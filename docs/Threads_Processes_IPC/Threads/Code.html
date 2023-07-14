@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Thread Code</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
+    <!--<link rel="stylesheet" href="/css/styles.css"/>-->
+    <link rel="stylesheet" href="/css/prism.css" />
 </head>
 
 <body>
@@ -26,7 +27,7 @@
     <!-- Tab content -->
     <div id="win" class="tabcontent">
         <h3>Windows</h3>
-        <pre>
+        <pre><code class="language-css">
             #include <windows.h>
                 #include <tchar.h>
                 #include <strsafe.h>
@@ -54,12 +55,12 @@
                     }
                 
                 }
-        </pre>
+                    </code></pre>
     </div>
 
     <div id="python" class="tabcontent">
         <h3>Python</h3>
-        <pre>
+        <pre><code class="language-css">
             import threading, zipfile
 
             class AsyncZip(threading.Thread):
@@ -80,12 +81,12 @@
             
             background.join()    # Wait for the background task to finish
             print('Main program waited until background was done.')
-        </pre>
+        </code></pre>
     </div>
 
     <div id="java" class="tabcontent">
         <h3>Java Thread Class</h3>
-        <pre>
+        <pre><code class="language-css">
             class test implements Runnable {		//Class should implement Runnable Interface to create Thread
                 test() {
                     Thread cur = Thread.currentThread();
@@ -132,12 +133,12 @@
             Parent Thread
             exiting child thread
             exiting main thread
-        </pre>
+        </code></pre>
     </div>
 
     <div id="posix" class="tabcontent">
         <h3>POSIX</h3>
-        <pre>
+        <pre><code class="language-css">
             #include<pthread.h>
                 #include<iostream>
                 using namespace std;
@@ -163,12 +164,12 @@
                     return 0;
                 }
                 
-        </pre>
+        </code></pre>
     </div>
 
     <div id="cppt" class="tabcontent">
         <h3>CPP Thread Class</h3>
-        <pre>
+        <pre><code class="language-css">
             #include<thread>
                 #include<iostream>
                 void fun(int a){
@@ -186,12 +187,12 @@
                   //std::thread t2(fun,3);           //error: use of deleted function ‘std::thread& std::thread::operator=(const std::thread&)’
                   //t1 = t2;
                 }
-        </pre>
+        </code></pre>
     </div>
 
     <div id="cppfun" class="tabcontent">
         <h3>CPP Functor</h3>
-        <pre>
+        <pre><code class="language-css">
             #include<thread>
                 #include<iostream>
                 #include<mutex>
@@ -219,12 +220,12 @@
                         t.join();
                     return 0;
                 }
-        </pre>
+                    </code></pre>
     </div>
 
     <div id="rust-ts" class="tabcontent">
         <h3>Rust thread::spawn() (OS Thread)</h3>
-        <pre>
+        <pre><code class="language-css">
             $ cargo new thread1
 
             $ cat main.rs
@@ -248,7 +249,7 @@
             }
             $ cargo build
             $ cargo run
-        </pre>
+        </code></pre>
     </div>
 
     <script>
@@ -267,6 +268,7 @@
         }
     </script>
 
+    <script src="/scripts/prism.js"></script>
 </body>
 
 </html>
