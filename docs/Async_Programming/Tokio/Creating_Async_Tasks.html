@@ -6,14 +6,15 @@
 </head>
 
 <body>
+    <h2>Creating Async Tasks(Rust)</h2>
     <div class="tab">
-          <button class="tablinks" onclick="opencode(event, 'rust-toks')">Rust(tokio::spawn)</button>
-          <button class="tablinks" onclick="opencode(event, 'rust-toksb')">Rust(tokio::task::spawn_blocking)</button>
-          <button class="tablinks" onclick="opencode(event, 'rust-blockon')">Rust(block_on)</button>
+          <button class="tablinks" onclick="opencode(event, 'rust-toks')">(tokio::spawn)</button>
+          <button class="tablinks" onclick="opencode(event, 'rust-toksb')">(tokio::task::spawn_blocking)</button>
+          <button class="tablinks" onclick="opencode(event, 'rust-blockon')">(block_on)</button>
     </div>
 
       <div id="rust-toks" class="tabcontent">
-        <h3>Rust tokio::spawn(Green Threads)</h3>
+        <h3>tokio::spawn(Green Threads)</h3>
           <li>spawn Non-blocking tasks within tokio runtime</li>
         <pre>
             $ cat Cargo.toml
@@ -46,7 +47,7 @@
     </div>
 
     <div id="rust-toksb" class="tabcontent">
-        <h3>Rust(tokio::task::spawn_blocking)</h3>
+        <h3>(tokio::task::spawn_blocking)</h3>
             <li>This spawn a blocking task into a separate thread from the Tokio runtime's thread pool</li>
             <li>while there can be other non-blocking tasks on tokio runtime</li>
         <pre>
