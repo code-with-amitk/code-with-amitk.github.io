@@ -16,7 +16,7 @@
       <div id="rust-toks" class="tabcontent">
         <h3>tokio::spawn(Green Threads)</h3>
           <li>spawn Non-blocking tasks within tokio runtime</li>
-        <pre>
+        <pre><code class="language-css">
             $ cat Cargo.toml
             [package]
             name = "tokio_spawn"
@@ -60,14 +60,14 @@
             $ cargo build
             $ cargo run
             thread-1
-        </pre>
+        </code></pre>
     </div>
 
     <div id="rust-toksb" class="tabcontent">
         <h3>(tokio::task::spawn_blocking)</h3>
             <li>This spawn a blocking task into a separate thread from the Tokio runtime's thread pool</li>
             <li>while there can be other non-blocking tasks on tokio runtime</li>
-        <pre>
+        <pre><code class="language-css">
             $ Cargo.toml
             [dependencies]
             futures = { version = "0.3.*" }
@@ -92,14 +92,14 @@
                   fun(arg).await
                 });            //2. Spawn a future
             }
-        </pre>
+        </code></pre>
     </div>
 
     <div id="rust-blockon" class="tabcontent">
         <h3>Rust(futures::executor::block_on())</h3>
             <li>Run 1 future to completion and there is only thread within tokio</li>
             <li>There are no other tasks on tokio</li>
-        <pre>
+        <pre><code class="language-css">
              $ cat Cargo.toml
             [dependencies]
             futures = "0.3"
@@ -114,7 +114,7 @@
             }
             $ main.exe
             fun1 fun2
-        </pre>
+        </code></pre>
     </div>
     
       <script>
@@ -132,7 +132,8 @@
           evt.currentTarget.className += " active";
         }
     </script>
-  
+
+    <script src="/scripts/prism.js"></script>
 </body>
 
 </html>
