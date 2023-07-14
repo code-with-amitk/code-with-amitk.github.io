@@ -7,12 +7,14 @@
 
 <body>
     <div class="tab">
-      <button class="tablinks" onclick="opencode(event, 'rust-toks')">Rust(tokio::spawn)</button>
-      <button class="tablinks" onclick="opencode(event, 'rust-toksb')">Rust(tokio::task::spawn_blocking)</button>
+          <button class="tablinks" onclick="opencode(event, 'rust-toks')">Rust(tokio::spawn)</button>
+          <button class="tablinks" onclick="opencode(event, 'rust-toksb')">Rust(tokio::task::spawn_blocking)</button>
+          <button class="tablinks" onclick="opencode(event, 'rust-blockon')">Rust(block_on)</button>
     </div>
 
       <div id="rust-toks" class="tabcontent">
         <h3>Rust tokio::spawn(Green Threads)</h3>
+          <li>spawn Non-blocking tasks within tokio runtime</li>
         <pre>
             $ cat Cargo.toml
             [package]
@@ -45,6 +47,8 @@
 
     <div id="rust-toksb" class="tabcontent">
         <h3>Rust(tokio::task::spawn_blocking)</h3>
+            <li>This spawn a blocking task into a separate thread from the Tokio runtime's thread pool</li>
+            <li>while there can be other non-blocking tasks on tokio runtime</li>
         <pre>
             $ Cargo.toml
             [dependencies]
@@ -73,6 +77,28 @@
         </pre>
     </div>
 
+    <div id="rust-blockon" class="tabcontent">
+        <h3>Rust(futures::executor::block_on())</h3>
+            <li>Run 1 future to completion and there is only thread within tokio</li>
+            <li>There are no other tasks on tokio</li>
+        <pre>
+             $ cat Cargo.toml
+            [dependencies]
+            futures = "0.3"
+            
+            $ cat main.rs
+            use futures::executor::block_on;
+            async fn fun1() { print!("fun1"); }
+            async fn fun2() { print!("fun2"); }
+            fn main() {
+                block_on(fun1());                       //main() blocks until fun1(),fun2() does not compelte
+                block_on(fun2());
+            }
+            $ main.exe
+            fun1 fun2
+        </pre>
+    </div>
+    
       <script>
         function opencode(evt, cityName) {
           var i, tabcontent, tablinks;
