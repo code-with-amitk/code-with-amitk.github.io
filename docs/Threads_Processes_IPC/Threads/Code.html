@@ -28,9 +28,9 @@
     <div id="win" class="tabcontent">
         <h3>Windows</h3>
         <pre><code class="language-css">
-            #include <windows.h>
-                #include <tchar.h>
-                #include <strsafe.h>
+                #include &lt;windows.h&rt;
+                #include &lt;tchar.h&lrt;
+                #include &lt;strsafe.h&rt;
                 using namespace std;
                 DWORD WINAPI worker(LPVOID param) {
                     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -44,7 +44,7 @@
                 
                 int _tmain() {
                     DWORD thread_id[5];
-                    for (int i = 0; i < 5; ++i) {
+                    for (int i = 0; i &lt; 5; ++i) {
                         CreateThread(
                             NULL,               //Default security attributes
                             0,                  //Use default stack size
@@ -139,8 +139,8 @@
     <div id="posix" class="tabcontent">
         <h3>POSIX</h3>
         <pre><code class="language-css">
-            #include<pthread.h>
-                #include<iostream>
+            #include &lt;pthread.h&rt;
+                #include &lt;iostream&rt;
                 using namespace std;
                 #define NUM_OF_THREADS 5
                 
@@ -170,8 +170,8 @@
     <div id="cppt" class="tabcontent">
         <h3>CPP Thread Class</h3>
         <pre><code class="language-css">
-            #include<thread>
-                #include<iostream>
+            #include &lt;thread&rt;
+                #include &lt;iostream&rt;
                 void fun(int a){
                   std::cout &lt;&lt; "Hello" &lt;&lt; a &lt;&lt; "\n";
                 }
@@ -193,10 +193,10 @@
     <div id="cppfun" class="tabcontent">
         <h3>CPP Functor</h3>
         <pre><code class="language-css">
-            #include<thread>
-                #include<iostream>
-                #include<mutex>
-                #include<vector>
+                #include &lt;thread&rt;
+                #include &lt;iostream&rt;
+                #include &lt;mutex&rt;
+                #include &lt;vector&rt;
                 std::mutex m;
                 
                 void fun(int tid) {
