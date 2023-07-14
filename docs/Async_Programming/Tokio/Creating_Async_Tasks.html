@@ -16,7 +16,8 @@
 
       <div id="rust-toks" class="tabcontent">
         <h3>tokio::spawn(Green Threads)</h3>
-          <li>spawn Non-blocking tasks within tokio runtime</li>
+            <li>spawn Non-blocking tasks within tokio runtime</li>
+            <li>Main thread will wait on JoinHandle(same as pthread_join)</li>
         <pre><code class="language-css">
             $ cat Cargo.toml
             [package]
@@ -32,35 +33,45 @@
             ///////////////////////////////////////////////
             $ cat main.rs
             use tokio::task;
-            fn fun() {
+            async fn fun1() {
                 println!("thread-1");
-                std::thread::sleep::from_sec(10);
+                tokio::time::delay_for(std::time::Duration::from_milli(5).await;
+                println!("Back in thread-1");
+                tokio::time::delay_for(std::time::Duration::from_milli(5000).await;
+            }
+            async fn fun2() {
+                println!("thread-2");
             }
             #[tokio::main]
             async fn main() {
 
-                /* spawn() returns `struct JoinHandle`
-                    This is similar to joining a thread in other programming languages.
-                    It allows you to wait for the task to complete and 
-                    obtain the result or handle any potential errors.
-                */
-                let handle = task::spawn(async {
-                    fun()
-                });
-                match handle {
-                    Ok(_) => {
-                        // Task completed successfully
-                        println!("Task completed successfully");
-                    }
-                    Err(e) => {
-                        // Task encountered an error
-                        println!("Task encountered an error: {:?}", e);
+                let mut vec_join_handles:Vec<tokio::task::JoinHandle()>> = vec![];
+                // spawn() returns `struct JoinHandle`
+                //    This is similar to joining a thread in other programming languages.
+                //    It allows you to wait for the task to complete and 
+                //    obtain the result or handle any potential errors.
+                let handle1 = task::spawn(async{ fun1().await });
+                vec_join_handles.push(handle1);
+                    
+                let handle2 = task::spawn(async{ fun2().await });
+                vec_join_handles.push(handle2);
+
+                for i in vec_join_handles {
+                    match i {
+                        Ok(_) => {  // Task completed successfully
+                            println!("Task completed successfully");
+                        }
+                        Err(e) => {    // Task encountered an error
+                            println!("Task encountered an error: {:?}", e);
+                        }
                     }
                 }
             }
             $ cargo build
             $ cargo run
             thread-1
+            thread-2
+            Back to thread-1
         </code></pre>
     </div>
 
