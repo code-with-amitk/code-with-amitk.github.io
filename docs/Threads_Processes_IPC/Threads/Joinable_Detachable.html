@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Joinable Detachable Threads</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
+    <!--<link rel="stylesheet" href="/css/styles.css"/>-->
+    <link rel="stylesheet" href="/css/prism.css" />
 </head>
 
   <body>
@@ -17,7 +18,7 @@
 
     <div id="joinable" class="tabcontent">
         <h3>Joinable Threads</h3>
-        <pre>
+        <pre><code class="language-css">
             Thread1(Main Process) waits for thread2 before it terminates itself. Thread1(Main process) cannot terminate before thread2 terminates.
             
             #include<pthread.h>
@@ -40,12 +41,12 @@
             # ./a.out
              Thread2 Created
              Thread-1/Main terminate2 after Thread-2
-        </pre>
+        </code></pre>
     </div>
 
     <div id="detachable" class="tabcontent">
         <h3>Detachable Threads</h3>
-        <pre>
+        <pre><code class="language-css">
             Thread-1/Main does not wait for Thread-2 to finish. Thread-1/Main is free to terminate.
             ```c
             #include<pthread.h>
@@ -68,7 +69,7 @@
             # ./a.out
               Inside main thread
             ```
-        </pre>
+        </code></pre>
     </div>
 
         <script>
@@ -86,7 +87,8 @@
           evt.currentTarget.className += " active";
         }
     </script>
-    
+
+      <script src="/scripts/prism.js"></script>
   </body>
   
 </html>
