@@ -14,7 +14,7 @@
     <h2><a href="https://leetcode.com/problems/longest-arithmetic-subsequence-of-given-difference/description/">1218. Longest Arithmetic Subsequence of Given Difference</a></h2>
     <p>Given an integer array arr and an integer difference, return the length of the longest subsequence in arr which is an arithmetic sequence such that the difference between adjacent elements in the subsequence equals difference.
 A subsequence is a sequence that can be derived from arr by deleting some or no elements without changing the order of the remaining elements.</p>
-    <pre><code class="language-css">
+    <pre><code>
       Example 1:
       Input: arr = [1,2,3,4], difference = 1
       Output: 4
@@ -36,7 +36,7 @@ A subsequence is a sequence that can be derived from arr by deleting some or no 
       <li>1. Take hashmap<key=element, value=length of AP till this element></li>
       <li>2. Iterate through the array and keep filling hashmap, Also not the largest value(that will be answer)</li>
       <li>Find (current_element - ap_difference) in hashmap. if found increment count by 1</li>
-    <pre><code class="language-css">
+    <pre><code>
       arr [1,5,7,8,5,3,4,2,1] difference = -2
            0 1 2 3 4 5 6 7 8
 
