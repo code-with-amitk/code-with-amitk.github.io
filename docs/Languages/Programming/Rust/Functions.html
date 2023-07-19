@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Functions</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+    
+<body>
+  <h1>Functions</h1>
+  <ul>
+    <li>
+        <h2><a href="#closure">Closures</a></h2>
+        <ul>
+            <li>
+                <h3><a href="#closuret">Closures Types(Move, Borrow)</a></h3>
+            </li>
+        </ul>
+        
+    </li>
+    </ul>
+
+  <br>
+
+  <h2 id="closure">Closure = Lambda(C++)</h2>
+  <li>Closure is a function-like construct that can capture variables from the environment in which it is defined.</li>
+  <table>
+    <tr>
+        <th></th>       <!--Table header-->
+        <th>Rust (Closure)</th>
+        <th>C++ (Lambda)</th>
+    </tr>
+    <tr>                    <!--Table Row-->
+        <td>Can capture variables from their surrounding environment</td>       <!--table data-->
+        <td>Yes</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>Syntax</td>
+        <td>|...| { ... } </td>
+        <td> [ ] (parameters) { ... }</td>
+    </tr>
+    <tr>
+        <td>Different Types</td>
+        <td>Move, Borrow Closure</td>
+        <td>There are no types in lambda</td>
+    </tr>
+    <tr>
+        <td>Can place break in closure?</td>
+        <td>No. You can do return. But rust does not allow break due to ownership and borrow check rules</td>
+        <td>Yes</td>
+    </tr>
+
+  </table>
+
+  <h3 id="closuret">Closure Types</h3>
+  <h4>Move Closure</h4>
+    <ul>
+        <li>A move closure captures variables from its environment by taking ownership of them (i.e., moving them).</li>
+    </ul>
+    Example
+    <pre><code>
+        fn main() {
+            let x = 10;
+            let closure = || {
+                println!("Value of x: {}", x);
+            };
+            closure(); // This is a move closure since it captures 'x' by moving it.
+            // 'x' cannot be used after this point, as it has been moved into the closure.
+        }        
+    </code></pre>
+
+  <h4>Borrow Closure</h4>
+    <ul><li>
+        A borrow closure captures variables by borrowing them (i.e., creating references to them).
+    </li></ul>
+
+</body>
+</html>
