@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Synchronous Asynchronous Channels</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+  <h1>Synchronous Asynchronous Channels</h1>
+  <ul>
+        <li>
+            <h3><a href="#comp">Synchronous vs Asynchronous Channel</a></h3>  
+        </li>
+        <li>
+            <h3><a href="#code">Code</a></h3>    
+        </li>
+    </ul>
+  <br>
+  
+  <table>
+    <h3 id="comp">Synchronous vs Asynchronous Channel</h3>
+  <tr>
+      <th></th>       <!--Table header-->
+      <th>Synchronous Channel (std::sync::mpsc::channel())</th>
+      <th>Asynchronous Channel (async_channel::unbounded())</th>
+  </tr>
+  <tr>                    <!--Table Row-->
+      <td>Blocking</td>       <!--table data-->
+      <td><b>Yes</b>(sending and receiving messages on the channel will block the sender or receiver until the operation can be completed)</td>
+      <td>No (used with async/await syntax)</td>
+  </tr>
+  <tr>                 
+      <td>Use Case</td>
+      <td>For Tasks which want to synchronize their execution (Eg: in threads)</td>
+      <td>working with async tasks and want to communicate between them without blocking</td>
+  </tr>
+  </table>
+
+  <br>
+  <h3 id="code">Code</h3>
+
+  <div>
+    <button class="tablinks" onclick="opencode(event, 's1')">Synchronous(1 Producer 1 Consumer)</button>
+    <button class="tablinks" onclick="opencode(event, 's2')">Synchronous(Multiple Producer 1 consumer)</button>
+    <button class="tablinks" onclick="opencode(event, 'async')">Asynchronous</button>
+  </div>
+
+  <div id="s1" class="tabcontent">
+    <h3>Synchronous(1 Producer 1 Consumer)</h3>
+        <li>Sender waits on channel until reciever recieves the message.</li>
+        <li>When all Senders or all Receivers are dropped, the channel becomes closed. When a channel is closed, no more messages can be sent, but remaining messages can still be received.</li>
+    <pre><code>
+        use std::sync::mpsc;                            //mpsc: Multiple producer, Single Consumer.
+        use std::thread;
+        
+        fn main() {
+            let (tx, rx) = mpsc::channel();            //1. Created channel having 2 ends(transmitter, reciever)
+            
+            let tid1 = thread::spawn(                  //2. Thread-1(Transmitter) owns tx(using move) and sends val=test on it
+                move || {
+                    let val = String::from("test");
+                    tx.send(val).unwrap();
+                    //println!("{}", val);              //We cannot use value after sending over channel, bcoz reciever might change it.
+                }                                       //ie ownership is transferred.
+            );
+            
+            println!("{}", rx.recv().unwrap());         //3. Thread-2(main) recieves message over rx end of channel.
+        }
+        $ cargo run
+        test
+    </code></pre>
+    </div>
+
+    <div id="s2" class="tabcontent">
+        <h3>Synchronous(Multiple Producer 1 consumer)</h3>
+        <pre><code>
+            use std::sync::mpsc;
+            use std::thread;
+            use std::time::Duration;
+            
+            fn main() {
+                let (tx, rx) = mpsc::channel();
+                let tx1 = tx.clone();
+                
+                thread::spawn(move || {
+                    let vals = vec![
+                        String::from("hi"),
+                        String::from("from"),
+                        String::from("thread1"),
+                    ];
+                    for val in vals {
+                        tx1.send(val).unwrap();                 //Sending over tx1
+                        thread::sleep(Duration::from_secs(1));
+                    }
+                });
+            
+                thread::spawn(move || {
+                    let vals = vec![
+                        String::from("more"),
+                        String::from("messages"),               
+                    ];
+            
+                    for val in vals {
+                        tx.send(val).unwrap();                    //Sending over tx
+                        thread::sleep(Duration::from_secs(1));
+                    }
+                });
+            
+                for i in rx {
+                    println!("{}", i);
+                }
+            }
+            $ cargo run
+            hi more thread1 from messages                       //See threads are executed in different order hence values recieved in different order
+    </code></pre>
+    </div>
+
+    <div id="async">
+    <h3>Asynchronous(1 Producer 1 Consumer)</h3>
+        <li>Neither reciever, nor sender waits on channel(ie sender/reciever can send/recv and leave no need to wait).</li>
+        <li>When all Senders or all Receivers are dropped, the channel becomes closed. When a channel is closed, no more messages can be sent, but remaining messages can still be received.</li>
+        <li>Kinds of channels: 1. Bounded channel with limited capacity. 2. Unbounded channel with unlimited capacity.</li>
+    <pre><code>
+            # Cargo.toml
+            [package]
+            name = "async_channel"
+            version = "0.1.0"
+            edition = "2018"
+            
+            [dependencies]
+            async-channel = {version = "1.5"}
+            tokio = {version = "0.2.*", features = ["full"] }
+            
+            # main.rs
+            use async_channel;
+            async fn fun() {
+                let (s, r) = async_channel::unbounded();
+            
+                assert_eq!(s.send("Hello").await, Ok(())); //Sends a message into the channel.
+                assert_eq!(r.recv().await, Ok("Hello"));   //Receives a message from channel. If the channel is empty, this method waits until there is a message.
+            }
+            
+            fn main() {
+                let mut rt = tokio::runtime::Runtime::new().unwrap(); //1. Start tokio runtime
+                let local = tokio::task::LocalSet::new();
+                local.block_on(&mut rt, async move { fun().await });
+            }
+    </code></pre>
+    </div>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+
+</html>
