@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deque</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <h1>Deque</h1>
+    <ul>
+      <li>
+          <h3><a href="#comp">C++ vs Python vs Rust</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="comp">C++ vs Python vs Rust</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+        </tr>
+        <tr>
+            <td>Declaration</td>
+            <td>deque<int> dq</td>
+            <td>let mut dq:VecDeque<i32> = VecDeque::new();</td>
+            <td>self.dq = deque()</td>
+        </tr>
+        <tr>
+            <td>push at end</td>
+            <td>dq.push_back(x)</td>
+            <td>dq.push_back(x)</td>
+            <td>self.dq.append(x)</td>
+        </tr>
+        <tr>
+            <td>Front, Back element</td>
+            <td>dq.front(), dq.back()</td>
+            <td>dq.front(), dq.back()</td>
+            <td>self.dq[0],self.dq[-1]</td>
+        </tr>
+        <tr>
+            <td>Pop front, back</td>
+            <td>dq.pop_front(), dq.pop_back()</td>
+            <td>dq.pop_front(), dq.pop_back()</td>
+            <td>self.dq.pop(), self.dq.popleft()</td>
+        </tr>
+        <tr>
+            <td>Check empty</td>
+            <td>!dq.empty()</td>
+            <td>!dq.empty()</td>
+            <td>bool(self.dq) != False</td>
+        </tr>
+        <tr>
+            <td>size</td>
+            <td>dq.size()</td>
+            <td>dq.len()</td>
+            <td>len(self.dq)</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
