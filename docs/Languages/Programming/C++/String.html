@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++, Rust, Python(Strings)</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <h1>Strings</h1>
+    <ul>
+      <li><h3><a href="#comp">String (C++ vs Python vs Rust)</a></h3></li>
+    </ul>
+
+    <h3 id="comp">String (C++ vs Python vs Rust)</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+        </tr>
+        <tr>
+            <td>Create</td>
+            <td>string test;</td>
+            <td><pre><code class="language-css">
+let s1 = String::new();
+s1 = "test".to_string();
+
+let s2 = String::from("Hello");
+            </code></pre>
+            </td>
+            <td>self.input = ""</td>
+        </tr>
+        <tr>
+            <td>Append</td>
+            <td>s1.append(s2)</td>
+            <td>s1.push(char);</td>
+            <td>str1 += str2</td>
+        </tr>
+        <tr>
+            <td>Erase / pop back</td>
+            <td><ul>
+                <li><b>substring</b> s.erase(3, s.size()-1)</li>
+                <li><b>Remove last char</b> s1.pop_back();</li>
+            </ul></td>
+            <td>
+                <li><b>Remove last char</b> s1.pop()</li>
+            </td>
+            <td><b>Remove last char</b> s1 = s1[:len(s1)-1]</td>
+        </tr>
+        <tr>
+            <td>Element at index</td>
+            <td><ul>
+                <li>str[i]</li>
+            </ul></td>
+            <td>
+                <pre><code class="language-css">
+// Find letter at index i
+let letter = str.chars()
+            .nth(i as usize).unwrap()
+            .to_digit(10).unwrap()
+             as i32;
+                </code></pre>
+            </td>
+            <td>str[i]</td>
+        </tr>
+        <tr>
+            <td>Iterate chars in string</td>
+            <td>for (int i=0; i&lt;letters.size(); ++i)</td>
+            <td>for letter in letters.chars()</td>
+            <td>for i in range(0, len(letters)):</td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td>str.length() or str.size()</td>
+            <td>s.len()</td>
+            <td>len(str)</td>
+        </tr>
+    </table>
+
+
+    <script src="/scripts/prism.js"></script>
+</body>
+
+</html>
