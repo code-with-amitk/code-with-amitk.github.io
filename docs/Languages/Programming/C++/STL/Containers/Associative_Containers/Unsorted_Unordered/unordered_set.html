@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++(unordered_set), Python, Rust(HashSet)</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <h1>unordered_set</h1>
+    <ul>
+      <li>
+          <h3><a href="#comp">C++ vs Python vs Rust</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="comp">C++ vs Rust vs Python</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust (use std::collections::HashSet)</th>
+            <th>Python (set())</th>
+        </tr>
+        <tr>
+            <td>Create</td>
+            <td><ul>
+                <li>unordered_set<string> us;</li>
+                <li>unordered_set<string> us(s.begin(), s.end());</li>
+            </ul></td>
+            <td><ul>
+                <li><b>Empty:</b> let mut hs:HashSet<String> = HashSet::new();</li>
+            <td>
+                <ul>
+                <li><b>Empty</b> hs = set()</li>
+                <li><b>Filled <br></b>
+                    <pre><code class="language-css">
+word: List[str] //Copy words from vector
+hs = set(words)
+                    </code></pre>
+                </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Find</td>
+            <td><ul>
+                <li>value = us[key]</li>
+                <li>value=count(key)</li>
+            </ul></td>
+            <td>
+                <pre><code class="language-css">
+if let Some(value) = hs.get(&key) {
+    //value returned
+} else {
+    // Not found
+}
+                </code></pre>
+            </td>
+            <td>
+                <pre><code class="language-css">
+if key in hs:
+    // contains key
+                </code></pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Insert</td>
+            <td>us.insert(key)</td>
+            <td>hs.insert(word);</td>
+            <td>
+                <pre><code class="language-css">
+for i in range(0, len(words)):
+    hs.add(wordDict[i])
+                </code></pre>
+            </td>
+        </tr>
+    </table>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+
+</html>
