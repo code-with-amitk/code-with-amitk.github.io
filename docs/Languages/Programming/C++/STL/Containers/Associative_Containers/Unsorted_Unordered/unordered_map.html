@@ -29,7 +29,31 @@
             </ul></td>
             <td><ul>
                 <li><b>Empty:</b> let hm:HashMap = HashMap::new()</li>
-                <li><b>init</b> let hm:HashMap = HashMap::From([(1:"a"),(2:"b")]);</li>
+                <li><b>init</b> 
+                    <ul>
+                        <li><b>iter():</b> is called on the array to create an iterator over its elements</li>
+                        <li><b>cloned():</b> method is used to clone each tuple's elements.<br>
+                            This is necessary because &str is a reference type, <br>
+                            and we need to create owned values to store in the HashMap.</li>
+                        <li><b>collect()</b> method consumes the iterator and collects <br>
+                            the cloned tuples into a HashMap<char, &str>.</li>
+                    </ul>
+                    <pre><code class="language-css">
+let hm: HashMap<i32, &str> = [
+    (2, "abc"),
+    (3, "def"),
+    (4, "ghi"),
+    (5, "jkl"),
+    (6, "mno"),
+    (7, "pqrs"),
+    (8, "tuv"),
+    (9, "wxyz"),
+]
+.iter()
+.cloned()
+.collect();
+            </code></pre>
+                </li>
             </ul></td>
             <td><ul>
                 <li><b>Empty:</b> self.hm = {}</li>
@@ -72,6 +96,7 @@
         </tr>
     </table>
 
+    <script src="/scripts/prism.js"></script>
 </body>
 
 </html>
