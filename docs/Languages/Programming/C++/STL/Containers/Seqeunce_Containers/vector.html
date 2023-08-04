@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++(vector), Python(List []), Rust(Vec)</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <h1>Vectors</h1>
+    <ul>
+      <li>
+          <h3><a href="#comp">C++ vs Python vs Rust</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="comp">C++ vs Python vs Rust</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+        </tr>
+        <tr>
+            <td>Delete</td>
+            <td><ul>
+                <li><b>1 element</b> v.erase(v.begin()+position-1);</li>
+                <li><b>Range</b> v.erase(v.begin()+position1, v.begin()position2);</li>
+                <li><b>All</b> v.clear();</li>
+            </ul></td>
+            <td></td>
+            <td><b>Last Element</b> element = list.pop()</td>
+        </tr>
+        <tr>
+            <td>push at end</td>
+            <td>dq.push_back(x)</td>
+            <td>dq.push_back(x)</td>
+            <td>self.dq.append(x)</td>
+        </tr>
+        <tr>
+            <td>Initialize</td>
+            <td>vector<int> v(size, init_value); OR <br> v.assign(3,10);//10 10 10</td>
+            <td></td>
+            <td>a = []</td>
+        </tr>
+        <tr>
+            <td>push_back()</td>
+            <td><ul>
+                <li><b>push_back()</b> allocates element somewhere <br> else then insert into vector at back. v.push_back(11)</li>
+                <li><b>emplace()</b> also inserts at back, it But <br> constructs elements inside the stl only. <br>Adv: Does in place insertion, avoids <br>unneccessary copy. v.emplace_back(11)</li>
+            </ul></td>
+            <td></td>
+            <td>list.append(4)</td>
+        </tr>
+        <tr>
+            <td>Insert</td>
+            <td>vec.insert(v.begin() + 2, 7)</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Slice</td>
+            <td></td>
+            <td></td>
+            <td>last 3 print(a[-3:]) <br> 1st to last list[1:]</td>
+        </tr>
+        <tr>
+            <td>Sort</td>
+            <td></td>
+            <td></td>
+            <td><b>Simple Sort:</b> list.sort() <br> <b>Custom Sort:</b> def fun(s): return s[1] sorted(list, key=fun)</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
