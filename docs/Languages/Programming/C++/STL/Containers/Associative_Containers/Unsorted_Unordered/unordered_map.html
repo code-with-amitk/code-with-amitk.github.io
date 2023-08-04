@@ -76,7 +76,15 @@ let hm: HashMap<i32, &str> = [
                 <li>value=count(key)</li>
                 <li><b>Smallest Key:</b> min_element(um.begin(), um.end())</li>
             </ul></td>
-            <td></td>
+            <td>
+                <pre><code class="language-css">
+if let Some(value) = hm.get(&key) {
+    //value returned
+} else {
+    // Not found
+}
+                </code></pre>
+            </td>
             <td>value = um[key]</td>
         </tr>
         <tr>
