@@ -20,7 +20,17 @@
             <th></th>
             <th>C++</th>
             <th>Rust</th>
-            <th>Python</th>
+            <th>Python(List [])</th>
+        </tr>
+        <tr>
+            <td>Create/Initialize</td>
+            <td>vector<int> v(size, init_value); OR <br> v.assign(3,10);//10 10 10</td>
+            <td>
+                <pre><code class="language-css">
+let mut out:Vec&lt;String> = Vec::new();
+                </code></pre>
+            </td>
+            <td>a = []</td>
         </tr>
         <tr>
             <td>Delete</td>
@@ -33,24 +43,12 @@
             <td><b>Last Element</b> element = list.pop()</td>
         </tr>
         <tr>
-            <td>push at end</td>
-            <td>dq.push_back(x)</td>
-            <td>dq.push_back(x)</td>
-            <td>self.dq.append(x)</td>
-        </tr>
-        <tr>
-            <td>Initialize</td>
-            <td>vector<int> v(size, init_value); OR <br> v.assign(3,10);//10 10 10</td>
-            <td></td>
-            <td>a = []</td>
-        </tr>
-        <tr>
             <td>push_back()</td>
             <td><ul>
                 <li><b>push_back()</b> allocates element somewhere <br> else then insert into vector at back. v.push_back(11)</li>
                 <li><b>emplace()</b> also inserts at back, it But <br> constructs elements inside the stl only. <br>Adv: Does in place insertion, avoids <br>unneccessary copy. v.emplace_back(11)</li>
             </ul></td>
-            <td></td>
+            <td>vec.push(str.clone())</td>
             <td>list.append(4)</td>
         </tr>
         <tr>
@@ -73,6 +71,7 @@
         </tr>
     </table>
 
+    <script src="/scripts/prism.js"></script>
 </body>
 
 </html>
