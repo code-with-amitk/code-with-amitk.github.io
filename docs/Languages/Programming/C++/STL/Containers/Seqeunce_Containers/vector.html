@@ -27,7 +27,15 @@
             <td>vector<int> v(size, init_value); OR <br> v.assign(3,10);//10 10 10</td>
             <td>
                 <pre><code class="language-css">
-let mut out:Vec&lt;String> = Vec::new();
+let mut v:Vec &lt;String> = Vec::new();
+OR
+let mut v:Vec &lt;i32> = vec![];    //v.len() = 0
+OR
+let v2: Vec &lt;i32> = vec![14,25,35]; 
+OR
+let mut v = vec![0; 5];             //size=5, init value=0
+OR
+let v1: Vec &lt;i32> = [1,2,3].to_vec();  //Initialize
                 </code></pre>
             </td>
             <td>
@@ -44,7 +52,9 @@ let mut out:Vec&lt;String> = Vec::new();
                 <li><b>Range</b> v.erase(v.begin()+position1, v.begin()position2);</li>
                 <li><b>All</b> v.clear();</li>
             </ul></td>
-            <td></td>
+            <td><ul>
+                <li><b>Last element</b> vec.pop()</li>
+            </ul></td>
             <td><b>Last Element</b> element = list.pop()</td>
         </tr>
         <tr>
@@ -63,10 +73,22 @@ let mut out:Vec&lt;String> = Vec::new();
             <td></td>
         </tr>
         <tr>
+            <td>Last element</td>
+            <td>vec.back()</td>
+            <td>if Some(l) = vec.last()</td>
+            <td></td>
+        </tr>
+        <tr>
             <td>Slice</td>
             <td></td>
             <td></td>
             <td>last 3 print(a[-3:]) <br> 1st to last list[1:]</td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td>vec.size()</td>
+            <td>vec.len()</td>
+            <td>len(vec)</td>
         </tr>
         <tr>
             <td>Sort</td>
