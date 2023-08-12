@@ -24,7 +24,22 @@
         </tr>
         <tr>
             <td>Create/Initialize</td>
-            <td>vector<int> v(size, init_value); OR <br> v.assign(3,10);//10 10 10</td>
+            <td>
+                <pre><code class="language-css">
+// 1 D
+vector<int> v(size, init_value);
+    OR
+v.assign(3,10);//10 10 10
+
+// 2 D
+vector<vector<int>> vec = {
+    {1,2,3},
+    {4,5,6}
+  };
+  OR
+vector&lt;vector&lt;int>> vec(row, vector<int>(col,0));   => vec[row][col]
+                </code></pre>
+            </td>
             <td>
                 <pre><code class="language-css">
 let mut v:Vec &lt;String> = Vec::new();
@@ -39,9 +54,15 @@ let v1: Vec &lt;i32> = [1,2,3].to_vec();  //Initialize
                 </code></pre>
             </td>
             <td>
-                <ul>
-                    <li><b>Empty</b> a = []</li>
-                    <li><b>Filled</b> a = [False] * (5)</li>
+                <ul><pre><code class="language-css">
+######### 1 D
+a = []              #Empty
+OR
+a = [False] * (5)   #Filled
+
+######### 2 D
+arr = [[0 for _ in range(cols)] for _ in range(rows)]
+                </code></pre>
                 </ul>
             </td>
         </tr>
