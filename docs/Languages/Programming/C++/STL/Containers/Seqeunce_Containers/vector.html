@@ -81,6 +81,19 @@ arr = [[0 for _ in range(cols)] for _ in range(rows)]
             <td><b>Last Element</b> element = list.pop()</td>
         </tr>
         <tr>
+            <td>Max</td>
+            <td>INT_MAX</td>
+            <td><pre><code class="language-css">
+let max_int: i32 = i32::MAX;
+let min_int: i32 = i32::MIN;
+            </code></pre></td>
+            <td><pre><code class="language-css">
+import sys
+sys.max_int     //INT_MAX
+min_int = -sys.maxsize - 1
+            </code></pre></td>
+        </tr>
+        <tr>
             <td>push_back()</td>
             <td><ul>
                 <li><b>push_back()</b> allocates element somewhere <br> else then insert into vector at back. v.push_back(11)</li>
@@ -115,9 +128,25 @@ arr = [[0 for _ in range(cols)] for _ in range(rows)]
         </tr>
         <tr>
             <td>Sort</td>
+            <td>
+sort(a.begin(), a.end())
+            </td>
             <td></td>
+            <td><pre><code class="language-css">
+#Simple Sort
+list.sort()
+
+#Custom Sort
+def fun(s):
+    return s[1] 
+sorted(list, key=fun)
+            </code></pre></td>
+        </tr>
+        <tr>
+            <td>Swap</td>
+            <td>swap(arr[i], arr[j])</td>
             <td></td>
-            <td><b>Simple Sort:</b> list.sort() <br> <b>Custom Sort:</b> def fun(s): return s[1] sorted(list, key=fun)</td>
+            <td>lst[i], lst[j] = lst[j], lst[i]</td>
         </tr>
     </table>
 
