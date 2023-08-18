@@ -27,6 +27,7 @@
             <td><ul>
                 <li>unordered_set<string> us;</li>
                 <li>unordered_set<string> us(s.begin(), s.end());</li>
+                <li>unordered_set<string> us(n);    //n sets</li>
             </ul></td>
             <td><ul>
                 <li><b>Empty:</b> let mut hs:HashSet<String> = HashSet::new();</li>
@@ -37,6 +38,9 @@
                     <pre><code class="language-css">
 word: List[str] //Copy words from vector
 hs = set(words)
+
+# n sets
+graph = [set() for _ in range(n)]
                     </code></pre>
                 </li>
                 </ul>
