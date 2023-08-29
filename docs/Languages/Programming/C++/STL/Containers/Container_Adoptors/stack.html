@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stack</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <h1>Stack</h1>
+    <ul>
+      <li>
+          <h3><a href="#st"C++ vs Python vs Rust</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="st">C++ vs Python vs Rust</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+            <th>Go</th>
+        </tr>
+        <tr>
+            <td>Declaration</td>
+            <td>stack<int> st;</td>
+            <td>let mut stack: Vec<i32> = Vec::new();</td>
+            <td>
+                <pre><code class="language-css">
+Python doesn't have built-in Stack.
+Its implemented using a list.
+st = []
+                </code></pre>
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>push at end</td>
+            <td>st.push(a)</td>
+            <td></td>
+            <td>st.append(item)</td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Top</td>
+            <td>st.top()</td>
+            <td></td>
+            <td>st[-1]</td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Pop</td>
+            <td>st.pop()</td>
+            <td></td>
+            <td>st.pop()</td>
+            <td>self.dq.pop(), self.dq.popleft()</td>
+        </tr>
+
+        <tr>
+            <td>Check empty</td>
+            <td>!st.empty()</td>
+            <td></td>
+            <td>len(st)</td>
+            <td></td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
