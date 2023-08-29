@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heap / Priority Queue</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <h1>Deque</h1>
+    <ul>
+      <li>
+          <h3><a href="#heap"C++ vs Python vs Rust</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="heap">C++ vs Python vs Rust</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+        </tr>
+        <tr>
+            <td>Declaration</td>
+            <td>priority_queue<pair<key, value>> pq</td>
+            <td>
+                <pre><code class="language-css">
+#Python does not provide built-in heap.
+#But it provides heapq module for heap operations on list
+import heapq
+
+# Creating a Max Heap
+max_heap = []
+heapq.heapify(max_heap)  # Convert list into a max heap
+                </code></pre>
+            </td>
+            <td>
+                <pre><code class="language-css">
+let mut max_heap: BinaryHeap<>> = BinaryHeap::new();
+
+let mut min_heap: BinaryHeap<Reverse<i32>> = BinaryHeap::new();
+                </code></pre>
+                </td>
+        </tr>
+        <tr>
+            <td>push at end</td>
+            <td>dq.push_back(x)</td>
+            <td>dq.push_back(x)</td>
+            <td>self.dq.append(x)</td>
+        </tr>
+        <tr>
+            <td>Front, Back element</td>
+            <td>dq.front(), dq.back()</td>
+            <td>dq.front(), dq.back()</td>
+            <td>self.dq[0],self.dq[-1]</td>
+        </tr>
+        <tr>
+            <td>Pop front, back</td>
+            <td>dq.pop_front(), dq.pop_back()</td>
+            <td>dq.pop_front(), dq.pop_back()</td>
+            <td>self.dq.pop(), self.dq.popleft()</td>
+        </tr>
+        <tr>
+            <td>Check empty</td>
+            <td>!dq.empty()</td>
+            <td>!dq.empty()</td>
+            <td>bool(self.dq) != False</td>
+        </tr>
+        <tr>
+            <td>size</td>
+            <td>dq.size()</td>
+            <td>dq.len()</td>
+            <td>len(self.dq)</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
