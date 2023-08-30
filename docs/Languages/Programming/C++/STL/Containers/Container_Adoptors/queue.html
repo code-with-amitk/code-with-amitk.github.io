@@ -10,7 +10,7 @@
     <h1>Queue</h1>
     <ul>
       <li>
-          <h3><a href="#q"C++ vs Python vs Rust</a></h3>
+          <h3><a href="#q">C++ vs Python vs Rust</a></h3>
       </li>
     </ul>
 
@@ -25,27 +25,70 @@
         </tr>
         <tr>
             <td>Declaration</td>
-            <td>qeue<int> st;</td>
-            <td></td>
-            <td>q = queue.Queue()</td>
+            <td>queue&lt;int> q;</td>
+            <td><a href="https://amitkumar50.github.io/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/Deque.html">Implemented as VecDeque</a></td>
             <td>
-
+                <pre><code class="language-css">
+import queue
+class Test
+    def __init__(self):
+        self.q = queue.Queue()
+                </code></pre>
             </td>
-        </tr>
 
-        <tr>
-            <td>push</td>
-            <td>q.push(a)</td>
-            <td></td>
-            <td>q.put(10)</td>
-            <td></td>
+            <td>
+            </td>
         </tr>
 
         <tr>
             <td>Front</td>
             <td>q.front()</td>
             <td></td>
-            <td>q.get()</td>
+                <td><pre><code class="language-css">
+# get() = pop(). returns top
+
+int front = self.q.get();
+                </code></pre>
+            </td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Push</td>
+            <td>q.push(a)</td>
+            <td></td>
+            <td>
+                <pre><code class="language-css">
+self.q.put(10)
+                <pre></code>
+            </td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Pop</td>
+            <td>q.pop()</td>
+            <td></td>
+            <td>
+                <pre><code class="language-css">
+# get() = pop(). returns top
+
+int front = self.q.get()
+                </pre></code>
+            </td>
+
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Size</td>
+            <td>q.size()</td>
+            <td></td>
+            <td>
+                <pre><code class="language-css">
+self.q.qsize()
+                </pre></code>
+            </td>
             <td></td>
         </tr>
 
@@ -53,11 +96,16 @@
             <td>Check empty</td>
             <td>!q.empty()</td>
             <td></td>
-            <td>q.empty()</td>
+            <td>
+                <pre><code class="language-css">
+self.q.empty()
+                </pre></code>
+            </td>
             <td></td>
         </tr>
     </table>
 
+    <script src="/scripts/prism.js"></script>
 </body>
 
 </html>
