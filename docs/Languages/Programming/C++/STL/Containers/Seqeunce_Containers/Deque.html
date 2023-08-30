@@ -28,24 +28,35 @@
             <td>let mut dq:VecDeque<i32> = VecDeque::new();</td>
             <td>self.dq = deque()</td>
         </tr>
+
         <tr>
             <td>push at end</td>
             <td>dq.push_back(x)</td>
             <td>dq.push_back(x)</td>
             <td>self.dq.append(x)</td>
         </tr>
+
         <tr>
             <td>Front, Back element</td>
             <td>dq.front(), dq.back()</td>
-            <td>dq.front(), dq.back()</td>
+                <td><pre><code class="Rust">
+// Front
+if let Some(front) = dq.front() {
+    println!("{}", front);
+}
+dq.back()
+                </code></pre>
+            </td>
             <td>self.dq[0],self.dq[-1]</td>
         </tr>
+
         <tr>
             <td>Pop front, back</td>
             <td>dq.pop_front(), dq.pop_back()</td>
             <td>dq.pop_front(), dq.pop_back()</td>
             <td>self.dq.pop(), self.dq.popleft()</td>
         </tr>
+
         <tr>
             <td>Check empty</td>
             <td>!dq.empty()</td>
