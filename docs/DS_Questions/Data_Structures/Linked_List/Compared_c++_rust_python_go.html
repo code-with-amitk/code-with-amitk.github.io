@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C, C++, Rust, Python, Go</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <h1>Linked Lists</h1>
+    <ul>
+      <li><h3><a href="#comp">Linked List (C, C++, Python, Rust, Go)</a></h3></li>
+    </ul>
+
+    <h3 id="comp">Linked List (C, C++, Python, Rust, Go)</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C</th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+            <th>Go</th>
+        </tr>
+
+        <tr>
+            <td>Representation</td>
+            <td>
+                <pre><code class="language-css">
+struct ListNode {
+    int val;
+    struct ListNode *next;
+};
+                </pre></code>
+            </td>
+            <td>
+                <pre><code class="language-css">
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+                </pre></code>
+            </td>
+            <td></td>
+            <td>
+                <pre><code class="language-css">
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+                </code></pre>
+            </td>
+            <td>
+                <pre><code class="language-css">
+type ListNode struct {
+    Val int
+    Next *ListNode
+}
+                </pre></code>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Access Element</td>
+            <td>
+                <pre><code class="language-css">
+v = node->val;
+next = node->next;
+                </pre></code>
+            </td>
+            <td>same as c</td>
+            <td>       <!--Rust-->
+                <pre><code class="language-css">
+
+                </pre></code>
+            </td>
+            <td>       <!--Python-->
+                <pre><code class="language-css">
+fast = head.next.next
+slow = head.next
+                </pre></code>
+            </td>
+            <td>        <!--Go-->
+                <pre><code class="language-css">
+var val int = node.Val
+var val int = node.Next
+                </pre></code>
+            </td>
+        </tr>
+
+        
+        <tr>
+            <td>Null Check</td>
+            <td>
+                <pre><code class="language-css">
+if (node->val == nullptr)
+  return nullptr;
+                </pre></code>
+            </td>
+            <td>same as c</td>
+            <td></td>   <!--Rust-->
+            <td>        <!--Python-->
+                <pre><code class="language-css">
+if head == None or head.next == None
+  return False
+                </pre></code>
+            </td>   
+            <td>        <!--Go-->
+                <pre><code class="language-css">
+if head == nil
+  return false
+                </pre></code>
+            </td>
+        </tr>
+
+    </table>
+
+
+    <script src="/scripts/prism.js"></script>
+</body>
+
+</html>
