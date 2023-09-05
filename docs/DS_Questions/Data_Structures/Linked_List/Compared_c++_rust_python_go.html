@@ -23,43 +23,41 @@
             <th>Go</th>
         </tr>
 
+
         <tr>
             <td>Representation</td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre><code class="language-css">    >    <!--C++-->
 struct ListNode {
     int val;
     struct ListNode *next;
 };
-                </pre></code>
-            </td>
-            <td>
-                <pre><code class="language-css">
+            </pre></code></td>
+
+            <td><pre><code class="language-css">
 struct ListNode {
     int val;
     ListNode *next;
     ListNode(int x) : val(x), next(NULL) {}
 };
-                </pre></code>
-            </td>
+            </pre></code></td>
+
             <td></td>
-            <td>
-                <pre><code class="language-css">
+
+            <td><pre><code class="language-css">    <!--Python-->
 class ListNode:
     def __init__(self, x):
         self.val = x
         self.next = None
-                </code></pre>
-            </td>
-            <td>
-                <pre><code class="language-css">
+            </code></pre></td>
+
+            <td><pre><code class="language-css">        <!--Go-->
 type ListNode struct {
     Val int
     Next *ListNode
 }
-                </pre></code>
-            </td>
+           </pre></code></td>
         </tr>
+
 
         <tr>
             <td>Access Element</td>
@@ -90,6 +88,25 @@ var val int = node.Next
         </tr>
 
         
+        <tr>
+            <td>Allocate New Node</td>
+            <td><pre><code class="language-css">
+new_node = (Node*) malloc(sizeof(int))
+            </pre></code></td>
+
+            <td><pre><code class="language-css">
+new_node = new Node(10)
+            </pre></code></td>
+            <td>       <!--Rust-->
+            </td>
+            <td>       <!--Python-->
+            </td>
+            <td><pre><code class="language-css">    <!--Go-->
+// Type of variable in interpreted automatically
+newNode := &ListNode{Val: 1}
+            </pre></code></td>
+        </tr>
+
         <tr>
             <td>Null Check</td>
             <td>
