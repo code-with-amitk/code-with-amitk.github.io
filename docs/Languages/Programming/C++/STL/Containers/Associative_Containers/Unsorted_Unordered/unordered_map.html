@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>C++(unordered_map), Python(Dictionary {}), Rust(HashMap)</title>
+    <title>C++(unordered_map), Rust(HashMap), Python(Dictionary {}), Go </title>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="/css/prism.css"/>
 </head>
@@ -10,7 +10,7 @@
     <h1>unordered_map</h1>
     <ul>
       <li>
-          <h3><a href="#comp">C++ vs Python vs Rust</a></h3>
+          <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
       </li>
     </ul>
 
@@ -21,13 +21,15 @@
             <th>C++</th>
             <th>Rust (use std::collections::HashMap)</th>
             <th>Python ({} Dictionary)</th>
+            <th>Go</th>
         </tr>
         <tr>
             <td>Create</td>
-            <td><ul>
-                <li>unordered_map<string, int> um;</li>
-            </ul></td>
-            <td><ul>
+            <td><pre><code class="language-css">
+unordered_map<string, int> um;
+            </code></pre></td>
+
+            <td><ul>    <!--Rust-->
                 <li><b>Empty:</b> let hm:HashMap = HashMap::new()</li>
                 <li><b>init</b> 
                     <ul>
@@ -55,52 +57,73 @@ let hm: HashMap<i32, &str> = [
             </code></pre>
                 </li>
             </ul></td>
-            <td><ul>
-                <li><b>Empty:</b> self.hm = {}</li>
-                <li><b>key,val:</b> self.hm={1:1, 2:2}</li>
-            </ul></td>
+
+            <td><pre><code class="language-css">        <!--Python-->
+self.hm = {}    #Empty
+self.hm={1:1, 2:2}  #key,val
+                </code></pre>
+            </td>
+
+            <td><pre><code class="=language-css">       <!--Go-->
+var hm map[string[int]]  //key=string, value=int
+
+// Using make function (key=pointer, val="pointer")
+var hm = make(map[*Node]*Node)
+            </code></pre></td>
         </tr>
+
         <tr>
             <td>Delete/Erase</td>
-            <td><ul>
+            <td><ul>    <!--c++-->
                 <li>um.erase(key)</li>
                 <li><b>Range:</b> um.erase(start,end)</li>
             </ul></td>
-            <td></td>
-            <td></td>
+            <td></td>   <!--Rust-->
+            <td></td>   <!--Python-->
+            <td>        <!--Go-->
+            </td>
         </tr>
+
         <tr>
             <td>Find</td>
-            <td><ul>
-                <li>value = um[key]</li>
-                <li>value=count(key)</li>
-                <li><b>Smallest Key:</b> min_element(um.begin(), um.end())</li>
-            </ul></td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre><code class="language-css">    <!--C++-->
+// Method1
+if (um.find("key") != um.end())
+   //Do
+// Method2
+  value=count(key)
+// Smallest Key
+  min_element(um.begin(), um.end())
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Rust-->
 if let Some(value) = hm.get(&key) {
     //value returned
 } else {
     // Not found
 }
+            </code></pre></td>
+            <td>                                   <!--Python-->
+                value = um[key]
+            </td>
+            <td><pre><code class="language-css">        <!--Go-->
+value = hm[key]
+if value != nil {
+    //Found
+}
+            </code></pre></td>
+        </tr>
+
+        <tr>
+            <td>Insert</td>
+            <td>vec.insert(v.begin() + 2, 7)</td>   <!--c++-->
+            <td></td>
+            <td></td>
+            <td>                                    <!--Go-->
+                <pre><code class="language-css">
+hm["test"] = 1
                 </code></pre>
             </td>
-            <td>value = um[key]</td>
-        </tr>
-        <tr>
-            <td>Insert</td>
-            <td><ul>
-                <li>um[key] = value</li>
-                <li>um.insert(make_pair(key,val))</li>
-            </ul></td>
-            <td></td>
-            <td>self.hm={1:1, 2:2}</td>
-        </tr>
-        <tr>
-            <td>Insert</td>
-            <td>vec.insert(v.begin() + 2, 7)</td>
-            <td></td>
-            <td></td>
+
         </tr>
     </table>
 
