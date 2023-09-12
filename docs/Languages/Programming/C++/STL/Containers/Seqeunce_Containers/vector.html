@@ -23,6 +23,45 @@
             <th>Python(List [])</th>
             <th>Go</th>
         </tr>
+
+        <tr>
+            <td>Back</td>
+            <td><pre><code class="language-css">    <!--c++-->
+vector<int> v;
+v.back();
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Rust-->
+let mut v:Vec<i32> = Vec::new();
+v.push(1);
+v.push(2);
+if let Some(l) = v.last() {
+    prinln!("last=", l);
+}
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Python-->
+
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Go-->
+
+            </code></pre></td>
+        </tr>
+
+        <tr>
+            <td>clear</td>
+            <td><pre><code class="language-css">    <!--c++-->
+v.clear();
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Rust-->
+v.clear();
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Python-->
+
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Go-->
+
+            </code></pre></td>
+        </tr>
+
         <tr>
             <td>Create/Initialize</td>
             <td><pre><code class="language-css">
@@ -32,7 +71,7 @@ vector<int> v(size, init_value);
 v.assign(3,10);//10 10 10
 
 // 2 D
-vector<vector<int>> vec = {
+vector&lt;vector&lt;int>> vec = {
     {1,2,3},
     {4,5,6}
   };
@@ -42,17 +81,19 @@ vector<vector<int>> vec = {
 vector&lt;vector&lt;int>> vec(row, vector<int>(col,0));
             </code></pre></td>
             <td><pre><code class="language-css">    <!--Rust-->
+///// 1D
 let mut v:Vec &lt;String> = Vec::new();
 OR
 let mut v:Vec &lt;i32> = vec![];
 OR
 let v2: Vec &lt;i32> = vec![14,25,35]; 
 OR
-//size=5, init value=0
-let mut v = vec![0; 5];
+let mut v = vec![0; 5]; //size=5, init value=0
 OR
-//Initialize
-let v1: Vec &lt;i32> = [1,2,3].to_vec();
+let v1: Vec &lt;i32> = [1,2,3].to_vec(); //Initialize
+
+//// 2D
+let mut two_d_vector: Vec&lt;Vec&lt;i32>> = Vec::new();
             </code></pre></td>
 
             <td><pre><code class="language-css">    <!--Python-->
@@ -63,20 +104,20 @@ a = [False] * (5)   #Filled
 
 ######### 2 D
 arr = [[0 for _ in range(cols)] for _ in range(rows)]
+OR
+arr = []
             </code></pre></td>
 
             <td><pre><code class="language-css">    <!--Go-->
-//Empty vector
-var arr []int
-
-//Slice size=5
-slice := make([]int, 5)
-
-// INITIALIZATION
-arr := []int {1,2,3,4,5,6} //Length=6. number of elements provided
+////// 1D
+var arr []int     //Empty vector
+slice := make([]int, 5) //Slice size=5
 for i:=0; i<5; i++ {
     slice[i] = 0;
 }
+
+/////// 2D
+
             </code></pre></td>
         </tr>
 
