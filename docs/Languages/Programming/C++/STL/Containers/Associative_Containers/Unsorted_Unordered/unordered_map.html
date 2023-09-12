@@ -14,7 +14,7 @@
       </li>
     </ul>
 
-    <h3 id="comp">C++ vs Rust vs Python</h3>
+    <h3 id="comp">C++, Rust, Python, Go</h3>
     <table>
         <tr>
             <th></th>
@@ -59,10 +59,17 @@ let hm: HashMap<i32, &str> = [
             </ul></td>
 
             <td><pre><code class="language-css">        <!--Python-->
-self.hm = {}    #Empty
-self.hm={1:1, 2:2}  #key,val
-                </code></pre>
-            </td>
+#Empty
+self.hm = {}
+
+#key,val
+self.hm={1:1, 2:2}
+
+#hashmap &lt;key=int, value=vector<int>>
+um = {}
+value = [1,2,3]
+um[10] = value
+                </code></pre></td>
 
             <td><pre><code class="=language-css">       <!--Go-->
 var hm map[string[int]]  //key=string, value=int
@@ -123,8 +130,20 @@ if value != nil {
 hm["test"] = 1
                 </code></pre>
             </td>
-
         </tr>
+
+        <tr>
+            <td>Iterate over elements</td>
+            <td>vec.insert(v.begin() + 2, 7)</td>   <!--c++-->
+            <td></td>                           <!--Rust-->
+            <td><pre><code class="language-css">      <!--Python-->
+for key,value in um.items():
+  
+            </code></pre></td>
+            <td><pre><code class="language-css">        <!--Go-->
+            </code></pre></td>
+        </tr>
+
     </table>
 
     <script src="/scripts/prism.js"></script>
