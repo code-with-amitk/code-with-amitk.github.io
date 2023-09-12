@@ -29,18 +29,23 @@
 unordered_map<string, int> um;
             </code></pre></td>
 
-            <td><ul>    <!--Rust-->
-                <li><b>Empty:</b> let hm:HashMap = HashMap::new()</li>
-                <li><b>init</b> 
-                    <ul>
-                        <li><b>iter():</b> is called on the array to create an iterator over its elements</li>
-                        <li><b>cloned():</b> method is used to clone each tuple's elements.<br>
-                            This is necessary because &str is a reference type, <br>
-                            and we need to create owned values to store in the HashMap.</li>
-                        <li><b>collect()</b> method consumes the iterator and collects <br>
-                            the cloned tuples into a HashMap<char, &str>.</li>
-                    </ul>
-                    <pre><code class="language-css">
+            <td><pre><code class="language-css">     <!--Rust-->
+//Empty
+let hm:HashMap = HashMap::new()
+
+//&lt;key=i32, value=vector&lt;i32>>
+let hm:HashMap&lt;i32, Vec&lt;i32>> = HashMap::new();
+                
+//init
+iter(): is called on the array to create
+        an iterator over its elements
+cloned(): method is used to clone each
+          tuple's elements. This is necessary
+          because &str is a reference type,
+          and we need to create owned values
+          to store in the HashMap.
+collect(): method consumes the iterator and collects
+           the cloned tuples into a HashMap&lt;char, &str>
 let hm: HashMap<i32, &str> = [
     (2, "abc"),
     (3, "def"),
@@ -54,9 +59,7 @@ let hm: HashMap<i32, &str> = [
 .iter()
 .cloned()
 .collect();
-            </code></pre>
-                </li>
-            </ul></td>
+            </code></pre></td>
 
             <td><pre><code class="language-css">        <!--Python-->
 #Empty
@@ -94,19 +97,20 @@ var hm = make(map[*Node]*Node)
         <tr>
             <td>Find</td>
             <td><pre><code class="language-css">    <!--C++-->
-// Method1
 if (um.find("key") != um.end())
-   //Do
-// Method2
-  value=count(key)
+OR
+value=count(key)
 // Smallest Key
   min_element(um.begin(), um.end())
             </code></pre></td>
             <td><pre><code class="language-css">    <!--Rust-->
 if let Some(value) = hm.get(&key) {
-    //value returned
 } else {
-    // Not found
+}
+OR 
+if let Some(value) = hm.get_mut(&key) {
+    value = 1;
+} else {
 }
             </code></pre></td>
             <td>                                   <!--Python-->
@@ -123,10 +127,11 @@ if value != nil {
         <tr>
             <td>Insert</td>
             <td>vec.insert(v.begin() + 2, 7)</td>   <!--c++-->
+            <td><pre><code class="language-css">    <!--Rust-->
+hm.insert(key, value);
+            </code></pre></td>
             <td></td>
-            <td></td>
-            <td>                                    <!--Go-->
-                <pre><code class="language-css">
+            <td><pre><code class="language-css">    <!--Go-->
 hm["test"] = 1
                 </code></pre>
             </td>
@@ -134,8 +139,16 @@ hm["test"] = 1
 
         <tr>
             <td>Iterate over elements</td>
-            <td>vec.insert(v.begin() + 2, 7)</td>   <!--c++-->
-            <td></td>                           <!--Rust-->
+            <td></td>   <!--c++-->
+            <td><pre><code class="language-css">       <!--Rust-->
+for (key, value) in &hm {
+    println!("Key: {}, Value: {}", key, value);
+}
+OR
+for (key, value) in hm.iter() {
+    println!("Key: {}, Value: {}", key, value);
+}
+            </code></pre></td>
             <td><pre><code class="language-css">      <!--Python-->
 for key,value in um.items():
   
