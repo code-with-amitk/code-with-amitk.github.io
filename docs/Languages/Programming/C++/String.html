@@ -22,90 +22,94 @@
             <th>Go</th>
         </tr>
         <tr>
+            <tr>
+                <td>Append</td>
+                <td>s1.append(s2)</td>
+                <td>s1.push(char);</td>
+                <td>str1 += str2</td>
+                <td></td>
+            </tr>
+
             <td>Create</td>
             <td>string test;</td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre><code class="language-css">
 let s1 = String::new();
 s1 = "test".to_string();
 
 let s2 = String::from("Hello");
-                </code></pre>
-            </td>
+            </code></pre></td>
             <td>self.input = ""</td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre><code class="language-css">
 var s string
-                </pre></code>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Append</td>
-            <td>s1.append(s2)</td>
-            <td>s1.push(char);</td>
-            <td>str1 += str2</td>
-            <td></td>
+            </pre></code></td>
         </tr>
 
         <tr>
             <td>Convert</td>
-            <td>
-                <pre><code class="language-css">
-
-                </pre></code>
-            </td>
-            <td>
-                <pre><code class="language-css">
-
-                </pre></code>
-            </td>
-            <td>
-                <pre><code class="language-css">
-
-                </pre></code>
-            </td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre><code class="language-css">
+            </pre></code></td>
+            <td><pre><code class="language-css">
+            </pre></code></td>
+            <td><pre><code class="language-css">
+            </pre></code></td>
+            <td><pre><code class="language-css">
 import (
 "strconv"
 }
 func test(a int) {
     var s string = strconv.Itoa(a)	//Convert int to String
 }
-                </pre></code>
-            </td>
+            </pre></code></td>
         </tr>
 
         <tr>
             <td>Erase / pop back</td>
-            <td><ul>
-                <li><b>substring</b> s.erase(3, s.size()-1)</li>
-                <li><b>Remove last char</b> s1.pop_back();</li>
-            </ul></td>
-            <td>
-                <li><b>Remove last char</b> s1.pop()</li>
-            </td>
-            <td><b>Remove last char</b> s1 = s1[:len(s1)-1]</td>
-            <td></td>
+            <td><pre><code class="language-css">    <!--c++-->
+//Erase all character
+s.erase();
+
+//Pop front
+//erase (size_type idx, size_type len )
+s.erase(0, 1);
+
+//Pop back
+s1.pop_back();
+            </pre></code></td>
+            <td><pre><code class="language-css">    <!--Rust-->
+//Pop back
+s1.pop()
+            </pre></code></td>
+            <td><pre><code class="language-css">    <!--Python-->
+#Pop back
+s1 = s1[:len(s1)-1]
+
+#Pop front
+s = s[1:]
+            </pre></code></td>
+            <td><pre><code class="language-css">    <!--Go-->
+//Pop back
+//Slicing Works same as Python
+s = s[:len(s)-1]
+
+//Pop front
+s = s[1:]
+            </pre></code></td>
         </tr>
 
         <tr>
             <td>Element at index</td>
-            <td><ul>
-                <li>str[i]</li>
-            </ul></td>
             <td>
-                <pre><code class="language-css">
+                str[i]
+            </td>
+            <td><pre><code class="language-css">
 // Find letter at index i
 let letter = str.chars()
             .nth(i as usize).unwrap()
             .to_digit(10).unwrap()
              as i32;
-                </code></pre>
-            </td>
+            </code></pre></td>
             <td>str[i]</td>
-            <td></td>
+            <td>s[i]</td>
         </tr>
 
         <tr>
@@ -113,28 +117,46 @@ let letter = str.chars()
             <td>for (int i=0; i&lt;letters.size(); ++i)</td>
             <td>for letter in letters.chars()</td>
             <td>for i in range(0, len(letters)):</td>
-            <td></td>
+            <td><pre><code class="language-css">    <!--Go-->
+for i:=0; i&lt;len(s); i++ {
+    s[i]
+}
+            </code></pre></td>
         </tr>
 
         <tr>
             <td>Size</td>
-            <td>str.length() or str.size()</td>
-            <td>s.len()</td>
-            <td>len(str)</td>
-            <td></td>
+            <td><pre><code class="language-css">    <!--C++-->
+str.length() or str.size()
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Rust-->
+s.len()
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Python-->
+len(str)
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Go-->
+len(s)
+            </code></pre></td>
         </tr>
 
         <tr>
             <td>Substring</td>
-            <td>str.substr(start_index, length)</td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre><code class="language-css">    <!--Go-->
+str.substr(start_index, length)
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Rust-->
 &str.substring(start_index,end_index));  //Method-1
 let substr = &s[j..i];  //Method-2
-                </code></pre>
-            </td>
-            <td><b>Slice</b> substr = s[j:i]</td>
-            <td></td>
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Python-->
+//Slice
+substr = s[j:i]
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Go-->
+//Slice
+s = s[1:]
+            </code></pre></td>
         </tr>
 
     </table>
