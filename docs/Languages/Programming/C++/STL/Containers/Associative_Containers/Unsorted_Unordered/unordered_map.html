@@ -75,10 +75,9 @@ um[10] = value
                 </code></pre></td>
 
             <td><pre><code class="=language-css">       <!--Go-->
+hm := make(map[int]int) //[key]value
+OR
 var hm map[string[int]]  //key=string, value=int
-
-// Using make function (key=pointer, val="pointer")
-var hm = make(map[*Node]*Node)
             </code></pre></td>
         </tr>
 
@@ -126,20 +125,50 @@ if value != nil {
 
         <tr>
             <td>Insert</td>
-            <td>vec.insert(v.begin() + 2, 7)</td>   <!--c++-->
+            <td><pre><code class="language-css">   <!--c++-->
+vec.insert(v.begin() + 2, 7)
+
+//Count occurences
+for (auto&i:vec)
+  um[i]++
+            </code></pre></td>
             <td><pre><code class="language-css">    <!--Rust-->
 hm.insert(key, value);
+
+// Count occurences
+let mut hm:HashMap&lt;i32, i32> = HashMap::new();
+for i in 0..nums.len() {
+    *hm.entry(nums[i]).or_insert(0) += 1;
+}
             </code></pre></td>
-            <td></td>
+            <td><pre><code class="language-css">    <!--Python-->
+# Count number of occurences
+um = {}
+nums = [1,2,3,1,2]
+for i in nums:
+  if i in um:
+    um[i] += 1
+  else:
+    um[i] = 1
+            </code></pre></td>
             <td><pre><code class="language-css">    <!--Go-->
 hm["test"] = 1
+
+//Count number of occurences
+for i:=0; i&lt;len(nums);i++ {
+    hm[nums[i]]++
+}
                 </code></pre>
             </td>
         </tr>
 
         <tr>
             <td>Iterate over elements</td>
-            <td></td>   <!--c++-->
+            <td><pre><code class="language-css">
+for (const auto& [key, value] : um) {
+    out += value*(value-1)/2;
+}
+            </code></pre></td>   <!--c++-->
             <td><pre><code class="language-css">       <!--Rust-->
 for (key, value) in &hm {
     println!("Key: {}, Value: {}", key, value);
@@ -154,6 +183,9 @@ for key,value in um.items():
   
             </code></pre></td>
             <td><pre><code class="language-css">        <!--Go-->
+for key, value := range hm {
+    out += (value-1)*value/2
+}
             </code></pre></td>
         </tr>
 
