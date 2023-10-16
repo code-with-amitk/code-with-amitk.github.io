@@ -80,7 +80,7 @@ v.clear();
 
         <tr>
             <td>Create/Initialize</td>
-            <td><pre><code class="language-css">
+            <td><pre><code class="language-css">    <!--c++-->
 // 1 D
 vector<int> v(size, init_value);
     OR
@@ -94,8 +94,9 @@ vector&lt;vector&lt;int>> vec = {
   OR
   
 //vec[row][col]
-vector&lt;vector&lt;int>> vec(row, vector<int>(col,0));
+vector&lt;vector&lt;int>> vec(row, vector&lt;int>(col,0));
             </code></pre></td>
+
             <td><pre><code class="language-css">    <!--Rust-->
 ///// 1D
 let mut v:Vec &lt;String> = Vec::new();
@@ -190,6 +191,25 @@ v.emplace_back(11)
             <td></td>
             <td>        <!--Go-->
 vec[i] = ele
+            </td>
+        </tr>
+
+        <tr>
+            <td>Iterate</td>
+            <td><pre><code class="language-css">   <!--c++-->
+
+            </code></pre></td>
+            <td><pre><code class="language-css">   <!--Rust-->
+
+            </code></pre></td>
+            <td><pre><code class="language-css">   <!--Python-->
+j=1
+for i in range(0,n):
+  print(vec[i][j])
+            </code></pre></td>
+            <td><pre><code class="language-css">        <!--Go-->
+
+            </code></pre>
             </td>
         </tr>
 
