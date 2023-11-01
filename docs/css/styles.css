@@ -56,7 +56,8 @@ body, h1, p, ul, li {
 
   table {
     border-collapse: collapse;
-    width: 100%;
+    /*width: 100%;*/
+    border: 1px solid black;
   }
 
   /*
@@ -70,3 +71,48 @@ body, h1, p, ul, li {
     text-align: left;
     background-color: #f2f2f2;
   } 
+
+.code-block {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+#search-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #f1f1f1;
+}
+
+/* Style the sidebar */
+.sidebar {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #f1f1f1;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Style the links inside the sidebar */
+.sidebar a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+}
+
+/* Change the color of links on hover */
+.sidebar a:hover {
+  color: #f1f1f1;
+}
