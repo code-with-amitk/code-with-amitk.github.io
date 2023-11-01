@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" >
+        <a href="#blockchain">Blockchain?</a>
+        <a href="#whylearn">Learn blockchain?</a>
+        <a href="#limitations">Limitations of blockchain</a>
+        <a href="#BlockchainAddress">BlockchainAddress (Sender or Receiver)</a>
+        <a href="#block">Block, Genesis Block</a>
+        <a href="#transaction">Transaction</a>
+        <a href="#pow">POW(Proof of Work)</a>
+        <a href="#pos">POS(Proof of Stake)</a>
+        <a href="#bcclients">Bitcoin Clients</a>
+        <a href="#Mining">Mining</a>
+        <a href="#howissued">How bitcoin can be issued?</a>
+        <a href="#smartcontract">Smart Contract</a>
+        <a href="#solidity">Solidity</a>
+        <a href="#wallet">Wallet</a>
+    </div>
+
+    <div style="margin-left:200px;">
+        <h3 id="blockchain">What is blockchain?</h3>
+            <dd>This is an append-only, immutable distributed ledger that is updateable only via consensus/agreement among peers. There is no single authority of this ledger.</dd>
+            <dd>This is a Peer to Peer network running over TCP. Same as HTTP, FTP over TCP.</dd>
+            <dd>Examples of blockchains: Tezos (Uses Proof of Stake), Bitcoin (Uses Proof of Work).</dd>
+
+        <h3 id="whylearn">Why learn blockchain</h3>
+            <dd><strong>Decentralization:</strong> no need for a trusted third party or intermediary to validate transactions; instead a consensus mechanism is used to agree on the validity of transactions.</dd>
+            <dd><strong>Transparency and trust:</strong> As blockchains are shared and everyone can see what is on the blockchain, this allows the system to be transparent and as a result trust is established.</dd>
+            <dd><strong>Immutable:</strong> Once the data has been written to the blockchain, it is extremely difficult to change it back.</dd>
+            <dd><strong>High availability:</strong> As the system is based on thousands of nodes in a peer-to-peer network, and the data is replicated and updated on each and every node.</dd>
+            <dd><strong>Highly Secure:</strong> All transactions on a blockchain are cryptographically secured and provide integrity.</dd>
+            <dd><strong>Cost saving:</strong> As no third party is required in the blockchain model.</dd>
+
+    
+    <h3 id="limitations">Limitations of Blockchain</h3>
+        <dd><strong>Denial-of-Service Attack:</strong> An attacker can overload a node by sending a lot of data or Huge block or transactions which too long to execute.</dd>
+        <dd><strong>How to mitigate?</strong> bitcoin & many cryptocurrencies have a maximum possible block size limit.</dd>
+        <dd><strong>Scalability:</strong> Very few nodes can maitain complete blockchain because of its big size.</dd>
+        <dd><strong>Adaptability</strong></dd>
+        <dd><strong>Regulation</strong></dd>
+        <dd><strong>Relatively immature technology</strong></dd>
+        <dd><strong>Privacy</strong></dd>
+        <dd><strong>Sybil Attack:</strong> A single person controls few nodes and persuades few other nodes to block user(bob) from the network completely. This can result in transaction censoring for user(bob). This can result in double spending. How to Avoid? look for nodes with suspiciously-low hashrate.</dd>
+
+    <h3 id="BlockchainAddress">BlockchainAddress (Sender or Receiver)</h3>
+        <dd>Bitcoin address of node is calculated using Hash of Public key. Public generated using secp256k1 ECC Algorithm.</dd>
+        <dd>Hash is generated using RIPEMD160 + SHA256.</dd>
+        <code><pre class="language-css">
+        K(public key) = k(pvt key) * G(constant)
+        K --> |SHA256| --256bit--> |RIPEMD160| --> 160bit(Address)
+        160bit(Address) --> |Encode(Base58 Check)| --> Bitcoin Address      //Base58-Check(RIPEMD160(SHA256(K)))
+        </pre></code>
+
+    <h3 id="block">Block</h3>
+        <dd>Blockchain is composed of blocks(Header + payload). Block stores the transactions.</dd>
+        <dd>Header is metadata, while payload is actual transaction data.</dd>
+        <dt><strong>Genesis Block. <a href="https://www.blockchain.com/explorer/blocks/btc/000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f">Bitcoin block#0</a></strong></dt>
+        <dd>1st block in blockchain. This is hardcoded at time when blockchain started. This is same as other blocks, just it does not have pointer to prev block</dd>
+        <code><pre class="language-css">
+        Header/Metadata => |block number | timestamp (when the block was created) | block hash | nonce |
+        Data/Payload =>  |Sender address | Recipient address | amount of transaction | fee |
+        
+        struct block {
+          struct block_header* bh;
+          struct block* prev_block;   //This is Hash pointer(not normal pointer)
+          long timestamp;
+          long nonce;
+          long transaction_counter
+          struct transactions* t;
+          struct other_attribute* oa;
+        }
+        </pre></code>
+        <dt><strong>Block creation</strong></dt>
+        <dd>The only way to add new information to the blockchain is to add a block to the end of it.</dd>
+        <dd>Only Qualified users create blocks and send them to other nodes.</dd>
+        <dd>If the block is valid, other users accept it.</dd>
+        <dd>If it’s invalid, they ignore it and may punish block creator. The valid block propagates through the network in a few seconds.</dd>
+
+    <h3 id="transaction">Transaction</h3>
+        <dd>1 block can store 1 or multiple transactions. Whenever a transaction(s) happens on blockchain, a block is created and stored on chain.
+        
+        Transactions are used to record various activities, such as cryptocurrency transfers, smart contract executions, and other changes to the blockchain’s state.</dd>
+
+    <h3 id="pow">POW(Proof of Work)</h3>
+        <dl>
+        <dt>There are 2 types of blockchain systems: POW & <strong><a href="#pos">POS(Proof of Stake)</a></strong></dt>
+            <dd>In POW system, to add a new block mining needed to be done. Miner who solves the puzzle(finds hash of transaction) is rewarded some bitcoins and transaction fee.</dd>
+        
+        <dt>Problems with POW:</dt>
+            <dd>1. Energy efficiency: Miners compete to solve complex mathematical puzzles using huge computational power.</dd>
+            <dd>2. Centralization Concerns: More power more chances to solve 1st, this means more bitcoins goes with people/companies who own huge machines.</dd>
+            <dd>3. Accessibility: Only those having specialized mining hardware, have more bitcoins.</dd>
+        </dl>
+
+    <h3 id="pos">POS(Proof of Stake) (Ethereum uses it)</h3>
+        <dl></dl>
+        <dt>Why POS came in?</dt> 
+            <dd>Due to problems in <strong><a href="#pow">POW(Proof of Work)</a></strong>, POS emerged.</dd>
+        
+        <dt>How POS Works?</dt>
+        <code><pre class="language-css">
+          Proposer                                  Validator-1                  Validator-2
+                                              (Hold coins to stake)
+        1. Create block
+        (having transaction)  -|--broadcasted---->  block is Good
+                               |------------------------------------------------> block is good
+        Block included on chain
+        Reward distributed to both
+        </pre></code>
+
+        <dt>1. Validators/forgers/stakers(same as miners in POW system) validate transactions based on:</dt>
+            <dd>a. Number of coins they hold</dd>
+            <dd>b. And how many coins they are willing to "stake" as collateral.</dd>
+        
+        <dt>2. Validators are selected in a deterministic manner, often based on factors like the amount of coins staked and the length of time they’ve been staking.</dt>
+        <dt>3. Validators are incentivized to act honestly because they have "their coins" – if they validate fraudulent transactions, they risk losing their staked coins.</dt>
+        <dt>4. Validators are rewarded with transaction fees and sometimes a portion of the transaction fees paid by users.</dt>
+        <dt>Advantages of POS:</dt>
+            <dd>1. Less power consumption wrt POW system: The need for solving computational puzzles is eliminated, which significantly reduces energy consumption compared to PoW.</dd>
+
+
+    <h3 id="bcclients">BlockChain Clients</h3>
+        <dl>
+        <dt>There are two main types of Bitcoin clients:</dt>
+            <dd>1. Full Node: These clients download and validate the entire Bitcoin blockchain</dd>
+            <dd>2. Lightweight Node: These clients do not download the entire blockchain. Instead, they rely on full nodes to verify transactions for them. Examples:</dd>
+            
+        <dt>1. Bitcoin Core (Fullnode Bitcoin client)</dt>
+            <dd>Holds complete blockchain in local system. Requires ~500GB of space.</dd>
+            
+        <dt>2. Electrum (Lightweight Bitcoin client)</dt>
+            <dd>It allows to interact with the Bitcoin network(bitcoin network is blockchain). With client we can send and receive transactions, and manage your Bitcoin holdings.</dd>
+            <dd>Mycelium, Electrum, Exodus</dd>
+            
+        <dt>3. Kukai (Lightweight Tezos client)</dt>
+            <dd>This is wallet service on Tezos blockchain. Tezos is based on Proof of stake, while Bitcoin core, electrum are Proof of work blockchains</dd>
+        </dl>
+
+    <h3 id="Mining">Mining</h3>
+        <dd>Let’s suppose Alice wants to send 1 BTC(bitcoin) to Bob, alice sends message on network.</dd>
+        
+        <dd>Miner Nodes(Verfiers of transaction) recieve the Alice’s message and starts a race to find HASH of desired diffculty(defined by software).</dd>
+        
+        <dd>Node(Miner) who solves it 1st is rewarded with some transaction fee(0.001 BTC) + bitcoin reward.</dd>
+        
+        <dd>Miner-1, solves the puzzle and sends to network for verification. Other miners verifies it using consensus and transaction is added as a node to ledger=blockchain.</dd>
+        
+        <dd>As more and more miners join the network, the total hash rate — the combined computing power of all miners — increases</dd>
+        
+        <code><pre clas="language-css">
+        Transaction
+          src_add = Alice_hash    //Hash is public address of entity on blockchain
+          amount = 1 BTC
+          dst_add = Bob_Hash
+        </pre></code>
+
+
+    <h3 id="howissued">How bitcoin can be issued?</h3>
+        <dl>1. Using crypto exchange: Here if someone sells the bitcoin, its purchased by other</dl>
+        
+        <dl>2. Mining: Miners are rewarded transaction fee + Bitcoins. Once a miner verifies a transaction and adds to blockchain.</dl>
+        
+        <dt>Rate of bitcoin Issuance?</dt>
+        <dd>2012: 25 bitcoins/block. ie on verification of 1 transaction, adding to blockchain. 25 bitcoins</dd>
+        
+        <dd>2016: 12.5</dd>
+        
+        <dd>2140: 0. (All 21 million bitcoin will be issued). Miners will be rewarded solely through the transaction fees.</dd>
+        
+        <dd>210000 is around every 4 years with a 10 minute block interval</dd>
+        
+        <dt>Why only 21Million bitcoins. Inflation?</dt>
+        <dd>The finite and diminishing issuance creates a fixed monetary supply that resists inflation.</dd>
+
+    <h3 id="smartcontract">Smart Contract</h3>
+        <dl>These are the programs that run on blockchain having business logic. This get automatically executed when certain conditions are met. These are secure and unstoppable.</dl>
+        
+        <dl>Represents aggrement b/w 2 parties & allows parties to securly conduct business. </dl>
+        
+        <dl>Properties:</dl>
+        
+        <dd>1. Immutable(cannot be changed): SC creates logs which are immutable, those cannot be changed.</dd>
+        
+        <dd>2. Distributed: Output of contract is Validated/verified by other nodes on the network.</dd>
+
+    <h3 id="solidity">Solidity</h3>
+        <dl>High level Object oriented programming language for writing smart contracts.</dl>
+        
+        <dl>Features;</dl>
+        
+        <dd>1. Based on C,C++,python</dd>
+        
+        <dd>2. Statically typed: Checking happens at compile time.</dd>
+        
+        <dd>3. Supports inheritance: 1 smart contract can be used by other.</dd>
+        
+    <h3 id="wallet">Wallet</h3>
+        <dl>In the context of blockchain(eg: bitcoin, tezoz), a wallet is a digital tool that allows you to store, manage, and interact with your Bitcoin holdings. It’s used to create and manage Bitcoin addresses, which are used to send and receive Bitcoin transactions. A Bitcoin wallet consists of two main components:</dl>
+        
+        <dd>1. Public Addresses(Hash number): These are account numbers in blockchain network. You share these addresses with others when you want to receive Bitcoin. They are derived from your wallet’s public key.</dd>
+        
+        <dd>2. Private Keys: These are secret keys that helps control/access bitcoins associated with your addresses. Whoever has access to the private key has control over the Bitcoin at that address.</dd>
+    </div>
+</body>
+</html>
