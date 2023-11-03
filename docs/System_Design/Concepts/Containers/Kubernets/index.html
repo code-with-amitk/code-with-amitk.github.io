@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kubernets</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+  
+<body>
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">Kubernets?</a>
+        <a href="#objects">Kubernets Objects</a>
+    </aside>
+
+    <main style="margin-left:200px;">
+        <h3 id="#what">Kubernets(Container Orchestrator)</h3>
+        <dl>
+        <dt>Orhestration?</dt>
+            <dd>Managing the lifecycles of containers. These are GUI/tools to automate following tasks: Deployment, Scaling up/down, Movement of containers from one host to another, Load balancing, Health monitoring.</dd>
+            <dd>Examples of Container Orhestrators: Kubernets, Docker swarm, Nomad Kubernets Cluster has different microservices inside it.</dd>
+        </dl>
+        <code><pre>
+            <--------------------k8s cluster----------------------------------->
+                |----control-plane,master-------|   |---------Worker node-----|
+                | micro_service1                |   |micro_service2           |
+                |               micro_service4  |   |       micro_servicen    |
+                |-------------------------------|   |-------------------------|
+        </pre></code>
+
+        <h2 id="#objects">Kubernets Resources,Objects</h2>
+        <dd>Kubernets Resource = C++ Class Resource is a blueprint for creating objects.</dd>
+
+        <dd>kubernets Object = C++ Object is Instance created from resource(using yaml,json file), having behaviour, state, metadata, and configuration.</dd>
+
+        <h3>Types of k8 Resources/Objects</h3>
+        <h4>1. ClusterRole</h4>
+        <dd>Defines set of permissions or access control rules for resources across an entire Kubernetes cluster. it applies to all namespaces in the cluster.</dd>
+        <code><pre>
+            $ test.yaml
+            apiVersion: rbac.authorization.k8s.io/v1
+            kind: ClusterRole
+            metadata:                       //Metadata of clusterRole
+              name: my-cluster-role
+              annotations:                  //Annotations: any number of key-value pairs, and can be used to provide additional context
+                my-annotation: "example"
+                namespace:     "test"
+            rules:
+            - apiGroups: [""]
+              resources: ["pods"]
+              verbs: ["get", "list", "watch"]
+        </pre></code>
+
+        <h3>2. ConfigMap. kind: configmap</h3>
+        <dd>Object storing configuration of POD. Unlike most Kubernetes objects(Eg: Deployment that have a spec), a ConfigMap has data and binaryData fields. Both the data field and the binaryData are optional</dd>
+        <dd>A Kubernetes resource that stores configuration data in key-value pairs.</dd>
+        <code><pre>
+            //Creating a configmap
+            # cat templates/configmap-tams.yaml
+            apiVersion: v1
+            king: ConfigMap
+            metadata:           //Metadata store additional data about the ConfigMap and is typically defined as a key-value pair
+              name: tams-config
+              labels:
+                app: {{ .Values.image.app }}    //Pick from values.yaml
+            data:
+              jams_config.yaml: |-
+                servicename: tamsc
+                kafka:
+                  brokers: {{ .Values.kafka.brokers }}    //Pick from values.yaml
+                  topics:
+                    {{- toYaml .Values.kafka.topics | nindent 10 }}
+        </pre></code>
+
+        <h3>3. Deployment</h3>
+        <dd>"Deployment" object defines how an application should be deployed and managed in a cluster.</dd>
+        <dd>It defines declarative configuration for running a containerized application and declares desired number of replicas of the application is always running.</dd>
+        <code><pre>
+            $ cat templates/Deployment.yaml
+            apiVersion: apps/v1       #(Required) Which version of the Kubernetes API you're using to create this object
+            kind: Deployment          #(Required) What kind of object you want to create
+            metadata:                 #(Required) Data that helps uniquely identify the object
+              name: {{ .Values.image.app }}   //Taken from values.yaml
+            spec:                     #(Required) What state you desire for the object
+              replicas: {{ .Values.replicaCount }}
+              volumes:                //specifies the storage volumes that should be available to containers within the deployment
+                - name: tams-cfg-vol
+                  configMap:
+                    name: tamc-config
+                - name: tams-srx-cfg-vol
+            
+            $ kubectl apply -f test.yaml
+        </pre></code>
+
+        <h3>4. Job</h3>
+        <dd>This object runs a specific task to completion. will create 1 or more pods and execute continously until job completes.</dd>
+        <code><pre>
+            apiVersion: batch/v1
+            kind: Job
+            metadata:
+              name: pi                #Name of Job
+            spec:
+              template:
+                spec:
+                  serviceAccountName: "Test"    // Name of ServiceAccount that should be used by the pod that is created to run the Job
+                  containers:                   //Container configuration for job
+                  - name: pi                    // Container name to be created by this Job
+                    image: perl:5.34.0
+                    env:                        //environment variables to set for the container.
+                      - name: DATABASE_HOST     //this env variable is set using a SecretKeyRef
+                        valueFrom:
+                          secretKeyRef:
+                            name: {{ .Release.Name }}-test-db
+                            key: host
+                  restartPolicy: Never
+              backoffLimit: 4
+        </pre></code>
+
+        <h3>5. RBAC (Role-based Access Control)</h3>
+        <dd>refers to the authorization mechanism that allows one Kubernetes service or workload to access another service or resource within a cluster based on predefined roles and permissions(eg: configmaps, secrets etc). The RBAC API declares 4 kinds of Kubernetes object</dd>
+
+        <dl>
+            <dt>a. Role & RoleBindings</dt>
+            <dd>Defines who (subjects) can perform actions/verbs(create, get, update etc) on which resources(eg: pods, deployments, services). Roles specify the permissions, and RoleBindings associate these roles with service accounts, users, or groups</dd>
+            <code><pre>
+                apiVersion: rbac.authorization.k8s.io/v1    //API version of RBAC being defined
+                kind: Role
+                rules:
+                  - apiGroups:                //Rule1: Grant Permission to create Tokenreviews is granted in group(authentication.k8s.io)
+                      - authentication.k8s.io
+                    verbs:
+                      - create
+                    resources:
+                      - tokenreviews
+                
+                  - apiGroups:                //Rule2: Grant Permission to get jobs in group(batch)
+                      - batch
+                    verbs:
+                      - get
+                    resources:
+                      - jobs
+                
+                  - apiGroups: ["coordination.k8s.io"]    //Rule3: Grant Permission to perform actions in group(coordination.k8s.io)
+                    resources: ["leases"]
+                    verbs: ["get", "watch", "list", "delete", "update", "create", "patch"]
+            </pre></code>
+
+            <dt>b. RoleBinding</dt>
+            <dd>Grants the permissions defined in a role to Subjects. Subjects can be user or set of users. Example: user:jane can read pods in default namespace</dd>
+            <code><pre>
+                apiVersion: rbac.authorization.k8s.io/v1
+                kind: RoleBinding
+                metadata:
+                  name: read-pods
+                  namespace: default
+                subjects:
+                - kind: User
+                  name: jane            #can read pods in default namespace
+                  apiGroup: rbac.authorization.k8s.io
+                roleRef:                                  # "roleRef" specifies the binding to a Role / ClusterRole
+                  kind: Role                              # this must be Role or ClusterRole
+                  name: pod-reader                        # You need to already have a Role named "pod-reader" in that namespace.
+                  apiGroup: rbac.authorization.k8s.io
+            </pre></code>
+
+            <dt>c. CapabilityMapping</dt>
+            <dd>Container will have Runtime(linux), CM can:</dd>
+            <dd>1. Give capabilities to a process running within linux container, Eg(process to modify n/w config, mouting file system, accessing h/w devices etc)</dd>
+            <dd>2. TAMS capability mapping When mapping-a is enabled, service can call method1,2. When mapping-b is enabled, service can call method3,4.</dd>
+        </dl>
+
+        <h3>6. ServiceAccount</h3>
+        <dd>This object allows pod to authenticate and access other parts of cluster using RBAC.</dd>
+
+        <h3>7. Services</h3>
+        <dd>In Kubernetes, Service(or microservice) is logical set of Pods. Service exposes REST endpoints(eg: POST) & other services interact by calling these endpoints.</dd>
+
+        <h3>8. Secrets</h3>
+        <dd>Kubernets on AWS, Secrets is used to store sensitive information(Eg: passwords, API keys, and other credentials), that should not be exposed in plaintext within Kubernetes manifests or configuration files.</dd>
+        <dd>Why secrets object? Secrets can be created independently of the Pods that use them, now there is no risk of the Secret data being exposed during the creating, viewing, and editing Pods</dd>
+        <code><pre>
+            // This yaml file stores sensitive data(eg: passwords or API keys), in an encrypted format within a Kubernetes cluster
+
+            kind: Secret
+            metaData:
+              name: {{ $name }}           //will be replaced with a specific name at deployment time
+              annotations:                    //Annotations that indicate these secret should be created before the installation of helm chart, and deleted after chart is uninstalled.
+                 "helm.sh/hook": pre-install
+                 "helm.sh/hook-weight": "-2"
+                 "helm.sh/hook-delete-policy": before-hook-creation
+            type: opaque                    //type of secret. Opaque means the data stored in the secret is an arbitrary byte array and the Secret does not have a predefined structure.
+            data:                           //key-value pairs of sensitive data that will be stored within the secret.
+              host: {{ .Values.test.host | b464enc }}       //key=host, value=take from values.yaml and encoded in base64 format using the b64enc function
+            
+              {{ - $previous := {lookup = "v1" "Secret" .Release.Namespace $name }}   //key=password
+              {{ - if .Values.identityDB.password }}
+              password: {{ .Values.identityDB.password | b64enc }}           //if values is in values.yaml file store after encoding in base64 format using the b64enc function
+            {{ - end - }}
+        </pre></code>
+    </main>
+</body>
+  
+</html>
