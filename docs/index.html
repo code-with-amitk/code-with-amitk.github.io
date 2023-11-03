@@ -32,8 +32,20 @@
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
+    <nav style="margin-left:200px;">    <!-- Top Navigation Bar -->
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <form>  <!--Search Bar-->
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
         <a href="/Async_Programming/">Async_Programming</a>
         <a href="/BlockChain/">BlockChain</a>
         <a href="/DS_Questions/">DS Questions</a>
@@ -43,11 +55,40 @@
         <a href="/Products/">Company Products</a>
         <a href="/System_Design/">System Design</a>
         <a href="/Threads_Process_IPC/">Threads Process IPC</a>
-    </div>
+    </aside>
 
-    <div style="margin-left:200px;">
-        <h2>Hello World, How are you</h2>
-    </div>
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2>Hello World, How are you</h2>
 
+            <h3>Heard AI is coming?</h3>
+            <p>
+                Now github copilot can write code for you. And that too efficiently.
+                Most of the time it is correct. But sometimes it is not. :)
+                But what for the future of developers? looms dark.
+            </p>
+
+            <h3>What I meditate?</h3>
+            <p>
+                When I close my eyes and meditate, I think of creating a AI based sofware company.
+                I dream not to create a biggest company but best company doing something good for the world.
+            </p>
+        </article>
+
+        <aside style="margin-left:200px;">  <!--the aside content can also be nested within the main content-->
+            <h2>Related</h2>
+            <ul>
+              <li><a href="#">I like to be beside the seaside</a></li>
+              <li><a href="#">Although in Mountain Valley</a></li>
+              <li><a href="#">It never stops raining</a></li>
+              <li><a href="#">Oh well…</a></li>
+            </ul>
+          </aside>
+    </main>
+
+        <!-- And here is our main footer that is used across all the pages of our website -->
+    <footer style="margin-left:200px;">
+        <p>©Copyright 2050 by nobody. All rights reversed</p>
+        </footer>
 </body>
 </html>
