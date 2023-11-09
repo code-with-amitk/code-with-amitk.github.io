@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Learning</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" >
+        <a href="#mlonamdgpu">Run ML on AMD GPU?</a>
+    </div>
+
+    <div style="margin-left:200px;" class="content">
+        <h3 id="#mlonamdgpu">Run ML on AMD GPU</h3>
+        <dl>
+            <dt>1. Windows version (>10, 1709)</dt>
+            <dt>2. Install miniconda</dt>
+                <dd>Install <a href="https://docs.conda.io/en/latest/miniconda.html#windows-installers">minconda</a> in C:\Users\amitk\</dd>
+            <dt>3. Create python env using conda, Activate</dt>
+                <dd>
+                <pre><code>
+cmd>
+C:\Users\amitk\source\repos\Python\ML> C:\Users\amitk\miniconda3\Scripts\conda create --name directml python=3.6
+..
+C:\Users\amitk\source\repos\Python\ML>"c:\Users\amitk\miniconda3\Scripts\activate" directml
+//Env is created here: C:\Users\amitk\miniconda3\envs
+(directml) C:\Users\amitk\source\repos\Python\ML>"c:\Users\amitk\miniconda3\condabin\deactivate.bat"  //deactivate
+(directml) C:\Users\amitk\source\repos\Python\ML>
+                </code></pre>
+              </dd>
+            <dt>4. Install the TensorFlow with DirectML package</dt>
+            <dd>(directml) C:\Users\amitk\source\repos\Python\ML>pip install tensorflow-directml</dd>
+            <dt>5. Add 2 tensors on GPU</dt>
+            <dl>
+                <pre><code>
+(directml) C:\Users\amitk\source\repos\Python\ML>python
+Python 3.6.13 |Anaconda, Inc.| (default, Mar 16 2021, 11:37:27) [MSC v.1916 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import tensorflow.compat.v1 as tf
+>>>
+>>> tf.enable_eager_execution(tf.ConfigProto(log_device_placement=True))
+>>>
+>>> print(tf.add([1.0, 2.0], [3.0, 4.0]))
+2023-10-26 10:50:50.890594: I tensorflow/stream_executor/platform/default/dso_loader.cc:97] Successfully opened dynamic library dxgi.dll
+2023-10-26 10:50:50.900401: I tensorflow/stream_executor/platform/default/dso_loader.cc:97] Successfully opened dynamic library d3d12.dll
+2023-10-26 10:50:51.365531: I tensorflow/core/common_runtime/dml/dml_device_cache.cc:250] DirectML device enumeration: found 1 compatible adapters.
+2023-10-26 10:50:51.367876: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2023-10-26 10:50:51.371564: I tensorflow/core/common_runtime/dml/dml_device_cache.cc:186] DirectML: creating device on adapter 0 (AMD Radeon R7 Graphics)
+                </code></pre>
+            </dl>
+        </dl>
+    </div>
+
+</body>
+</html>
