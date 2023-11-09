@@ -17,6 +17,7 @@
         <a href="#keras">Keras</a>
         <a href="#layer">Layer</a>
         <a href="#lossf">Loss function</a>
+        <a href="#tensor">Tensor</a>
         <a href="#tensorflow">Tensorflow</a>
         <a href="#underfitting">Underfitting</a>
         <a href="#variance">Variance</a>
@@ -93,6 +94,100 @@
         <code><pre>
             Loss function = (Actual O/P) - (Expected output)
         </pre></code>
+
+        <h3 id="tensor">Tensor = n-D Matrix</h3>
+        This is matrix(as in maths). Multi-dimensional numpy arrays used to store numbers during computation.
+
+        <h4>Types of Tensors</h4>
+        <table>
+            <tr>
+                <th>Dimension/Rank/Axis/Ndim</th>
+                <th>Name</th>
+                <th>Representation</th>
+                <th>Examples</th>
+                <th>Shape(Rows,cols)</th>
+                <th>Processed By (Keras)</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>Scalar</td>
+                <td>[0]</td>
+                <td></td>
+                <td>(0)</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>vector</td>
+                <td>[1,2,3,4]</td>
+                <td></td>
+                <td>(4)</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Matrix / 2D Tensor</td>
+                <td>{{1,2,3},{4,5,6}}</td>
+                <td>samples</td>
+                <td>(2,3)</td>
+                <td>Dense Layer</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>3D Tensor</td>
+                <td>{{{1,2,3},{4,5,6}},{{1,2,3},{4,5,6}}}</td>
+                <td>Timestamped data</td>
+                <td>(2,2,3)</td>
+                <td>Recurrent layers(eg: LSTM layer)</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>4D Tensor</td>
+                <td>3D tensors packed together</td>
+                <td></td>
+                <td>2D convolution layers (Conv2D)</td>
+                <td></td>
+            </tr>
+        </table>
+        <code><pre>
+            /////////// 2-D Tensor //////////////
+            Shape: (2,3)
+            Dimension/Rank/Axis/Ndim: 2
+                    | 1,2,3 |
+                    | 4,5,6 |
+            
+            /////////// 3-D Tensor example. Packing 2-D matrices //////////////
+            Shape: (3,3,5)
+            Dimension/Rank/Axis/Ndim: 3
+            
+            >> x = np.array([[
+                                  [5, 78, 2, 34, 0],
+                                  [6, 79, 3, 35, 1],
+                                  [7, 80, 4, 36, 2]
+                             ],
+                             [
+                                  [5, 78, 2, 34, 0],
+                                  [6, 79, 3, 35, 1],
+                                  [7, 80, 4, 36, 2]
+                             ],
+                             [
+                                  [5, 78, 2, 34, 0],
+                                  [6, 79, 3, 35, 1],
+                                  [7, 80, 4, 36, 2]
+                            ]])
+        </pre></code>
+
+        <h4>Tensor Terms</h4>
+        <dl>Data types(dtype)</dl>
+        <dd>Type of the data contained in the tensor; for instance, a tensor’s type could be float32, uint8, float64, and so on.</dd>
+        <dd>String tensors don’t exist in Numpy (or in most other libraries), because tensors are preallocated contiguous memory segments, and strings, being variable length.</dd>
+
+        <dl>Rank/Axis/Dimension/ndim</dl>
+        <dd>Dimension of matrix. For instance, a 3D tensor has three axes, and a matrix has two axes. This is also called the tensor’s ndim in Python libraries such as Numpy.</dd>
+        
+        <dl>Shape</dl>
+        <dd>Tells how many size tensor has along each axis.</dd>
+        <dd>For instance, the previous matrix example has shape (3, 5), and the 3D tensor example has shape (3, 3, 5).</dd>
 
         <h3 id="tensorflow">Tensorflow</h3>
         <dl>This is ML Open source library(EXPOSING APIs) for numerical computation and large-scale ML supports CPUs & GPUs.</dl>
