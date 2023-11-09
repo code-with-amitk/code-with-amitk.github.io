@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Learning Terms</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+<body>
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#comp">AI, ML, DL</a>
+        <a href="#ActivationFunction">Activation Function</a>
+        <a href="#conda">Conda</a>
+        <a href="#opt">Optimizer, stochastic gradient descent (SGD)</a>
+        <a href="#overfitting">Overfitting</a>
+        <a href="#bias">Bias/Sampling Bias</a>
+        <a href="#cntk">CNTK</a>
+        <a href="#keras">Keras</a>
+        <a href="#layer">Layer</a>
+        <a href="#lossf">Loss function</a>
+        <a href="#tensorflow">Tensorflow</a>
+        <a href="#underfitting">Underfitting</a>
+        <a href="#variance">Variance</a>
+    </aside>
+
+    <div style="margin-left:200px;">
+        <h3 id="comp">Artificial Intelligence, Machine Learning, Deep Learning</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>AL</th>
+                <th>ML</th>
+                <th>Deep Learning</th>
+            </tr>
+            <tr>
+                <td>Originated</td>
+                <td>1950</td>
+                <td>1960</td>
+                <td>1970</td>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Simulated Intelligence in Machines</td>
+                <td>Machine making decisions without being programmed</td>
+                <td>Using Neural networks to solve complex problems</td>
+            </tr>
+            <tr>
+                <td>Objective</td>
+                <td>Building machines which can think like humans</td>
+                <td>Algo which can learn thru data</td>
+                <td>Neural n/w to identify patterns</td>
+            </tr>
+        </table>
+
+        <h3 id="ActivationFunction">Activation Function</h3>
+        <dl>Without an activation function(eg: relu, softmax), [Dense layer](#layer) would always perform linear operations(a dot product, an addition) on input tensors.</dl>
+        <dl>Adding activation function to a layer introduces non-linearity into the model, allowing it to learn more complex relationships between the input and output data</dl>
+        <dl>Non-linear activation functions such as ReLU, Sigmoid, and Tanh can help the model to better fit the training data and make more accurate predictions on new data.</dl>
+
+        <h3 id="conda">Conda</h3>
+        <dl><a href="https://docs.conda.io/projects/miniconda/en/latest/">Miniconda</a> is the recommended approach for installing TensorFlow with GPU support</dl>
+        <dl> It creates a separate environment to avoid changing any installed software in your system. This is also the easiest way to install the required software especially for the GPU setup.</dl>
+
+        <h3 id="opt">Optimizer, stochastic gradient descent (SGD)</h3>
+        <dl>Tells how parameters should be tuned to make model produce expected output. Presently ML model is showing [loss function](#lf).</dl>
+        <dl>Goal of gradient descent is to identify the model parameters that provide the maximum accuracy.</dl>
+        <dl>Gradient-descent process must be based on a single scalar loss value; so, for multiloss networks, all losses are combined (via averaging) into a single scalar quantity.</dl>
+
+        <h3 id="overfitting">Overfitting</h3>
+        <dl>Means that the model performs well on the training data, but it does not generalize well(ie produces good results on real world/unseen data), because there is too of much uneccessary data(noise) in traning data.</dl>
+        <dl><strong>Regularization:</strong> Constraining a model to make it simpler and reduce the risk of overfitting.</dl>
+
+        <h3 id="bias">Bias/Sampling Bias</h3>
+        <dl>We should use a training data set that is representative of the cases we want model to predict.</dl>
+        <dl>if the sample is too small, you will have sampling noise (i.e., nonrepresentative data as a result of chance), but even very large samples can be nonrepresentative if the sampling method is flawed. This is called sampling bias.</dl>
+
+        <h3 id="cntk">CNTK</h3>
+        <dl>This is Microsoft Cognitive Toolkit (CNTK) backend, plugged with keras.</dl>
+
+        <h3 id="keras">Keras</h3>
+        <dl>Library(in Python) which provides functions/APIs to build deep-learning models. Different backends can be plugged with keras</dl>
+        <code><pre>
+            Keras
+            Tensorflow / Theano / CNTK
+             CUDA           BLAS,Eigen
+             GPU            CPU
+        </pre></code>
+
+        <h3 id="layer">Layer</h3>
+        Neural network is created by cascading multiple layers.
+
+        <h3 id="lossf">Loss Function</h3>
+        Function that compares expected and actual values. Measures how well the neural network models the training data. Loss function should be minimum.
+        <code><pre>
+            Loss function = (Actual O/P) - (Expected output)
+        </pre></code>
+
+        <h3 id="tensorflow">Tensorflow</h3>
+        <dl>This is ML Open source library(EXPOSING APIs) for numerical computation and large-scale ML supports CPUs & GPUs.</dl>
+        <dl>Python Front-end APIs & backend written in c++ for high performance.</dl>
+        <code><pre>
+            //Install conda https://docs.conda.io/projects/miniconda/en/latest/
+            C:\Users\amitk\source\repos\Python> mkdir venv_ml1
+            C:\Users\amitk\source\repos\Python> cd venv_ml1
+            C:\Users\amitk\source\repos\Python\venv_ml1>"c:\Users\amitk\miniconda3\Scripts\activate" venv_ml1
+            //Env is created here: C:\Users\amitk\miniconda3\envs
+            (venv_ml1) C:\Users\amitk\source\repos\Python\venv_ml1>
+            (venv_ml1) C:\Users\amitk\source\repos\Python\venv_ml1>"c:\Users\amitk\miniconda3\condabin\deactivate.bat"  //deactivate
+            (venv_ml1) C:\Users\amitk\source\repos\Python\venv_ml1>pip install tensorflow
+            Downloading tensorflow-2.6.2-cp36-cp36m-win_amd64.whl (423.3 MB)
+        </pre></code>
+
+        <h3 id="underfitting">Underfitting</h3>
+        Does not produces good results on traning data.
+
+        <h3 id="variance">Variance</h3>
+        Variance is the tendency to learn random things unrelated to the real signal
+
+    </div>
+</body>
+</html>
