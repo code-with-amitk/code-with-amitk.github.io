@@ -34,22 +34,25 @@ body, h1, p, ul, li {
   /*Header styles End*/
   
   /* Navigation styles start */
-  nav {
+  .navbar {
+    margin-left: 180px;
     margin-bottom: 20px;
+    background-color:honeydew;
+    font-size:small;
   }
-  
-  nav ul {
+  .navbar ul {
     list-style-type: none;
   }
-  
-  nav ul li {
+  .navbar ul li {
     display: inline-block;
     margin-right: 10px;
   }
-  
-  nav ul li a {
+  .navbar ul li a {
     text-decoration: none;
     color: #333;
+  }
+  .navbar a:hover {
+    color:blue;
   }
   /* Navigation styles end */
 
