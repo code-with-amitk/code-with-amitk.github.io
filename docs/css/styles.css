@@ -70,6 +70,7 @@ body, h1, p, ul, li {
     padding: 8px;
     text-align: left;
     background-color: #f2f2f2;
+    font-size: small;
   } 
 
 .code-block {
@@ -101,7 +102,9 @@ body, h1, p, ul, li {
   background-color: #f1f1f1;
   overflow-x: hidden;
   padding-top: 20px;
+  font-size: small;
 }
+
 
 /* Style the links inside the sidebar */
 .sidebar a {
@@ -114,7 +117,7 @@ body, h1, p, ul, li {
 
 /* Change the color of links on hover */
 .sidebar a:hover {
-  color: #f1f1f1;
+  color: #333333;
 }
 dl {
   margin-top: 0;
