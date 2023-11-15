@@ -54,6 +54,7 @@
         <a href="#theft">Theft, Robbery, Extortion, Dacoity</a>
         <a href="#unlawfulassembly">Unlawful Assembly, Riot, Affray</a>
         <a href="#wrongfulr">Wrongful Restraint, Wrongful Confinement</a>
+        <a href="#cases">Cases</a>
     </aside>
 
     <div style="margin-left:200px;">
@@ -366,6 +367,51 @@
         <dl><strong>Wrongful confinement</strong></dl>
         <dd>obstructing a person from proceeding beyond a certain limit.</dd>
 
+        <h3 id="cases">Cases</h3>
+        <table>
+            <tr>
+                <th>Case</th>
+                <th>Date</th>
+                <th>Judegement</th>
+            </tr>
+            <tr>
+                <td>Jai Devi, Hari Singh vs <br>State of Punjab</td>
+                <td>AIR 14sept/1963</td>
+                <td>Against Jai Dev(unlawful assembly, Rioting, Trespassing)</td>
+            </tr>
+            <tr>
+                <td>Virsha Singh vs <br>State of Punjab</td>
+                <td>AIR July/1955</td>
+                <td>Sec(302,323,324) Virsha Singh prosecuted for Murder</td>
+            </tr>
+            <tr>
+                <td>regina vs <br>Govinda</td>
+                <td></td>
+                <td>Accused is not guilty of murder but <a href="#culpablehomicide">Culpable homicide</a></td>
+            </tr>
+        </table>
+        <pre class="mermaid">
+            sequenceDiagram
+                note over JaiDev_HariSingh_RamDutt: JaiDev,HariSingh,RamDutt<br>reached disputed filed<br>and begin destroying Bajra crop
+                Sajjan_Prabhati ->> JaiDev_HariSingh_RamDutt: Stop plough, Bajra crop will destroy
+                JaiDev_HariSingh_RamDutt -->> Sajjan_Prabhati: Fired rifle
+                Sajjan_Prabhati -->> JaiDev_HariSingh_RamDutt: Attacked with pharsa
+                note over JaiDev_HariSingh_RamDutt:Result:6 people killed, 5 injured<br>Offense:Riot
+        </pre>
+        <pre class="mermaid">
+            sequenceDiagram
+                VirshaSingh_5Other ->> KhemSingh: VirshaSingh thurst spear in<br>abdomen of khem Singh
+                note over KhemSingh: Died next day
+        </pre>
+        <pre class="mermaid">
+            sequenceDiagram
+                Govinda_18years_Husband ->> Regina_13years_Wife: Kicked several times<br>Hit with knee on chest
+                note over Regina_13years_Wife: Died on spot
+        </pre>
     </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    </script>
 </body>
 </html>
