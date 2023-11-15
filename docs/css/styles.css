@@ -124,9 +124,10 @@ Search: mdn sidebar*/
   top: 0;
   left: 0;
   background-color:honeydew;
-/*  overflow-x: hidden;
-  padding-top: 20px;*/
+  overflow-x: hidden;
+  /*padding-top: 20px;*/
   font-size:small;
+  overflow-y: auto;
 }
 
 
@@ -136,12 +137,19 @@ Search: mdn sidebar*/
   text-decoration:burlywood;
   color: #818181;
   display: block;
+  font-size: small;
 }
 
 /* Change the color of links on hover */
 .sidebar a:hover {
   color: #333333;
 }
+
+.sidebar ul{
+  margin: -1px 0;
+  font-size: x-small;
+}
+
 /* sidebar end*/
 
 dl {
