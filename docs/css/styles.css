@@ -31,6 +31,11 @@ body, h1, p, ul, li {
     margin-bottom: 10px;
     color:darkgreen;
   }
+  h4 {
+    font-size: 13px;
+    margin-bottom: 10px;
+    color:darkmagenta;
+  }
   /*Header styles End*/
   
   /* Navigation styles start */
@@ -82,12 +87,12 @@ body, h1, p, ul, li {
     th: It targets the table header cells (<th>) in html table
     td: It targets the table data cells (<td>) within an HTML table.
   */
-  th, td {
+  th, td, tr {
     border: 1px solid black;
-    padding: 8px;
+    padding: 5px;
     text-align: left;
     background-color: #f2f2f2;
-    font-size: small;
+    font-size: smaller;
   }
   /* Table styles end */
 
@@ -141,16 +146,17 @@ Search: mdn sidebar*/
 
 dl {
   margin-top: 0;
+  font-size: 12px;
+
 }
 dt {
-  font-weight: 500;
-  font-size: 16px;
-  margin-top: 20px;
+  font-size: 12px;
+  margin-top: 10px;
 }
 dd {
-  margin-left: 20px;
-  font-size: 14px;
-  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
 }
 
 /* li start*/
