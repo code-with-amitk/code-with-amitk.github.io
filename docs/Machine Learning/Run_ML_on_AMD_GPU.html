@@ -7,33 +7,44 @@
 
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" >
-        <a href="#mlonamdgpu">Run ML on AMD GPU?</a>
-    </div>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
 
-    <div style="margin-left:200px;" class="content">
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#mlonamdgpu">Run ML on AMD GPU</a>
+    </aside>
+
+    <div style="margin-left:200px;">
         <h3 id="#mlonamdgpu">Run ML on AMD GPU</h3>
-        <dl>
-            <dt>1. Windows version (>10, 1709)</dt>
-            <dt>2. Install miniconda</dt>
-                <dd>Install <a href="https://docs.conda.io/en/latest/miniconda.html#windows-installers">minconda</a> in C:\Users\amitk\</dd>
-            <dt>3. Create python env using conda, Activate</dt>
-                <dd>
-                <pre><code>
+        <dl>1. Windows version (>10, 1709)</dl>
+        <dl>2. Install <a href="https://docs.conda.io/en/latest/miniconda.html#windows-installers">minconda</a> in C:\Users\amitk\
+            What is conda? conda is package manager which will install python,other required packages.
+        </dl>
+        <dl>3. Create python env using conda, Activate</dl>
+            <pre><code>
+//Create a new environment named ml_venv, install Python 3.6
 cmd>
-C:\Users\amitk\source\repos\Python\ML> C:\Users\amitk\miniconda3\Scripts\conda create --name directml python=3.6
-..
-C:\Users\amitk\source\repos\Python\ML>"c:\Users\amitk\miniconda3\Scripts\activate" directml
+C:\Users\amitk\source\repos\Python\ML>C:\Users\amitk\miniconda3\Scripts\conda create --name ml_venv python=3.6
+C:\Users\amitk\source\repos\Python\ML>"c:\Users\amitk\miniconda3\Scripts\activate" ml_venv
 //Env is created here: C:\Users\amitk\miniconda3\envs
-(directml) C:\Users\amitk\source\repos\Python\ML>"c:\Users\amitk\miniconda3\condabin\deactivate.bat"  //deactivate
-(directml) C:\Users\amitk\source\repos\Python\ML>
-                </code></pre>
-              </dd>
-            <dt>4. Install the TensorFlow with DirectML package</dt>
-            <dd>(directml) C:\Users\amitk\source\repos\Python\ML>pip install tensorflow-directml</dd>
-            <dt>5. Add 2 tensors on GPU</dt>
-            <dl>
+(ml_venv) C:\Users\amitk\source\repos\Python\ML>"c:\Users\amitk\miniconda3\condabin\deactivate.bat"  //deactivate
+(ml_venv) C:\Users\amitk\source\repos\Python\ML>
+            </code></pre>
+            <dl>4. Install the TensorFlow with DirectML package</dl>
+            <dl>(directml) C:\Users\amitk\source\repos\Python\ML>pip install tensorflow-directml</dl>
+            <dl>5. Add 2 tensors on GPU</dl>
                 <pre><code>
 (directml) C:\Users\amitk\source\repos\Python\ML>python
 Python 3.6.13 |Anaconda, Inc.| (default, Mar 16 2021, 11:37:27) [MSC v.1916 64 bit (AMD64)] on win32
@@ -49,8 +60,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 2023-10-26 10:50:51.367876: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
 2023-10-26 10:50:51.371564: I tensorflow/core/common_runtime/dml/dml_device_cache.cc:186] DirectML: creating device on adapter 0 (AMD Radeon R7 Graphics)
                 </code></pre>
-            </dl>
-        </dl>
     </div>
 
 </body>
