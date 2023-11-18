@@ -36,6 +36,11 @@ body, h1, p, ul, li {
     margin-bottom: 10px;
     color:darkmagenta;
   }
+  h5 {
+    font-size: 12px;
+    margin-bottom: 10px;
+    color:chocolate;
+  }
   /*Header styles End*/
   
   /* Navigation styles start */
