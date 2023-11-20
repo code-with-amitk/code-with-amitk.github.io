@@ -6,6 +6,20 @@
 </head>
 
 <body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
     <aside class="sidebar">   <!-- Sidebar -->
         <a href="#comp">AI, ML, DL</a>
         <a href="#ActivationFunction">Activation Function</a>
@@ -87,16 +101,18 @@
         </pre></code>
 
         <h3 id="layer">Layer</h3>
-        Neural network is created by cascading multiple layers.
+        <dl>Neural network is created by cascading multiple layers.</dl>
 
         <h3 id="lossf">Loss Function</h3>
-        Function that compares expected and actual values. Measures how well the neural network models the training data. Loss function should be minimum.
+        <dl>Function that compares expected and actual values. Measures how well the neural network models the training data. 
+            Loss function should be minimum.</dl>
         <code><pre>
             Loss function = (Actual O/P) - (Expected output)
         </pre></code>
 
         <h3 id="tensor">Tensor = n-D Matrix</h3>
-        This is matrix(as in maths). Multi-dimensional numpy arrays used to store numbers during computation.
+        <dl>This is matrix(as in maths). 
+            Multi-dimensional numpy arrays used to store numbers during computation.</dl>
 
         <h4>Types of Tensors</h4>
         <table>
@@ -205,10 +221,10 @@
         </pre></code>
 
         <h3 id="underfitting">Underfitting</h3>
-        Does not produces good results on traning data.
+        <dl>Does not produces good results on traning data.</dl>
 
         <h3 id="variance">Variance</h3>
-        Variance is the tendency to learn random things unrelated to the real signal
+        <dl>Variance is the tendency to learn random things unrelated to the real signal</dl>
 
     </div>
 </body>

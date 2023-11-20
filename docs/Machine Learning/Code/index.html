@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Learning</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#classifymnist">1. Classify grayscale images into(0 to 9)</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="classifymnist">Classify grayscale images of handwritten digits 
+            (28 × 28 pixels) into their 10 categories (0 through 9)</h3>
+            <h4>1. Use MNIST dataset(60,000 training images, plus 10,000 test images)</h4>
+            <dl><strong>How a image is represented by 28x28 matrix?</strong></dl>
+            <dt>In a grayscale image represented as a (28, 28) matrix, each element of the
+                 matrix corresponds to the intensity of the pixel at that position.</dt>
+                <dd>0 represents black: A pixel with an intensity value of 0 is completely black.<br>
+                255 represents white: A pixel with an intensity value of 255 is completely white.<br>
+                Values in between represent shades of gray: The values between 0 and 255 
+                represent varying shades of gray, with higher values indicating lighter shades
+            </dd>
+            <img src="/images/mnist_sample_digits.PNG" 
+            alt="mnist sample digits" style="width:200px;height:70px;">
+            <br>
+            <code>
+                (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+            </code>
+            <dl><strong>train_images</strong></dl>
+                <dd>train_images is an array containing 60,000 elements, each element is 28x28 matrix 
+                    representing a grayscale image of a handwritten digit from the MNIST dataset.</dd>
+            <dl><strong>train_labels</strong></dl>
+                <dd>it is an array containing the corresponding labels or class values for each image in train_images<br>
+                    each label is an integer from 0 to 9, representing the digit that the corresponding image depicts.<br>
+                    This is 1D array of length 60,000, where each element is the label for the corresponding image
+                </dd>
+    </article>
+
+</body>
+</html>
