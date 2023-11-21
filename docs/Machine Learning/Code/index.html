@@ -29,6 +29,7 @@
     <article style="margin-left:200px;">
         <h3 id="classifymnist">Classify grayscale images of handwritten digits 
             (28 × 28 pixels) into their 10 categories (0 through 9)</h3>
+            <h4>1. Create Neural Network of 2 dense layers</h4>
             <h4>1. Use MNIST dataset(60,000 training images, plus 10,000 test images)</h4>
             <dl><strong>How a image is represented by 28x28 matrix?</strong></dl>
             <dt>In a grayscale image represented as a (28, 28) matrix, each element of the
@@ -44,10 +45,10 @@
             <code>
                 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
             </code>
-            <dl><strong>train_images</strong></dl>
+            <dl><strong>train_images?</strong></dl>
                 <dd>train_images is an array containing 60,000 elements, each element is 28x28 matrix 
                     representing a grayscale image of a handwritten digit from the MNIST dataset.</dd>
-            <dl><strong>train_labels</strong></dl>
+            <dl><strong>train_labels?</strong></dl>
                 <dd>it is an array containing the corresponding labels or class values for each image in train_images<br>
                     each label is an integer from 0 to 9, representing the digit that the corresponding image depicts.<br>
                     This is 1D array of length 60,000, where each element is the label for the corresponding image

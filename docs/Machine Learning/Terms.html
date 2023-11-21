@@ -30,7 +30,9 @@
         <a href="#cntk">CNTK</a>
         <a href="#keras">Keras</a>
         <a href="#layer">Layer</a>
+        <a href="#learningtypes">Learning Types</a>
         <a href="#lossf">Loss function</a>
+        <a href="#neuralnetwork">Neural Network</a>
         <a href="#tensor">Tensor</a>
         <a href="#tensorflow">Tensorflow</a>
         <a href="#underfitting">Underfitting</a>
@@ -103,12 +105,67 @@
         <h3 id="layer">Layer</h3>
         <dl>Neural network is created by cascading multiple layers.</dl>
 
+        <h3 id="learningtypes">Learning Types</h3>
+        <h4>A. Supervised Learning</h4>
+        <dl>The training data feed to the algorithm includes the desired solutions(called labels).</dl>
+        <dl>Supervised learning algorithms</dl>
+            <dd>k-Nearest Neighbors, <br>
+                Linear Regression, <br>Logistic Regression, <br>
+                Support Vector Machines (SVMs), <br>Decision Trees & Random Forests, <br>
+                Neural networks</dd>
+        <dl><strong>Types of Supervised learning</strong></dl>
+        <dt><u>1.Classification (give yes/no)</u></dt>
+        <dd>a. Spam Filterning: Algo is trained with many example emails along with their class (spam or ham), 
+            and it must learn how to classify new emails. Each email has a label.</dd>
+
+        <dt><u>2. Regression: (give % or numeric value)</u></dt>
+        <dd>Predictors(Predict something):<br>
+            Predict whether based on inputs, Predict price of car provided with some inputs((mileage, age, brand, etc.)</dd>
+        
+        <dt>3. Logistic Regression (yes/no with %)</dt>
+        <dd>Mix of classfication & Regression. Example: 20% of chances being a spam.</dd>
+
+        <h4>B. Unsupervised Learning</h4>
+        <dl>Dataset does not have labels. ML model tries to learn without teacher.</dl>
+        <dl><strong>Types of unsupervised learning</strong></dl>
+        <dt><u>1. Clustering</u></dt>
+        <dd>Algorithms used: (k-Means, Hierarchical Cluster Analysis (HCA), Expectation Maximization)</dd>
+        <dt><u>2. Visualization and dimensionality reduction</u></dt>
+        <dd>
+            With unlabelled data this algorithm provides ouput which can be plotted on 2-D, 3-D plane.<br>
+            Algorithms used: <br>
+            Principal Component Analysis (PCA), Kernel PCA, Locally-Linear Embedding (LLE), t-distributed Stochastic Neighbor Embedding (t-SNE)
+        </dd>
+        <dt><u>3. Association rule learning</u></dt>
+        <dd>
+            This provides output as relations between attributes.<br>
+            Algorithms used: Apriori, Eclat<br>
+            Examples:<br>
+            1. Supermarket data analysis: suppose you own a supermarket. Sales logs 
+            may reveal that people who purchase sauce, potato chips also buy bread. 
+            Thus, you may want to place these items close to each other
+        </dd>
+
+        <h4>C. Semisupervised Learning</h4>
+        <dt>lot of unlabeled data and a little bit of labeled data<br>
+            Algorithms: Deep belief networks (DBNs),<br>
+            Examples: 1. FB Photos: When we load photos, we provide labels to few and leave others.
+             AI identifies photos.
+        </dt>
+
+        <h4>D. Reinforcement learning</h4>
+        <dt>Agent(AI Program) can observe the environment, select and perform actions, and get rewards in return
+        </dt>
+
         <h3 id="lossf">Loss Function</h3>
         <dl>Function that compares expected and actual values. Measures how well the neural network models the training data. 
             Loss function should be minimum.</dl>
         <code><pre>
             Loss function = (Actual O/P) - (Expected output)
         </pre></code>
+
+        <h3 id="neuralnetwork">Neural Network</h3>
+        <dl></dl>
 
         <h3 id="tensor">Tensor = n-D Matrix</h3>
         <dl>This is matrix(as in maths). 
