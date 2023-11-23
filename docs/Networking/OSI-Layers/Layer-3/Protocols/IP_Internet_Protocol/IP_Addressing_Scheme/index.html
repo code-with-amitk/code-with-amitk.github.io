@@ -1,132 +1,156 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-  <title>IP Addressing Scheme</title>
+  <title>Networking</title>
   <link rel="stylesheet" href="/css/styles.css"/>
+  <!-- Add any necessary CSS and JavaScript files -->
 </head>
+
 <body>
-  <h1>IP Addressing Scheme</h1>
-  <h2>Types of IP Addressing</h2>
-  <ul>
-    <li><a href="#ful">1. Classful Addressing. Ancient</a>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="./OSI-Layers/">OSI Layers</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+      <h1>IP Addressing Scheme</h1>
+      <h2>Types of IP Addressing</h2>
       <ul>
-        <li><a href="#ip4valid">Valid IPv4 Addresses</a></li>
-      </ul>
-    </li>
-    <li><a href="#les">2. Classless Addressing</a>
-      <ul>
-        <li><a href="#submask">Subnet Mask / Prefix / Netmask</a>
+        <li><a href="#ful">1. Classful Addressing. Ancient</a>
           <ul>
-            <li><a href="#cidr">CIDR(Classless Interdomain Routing) Notation</a></li>
-            <li><a href="#csub">Classes(A,B,C) &amp; their Subnet masks</a></li>
-            <li><a href="#valid">Valid Subnet masks</a></li>
+            <li><a href="#ip4valid">Valid IPv4 Addresses</a></li>
           </ul>
         </li>
-        <li><a href="#nidr">Network ID / Network Address</a></li>
-        <li><a href="#baddr">Broadcast Address</a></li>
-        <li><a href="#nid">Finding Network,Broadcast Address using Prefix</a></li>
+        <li><a href="#les">2. Classless Addressing</a>
+          <ul>
+            <li><a href="#submask">Subnet Mask / Prefix / Netmask</a>
+              <ul>
+                <li><a href="#cidr">CIDR(Classless Interdomain Routing) Notation</a></li>
+                <li><a href="#csub">Classes(A,B,C) &amp; their Subnet masks</a></li>
+                <li><a href="#valid">Valid Subnet masks</a></li>
+              </ul>
+            </li>
+            <li><a href="#nidr">Network ID / Network Address</a></li>
+            <li><a href="#baddr">Broadcast Address</a></li>
+            <li><a href="#nid">Finding Network,Broadcast Address using Prefix</a></li>
+          </ul>
+        </li>
       </ul>
-    </li>
-  </ul>
-  <h2><a name="subnetting">Subnetting</a></h2>
-  <h2><a name="supernetting">Supernetting /Prefix Aggregation/ Route Aggregation/ Route Summarization</a></h2>
-  <h2>Address Types</h2>
-  <ul>
-    <li><a href="#inside">A. Private IP Addresses</a>
+      <h2><a name="subnetting">Subnetting</a></h2>
+      <h2><a name="supernetting">Supernetting /Prefix Aggregation/ Route Aggregation/ Route Summarization</a></h2>
+      <h2>Address Types</h2>
       <ul>
-        <li><a href="#inlocal">Inside Local IP Address</a></li>
-        <li><a href="#inglobal">Inside Global IP Address</a></li>
+        <li><a href="#inside">A. Private IP Addresses</a>
+          <ul>
+            <li><a href="#inlocal">Inside Local IP Address</a></li>
+            <li><a href="#inglobal">Inside Global IP Address</a></li>
+          </ul>
+        </li>
+        <li><a href="#outside">B. Outside Network</a>
+          <ul>
+            <li><a href="#insideg">Inside Global Address</a></li>
+            <li><a href="#outsideg">Outside Global Address</a></li>
+          </ul>
+        </li>
+        <li><a href="#rd">C. Reserved and Documentation Addresses</a>
+          <ul>
+            <li><a href="#cgn">Carrier-grade NAT</a></li>
+          </ul>
+        </li>
       </ul>
-    </li>
-    <li><a href="#outside">B. Outside Network</a>
+      <h2>IPV4 Addressing Scheme</h2>
       <ul>
-        <li><a href="#insideg">Inside Global Address</a></li>
-        <li><a href="#outsideg">Outside Global Address</a></li>
+        <li>This is used to identify Host and network part from an IP address.</li>
+        <li>All hosts on same N/W have same N/W-ID. Same network means these hosts can communicate with each other
+          without any router. They are on same LAN.</li>
       </ul>
-    </li>
-    <li><a href="#rd">C. Reserved and Documentation Addresses</a>
+      <h2>Types of IP Addressing</h2>
+      <h3><a name="ful">1. Classful Addressing</a></h3>
       <ul>
-        <li><a href="#cgn">Carrier-grade NAT</a></li>
+        <li>Each IP Address is assigned to a class.</li>
+        <li>class A, B addresses are exhausted. Class C addresses are given to new organizations</li>
       </ul>
-    </li>
-  </ul>
-  <h2>IPV4 Addressing Scheme</h2>
-  <ul>
-    <li>This is used to identify Host and network part from an IP address.</li>
-    <li>All hosts on same N/W have same N/W-ID. Same network means these hosts can communicate with each other
-      without any router. They are on same LAN.</li>
-  </ul>
-  <h2>Types of IP Addressing</h2>
-  <h3><a name="ful">1. Classful Addressing</a></h3>
-  <ul>
-    <li>Each IP Address is assigned to a class.</li>
-    <li>class A, B addresses are exhausted. Class C addresses are given to new organizations</li>
-  </ul>
-  <pre>
-  <code>Class        A                       B                   C                D(MULTICAST)      E(experimental)
-  N/W part       a                       a.b                 a.b.c            NA                 NA
-  Host part      b.c.d                   c.d                 d                NA                 NA
-  Range          0-127.x.x.x             128-191.x.x.x       192-223.x.x.x    224-239.x.x.x      240-255.x.x.x     
-  No of hosts    2pow24=1677716-2        2pow16=65536-2      2pow8=256-2      NA                 NA
-                 N/W-ID,broadcast removed
-  Start Bits      0                      10                  110             1110                1111
-  Start Address   0.0.0.0                128.0.0.0           192.0.0.0       224.0.0.0           240.0.0.0
-  End Address     127.255.255.255        191.255.255.255     223.255.255.255 239.255.255.255     255.255.255.255
-  Suitable For    Large Org              Medium Org          Small Org
-  </code>
-  </pre>
-  <h3><a name="ip4valid">Valid IPv4 Addresses</a></h3>
-  <ul>
-    <li>First and last address in any network or subnet can't be assigned to any individual host. Eg: 192.168.123.0
-      and 192.168.123.255</li>
-    <ul>
-      <li>0 address is invalid bcoz it's specifies a network not host. 192.168.123.0 is N/W not host</li>
-      <li>255 address is invalid bcoz it's used to broadcast a message to every host on a network. 192.168.123.255 is
-        broadcast address</li>
-    </ul>
-  </ul>
-  <pre>
-  <code>
-  0.0.0.0 Invalid Address(N/W ID)
-  255.255.255.255 - Broadcast Address
-  </code>
-  </pre>
-  <h3><a name="les">2. Classless Addressing</a></h3>
-  <ul>
-    <li>No portion for n/w &amp; hosts is separated. Subnet mask/netmask is used to get n/w and host parts.</li>
-    <li>Subnet mask decides how many hosts are possible on a network.</li>
-  </ul>
-  <h4><a name="submask">Subnet Mask / Prefix / Netmask</a></h4>
-  <p>Number of ON bits in 32 bit address going from left to right defines n/w address. 1's defines network and 0's
-    defines host.</p>
-  <pre>
-  <code>&lt;---1's defines n/w   ---&gt; &lt;-host-&gt;
-  11111111.11111111.11111111.00000000    =   255.255.255.0   
-  </code>
-  </pre>
-  <h4><a name="cidr">CIDR(Classless Interdomain Routing) Notation</a></h4>
-  <p>Representation in which address is written with a suffix indicating the number of on bits in the subnet mask</p>
-  <pre>
-  <code>11111111.11111111.11111111.00000000    =   255.255.255.0   =    /24   called CIDR notation
-  </code>
-  </pre>
-  <h4><a name="csub">Classes &amp; their Subnet masks</a></h4>
-  <pre>
-  <code>Class                 A                 B                 C                 D       E
-  Possible Hosts      2pow24            2pow16            2pow8               NA      NA
-  Subnet mask       255.0.0.0(/8)   255.255.0.0(/16)    255.255.255.0(/24)
-  Network part      1st 8 bits        1st 16 bits         1st 24 bits
-  </code>
-  </pre>
-  <h4><a name="valid">Valid Subnet masks</a></h4>
-  <p>Only contiguous subnet masks are valid. ie Contiguous 1's from left.</p>
-  <pre>
-  <code>Invalid: 255.255.255.1   = 11111111.11111111.11111111.00000001   //Not contiguous
-  Valid:   255.255.255.128 = 11111111.11111111.11111111.1000000
-  </code>
-  </pre>
-  <p><em>Why gaps in subnet mask not valid?</em><br>- Impossible for a router to accurately summarize and aggregate
-    prefix ranges.</p>
-  <p>Please write in the English language.</p>
+      <pre>
+      <code>Class        A                       B                   C                D(MULTICAST)      E(experimental)
+      N/W part       a                       a.b                 a.b.c            NA                 NA
+      Host part      b.c.d                   c.d                 d                NA                 NA
+      Range          0-127.x.x.x             128-191.x.x.x       192-223.x.x.x    224-239.x.x.x      240-255.x.x.x     
+      No of hosts    2pow24=1677716-2        2pow16=65536-2      2pow8=256-2      NA                 NA
+                    N/W-ID,broadcast removed
+      Start Bits      0                      10                  110             1110                1111
+      Start Address   0.0.0.0                128.0.0.0           192.0.0.0       224.0.0.0           240.0.0.0
+      End Address     127.255.255.255        191.255.255.255     223.255.255.255 239.255.255.255     255.255.255.255
+      Suitable For    Large Org              Medium Org          Small Org
+      </code>
+      </pre>
+      <h3><a name="ip4valid">Valid IPv4 Addresses</a></h3>
+      <ul>
+        <li>First and last address in any network or subnet can't be assigned to any individual host. Eg: 192.168.123.0
+          and 192.168.123.255</li>
+        <ul>
+          <li>0 address is invalid bcoz it's specifies a network not host. 192.168.123.0 is N/W not host</li>
+          <li>255 address is invalid bcoz it's used to broadcast a message to every host on a network. 192.168.123.255 is
+            broadcast address</li>
+        </ul>
+      </ul>
+      <pre>
+      <code>
+      0.0.0.0 Invalid Address(N/W ID)
+      255.255.255.255 - Broadcast Address
+      </code>
+      </pre>
+      <h3><a name="les">2. Classless Addressing</a></h3>
+      <ul>
+        <li>No portion for n/w &amp; hosts is separated. Subnet mask/netmask is used to get n/w and host parts.</li>
+        <li>Subnet mask decides how many hosts are possible on a network.</li>
+      </ul>
+      <h4><a name="submask">Subnet Mask / Prefix / Netmask</a></h4>
+      <p>Number of ON bits in 32 bit address going from left to right defines n/w address. 1's defines network and 0's
+        defines host.</p>
+      <pre>
+      <code>&lt;---1's defines n/w   ---&gt; &lt;-host-&gt;
+      11111111.11111111.11111111.00000000    =   255.255.255.0   
+      </code>
+      </pre>
+      <h4><a name="cidr">CIDR(Classless Interdomain Routing) Notation</a></h4>
+      <p>Representation in which address is written with a suffix indicating the number of on bits in the subnet mask</p>
+      <pre>
+      <code>11111111.11111111.11111111.00000000    =   255.255.255.0   =    /24   called CIDR notation
+      </code>
+      </pre>
+      <h4><a name="csub">Classes &amp; their Subnet masks</a></h4>
+      <pre>
+      <code>Class                 A                 B                 C                 D       E
+      Possible Hosts      2pow24            2pow16            2pow8               NA      NA
+      Subnet mask       255.0.0.0(/8)   255.255.0.0(/16)    255.255.255.0(/24)
+      Network part      1st 8 bits        1st 16 bits         1st 24 bits
+      </code>
+      </pre>
+      <h4><a name="valid">Valid Subnet masks</a></h4>
+      <p>Only contiguous subnet masks are valid. ie Contiguous 1's from left.</p>
+      <pre>
+      <code>Invalid: 255.255.255.1   = 11111111.11111111.11111111.00000001   //Not contiguous
+      Valid:   255.255.255.128 = 11111111.11111111.11111111.1000000
+      </code>
+      </pre>
+      <p><em>Why gaps in subnet mask not valid?</em><br>- Impossible for a router to accurately summarize and aggregate
+        prefix ranges.</p>
+      <p>Please write in the English language.</p>
+  </article>
 </body>
 </html>

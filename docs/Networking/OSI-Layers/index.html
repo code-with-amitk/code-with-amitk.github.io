@@ -5,81 +5,104 @@
   <title>Layers, Design Issues</title>
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
+
+
 <body>
-  <h2>Layers, Design Issues</h2>
-  <table>
-    <tr>
-      <th>Layer</th>
-      <th>Design Issues</th>
-      <th>Duties</th>
-      <th>Protocols</th>
-    </tr>
-    <tr>
-      <td>Application</td>
-      <td>sending large information. eg: 5gb, caching:how long fetched data is valid and when to query back?, security, slow client or server</td>
-      <td>User services(eg: Emails, video share etc)</td>
-      <td>DNS,DHCP,HTTP,LDAP</td>
-    </tr>
-    <tr>
-      <td>Presentation(Handles any conversions between data formats required by users such as different character sets, encodings, compression, encryption, etc)</td>
-      <td></td>
-      <td>Presentation of data(ie syntax, semantics of data received)</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Session</td>
-      <td></td>
-      <td>Establish sessions(eg: token management etc) b/w hosts on different machines</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Transport(App to App)</td>
-      <td>Services provided to upper layer</td>
-      <td>Process to process delivery, Congestion &amp; flow Control, Error detection</td>
-      <td>TCP,UDP</td>
-    </tr>
-    <tr>
-      <td>Network(Host to Host)</td>
-      <td>Store/Forward pkt, Implementation of connectionless/connection-oriented</td>
-      <td>Handling congestion</td>
-      <td>IP,ICMP,IGMP</td>
-    </tr>
-    <tr>
-      <td>Between L3,L2</td>
-      <td></td>
-      <td></td>
-      <td>ARP</td>
-    </tr>
-    <tr>
-      <td>Data Link(Hop to Hop)</td>
-      <td>Framing, Error control, Flow control</td>
-      <td>Detect/correct PHY layer errors. Used to deliver data frame within same network</td>
-      <td>L2TP</td>
-    </tr>
-    <tr>
-      <td>Physical(Electrical or Optical Cabling)</td>
-      <td>Making sure sender sends 1 and recr receives 1 not 0</td>
-      <td>Send 0,1s on network</td>
-      <td></td>
-    </tr>
-  </table>
-  
-  <h2>Header Sizes</h2>
-  <table>
-    <tr>
-      <th>Ethernet Header</th>
-      <th>IP Header</th>
-      <th>TCP Header</th>
-      <th>UDP Header</th>
-      <th>Total</th>
-    </tr>
-    <tr>
-      <td>18 bytes</td>
-      <td>Min(20 bytes), Max(60 bytes)</td>
-      <td>Min(20 bytes), Max(60 bytes)</td>
-      <td>8 bytes</td>
-      <td>Using TCP:138 bytes<br>Using UDP:86 bytes</td>
-    </tr>
-  </table>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="./Layer-3/">Layer-3</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+      <h2>Layers, Design Issues</h2>
+      <table>
+        <tr>
+          <th>Layer</th>
+          <th>Design Issues</th>
+          <th>Duties</th>
+          <th>Protocols</th>
+        </tr>
+        <tr>
+          <td>Application</td>
+          <td>sending large information. eg: 5gb, caching:how long fetched data is valid and when to query back?, security, slow client or server</td>
+          <td>User services(eg: Emails, video share etc)</td>
+          <td>DNS,DHCP,HTTP,LDAP</td>
+        </tr>
+        <tr>
+          <td>Presentation(Handles any conversions between data formats required by users such as different character sets, encodings, compression, encryption, etc)</td>
+          <td></td>
+          <td>Presentation of data(ie syntax, semantics of data received)</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Session</td>
+          <td></td>
+          <td>Establish sessions(eg: token management etc) b/w hosts on different machines</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Transport(App to App)</td>
+          <td>Services provided to upper layer</td>
+          <td>Process to process delivery, Congestion &amp; flow Control, Error detection</td>
+          <td>TCP,UDP</td>
+        </tr>
+        <tr>
+          <td>Network(Host to Host)</td>
+          <td>Store/Forward pkt, Implementation of connectionless/connection-oriented</td>
+          <td>Handling congestion</td>
+          <td>IP,ICMP,IGMP</td>
+        </tr>
+        <tr>
+          <td>Between L3,L2</td>
+          <td></td>
+          <td></td>
+          <td>ARP</td>
+        </tr>
+        <tr>
+          <td>Data Link(Hop to Hop)</td>
+          <td>Framing, Error control, Flow control</td>
+          <td>Detect/correct PHY layer errors. Used to deliver data frame within same network</td>
+          <td>L2TP</td>
+        </tr>
+        <tr>
+          <td>Physical(Electrical or Optical Cabling)</td>
+          <td>Making sure sender sends 1 and recr receives 1 not 0</td>
+          <td>Send 0,1s on network</td>
+          <td></td>
+        </tr>
+      </table>
+      
+      <h2>Header Sizes</h2>
+      <table>
+        <tr>
+          <th>Ethernet Header</th>
+          <th>IP Header</th>
+          <th>TCP Header</th>
+          <th>UDP Header</th>
+          <th>Total</th>
+        </tr>
+        <tr>
+          <td>18 bytes</td>
+          <td>Min(20 bytes), Max(60 bytes)</td>
+          <td>Min(20 bytes), Max(60 bytes)</td>
+          <td>8 bytes</td>
+          <td>Using TCP:138 bytes<br>Using UDP:86 bytes</td>
+        </tr>
+      </table>
+    </article>
 </body>
 </html>
