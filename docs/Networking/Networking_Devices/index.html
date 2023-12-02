@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Networking Devices</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#firewall">Firewall</a>
+        <a href="./Gateway/">Gateway</a>
+        <a href="#router">Router</a>
+    </aside>
+
+    <main>
+        <article style="margin-left:200px;">
+            <h3 id="firewall">Firewall</h3>
+                <dl>sits at gate of organization in DMZ Zone.</dl>
+
+            <h3 id="gateway">Gateway / SWG(Secure Web Gateway) / Application Level Gateway</h3>
+            <dl>
+                Bridges 2 networks. Can look into application level packet contents. Eg:<br>
+                1. HTTP is used for Web browsing(allow this)<br>
+                2. HTTP is used for File-sharing(block this)<br>
+                3. Not allowing documents to send by Email using HTTP.
+            </dl>
+            <dl>Real world SWG</dl>
+                <dt>Juniper SRX Series</dt>
+
+            <h3 id="router">Router</h3>
+            <dl>Within network. Device or a hardware which is 
+                responsible for receiving, analyzing and forwarding the data packets to other networks</dl>
+        </article>
+    </main>
+
+</body>
+</html>
