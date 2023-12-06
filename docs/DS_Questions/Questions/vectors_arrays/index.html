@@ -6,18 +6,25 @@
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
-    <div class="container">
-		<div class="menu">
-			<ul>
-				<li><a href="./Find_Search_Count/">Find Search Count</a></li>
-				<li><a href="./SubSequence_SubArray/">SubSequence SubArray</a></li>
-				<li><a href="./Intervals/">Intervals</a></li>
-				<!-- Add more menu items as needed -->
-			</ul>
-        </div>
-        <div class="content">
-            <!-- Main content area -->
-        </div>
-    </div>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="./Find_Search_Count/">Find Search Count</a>
+        <a href="./Intervals/">Intervals</a>
+        <a href="./Progressions/">Progressions</a>
+        <a href="./SubSequence_SubArray/">SubSequence SubArray</a>
+    </aside>
 </body>
 </html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Law of Crimes</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#problem">Problem</a>
+        <a href="#approach">Approach</a>
+        <a href="#code">Code</a>
+    </aside>
+
+    <div style="margin-left:200px;">
+        <h2 id="problem"><a href="https://leetcode.com/problems/calculate-money-in-leetcode-bank/">
+            1716. Calculate Money in Leetcode Bank</a></h2>
+            <dl>Hercy wants to save money for his first car. He puts money in the Leetcode bank every day.<br>
+                He starts by putting in $1 on Monday, the first day. Every day from Tuesday to Sunday, 
+                he will put in $1 more than the day before. On every subsequent Monday, he will 
+                put in $1 more than the previous Monday.<br>
+                Given n, return the total amount of money he will have in the Leetcode bank at the end 
+                of the nth day.</dl>
+            <pre><code>
+                Example 1:
+
+                Input: n = 4
+                Output: 10
+                Explanation: After the 4th day, 
+                the total is 1 + 2 + 3 + 4 = 10.
+
+                Example 2:
+                Input: n = 10
+                Output: 37
+                Explanation: After the 10th day, 
+                the total is (1 + 2 + 3 + 4 + 5 + 6 + 7) + (2 + 3 + 4) = 37. 
+                Notice that on the 2nd Monday, Hercy only puts in $2.
+
+                Example 3:
+                Input: n = 20
+                Output: 96
+                Explanation: After the 20th day, 
+                the total is (1 + 2 + 3 + 4 + 5 + 6 + 7) + (2 + 3 + 4 + 5 + 6 + 7 + 8) + 
+                (3 + 4 + 5 + 6 + 7 + 8) = 96.
+            </code></pre>
+
+        <h2 id="approach">Approach = Progression</h2>
+        <h3>Logic</h3>
+        <dl>After every 7 steps, we start from (start+1), where start=1</dl>
+        <pre><code>
+            1 2 3 4 5 6 7
+            |
+            start
+
+            2 3 4 5 6 7 8
+            |
+            start+1
+        </code></pre>
+
+        <h2 id="code">Code</h2>
+        <div class="tab">
+            <button class="tablinks" onclick="opencode(event, 'cpp98')">CPP98</button>
+            <button class="tablinks" onclick="opencode(event, 'cpp11')">CPP11,14</button>
+            <button class="tablinks" onclick="opencode(event, 'cpp17')">CPP17</button>
+            <button class="tablinks" onclick="opencode(event, 'python')">Python</button>
+            <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
+            <button class="tablinks" onclick="opencode(event, 'go')">Golang</button>
+        </div>
+
+        <div id="cpp98" class="tabcontent">
+            <h4>CPP98</h4>
+            <pre><code>
+                class Solution {
+                    public:
+                        int totalMoney(int n) {
+                            int start = 1, j = start, i = 0, out = 0;
+                            while (i < n) {
+                                out += j;
+                                j += 1;
+                                i++;
+                                if (i%7 == 0) {
+                                    start += 1;
+                                    j = start;
+                                }
+                            }
+                            return out;
+                        }
+                    };
+            </code></pre>
+        </div>
+
+        <div id="cpp11" class="tabcontent">
+            <h4>CPP11(lambda), CPP14(auto type deduction for the lambda)</h4>
+            <pre><code>
+                class Solution {
+                    public:
+                        int totalMoney(int n) {
+                            int start = 1, j = start, i = 0, out = 0;
+                            /*
+                            lambda expression
+                            function_pointer  = [env var] (params) mutable throw -> return_type { 
+                                .....function body ......
+                            };
+                            */
+                            //CPP11 = lambda
+                            //CPP14 = auto type deduction for the lambda
+                            auto fun = [&]() {
+                                out += j;
+                                j += 1;
+                                i++;
+                                if (i%7 == 0) {
+                                    start += 1;
+                                    j = start;
+                                }
+                            };
+                            while (i < n) {
+                                fun();
+                            }
+                            return out;
+                        }
+                    };
+            </code></pre>
+        </div>
+
+        <div id="cpp17" class="tabcontent">
+            <h4>CPP17 (structured bindings. Capture multiple values from the lambda)</h4>
+            <pre><code>
+                class Solution {
+                    public:
+                        int totalMoney(int n) {
+                            int start = 1, j = start, i = 0, out = 0;
+                    
+                            //CPP17 = capture 3 values from lambda
+                            auto updateCounters = [&]() -> std::tuple&lt;int, int, int> {
+                                out += j;
+                                j += 1;
+                                i++;
+                                if (i % 7 == 0) {
+                                    start += 1;
+                                    j = start;
+                                }
+                                return std::make_tuple(out, j, i);
+                            };
+                    
+                            while (i < n) {
+                                std::tie(out, j, i) = updateCounters();
+                            }
+                    
+                            return out;
+                        }
+                    };
+            </code></pre>
+        </div>
+
+        <div id="python" class="tabcontent">
+            <h4>Python</h4>
+            <pre><code>
+                class Solution:
+                def totalMoney(self, n: int) -> int:
+                    start = 1
+                    j = start
+                    i = 0
+                    out = 0
+                    while i < n:
+                        out += j
+                        j += 1
+                        i += 1
+                        if i%7 == 0:
+                            start += 1
+                            j = start
+                    return out
+            </code></pre>
+        </div>
+
+        <div id="rust" class="tabcontent">
+            <h4>Rust</h4>
+            <pre><code>
+                impl Solution {
+                    pub fn total_money(n: i32) -> i32 {
+                        let mut start = 1;
+                        let mut j = start;
+                        let mut i = 0; 
+                        let mut out = 0;
+                        while (i < n) {
+                            out += j;
+                            j += 1;
+                            i += 1;
+                            if (i%7 == 0) {
+                                start += 1;
+                                j = start;
+                            }
+                        }
+                        out
+                    }
+                }
+            </code></pre>
+        </div>
+
+        <div id="go" class="tabcontent">
+            <h4>Golang</h4>
+            <pre><code>
+                func totalMoney(n int) int {
+                    start := 1
+                    j := start 
+                    i := 0
+                    out := 0
+                    for i < n {
+                        out += j
+                        j += 1
+                        i++
+                        if (i%7 == 0) {
+                            start += 1
+                            j = start
+                        }
+                    }
+                    return out
+                }
+            </code></pre>
+        </div>
+
+    </div>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
