@@ -24,6 +24,9 @@
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#techskills">My Technical Skills</a>
         <a href="#workexp">My Work Experience</a>
+        <a href="#edu">Education</a>
+        <a href="#awards">Awards</a>
+        <a href="#lang">Languages</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
@@ -105,49 +108,167 @@
 
             <h2 id="workexp">My Work Experience</h2>
             <h3>Juniper Networks India Pvt Ltd. (Jun 2021 – Till Date)  Rust,Go,C++,ML </h3>
-                <h4>Project: <a href="https://www.juniper.net/documentation/product/us/en/juniper-identity-management-service/">
-                    JIMS(Juniper Identity Management Solution)</a></h4>
-                    <dl><u>Responsibilities</u></dl>
-                    <dt>Design, code, enhance, bugfix on-prem, AWS cloud of JIMS & UI (Rust)<br>
+                <dl><strong>
+                    Project-1: <a href="https://www.juniper.net/documentation/product/us/en/juniper-identity-management-service/">
+                        JIMS(Juniper Identity Management Solution)</a>
+                </strong></dl>
+                    <dd>Design, code, enhance, bugfix on-prem, AWS cloud of JIMS & UI (Rust)<br>
                         Write SRX multithreaded stub in Rust using async,tokio.<br>
                         powershell scripting to dump Active directory(Win 2019,2022)
-                        information from customer's environment and simulate same in dev</dt>
+                        information from customer's environment and simulate same in dev</dd>
 
-                <h4>Project: Azure, Okta Client. Golang,Rust</h4>
-                <dl><u>Responsibilities</u></dl>
-                <dt>Write azure,okta client library to pull<br>
+                <dl><strong>Project-2: Azure, Okta Client. Golang,Rust</strong></dl>
+                <dd>Write azure,okta client library to pull<br>
                     users,groups,devices from Microsoft Azure,okta
                     directory servers.<br>
-                    Push this information to JIMS server(on cloud)</dt>
+                    Push this information to JIMS server(on cloud)</dd>
 
-                <h4>Project: User anomaly detection using Machine Learning with Active directory data</h4>
-                <dl><u>Responsibilities</u></dl>
-                <dt>Train ML model to detect anomalous pattern from Active Directory event logs</dt>
+                <dl><strong>
+                    Project-3: User anomaly detection using Machine Learning with Active directory data
+                </strong></dl>
+                <dd>Train ML model to detect anomalous pattern from Active Directory event logs</dd>
 
             <h3>AMD India Pvt Ltd. (Jun 2020 – Jul 2021)  C++, Chip Programmer</h3>
-                <h4>Project: Port Tools to VMWare ESXi using VMWareNDDK, code,Redesign(OOD)</h4>
-                <dl><u>Responsibilities</u></dl>
-                <dt>
-                    Tools are used for RW(GPU(Graphics Processing Unit) registers, PCI Config Space,Video Memory, port, CPU MSR Registers)
-                </dt>
+                <dl><strong>
+                    Project-1: Port Tools to VMWare ESXi using VMWareNDDK, code,Redesign(OOD)
+                </strong></dl>
+                <dd>
+                    Tools are used for RW(GPU(Graphics Processing Unit) registers, 
+                    PCI Config Space,Video Memory, port, CPU MSR Registers)
+                </dd>
 
-                <h4>Project: Update vctf(voltage,current,thermal,fan) in toollib MI300, MI500 GPU</h4>
-                <dl><u>Responsibilities</u></dl>
-                <dt>
-                    Library? Interact with device drivers & collect vctf information<br>
+                <dl><strong>Project-2: Update vctf(voltage,current,thermal,fan) in toollib MI300, MI500 GPU</strong></dl>
+                <dd>
+                    toolib Library? Interact with device drivers & collect vctf information 
                     Reading CPU/GPU Specification, adding register offsets, code.
-                </dt>
+                </dd>
 
                 <h3>Red Hat India Pvt Ltd. (Jul 2016 – Jun 2020)  C++, C, Python Programmer</h3>
-                <h4>Project: Design, Develop 
+                <dl><strong>
+                    Project-1: Design, Develop 
                     <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/sssd">SSSD</a>
-                         interface to the kernel.</h4>
-                    <dl>Redesigned interface for ldaps, ldap introducing ldap_nw_timeout</dl>
-                <h4>Project: Fixing the design issues in 
-                    <a href="https://www.samba.org/">samba</a> file server passdb backend, rpclient.</h4>
-                <h4>Project: Write Parser for 
+                         interface to the kernel.
+                </strong></dl>
+                    <dd>Redesigned interface for ldaps, ldap introducing ldap_nw_timeout</dd>
+                <dl><strong>
+                    Project-2: Fixing the design issues in 
+                    <a href="https://www.samba.org/">samba</a> file server passdb backend, rpclient.
+                </strong></dl>
+                <dl><strong>
+                    Project-3: Write Parser for 
                     <a href="https://www.redhat.com/en/technologies/management/insights">Red Hat Support Insights</a>
-                     (python 3.7)</h4>
+                     (python 3.7)
+                </strong></dl>
+
+            <h3>HCL Technologies(Cisco) (Jul 2014 – Jul 2016) IPSec, VPN C++, Python developer</h3>
+                <dl><strong>
+                    Project-1: IKE, ISAKMP, SSL feature development for 
+                    <a href="https://www.cisco.com/c/en_in/products/security/adaptive-security-appliance-asa-software/index.html">
+                        Cisco ASA</a>
+                </strong></dl>
+                <dl><strong>
+                    Project-2: Reduced reported issues in  
+                    <a href="https://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol">
+                        OCSP</a>by 20%
+                </strong></dl>
+                <dl><strong>
+                    Project-3: “Feature-Request” message implementation in 
+                    <a href="https://www.openvswitch.org/">
+                        OpenvSwitch</a>POC
+                </strong></dl>
+
+            <h3>Samsung (Jul 2012 – Jul 2014) Lead Engineer C++</h3>
+                <dl><strong>
+                    Project-1: Offload encryption/decryption to 
+                    <a href="https://www.marvell.com/products/security-solutions/nitrox-iii.html">
+                        Cavium Nitrox Card</a> to increase TPS by 80%
+                </strong></dl>
+                    <dd>Samsung was planning to create SSL 
+                        encryptor/decryptor hardware inhouse from old SDK based nitrox card<br>
+                        Card detection, writing SSL applications for interaction with nitrox card
+                    </dd>
+                <dl><strong>
+                    Project-2: Design, Develop Smart TV Client application 
+                    to receive AV over RTP. (C, Multithreading)
+                </strong></dl>
+                    <dd>Video stream received capture server and shows on console</dd>
+
+            <h3>Clear2Pay (Dec 2010 – Jul 2012) Senior Software Engineer C++, 
+                C, Verifone, Gemalto</h3>
+                <dl><strong>
+                    Project-1: Implement 
+                    <a href="https://en.wikipedia.org/wiki/Token_bucket">Token Bucket Algorithm</a>
+                    for Congestion Control on POS App
+                </strong></dl>
+                    <dd>POS application did not had rate control and hence 
+                        huge packet drops and retransmissions. Developed interface for rate control
+                    </dd>
+                <dl><strong>
+                    Project-2: Develop Message Layer for Train control system
+                </strong></dl>
+                    <dd>Train system has 2 entities. Office server(Controller) 
+                        & Locomotive(Moving Engine+ Train). My Role was to implement Controller</dd>
+
+            <h3>Mtree Software Pvt Ltd. (Aug 2008 – dec 2010) 
+                Software Engineer C, C++,Windows, Linux</h3>
+                <dl><strong>
+                    Project-1:
+                    <a href="https://en.wikipedia.org/wiki/High_Assurance_Internet_Protocol_Encryptor#:~:text=A%20High%20Assurance%20Internet%20Protocol,Assurance%20Internet%20Protocol%20Interoperability%20Specification).">
+                        HAIPE(High Assurance Internet Protocol Encryptor)</a>
+                </strong></dl>
+                <dd>Design, Develop HAIPE(High Assurance Internet Protocol Encryptor) 
+                    to provide secure gateways on 
+                    <a href="https://en.wikipedia.org/wiki/QualNet">Qualnet</a></dd>
+                <dl><strong>
+                    Project-2: <a href="https://en.wikipedia.org/wiki/Bell%E2%80%93LaPadula_model">Bell-Lapadula</a>
+                </strong></dl>
+                    <dd>Design, Develop of Bell-Lapadula model on 
+                        HAIPE to enforce access control (C++, Visual Studio)</dd>
+
+            <h3>Bharti Airtel (Jan 2006 – Aug 2007) Associate Software Engineer C, C++</h3>
+                <dl><strong>
+                    Project-1: 
+                    <a href="https://airteltv.live/">Airtel Live</a>
+                </strong></dl>
+                    <dd>Design Application interface layer(AIL) 
+                        on Video Delivery Platform(VDP)=Airtel live(send AV to 3G phones) using SIP,SDP</dd>
+                <dl><strong>Project-2: Multimedia Portal Application</strong></dl>
+                <dd>Design, Develop Multimedia Portal Application on Video Delivery Platform</dd>
+
+        <h2 id="edu">Education</h2>
+            <dl><strong>Masters</strong>
+                <dd>Computer Science(Pursuing) AM University</dd>
+                <dd>PGDM (Information Technology) 2008 AIMA, Grade A</dd>
+            
+            <dl><strong>PG Diploma</strong></dl>
+                <dd>PGDEVD (Information Technology) 2006 CDAC, Grade A</dd>
+
+            <dl><strong>Bachelor</strong></dl>
+                <dd>B.tech (Electronics & Communication) 2005 UPTU University 74%</dd>
+
+        <h2 id="awards">Awards</h2>
+            <dl>Samsung</dl>
+                <dd>Focus on Customer<br>
+                    Best Project
+                </dd>
+            <dl>Mtree</dl>
+                <dd>
+                    Pat on Back
+                </dd>
+            <dl>RedHat</dl>
+                <dd>Red Hat Multiplier</dd>
+            <dl>Clear2Pay</dl>
+                <dd>Team Titan</dd>
+            <dl>Bharti</dl>
+                <dd>2nd Best Project</dd>
+
+        <h2 id="lang">Languages</h2>
+            <dd>English (Proficient)<br>
+                French (Intermediate)<br>
+                Spanish (Beginner)<br>
+                Hindi (Native)
+            </dd>
+
     </main>
 
     <script src="/scripts/search.js"></script>
