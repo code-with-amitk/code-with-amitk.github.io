@@ -47,6 +47,24 @@ var s string
         <tr>
             <td>Convert</td>
             <td><pre><code class="language-css">
+//Lowercase 
+transform(sl.begin(), sl.end(), sl.begin(), ::tolower)
+
+//int,double to str 
+int a=4; 
+stringstream ss; 
+ss&lt;&lt;a; 
+cout&lt;&lt;ss.str()
+
+//string to int 
+string str="ab"; 
+int i; 
+istringstream(str)>>i;
+
+//string to int 
+string str="ab"; 
+int i; 
+stringstream(str)>>i;
             </pre></code></td>
             <td><pre><code class="language-css">
             </pre></code></td>
