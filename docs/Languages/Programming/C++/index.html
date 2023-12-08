@@ -5,16 +5,25 @@
     <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 <body>
-    <div class="container">
-		<div class="menu">
-			<ul>
-				<li><a href="./STL">STL</a></li>
-				<li><a href="String.html">Strings (C++, Rust, Python)</a></li>
-			</ul>
-        </div>
-        <div class="content">
-            <!-- Main content area -->
-        </div>
-    </div>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="./STL/">STL</a>
+        <a href="String.html">String</a>
+        <a href="./C++_11,14,17,20,23/">C++_11,14,17,20,23</a>
+    </aside>
 </body>
 </html>
