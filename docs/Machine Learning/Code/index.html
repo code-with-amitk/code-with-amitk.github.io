@@ -29,8 +29,25 @@
     <article style="margin-left:200px;">
         <h3 id="classifymnist">1. Classify grayscale images of handwritten digits 
             (28 × 28 pixels) into their 10 categories (0 through 9)</h3>
-            <h4>1. Create Neural Network of 2 dense layers</h4>
-            <dl></dl>
+            <h4>1. Create 
+                <a href="../Terms.html#layer">Neural Network</a> of 2 dense layers</h4>
+            <dl>a. Create n linear layers(functions) using keras, where input & output to layer is a tensor.</dl>
+            <dl>b. Add a 
+                <a href="../Terms.html#layer">Dense layer</a>
+                with (512=<a href="../Terms.html#neuron">neurons</a>, 
+                ReLU=<a href="../Terms.html#ActivationFunction">activation function</a>, 
+                i/p <a href="../Terms.html#tensor">tensor shape</a>=(28*28)</dl>
+            <pre><code>
+                    Layer-1         Layer-2
+                ---->   |               |
+            2D-tensor   |   ---->       |
+                        |   2D-tensor   |   --->
+                                            2D-tensor
+
+network = models.Sequential()       //a
+network.add(layers.Dense(512, activation='relu', input_shape=(28*28,))) //b
+network.add(layers.Dense(10, activation='softmax'))
+            </code></pre>
 
             <h4>2. Use MNIST dataset(60,000 training images, plus 10,000 test images)</h4>
             <dl><strong>How a image is represented by 28x28 matrix?</strong></dl>

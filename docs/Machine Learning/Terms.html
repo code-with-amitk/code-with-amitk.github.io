@@ -32,6 +32,7 @@
         <a href="#layer">Layer</a>
         <a href="#learningtypes">Learning Types</a>
         <a href="#lossf">Loss function</a>
+        <a href="#neuron">Neuron</a>
         <a href="#neuralnetwork">Neural Network</a>
         <a href="#tensor">Tensor</a>
         <a href="#tensorflow">Tensorflow</a>
@@ -69,9 +70,13 @@
         </table>
 
         <h3 id="ActivationFunction">Activation Function</h3>
-        <dl>Without an activation function(eg: relu, softmax), [Dense layer](#layer) would always perform linear operations(a dot product, an addition) on input tensors.</dl>
-        <dl>Adding activation function to a layer introduces non-linearity into the model, allowing it to learn more complex relationships between the input and output data</dl>
-        <dl>Non-linear activation functions such as ReLU, Sigmoid, and Tanh can help the model to better fit the training data and make more accurate predictions on new data.</dl>
+        <dl>Without an activation function(eg: relu, softmax), 
+            <a href="#layer">Dense layer</a> would always perform linear operations
+            (a dot product, an addition) on input tensors.</dl>
+        <dl>Adding activation function to a layer introduces non-linearity into the model, 
+            allowing it to learn more complex relationships between the input and output data</dl>
+        <dl>Non-linear activation functions such as ReLU, Sigmoid, and Tanh can help the 
+            model to better fit the training data and make more accurate predictions on new data.</dl>
 
         <h3 id="conda">Conda</h3>
         <dl><a href="https://docs.conda.io/projects/miniconda/en/latest/">Miniconda</a> is the recommended approach for installing TensorFlow with GPU support</dl>
@@ -102,8 +107,31 @@
              GPU            CPU
         </pre></code>
 
-        <h3 id="layer">Layer</h3>
-        <dl>Neural network is created by cascading multiple layers.</dl>
+        <h3 id="layer">Layer / class or Function</h3>
+        <dl>Layer processes input data(tensor) and produces an output(tensor) in specific format.<br>
+            Neural network is created by cascading multiple layers.<br>
+            Types of Layers:
+        </dl>
+        <table>
+            <tr>
+                <th></th>
+                <th>Dense Layer / Fully connected layer</th>
+                <th>Convolutional Layer</th>
+                <th>Recurrent Layer</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Each neuron is connected to every neuron in the previous layer.</td>
+                <td>Use convolutional operations to detect local patterns in the input data.</td>
+                <td>Processes sequential data, where the order of the input matters</td>
+            </tr>
+            <tr>
+                <td>Usage</td>
+                <td>image classification, regression, and more</td>
+                <td>image classification, object detection, image segmentation, spatial hierarchies</td>
+                <td>natural language processing (NLP), time series analysis, and speech recognition</td>
+            </tr>
+        </table>
 
         <h3 id="learningtypes">Learning Types</h3>
         <h4>A. Supervised Learning</h4>
@@ -163,6 +191,31 @@
         <code><pre>
             Loss function = (Actual O/P) - (Expected output)
         </pre></code>
+
+        <h3 id="neuron">Neuron / Node / Function or class</h3>
+        <dl>A neuron is the basic unit within a layer. 
+            It takes input, performs a computation, and produces an output.</dl>
+        <dl>Each neuron has weight, bias, activation function</dl>
+        <dt>weight</dt>
+        <dd>Neurons receive input signals, and each input is associated with a weight. 
+            These weights represent the strength of the connection between the input and the neuron. 
+        </dd>
+        <pre><code>
+class Neuron:
+    def __init__(self, num_inputs):
+        self.weights = initialize_weights(num_inputs)
+        self.bias = initialize_bias()
+        self.activation_function = relu
+
+    def forward(self, input_data):
+        # Compute the weighted sum of inputs
+        weighted_sum = sum(weight * input_value for weight, input_value in zip(self.weights, input_data)) + self.bias
+        
+        # Apply the activation function
+        output = self.activation_function(weighted_sum)
+        
+        return output        
+        </code></pre>
 
         <h3 id="neuralnetwork">Neural Network</h3>
         <dl>It try to emulate the human brain, combining computer 
