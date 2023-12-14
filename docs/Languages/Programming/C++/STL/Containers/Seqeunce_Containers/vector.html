@@ -201,7 +201,11 @@ vec[i] = ele
 
             </code></pre></td>
             <td><pre><code class="language-css">   <!--Rust-->
-
+fun(nums: Vec&lt;i32>) {
+    for i in nums.iter().skip(1) {//skip 1st element
+        println!("{}", *i);
+    }
+}
             </code></pre></td>
             <td><pre><code class="language-css">   <!--Python-->
 range(start, stop, step)
