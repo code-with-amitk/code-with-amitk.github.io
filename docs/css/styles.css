@@ -155,21 +155,26 @@ Search: mdn sidebar*/
   font-size: x-small;
 }
 
+summary {
+  margin-left: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
 /* sidebar end*/
-
 dl {
   margin-top: 0;
   font-size: 12px;
 }
 dt {
-  font-size: 12px;
   margin-top: 10px;
+  font-size: 11px;
 }
 dd {
-  margin-left: 10px;
+  margin-left: 12px;
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: 10px;
 }
+
 
 /* li start*/
 li {
