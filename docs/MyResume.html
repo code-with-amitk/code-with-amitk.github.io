@@ -27,6 +27,7 @@
         <a href="#edu">Education</a>
         <a href="#awards">Awards</a>
         <a href="#lang">Languages</a>
+        <a href="/contact.html">Contact Me</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
@@ -115,20 +116,19 @@
                 </summary>
                     <dd>
                         JIMS is distributed service. Collector collects information(user,groups,devices,events) from Identity Providers(Active Directory, Azure, Okta)
-                        and provide to Server(which stores in Postgres). <br>
+                        and provide to Server(which stores in Postgres). 
                         SRX firewall queries Server on REST endpoint and server serves it.
                     </dd>
-                    <dt>My Responsibilities</dt>
-                        <dd>Design, code, enhance, bugfix on-prem, AWS cloud of JIMS & UI (Rust)<br>
-                        Write SRX multithreaded stub in Rust using async,tokio.<br>
-                        Powershell/Python scripting to dump Active directory(Win 2019,2022)
-                            information from customer's environment and simulate same in dev<br>
-                        AWS jims-server serving <a href="https://www.juniper.net/us/en/products/security/srx-series.html">
-                            SRX firewall</a> <br>
-                        Write <a href="https://prometheus.io/">Prometheus</a> endpoint to scrap metrics(counter, gauge, histogram, summary)
-                            serving <a href="https://grafana.com/">Grafanna</a><br>
-                        <a href="https://kafka.apache.org/">Kafka Producer</a>, 
-                            Consumer to send topics(messages) to kafka broker</dd>
+                    <dd>Design, code, enhance, bugfix on-prem, AWS cloud of JIMS & UI (Rust)</dd>
+                    <dd>Write SRX multithreaded stub in Rust using async,tokio.</dd>
+                    <dd>Python scripting to dump Active directory(Win 2019,2022)
+                        information from customer's environment and simulate same in dev</dd>
+                    <dd>AWS jims-server serving <a href="https://www.juniper.net/us/en/products/security/srx-series.html">
+                        SRX firewall</a> </dd>
+                    <dd>Write <a href="https://prometheus.io/">Prometheus</a> endpoint to scrap metrics(counter, gauge, histogram, summary)
+                        serving <a href="https://grafana.com/">Grafanna</a></dd>
+                    <dd><a href="https://kafka.apache.org/">Kafka Producer</a>, 
+                        Consumer to send topics(messages) to kafka broker</dd>
             </details>
 
             <details>
@@ -146,6 +146,10 @@
             <details>
                 <summary>4. Optimizations in postgres</summary>
                 <dd>Postgres query for handing 1.5 millions req/sec</dd>
+            </details>
+
+            <details>
+                <summary>5. Multipod support to JIMS</summary>
             </details>
 
             <h3>AMD India Pvt Ltd. (Jun 2020 – Jul 2021)  C++, Chip Programmer</h3>

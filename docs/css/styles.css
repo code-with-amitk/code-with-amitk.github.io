@@ -162,15 +162,17 @@ summary {
 }
 /* sidebar end*/
 dl {
+  margin-left: 16px;
   margin-top: 0;
   font-size: 12px;
 }
 dt {
+  margin-left: 20px;
   margin-top: 10px;
   font-size: 11px;
 }
 dd {
-  margin-left: 12px;
+  margin-left: 24px;
   margin-bottom: 10px;
   font-size: 10px;
 }
