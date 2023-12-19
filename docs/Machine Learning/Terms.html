@@ -82,10 +82,34 @@
         <dl><a href="https://docs.conda.io/projects/miniconda/en/latest/">Miniconda</a> is the recommended approach for installing TensorFlow with GPU support</dl>
         <dl> It creates a separate environment to avoid changing any installed software in your system. This is also the easiest way to install the required software especially for the GPU setup.</dl>
 
-        <h3 id="opt">Optimizer, stochastic gradient descent (SGD)</h3>
-        <dl>Tells how parameters should be tuned to make model produce expected output. Presently ML model is showing [loss function](#lf).</dl>
-        <dl>Goal of gradient descent is to identify the model parameters that provide the maximum accuracy.</dl>
-        <dl>Gradient-descent process must be based on a single scalar loss value; so, for multiloss networks, all losses are combined (via averaging) into a single scalar quantity.</dl>
+        <h3 id="opt">Optimizers</h3>
+        <dl>optimizer is an algorithm used to adjust the parameters of a model in order to minimize the 
+            <a href="#lossf">error or loss function</a></dl>
+        <table>
+            <tr>
+                <th>Optimizer</th>
+                <th>Meaning</th>
+                <th>Example</th>
+            </tr>
+            <tr>
+                <td>1. RMSprop (Root Mean Square Propagation)</td>
+                <td> It divides the learning rate for a weight by a running average of the magnitudes</td>
+                <td>
+                    <pre><code>
+from keras.optimizers import RMSprop
+optimizer = RMSprop(learning_rate=0.001, rho=0.9)
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>2. Stochastic Gradient Descent (SGD)</td>
+                <td>Adjusts the model parameters based on the average gradient of the loss</td>
+                <td><pre><code>
+from keras.optimizers import SGD
+optimizer = SGD(learning_rate=0.01, momentum=0.9)
+                </code></pre></td>
+            </tr>
+        </table>
 
         <h3 id="overfitting">Overfitting</h3>
         <dl>Means that the model performs well on the training data, but it does not generalize well(ie produces good results on real world/unseen data), because there is too of much uneccessary data(noise) in traning data.</dl>
@@ -108,7 +132,7 @@
         </pre></code>
 
         <h3 id="layer">Layer / class or Function</h3>
-        <dl>Layer processes input data(tensor) and produces an output(tensor) in specific format.<br>
+        <dl>Layer processes input data(tensor) and produces an output(tensor) in specific format. 
             Neural network is created by cascading multiple layers.<br>
             Types of Layers:
         </dl>
@@ -186,11 +210,33 @@
         </dt>
 
         <h3 id="lossf">Loss Function</h3>
-        <dl>Function that compares expected and actual values. Measures how well the neural network models the training data. 
-            Loss function should be minimum.</dl>
+        <dl>In Keras, a loss function is used during the training of a neural network. 
+            It measures the difference between the model's predictions and the actual target values. The goal of training is to minimize this loss</dl>
         <code><pre>
             Loss function = (Actual O/P) - (Expected output)
         </pre></code>
+        <table>
+            <tr>
+                <th>Types</th>
+                <th>What</th>
+                <th>Example</th>
+            </tr>
+            <tr>
+                <td>1. categorical_crossentropy</td>
+                <td>used in multi-class classification problems when the target variable is one-hot encoded</td>
+                <td>model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])</td>
+            </tr>
+            <tr>
+                <td>2. Binary Crossentropy (binary_crossentropy)</td>
+                <td>Used for binary classification problems, where the target variable is binary (0 or 1)</td>
+                <td>model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+            </tr>
+            <tr>
+                <td>3. Mean Squared Error (mean_squared_error or mse)</td>
+                <td>Measures the average squared difference between the true and predicted values</td>
+                <td>model.compile(optimizer='adam', loss='mean_squared_error')</td>
+            </tr>
+        </table>
 
         <h3 id="neuron">Neuron / Node / Function or class</h3>
         <dl>A neuron is the basic unit within a layer. 
