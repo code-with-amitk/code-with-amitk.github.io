@@ -205,6 +205,9 @@ fun(nums: Vec&lt;i32>) {
     for i in nums.iter().skip(1) {//skip 1st element
         println!("{}", *i);
     }
+    for i in nums.iter().skip(2) {//skip 1st 2 elements
+        println!("{}", *i);
+    }
 }
             </code></pre></td>
             <td><pre><code class="language-css">   <!--Python-->
@@ -243,6 +246,7 @@ for i in range(len(list) - 1, -1, -1):
             <td>vec.size()</td>
             <td>vec.len()</td>
             <td>len(vec)</td>
+            <td>len(arr)</td>
         </tr>
 
         <tr>
@@ -265,8 +269,9 @@ sorted(list, key=fun)
         <tr>
             <td>Swap</td>
             <td>swap(arr[i], arr[j])</td>
-            <td></td>
+            <td>std::mem::swap(&mut a, &mut b);</td>
             <td>lst[i], lst[j] = lst[j], lst[i]</td>
+            <td>a,b = b,a</td>
         </tr>
 
     </table>
