@@ -23,11 +23,53 @@
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#capportal">Captive Portal</a>
+        <a href="#wctows">Ways Web Client connect to Web Server</a>
     </aside>
 
     <div style="margin-left:200px;">
         <h3 id="capportal">Captive Portal</h3>
-            <p>A captive portal is a web page that users must interact with before accessing a public network. It's often used by public venues that offer free Wi-Fi, such as airports, hotels, and coffee shops</p>
+            <p>A captive portal is a web page that users must interact with before accessing a public network. 
+                It's often used by public venues that offer free Wi-Fi, such as airports, hotels, and coffee shops</p>
+
+        <h3 id="wctows">Ways Web Client connect to Web Server</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>What</th>
+                <th>Usecase</th>
+                <th>Keeps Connection open</th>
+            </tr>
+            <tr>
+                <td>1. Pooling / Pull Method</td>
+                <td>Client repeatedly sends requests to the server<br>at regular intervals to check for updates</td>
+                <td>When near real-time updates are required</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>2. Long Pooling</td>
+                <td>client sends a request to the server, and the server<br>
+                     holds the request open until new data is available or a timeout occurs.</td>
+                <td>When near real-time updates are required</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>3. Websockets</td>
+                <td>Full-duplex long-lived connection. Both the client<br> and server can send messages to each other at any time.</td>
+                <td>
+                    - For low-latency and high-frequency data updates, such as <br>
+                    - chat applications, real-time collaborative editing, and online gaming.</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>4. Webhooks <br>(Event Driven Architecture)</td>
+                <td>
+                    - These are HTTP callbacks initiated by the server to <br>notify a client when specific events occur.<br>
+                    - Client provides an endpoint, and the server sends HTTP<br> requests to that endpoint whenever relevant events happen
+                </td>
+                <td>notifying clients about new data, updates, or changes.</td>
+                <td>No. Server calls client endpoint(APIs) on data</td>
+            </tr>
+        </table>
     </div>
 
 </body>
