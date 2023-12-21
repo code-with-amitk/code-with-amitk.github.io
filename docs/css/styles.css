@@ -177,6 +177,11 @@ dd {
   font-size: 10px;
 }
 
+p {
+  margin-left: 24px;
+  margin-bottom: 10px;
+  font-size: 10px;
+}
 
 /* li start*/
 li {
