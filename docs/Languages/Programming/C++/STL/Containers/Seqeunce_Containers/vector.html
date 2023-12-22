@@ -196,9 +196,12 @@ vec[i] = ele
         </tr>
 
         <tr>
-            <td>Iterate</td>
+            <td>Iterate, Traverse</td>
             <td><pre><code class="language-css">   <!--c++-->
+vector&lt;int> v;
+for_each(v.begin(),v.end(),[&](int ele){
 
+});
             </code></pre></td>
             <td><pre><code class="language-css">   <!--Rust-->
 fun(nums: Vec&lt;i32>) {
@@ -211,10 +214,11 @@ fun(nums: Vec&lt;i32>) {
 }
             </code></pre></td>
             <td><pre><code class="language-css">   <!--Python-->
-range(start, stop, step)
-# Forward Iterate
+for c in s[1:-1]:
+  print(c)
+
 j=1
-for i in range(0,n):
+for i in range(0,n):  #range(start, stop, step)
   print(vec[i][j])
 
 # Reverse Iterate
@@ -272,6 +276,18 @@ sorted(list, key=fun)
             <td>std::mem::swap(&mut a, &mut b);</td>
             <td>lst[i], lst[j] = lst[j], lst[i]</td>
             <td>a,b = b,a</td>
+        </tr>
+
+        <tr>
+            <td>Ternary Operator</td>
+            <td><pre><code class="language-css">
+int a = (x == '0') ? 1 : 0;
+            </code></pre></td>
+            <td></td>
+            <td><pre><code class="language-css">
+a = 1 if x == '0' else 0
+            </code></pre></td>
+            <td></td>
         </tr>
 
     </table>
