@@ -7,6 +7,21 @@
 </head>
 
 <body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
     <h1>Strings</h1>
     <ul>
       <li><h3><a href="#comp">String (C++ vs Python vs Rust vs Go)</a></h3></li>
@@ -46,26 +61,42 @@ var s string
 
         <tr>
             <td>Convert</td>
-            <td><pre><code class="language-css">
+            <td><pre><code>
 //Lowercase 
 transform(sl.begin(), sl.end(), sl.begin(), ::tolower)
 
 //int,double to str 
+        <table>
+            <tr>
+                <th><pre><code>
 int a=4; 
 stringstream ss; 
 ss&lt;&lt;a; 
 cout&lt;&lt;ss.str()
+        </code></pre></th>
+        <th><pre><code>
+int a = 1, b = 2;
+string s = to_string(a) + "," + to_string(b);
+        </code></pre></th>
+    </tr>
+</table>
 
 //string to int 
+<table>
+    <tr>
+        <th>
 string str="ab"; 
 int i; 
 istringstream(str)>>i;
-
-//string to int 
+        </th>
+        <th>
 string str="ab"; 
 int i; 
 stringstream(str)>>i;
-            </pre></code></td>
+        </th>
+    </tr>
+</table>
+    </td>
             <td><pre><code class="language-css">
             </pre></code></td>
             <td><pre><code class="language-css">
