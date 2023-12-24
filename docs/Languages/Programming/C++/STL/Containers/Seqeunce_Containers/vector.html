@@ -205,13 +205,18 @@ for_each(v.begin(),v.end(),[&](int ele){
             </code></pre></td>
             <td><pre><code class="language-css">   <!--Rust-->
 fun(nums: Vec&lt;i32>) {
-    for i in nums.iter().skip(1) {//skip 1st element
-        println!("{}", *i);
-    }
-    for i in nums.iter().skip(2) {//skip 1st 2 elements
+    for i in nums.iter().skip(1) {//skip 1st 2 element
         println!("{}", *i);
     }
 }
+
+// Closure or Lambda
+let s:String = "010101";
+s.chars().for_each(|ele| {
+    if ele == '1' {
+
+    }
+});
             </code></pre></td>
             <td><pre><code class="language-css">   <!--Python-->
 for c in s[1:-1]:
