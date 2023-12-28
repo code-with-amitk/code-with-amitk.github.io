@@ -22,15 +22,21 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#commands">Commands</a>
-        <a href="#authtable">Authentication Table</a>
+        <a href="#srx">SRX</a>
+        <ul>
+            <li><a href="#authtable">Authentication Table</a></li>
+            <li><a href="#commands">Commands</a></li>
+        </ul>
+        <a href="#fortiAuthenticator">FortiAuthenticator</a>
+        
     </aside>
 
     <main>
         <article style="margin-left:200px;">
-            <h3 id="authtable">Authentication Table</h3>
-            <dl><strong>Security Poilcy</strong></dl>
-            <dt>Set of rules(Rules: Permit, deny or tunnel) that determine how network traffic is controlled, inspected, and allowed or denied</dt>
+            <h3 id="srx">SRX</h3>
+            <dl id="authtable"><strong>Authentication Table</strong></dl>
+            <dt><u>Security Poilcy</u></dt>
+            <dd>Set of rules(Rules: Permit, deny or tunnel) that determine how network traffic is controlled, inspected, and allowed or denied</dd>
             <code><pre>
                 1. On qa-central or dav-central.
                 $ get_vsrx_tanant <tanent-id>
@@ -53,15 +59,20 @@
                 # run show services user-identification authentication-table authentication-source all extensive
             </pre></code>
 
-            <dl><strong>Domain based policies</strong></dl>
-            <dt>Policies are created to manage traffic between different security domains/zones.</dt>
-            <dd>For example, you might have separate zones for the internal network, the DMZ, and external networks. Policies define how traffic is allowed or denied between these zones.</dd>
+            <dt><u>Domain based policies</u></dl>
+            <dd>Policies are created to manage traffic between different security domains/zones.<br>
+                For example, you might have separate zones for the internal network, the DMZ, and 
+                external networks. Policies define how traffic is allowed or denied between these zones.
+            </dd>
 
-            <dl><strong>Group based policies</strong></dl>
-            <dt>Policies can also be based on user groups. User group policies can be configured to apply different rules based on group membership.</dt>
-            <dd>For example, you can create rules for specific groups of users, granting or denying access to certain resources or applications.</dd>
+            <dl><u>Group based policies</u></dl>
+            <dd>Policies can also be based on user groups. User group policies can be configured to apply different 
+                rules based on group membership.<br>
+                For example, you can create rules for specific groups of users, granting or denying access to certain 
+                resources or applications.
+            </dd>
 
-            <dl><strong>How Authentication table is created?</strong></dl>
+            <dt><u>How Authentication table is created?</u></dt>
             <pre class="mermaid">
                 sequenceDiagram
                     note over User: Access network device
@@ -72,7 +83,7 @@
                     jims -->> srx: response
             </pre>
 
-            <h3 id="commands">Commands</h3>
+            <dl id="commands"><strong>Commands</strong></dl>
             <code><pre>
                 Get IP Addresses
                 > cli
@@ -167,6 +178,13 @@
                 //////////////reboot: Needed when you change config////////////////
                 # reboot
             </pre></code>
+
+            <h3 id="fortiAuthenticator">FortiAuthenticator</h3>
+            <dl>- This is a IAM device which provides Authentication(using RADIUS, LDAP), Two Factor Authentication(token)
+                IEEE802.1X(wireless) Support, User Identification, Certificate Management, Integration(third party RADIUS 
+                and LDAP authentication systems) <br>
+                - The REST API can also be used to integrate with external provisioning systems.
+            </dl>
 
         </article>
     </main>
