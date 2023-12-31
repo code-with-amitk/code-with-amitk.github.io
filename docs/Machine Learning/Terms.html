@@ -32,6 +32,7 @@
         <a href="#layer">Layer</a>
         <a href="#learningtypes">Learning Types</a>
         <a href="#lossf">Loss function</a>
+        <a href="#metrics">Metrics</a>
         <a href="#neuron">Neuron</a>
         <a href="#neuralnetwork">Neural Network</a>
         <a href="#tensor">Tensor</a>
@@ -210,8 +211,9 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         </dt>
 
         <h3 id="lossf">Loss Function</h3>
-        <dl>In Keras, a loss function is used during the training of a neural network. 
-            It measures the difference between the model's predictions and the actual target values. The goal of training is to minimize this loss</dl>
+        <p>In Keras, a loss function is used during the training of a neural network. 
+            It measures the difference between the model's predictions and the actual target values. 
+            The goal of training is to minimize this loss</p>
         <code><pre>
             Loss function = (Actual O/P) - (Expected output)
         </pre></code>
@@ -237,6 +239,27 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
                 <td>model.compile(optimizer='adam', loss='mean_squared_error')</td>
             </tr>
         </table>
+
+        <dt id="to_categorical"><strong>to_categorical</strong></dt>
+        <dd>Function to convert labels into a one-hot encoded format.<br>
+            One-hot encoding is converting categorical labels into a binary matrix (1s and 0s)
+        </dd>
+        <pre><code class="language-css">
+from keras.utils import to_categorical
+train_labels = [0, 1, 2, 0, 1]
+train_labels_one_hot = to_categorical(train_labels) # Convert to one-hot encoding
+print(train_labels_one_hot)
+
+array([[1., 0., 0.],                //represents 0
+       [0., 1., 0.],                #1
+       [0., 0., 1.],                #2
+       [1., 0., 0.],                #0
+       [0., 1., 0.]], dtype=float32)#1
+
+        </code></pre>
+
+        <h3 id="metrics">Metrics</h3>
+        <p>Metrics to monitor during training and testing</p>
 
         <h3 id="neuron">Neuron / Node / Function or class</h3>
         <dl>A neuron is the basic unit within a layer. 

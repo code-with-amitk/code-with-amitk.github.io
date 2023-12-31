@@ -110,6 +110,15 @@ body, h1, p, ul, li {
     line-height: 1.5;
     white-space: pre-wrap;
 }
+pre {
+  background-color: lightgrey;
+  /*padding: 10px;
+  border-radius: 5px;*/
+  font-family: monospace;
+  font-size: 9.5px;
+  /*line-height: 1.5;
+  white-space: pre-wrap;*/
+}
 
 #search-bar {
   position: absolute;

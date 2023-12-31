@@ -31,62 +31,65 @@
             (28 × 28 pixels) into their 10 categories (0 through 9)</h3>
 
             <h4>1. Create <a href="../Terms.html#neuralnetwork">Neural Network</a> of 2 dense layers</h4>
-            <dl>a. Create n linear <a href="../Terms.html#layer">layers(functions)</a> using 
+            <dt>a. Create n linear <a href="../Terms.html#layer">layers(functions)</a> using 
                 <a href="../Terms.html#keras">keras</a>, where input & output to layer is a 
-                <a href="../Terms.html#tensor">tensor</a>.</dl>
-            <dl>b. Add a 
-                <a href="../Terms.html#layer">Dense layer</a>
+                <a href="../Terms.html#tensor">tensor</a>.
+                <br>
+                b. Add 2 <a href="../Terms.html#layer">Dense layers</a>
                 with (512=<a href="../Terms.html#neuron">neurons</a>, 
                 ReLU=<a href="../Terms.html#ActivationFunction">activation function</a>, 
-                i/p <a href="../Terms.html#tensor">tensor shape</a>=(28*28) matrix</dl>
+                i/p <a href="../Terms.html#tensor">tensor shape</a>=(28*28) matrix
+                <br>
+                c. Add <a href="../Terms.html#lossf">loss function(categorical_crossentropy)</a>, 
+                <a href="../Terms.html#opt">Optimizer</a>, <a href="../Terms.html#metrics">Metrics</a>
+            </dt>
             <pre><code>
-                --2D_tensor-> [Layer-1]  --2D_tensor-> [Layer-2] --2D_tensor->
-                                  /\                        |
-                                  |                         \/
-                                  |                     Loss Function
-                                  |                      (loss score)
-                                  |                     /
-                                  |------------- Optimizer
+                --2D_tensor-> [Dense-Layer-1]  --2D_tensor-> [Dense-Layer-2] --2D_tensor->
+                                  /\                             |
+                                  |                              \/
+                                  |                          Loss Function
+                                  |                          (loss score)
+                                  |                             /
+                                  |------------- Optimizer -----
 
 network = models.Sequential()       //a
 network.add(layers.Dense(512, activation='relu', input_shape=(28*28,))) //b
 network.add(layers.Dense(10, activation='softmax'))
-            </code></pre>
-
-            <dl>c. Add a <a href="../Terms.html#lossf">loss function(categorical_crossentropy)</a>, 
-                <a href="../Terms.html#opt">Optimizer</a>, Metrics</dl>
-                <dd>Metrics to monitor during training and testing? Here, we’ll only care about accuracy (the fraction of the images that were correctly classified)</dd>
-            <pre><code>
 network.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])  //c
             </code></pre>
 
-            <h4>2. Load MNIST dataset(60,000 training images, plus 10,000 test images) to local variables</h4>
-            <dl><strong>How a image is represented by 28x28 matrix?</strong></dl>
-            <dt>In a grayscale image represented as a (28, 28) matrix, each element of the
-                 matrix corresponds to the intensity of the pixel at that position.</dt>
-                <dd>0 represents black: A pixel with an intensity value of 0 is completely black.<br>
+            <h4>2. Prepare input data for neural network</h4>
+            <pre><code>
+train_images = (60000, 28(row),28(col))         //a. Load input image 60k matrix of 28x28
+train_images = reshape(60000, 28x28(row),1(col))//b. Convert 28x28 to 784x1
+train_images = train_images.astype ('float32') / 255    //c. Round off every value in matrix between 0 and 1
+            </code></pre>
+
+            <dl><strong>a. Load MNIST dataset(60,000 training images, plus 10,000 test images) to local variables</strong></dl>
+            <dt><strong>How a image is represented by 28x28 matrix?</strong></dt>
+            <dd>In a grayscale image represented as a (28, 28) matrix, each element of the
+                 matrix corresponds to the intensity of the pixel at that position.<br>
+                0 represents black: A pixel with an intensity value of 0 is completely black.<br>
                 255 represents white: A pixel with an intensity value of 255 is completely white.<br>
                 Values in between represent shades of gray: The values between 0 and 255 
-                represent varying shades of gray, with higher values indicating lighter shades
+                represent varying shades of gray, with higher values indicating lighter shades<br><br>
+                <u>train_images?</u> train_images is an array containing 60,000 elements, each element is 28x28 matrix 
+                representing a grayscale image of a handwritten digit from the MNIST dataset.<br>
+                <u>train_labels?</u> it is an array containing the corresponding labels or class values for each image in train_images 
+                each label is an integer from 0 to 9, representing the digit that the corresponding image depicts. 
+                This is 1D array of length 60,000, where each element is the label for the corresponding image
             </dd>
             <img src="/images/mnist_sample_digits.PNG" 
             alt="mnist sample digits" style="width:200px;height:70px;">
             <br>
-            <code>
-                (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
-            </code>
-            <dl>train_images?</dl>
-                <dd>train_images is an array containing 60,000 elements, each element is 28x28 matrix 
-                    representing a grayscale image of a handwritten digit from the MNIST dataset.</dd>
-            <dl>train_labels?</dl>
-                <dd>it is an array containing the corresponding labels or class values for each image in train_images 
-                    each label is an integer from 0 to 9, representing the digit that the corresponding image depicts.<br>
-                    This is 1D array of length 60,000, where each element is the label for the corresponding image
-                </dd>
+            <pre><code>
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+            </code></pre>
 
-            <h4>3. After storing data into tensors, Reshape them from train_images,test_images(28(rows)x28(cols)) to 28*28=784(rows)</h4>
-                <dt>Reshaping means rearranging tensor to match target shape.</dt>
-                <dt>Why Reshaping? Because Neural Network expects 1-D array</dt>
+            <dl><strong>b. Reshape train_images,test_images from 28(row)x28(col) to 28*28=784(rows)x1(col)</strong></dl>
+                <dd>Reshaping means rearranging tensor to to fit input size needed by neural network layer.<br>
+                    Why Reshaping? Our Neural Network expects 1-D array
+                </dd>
                 <pre><code>
 # Examples
 >>> x = np.array ( [[1,2],[3,4],[5,6]])
@@ -101,7 +104,7 @@ train_images = train_images.reshape ((60000, 28*28))
 test_images = test_images.reshape ((10000, 28*28))
                 </code></pre>
 
-                <h4>4. Convert all train_images,test_images from [0,255] to [0,1]</h4>
+                <dl><strong>c. Convert all train_images,test_images from [0,255] to [0,1]</strong></dl>
                 <pre><code>
 # Divide every value by 255.
 0/255 = 0
@@ -112,6 +115,13 @@ test_images = test_images.reshape ((10000, 28*28))
 train_images = train_images.astype ('float32') / 255
 test_images = test_images.astype ('float32') / 255
                 </code></pre>
+
+                <dl><strong>d. Convert train_images,test_images to 
+                    <a href="../Terms.html#to_categorical">One-hot encoded labels</a></strong></dl>
+                <pre>
+train_labels = to_categorical(train_labels)
+test_labels = to_categorical(test_labels)
+                </pre>
     </article>
 
 </body>
