@@ -32,6 +32,7 @@
         <a href="#layer">Layer</a>
         <a href="#learningtypes">Learning Types</a>
         <a href="#lossf">Loss function</a>
+        <a href="#matplotlib">Matplotlib</a>
         <a href="#metrics">Metrics</a>
         <a href="#neuron">Neuron</a>
         <a href="#neuralnetwork">Neural Network</a>
@@ -258,6 +259,14 @@ array([[1., 0., 0.],                //represents 0
 
         </code></pre>
 
+        <h3 id="matplotlib">Matplotlib</h3>
+        <dd>
+            Popular plotting library for Python that provides a variety of high-quality 2D and 3D plots and visualizations.<br>
+            <u>Matplotlib.pyplot</u> is a collection of functions that make Matplotlib work like MATLAB, allowing you to create plots, charts<br>
+            <u>imshow(digit, cmap=plt.cm.binary)</u> is used to display images in digit array, 
+                cmap=colormap for mapping the data values to colors in the plot. plt.cm.binary = black and white colors.
+        </dd>
+
         <h3 id="metrics">Metrics</h3>
         <p>Metrics to monitor during training and testing</p>
 
@@ -287,13 +296,13 @@ class Neuron:
         </code></pre>
 
         <h3 id="neuralnetwork">Neural Network</h3>
-        <dl>It try to emulate the human brain, combining computer 
-            science and statistics to solve common problems in the field of AI</dl>
-        <dl>It contains an input layer, one or more hidden layers, and an output layer.</dl>
+        <dd>It try to emulate the human brain, combining computer 
+            science and statistics to solve common problems in the field of AI<br>
+            It contains an input layer, one or more hidden layers, and an output layer.
+        </dd>
 
         <h3 id="tensor">Tensor = n-D Matrix</h3>
-        <dl>This is matrix(as in maths). 
-            Multi-dimensional numpy arrays used to store numbers during computation.</dl>
+        <dd>This is matrix(as in maths). Multi-dimensional numpy arrays used to store numbers during computation.</dd>
 
         <h4>Types of Tensors</h4>
         <table>
@@ -375,16 +384,39 @@ class Neuron:
         </pre></code>
 
         <h4>Tensor Terms</h4>
-        <dl>Data types(dtype)</dl>
-        <dd>Type of the data contained in the tensor; for instance, a tensor’s type could be float32, uint8, float64, and so on.</dd>
-        <dd>String tensors don’t exist in Numpy (or in most other libraries), because tensors are preallocated contiguous memory segments, and strings, being variable length.</dd>
-
-        <dl>Rank/Axis/Dimension/ndim</dl>
-        <dd>Dimension of matrix. For instance, a 3D tensor has three axes, and a matrix has two axes. This is also called the tensor’s ndim in Python libraries such as Numpy.</dd>
-        
-        <dl>Shape</dl>
-        <dd>Tells how many size tensor has along each axis.</dd>
-        <dd>For instance, the previous matrix example has shape (3, 5), and the 3D tensor example has shape (3, 3, 5).</dd>
+        <table>
+            <tr>
+                <th>Term</th>
+                <th>Mearning</th>
+            </tr>
+            <tr>
+                <td>Data types(dtype)</td>
+                <td>
+                    Data type of data present in tensor. Eg: float32, uint8, float64<br>
+                    String tensors don’t exist in Numpy (or in most other libraries), 
+                    because tensors are preallocated contiguous memory segments, and strings, being variable length
+                </td>
+            </tr>
+            <tr>
+                <td>Axis/ndim/Rank/Dimension</td>
+                <td>Dimension of matrix
+                    <pre>
+Dimension/Axis   Array                        
+    0           np.array(12)                     // Point does not have any dimension
+    1           np.array([1,2])                     // 1x2. 1 Dimensional
+    2           np.array([[5, 78, 2, 34, 0],       // 3x4. 2 Dimensional
+                        [6, 79, 3, 35, 1],
+                        [7, 80, 4, 36, 2]])
+                    </pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Shape</td>
+                <td>Tells how many size tensor has along each axis<br>
+                    previous matrix example has shape (3, 5), and the 3D tensor example has shape (3, 3, 5)
+                </td>
+            </tr>
+        </table>
 
         <h3 id="tensorflow">Tensorflow</h3>
         <dl>This is ML Open source library(EXPOSING APIs) for numerical computation and large-scale ML supports CPUs & GPUs.</dl>
