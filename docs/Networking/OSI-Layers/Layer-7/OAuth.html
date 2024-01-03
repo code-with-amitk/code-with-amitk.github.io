@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="what">What is OAuth(Open Authorization)</h3>
+            <p> 
+                - Standard protocol for token-based authentication and authorization. <br>
+                - It allows a client (such as an application or user) to obtain limited access to a resource on behalf of a 
+                resource owner (such as a user) without exposing the resource owner's credentials.<br>
+                - OAuth 2.0 is the current version of the OAuth protocol.
+            </p>
+        <dl id ="oauth"><strong>OAuth in Fortinet Authenticator</strong></dl>
+        <dt><a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/administration-guide/75999/oauth-service"
+        >Fortinet Authenticator OAuth Configuration document</a>
+        <br>
+        <strong>Terms:</strong>
+            <table>
+                <tr>
+                    <th>Term</th>
+                    <th>Meaning</th>
+                </tr>
+                <tr>
+                    <td>Relying Party</td>
+                    <td>OAuth clients that have been issued credentials for requesting OAuth tokens from the FortiAuthenticator</td>
+                </tr>
+                <tr>
+                    <td>Client type</td>
+                    <td>
+                        - Confidential: client ID, user credentials, and the client secret to obtain an OAuth token<br>
+                        - Public: client ID & user credentials to obtain an OAuth token
+                    </td>
+                </tr>
+                <tr>
+                    <td>Authorization grant types</td>
+                    <td>
+                        - Password-based: Authentication and authorization is API-based.<br>
+                        - Authorization code: Authentication and authorization is initiated by the relying party, but the end-user provides their credentials through their browser on the FortiAuthenticator login portal.<br>
+                        - Authorization code with PKCE: FortiAuthenticator applies modifications to the standard Authorization code
+                    </td>
+                </tr>
+                <tr>
+                    <td>Client ID</td>
+                    <td>A generated value is provided by default</td>
+                </tr>
+                <tr>
+                    <td>Client secret</td>
+                    <td>A generated value is provided by default</td>
+                </tr>
+                <tr>
+                    <td>Policy</td>
+                    <td><a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/administration-guide/271141/policies">
+                        Policy Page</a></td>
+                </tr>
+                <tr>
+                    <td>Access token expiry</td>
+                    <td> length of time for which OAuth access tokens issued by this application are valid</td>
+                </tr>
+                <tr>
+                    <td>Redirect URIs</td>
+                    <td>(URI) that the OAuth service is authorized to redirect end-users to after authentication</td>
+                </tr>
+                <tr>
+                    <td>Refresh token expiry</td>
+                    <td>time in days/weeks/months the refresh token issued is valid upon authorization (default = 1 day)</td>
+                </tr>
+                <tr>
+                    <td>Relying Party Scopes</td>
+                    <td>Add scopes for the relying party</td>
+                </tr>
+                <tr>
+                    <td>Claims</td>
+                    <td><a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/administration-guide/796040/relying-party#Claims">
+                        Cliams</a>
+                    </td>
+                </tr>
+            </table>
+        <pre class="mermaid">
+            sequenceDiagram
+                participant FortiAuthenticator-WebInterface
+
+                note over FortiAuthenticator-WebInterface: Configure OAuth in Web Interface
+                note over FortiAuthenticator-WebInterface: Authentication > OAuth Service > General><br>Set Authorization code expiry(1-56000sec)<br>Auto-generated client secret length(16 - 256, default = 128)<br>>Save
+                note over FortiAuthenticator-WebInterface: Configure oauth params as shown in above table
+        </pre>
+
+    </article>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    </script>
+</body>
+</html>

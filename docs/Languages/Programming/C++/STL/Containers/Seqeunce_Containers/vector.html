@@ -197,13 +197,19 @@ vec[i] = ele
 
         <tr>
             <td>Iterate, Traverse</td>
-            <td><pre><code class="language-css">   <!--c++-->
+            <td><pre>   <!--c++-->
 vector&lt;int> v;
 for_each(v.begin(),v.end(),[&](int ele){
-
 });
-            </code></pre></td>
-            <td><pre><code class="language-css">   <!--Rust-->
+
+// next element
+for (auto it=v.begin(); it!=v.end()-1; ++it) {
+    auto next = std::next(it);
+    out = (*it)*(*next);
+}
+            </pre></td>
+
+            <td><pre>   <!--Rust-->
 fun(nums: Vec&lt;i32>) {
     for i in nums.iter().skip(1) {//skip 1st 2 element
         println!("{}", *i);
@@ -217,7 +223,7 @@ s.chars().for_each(|ele| {
 
     }
 });
-            </code></pre></td>
+            </pre></td>
             <td><pre><code class="language-css">   <!--Python-->
 for c in s[1:-1]:
   print(c)
