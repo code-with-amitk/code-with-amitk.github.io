@@ -23,7 +23,8 @@
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#fortiAuthenticator">FortiAuthenticator</a>
-        <a href="#fortiAuthenticatorrestapi">FortiAuthenticator REST API Solution</a>
+        <a href="#fortiAuthenticatorrestapi">REST API Solution</a>
+        <a href="#authenticationmethods">Authentication Methods</a>
         <ul>
             <li><a href="#webservicebasicauthentication">Webservice Basic Authentication</a></li>
             <li><a href="#oauthbearertokenauthentication">OAuth Bearer Token Authentication</a></li>
@@ -47,7 +48,56 @@
             </dd>
 
             <h4 id="fortiAuthenticatorrestapi">REST API Solution (Version 6.6.0)</h4>
-            <dl><strong>Authentication Methods for REST Endpoints</strong></dl>
+            <dt>
+                <a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/rest-api-solution-guide/504500/supported-api-methods">
+                    Supported Methods</a>
+            </dt>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>URL</th>
+                    <th>Operation description</th>
+                    <th>Success response code</th>
+                </tr>
+                <tr>
+                    <td>GET(list)</td>
+                    <td>/[resource]/[id]/</td>
+                    <td>Retrieve a specific resource with ID id from the endpoint</td>
+                    <td>200 ok</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/[resource]/</td>
+                    <td>Create a new resource on the given endpoint. </td>
+                    <td>201 created</td>
+                </tr>
+                <tr>
+                    <td>PUT(list)</td>
+                    <td>/[resource]/</td>
+                    <td>Update all of the resources for the given endpoint</td>
+                    <td>204 NO CONTENT</td>
+                </tr>
+                <tr>
+                    <td>PUT(detail)</td>
+                    <td>/[resource]/[id]/</td>
+                    <td>Update an existing item specified with ID id</td>
+                    <td>204 NO CONTENT</td>
+                </tr>
+                <tr>
+                    <td>DELETE(list)</td>
+                    <td>/[resource]/</td>
+                    <td>Delete all resources from an endpoint</td>
+                    <td>204 NO CONTENT</td>
+                </tr>
+                <tr>
+                    <td>DELETE(detail)</td>
+                    <td>/[resource]/[id]/</td>
+                    <td>Delete an existing resource specified with ID id from an endpoint</td>
+                    <td>204 NO CONTENT</td>
+                </tr>
+            </table>
+
+            <h4 id="authenticationmethods"><strong>Authentication Methods for REST Endpoints</strong></h4>
 
             <dt id="webservicebasicauthentication"><strong>1. User Credentials and API Key (Webservice Basic Authentication)</strong></dt>
             <dd>In every request client has to pass username, API_Key to server</dd>
