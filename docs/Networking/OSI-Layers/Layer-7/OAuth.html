@@ -23,6 +23,8 @@
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#what">What</a>
+        <a href="#oauth">OAuth in 
+            <a href="/Networking/Networking_Devices/Gateway/Fortinet.html#fortiAuthenticator">Fortinet Authenticator</a>
     </aside>
 
     <article style="margin-left:200px;">
@@ -101,12 +103,23 @@
         <pre class="mermaid">
             sequenceDiagram
                 participant FortiAuthenticator-WebInterface
+                participant Client
 
                 note over FortiAuthenticator-WebInterface: Configure OAuth in Web Interface
                 note over FortiAuthenticator-WebInterface: Authentication > OAuth Service > General><br>Set Authorization code expiry(1-56000sec)<br>Auto-generated client secret length(16 - 256, default = 128)<br>>Save
-                note over FortiAuthenticator-WebInterface: Configure oauth params as shown in above table
-        </pre>
+                note over FortiAuthenticator-WebInterface: Configure Relying Party params
 
+                FortiAuthenticator-WebInterface ->> Client: client_id, client-secret
+                Client ->> FortiAuthenticator-WebInterface: Authenticate (client_id, secret)
+                FortiAuthenticator-WebInterface ->> Client: ok
+                Client ->> FortiAuthenticator-WebInterface: Provide oauth token (client_id, secret, Auth_Grant_type)
+                FortiAuthenticator-WebInterface ->> Client: Oauth Token(with expiry, other info)
+                note over Client: Client includes OAuth token in REST API calls
+                Client ->> FortiAuthenticator-WebInterface: GET /api/resource HTTP/1.1 Host:abc.com<br> Authorization: Bearer asssssasa..
+                
+
+        </pre>
+        <img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/e55a4531-63cb-11ee-8e6d-fa163e15d75b/images/a83b9b96afe0b06be87f5623665dfe02_14965_Configure%20OIDC%20Claim_new.png" style="width:100%;height:100%;">
     </article>
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
