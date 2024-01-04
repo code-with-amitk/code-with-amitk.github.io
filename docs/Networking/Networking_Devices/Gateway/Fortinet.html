@@ -28,7 +28,7 @@
         <ul>
             <li><a href="#webservicebasicauthentication">Webservice Basic Authentication</a></li>
             <li><a href="#oauthbearertokenauthentication">OAuth Bearer Token Authentication</a></li>
-            <li><a href="#noneauthentication">None Authentication</a></li>
+            <li><a href="#sessionbasedauthentication">Session-based authentication</a></li>
         </ul>
     </aside>
 
@@ -48,10 +48,17 @@
             </dd>
 
             <h4 id="fortiAuthenticatorrestapi">REST API Solution (Version 6.6.0)</h4>
-            <dt>
-                <a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/rest-api-solution-guide/504500/supported-api-methods">
-                    Supported Methods</a>
-            </dt>
+            <dl><strong>
+                <a href="https://community.fortinet.com/t5/FortiGate/Technical-Tip-About-REST-API/ta-p/195425">
+                    Usage of REST API Method</a></strong></dl>
+            <dd>
+                Retrieve(GET)  system logs and statistics<br>
+                Create(POST), Update(PUT), delete configuration settings
+            </dd>
+
+            <dl><strong><a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/rest-api-solution-guide/504500/supported-api-methods">
+                    Supported Methods</a></strong></dl>
+
             <table>
                 <tr>
                     <th>Method</th>
@@ -120,6 +127,30 @@
 
             <dt id="oauthbearertokenauthentication"><strong>
                 <a href="/Networking/OSI-Layers/Layer-7/OAuth.html#oauth">2. OAuth Bearer Token Authentication</a></strong></dt>
+
+            <dt id="sessionbasedauthentication"><strong>
+                <a href="https://community.fortinet.com/t5/FortiGate/Technical-Tip-About-REST-API/ta-p/195425">3. Session-based authentication</a>
+            </strong></dt>
+            <dd>The authentication is valid per login session</dd>
+            <pre class="mermaid">
+                sequenceDiagram
+                    participant User
+                    participant User's Browser
+                    participant FortiAuthenticator
+                    participant FortiAuthenticator-Web-Interface
+
+                    note over User's Browser: Open FortiAuthenticator Device's Web<br> Interface in web brower
+                    User's Browser ->> FortiAuthenticator-Web-Interface: Login (Administrator)
+                    note over FortiAuthenticator-Web-Interface: user management:<br>Create a new user>Generate client_id,secret
+                    User ->> FortiAuthenticator: POST /logincheck HTTP/1.1<br>Content-Type: application/x-www-form-urlencoded<br>username=client_id&secretkey=client_secret&ajax=1
+                    note over FortiAuthenticator: Valid Login
+                    FortiAuthenticator ->> User: HTTP Response (APSCOOKIE=123, ccsrftoken=456)
+                    note over User: Extract CSRF token from the 'ccsrftoken' cookie.<br>Will use in further requests
+                    User ->> FortiAuthenticator: POST /some_endpoint HTTP/1.1<br>X-CSRFTOKEN:456<br>{ "data": "example" }
+                    note over FortiAuthenticator: This is valid token
+                    User ->> FortiAuthenticator: POST /logout HTTP/1.1 {End Session}
+                    note over FortiAuthenticator: Invalidate authentication cookie and CSRF token 
+            </pre>
 
         </article>
     </main>
