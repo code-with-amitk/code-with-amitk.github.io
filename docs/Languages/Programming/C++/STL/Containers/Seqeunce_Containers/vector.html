@@ -155,10 +155,12 @@ for i:=0; i<5; i++ {
         <tr>
             <td>Max</td>
             <td>INT_MAX</td>
-            <td><pre><code class="language-css">
+            <td><pre>       <!--Rust-->
 let max_int: i32 = i32::MAX;
 let min_int: i32 = i32::MIN;
-            </code></pre></td>
+let maxi = std::cmp::max(a,b);
+            </pre></td>
+
             <td><pre><code class="language-css">
 import sys
 sys.max_int     //INT_MAX
@@ -215,7 +217,9 @@ fun(nums: Vec&lt;i32>) {
         println!("{}", *i);
     }
 }
-
+for i in 1..10 {
+    
+}
 // Closure or Lambda
 let s:String = "010101";
 s.chars().for_each(|ele| {
