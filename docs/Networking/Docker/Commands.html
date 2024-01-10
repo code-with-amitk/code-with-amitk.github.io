@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Commands</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#">Commands</a>
+    </aside>
+
+    <div style="margin-left:200px;">
+        <table>
+            <tr>
+                <th>Command</th>
+                <th>Meaning</th>
+            </tr>
+            <tr>
+                <td>Login</td>
+                <td><pre>
+$ docker login repository
+                </pre></td>
+            </tr>
+
+            <tr>
+                <td>Pull docker image</td>
+                <td><pre>
+$ docker image pull artifactory/path:image-tag
+// Download docker image locally on system
+                </pre></td>
+            </tr>
+
+            <tr>
+                <td>List docker images present on system</td>
+                <td><pre>
+$ docker images
+                </pre></td>
+            </tr>
+
+            <tr>
+                <td>Build Docker image</td>
+                <td><pre>
+$ vim test.Dockerfile
+$ docker build . -f test.Dockerfile -t test_image
+                </pre></td>
+            </tr>
+        </table>
+
+    </div>
+</body>
+</html>
