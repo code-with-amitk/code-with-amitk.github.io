@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memory</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#comparison">Comparison</a>
+
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h3 id="comparison">Virtual Memory & Physical Memory</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Virtual Memory = Hard Disk</th>
+                    <th>Physical Memory = RAM</th>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td>Bigger</td>
+                    <td>Smaller wrt HD</td>
+                </tr>
+                <tr>
+                    <td>Contains</td>
+                    <td><b>Pages</b> inside Virtual Table</td>
+                    <td><b>Frames</b> inside Page Table. Pages & Frames are of same size.</td>
+                </tr>
+                <tr>
+                    <td>Memory Allocation</td>
+                    <td>Contigous</td>
+                    <td>Contigous</td>
+                </tr>
+                <tr>
+                    <td>Max Memory Sizes</td>
+                    <td>
+                        hard Disk=4GB. Virtual Memory=3GB<br>
+                        hard Disk=1TB. Virtual Memory=966GB
+                    </td>
+                    <td>
+                        hard Disk=4GB. Physical Memory=1GB<br>
+                        hard Disk=1TB. Virtual Memory=4GB
+                    </td>
+                </tr>
+            </table>
+        </article>
+    </main>
+
+</body>
+</html>
