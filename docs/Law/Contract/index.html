@@ -6,43 +6,47 @@
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
-    <nav style="margin-left:200px;">    <!-- Top Navigation Bar -->
+    <nav class="navbar">    <!--See .navbar in styles.css-->
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="#">Our team</a></li>
           <li><a href="#">Projects</a></li>
           <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
         </ul>
-        <form>  <!--Search Bar-->
-            <input type="search" name="q" placeholder="Search site" />
-            <input type="submit" value="Go!" />
-        </form>
     </nav>
 
     <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#contract">Contract?</a>
+        <a href="#contract">Contract</a>
         <a href="#agreementvscontract">Aggrement vs Contract</a>
+        <a href="#terms">Terms</a>
     </aside>
 
     <div style="margin-left:200px;">
         <h3 id="contract">Contract</h3>
-        <dl>Law of Contract</dl>
+        <dl><strong>Law of Contract</strong></dl>
         <dd>Man should fufill his promise whatever he made</dd>
         <table>
             <tr>
                 <th>Jurist</th>
-                <th>Jurist	Definition of Law of Contract</th>
+                <th>Definition</th>
             </tr>
             <tr>
                 <td>Anson</td>
-                <td>Branch of Law which tells about situations when promise should be legally binding</td>
+                <td>Tells situations when promise should be legally binding</td>
             </tr>
             <tr>
                 <td>Sir Frederick Pollock</td>
-                <td>Constant effort of state, to deliver faith in mutual dealing of men</td>
+                <td>Constant effort to deliver faith in mutual dealing of men</td>
             </tr>
         </table>
-        <dl>History of Origin</dl>
+        <br>
+        <dl><strong>History of Origin</strong></dl>
         <table>
             <tr>
                 <th>Year</th>
@@ -58,12 +62,117 @@
             </tr>
             <tr>
                 <td>1872</td>
-                <td>Britishers introduced Indian Contract Act. English Common Law,Statue Law introduced in Calcutta, Madras, Bombay. But still Hindu, Mohmadean laws were referred</td>
+                <td>Britishers introduced Indian Contract Act,English Common Law,Statue Law(introduced in Calcutta, Madras, Bombay). 
+                    But still Hindu, Mohmadean laws were referred</td>
+            </tr>
+        </table>
+        <br>
+        <dl><strong>Contract Types</strong></dl>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Meaning</th>
+                <th>Legal?</th>
+            </tr>
+            <tr>
+                <td>Contingent</td>
+                <td>May or may not happen.Some uncertain/future event, happening of event is beyond the parties</td>
+                <td>no</td>
+            </tr>
+            <tr>
+                <td>Quasi</td>
+                <td>Doing something Criminal or civil wrong, or against the public good. Selling firearms to person not having license</td>
+                <td>no</td>
+            </tr>
+            <tr>
+                <td>Void</td>
+                <td>A legal obligation imposed by a judge to remedy a dispute between two parties that don’t have a contract</td>
+                <td>no</td>
+            </tr>
+            <tr>
+                <td>Voidable</td>
+                <td>A contract which is not legally enforceable from the time it was created. Eg: contract where both parties are minors</td>
+                <td>no</td>
+            </tr>
+            <tr>
+                <td>Wagering(Bet/Gamble)</td>
+                <td>This is void contract</td>
+                <td>no</td>
+            </tr>
+        </table>
+        <br>
+        <dl><strong>Following are incompetant for Contract</strong></dl>
+        <dd>a. Minor(1. Less than 18 years. 2. if he has legal gurdian, minority continues to 21 years). 
+            Minor's Contract is illegal, cannot be enforced<br>
+            b. person with unsound mind<br>
+            c. person disqualified by law for contract
+        </dd>
+        <dl><strong>Conditions under which contract stands Terminated/Discharged</strong></dl>
+        <dd>
+            1. Completed. a. Both parties have done whatever agreed in contract b. Contract Excused by law<br>
+            2. Breach<br>
+            3. Contract becoming immposible or unlawful<br>
+            4. Alteration of contract<br>
+            5. Waiver. promisee waives promiser<br>
+            6. Accord<br>
+            7. Merger, Insolvency<br>
+        </dd>
+        <dl><strong><a href="/Law/Law_of_Crimes/index.html#mistakeoffact">Mistake of Fact, Mistake of Law</a></strong></dl>
+        <dl>Types of Mistake of Fact:</dl>
+        <dd>1. Bilateral mistake(S.20): Both parties in aggrement done mistake, this contract becomes void<br>
+            2. Unilateral mistake(S.22): Only 1 party caused mistake. Contract does not become void</dd>
+        <dl>Types of Mistake of Law</dl>
+        <dd>1. Mistake with regard to native law<br>
+            2. Mistake with regard to private right<br>
+            3. Mistake with regard to forign law: A,B makes contract on erroneous belief on bills exchange in france. contract is void.</dd>
+
+        <dl><strong>Elements of contract</strong></dl>
+        <dd>
+1.Contractual aggrement<br>
+2. No misinterpretation<br>
+3. Reasonable notice to contractual terms<br>
+Case: 1999(Prakash Roadlines(P) Ltd vs HMT Bearing Ltd). Mere printing on lorry reciept(Good transported on owner’s 
+risk will not absolve transporter from duty).<br>
+4. Notice should be contemporaneous(existing) with contract<br>
+5. Terms of contract should be reasonable
+        </dd>
+
+        <h3 id="agreementvscontract">Aggrement vs Contract</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>Aggrement</th>
+                <th>Contract</th>
+            </tr>
+            <tr>
+                <td>Legally Binding</td>
+                <td>no</td>
+                <td>yes</td>
+            </tr>
+            <tr>
+                <td>Enforcable</td>
+                <td>no</td>
+                <td>yes</td>
+            </tr>
+            <tr>
+                <td>Elements</td>
+                <td>Offer, Acceptance</td>
+                <td>Offer, Acceptance, Consideration, Intention (OACI)</td>
             </tr>
         </table>
 
-        <h3 id="agreementvscontract">Aggrement vs Contract</h3>
-
+        <h3 id="terms">Terms</h3>
+        <dl><strong>Novation (Rennovation)</strong></dl>
+        <dd>Process of replacing an existing contract with a new one, where the same obligations are performed by different parties.</dd>
+        <dl><strong>Quantum Meruit (latin term. Quantum(How Much), Meruit(deserved))</strong></dl>
+        <dd>Court awards reasonable compensation to a person who has completed a contractual obligation, 
+            even if the contract did not explicitly provide for that compensation</dd>
+        <dl><strong>Anticipatory breach of contract</strong></dl>
+        <dd>when 1 party in contract indicates he cannot fulfill his contractual obligations before the performance is due.
+            Other party can take legal action against party who denied
+        </dd>
+        <dl><strong>Agreement in restraint of marriage</strong></dl>
+        <dd>Contract that prevents someone from marrying, This is illegal</dd>
     </div>
 </body>
 </html>
