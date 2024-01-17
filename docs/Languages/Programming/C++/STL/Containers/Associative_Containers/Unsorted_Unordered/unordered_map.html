@@ -146,15 +146,57 @@ vec.insert(v.begin() + 2, 7)
 for (auto&i:vec)
   um[i]++
             </code></pre></td>
-            <td><pre><code class="language-css">    <!--Rust-->
-hm.insert(key, value);
 
-// Count occurences
-let mut hm:HashMap&lt;i32, i32> = HashMap::new();
+<td>
+<table>             <!-- Table1 -->
+    <tr>
+        <th>Method</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Insert</td>
+        <td>
+            <pre>
+hm.insert(key, value);
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Count occurences</td>
+        <td>
+            <table>             <!-- Table2 -->
+                <tr>
+                    <th>method</th>
+                    <th>code</th>
+                </tr>
+                <tr>
+                    <td>get_mut</td>
+                    <td>
+                        <pre>
 for i in 0..nums.len() {
-    *hm.entry(nums[i]).or_insert(0) += 1;
-}
-            </code></pre></td>
+    if let Some(val) = hm.get_mut(&nums[i]) {
+        *val += 1;
+    } else {
+        hm.insert(nums[i],1);
+    }
+} 
+                        </pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>entry</td>
+                    <td><pre>
+// entry() returns enum{Occupied, Vacant}
+*hm.entry(nums[i]).or_insert(0) += 1;
+                    </pre></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</td>
+
+
             <td><pre><code class="language-css">    <!--Python-->
 # Count number of occurences
 um = {}
