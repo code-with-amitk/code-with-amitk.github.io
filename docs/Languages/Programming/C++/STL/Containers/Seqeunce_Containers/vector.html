@@ -79,23 +79,23 @@ if let Some(l) = v.last() {
 
         <tr>
             <td>clear</td>
-            <td><pre><code class="language-css">    <!--c++-->
+            <td><pre>                               <!--c++-->
 v.clear();
-            </code></pre></td>
-            <td><pre><code class="language-css">    <!--Rust-->
+            </pre></td>
+            <td><pre>                               <!--Rust-->
 v.clear();
-            </code></pre></td>
-            <td><pre><code class="language-css">    <!--Python-->
+            </pre></td>
+            <td><pre>                               <!--Python-->
 
-            </code></pre></td>
-            <td><pre><code class="language-css">    <!--Go-->
+            </pre></td>
+            <td><pre>                               <!--Go-->
 
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>
             <td>Create/Initialize</td>
-            <td><pre><code class="language-css">    <!--c++-->
+            <td><pre>                   <!--c++-->
 // 1 D
 vector<int> v(size, init_value);
     OR
@@ -110,26 +110,36 @@ vector&lt;vector&lt;int>> vec = {
   
 //vec[row][col]
 vector&lt;vector&lt;int>> vec(row, vector&lt;int>(col,0));
-            </code></pre></td>
+            </pre></td>
 
-            <td><pre><code class="language-css">    <!--Rust-->
-///// 1D
+            <td>                           <!--Rust-->
+                <table>
+                    <tr>
+                        <td>1D</td>
+                        <td><pre>
 let mut v:Vec &lt;String> = Vec::new();
-OR
 let mut v:Vec &lt;i32> = vec![];
-OR
-let v2: Vec &lt;i32> = vec![14,25,35]; 
-OR
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Initialize</td>                        
+                        <td><pre>
+let v2: Vec &lt;i32> = vec![1,2,3];
 let mut v = vec![0; 5]; //size=5, init value=0
-OR
-let v1: Vec &lt;i32> = [1,2,3].to_vec(); //Initialize
-
-//// 2D
+let v: Vec &lt;i32> = [1,2,3].to_vec();
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>2D</td>
+                        <td><pre>
 let mut 2d_vec: Vec&lt;Vec&lt;i32>> = Vec::new();
 let mut 2d_vec: Vec&lt;Vec&lt;i32>> = vec![vec![0; row as usize]; col as usize];
-            </code></pre></td>
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
 
-            <td><pre><code class="language-css">    <!--Python-->
+            <td><pre>                   <!--Python-->
 ######### 1 D
 a = []              #Empty
 OR
@@ -139,9 +149,9 @@ a = [False] * (5)   #Filled
 arr = [[0 for _ in range(cols)] for _ in range(rows)]
 OR
 arr = []
-            </code></pre></td>
+            </pre></td>
 
-            <td><pre><code class="language-css">    <!--Go-->
+            <td><pre>                       <!--Go-->
 ////// 1D
 var arr []int     //Empty vector
 slice := make([]int, 5) //Slice size=5
@@ -151,7 +161,7 @@ for i:=0; i<5; i++ {
 
 /////// 2D
 
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>

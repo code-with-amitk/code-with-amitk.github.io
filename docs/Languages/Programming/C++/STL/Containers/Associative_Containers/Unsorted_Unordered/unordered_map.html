@@ -39,27 +39,36 @@
         </tr>
         <tr>
             <td>Create</td>
-            <td><pre><code class="language-css">
-unordered_map<string, int> um;
-            </code></pre></td>
+            <td><pre>   <!--C++-->
+unordered_map&lt;string, int> um;
+            </pre></td>
 
-            <td><pre><code class="language-css">     <!--Rust-->
-//Empty
+            <td>        <!--Rust-->
+                <table>
+                    <tr>
+                        <td>Empty</td>
+                        <td><pre>
 let hm:HashMap = HashMap::new()
-
-//&lt;key=i32, value=vector&lt;i32>>
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Key ,value</td>
+                        <td><pre>
 let hm:HashMap&lt;i32, Vec&lt;i32>> = HashMap::new();
-                
-//init
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>initialize</td>
+                        <td><pre>
 iter(): is called on the array to create
         an iterator over its elements
 cloned(): method is used to clone each
-          tuple's elements. This is necessary
-          because &str is a reference type,
-          and we need to create owned values
-          to store in the HashMap.
+            tuple's elements. This is necessary
+            because &str is a reference type,
+            and we need to create owned values
+            to store in the HashMap.
 collect(): method consumes the iterator and collects
-           the cloned tuples into a HashMap&lt;char, &str>
+            the cloned tuples into a HashMap&lt;char, &str>
 let hm: HashMap<i32, &str> = [
     (2, "abc"),
     (3, "def"),
@@ -73,9 +82,12 @@ let hm: HashMap<i32, &str> = [
 .iter()
 .cloned()
 .collect();
-            </code></pre></td>
+                        </pre></td>
+                    </tr>
+                </table>                
+            </td>
 
-            <td><pre><code class="language-css">        <!--Python-->
+            <td><pre>                               <!--Python-->
 #Empty
 self.hm = {}
 
@@ -86,21 +98,21 @@ self.hm={1:1, 2:2}
 um = {}
 value = [1,2,3]
 um[10] = value
-                </code></pre></td>
+                </pre></td>
 
-            <td><pre><code class="=language-css">       <!--Go-->
+            <td><pre>                              <!--Go-->
 hm := make(map[int]int) //[key]value
 OR
 var hm map[string[int]]  //key=string, value=int
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>
             <td>Delete/Erase</td>
-            <td><ul>    <!--c++-->
-                <li>um.erase(key)</li>
-                <li><b>Range:</b> um.erase(start,end)</li>
-            </ul></td>
+            <td><pre>    <!--c++-->
+um.erase(key);
+Range: um.erase(start,end);
+            </pre></td>
             <td></td>   <!--Rust-->
             <td></td>   <!--Python-->
             <td>        <!--Go-->
@@ -109,43 +121,57 @@ var hm map[string[int]]  //key=string, value=int
 
         <tr>
             <td>Find</td>
-            <td><pre><code class="language-css">    <!--C++-->
+            <td><pre>    <!--C++-->
 if (um.find("key") != um.end())
 OR
 value=count(key)
 // Smallest Key
   min_element(um.begin(), um.end())
-            </code></pre></td>
-            <td><pre><code class="language-css">    <!--Rust-->
+            </pre></td>
+
+            <td>    <!--Rust-->
+                <table>
+                    <tr>
+                        <td>Search</td>
+                        <td><pre>
 if let Some(value) = hm.get(&key) {
 } else {
 }
-OR 
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Mutable</td>
+                        <td>
+                        <pre>
 if let Some(value) = hm.get_mut(&key) {
     value = 1;
 } else {
 }
-            </code></pre></td>
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+            
             <td>                                   <!--Python-->
                 value = um[key]
             </td>
-            <td><pre><code class="language-css">        <!--Go-->
+            <td><pre>        <!--Go-->
 value = hm[key]
 if value != nil {
     //Found
 }
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>
             <td>Insert</td>
-            <td><pre><code class="language-css">   <!--c++-->
+            <td><pre>   <!--c++-->
 vec.insert(v.begin() + 2, 7)
 
 //Count occurences
 for (auto&i:vec)
   um[i]++
-            </code></pre></td>
+            </pre></td>
 
 <td>
 <table>             <!-- Table1 -->
