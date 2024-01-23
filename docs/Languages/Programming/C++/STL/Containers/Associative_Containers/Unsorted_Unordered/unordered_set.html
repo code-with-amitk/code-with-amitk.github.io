@@ -32,60 +32,101 @@
         </tr>
         <tr>
             <td>Create</td>
-            <td><ul>
-                <li>unordered_set<string> us;</li>
-                <li>unordered_set<string> us(s.begin(), s.end());</li>
-                <li>unordered_set<string> us(n);    //n sets</li>
-            </ul></td>
-            <td><ul>
-                <li><b>Empty:</b> let mut hs:HashSet<String> = HashSet::new();</li>
-            <td>
-                <ul>
-                <li><b>Empty</b> hs = set()</li>
-                <li><b>Filled <br></b>
-                    <pre><code class="language-css">
-word: List[str] //Copy words from vector
+            <td>                                   <!--C++-->
+                <table>
+                    <tr>
+                        <td>Empty</td>
+                        <td><pre>
+unordered_set<string> us;
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Filled<br> from String</td>
+                        <td><pre>
+string s = "abcda";
+unordered_set<char> us(s.begin(), s.end());
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>n sets</td>
+                        <td><pre>
+unordered_set<string> us(n);
+                        </pre></td>
+                    </tr>                    
+                </table>
+            </td>
+            <td>                                   <!--Rust-->
+                <table>
+                    <tr>
+                        <td>Empty</td>
+                        <td><pre>
+let mut hs:HashSet<String> = HashSet::new();
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Filled <br>From String</td>
+                        <td><pre>
+let s = String::from("abcda");
+let mut us:HashSet<char> = s.chars().collect();
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+
+            <td>                                    <!--Python-->
+                <table>
+                    <tr>
+                        <td>Empty</td>
+                        <td><pre>
+hs = set()
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Filled</td>
+                        <td><pre>
+//Copy words from vector
+word: List[str]
 hs = set(words)
 
 # n sets
 graph = [set() for _ in range(n)]
-                    </code></pre>
-                </li>
-                </ul>
+                        </pre></td>
+                    </tr>
+                </table>
             </td>
         </tr>
+
         <tr>
             <td>Find</td>
-            <td><ul>
-                <li>value = us[key]</li>
-                <li>value=count(key)</li>
-            </ul></td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre>           <!--c++-->
+value = us[key]
+value=count(key)
+            </pre></td>
+            <td><pre>           <!--rust-->
 if let Some(value) = hs.get(&key) {
     //value returned
 } else {
     // Not found
 }
-                </code></pre>
-            </td>
-            <td>
-                <pre><code class="language-css">
+            </pre></td>
+            <td><pre>           <!--python-->
 if key in hs:
     // contains key
-                </code></pre>
-            </td>
+            </pre></td>
         </tr>
+
         <tr>
             <td>Insert</td>
-            <td>us.insert(key)</td>
-            <td>hs.insert(word);</td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre>           <!--C++-->
+us.insert(key)
+            </pre></td>
+            <td><pre>           <!--Rust-->
+hs.insert(word);
+            </pre></td>
+            <td><pre>           <!--python-->
 for i in range(0, len(words)):
     hs.add(wordDict[i])
-                </code></pre>
-            </td>
+            </pre></td>
         </tr>
     </table>
 

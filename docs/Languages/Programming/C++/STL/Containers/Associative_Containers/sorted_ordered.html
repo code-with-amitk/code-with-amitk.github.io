@@ -40,16 +40,16 @@
         </tr>
         <tr>
             <td>Create</td>
-            <td><pre><code class="language-css">     <!--C++-->
+            <td><pre>                       <!--C++-->
 map&lt;char, int> m;
-            </code></pre></td>
+            </pre></td>
 
-            <td><pre><code class="language-css">     <!--Rust-->
+            <td><pre>                       <!--Rust-->
 //Empty
-let hm:HashMap = HashMap::new()
+let btm:BTreeMap = BTreeMap::new()
 
 //&lt;key=i32, value=vector&lt;i32>>
-let hm:HashMap&lt;i32, Vec&lt;i32>> = HashMap::new();
+let btm:BTreeMap&lt;i32, Vec&lt;i32>> = BTreeMap::new();
                 
 //init
 iter(): is called on the array to create
@@ -61,7 +61,7 @@ cloned(): method is used to clone each
           to store in the HashMap.
 collect(): method consumes the iterator and collects
            the cloned tuples into a HashMap&lt;char, &str>
-let hm: HashMap<i32, &str> = [
+let btm: BTreeMap<i32, &str> = [
     (2, "abc"),
     (3, "def"),
     (4, "ghi"),
@@ -74,9 +74,9 @@ let hm: HashMap<i32, &str> = [
 .iter()
 .cloned()
 .collect();
-            </code></pre></td>
+            </pre></td>
 
-            <td><pre><code class="language-css">        <!--Python-->
+            <td><pre>                           <!--Python-->
 #Empty
 self.hm = {}
 
@@ -87,22 +87,22 @@ self.hm={1:1, 2:2}
 um = {}
 value = [1,2,3]
 um[10] = value
-                </code></pre></td>
+                </pre></td>
 
-            <td><pre><code class="=language-css">       <!--Go-->
+            <td><pre>                           <!--Go-->
 var hm map[string[int]]  //key=string, value=int
 
 // Using make function (key=pointer, val="pointer")
 var hm = make(map[*Node]*Node)
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>
             <td>Delete/Erase</td>
-            <td><ul>    <!--c++-->
-                <li>um.erase(key)</li>
-                <li><b>Range:</b> um.erase(start,end)</li>
-            </ul></td>
+            <td><pre>                           <!--C++-->
+um.erase(key);
+Range: um.erase(start,end);
+            </pre></td>
             <td></td>   <!--Rust-->
             <td></td>   <!--Python-->
             <td>        <!--Go-->
@@ -111,56 +111,56 @@ var hm = make(map[*Node]*Node)
 
         <tr>
             <td>Find</td>
-            <td><pre><code class="language-css">    <!--C++-->
+            <td><pre>                               <!--C++-->
 if (um.find("key") != um.end())
 OR
 value=count(key)
 // Smallest Key
   min_element(um.begin(), um.end())
-            </code></pre></td>
-            <td><pre><code class="language-css">    <!--Rust-->
-if let Some(value) = hm.get(&key) {
+            </pre></td>
+            <td><pre>                               <!--Rust-->
+if let Some(value) = btm.get(&key) {
 } else {
 }
 OR 
-if let Some(value) = hm.get_mut(&key) {
+if let Some(value) = btm.get_mut(&key) {
     value = 1;
 } else {
 }
-            </code></pre></td>
-            <td>                                   <!--Python-->
-                value = um[key]
-            </td>
-            <td><pre><code class="language-css">        <!--Go-->
+            </pre></td>
+            <td><pre>                              <!--Python-->
+value = um[key]
+            </pre></td>
+            <td><pre>                               <!--Go-->
 value = hm[key]
 if value != nil {
     //Found
 }
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>
             <td>Insert</td>
             <td>vec.insert(v.begin() + 2, 7)</td>   <!--c++-->
-            <td><pre><code class="language-css">    <!--Rust-->
-hm.insert(key, value);
-            </code></pre></td>
+            <td><pre>    <!--Rust-->
+btm.insert(key, value);
+            </pre></td>
             <td></td>
-            <td><pre><code class="language-css">    <!--Go-->
+            <td><pre>    <!--Go-->
 hm["test"] = 1
-                </code></pre>
+            </pre>
             </td>
         </tr>
 
         <tr>
             <td>Iterate over elements</td>
-            <td><pre><code class="language-css">   <!--c++-->
+            <td><pre>                    <!--c++-->
 map&lt;int, int> m;
 for (auto&i:m) {
     cout << i.first << "," << i.second;
 }
-            </code></pre></td>
-            <td><pre><code class="language-css">       <!--Rust-->
+            </pre></td>
+            <td><pre>                  <!--Rust-->
 for (key, value) in &hm {
     println!("Key: {}, Value: {}", key, value);
 }
@@ -168,13 +168,13 @@ OR
 for (key, value) in hm.iter() {
     println!("Key: {}, Value: {}", key, value);
 }
-            </code></pre></td>
-            <td><pre><code class="language-css">      <!--Python-->
+            </pre></td>
+            <td><pre>                     <!--Python-->
 for key,value in um.items():
   
-            </code></pre></td>
-            <td><pre><code class="language-css">        <!--Go-->
-            </code></pre></td>
+            </pre></td>
+            <td><pre>                       <!--Go-->
+            </pre></td>
         </tr>
 
     </table>
