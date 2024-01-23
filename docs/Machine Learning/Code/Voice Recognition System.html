@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Recognition System</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#voicertotext">1. Voice to Text</a>
+        <a href="#sendtexttochatbottorespond">2. Send Text to Chatbot to respond</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="voicertotext">1. Voice to Text. Speak in Mic and print in text</h3>
+
+            <dl><strong>1. Create & Start the Virtual Env</strong></dl>
+            <pre>
+// Create a new environment named virtual_talking_avatar, install Python 3.6
+cmd>
+C:\Users\amitk\source\repos\Python\ML>C:\Users\amit\miniconda3\Scripts\conda create --name virtual_talking_avatar python=3.6
+
+// Activate venv
+c:\Users\amit\miniconda3\envs>c:\Users\amit\miniconda3\Scripts\activate virtual_talking_avatar
+            </pre>
+
+            <dl><strong>2. Install voice recognition system with Python(SpeechRecognition, PyAudio)</strong></dl>
+            <pre>
+(virtual_talking_avatar) c:\Users\amit\miniconda3\envs>pip install SpeechRecognition
+..
+(virtual_talking_avatar) c:\Users\amit\miniconda3\envs>pip install PyAudio
+..
+ERROR: Could not build wheels for pyaudio which use PEP 517 and cannot be installed directly
+            </pre>
+
+            <dt><strong>if pyaudio is not installed, try installing using pipwin</strong></dt>
+            <pre>
+(virtual_talking_avatar) c:\Users\amit\miniconda3\envs>conda install portaudio
+(virtual_talking_avatar) c:\Users\amit\miniconda3\envs>pip install pipwin
+(virtual_talking_avatar) c:\Users\amit\miniconda3\envs>pipwin install pyaudio
+..
+Successfully installed PyAudio-0.2.11
+            </pre>
+
+            <dl><strong>3. Run this 
+                <a href="https://reintech.io/blog/how-to-create-a-voice-recognition-system-with-python">code</a></strong></dl>
+                <pre>
+                    import speech_recognition as sr
+
+                    recognizer = sr.Recognizer()
+                    
+                    def capture_voice_input():
+                        with sr.Microphone() as source:
+                            print("Listening...")
+                            audio = recognizer.listen(source)
+                        return audio
+                        
+                    def convert_voice_to_text(audio):
+                        try:
+                            text = recognizer.recognize_google(audio)
+                            print("You said: " + text)
+                        except sr.UnknownValueError:
+                            text = ""
+                            print("Sorry, I didn't understand that.")
+                        except sr.RequestError as e:
+                            text = ""
+                            print("Error; {0}".format(e))
+                        return text
+                    
+                    def process_voice_command(text):
+                        if "hello" in text.lower():
+                            print("Hello! How can I help you?")
+                        elif "goodbye" in text.lower():
+                            print("Goodbye! Have a great day!")
+                            return True
+                        else:
+                            print("I didn't understand that command. Please try again.")
+                        return False
+                        
+                    def main():
+                        end_program = False
+                        while not end_program:
+                            audio = capture_voice_input()
+                            text = convert_voice_to_text(audio)
+                            end_program = process_voice_command(text)
+                    
+                    if __name__ == "__main__":
+                        main()
+
+(virtual_talking_avatar) c:\Users\amit\miniconda3\envs>cd c:\go-here\Code\python\virtual_talking_avatar
+(virtual_talking_avatar) c:\go-here\Code\python\virtual_talking_avatar>python code.py
+Listening ..
+                </pre>
+
+            <h3 id="sendtexttochatbottorespond">
+                <a href="https://platform.openai.com/docs/api-reference/authentication">2. Send Text to Chatbot to respond</a></h3>
+            <dl><strong>a. Install openai</strong></dl>
+            <pre>
+(virtual_talking_avatar) c:\go-here\Code\python\virtual_talking_avatar>pip install openai
+            </pre>
+    </article>
+
+</body>
+</html>
