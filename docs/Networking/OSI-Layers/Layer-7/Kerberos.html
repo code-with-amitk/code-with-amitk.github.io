@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kerberos</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#terms">Terms</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="what">What is Kerberos</h3>
+            <p> 
+                - Kerberos is authentication protocol where ticket(TGT) is provided to authenticated users and services<br>
+            </p>
+            <dl><strong>How user is authenticated and accesses a Service?</strong></dl>
+            <pre class="mermaid">
+                sequenceDiagram
+                    participant u as User
+                    participant c as Client
+                    participant as as AuthenticationServer
+                    participant tgs as TicketGrantingService
+                    participant svc1 as Service1
+                    participant db as Database
+                  
+                    u ->> c: enter username,pass
+                    c ->> as: Auth request
+                    as ->> db: Check user cred
+                    db ->> as: Valid
+                    note over as: Create TGT, Session key<br>TGT encrypted by user's secret key
+                    as ->> c: TGT
+                    note over c: Want to access Service1
+                    c ->> tgs: Access to Service1+TGT
+                    note over tgs: verify TGT and extract Sessionkey<br>Valid
+                    tgs ->> c: Service Ticket(encrypted by session key)
+                    c ->> svc1: Service Ticket
+                    note over svc1: Decrypts service ticket and get session key<br>Communication b/w svc1 & client encrypted by session key
+                </pre>
+            
+            <h3 id="terms">Terms</h3>
+            <dl><strong>Keytab(key table)</strong></dl>
+            <dd>
+                File containing Pricipals and their keys. 1. Principals & 2. their keys<br>
+                keys derived from a password
+            </dd>
+    </article>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    </script>
+</body>
+</html>
