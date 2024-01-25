@@ -46,119 +46,159 @@
             </tr>
 
             <td>Create</td>
-            <td>string test;</td>
-            <td><pre><code class="language-css">
+            <td>                <!--c++-->
+                string test;
+            </td>
+            <td><pre>           <!--Rust-->
 let s1 = String::new();
 s1 = "test".to_string();
-
 let s2 = String::from("Hello");
-            </code></pre></td>
-            <td>self.input = ""</td>
-            <td><pre><code class="language-css">
+            </pre></td>
+
+            <td><pre>       <!--python-->
+self.input = ""
+            </pre></td>
+            <td><pre>       <!--Go-->
 var s string
-            </pre></code></td>
+            </pre></td>
         </tr>
 
         <tr>
             <td>Convert</td>
-            <td><pre><code>
-//Lowercase 
+            <td>               <!--c++-->
+                <table>
+                    <tr>
+                        <td>Lowercase</td>
+                        <td><pre>
 transform(sl.begin(), sl.end(), sl.begin(), ::tolower)
-
-//int,double to str 
-        <table>
-            <tr>
-                <th><pre><code>
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>int to string</td>
+                        <td><pre>
 int a=4; 
 stringstream ss; 
 ss&lt;&lt;a; 
 cout&lt;&lt;ss.str()
-        </code></pre></th>
-        <th><pre><code>
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>int to string</td>
+                        <td><pre>
 int a = 1, b = 2;
 string s = to_string(a) + "," + to_string(b);
-        </code></pre></th>
-    </tr>
-</table>
-
-//string to int 
-<table>
-    <tr>
-        <th>
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>string to int</td>
+                        <td><pre>
 string str="ab"; 
 int i; 
 istringstream(str)>>i;
-        </th>
-        <th>
+                        </pre></td>
+                        <tr>
+                            <td>string to int</td>
+                            <td><pre>
 string str="ab"; 
 int i; 
 stringstream(str)>>i;
-        </th>
-    </tr>
-</table>
+                            </pre></td>
+                    </tr>
+                </table>
     </td>
-            <td><pre><code class="language-css">
-            </pre></code></td>
-            <td><pre><code class="language-css">
-            </pre></code></td>
-            <td><pre><code class="language-css">
+            <td><pre>       <!--Rust-->
+            </pre></td>
+            <td><pre>       <!--python-->
+            </pre></td>
+            <td><pre>       <!--Go-->
 import (
 "strconv"
 }
 func test(a int) {
     var s string = strconv.Itoa(a)	//Convert int to String
 }
-            </pre></code></td>
+            </pre></td>
         </tr>
 
         <tr>
             <td>Erase / pop back</td>
-            <td><pre><code class="language-css">    <!--c++-->
-//Erase all character
+            <td>                            <!--c++-->
+                <table>
+                    <tr>
+                        <td>Erase all character</td>
+                        <td><pre>
 s.erase();
-
-//Pop front
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Pop front</td>
+                        <td><pre>
 //erase (size_type idx, size_type len )
 s.erase(0, 1);
-
-//Pop back
-s1.pop_back();
-            </pre></code></td>
-            <td><pre><code class="language-css">    <!--Rust-->
-//Pop back
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Pop back</td>
+                        <td><pre>
 s1.pop()
-            </pre></code></td>
-            <td><pre><code class="language-css">    <!--Python-->
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+
+            <td><pre>              <!--Rust-->
+s1.pop()
+            </pre></td>
+
+            <td><pre>    <!--Python-->
 #Pop back
 s1 = s1[:len(s1)-1]
-
 #Pop front
 s = s[1:]
-            </pre></code></td>
-            <td><pre><code class="language-css">    <!--Go-->
+            </pre></td>
+
+            <td><pre>    <!--Go-->
 //Pop back
 //Slicing Works same as Python
 s = s[:len(s)-1]
 
 //Pop front
 s = s[1:]
-            </pre></code></td>
+            </pre></td>
         </tr>
 
         <tr>
-            <td>Element at index</td>
-            <td>
-                str[i]
-            </td>
-            <td><pre><code class="language-css">
-// Find letter at index i
+            <td>Element at index i</td>
+            <td><pre>
+str[i]
+            </pre></td>
+
+            <td>               <!--Rust-->
+                <table>
+                    <tr>
+                        <td>Method-1</td>
+                        <td><pre>
+s1.chars().nth(i - 1) 
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Method-2</td>
+                        <td><pre>
 let letter = str.chars()
-            .nth(i as usize).unwrap()
-            .to_digit(10).unwrap()
-             as i32;
-            </code></pre></td>
-            <td>str[i]</td>
-            <td>s[i]</td>
+    .nth(i as usize).unwrap()
+    .to_digit(10).unwrap()
+        as i32;
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+
+            <td><pre>     <!--python-->
+str[i]
+            </pre></td>
+            <td><pre>       <!--Go-->
+s[i]
+            </pre></td>
         </tr>
 
         <tr>
