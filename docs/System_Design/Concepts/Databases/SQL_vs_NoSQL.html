@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SQL vs NoSQL</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <aside class="sidebar">
+    <a href="#comp">SQL vs NoSQL</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+        <h3 id="comp">SQL vs NoSQL</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>SQL / Structured / Relational</th>
+                <th>NoSQL / unStructured / nonRelational</th>
+            </tr>
+            <tr>
+                <td>Examples</td>
+                <td>Amazon(Aurora, RDS), MySQL, postgreSQL, mariaDB</td>
+                <td>
+                    <li>Semistructured: Amazon (S3, dynamoDB), Apache Cassandra</li>
+                    <li>Unstructured: Amazon S3, Apache CouchDB, MongoDB</li>
+                </td>
+            </tr>
+            <tr>
+                <td>Format</td>
+                <td>Table(Records searched using primary key)
+                    <pre>
+//Books Table
+
+| book-id(pk) | title | author | genre | comments |
+                    </pre>
+                </td>
+                <td>
+                    &lt;key, value> or xml or json or objects<br>
+                    Example: Book data stored in mongoDB in json format
+                    <pre>
+// Same as books table
+/////// entry-1 /////////
+{       
+    "_id": ObjectId("5f85e7a06921e55c279b15a0"), //Primary key
+    "title": "GumsRoad",
+    "author": {
+        "name": "Douglas Adams",
+        "birth_year": 1952
+    },
+    "genre": "Science Fiction",
+    "comments": [
+        {
+        "user": "Alice",
+        "text": "One of my favorites!"
+        },
+        {
+        "user": "Bob",
+        "text": "Hilarious and clever."
+        }
+    ]
+}
+////////// entry-2
+(Fields in json document can vary) /////////
+{
+    "_id": ObjectId("122312141241241"),     
+    "title": "HedgeHog",
+    "author": {
+        "name": "Douglas Adams",
+    },
+    "genre": "Adventure",
+}
+                    </pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Huge Data Supoprt (~1TB)</td>
+                <td><b>No. <a href="./SQL/SQL_Issues.html#why">Why?</b></a></td>
+                <td>yes</td>
+            </tr>
+            <tr>
+                <td>Horizontal Scaling</td>
+                <td><b><a href="./SQL/SQL_Issues.html#horiscaling">Does not support Horizontal scaling efficiently</b></a></td>
+                <td>yes</td>
+            </tr>
+            <tr>
+                <td>Tech Support</td>
+                <td>Good, query-writing:simple</td>
+                <td>Poor, query-writing:complex</td>
+            </tr>
+            <tr>
+                <td>Schema</td>
+                <td>Fixed</td>
+                <td>Not fixed. We can have variable</td>
+            </tr>
+        </table>
+
+    </article>
+  </main>
+
+</body>
+</html>

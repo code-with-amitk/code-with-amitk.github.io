@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SQL Issues</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <aside class="sidebar">
+    <a href="#issues">Scaling Issues with SQL DB</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+        <h3 id="issues">Scaling Issues with SQL DB</h3>
+        <dl id="refintegrity"><strong>Referential Integrity</strong></dl>
+        <dt><u>Definition:</u></dt>
+        <dd>
+            1. Relation between 2 or more tables remain consistent (on same server)<br>
+            2. Relation between 1 table when its distributed on shards(multiple servers) remain consistent.
+        </dd>
+        <dt><u>Challenges in Referential Integrity across Shards:</u></dt>
+        <dd>1. Transaction Coordination: 
+            if transaction requires to write data on same table in different shards, it becomes challenging.<br>
+            2. Latency in data synchronization: 
+            Changes made to 1 shard may not be immediately reflected in another, can lead to situations where data 
+            reads on different shards return inconsistent results<br>
+            3. Joins: 
+            joins across shards are less efficient, and careful query planning is required to minimize the impact on performance<br>
+            4. Partitioning Strategy: 
+            strategy used for partitioning data across shards can impact referential integrity.<br>
+        </dd>
+
+        <dl id="why"><strong>SQL Cannot support Large data</strong></dl>
+        <dt>
+            SQL stores data in tables, if more data size of table will grow.<br>
+            <u>Problem with Huge tables:</u><br>
+            - Searching will take time, indexing will take time<br>
+            - Horizontal scaling not possible
+        </dt>
+
+
+        <br>
+        <dl id="horiscaling"><strong>SQL Cannot support Horizontal scaling=Sharding efficiently</strong></dl>
+        <dt>
+            Sharding a relational database involves dividing the dataset into shards (partitions) and distributing them across multiple servers.<br>
+            <u>Problem with Huge tables:</u><br>
+            - Searching will take time, indexing will take time<br>
+            - Horizontal scaling not possible
+            - <a href="#refintegrity">Referential Integrity</a>
+        </dt>
+
+    </article>
+  </main>
+
+</body>
+</html>
