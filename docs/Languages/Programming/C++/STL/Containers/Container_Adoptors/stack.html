@@ -7,6 +7,21 @@
 </head>
 
 <body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
     <h1>Stack</h1>
     <ul>
       <li>
@@ -28,53 +43,101 @@
         <tr>
             <td>Declaration</td>
 
-            <td><pre><code class="language-css">    <!--c++-->
+            <td><pre>    <!--c++-->
 stack&lt;int> st;
-            </code></pre></td>
+            </pre></td>
 
-            <td><pre><code class="language-css">    <!--rust-->
+            <td><pre>    <!--rust-->
 let mut stack: Vec<i32> = Vec::new();
-            </code></pre></td>
+            </pre></td>
 
-            <td><pre><code class="language-css">    <!--python-->
+            <td><pre>    <!--python-->
 Python doesn't have built-in Stack.
 Its implemented using a list.
 st = []
-            </code></pre></td>
+            </pre></td>
 
             <td>
             </td>
         </tr>
 
         <tr>
-            <td>push at end</td>
-            <td>st.push(a)</td>
-            <td></td>
-            <td>st.append(item)</td>
+            <td>Empty</td>
+            <td><pre>               <!--c++-->
+!st.empty()
+            </pre></td>
+            <td><pre>               <!--Rust-->
+self.s1.is_empty()                
+            </pre></td>
+            <td><pre>               <!--Python-->
+len(st)
+            </pre></td>
+            <td>                    <!--Go-->
+
+            </td>   
+        </tr>
+
+        <tr>
+            <td>Last</td>
+            <td><pre>               <!--c++-->
+st.back()
+            </pre></td>
+            <td><pre>               <!--Rust-->
+//pub fn last(&self) -> Option<&T>
+if let Some(&ele) = self.s1.last() {
+    
+}                
+            </pre></td>
+            <td><pre>               <!--Python-->
+            </pre></td>
+            <td>                    <!--Go-->
+
+            </td>   
+        </tr>
+
+        <tr>
+            <td>Pop</td>
+            <td><pre>               <!--c++-->
+st.pop()
+            </pre></td>
+            <td><pre>               <!--Rust-->
+if let Some(ele) = self.s1.pop() {
+    //ele removed
+}
+            </pre></td>
+            <td><pre>               <!--Python-->
+st.pop()
+            </pre></td>
+            <td><pre>               <!--Go-->
+self.dq.pop(), self.dq.popleft()
+            </pre></td>
+        </tr>
+
+        <tr>
+            <td>push_back</td>
+            <td><pre>               <!--c++-->
+st.push(a)
+            </pre></td>
+            <td><pre>               <!--Rust-->
+self.s1.push(x);
+            </pre></td>
+            <td><pre>               <!--python-->
+st.append(item)
+            </pre></td>
             <td></td>
         </tr>
 
         <tr>
             <td>Top</td>
-            <td>st.top()</td>
-            <td></td>
-            <td>st[-1]</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>Pop</td>
-            <td>st.pop()</td>
-            <td></td>
-            <td>st.pop()</td>
-            <td>self.dq.pop(), self.dq.popleft()</td>
-        </tr>
-
-        <tr>
-            <td>Check empty</td>
-            <td>!st.empty()</td>
-            <td></td>
-            <td>len(st)</td>
+            <td><pre>           <!--c++-->
+st.top()
+            </pre></td>
+            <td><pre>               <!--rust-->
+self.st.last()
+            </pre></td>
+            <td><pre>               <!--Python-->
+st[-1]
+            </pre></td>
             <td></td>
         </tr>
 
