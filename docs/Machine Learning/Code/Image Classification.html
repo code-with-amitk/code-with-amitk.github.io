@@ -51,6 +51,9 @@
                                   |                          (loss score)
                                   |                             /
                                   |------------- Optimizer -----
+from keras import models
+from keras import layers
+from keras.datasets import mnist
 
 network = models.Sequential()       //a
 network.add(layers.Dense(512, activation='relu', input_shape=(28*28,))) //b
