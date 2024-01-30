@@ -27,7 +27,12 @@
     <a href="#req">Requirements</a>
     <a href="#boe">BOE</a>
     <a href="#systemapis">System APIs</a>
-    <a href="#database">Databases</a>
+    <a href="#partioning">Databases</a>
+    <ul>
+      <li><a href="#sqltables">SQL Tables</a></li>
+      <li><a href="#partitioning">DB Scaling & Paritioning</a></li>
+    </ul>
+    <a href="#hld">HLD</a>
   </aside>
 
   <main>
@@ -135,12 +140,18 @@
                 }
             </pre>
 
-            <h3 id="database">3. Databases</h3>
-            <dt>
-                Following are entities in system: Place, Place_Owner(who adds entry), Reviews, Photos, Videos
-            </dt>
+            <h3 id="database">4. Databases</h3>
+            <dl><strong><a href="/System_Design/Concepts/Databases/SQL_vs_NoSQL.html">We will use SQL, not noSQL?</a></strong></dl>
+            <p>
+              - NoSQL has good use when schema is dynamic, but we have fixed fields to store in DB here.
+            </p>
 
-            <dl><strong>1. Place table (indexing for faster searching)</strong></dl>
+            <dl id="sqltables"><strong>4.1 SQL Tables</strong></dl>
+            <p>
+                Following are entities in system: Place, Place_Owner(who adds entry), Reviews, Photos, Videos
+            </p>
+
+            <dt><strong>1. Place table (indexing for faster searching)</strong></dt>
             <pre>
 | ownerID(fk)[indexed] | lattitude | longitude | placeID(pk) | Description | categoryId(fk) | lastupdated_timestamp[indexed] |
 
@@ -154,8 +165,7 @@ Description(512 bytes)
 Category(1 byte): E.g., coffee shop, restaurant, theater, etc.                
             </pre>
 
-            <br>
-            <dl><strong>2. Place_owner table</strong></dl>
+            <dt><strong>2. Place_owner table</strong></dt>
             <pre>
 | ownerID(pk) | name | email | secret_key | placeID(fk) | created_timestamp |
 
@@ -163,15 +173,13 @@ placeId: locations this owner owns
 created_timestamp: profile created by owner at this time                
             </pre>
 
-            <br>
-            <dl><strong>3. Reviews table</strong></dl>
+            <dt><strong>3. Reviews table</strong></dt>
             <pre>
 | review_id(pk) | creator_name | creator_email | review_description | placeID(fk) | created_timestamp |           
             </pre>
 
-            <br>
-            <dl><strong>4. Place Photo table</strong></dl>
-            <dt>photos stored on object store</dt>
+            <dt><strong>4. Place Photo table</strong></dt>
+            <p>photos stored on object store</p>
             <pre>
 | photo_id(pk) | active | photo_url | placeID(fk) | created_timestamp | marked_inactive_timestamp |
 
@@ -180,25 +188,85 @@ active: Is photo active on website, ie getting displayed. We will remove photo f
 photo_url:
             </pre>
 
-            <br>
-            <dl><strong>5. Place video table</strong></dl>
-            <dt>videos stored on object store</dt>
+            <dt><strong>5. Place video table</strong></dt>
+            <p>videos stored on object store</p>
 
-            <br>
-            <dl><strong>6. Reviews table</strong></dl>
-            <dt>Reviews stored on object store</dt>
+            <dt><strong>6. Reviews table</strong></dt>
+            <p>Reviews stored on object store</p>
             <pre>
 | reviewId(pk) | review-text-url | placeid(fk) | stars |
             </pre>
 
-            <br>
-            <dl><strong>7. Category Table</strong></dl>
+            <dt><strong>7. Category Table</strong></dt>
             <pre>
 | categoryId(pk) | Category-text |
 
 Benefits of keeping seperate Category table:
 - Add/update category without affecting place table
             </pre>
+
+            <dl id="partitioning"><strong>4.2 DB Scaling and Partitioning</strong></dl>
+            <dt><u>Why we need DB Scaling?</u><br>
+              - Everyday new places(text, photos, videos, reviews) will get added, DB size will increase.<br>
+              - Given such a huge QPS = 100k req/sec and such a huge data to store 2Exabytes, we would need 
+              to partition our DB, we cannot store everything at 1 place.
+            </dt>
+            <dt>
+              We can do:<br>
+              - <a href="/System_Design/Concepts/Databases/DB_Scaling/Sharding/index.html#regionbasedpartition">Sharding based on location IDs</a>
+            </dt>
+
+            <h3 id="hld">5. High Level Design</h3>
+            <dt>There can be 2 ways for Database arragement</dt>
+            <table>
+              <tr>
+                <th></th>
+                <th><a href="https://github.com/amitkumar50/Code-examples/tree/master/DS_Questions/Data_Structures/Trees/M-Ary_Trees/Quad_Tree">Quad Tree</a>
+                  //Will Choose this</th>
+                <th>HashMap<zipcode, db-location></th>
+              </tr>
+              <tr>
+                <td>Advantages</td>
+                <td>
+                  - No problem in non-uniform distributed data. We can increase more DBs on heavy load.<br>
+                  - Allows for spatial indexing, enabling efficient range queries and proximity searches.
+                </td>
+                <td>
+                  - Simple to implement.<br>
+                  - Work well if data is uniformly distributed across zipcodes
+                </td>
+              </tr>
+              <tr>
+                <td>Disdvantages</td>
+                <td>
+                  - More Complex wrt Hash map<br>
+                  - Maintenance overhead as the system scales, especially in scenarios where data distribution changes frequently.
+                </td>
+                <td>
+                  - May not handle non-uniform data distribution effectively. 
+                  If certain regions have significantly more data than others, it could lead to load imbalance<br>
+                  - Adding or removing servers might be challenging
+                </td>
+              </tr>
+            </table>
+
+            <dt>
+              QuadTree:<br>
+              - Whole whole world map is divided into grids. 1 grid can reside on multiple servers. Search Complexity for DB is O(logn).
+            </dt>
+            <pre>
+              Quad Tree
+                [root]
+               / | \ \
+     
+       struct gridNode_or_dbNode {
+         uint32 gridId_or_dbID;            //gridId hash gives the DB where (latt-start,long-start,latt-end,long-end) are stored
+         double lattitude-start,lattitude-end;
+         double longitude-start,longitude-end;
+         struct grid *child[4];
+       }                
+            </pre>
+
     </article>
   </main>
 </body>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sharding</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#what">What</a>
+    <a href="#scalablity">Sharding=Scalabilty?</a>
+    <a href="#partitioningwithreplication">Sharding with Replication</a>
+    <a href="#typesofsharding">Types of Sharding</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+        <h3 id="what">Partitioning/Sharding(MongoDB,ElasticSearch) / Region(HBase) / Bigtable(Tablet) / vNode(Cassandra) / vBucket(CouchBase)</h3>
+        <dt>
+            - Replication: Multiple copies of the same data on different nodes<br>
+            - Sharding: For very large datasets, breaking the data & storing into partitions is called partitioning or sharding.
+        </dt>
+        <pre>
+            hello world come here
+
+            |hello|     |world|     |come|        |here|
+            node-1      node-2      node-3        node-4            
+        </pre>
+
+        <dl id="scalablity"><strong>How Partioning achieves Scalabilty</strong></dl>
+        <dt>
+            - Different partitions can be placed on different nodes hence a large dataset is distributed across many disks, 
+            and the query load can be distributed across many machines/processors.<br>
+            - With partitioning we speard query load evenly across nodes. That means 10 nodes should be able to 
+            handle 10 times read & write throughput wrt 1 node.
+        </dt>
+
+        <br>
+        <dl id="partitioningwithreplication"><strong>Partitioning/Sharding with Replication</strong></dl>
+        <dt>
+            - Keeping copies of each partition at multiple nodes improves fault tolerance.<br>
+            - if master/slave replication is used with partitioning, Each node may be master for 1 dataset while slave for other
+        </dt>
+        <pre>
+            |             Node-1             |      |             Node-2             |
+            |partition1 partition2 partition3|      |partition3 partition2 partition1|
+            | (master)   (slave)    (slave)  |      | (master)   (slave)    (slave)  |            
+        </pre>
+
+        <h3 id="typesofsharding">Types of Sharding</h3>
+        <dl><strong>1. By Key range</strong></dl>
+        <pre>
+            |Partition-1|   |Partition-2|   |Partition-3|
+     keys   |a-e        |   |f-o        |   |p-z        |
+        </pre>
+        <dt>
+            Each partition/shard holds range of &lt;key, value> for particular range. 
+            If we know which partition is assigned to which node, then we can make request directly to the appropriate node.<br>
+            <u>Advantage</u>: Keys can be kept in sorted order inside the partition.<br>
+            <u>Disadvantage</u>: Certain types of keys can turn partition into Hotspot. Eg: if a shard stores all tweets of a celebrity user
+        </dt>
+
+        <br>
+        <dl><strong>2. By Hash of Keys</strong></dl>
+        <img src="/images/Partitioning_by_hash_of_keys.png" 
+            alt="Partitioning_by_hash_of_keys" style="width:400px;height:100px;">
+        <pre>
+            key -> |Hash Function| -> Hash of Shard
+        </pre>
+        <dt>
+            Hash is so generated that keys are equally distributed amongst shards<br>
+            Adv: Similar keys different hashes are generated, hence hotspots are avoided.<br>
+            Disadv: <br>
+                1. Range based key search property is lost. ie Advantage of Partitioning by Key range is lost.<br>
+                2. Hotspots still exists: In extreme conditions, where keys differ by millisec, same hash gets generated and all load goes to same shard.
+        </dt>
+
+        <br>
+        <dl><strong>3. By reverse indexing/secondary indexes</strong></dl>
+        <dt>
+
+        </dt>
+
+        <br>
+        <dl id="regionbasedpartition"><strong>4. Region based Partition / Sharding based on location IDs</strong></dl>
+        <dt>
+            Storing data specific to region (maybe based on pin code).<br>
+            <u>Advantages:</u><br>
+            1. Data Localization: Users in a particular region primarily access data relevant to that region, 
+            which can reduce latency and improve response times.<br>
+            2. Scaling: By partitioning the database based on region, we can scale system horizontally.<br>
+            3. Regulatory Compliance: Data privacy laws may require certain data to be stored within specific geographic regions<br>
+            4. Disaster Recovery: In the event of a localized failure or disaster, having region-based partitions can make it easier to implement disaster recovery strategies. 
+            We can focus on recovering data for specific regions without affecting the entire system<br>
+            5. Reduced Maintenance Downtime: When need to perform maintenance tasks, such as database upgrades, 
+            we can target specific regions, minimizing the impact on the overall system.
+        </dt>
+
+    </article>
+  </main>
+
+</body>
+</html>

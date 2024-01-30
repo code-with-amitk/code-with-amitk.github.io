@@ -171,9 +171,12 @@ for i:=0; i<5; i++ {
                 <li><b>Range</b> v.erase(v.begin()+position1, v.begin()position2);</li>
                 <li><b>All</b> v.clear();</li>
             </ul></td>
-            <td><ul>
-                <li><b>Last element</b> vec.pop()</li>
-            </ul></td>
+            <td><pre>
+//pop(&mut self) -> Option<T>
+if let Some(a) = vec.pop() {
+    
+}
+            </pre></td>
             <td><b>Last Element</b> element = list.pop()</td>
         </tr>
 

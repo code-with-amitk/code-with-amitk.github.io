@@ -203,8 +203,22 @@ s[i]
 
         <tr>
             <td>Iterate chars in string</td>
-            <td>for (int i=0; i&lt;letters.size(); ++i)</td>
-            <td>for letter in letters.chars()</td>
+            <td><pre>
+for (int i=0; i&lt;str.size(); ++i)
+            </pre></td>
+            <td><a href="https://doc.rust-lang.org/std/string/struct.String.html#method.chars">Rust chars()</a>
+                <pre>
+//pub fn chars(&self) -> Chars<'_>
+for ch in str.chars() {
+
+}
+
+let word = "goodbye";
+word.chars().count();   //7
+let mut chars = word.chars();
+assert_eq!(Some('g'), chars.next());
+                </pre>
+            </td>
             <td>for i in range(0, len(letters)):</td>
             <td><pre><code class="language-css">    <!--Go-->
 for i:=0; i&lt;len(s); i++ {
