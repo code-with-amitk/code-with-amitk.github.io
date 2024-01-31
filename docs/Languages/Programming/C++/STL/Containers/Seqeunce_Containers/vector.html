@@ -197,6 +197,23 @@ min_int = -sys.maxsize - 1
         </tr>
 
         <tr>
+            <td>pop Back. Remove last</td>
+            <td><pre>       <!--c++-->
+vec.pop_back();                
+            </pre></td>
+
+            <td><pre>       <!--rust-->
+// Pop removes and returns last
+if let Some(last) = st.pop() {
+    println!("last element", last);
+}                
+            </pre></td>
+
+            <td><pre>       <!--Python-->
+            </pre></td>
+        </tr>        
+
+        <tr>
             <td>push_back()</td>
             <td><pre><code class="language-css">
 //push_back(): allocates element
