@@ -7,10 +7,25 @@
 </head>
 
 <body>
-    <h1>Deque</h1>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <h1>Max Heap</h1>
     <ul>
       <li>
-          <h3><a href="#heap"C++ vs Python vs Rust</a></h3>
+          <h3><a href="#heap">C++ vs Python vs Rust</a></h3>
       </li>
     </ul>
 
@@ -22,11 +37,42 @@
             <th>Rust</th>
             <th>Python</th>
         </tr>
+
         <tr>
             <td>Declaration</td>
-            <td>priority_queue<pair<key, value>> pq</td>
-            <td>
-                <pre><code class="language-css">
+            <td><pre>                       <!--c++-->
+priority_queue&lt;pair&lt;key, value>> pq
+            </pre></td>
+
+            <td>                       <!--Rust-->
+max_heap
+                <table>
+                    <tr>
+                        <td>i32</td>
+                        <td><pre>
+let mut max_heap: BinaryHeap&lt;> = BinaryHeap::new();                            
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Pair &lt;i32, char></td>
+                        <td><pre>
+let mut max_heap:BinaryHeap<(i32, char)> = BinaryHeap::new();
+                        </pre></td>
+                    </tr>
+                </table>
+<br>
+min_heap 
+                <table>
+                    <tr>
+                        <td>i32</td>
+                        <td><pre>
+let mut min_heap: BinaryHeap&lt;Reverse<i32>> = BinaryHeap::new();
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+
+            <td><pre>                       <!--Python-->
 #Python does not provide built-in heap.
 #But it provides heapq module for heap operations on list
 import heapq
@@ -34,40 +80,63 @@ import heapq
 # Creating a Max Heap
 max_heap = []
 heapq.heapify(max_heap)  # Convert list into a max heap
-                </code></pre>
-            </td>
-            <td>
-                <pre><code class="language-css">
-let mut max_heap: BinaryHeap<>> = BinaryHeap::new();
+            </pre></td>    
+        </tr>
 
-let mut min_heap: BinaryHeap<Reverse<i32>> = BinaryHeap::new();
-                </code></pre>
-                </td>
-        </tr>
         <tr>
-            <td>push at end</td>
-            <td>dq.push_back(x)</td>
-            <td>dq.push_back(x)</td>
-            <td>self.dq.append(x)</td>
+            <td>push Back</td>
+            <td><pre>
+dq.push_back(x)
+            </pre></td>
+            <td><pre>
+heap.push(x)
+            </pre></td>
+            <td><pre>
+self.dq.append(x)
+            </pre></td>
         </tr>
+
         <tr>
             <td>Front, Back element</td>
-            <td>dq.front(), dq.back()</td>
-            <td>dq.front(), dq.back()</td>
-            <td>self.dq[0],self.dq[-1]</td>
+            <td><pre>
+dq.front()
+dq.back()
+            </pre></td>
+            <td><pre>
+heap.front()
+dq.back()
+            </pre></td>
+            <td><pre>
+self.dq[0]
+self.dq[-1]
+            </pre></td>
         </tr>
+
         <tr>
             <td>Pop front, back</td>
-            <td>dq.pop_front(), dq.pop_back()</td>
-            <td>dq.pop_front(), dq.pop_back()</td>
-            <td>self.dq.pop(), self.dq.popleft()</td>
+            <td><pre>
+dq.pop_front()
+dq.pop_back()
+            </pre></td>
+            <td><pre>                   <!--Rust-->
+pub fn pop(&mut self) -> Option<T>
+while let Some(num) = max_heap.pop() {
+    println!("{}", num);
+}
+            </pre></td>
+            <td><pre>
+self.dq.pop()
+self.dq.popleft()
+            </pre></td>
         </tr>
+
         <tr>
             <td>Check empty</td>
             <td>!dq.empty()</td>
             <td>!dq.empty()</td>
             <td>bool(self.dq) != False</td>
         </tr>
+
         <tr>
             <td>size</td>
             <td>dq.size()</td>
@@ -77,5 +146,4 @@ let mut min_heap: BinaryHeap<Reverse<i32>> = BinaryHeap::new();
     </table>
 
 </body>
-
 </html>

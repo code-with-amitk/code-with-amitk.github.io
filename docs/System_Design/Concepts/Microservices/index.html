@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Microservices</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+  <aside class="sidebar">
+    <a href="#microservicesdp">Microservices Design Patterns</a>
+  </aside>
+
+    <main style="margin-left:200px;">
+        <h3 id="microservicesdp">Microservices Design Patterns</h3>
+        <img src="/images/microservices_design_patterns.PNG"
+        alt="microservices_design_patterns" style="width:500px;height:400px;">
+        <p>These are software patterns that create reusable, autonomous services</p>
+        <table>
+            <tr>
+                <td>1. Externalized Configuration</td>
+                <td>Configuration settings should be externalized from the codebase, allowing services 
+                    to be more configurable without requiring redeployment. This can be achieved using tools 
+                    like ArgoCD manifests, Spring Cloud Config.</td>
+            </tr>
+            <tr>
+                <td>2. API Gateway</td>
+                <td>single entry point for clients to access multiple microservices. It can handle routing, 
+                    authentication, rate limiting, and other cross-cutting concerns.</td>
+            </tr>
+            <tr>
+                <td>3. Event-Driven Architecture</td>
+                <td>Microservices can communicate asynchronously using events. 
+                    Eg: Event Sourcing and CQRS (Command Query Responsibility Segregation) </td>
+            </tr>
+            <tr>
+                <td>4. Saga Pattern</td>
+                <td>To maintain data consistency, break the transaction into a series of smaller, compensating transactions</td>
+            </tr>
+            <tr>
+                <td>5. CQRS</td>
+                <td>A separate service, model, and database for insert operations in the database. 
+                    It also has a separate service, model, and database for query data.</td>
+            </tr>
+        </table>
+    </main>
+
+</body>
+</html>

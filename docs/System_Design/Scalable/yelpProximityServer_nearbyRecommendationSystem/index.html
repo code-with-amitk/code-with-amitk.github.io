@@ -251,8 +251,12 @@ Benefits of keeping seperate Category table:
             </table>
 
             <dt>
-              QuadTree:<br>
-              - Whole whole world map is divided into grids. 1 grid can reside on multiple servers. Search Complexity for DB is O(logn).
+              <b>QuadTree:</b><br>
+              - Whole whole world map is divided into grids. 1 grid can reside on multiple servers. 
+              Search Complexity for DB is O(logn).<br>
+              - Dynamically adjust the grid size such that whenever grid gets lot of places(maybe > 500) 
+              break it down into 4 dbs and distribute places b/w them.<br>
+              - Thickly populated areas like San Francisco will have a lot of grids.
             </dt>
             <pre>
               Quad Tree
@@ -267,7 +271,67 @@ Benefits of keeping seperate Category table:
        }                
             </pre>
 
+          <dl><strong><a href="#req1">Req-1: Add_place</a></strong></dl>
+          <pre class="mermaid">
+            sequenceDiagram
+            rect rgb(221, 240, 221)
+              participant u as UserApp
+              participant cdn as CDN
+              box AWS
+              participant elb as External-LB
+              participant ilb as Internal-LB<br>Ambassador
+              participant pod as POD<br><br>-Container-1(sidecar)<br>-Container-2(AppServer)
+              participant dbf as DbFrontEnd<br>Diesel
+              participant db as QuadTree-DB
+              end
+
+              note over u: User fills description,<br>(lat,lon),locates on map and Press Submit
+              note over u: UserApp will have public<br>IP of external-lb pf AWS
+              u ->> elb
+              cdn ->> u: Datacenter1=FQDN near you
+          </pre>
+
+          <dl><strong><a href="#req4">Req-4: Search. Hotels Near me</a></strong></dl>
+          <pre class="mermaid">
+            sequenceDiagram
+            rect rgb(221, 240, 221)
+              participant u as UserApp
+              participant cdn as CDN
+              box AWS
+              participant elb as External-LB
+              participant ilb as Internal-LB<br>Ambassador
+              participant pod as POD<br><br>-Container-1(sidecar)<br>-Container-2(AppServer)
+              participant dbf as DbFrontEnd<br>Diesel
+              participant db as QuadTree-DB
+              end
+
+              u ->> cdn: My (lat,long)
+              cdn ->> u: Datacenter1=FQDN near you
+              u ->> elb: HTTPS GET Hotels(long,lat)
+              elb ->> ilb: HTTPS GET Hotels(long,lat)
+              ilb ->> pod: HTTPS GET Hotels(long,lat)
+              note over pod: Sidecar Decrypt HTTPS
+              pod ->> dbf: Find root of DB-Quadtree<br>root stored on db
+              dbf ->> db: Find root of DB-Quadtree<br>root stored on db
+              db ->> dbf: root
+              dbf ->> pod: root
+              pod ->> dbf: traverse to DB which stores (lon, lat)
+              dbf ->> db: traverse to DB which stores (lon, lat)
+              pod ->> dbf: hotels in 10km of (lat,lon)
+              dbf ->> db: hotels in 10km of (lat,lon)
+              db ->> dbf: Hotels
+              dbf ->> pod: Hotels
+              note over pod: Create json
+              pod ->> elb: Hotels json
+              elb ->> u: Hotels json
+            end
+
+          </pre>
+
     </article>
   </main>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
+  </script>	
 </body>
 </html>
