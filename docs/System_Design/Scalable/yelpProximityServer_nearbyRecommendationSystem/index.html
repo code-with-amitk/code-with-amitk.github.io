@@ -286,9 +286,13 @@ Benefits of keeping seperate Category table:
               end
 
               note over u: User fills description,<br>(lat,lon),locates on map and Press Submit
-              note over u: UserApp will have public<br>IP of external-lb pf AWS
-              u ->> elb
-              cdn ->> u: Datacenter1=FQDN near you
+			        cdn ->> u: Give ELB IP Address<br>on startup
+              u ->> elb: POST(data)
+              elb ->> ilb: POST(data)
+              ilb ->> pod: POST(data)
+              pod ->> dbf: API call to insert
+              dbf ->> db: insert into table              
+            end
           </pre>
 
           <dl><strong><a href="#req4">Req-4: Search. Hotels Near me</a></strong></dl>
