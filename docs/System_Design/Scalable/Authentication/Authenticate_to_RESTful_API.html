@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Authentication to RESTFul APIs</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#authenticatetorestful">Authenticate to RESTFul APIs</a>
+  </aside>
+
+  <main style="margin-left:200px;">
+    <h3 id="authenticatetorestful">Authenticate to RESTFul APIs</h3>
+    <dl><strong>
+        <a href="/System_Design/Concepts/Terms/index.html#jwt">JWT(Json Web Token)</a></strong></dl>
+    <pre class="mermaid">
+        sequenceDiagram
+        rect rgb(221, 240, 221)
+            participant u as UserApp
+            participant cdn as CDN
+            box AWS
+            participant cog as Amazon-Cognito<br>User,Pass store
+            participant s3 as Amazon-S3
+            end
+
+            s3 ->> cdn: HTML, css, javascript etc
+            note over u: Open www.test.com
+            u ->> cdn: GET test.com
+            cdn ->> u: HTML, css, javascript etc
+
+            note over u: Enter email, username, password<br>Submit.
+            u ->> cog: user,password,email
+            cog ->> u: Send Confirmation Code to Inbox
+
+            note over u: User enter code on test.com<br>User signs in
+            note over u: Javascript function in browser <br>communicate with cognito
+            u ->> cog: Authenticate using <br>Secure Remote Password protocol (SRP)
+            cog ->> u: JWT(JSON Web Token)
+            note over u: JWT would be used by <br>to communicate with RESTful APIs
+        end
+    </pre>
+  </main>
+
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
+  </script>	
+
+</body>
+</html>
