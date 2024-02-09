@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Containers</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+    <script src="https://cdn.jsdelivr.net/npm/puml-for-markdown@1.2.1/index.min.js"></script>
+</head>
+  
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+            </li>
+        </ul>
+      </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#containers">Containers</a>
+        <a href="./Kubernets/">Kubernets</a>
+    </aside>
+
+    <main style="margin-left:200px;">
+        <h3 id="containers">Containers</h3>
+        <dl><strong>What is Container?</strong></dl>
+        <dt>Self contained package that contains everything that binary/application need to run.<br>
+            Only 1 Application can run inside container and all its dependent libraries. 
+            Each container has its own: Network interface, IP address, file system, All containers share the kernel of the host.
+        </dt>
+        <br>
+        <dl><strong>Issues without containers?</strong></dl>
+        <dt>1. App-1 have dependency on shared library(libcv1). App-1 have dependency on shared library(libcv2). 
+            Both cannot run on production.<br>
+            2. All programs to share same versions of shared libraries which makes application tightly coupled.
+        </dt>
+        <br>
+        <dl><strong>Advantages of Containers</strong></dl>
+        <dt>
+            1. lightweight Use less memory: Simple web application running inside container takes 100MB space.<br>
+            2. Secure: Reduces the chance that malicious code present in one container impacting other containers or invade the host system.<br>
+            3. Portable: abstraction from the host operating system makes containerized applications portable ie able to run on any OS,VM.            
+        </dt>
+        <img 
+        src="//www.plantuml.com/plantuml/png/XP71QuCm5CRl_XLlsQKz35efwwdGp1xAO5hKmM0CIJNJi9X8J8Gn_D-dWSqMgXwKyF9xxyltlNsjYTAcvCwTBcX9eQIQSCUfIFf5SWeeLYHZcab1E09IGmm_3i2dv1bLW8worX14o1Q7CcVdj5abBYXJw-wmsKBrhGifcdNY_i6sGP5E4-6gWcVy4i4wsLnUjnFW8xnxsFU36C9N_mF1VKYpkTOeV8FX1VzS_--_ziBtAJXOlwShlvuKcZ11rGDU1D7Ed8tGPcb1RC5Rw1CimevZ9TtrUQJBGVyMxjdKe4zj0EV3klBSJim_sFbzWkxS_6socbPeHomV1ykvv4Jaov6jOwEBnDHKDIobutlPKv6Paly2" 
+        style="width:100%;height:100%;"
+        alt="Container Diagram">
+</body>
+  
+</html>
