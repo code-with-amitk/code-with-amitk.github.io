@@ -70,11 +70,11 @@ if let Some(l) = v.last() {
     prinln!("last=", l);
 }
             </code></pre></td>
-            <td><pre><code class="language-css">    <!--Python-->
-            </code></pre></td>
+            <td><pre>    <!--Python-->
+            </pre></td>
 
-            <td><pre><code class="language-css">    <!--Go-->
-            </code></pre></td>
+            <td><pre>    <!--Go-->
+            </pre></td>
         </tr>
 
         <tr>
@@ -133,7 +133,8 @@ let v: Vec &lt;i32> = [1,2,3].to_vec();
                         <td>2D</td>
                         <td><pre>
 let mut 2d_vec: Vec&lt;Vec&lt;i32>> = Vec::new();
-let mut 2d_vec: Vec&lt;Vec&lt;i32>> = vec![vec![0; row as usize]; col as usize];
+let mut 2d_vec: Vec&lt;Vec&lt;i32>> = 
+vec![vec![0; row as usize]; col as usize];
                         </pre></td>
                     </tr>
                 </table>
@@ -189,11 +190,11 @@ let min_int: i32 = i32::MIN;
 let maxi = std::cmp::max(a,b);
             </pre></td>
 
-            <td><pre><code class="language-css">
+            <td><pre>
 import sys
 sys.max_int     //INT_MAX
 min_int = -sys.maxsize - 1
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>
@@ -215,7 +216,7 @@ if let Some(last) = st.pop() {
 
         <tr>
             <td>push_back()</td>
-            <td><pre><code class="language-css">
+            <td><pre>
 //push_back(): allocates element
 //somewhere else then insert
 //into vector at back.
@@ -226,7 +227,7 @@ v.push_back(11)
 //Adv: Does in place insertion
 //avoids unneccessary copy
 v.emplace_back(11)
-            </code></pre></td>
+            </pre></td>
 
             <td>vec.push(str.clone())</td>
             <td>list.append(4)</td>
@@ -273,7 +274,7 @@ s.chars().for_each(|ele| {
     }
 });
             </pre></td>
-            <td><pre><code class="language-css">   <!--Python-->
+            <td><pre>   <!--Python-->
 for c in s[1:-1]:
   print(c)
 
@@ -284,10 +285,11 @@ for i in range(0,n):  #range(start, stop, step)
 # Reverse Iterate
 for i in range(len(list) - 1, -1, -1):
   print(list[i])
-            </code></pre></td>
-            <td><pre><code class="language-css">        <!--Go-->
+            </pre></td>
 
-            </code></pre>
+            <td><pre>        <!--Go-->
+
+            </pre>
             </td>
         </tr>
 
@@ -321,7 +323,7 @@ sort(a.begin(), a.end())
             <td><pre>
 vec.sort();
             </pre></td>
-            <td><pre><code class="language-css">
+            <td><pre>
 #Simple Sort
 list.sort()
 
@@ -329,7 +331,7 @@ list.sort()
 def fun(s):
     return s[1] 
 sorted(list, key=fun)
-            </code></pre></td>
+            </pre></td>
         </tr>
 
         <tr>
@@ -342,13 +344,13 @@ sorted(list, key=fun)
 
         <tr>
             <td>Ternary Operator</td>
-            <td><pre><code class="language-css">
+            <td><pre>
 int a = (x == '0') ? 1 : 0;
-            </code></pre></td>
+            </pre></td>
             <td></td>
-            <td><pre><code class="language-css">
+            <td><pre>
 a = 1 if x == '0' else 0
-            </code></pre></td>
+            </pre></td>
             <td></td>
         </tr>
 
