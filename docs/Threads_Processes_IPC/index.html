@@ -6,18 +6,81 @@
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
-    <div class="container">
-		<div class="menu">
-			<ul>
-				<li><a href="./Threads">Threads</a></li>
-				<li><a href="Menu1">Menu1</a></li>
-				<li><a href="Menu2">Menu2</a></li>
-				<!-- Add more menu items as needed -->
-			</ul>
-        </div>
-        <div class="content">
-            <!-- Main content area -->
-        </div>
-    </div>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#vs">Thread vs Process</a>
+        <a href="#whyprocess">Why Processes</a>
+        <a href="./Threads">Threads</a>
+        <a href="./IPC/">InterProcess/Interthread Communication</a>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h3 id="vs">Threads vs Processes (Mechanisms used for executing code concurrently)</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Threads(User Space)</th>
+                    <th>Processes</th>
+                </tr>
+                <tr>
+                    <td>What</td>
+                    <td>Lightweight process within a process.(Since no duplication of process space)</td>
+                    <td>Heavy(Complete process space(CS,DS,SS,HS) duplicated) to child</td>
+                </tr>
+                <tr>
+                    <td>Compared</td>
+                    <td>
+                        <ul>
+                            <li>Fast</li>
+                            <li>No Context Switch(Switching from Thread-1 to Thread-2 does not need context)</li>
+                            <li>No memory cache flush, No Trap instruction, 
+                                Everything is inside process(No need to go in kernel space). 
+                                Process can decide his own scheduling algo
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>slow</li>
+                            <li>Context Switch needed</li>
+                            <li>Trap needed and to achieve these control need to go into kernel space</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Disadv</td>
+                    <td>If 1 thread blocks, whole process blocks.</td>
+                </tr>
+            </table>
+
+            <h3 id="whyprocess">Why Processes(if they are Heavy wrt Threds?)</h3>
+            <dt>
+                <b>1. Isolation:</b> 
+                Processes provide a higher level of isolation compared to threads. If one process crashes, 
+                it doesn't necessarily affect other processes. This is crucial for building robust and fault-tolerant systems.<br>
+                <b>2. Security:</b> 
+                Processes offer better security because they have separate memory spaces. 
+                This helps prevent unintended access or modification of data.<br>
+                <b>3. Compatibility and Portability:</b> 
+                Processes are more portable across different operating systems compared to threads
+            </dt>
+        </article>
+    </main>
+
 </body>
 </html>

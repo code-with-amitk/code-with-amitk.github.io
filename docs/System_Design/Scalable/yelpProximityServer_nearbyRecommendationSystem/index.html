@@ -35,8 +35,9 @@
     <a href="#hld">HLD</a>
     <ul>
       <li><a href="#authenticate">Authenticate to RESTful APIs</a></li>
-      <li><a href="#bhld">Basic HLD</a></li>
-      <li><a href="#problems">Problems in Basic HLD</a></li>
+      <li><a href="#reachmicroservice">Reach Microservice from public network</a>
+      <li><a href="#bhld">Basic Design</a></li>
+      <li><a href="#problems">Problems in Basic Design</a></li>
     </ul>
   </aside>
 
@@ -60,9 +61,14 @@
         <dl id="req5"> 5. POST. Users should be able to give reviews, ratings, open/close times, pictures etc.</dl>
 
         <h4>Non Functional</h4>
-        <dl id="nonfuncreq1">1. Scalable: System should support adding new places. (CRUD=CREATE)</dl>
-        <dl id="nonfuncreq2">2. Available: On high load, system should be available. (CRUD=READ)</dl>
-        <dl id="nonfuncreq3">3. Automated Review Filters</dl>
+        <dl id="nonfuncreq1">1. Scalable</dl>
+          <dd>Add new places without delay. (CRUD=CREATE)<br>
+              Return nearby places without delay. (READ)
+          </dd>
+        <dl id="nonfuncreq2">2. Reliable: Recommendations should be valid(not stale)</dl>
+        <dl id="nonfuncreq3">3. Fast</dl>
+        <dl id="nonfuncreq4">3. Available: On high load, system should be available. (CRUD=READ)</dl>
+        <dl id="nonfuncreq5">4. Automated Review Filters</dl>
 
         <h3 id="boe">2. BOE</h3>
         <dl><strong>Storage Estimates:</strong></dl>
@@ -231,8 +237,12 @@ Benefits of keeping seperate Category table:
               5.1 Authenticating to RESTful API using JWT(Json Web Tokens)
             </a></h4>
 
-            <h4  id="bhld">5.2 Basic HLD</h4>
-            <dt>There can be 2 ways for Database arragement</dt>
+            <h4 id="reachmicroservice"><a href="/System_Design/Scalable/Methods%20to%20reach%20Microservice/index.html">
+              5.2 Reach Microservice from public network
+            </a></h4>
+
+            <h4  id="bhld">5.3 Basic Design</h4>
+            <dt>All places would be stored in database. There can be 2 ways in which Databases can be arranged</dt>
             <table>
               <tr>
                 <th></th>
@@ -287,25 +297,22 @@ Benefits of keeping seperate Category table:
             </pre>
 
           <dl><strong><a href="#req1">Req-1: Add_place</a></strong></dl>
+          <dt><b>
+          <a href="/System_Design/Scalable/Methods%20to%20reach%20Microservice/index.html">
+            Components in reaching Microservice from public network
+          </a></b></dt>
           <pre class="mermaid">
             sequenceDiagram
             rect rgb(221, 240, 221)
               participant u as UserApp
-              participant cdn as CDN
               box AWS
-              participant elb as External-LB
-              participant ilb as Internal-LB<br>Ambassador
-              participant pod as POD<br><br>-Container-1(sidecar)<br>-Container-2(AppServer)
+              participant app as AppServer
               participant dbf as DbFrontEnd<br>Diesel
               participant db as QuadTree-DB
               end
 
-              note over u: User fills description,<br>(lat,lon),locates on map and Press Submit
-			        cdn ->> u: Give ELB IP Address<br>on startup
-              u ->> elb: POST(data)
-              elb ->> ilb: POST(data)
-              ilb ->> pod: POST(data)
-              pod ->> dbf: API call to insert
+              u ->> app: POST(data)
+              app ->> dbf: API call to insert
               dbf ->> db: insert into table              
             end
           </pre>
@@ -315,40 +322,78 @@ Benefits of keeping seperate Category table:
             sequenceDiagram
             rect rgb(221, 240, 221)
               participant u as UserApp
-              participant cdn as CDN
               box AWS
-              participant elb as External-LB
-              participant ilb as Internal-LB<br>Ambassador
-              participant pod as POD<br><br>-Container-1(sidecar)<br>-Container-2(AppServer)
+              participant app as AppServer
               participant dbf as DbFrontEnd<br>Diesel
               participant db as QuadTree-DB
               end
 
-              u ->> cdn: My (lat,long)
-              cdn ->> u: Datacenter1=FQDN near you
-              u ->> elb: HTTPS GET Hotels(long,lat)
-              elb ->> ilb: HTTPS GET Hotels(long,lat)
-              ilb ->> pod: HTTPS GET Hotels(long,lat)
-              note over pod: Sidecar Decrypt HTTPS
-              pod ->> dbf: Find root of DB-Quadtree<br>root stored on db
-              dbf ->> db: Find root of DB-Quadtree<br>root stored on db
+              u ->> app: HTTPS GET Hotels(long,lat)
+              app ->> dbf: Find root of DB-Quadtree<br>stored on db
+              dbf ->> db: Find root of DB-Quadtree<br>stored on db
               db ->> dbf: root
-              dbf ->> pod: root
-              pod ->> dbf: traverse to DB which stores (lon, lat)
+              dbf ->> app: root
+              app ->> dbf: traverse to DB which stores (lon, lat)
               dbf ->> db: traverse to DB which stores (lon, lat)
-              pod ->> dbf: hotels in 10km of (lat,lon)
+              app ->> dbf: hotels in 10km of (lat,lon)
               dbf ->> db: hotels in 10km of (lat,lon)
               db ->> dbf: Hotels
-              dbf ->> pod: Hotels
-              note over pod: Create json
-              pod ->> elb: Hotels json
-              elb ->> u: Hotels json
+              dbf ->> app: Hotels
+              note over app: Create json
+              app ->> u: Hotels json
             end
 
           </pre>
 
-          <h4  id="#problems">5.2 Problems in Basic HLD</h4>
-          <dl><strong>1. </strong></dl>
+          <h4  id="#problems">5.2 Problems in Basic Design </h4>
+          <dl><strong><a href="#nonfuncreq1">Non-Functional-Req-1. System should be Scalable, but it is not</a></strong></dl>
+          <table>
+            <tr>
+              <th>Problem</th>
+              <th>Solution</th>
+            </tr>
+            <tr>
+              <td>1. Only 1 application server serving all CREATE, READ. Will slow down on load</td>
+              <td>Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</td>
+            </tr>
+            <tr>
+              <td>2. Only 1 DB serving all CREATE, READ. Will slow down on load.</td>
+              <td>Master-Slave DB or Sharded Database</td>
+            </tr>
+          </table>
+
+          <br>
+          <dl><strong><a href="#nonfuncreq2">Non-Functional-Req-2. Reliable, but it is not</a></strong></dl>
+          <table>
+            <tr>
+              <th>Problem</th>
+              <th>Solution</th>
+            </tr>
+            <tr>
+              <td>1. Only 1 application server serving all CREATE, READ. if it fails, system will die</td>
+              <td>Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</td>
+            </tr>
+            <tr>
+              <td>2. Only 1 DB serving all CREATE, READ. Will slow down on load.</td>
+              <td>Master-Slave DB or Sharded Database</td>
+            </tr>
+          </table>
+
+          <br>
+          <dl><strong><a href="#nonfuncreq3">Non-Functional-Req-3. Fast, but it is not</a></strong></dl>
+          <table>
+            <tr>
+              <th>Problem</th>
+              <th>Solution</th>
+            </tr>
+            <tr>
+              <td>1. Only 1 application server serving all CREATE, READ. if it loaded system will be slow</td>
+              <td>
+                - Caching: store frequently accessed data in memory<br>
+                - CDNs: CDNs to cache static content and serve it from edge servers located closer to users
+              </td>
+            </tr>
+          </table>
 
     </article>
   </main>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>How to Reach Microservice</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#apigateway">1. API Gateway</a>
+    <a href="#externalloadbalancer">2. External Load Balancer</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+      <h2>Ways to reach Microservice from public network</h2>
+      <h3 id="apigateway">1. API Gateway</h3>
+      <img 
+      src="//www.plantuml.com/plantuml/png/ZKyzJyCm4DtlLvpAIXMnTa0DK9KYX28QLBRgdBYjKySsjfDG8VuxTb8-iZ7PzpxktPixJzOtjGGJNb48GyhZY-CMoM4pGc-ixiu46n6tTqyHB4e5JB_Z9Dsi9tZnAFO7dmbr76dJRBLTakSTdQA7Z1ZHacfMqZOrPirjEuH9uAh4i1a06fnU8vlXSf7ZmNipIvBdnJfFZPWPRNtINYMDuzO12y9uKP2AbkCgGxsBuRXCDX3myvunhhJdg6CiGvXYGL9YHIsvmWhZiT0b3t3b-Xzs8j3GYzA7z1MbO9Ri2QR3A1nMRmst9uITfPftsXvnfotKT1HgZ_TvdlKHhkyNis4ucqARdeur8KmHbFyeBN_SbTFgsyc64V_MWzw07u1q2M7y_BrX7dvDBRy0"
+      alt="api Gateway" style="width:500px;height:400px;">
+
+      <pre class="puml" visibility: hidden>
+        @startuml
+        participant User as u
+        participant Browser as b
+        participant CDN as cdn
+        box "AWS" #LightPink
+        participant API_Gateway as api
+        participant lambda_AppServer as l
+        end box
+        
+        
+        u -> b: GET http://RESTApi:port/v1/users
+        b -> cdn: Give IP of API G/W
+        cdn -> b: IP of API G/W
+        note over b 
+        - call javascript code
+        - js code will 
+        call AJAX library
+        - AJAX is jquery 
+        framework for
+        making HTTP calls
+        end note
+        
+        b -> api: HTTP GET
+        api -> l: GET http://RESTApi:port/v1/users
+        l -> api: json
+        api -> b: json 
+        note over b
+        users {
+         a,
+         b
+        }
+        end note
+        @enduml
+      </pre>
+
+      <h3 id="externalloadbalancer">2. External Load Balancer</h3>
+      <img 
+      src="//www.plantuml.com/plantuml/png/ZL5DJnin4BtxLqpJQwE87lTGiI4H1KKGaQ3s4AaQhoV1oQxjsju4YlZldQpTHej0uhP-7_FcpPw7Y3wsJIq-EO-R1Y6I_GFHjoGSCxhI3as4-q0UC43RGyVU7Z8XUyJ5vEO8Lie8QHzXKFvO3E3pJ6yUuboRNKyxVOpa3TQ_PXRL66iqLHf9TN_euCgyeLoPif4O0Yhh1qURPbjAdTzE_gLUUYBJdtPXJKHjo0_FLYPeHHMc0VdxFVNNbK7dXjnxJyd0Jq560OVsJ1ECoAlHKQFaVubeOVWDP06NqoKynEX2CHhTJHVBqkd2MHz7-xDHo_E3a4SbNv6rn9UQZU5g3gLIda8GZAT1hmbZ8u7bxK2264A5TGrRt6Eel7OHAgk8uMtelk2WcHQTgBmkVqAjfKV_n8hkgGDiVxVadq2iFJPqi7u7Q-j5WpjjDl1zkPnt4Q4hUCmMQM-gPP5eBYhunPYkFzHRT-By8pvYo58seNC5t573_KCo2OQ06PMZaqD9oEeCdAx6eEWmU1Q0NmH8yN8gbwQTbhllbDUBsnkHCSX5KpmyPqMmveMRdMxp5a-9VuVjkBQ0cGuHx3flViwxjKtz5m00"
+      alt="internal external lb" style="width:800px;height:400px;">
+      <pre class="puml" visibility: hidden>
+        @startuml
+        !pragma teoz true
+        participant User as u
+        participant Browser as b
+        box "AWS" #LightPink
+        participant External_LoadBalancer as elb
+        participant "Internal_LoadBalancer\nAmbassador" as ilb
+        
+        box "POD" #LightGreen
+        participant "Container-1\nsidecar" as sidecar
+        participant "Container-2\napp-server" as app
+        end box
+        participant Database as db
+        end box
+        
+        u -> b: GET https://RESTApi:port/v1/users
+        note over b 
+        - call javascript code
+        - js code will 
+        call AJAX library
+        - AJAX is jquery 
+        framework for
+        making HTTP calls
+        end note
+        
+        b -> elb: HTTP GET
+        elb-> ilb: GET https://RESTApi:port/v1/users
+        ilb-> sidecar: GET https://RESTApi:port/v1/users
+        sidecar-> app: Removes https
+        app -> db: GET users
+        db -> app: users
+        note over app
+        users {
+         a,
+         b
+        }
+        end note
+        app -> sidecar: Users JSON
+        sidecar -> ilb: https {Users Json}
+        ilb -> elb:  https {Users Json}
+        elb -> b:  https {Users Json}
+        b -> u: List of users
+        @enduml
+      </pre>
+
+    </article>
+  </main>
+
+
+</body>
+</html>
