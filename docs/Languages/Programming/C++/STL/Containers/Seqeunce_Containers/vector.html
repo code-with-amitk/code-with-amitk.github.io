@@ -25,35 +25,40 @@
     <h1>Vectors</h1>
     <ul>
       <li>
-          <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
+          <h3><a href="#comp">C++, Rust, Python, Go, C</a></h3>
       </li>
     </ul>
 
-    <h3 id="comp">C++, Rust, Python, Go</h3>
+    <h3 id="comp">C++, Rust, Python, Go(No semicolons), C</h3>
     <table>
         <tr>
             <th></th>
             <th>C++</th>
             <th>Rust</th>
-            <th>Python(List [])</th>
-            <th>Go</th>
+            <th>Python (List [])</th>
+            <th>Go (Slice [])</th>
+            <th>C</th>
         </tr>
 
         <tr>
             <td>Access</td>
-            <td><pre><code>    <!--c++-->
+            <td><pre>    <!--c++-->
 v[i]
-            </code></pre></td>
-            <td><pre><code>    <!--Rust-->
+            </pre></td>
+            <td><pre>    <!--Rust-->
 v[i as usize]
-            </code></pre></td>
-            <td><pre><code>    <!--Python-->
+            </pre></td>
+            <td><pre>    <!--Python-->
 v[i]
-            </code></pre></td>
+            </pre></td>
             
-            <td><pre><code>    <!--Go-->
+            <td><pre>    <!--Go-->
 v[i]
-            </code></pre></td>
+            </pre></td>
+
+            <td><pre>    <!--C-->
+v[i]
+            </pre></td>
         </tr>
 
         <tr>
@@ -95,22 +100,32 @@ v.clear();
 
         <tr>
             <td>Create/Initialize</td>
-            <td><pre>                   <!--c++-->
-// 1 D
+            <td>                           <!--c++-->
+                <table>
+                    <tr>
+                        <td>1D</td>
+                        <td><pre>
 vector<int> v(size, init_value);
     OR
-v.assign(3,10);//10 10 10
+v.assign(3,10);//10 10 10    
+                        </pre></td>
+                    </tr>
 
-// 2 D
+                    <tr>
+                        <td>2D</td>
+                        <td><pre>
 vector&lt;vector&lt;int>> vec = {
     {1,2,3},
     {4,5,6}
-  };
-  OR
-  
+};
+OR
 //vec[row][col]
-vector&lt;vector&lt;int>> vec(row, vector&lt;int>(col,0));
-            </pre></td>
+vector&lt;vector&lt;int>> 
+v(row, vector&lt;int>(col,0));
+                        </pre></td>
+                    </tr>                    
+                </table>
+            </td>
 
             <td>                           <!--Rust-->
                 <table>
@@ -147,7 +162,8 @@ OR
 a = [False] * (5)   #Filled
 
 ######### 2 D
-arr = [[0 for _ in range(cols)] for _ in range(rows)]
+arr = [[0 for _ in range(cols)] 
+for _ in range(rows)]
 OR
 arr = []
             </pre></td>
@@ -156,13 +172,48 @@ arr = []
 ////// 1D
 var arr []int     //Empty vector
 slice := make([]int, 5) //Slice size=5
-for i:=0; i<5; i++ {
+for i:=0; i&lt;5; i++ {
     slice[i] = 0;
 }
 
 /////// 2D
 
             </pre></td>
+
+            <td>                            <!--C-->
+                <table>
+                    <tr>
+                        <td>1D</td>
+                        <td><pre>
+int a[10];
+
+OR
+
+int* a = (int*) malloc(sizeof(int)*10);
+memset(a, 0, sizeof(int)*10));
+free(a);
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>2D</td>
+                        <td><pre>
+int a[3][4];
+
+OR
+
+//Using pointer to a pointer
+int r=3, c=4;
+int** arr = (int**)malloc(r * sizeof(int*));
+for (int i=0;i&lt;r;i++)
+arr[i] = (int*)malloc(c * sizeof(int));
+
+for (int i = 0; i < r; i++)
+    free(arr[i]);
+free(arr);
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
         </tr>
 
         <tr>
@@ -279,16 +330,24 @@ for c in s[1:-1]:
   print(c)
 
 j=1
-for i in range(0,n):  #range(start, stop, step)
+#range(start, stop, step)
+for i in range(0,n):
   print(vec[i][j])
 
 # Reverse Iterate
-for i in range(len(list) - 1, -1, -1):
+for i in range(len(list) - 1,
+ -1, -1):
   print(list[i])
             </pre></td>
 
             <td><pre>        <!--Go-->
-
+for i := 0; i &lt; len(nums)-1; i++ {
+    sum += int64(nums[i])
+}
+OR
+for index, n := range nums {
+    sum += int64(n)
+}
             </pre>
             </td>
         </tr>
@@ -317,20 +376,38 @@ for i in range(len(list) - 1, -1, -1):
 
         <tr>
             <td>Sort</td>
-            <td><pre>
+            <td><pre>       <!--C++-->
 sort(a.begin(), a.end())
-            </pre></td>
+            </pre></td>     <!--Rust-->
             <td><pre>
 vec.sort();
             </pre></td>
-            <td><pre>
-#Simple Sort
+            <td>       <!--Python-->
+                <table>
+                    <tr>
+                        <td>Simple</td>
+                        <td><pre>
 list.sort()
-
-#Custom Sort
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Custom</td>
+                        <td><pre>
 def fun(s):
     return s[1] 
 sorted(list, key=fun)
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+            <td><pre>   <!--Go-->
+sort.Ints(v)
+            </pre></td>
+            <td><pre>       <!--C-->
+int cmpfunc(const void * a, const void * b) {
+    return (*(int*)a - *(int*)b);
+}
+qsort(nums, numsSize, sizeof(int), cmpfunc);
             </pre></td>
         </tr>
 
@@ -340,6 +417,21 @@ sorted(list, key=fun)
             <td>std::mem::swap(&mut a, &mut b);</td>
             <td>lst[i], lst[j] = lst[j], lst[i]</td>
             <td>a,b = b,a</td>
+        </tr>
+
+        <tr>
+            <td>Sum</td>
+            <td><pre>
+for(auto&i:v)
+    sum += i;
+OR
+// C++17
+sum = std::accumulate(v.begin(), v.end());
+            </pre></td>
+
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
 
         <tr>
