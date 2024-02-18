@@ -21,116 +21,125 @@
            </li>
         </ul>
     </nav>
-    <h1>Binary Trees</h1>
-    <ul>
-      <li>
-          <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
-      </li>
-    </ul>
 
-    <h3 id="comp">C++, Rust, Python, Go</h3>
-    <table>
-        <tr>
-            <th></th>
-            <th>C++</th>
-            <th>Rust</th>
-            <th>Python(List [])</th>
-            <th>Go</th>
-        </tr>
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="./Types_of_Trees.html">Types of Trees</a>
+    </aside>
 
-        <tr>
-            <td>Definition</td>
-            <td><pre>    <!--c++-->
-/**
-* Definition for a binary tree node.
-* struct TreeNode {
-*     int val;
-*     TreeNode *left;
-*     TreeNode *right;
-*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
-*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-*     TreeNode(int x, TreeNode *left, TreeNode *right) : 
-        val(x), left(left), right(right) {}
-* };
-*/
-            </pre></td>
-            <td><pre>    <!--Rust-->
-// Definition for a binary tree node.
-// #[derive(Debug, PartialEq, Eq)]
-// pub struct TreeNode {
-//   pub val: i32,
-//   pub left: Option<Rc<RefCell<TreeNode>>>,
-//   pub right: Option<Rc<RefCell<TreeNode>>>,
-// }
-//
-// impl TreeNode {
-//   #[inline]
-//   pub fn new(val: i32) -> Self {
-//     TreeNode {
-//       val,
-//       left: None,
-//       right: None
-//     }
-//   }
-// }
-            </pre></td>
-            <td><pre>    <!--Python-->
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-            </pre></td>
-            
-            <td><pre>    <!--Go-->
-            </pre></td>
-        </tr>
-
-        <tr>
-            <td>Passing to Function</td>
-            <td><pre>   <!--c++-->
-void inorder(TreeNode* root)
-            </pre></td>
-            <td><pre>   <!--Rust-->
-fn inorder(root: &Option<Rc<RefCell<TreeNode>>>)
-            </pre></td>
-            <td><pre>   <!--Python-->
-def leafSimilar(self, root1: Optional[TreeNode])
-            </pre></td>
-            <td>    <!--Go-->
-
-            </td>
-        </tr>
-
-        <tr>
-            <td>Check Value is empty?</td>
-            <td><pre>    <!--c++-->
-if (!root)
-    return;
-            </pre></td>
-            <td><pre>    <!--rust-->
-fn inorder(root: &Option<Rc<RefCell<TreeNode>>>, tree: &mut Vec<i32>) {
-    if let Some(node) = root {
-        Solution::inorder(&node.borrow().left, tree);
-        if node.borrow().left.is_none() && node.borrow().right.is_none() {
-            tree.push(node.borrow().val);
+    <main>
+        <article style="margin-left:200px;">
+            <h1>Binary Trees</h1>
+            <ul>
+              <li>
+                  <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
+              </li>
+            </ul>
+        
+            <h3 id="comp">C++, Rust, Python, Go</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>C++</th>
+                    <th>Rust</th>
+                    <th>Python(List [])</th>
+                    <th>Go</th>
+                </tr>
+        
+                <tr>
+                    <td>Definition</td>
+                    <td><pre>    <!--c++-->
+        /**
+        * Definition for a binary tree node.
+        * struct TreeNode {
+        *     int val;
+        *     TreeNode *left;
+        *     TreeNode *right;
+        *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+        *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+        *     TreeNode(int x, TreeNode *left, TreeNode *right) : 
+                val(x), left(left), right(right) {}
+        * };
+        */
+                    </pre></td>
+                    <td><pre>    <!--Rust-->
+        // Definition for a binary tree node.
+        // #[derive(Debug, PartialEq, Eq)]
+        // pub struct TreeNode {
+        //   pub val: i32,
+        //   pub left: Option<Rc<RefCell<TreeNode>>>,
+        //   pub right: Option<Rc<RefCell<TreeNode>>>,
+        // }
+        //
+        // impl TreeNode {
+        //   #[inline]
+        //   pub fn new(val: i32) -> Self {
+        //     TreeNode {
+        //       val,
+        //       left: None,
+        //       right: None
+        //     }
+        //   }
+        // }
+                    </pre></td>
+                    <td><pre>    <!--Python-->
+        # Definition for a binary tree node.
+        # class TreeNode:
+        #     def __init__(self, val=0, left=None, right=None):
+        #         self.val = val
+        #         self.left = left
+        #         self.right = right
+                    </pre></td>
+                    
+                    <td><pre>    <!--Go-->
+                    </pre></td>
+                </tr>
+        
+                <tr>
+                    <td>Passing to Function</td>
+                    <td><pre>   <!--c++-->
+        void inorder(TreeNode* root)
+                    </pre></td>
+                    <td><pre>   <!--Rust-->
+        fn inorder(root: &Option<Rc<RefCell<TreeNode>>>)
+                    </pre></td>
+                    <td><pre>   <!--Python-->
+        def leafSimilar(self, root1: Optional[TreeNode])
+                    </pre></td>
+                    <td>    <!--Go-->
+        
+                    </td>
+                </tr>
+        
+                <tr>
+                    <td>Check Value is empty?</td>
+                    <td><pre>    <!--c++-->
+        if (!root)
+            return;
+                    </pre></td>
+                    <td><pre>    <!--rust-->
+        fn inorder(root: &Option<Rc<RefCell<TreeNode>>>, tree: &mut Vec<i32>) {
+            if let Some(node) = root {
+                Solution::inorder(&node.borrow().left, tree);
+                if node.borrow().left.is_none() && node.borrow().right.is_none() {
+                    tree.push(node.borrow().val);
+                }
+                Solution::inorder(&node.borrow().right, tree);
+            }
         }
-        Solution::inorder(&node.borrow().right, tree);
-    }
-}
-            </pre></td>
-            <td><pre>   <!--python-->
-def inorder(root: Optional[TreeNode], tree: []):
-    if root == None:
-        return
-    inorder (root.left, tree)
-            </pre></td>
-            <td><pre>   <!--go-->
-
-            </pre></td>
-        </tr>
-    </table>
+                    </pre></td>
+                    <td><pre>   <!--python-->
+        def inorder(root: Optional[TreeNode], tree: []):
+            if root == None:
+                return
+            inorder (root.left, tree)
+                    </pre></td>
+                    <td><pre>   <!--go-->
+        
+                    </pre></td>
+                </tr>
+            </table>
+        </article>
+    </main>
 
     <script src="/scripts/prism.js"></script>
 </body>

@@ -34,7 +34,7 @@
         <tr>
             <th></th>
             <th>C++</th>
-            <th>Rust</th>
+            <th>Rust (use std::collections::BinaryHeap)</th>
             <th>Python</th>
         </tr>
 
@@ -50,13 +50,15 @@ max_heap
                     <tr>
                         <td>i32</td>
                         <td><pre>
-let mut max_heap: BinaryHeap&lt;> = BinaryHeap::new();                            
+let mut max_heap: BinaryHeap&lt;> = 
+BinaryHeap::new();                            
                         </pre></td>
                     </tr>
                     <tr>
                         <td>Pair &lt;i32, char></td>
                         <td><pre>
-let mut max_heap:BinaryHeap<(i32, char)> = BinaryHeap::new();
+let mut max_heap:BinaryHeap<(i32, char)> = 
+BinaryHeap::new();
                         </pre></td>
                     </tr>
                 </table>
@@ -66,7 +68,9 @@ min_heap
                     <tr>
                         <td>i32</td>
                         <td><pre>
-let mut min_heap: BinaryHeap&lt;Reverse<i32>> = BinaryHeap::new();
+use std::cmp::Reverse;
+let mut min_heap: BinaryHeap&lt;Reverse&lt;i32>> = 
+BinaryHeap::new();
                         </pre></td>
                     </tr>
                 </table>
@@ -84,14 +88,15 @@ heapq.heapify(max_heap)  # Convert list into a max heap
         </tr>
 
         <tr>
-            <td>push Back</td>
-            <td><pre>
+            <td>push</td>
+            <td><pre>       <!--c++-->
 dq.push_back(x)
             </pre></td>
-            <td><pre>
-heap.push(x)
+            <td><pre>       <!--Rust-->
+max_heap.push(x);
+min_heap.push(Reverse(x));
             </pre></td>
-            <td><pre>
+            <td><pre>       <!--Python-->
 self.dq.append(x)
             </pre></td>
         </tr>
@@ -113,15 +118,17 @@ self.dq[-1]
         </tr>
 
         <tr>
-            <td>Pop front, back</td>
-            <td><pre>
+            <td>Pop, Top</td>
+            <td><pre>       <!--c++-->
 dq.pop_front()
 dq.pop_back()
             </pre></td>
             <td><pre>                   <!--Rust-->
 pub fn pop(&mut self) -> Option<T>
-while let Some(num) = max_heap.pop() {
-    println!("{}", num);
+while let Some(top) = max_heap.pop() {
+}
+if let Some(Reverse(top)) = min_heap.pop(){
+
 }
             </pre></td>
             <td><pre>
@@ -129,7 +136,6 @@ self.dq.pop()
 self.dq.popleft()
             </pre></td>
         </tr>
-
         <tr>
             <td>Check empty</td>
             <td>!dq.empty()</td>
