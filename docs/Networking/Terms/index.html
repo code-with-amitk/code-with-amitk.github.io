@@ -23,6 +23,9 @@
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#capportal">Captive Portal</a>
+        <a href="#sase">SASE</a>
+        <a href="#sdwan">SD-WAN</a>
+        <a href="#sse">SSE</a>
         <a href="#wctows">Ways Web Client connect to Web Server</a>
     </aside>
 
@@ -30,6 +33,54 @@
         <h3 id="capportal">Captive Portal</h3>
             <p>A captive portal is a web page that users must interact with before accessing a public network. 
                 It's often used by public venues that offer free Wi-Fi, such as airports, hotels, and coffee shops</p>
+
+        <h3 id="sase">SASE(Secure Access Service Edge)</h3>
+        <p>
+            <b>What?</b> Architectural approach for providing network security at wide-area networking (WAN) delivered as a cloud service
+        </p>
+        <p>
+            <b>Usage?</b> 
+            Secure access to applications and data for users regardless of their location or the underlying network infrastructure
+        </p>
+        <p>
+            <b>Example</b><br>
+            - Consider a multinational corporation(HCL Tech) with branch offices across different regions. India(Delhi, Mumbai), US(NY, chicago)<br>
+            - Each office requires secure access to the corporate network and cloud-based applications.<br>
+            - With SASE, security and all services delivered from cloud, allowing employees to securely connect to the corporate network and cloud applications from any location using a unified and consistent security policy
+        </p>
+        <pre>
+            HCL Offices
+            (Delhi)India        (Mumbai)India       (NY)US      (Chicago)US     
+                   \                |                   |             /
+                    \               |                   |            /
+                     ---------------SASE(Service from Cloud)--------
+                                            |
+                                     AWS Cloud (App, Data)
+        </pre>
+
+        <h3 id="sdwan">SD-WAN (Software-Defined Wide Area Network)</h3>
+        <p><b>What?</b><br>
+            - Enables organizations to build higher-performance WANs using lower-cost and commercially available internet access<br>
+            - Separates of networking hardware and control mechanisms
+        </p>
+        <p>
+            <b>Example</b><br>
+            - Consider a retail chain(Relaince) with numerous stores across the country
+            - Each store requires reliable connectivity to Central DB to POS devices.
+            - 1 solution is to use MPLS circuits for connectivity between stores and headquarters, other is SD-WAN.
+            - With SD-WAN retail chain achieves cost savings, improved application performance
+        </p>
+
+        <h3 id="sse">SSE (Secure Service Edge)</h3>
+        <p><b>What?</b> 
+            Integration of security services directly into the network edge
+        </p>
+        <p>
+            <b>Example</b><br>
+            - Consider a healthcare organization(Apollo) that needs to provide secure access to electronic health records (EHR).<br>
+            - Organization implements secure web gateways (SWG), next-generation firewalls (NGFW), intrusion prevention systems(IPS) into the network edge.<br>
+            - Allows organization to enforce consistent security policies, inspect and filter internet traffic, and detect and mitigate threats in real-time
+        </p>
 
         <h3 id="wctows">Ways Web Client connect to Web Server</h3>
         <table>
