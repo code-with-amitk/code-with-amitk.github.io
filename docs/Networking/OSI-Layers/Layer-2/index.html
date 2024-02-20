@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Layer-2</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#ping">Ping from Host-1 to Host-2</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="ping">Ping from Host-1 to Host-2</h2>
+    <img 
+      src="//www.plantuml.com/plantuml/png/hLDHazes47xNhzZ9K_9mlfCuaf8PsX2JD4pXy80ppGClYf2n1YDHILpBZ7vyLpB1SBdfzE46RAzM-lRx_EtwW_FS-iEk8NjyAg7sN7juzSKuJrSwe_GLS0Sr9S9eRqq3z1tBwDkCPj_YXgRNkENVoeiw8ba2kWlWBmYykpiZsJLoOGvUsiIPaFQwyaJZhfOUdaEn3iKwli4rN-yvfQnJsY4PeYwHzpzx4t6zrXf6Y3PUWdcKDXgrb7eDnTQ3Dv2EaWdK_572R9I3gThSRm-cFJXQ5B3VUXBZM8RKzEPNHz-dZSAQxv8up5ZwFYOMyg-LXk2ic1J3ElOeh9t7E1KDAuqxI3DqigdYJeohgWgN4kr9OZmJDNNKnBRSBPDBn7MtF4ihbDwqKaBaus9O9nqnihJDndLOMb4Owr7NsFaKJV9P0LzaqvZGljVBbRj-nIa_Idl3YAfUdtoO7V7-XW3StgAlGZe7okCohxdUjDtn1Z2XTZkvLjpBvWZ2Q2s5bslCspHhdLtF4VOYuUmO-uzK4UuEEqbausH79UejPd5TbbEu6G8ba7ewF7zRD1amx0Qn7_3C3QJ66GseP6FGjgXM-megQtP9Nvlp_7iZd_JLifTpkf4RB4w6i6WfeOo4hnVq3GaFjt-EfSCizmgL1i04pBZRGdYG_tWS_tr87tF5XGmpwQqIjxbn7WAsnHjXca32NPP-FvuGEcimXd3_5iBuq-VHrsa9Y_dNyXEizEM7zpkIJYhG1jnU2bKf0J_OGJcOAeSz1QLRvHaoidu_kxZWQU8iWPqai47KeAmKAFtZOZuQvwDbYPKeUvTKqvzhT7jTc1Rt_HxUfqRm1X_pUV5nbFyHLR74UOyMN1PxwWWkUtWjor4voI6KjNA0_ndN1zxW6ET6Lsfpi7ATOV-vgE5S-1iyAWvhMV53uwDloDhDtN_GCenRslco-0pnnGVi_y86x0oBNJiD5Fc0zyEk-HS0"
+      alt="ping from host1 to host2">
+      <pre class="puml" visibility: hidden>
+        @startuml
+        participant "Host1\n.11" as h1
+        control 172.16.1.X as n1
+        participant "Switch1\n.2" as s1
+        control 182.100.1.X as n2
+        participant "Router1\n.1" as r1
+        participant Internet 
+        participant "Router2\n.1" as r2
+        control 192.100.1.X as n3
+        participant "Switch2\n.2" as s2
+        control 200.100.1.X as n4
+        participant "Host2\n.3" as h2
+        
+        note over h1
+        Send Pkt to Host2
+        I have MAC of Host2?No
+        Send ARP pkt
+        end note
+        h1->s1: ARP Probe
+        s1->r1:ARP Req\n |srcIP=host1|dstIP=Host2|\nsrcMAC=self|dstMAC=fff|
+        
+        note over r1
+        Send self MAC
+        end note
+        
+        r1->s1:ARP Res
+        s1->h1:ARP Res
+        
+        h1->s1: Ping Req\n|srcMac=h1|dstMac=r1\n|src|dst|SrcPort|\nDstPort|ICMP Hello|
+        s1->r1: Ping Req\n|srcMac=h1|dstMac=r1\n|src|dst|SrcPort|\nDstPort|ICMP Hello|
+        
+        note over r1
+        Layer-2
+        if(dstMAC=MyMAC)
+          //Process it
+          Change MAC to 
+          immediately connected
+          router
+        end note
+        
+        note over r1
+        Layer-3
+        if(My Pkt)
+          consume
+        else
+          Change chksum
+          TTL -= 1
+          |src=172.16.1.11|dst=200.100.1.5|
+          - Send on outgoing
+          intf from routing
+          table
+        end note
+        
+        r1->r2: Ping Req\n|srcMac=h1|dstMac=r1\n|src|dst|SrcPort|\nDstPort|ICMP Hello|
+        
+        legend
+        = Routing Table(R1)
+        |N/WDestination | N/W Mask |Next Hop|Interface|Metric/Cost |Protocol|
+        |0.0.0.0|0.0.0.0 |172.16.1.1 |1 |46 |DEFAULT ROUTE \nSend Pkt to G/W If no specific Next Hop is Listed in Table.|
+        |255.255.255.255 |255.255.255.255 |172.16.2.1 |1 |296 |Direct |BROADCAST|
+        |127.0.0.1 |255.255.255.255 |127.0.0.1 |127.0.0.0.1 |4531 |Local |LOOPBACK|
+        |222.16.4.0 |255.255.255.0 |172.16.1.1 |0 |30 |STATIC |This is Manually Configured. Reach 222.16.4.X via default G/W|
+        |200.100.1.0 |255.255.255.0 |172.16.1.2 |1 |30 |OSPF |
+        |192.100.1.0 |255.255.255.0 |172.16.1.2 |1 |92 |OSPF |
+        end legend
+        
+        @enduml
+      </pre>
+
+  </article>
+</body>
+</html>

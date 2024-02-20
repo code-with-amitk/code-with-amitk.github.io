@@ -242,7 +242,15 @@ Benefits of keeping seperate Category table:
             </a></h4>
 
             <h4  id="bhld">5.3 Basic Design</h4>
-            <dt>All places would be stored in database. There can be 2 ways in which Databases can be arranged</dt>
+            <dt><strong>Why we cannot store places directly on DB, Why we need to arrange DBs QuadTree Format?</strong></dt>
+            <p>
+              - System will have Huge data. We assumed 200-300M entries.<br>
+              - Now if someone want to get nearby places(within 10km), We need to perform following query on each entry of database
+              (long-10 and long+10) and (lat-10 and lat+10)<br>
+              - Scanning the entire table and checking if it meets both criteria can be very time-consuming and expensive.
+            </p>
+
+            <dt><strong>2 ways in which Databases can be arranged</strong></dt>
             <table>
               <tr>
                 <th></th>
@@ -347,53 +355,29 @@ Benefits of keeping seperate Category table:
 
           <h4  id="#problems">5.2 Problems in Basic Design </h4>
           <dl><strong><a href="#nonfuncreq1">Non-Functional-Req-1. System should be Scalable, but it is not</a></strong></dl>
-          <table>
-            <tr>
-              <th>Problem</th>
-              <th>Solution</th>
-            </tr>
-            <tr>
-              <td>1. Only 1 application server serving all CREATE, READ. Will slow down on load</td>
-              <td>Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</td>
-            </tr>
-            <tr>
-              <td>2. Only 1 DB serving all CREATE, READ. Will slow down on load.</td>
-              <td>Master-Slave DB or Sharded Database</td>
-            </tr>
-          </table>
+          <p><u>Problem-1:</u> Only 1 application server serving all CREATE, READ. Will slow down on load<br>
+          Solution: Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</p>
+
+          <p><u>Problem-2:</u> Only 1 DB serving all CREATE, READ. Will slow down on load<br>
+          Solution: Master-Slave DB or Sharded Database</p>
 
           <br>
           <dl><strong><a href="#nonfuncreq2">Non-Functional-Req-2. Reliable, but it is not</a></strong></dl>
-          <table>
-            <tr>
-              <th>Problem</th>
-              <th>Solution</th>
-            </tr>
-            <tr>
-              <td>1. Only 1 application server serving all CREATE, READ. if it fails, system will die</td>
-              <td>Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</td>
-            </tr>
-            <tr>
-              <td>2. Only 1 DB serving all CREATE, READ. Will slow down on load.</td>
-              <td>Master-Slave DB or Sharded Database</td>
-            </tr>
-          </table>
+          <p><u>Problem-1:</u> Only 1 application server serving all CREATE, READ. if it fails, system will die<br>
+            Solution: Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</p>
+  
+            <p><u>Problem-2:</u> Only 1 DB serving all CREATE, READ. Will slow down on load<br>
+            Solution: Master-Slave DB or Sharded Database</p>
 
           <br>
           <dl><strong><a href="#nonfuncreq3">Non-Functional-Req-3. Fast, but it is not</a></strong></dl>
-          <table>
-            <tr>
-              <th>Problem</th>
-              <th>Solution</th>
-            </tr>
-            <tr>
-              <td>1. Only 1 application server serving all CREATE, READ. if it loaded system will be slow</td>
-              <td>
-                - Caching: store frequently accessed data in memory<br>
-                - CDNs: CDNs to cache static content and serve it from edge servers located closer to users
-              </td>
-            </tr>
-          </table>
+          <p><u>Problem-1:</u> Only 1 application server serving all CREATE, READ. if it loaded system will be slow<br>
+            Solution:<br>
+            - Caching: store frequently accessed data in memory<br>
+            - CDNs: CDNs to cache static content and serve it from edge servers located closer to users</p>
+  
+            <p><u>Problem-2:</u> Only 1 DB serving all CREATE, READ. Will slow down on load<br>
+            Solution: Master-Slave DB or Sharded Database</p>
 
     </article>
   </main>
