@@ -161,11 +161,11 @@
 
             <dl id="commands"><strong>Commands</strong></dl>
             <code><pre>
-                Get IP Addresses
+                /////////////////// IP Addresses ////////////////////
                 > cli
                 > show interfaces terse
 
-                User Identification
+                ////////////////// User Identification ////////////////////
                 root# cli
                 root> edit
 
@@ -214,6 +214,7 @@
                 > cat /var/log/test.txt
                 <a name=bql></a> Batch query logs
                 
+                /////////////// Logging /////////////////////
                 set groups jims-server services user-identification identity-management traceoptions file jims_query.log
                 set groups jims-server services user-identification identity-management traceoptions file size 10M
                 set groups jims-server services user-identification identity-management traceoptions level all
@@ -224,7 +225,7 @@
                 or
                 goto shell prompt and open /var/log/jims-query.log
 
-                Counters, Status
+                ////////////////////// Counters, Status /////////////////////
                 # run show services user-identification identity-management counters
                 # run show services user-identification identity-management status
                             Primary server :
