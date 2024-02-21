@@ -35,27 +35,77 @@
                 It's often used by public venues that offer free Wi-Fi, such as airports, hotels, and coffee shops</p>
 
         <h3 id="sase">SASE(Secure Access Service Edge)</h3>
+        <dl><strong>What is SASE?</strong></dl>
         <p>
-            <b>What?</b> Architectural approach for providing network security at wide-area networking (WAN) delivered as a cloud service
+            - Providing network security at wide-area networking (WAN) delivered as a cloud service.<br>
+            - All users in branch office, home, roaming(airport) if he want to access any of cloud service()
+            he will go thru SASE.<br>
+            - Examples: 
+            <a href="https://www.juniper.net/us/en/products/security/secure-edge.html">Juniper Secure Edge</a>, 
+            <a href="https://www.zscaler.com/capabilities/secure-access-service-edge">ZScaler Zero Trust SASE</a>, 
+            <a href="https://umbrella.cisco.com/info/package-comparison-and-consultation?utm_medium=search-paid&utm_source=google&utm_campaign=UMB_APJC_IN_EN_GSR_Branded_Cisco&utm_content=SIG-FY24-Q1-Umbrella-Content-product-package-comparison-download&_bt=688783193249&_bk=cisco%20umbrella&_bm=e&_bn=g&_bg=161647957401&gad_source=1&gclid=CjwKCAiAuNGuBhAkEiwAGId4aq-70lW7FCphZ340rHY8UAGdU8NGcOoKYSPv_iAVJWU_HOuJjxaQJhoCYyEQAvD_BwE">Cisco Umbrella</a>
         </p>
+
+        <dl><strong>Example</strong></dl>
         <p>
-            <b>Usage?</b> 
-            Secure access to applications and data for users regardless of their location or the underlying network infrastructure
+        - Consider a multinational corporation(HCL Tech) with branch offices across different regions.<br>
+        - Each office requires secure access to the corporate network and cloud-based applications.<br>
+        - With SASE, security and all services delivered from cloud, allowing employees to securely connect to the corporate network and cloud applications from any location using a unified and consistent security policy
         </p>
-        <p>
-            <b>Example</b><br>
-            - Consider a multinational corporation(HCL Tech) with branch offices across different regions. India(Delhi, Mumbai), US(NY, chicago)<br>
-            - Each office requires secure access to the corporate network and cloud-based applications.<br>
-            - With SASE, security and all services delivered from cloud, allowing employees to securely connect to the corporate network and cloud applications from any location using a unified and consistent security policy
-        </p>
-        <pre>
-            HCL Offices
-            (Delhi)India        (Mumbai)India       (NY)US      (Chicago)US     
-                   \                |                   |             /
-                    \               |                   |            /
-                     ---------------SASE(Service from Cloud)-------- <---
-                                            |                           |
-                                     AWS Cloud (App, Data)          Mobile(Airport)
+
+        <dl><strong>Problems in N/W without SASE</strong></dl>
+        <dd>
+            1. Cloud Migration: All applications are moving to cloud<br>
+        </dd>
+        <img 
+        src="//www.plantuml.com/plantuml/png/NP5FQ-Cm4CNl-XHpt0KdbsLx2AN4-HDIIEDGquPYzw38uqJKbinetE9lNqbE8VIed_JUl7cQEvR4VTk8Oa7Ig0jajNe7wU0q7aMnNQSho3PBA4rfuFMmJtQBP7CSZtc-IrQxG_9uoAFgWh8InRhj6ZiWHeHj9uedUz8D_aarTPRuhnS_MzbgSuONXnJVjV69p_6MhVpzYSBjO7igZVqoKE6dLZX66wmVicniNq6E5BYxnf4DkjgImYIhQy__tVqlJTfrZLQIjJKk6gWW5S9OHY1zlZ3OUeo-jOuTv2pLHs0ELK-Q1v31mXU2RYOcq95NAeRU8JceoRQW3ICPP86cWc0inBN1oIHQmmoEwLwCMzv0NwW82_r2lhKRuZHpg4CRdqg9IE-dquUVJUP-gl_4Rm00"
+        alt="sase">
+        <pre class="puml" visibility: hidden>
+            @startuml
+            [Branch Ofc] as branch 
+            [HEAD OFC \n\n VPN,LB,FW \n\n SSL,DLP,IPS] as head
+            [Employee] as emp
+            [Mobile(Airport) \nRoaming User] as mobile
+            [BYOD \nbring your\nown device] as byod
+            [Cloud Services \n\n Salesforce,Office365\nApplications] as cloud
+            
+            note right of head
+            Hosts Stack of security appliances:
+            - protect users from internet
+            end note
+            
+            branch -- head : WAN
+            mobile -- head : VPN
+            byod -- head : VPN
+            emp -- head : sitting in ofc
+            head <..> cloud
+            
+            @enduml            
+        </pre>
+
+        <br><br><br><br>
+        <dl><strong>How SASE enabled N/W solves issues</strong></dl>
+        <img 
+        src="//www.plantuml.com/plantuml/png/PO_1IWCn48Rl-nHpt83q2KIwsg8Ugc0e8jN3T3EsWMIoJ3RAlhqnGGdq4fZ_-_WpiuupofoywmxzXjpPgaSs5k6TuLQGnpCyVuuVW17CBytMBlaZDje3eVcNV87PUdfJU_rNSLd6ItRkIJpoehP9maGNNQU2ixWBH-ke7wnCGMQLnPU0tl89zf6a_bkKxg07lUqroPST2GB3dGl952DYp7nurJM3VfYcAzZWZAfm_8vTLsw4wzNgflhbd3RWfHdgWcrIrsY2_DInzg-9JVBk1m00"
+        alt="sase">
+        <pre class="puml" visibility: hidden>
+            @startuml
+            [(Delhi)India \n Branch Ofc] as delhi
+            [(Mumbai)India \n Head Ofc] as mumbai
+            [(NY)US Branch \n Branch Ofc] as ny
+            [(Germany)Europe \n Head Ofc] as germany
+            [Mobile(Airport) \nRoaming User] as mobile
+            [SASE(Service on Cloud] as sase
+            [AWS Cloud (App, Data)] as aws
+            
+            delhi <..> sase
+            mumbai <..> sase
+            ny <..> sase
+            germany <..> sase
+            mobile <..> sase
+            sase <..> aws
+            
+            @enduml
         </pre>
 
         <h3 id="sdwan">SD-WAN (Software-Defined Wide Area Network)</h3>

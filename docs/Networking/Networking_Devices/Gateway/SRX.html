@@ -32,9 +32,27 @@
     <main>
         <article style="margin-left:200px;">
             <h3 id="srx">SRX</h3>
-            <dl id="authtable"><strong>Authentication Table</strong></dl>
             <dt><u>Security Poilcy</u></dt>
-            <dd>Set of rules(Rules: Permit, deny or tunnel) that determine how network traffic is controlled, inspected, and allowed or denied</dd>
+            <p>Set of rules(Rules: Permit, deny or tunnel) that determine how network traffic is controlled, inspected, and allowed or denied
+            </p>
+
+            <dt><u>Domain based policies</u></dt>
+            <p>Policies are created to manage traffic between different security domains/zones.<br>
+                    For example, you might have separate zones for the internal network, the DMZ, and 
+                    external networks. Policies define how traffic is allowed or denied between these zones.
+            </p>
+    
+            <dt><u>Group based policies</u></dt>
+            <p>Policies can also be based on user groups. User group policies can be configured to apply different 
+                rules based on group membership.<br>
+                For example, you can create rules for specific groups of users, granting or denying access to certain 
+                resources or applications.
+            </p>
+
+            <dl id="authtable"><strong>Authentication Table</strong></dl>
+            <p>Authentication table contains the IP addresses of active users. Each entry contains:<br>
+                    username, device IP(from where logged in), domainname, groups.
+            </p>
             <code><pre>
                 1. On qa-central or dav-central.
                 $ get_vsrx_tanant <tanent-id>
@@ -55,30 +73,90 @@
                 4.5.6.6        amit                                   Valid             //user=amit logged with IP
                 
                 # run show services user-identification authentication-table authentication-source all extensive
+                Domain: test.com
+                    IP: 1.2.3.4
+                    username: User
+                    groups: g1,g2
+                    state: Valid
+                    timestamp:
+                    age: 150
             </pre></code>
-
-            <dt><u>Domain based policies</u></dl>
-            <dd>Policies are created to manage traffic between different security domains/zones.<br>
-                For example, you might have separate zones for the internal network, the DMZ, and 
-                external networks. Policies define how traffic is allowed or denied between these zones.
-            </dd>
-
-            <dl><u>Group based policies</u></dl>
-            <dd>Policies can also be based on user groups. User group policies can be configured to apply different 
-                rules based on group membership.<br>
-                For example, you can create rules for specific groups of users, granting or denying access to certain 
-                resources or applications.
-            </dd>
-
-            <dt><u>How Authentication table is created?</u></dt>
-            <pre class="mermaid">
-                sequenceDiagram
-                    note over User: Access network device
-                    User ->> srx: Access request for resource
-                    note over jims: REST endpoint for batch query<br>/batch_query/version/
-                    srx ->> jims:batch query request<br>Instead of 1 user query, srx does collective request
-                    note over jims: Validates srx client(user,pass)
-                    jims -->> srx: response
+            <img 
+            src="//www.plantuml.com/plantuml/png/TLF1Rjf04BtlLuoKIo8r80ogg1MYe2G7ggIXCMbxY5Gjzc1Mc5spkwP1yiTtnWQnf2a7aD-yUVCUCxvnNbfVhGjHqgzALIcrXygX1UcWWhDIwTL9RPnwjSKxPJ7rnkwO9ZCuwsSo6qOdpA-Jn-JM54L3P5vg2YQcmyNm7sA2TjiETNRBh2_o7Ilv_j2KDuq83llloi-_skwtjanc10-yl2P_CIJLtALMpH7kjwYz4q8RZs1uQ2LUE71XSgK5wWou9Af3QuD3q1061lgqaimxJp2jhFAx2z5WCTKd937u70q4m6nNOWmF9ZUQdcujIe_PJAq9lBfkJ1mQnhFxPFRAUo0WcTp587uQkqgyzCfePdsJt7Rxz3ZjSSyqXbudwlGx0v7idCSrSvunDJPZlLxKZmQzOpWXCuh76ubRzsJgd5rU1363VR4BRoo2qf3AT8c2lOq2cmMd2e4WteZI7KUtM-4znp2r9aNdC8E9NfXN_QhXvLIO45MUFhUnzlfZJ-e4vjPKfHlblKzv94Yx6R6XUExWsyjvGUFvGWxZdsJbb-3D2bbr4sGFhr0jphc99BBvXG0ehTcgZ8ZSVGos7qhK6CnHMFn75MW_50hkTLOQfRtepgLFbxyt5TfTTnjrEQqxofyO_vWRnixHmn6zkcpH0_B622krI9ijT1g-HxqEJ4rP5TAZ4sCAXjghb2_nyAS6BWlCwK6Cu4DYlS9TpHlMSesryoHPYtf_kJLxgN_8GcNGRIADv5erBrQE6VnHVac7NhVJzdDkwAjQ5ty1"
+            alt="srx authentication table" >
+            <pre class="puml" visibility: hidden>
+                @startuml
+                participant user as u #pink
+                participant ActiveDirectory as ad #3dad82
+                participant JIMSCollector as col #3dc8f8
+                participant JIMSServer as srv #3d9af8
+                participant SQL as sql #3de838
+                participant SRX as srx #3de882
+                
+                col -> ad: Subscribe Events
+                
+                note over u
+                User login
+                end note
+                u -> ad: login 
+                
+                note over ad #3dad82
+                     Event log(Security)
+                Event:
+                  Id: 4624
+                  Type: Logon
+                  CreatedTime: <>
+                User:
+                  Id: ATEST\user
+                  SID: 
+                WorkStation:
+                  Name: COMP1
+                  IP: 1.2.3.4
+                System:
+                  RecordId: 123241
+                end note
+                
+                ad -> col: EventLog(4624)
+                note over col #3dc8f8
+                  Store in cache
+                user=ATEST\user
+                logon=ATEST\user
+                CreatedTime=<>
+                end note
+                
+                col -> srv: Processed Info\n\n User=ATEST\user\n ip=ATEST\user\n RecordCreatedAt=<>\n groups=g1,g2
+                srv -> sql: store in table
+                
+                srx -> srv: Oauth token Req
+                note over srv #3d9af8
+                if(srx in db)
+                  provide oauth
+                end note
+                srv -> srx: oauth token
+                
+                note over srv #3d9af8
+                   REST Endpoint
+                /batch_query/v2/users
+                end note
+                
+                srx -> srv: /batch_query/v2/users
+                srv -> sql: get users
+                srv <- sql: users
+                srx <- srv: users in db
+                
+                note over srx #3de882
+                1. Populates
+                Authentication table
+                
+                end note
+                
+                legend
+                = Authentication table
+                |key|Username|state|
+                |1.2.3.4|user|Valid //user=amit logged with IP|
+                
+                end legend
+                @enduml
             </pre>
 
             <dl id="commands"><strong>Commands</strong></dl>
