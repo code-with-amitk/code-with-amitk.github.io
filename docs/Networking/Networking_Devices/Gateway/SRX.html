@@ -81,6 +81,123 @@
                     timestamp:
                     age: 150
             </pre></code>
+
+            <dl id="commands"><strong>Commands</strong></dl>
+            <dd>IP Addresses</dd>
+            <pre>
+              > cli
+              > show interfaces terse
+            </pre>
+
+            <dd>JIMS Configuration</dd>
+            <pre>
+              root# cli
+              root> edit
+
+              Entering configuration mode
+              root# show | display set                              //All services
+              set version 10.4R
+              set global interfaces 1o0 ...........   //Interfaces for connectivity
+              set                                     //zones
+              ..                                      //Policies
+              
+              # show services user-identification | display set     //for JIMS
+              set services user-identification device-information authentication-source-network-access-controller
+              set services user-identification device-information end-user-profile profile-name a domain-name <>
+              set services user-identification device-information end-user-profile profile-name a-group device-identity string <>
+              set services user-identification identity-maangement connection connect-method https
+              
+              delete services user-identification identity-maangement connection connect-method https        //To delete config
+              
+              set services user-identification identity-maangement connection port 443
+              set services user-identification identity-maangement connection primary address jims-IP        //Primary
+              set services user-identification identity-maangement connection primary client-id test
+              set services user-identification identity-maangement connection primary client-secret test
+              set services user-identification identity-maangement connection secondary address jims-IP      //Secondary
+              set services user-identification identity-maangement connection secondary client-id test
+              set services user-identification identity-maangement connection secondary client-secret <>
+              set services user-identification identity-maangement batch-query items-per-batch 100
+              set services user-identification identity-maangement batch-query query-interval 5
+              
+              root# deactivate services user-identification identity-management connection secondary          //Deactivate Secondary
+              root# commit
+              root# set services user-identification identity-maangement connection primary address jims-IP   //Set New Primary
+              root# commit
+              root# set services user-identification identity-maangement connection primary client-secret test
+              root# commit
+            </pre>
+
+            <dd>Logging</dd>
+            <pre>
+              exit
+              exit
+              > configure
+              Entering configuration mode
+              # set services user-identification identity-maangement traceoptions file test.txt
+              # set services user-identification identity-maangement traceoptions flag all
+              # set services user-identification identity-maangement traceoptions level all
+              # exit
+              Exiting configuration mode
+              > exit
+              > cat /var/log/test.txt
+              Batch query logs
+              
+              set groups jims-server services user-identification identity-management traceoptions file jims_query.log
+              set groups jims-server services user-identification identity-management traceoptions file size 10M
+              set groups jims-server services user-identification identity-management traceoptions level all
+              set groups jims-server services user-identification identity-management traceoptions flag all
+              set groups jims-server services user-identification identity-management traceoptions flag jims-validator-query
+              
+              show log jims-query.log
+              or
+              goto shell prompt and open /var/log/jims-query.log
+            </pre>
+
+            <dd>Counters, Status</dd>
+            <pre>
+              # run show services user-identification identity-management counters
+              # run show services user-identification identity-management status
+                          Primary server :
+                          Address                      : ip
+                          Port                         : 443
+                          Source                       : Automatic
+                          Interface                    : Automatic
+                          Routing-instance             : Automatic
+                          Connection method            : HTTPS
+                          Connection status            : Online
+                          Last received status message : OK (200)
+                          Access token                 : <>
+                          Token expire time            : 2022-01-31 16:20:08
+              
+                          Secondary server :
+                          Address                      : ip
+                          Port                         : 443
+                          Source                       : Automatic
+                          Interface                    : Automatic
+                          Routing-instance             : Automatic
+                          Connection method            : HTTPS
+                          Connection status            : Online
+                          Last received status message : OK (200)
+                          Access token                 : <>
+                          Token expire time            : 2022-01-31 16:22:19
+            </pre>
+
+            <dd>Reboot</dd>
+            <pre>
+                # reboot
+            </pre>
+
+            <dd>Groups from Domain</dd>
+            <pre>
+                > cli
+                > request services user-identification authentication-source jims groups domain test.com status
+                node0:
+                -------------------------------------------
+                Server-type: JIMS
+                Domain: test.com
+                Groups: finished:(800 groups are Processed)
+            </pre>
+
             <img 
             src="//www.plantuml.com/plantuml/png/TLF1Rjf04BtlLuoKIo8r80ogg1MYe2G7ggIXCMbxY5Gjzc1Mc5spkwP1yiTtnWQnf2a7aD-yUVCUCxvnNbfVhGjHqgzALIcrXygX1UcWWhDIwTL9RPnwjSKxPJ7rnkwO9ZCuwsSo6qOdpA-Jn-JM54L3P5vg2YQcmyNm7sA2TjiETNRBh2_o7Ilv_j2KDuq83llloi-_skwtjanc10-yl2P_CIJLtALMpH7kjwYz4q8RZs1uQ2LUE71XSgK5wWou9Af3QuD3q1061lgqaimxJp2jhFAx2z5WCTKd937u70q4m6nNOWmF9ZUQdcujIe_PJAq9lBfkJ1mQnhFxPFRAUo0WcTp587uQkqgyzCfePdsJt7Rxz3ZjSSyqXbudwlGx0v7idCSrSvunDJPZlLxKZmQzOpWXCuh76ubRzsJgd5rU1363VR4BRoo2qf3AT8c2lOq2cmMd2e4WteZI7KUtM-4znp2r9aNdC8E9NfXN_QhXvLIO45MUFhUnzlfZJ-e4vjPKfHlblKzv94Yx6R6XUExWsyjvGUFvGWxZdsJbb-3D2bbr4sGFhr0jphc99BBvXG0ehTcgZ8ZSVGos7qhK6CnHMFn75MW_50hkTLOQfRtepgLFbxyt5TfTTnjrEQqxofyO_vWRnixHmn6zkcpH0_B622krI9ijT1g-HxqEJ4rP5TAZ4sCAXjghb2_nyAS6BWlCwK6Cu4DYlS9TpHlMSesryoHPYtf_kJLxgN_8GcNGRIADv5erBrQE6VnHVac7NhVJzdDkwAjQ5ty1"
             alt="srx authentication table" >
@@ -158,103 +275,6 @@
                 end legend
                 @enduml
             </pre>
-
-            <dl id="commands"><strong>Commands</strong></dl>
-            <code><pre>
-                /////////////////// IP Addresses ////////////////////
-                > cli
-                > show interfaces terse
-
-                ////////////////// User Identification ////////////////////
-                root# cli
-                root> edit
-
-                Entering configuration mode
-                root# show | display set                              //All services
-                set version 10.4R
-                set global interfaces 1o0 ...........   //Interfaces for connectivity
-                set                                     //zones
-                ..                                      //Policies
-                
-                # show services user-identification | display set     //for JIMS
-                set services user-identification device-information authentication-source-network-access-controller
-                set services user-identification device-information end-user-profile profile-name a domain-name <>
-                set services user-identification device-information end-user-profile profile-name a-group device-identity string <>
-                set services user-identification identity-maangement connection connect-method https
-                
-                delete services user-identification identity-maangement connection connect-method https        //To delete config
-                
-                set services user-identification identity-maangement connection port 443
-                set services user-identification identity-maangement connection primary address jims-IP        //Primary
-                set services user-identification identity-maangement connection primary client-id test
-                set services user-identification identity-maangement connection primary client-secret test
-                set services user-identification identity-maangement connection secondary address jims-IP      //Secondary
-                set services user-identification identity-maangement connection secondary client-id test
-                set services user-identification identity-maangement connection secondary client-secret <>
-                set services user-identification identity-maangement batch-query items-per-batch 100
-                set services user-identification identity-maangement batch-query query-interval 5
-                
-                root# deactivate services user-identification identity-management connection secondary          //Deactivate Secondary
-                root# commit
-                root# set services user-identification identity-maangement connection primary address jims-IP   //Set New Primary
-                root# commit
-                root# set services user-identification identity-maangement connection primary client-secret test
-                root# commit
-                Set Logging
-                exit
-                exit
-                > configure
-                Entering configuration mode
-                # set services user-identification identity-maangement traceoptions file test.txt
-                # set services user-identification identity-maangement traceoptions flag all
-                # set services user-identification identity-maangement traceoptions level all
-                # exit
-                Exiting configuration mode
-                > exit
-                > cat /var/log/test.txt
-                <a name=bql></a> Batch query logs
-                
-                /////////////// Logging /////////////////////
-                set groups jims-server services user-identification identity-management traceoptions file jims_query.log
-                set groups jims-server services user-identification identity-management traceoptions file size 10M
-                set groups jims-server services user-identification identity-management traceoptions level all
-                set groups jims-server services user-identification identity-management traceoptions flag all
-                set groups jims-server services user-identification identity-management traceoptions flag jims-validator-query
-                
-                show log jims-query.log
-                or
-                goto shell prompt and open /var/log/jims-query.log
-
-                ////////////////////// Counters, Status /////////////////////
-                # run show services user-identification identity-management counters
-                # run show services user-identification identity-management status
-                            Primary server :
-                            Address                      : ip
-                            Port                         : 443
-                            Source                       : Automatic
-                            Interface                    : Automatic
-                            Routing-instance             : Automatic
-                            Connection method            : HTTPS
-                            Connection status            : Online
-                            Last received status message : OK (200)
-                            Access token                 : <>
-                            Token expire time            : 2022-01-31 16:20:08
-                
-                            Secondary server :
-                            Address                      : ip
-                            Port                         : 443
-                            Source                       : Automatic
-                            Interface                    : Automatic
-                            Routing-instance             : Automatic
-                            Connection method            : HTTPS
-                            Connection status            : Online
-                            Last received status message : OK (200)
-                            Access token                 : <>
-                            Token expire time            : 2022-01-31 16:22:19
-                
-                //////////////reboot: Needed when you change config////////////////
-                # reboot
-            </pre></code>
 
         </article>
     </main>

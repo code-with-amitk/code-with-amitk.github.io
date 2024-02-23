@@ -53,60 +53,78 @@
         - With SASE, security and all services delivered from cloud, allowing employees to securely connect to the corporate network and cloud applications from any location using a unified and consistent security policy
         </p>
 
-        <dl><strong>Problems in N/W without SASE</strong></dl>
-        <dd>
-            1. Cloud Migration: All applications are moving to cloud<br>
-        </dd>
-        <img 
-        src="//www.plantuml.com/plantuml/png/NP5FQ-Cm4CNl-XHpt0KdbsLx2AN4-HDIIEDGquPYzw38uqJKbinetE9lNqbE8VIed_JUl7cQEvR4VTk8Oa7Ig0jajNe7wU0q7aMnNQSho3PBA4rfuFMmJtQBP7CSZtc-IrQxG_9uoAFgWh8InRhj6ZiWHeHj9uedUz8D_aarTPRuhnS_MzbgSuONXnJVjV69p_6MhVpzYSBjO7igZVqoKE6dLZX66wmVicniNq6E5BYxnf4DkjgImYIhQy__tVqlJTfrZLQIjJKk6gWW5S9OHY1zlZ3OUeo-jOuTv2pLHs0ELK-Q1v31mXU2RYOcq95NAeRU8JceoRQW3ICPP86cWc0inBN1oIHQmmoEwLwCMzv0NwW82_r2lhKRuZHpg4CRdqg9IE-dquUVJUP-gl_4Rm00"
-        alt="sase">
-        <pre class="puml" visibility: hidden>
-            @startuml
-            [Branch Ofc] as branch 
-            [HEAD OFC \n\n VPN,LB,FW \n\n SSL,DLP,IPS] as head
-            [Employee] as emp
-            [Mobile(Airport) \nRoaming User] as mobile
-            [BYOD \nbring your\nown device] as byod
-            [Cloud Services \n\n Salesforce,Office365\nApplications] as cloud
-            
-            note right of head
-            Hosts Stack of security appliances:
-            - protect users from internet
-            end note
-            
-            branch -- head : WAN
-            mobile -- head : VPN
-            byod -- head : VPN
-            emp -- head : sitting in ofc
-            head <..> cloud
-            
-            @enduml            
-        </pre>
-
-        <br><br><br><br>
-        <dl><strong>How SASE enabled N/W solves issues</strong></dl>
-        <img 
-        src="//www.plantuml.com/plantuml/png/PO_1IWCn48Rl-nHpt83q2KIwsg8Ugc0e8jN3T3EsWMIoJ3RAlhqnGGdq4fZ_-_WpiuupofoywmxzXjpPgaSs5k6TuLQGnpCyVuuVW17CBytMBlaZDje3eVcNV87PUdfJU_rNSLd6ItRkIJpoehP9maGNNQU2ixWBH-ke7wnCGMQLnPU0tl89zf6a_bkKxg07lUqroPST2GB3dGl952DYp7nurJM3VfYcAzZWZAfm_8vTLsw4wzNgflhbd3RWfHdgWcrIrsY2_DInzg-9JVBk1m00"
-        alt="sase">
-        <pre class="puml" visibility: hidden>
-            @startuml
-            [(Delhi)India \n Branch Ofc] as delhi
-            [(Mumbai)India \n Head Ofc] as mumbai
-            [(NY)US Branch \n Branch Ofc] as ny
-            [(Germany)Europe \n Head Ofc] as germany
-            [Mobile(Airport) \nRoaming User] as mobile
-            [SASE(Service on Cloud] as sase
-            [AWS Cloud (App, Data)] as aws
-            
-            delhi <..> sase
-            mumbai <..> sase
-            ny <..> sase
-            germany <..> sase
-            mobile <..> sase
-            sase <..> aws
-            
-            @enduml
-        </pre>
+        <table>
+            <tr>
+                <th>N/W Without SASE</th>
+                <th>N/W With SASE</th>
+            </tr>
+            <tr>
+                <td>
+                    <b>Challenges: How can change my Network when?</b><br>
+                    - All applications(salesforce, office365) are moving to cloud<br>
+                    - More users are moving out of office(WFH, Roaming, BYOD(bring your own device))<br>
+                    - Companies have central HQ, where branch offices connect via WAN, home users via VPN(but also connecting to cloud directly)<br>
+                    - How to do authentication, authorization
+                    <img 
+                    src="//www.plantuml.com/plantuml/png/NP5FQ-Cm4CNl-XHpt0KdbsLx2AN4-HDIIEDGquPYzw38uqJKbinetE9lNqbE8VIed_JUl7cQEvR4VTk8Oa7Ig0jajNe7wU0q7aMnNQSho3PBA4rfuFMmJtQBP7CSZtc-IrQxG_9uoAFgWh8InRhj6ZiWHeHj9uedUz8D_aarTPRuhnS_MzbgSuONXnJVjV69p_6MhVpzYSBjO7igZVqoKE6dLZX66wmVicniNq6E5BYxnf4DkjgImYIhQy__tVqlJTfrZLQIjJKk6gWW5S9OHY1zlZ3OUeo-jOuTv2pLHs0ELK-Q1v31mXU2RYOcq95NAeRU8JceoRQW3ICPP86cWc0inBN1oIHQmmoEwLwCMzv0NwW82_r2lhKRuZHpg4CRdqg9IE-dquUVJUP-gl_4Rm00"
+                    alt="sase" style="width:350px;height:400px;">
+                    <pre class="puml" visibility: hidden>
+                        @startuml
+                        [Branch Ofc] as branch 
+                        [HEAD OFC \n\n VPN,LB,FW \n\n SSL,DLP,IPS] as head
+                        [Employee] as emp
+                        [Mobile(Airport) \nRoaming User] as mobile
+                        [BYOD \nbring your\nown device] as byod
+                        [Cloud Services \n\n Salesforce,Office365\nApplications] as cloud
+                        
+                        note right of head
+                        Hosts Stack of security appliances:
+                        - protect users from internet
+                        end note
+                        
+                        branch -- head : WAN
+                        mobile -- head : VPN
+                        byod -- head : VPN
+                        emp -- head : sitting in ofc
+                        head <..> cloud
+                        
+                        @enduml            
+                    </pre>
+                </td>
+                <td>
+                    <b>Solving the Challenges</b><br>
+                    - All traffic(WFH, Office, Roaming) will go thru SASE<br>
+                    - All security policies are applied, a single n/w stack is provided
+                    <br><br>
+                    <b>Benefits</b><br>
+                    - Uplevel my security<br>
+                    - Simplify my N/w(as devices for VPN,LB,FW,SSL,DLP,IPS sitting in HQ) can be removed<br>
+                    - Branch office to HQ WAN not needed this Saves Million of $<br>
+                    <img 
+                    src="//www.plantuml.com/plantuml/png/PO_1IWCn48Rl-nHpt0NR9v3IrHRrK0L34QaUfhjZ6qmcOP8e-_R6B4gWbu7vlu-VcNM8A35PquHFpHu5BGpEUiV4KSN940WD4Vbag3cq6p9dtJtmg17U66u4UJZ3qyVm3XXW_ANPsYLxn4gx9np_9LjWjXvVkxtwgxWiuoaxToGMUUgsIPodYwvJmLdSkQCsrFPQl9FOPV7PeTLyWdqWAQujIdDGlTgsYkHB3mIEuTQuD1OZOCYyVr5p1ctl_HLiC69NE7w7fYa_mlLYiPhzyauTy5Gjyu5rCfzH1NdaTRbSbVuryPYi-G40"
+                    alt="sase" style="width:500px;height:400px;">
+                    <pre class="puml" visibility: hidden>
+                        @startuml
+                        skinparam componentStyle rectangle
+                        [(Delhi)India \n Branch Ofc] as delhi
+                        [(Mumbai)India \n Head Ofc] as mumbai
+                        [(NY)US Branch \n Branch Ofc] as ny
+                        [(Germany)Europe \n Head Ofc] as germany
+                        [Mobile(Airport) \nRoaming User] as mobile
+                        [SASE(Service on Cloud] as sase
+                        [AWS Cloud (App, Data)] as aws
+                        
+                        delhi <--> sase
+                        mumbai <--> sase
+                        ny <--> sase
+                        germany <--> sase
+                        mobile <--> sase
+                        sase <..> aws
+                        @enduml
+                    </pre>
+                </td>
+            </tr>
+        </table>
 
         <h3 id="sdwan">SD-WAN (Software-Defined Wide Area Network)</h3>
         <p><b>What?</b><br>
