@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MPLS</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#what">What</a>
+    <a href="#flow">Packet Flow</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+
+    <h3 id="what">MPLS(Multiprotocol Label Switching)</h3>
+    <dd>This is protocol-agnostic routing technique used in telecommunications networks to speed up and shape traffic flows.<br>
+        MPLS works by assigning short labels to data packets, which are then used to make forwarding decisions within a network.<br>
+        Instead of examining the packet's IP header to determine its next hop, MPLS routers simply look at the label and forward 
+        the packet based on the information in their forwarding table.
+    </dd>
+    <dl><strong>Benefits of MPLS</strong></dl>
+    <dd>
+        1. Scalability: 
+        MPLS can handle larger and more complex network architectures than traditional network technologies. <br>
+        2. Improved uptime: 
+        MPLS can send data over an alternative path in less than 50 milliseconds. <br>
+        3. Reduced WAN costs: 
+        MPLS WAN allows businesses to give control of routing to the service provider they are with.<br>
+        4. Increased reliability: 
+        MPLS has several routes data can take to be transferred, which lowers the chance of a network crashing or overloading.<br>
+        5. Fast reroute: 
+        MPLS has a feature known as Fast Reroute that enables traffic to be switched to an alternative path very rapidly 
+        in the event of downtime.<br>
+    </dd>
+
+    <h3 id="flow">Packet Flow</h3>
+    <img 
+        src="//www.plantuml.com/plantuml/png/dLH1Qzim6BthLpnwIWw3IcQNWaVBrj520gRTCHVL4fN0auoaf1danq-IOozsuZ2QIynxttkVthFmlG_SXUtlXhJnNzUwvIRWvidw07e3xg7ecF8VEjJgIFe9kQvMhzWOlDXja0vqOnOh_YQRajukiy1D1Dh4EID39lLLis8mAtgpugg03GBM2zZ5BApBmYvqq56A4LAMMFseK3aRR6qRlARYi0WMSbyhRjubchJCBr6Mn55y-GR7xh3-q-6nWXuj9YZBA3r1sO0M4xGucotcqEc97ur8HqjuQaYRTsnRmOFqVPZ7VMkz54ZHfpcUeVXEmgLk4InKdA53ebcUNUFPa7sElt1MUOnXR1oqE-cYdFoqxeCxaUP-yRT64k4302FtuScsgACPoOw0OqW_Hf9HCXbPiV-see2ZPrOg5-9Ze4FKhH--bt7eWFZyN9MA7OZl6fiTc0Hx40BvNYlXoCke76YFdUPmf_jTjjTt6DjlJ6-owEx7rzjbXl_jrTsR_eJoFgwFdv2_"
+        alt="mpls" style="width:700px;height:500px;">
+    <pre class="puml" visibility: hidden>
+        @startuml
+        participant "Host 1" as h1
+        participant "switch 1" as s1
+        participant "MPLS \n Router 1\n(Label=10)" as r1
+        participant "internet" as i
+        participant "MPLS \n Router 3\n(Label=30)" as r3
+        participant "MPLS \n Router 2\n(Label=20)" as r2
+        participant "switch 2" as s2
+        participant "Host 2" as h2
+        
+        == LDP Protocol Start (to exchange labels) ==
+        r1 -> r2: My label=10
+        r1 -> r3: My label=10
+        r2 -> r1: My label=20
+        r2 -> r3: My label=20
+        r3 -> r1: My label=30
+        r3 -> r1: My label=30
+        == LDP Protocol End ==
+        
+        == Routing updates Start (Exposed Hosts) ==
+        r1 -> r2: I have route to host1
+        r1 -> r3: I have route to host1
+        r2 -> r3: I have route to host2
+        r2 -> r1: I have route to host2
+        == Routing updates end ==
+        
+        note over r1
+        Forwarding Table
+        dst   nextHop cost
+        host2  r2     2
+        end note
+        
+        note over r2
+        Forwarding Table
+        dst   nextHop cost
+        host1  r1     2
+        end note
+        
+        h1 -> s1: |dstMAC=r1 | dstIP=h2|
+        s1 -> r1: |dstMAC=r1 | dstIP=h2|
+        
+        note over r1
+        Add MPLS hdr
+        Route to host2 is via r2
+        end note
+        
+        r1 -> i:  |dstMAC=r1 | \nMPLS hdr(label=50) | \ndstIP=h2|
+        i -> r2:  |dstMAC=r1 | \nMPLS hdr(label=50) | \ndstIP=h2|
+        
+        @enduml        
+    </pre>
+  </article>
+</body>
+</html>
