@@ -23,9 +23,16 @@
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#capportal">Captive Portal</a>
-        <a href="#sase">SASE</a>
-        <a href="#sdwan">SD-WAN</a>
-        <a href="#sse">SSE</a>
+        <a href="#whycloud">Why Cloud</a>
+        <a href="#gartner">Gartner Terms</a>
+        <ul>
+            <li><a href="#magicquadrant">Magic Quadrant</a></li>
+            <li><a href="#sase">SASE</a></li>
+            <li><a href="#sdwan">SD-WAN</a></li>
+            <li><a href="#sse">SSE</a></li>
+        </ul>
+        <a href="#sdn">SDN</a>
+        <a href="#planes">Data, Control Plane</a>
         <a href="#wctows">Ways Web Client connect to Web Server</a>
     </aside>
 
@@ -34,9 +41,26 @@
             <p>A captive portal is a web page that users must interact with before accessing a public network. 
                 It's often used by public venues that offer free Wi-Fi, such as airports, hotels, and coffee shops</p>
 
-        <h3 id="sase">SASE(Secure Access Service Edge)</h3>
+        <h3 id="whycloud">Why Cloud?</h3>
+        <dt>
+            - Cloud adoption is all time high and constantly growing. 
+            The demand for remote workforce is increasing and per Gartner research demand for remote working is set to increase 30% by 2030, 
+            post coronavirus pandemic which has forced world wide organizations to adopt a hybrid working model.<br>
+            - All application(FaaS, SaaS, Sharepoint, office365) as moving to cloud and organizations want secure, seemless access by all employees(in office, home, branch offices)
+            to these applications
+        </dt>
+
+        <h3 id="gartner">Gartner Given Terms</h3>
+        <h4 id="magicquadrant">Gartner Magic Quadrant</h4>
+        <dl>
+            The Gartner Magic Quadrant is a research report that helps identify and assess the top 10-12 players in a specific global market<br>
+            It provides a visual representation of different types of technology providers and their position in fast-growing markets.
+        </dl>
+
+        <h4 id="sase">SASE(Secure Access Service Edge)</h4>
         <dl><strong>What is SASE?</strong></dl>
         <p>
+            - Gartner gave SASE term in year 2019 to define networking and security capabilities into a single service sitting on cloud.<br>
             - Providing network security at wide-area networking (WAN) delivered as a cloud service.<br>
             - All users in branch office, home, roaming(airport) if he want to access any of cloud service()
             he will go thru SASE.<br>
@@ -126,29 +150,87 @@
             </tr>
         </table>
 
-        <h3 id="sdwan">SD-WAN (Software-Defined Wide Area Network)</h3>
+        <h4 id="sdwan">SD-WAN (Software-Defined Wide Area Network)</h4>
         <p><b>What?</b><br>
-            - Enables organizations to build higher-performance WANs using lower-cost and commercially available internet access<br>
-            - Separates of networking hardware and control mechanisms
+            - Helps organizations to connect branch offices, central office(HQ), Services on cloud in fast, cost effective way<br>
+            - Uses <a href="#sdn">SDN(software defined network)</a> to separate hardware and control mechanisms.
         </p>
         <p>
             <b>Example</b><br> 
-            - Consider a retail chain(Relaince) with numerous stores across the country. <br>
-            - Each store requires reliable connectivity to Central DB to POS devices.<br>
-            - 1 solution is to use MPLS circuits for connectivity between stores and headquarters, other is SD-WAN.<br>
+            - Consider a retail chain(Relaince) with numerous branch offices across the country. <br>
+            - Each branch office(store) requires reliable connectivity to Central or HQ services(eg: DB) to POS devices.<br>
+            - 1 solution is to use <a href="/Networking/OSI-Layers/Layer-2.5/mpls.html">MPLS</a> for connectivity 
+            between stores and headquarters(But this is expensive), other is SD-WAN.<br>
             - With SD-WAN retail chain achieves cost savings, improved application performance
         </p>
+        <img src="/images/sd-wan.PNG" alt="sdwan" style="width:500px;height:300px;">
 
-        <h3 id="sse">SSE (Secure Service Edge)</h3>
-        <p><b>What?</b> 
-            Integration of security services directly into the network edge
-        </p>
-        <p>
+        <h4 id="sse">SSE (Secure Service Edge)</h4>
+        <dt><b>What?</b> 
+            Gartner gave SSE term in year 2021 to define limited scope of network security convergence including SWG, CASB, DLP, 
+            FaaS, ZTNA into a single cloud native service. <br>
+        </dt>
+        <dt>
             <b>Example</b><br>
             - Consider a healthcare organization(Apollo) that needs to provide secure access to electronic health records (EHR).<br>
             - Organization implements secure web gateways (SWG), next-generation firewalls (NGFW), intrusion prevention systems(IPS) into the network edge.<br>
             - Allows organization to enforce consistent security policies, inspect and filter internet traffic, and detect and mitigate threats in real-time
-        </p>
+        </dt>
+        <img src="/images/sse-sdwan-sase.PNG" alt="sse" style="width:500px;height:300px;">
+
+        <h3 id="sdn">Software Defined Networking</h3>
+        <dt>
+            Separating S/W from H/W. Routers, Switches can be controlled remotely.<br>
+            <a href="#planes">Forwarding Plane(lies on Switch), Control Plane(lies on GUI)</a>.<br>
+            Controlling switches routing decisions from GUI. Person does not have to go physically to control/change Switch/Router.
+        </dt>
+        <img 
+        src="//www.plantuml.com/plantuml/png/RO-noiCW54Ptdy8n_-2WMNyAfO7IfHH2fz3X8fT4QbJKjlJj6sEJ9f11y1pEyDrmLyQ1XvvAspjhqCGwlZLIZpA2QJMIvdWzyHk5GDk7uYEA2GLfwkfCzyxb0eRFhCIaSiKEraHljKRFQlHFzCNNq8i6WtzZBgqXJNYfA3icE-LuKK64PH4aNnLYen2hejmeIaBIEVIViLsUdSwPKP3aCgP9IVreU1dIbWM89PGV"
+        alt="sase" style="width:500px;height:200px;">
+        <pre class="puml" visibility: hidden>
+            @startuml
+            skinparam componentStyle rectangle
+            [GUI1] as gui1
+            [GUI2] as gui2
+            [SDN App1] as app1
+            [SDN App2] as app2
+            [SDN-Controller-Server(Control Plane)] as con
+            [switch-chip1(Data Plane)] as sc1
+            [switch-chip2(Data Plane)] as sc2
+            [switch-chip3(Data Plane)] as sc3
+            
+            gui1 <--> app1
+            gui2 <--> app2
+            app1 <--> con
+            app2 <--> con
+            con <--> sc1
+            con <--> sc2
+            con <--> sc3
+            @enduml
+        </pre>
+
+        <h3 id="planes">Data Plane, Control Plane, Forwarding Plane, Management Plane</h3>
+        <dt>
+            Why planes are seperated? Technologies can be developed independetly.
+        </dt>
+        <table>
+            <tr>
+                <th>Plane</th>
+                <th>Kind of Traffic</th>
+            </tr>
+            <tr>
+                <td>Control(CPU Intersive)</td>
+                <td>Routing traffic:OSPF, ping, management etc</td>
+            </tr>
+            <tr>
+                <td>Data/Forwarding(Less CPU intensive)</td>
+                <td>This is not my packet, I just need to forward</td>
+            </tr>
+            <tr>
+                <td>Management</td>
+                <td>Management traffic(SSH, SNMP, Telnet)</td>
+            </tr>
+        </table>
 
         <h3 id="wctows">Ways Web Client connect to Web Server</h3>
         <table>
