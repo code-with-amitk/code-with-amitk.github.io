@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Install Rust</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#install">Install Rust</a>
+            <a href="Functions.html">Functions(Closure)</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="install">Install Rust</h2>
+            <dt>Linux</dt>
+                <pre>
+                $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+                ...
+                Rust is installed now. Great!   //Rust Installed successfully
+                </pre>
+
+            <dt>Windows:<br>
+                a. Download installer & install. Rust is installed in C:\Users\amitk\.cargo<br>
+                b. Open cmd prompt & check PATH variable is configured correctly or not.
+            </dt>
+                <pre>
+                > C:\Users\amitk>rustc --version
+                rustc 1.51.0 (2fd73fabe 2021-03-23)                
+                </pre>
+        </article>
+
+    </body>
+</html>

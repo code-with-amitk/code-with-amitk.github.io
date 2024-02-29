@@ -125,25 +125,68 @@
                     - Simplify my N/w(as devices for VPN,LB,FW,SSL,DLP,IPS sitting in HQ) can be removed<br>
                     - Branch office to HQ WAN not needed this Saves Million of $<br>
                     <img 
-                    src="//www.plantuml.com/plantuml/png/PO_1IWCn48Rl-nHpt0NR9v3IrHRrK0L34QaUfhjZ6qmcOP8e-_R6B4gWbu7vlu-VcNM8A35PquHFpHu5BGpEUiV4KSN940WD4Vbag3cq6p9dtJtmg17U66u4UJZ3qyVm3XXW_ANPsYLxn4gx9np_9LjWjXvVkxtwgxWiuoaxToGMUUgsIPodYwvJmLdSkQCsrFPQl9FOPV7PeTLyWdqWAQujIdDGlTgsYkHB3mIEuTQuD1OZOCYyVr5p1ctl_HLiC69NE7w7fYa_mlLYiPhzyauTy5Gjyu5rCfzH1NdaTRbSbVuryPYi-G40"
+                    src="//www.plantuml.com/plantuml/png/VL9VJzj037_tfx2wbrG2QIqyxOcqC3HfWaWPGrlBWtivmYcfBxiue3BntHTVGZLMZHVhVd_EzlbyrWe5wROrj9NZXW9jqVXjuzcovBAhBGPhXBYiBQoIgn_JcnmNWTWyu9fVJzVtvWwfHTu16V419mk_MNEIkj3u8DE9YXk_mG_15h1QorhIsxnFqAT8cwPsXiHvRe_md8HYAdfgH-Dp5-pxLdKCvijbzgwrD0q0cDft1Vu6NB6LEtXvIymEcFa1StB0d2e33PcAIekJFCqlajo6HsSiUiQbUgSJTUDgQLbimEGcdyQkJCIzmhxexsRUiVZxBDZMiXdVdbrdCqo-kr0wTZJLuO_fsq-VYV8ZJBikZuDkV3EBXVfIvr-pMAAecu7u-UqgZSopC0rKVdiPcVQf78XbcY-6ngZTzDIBDjqtCCVaeWk-iR5jhJFNHmzTNrT2ITh90sR1Fxh2Xk7RVGL_xLP1GXjgxO9CLGRVSR7qjG-O_ke8NaMSf4RSeyLp5wpkqoxvKbWM9xj_abC1C4mFZu_Zmz_2EG0LUcOh7q63Wi42lXgL6MZOPm2zE4fpbIBG_GNWtIYSWWO5SKZmtnyVx2UWGO4kzlwicxj7kfndbejkM_y1"
                     alt="sase" style="width:500px;height:400px;">
                     <pre class="puml" visibility: hidden>
                         @startuml
                         skinparam componentStyle rectangle
-                        [(Delhi)India \n Branch Ofc] as delhi
-                        [(Mumbai)India \n Head Ofc] as mumbai
                         [(NY)US Branch \n Branch Ofc] as ny
-                        [(Germany)Europe \n Head Ofc] as germany
-                        [Mobile(Airport) \nRoaming User] as mobile
-                        [SASE(Service on Cloud] as sase
-                        [AWS Cloud (App, Data)] as aws
+                        actor "Bob\n(Airport)" as bob #red
+                        [\t\tAWS \n\n Applications, Data] as aws
+                        [\t\tAzure \n\n Applications, Data] as azure
+                        [\t\tGCP \n\n Applications, Data] as gcp
                         
-                        delhi <--> sase
-                        mumbai <--> sase
-                        ny <--> sase
-                        germany <--> sase
-                        mobile <--> sase
-                        sase <..> aws
+                        
+                        cloud {
+                         [net]
+                        }
+                        cloud {
+                         [net1]
+                        }
+                        cloud {
+                         [net2]
+                        }
+                        cloud {
+                         [net3]
+                        }
+                        cloud {
+                         [net4]
+                        }
+                        
+                        package "SASE(Service on Cloud)" {
+                          [Center (US)] as center
+                          node "PointofPresence \n\n POP1 (Virginia) \n Services:FaaS, AuuS" as pop1 {
+                            [DLP] as dlp
+                            [ZTNA] as ztna
+                            [SWG] as swg
+                            [CASB] as casb
+                          }
+                          [POP2 (Europe)] as pop2
+                        }
+                        
+                        node "Okta(Auth Provider)" as ok
+                        
+                        skinparam databaseBackgroundColor Aqua
+                        database "Active Directory(Identity Provider)" as ad
+                        
+                        center -- pop1
+                        center -- pop2
+                        
+                        ad -- net0
+                        net0 -- center
+                        ok -- net1
+                        net1 -- pop1
+                        
+                        pop2 -- net2
+                        net2 --  bob
+                        
+                        ny -- net4
+                        net4 -- casb
+                        
+                        "SASE(Service on Cloud)" -- net3
+                        net3 -- aws
+                        net3 -- azure
+                        net3 -- gcp
                         @enduml
                     </pre>
                 </td>
