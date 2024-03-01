@@ -2,273 +2,276 @@
 <html>
 <head>
     <title>Thread Code</title>
-    <!--<link rel="stylesheet" href="/css/styles.css"/>-->
-    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!--<link rel="stylesheet" href="/css/prism.css" />-->
 </head>
 
 <body>
-    <h1>Creating Threads</h1>
-    <ul>
-        <li><h2><a href="#code"> Code</a></h2></li>
-        <li><h2><a href="#jd"> Joinable, Detachable Threads</a></h2></li>
-    </ul>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
 
-    <h2 id="code">Code</h2>
-    <div class="tab">
-        <button class="tablinks" onclick="opencode(event, 'win')">Windows</button>
-        <button class="tablinks" onclick="opencode(event, 'python')">Python</button>
-        <button class="tablinks" onclick="opencode(event, 'java')">Java</button>
-        <button class="tablinks" onclick="opencode(event, 'posix')">POSIX</button>
-        <button class="tablinks" onclick="opencode(event, 'cppt')">CPP Threadclass</button>
-        <button class="tablinks" onclick="opencode(event, 'cppfun')">CPP Functor</button>
-        <button class="tablinks" onclick="opencode(event, 'rust-ts')">Rust(thread::spawn)</button>
-    </div>
 
-    <!-- Tab content -->
-    <div id="win" class="tabcontent">
-        <h3>Windows</h3>
-        <pre><code class="language-css">
-                #include &lt;windows.h&rt;
-                #include &lt;tchar.h&lrt;
-                #include &lt;strsafe.h&rt;
-                using namespace std;
-                DWORD WINAPI worker(LPVOID param) {
-                    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-                    int* data = (int*)param;
-                    TCHAR buf[60];
-                    DWORD dwChar;
-                    StringCchPrintf(buf, 60, TEXT("val=%d"), *data);
-                    WriteConsole(hStdout, buf, 10, &dwChar, nullptr);
-                    return 0;
-                }
-                
-                int _tmain() {
-                    DWORD thread_id[5];
-                    for (int i = 0; i &lt; 5; ++i) {
-                        CreateThread(
-                            NULL,               //Default security attributes
-                            0,                  //Use default stack size
-                            worker,             //thread function
-                            (void*)i,           //argument to thread function
-                            0,                  //Default creation flag
-                            &thread_id[i]);     //Thread identifier returned
-                    }
-                
-                }
-                    </code></pre>
-    </div>
+    <article style="margin-left:200px;">
+        <h3 id="code">Thread Creation Code</h3>
+        <dl>
+            CPP Threadclass, CPP Functor, Rust, Python, POSIX, Java, Windows
+        </dl>
+        <table>
+            <tr>
+                <th>C++ Threadclass</th>
+                <th>C++ Functor</th>
+                <th>Rust</th>
+                <th>Python</th>
+                <th>POSIX</th>
+                <th>Java</th>
+                <th>Windows</th>
+            </tr>
+            <tr>
+                <td><pre>        <!--cpp threadclass-->
+#include &lt;thread&rt;
+#include &lt;iostream&rt;
+void fun(int a){
+    std::cout &lt;&lt; "Hello" &lt;&lt; a &lt;&lt; "\n";
+}
+int main() { 
+    int a = 10;
+    //Creates Thread Object, 
+    //which is entity that can start 
+    //execution immediately after creation
+    std::thread t1(fun, a);
+    t1.join();
+    
+    /* Not copy construtible */
+    //error: use of deleted function 
+    ‘std::thread::thread(std::thread&)’
+    //std::thread t2 = t1
+    
+    /* Not copy assignable */
+    //error: use of deleted function 
+    //‘std::thread& std::thread::operator
+    //=(const std::thread&)’
+    //std::thread t2(fun,3);
+    //t1 = t2;
+}
+                </pre></td>
 
-    <div id="python" class="tabcontent">
-        <h3>Python</h3>
-        <pre><code class="language-css">
-            import threading, zipfile
+                <td><pre>       <!--C++ Functor-->
+#include &lt;thread&rt;
+#include &lt;iostream&rt;
+#include &lt;mutex&rt;
+#include &lt;vector&rt;
+std::mutex m;
 
-            class AsyncZip(threading.Thread):
-                def __init__(self, infile, outfile):              # Constructor
-                    threading.Thread.__init__(self)
-                    self.infile = infile
-                    self.outfile = outfile
-            
-                def run(self):
-                    f = zipfile.ZipFile(self.outfile, 'w', zipfile.ZIP_DEFLATED)
-                    f.write(self.infile)
-                    f.close()
-                    print('Finished background zip of:', self.infile)
-            
-            background = AsyncZip('mydata.txt', 'myarchive.zip')
-            background.start()
-            print('The main program continues to run in foreground.')
-            
-            background.join()    # Wait for the background task to finish
-            print('Main program waited until background was done.')
-        </code></pre>
-    </div>
+void fun(int tid) {
+    int a;
+    m.lock();
+    a += 5;
+    std::cout &lt;&lt; 
+    "Thread: " &lt;&lt; 
+    tid &lt;&lt; ", a:
+    " &lt;&lt; a &lt;&lt; std::endl;
+    m.unlock();
+}
 
-    <div id="java" class="tabcontent">
-        <h3>Java Thread Class</h3>
-        <pre><code class="language-css">
-            class test implements Runnable {		//Class should implement Runnable Interface to create Thread
-                test() {
-                    Thread cur = Thread.currentThread();
-            
-                    Thread t = new Thread (this, "New thread"); //1. Created child thread
-                    t.start();                                  //2. Started child thread. if start() is not called, Child Thread will not start
-                    try {
-                        for (int i = 0; i &lt; 6; ++i) {
-                            System.out.println ("Parent Thread");       //Parent process waits 1sec
-                            Thread.sleep(1000);
-                        }
-                    } catch (InterruptedException e) {
-                        System.out.println ("Interrupted");
-                    }
-                    System.out.println ("exiting main thread");
-                }
-                public void run () {
-                    try {
-                        for (int i = 0; i &lt; 3; ++i) {
-                            System.out.println ("Child Thread");        //Child Thread waits 2sec
-                            Thread.sleep(2000);
-                        }
-                    }
-                    catch (InterruptedException e) {
-                        System.out.println ("child interrupted");
-                    }
-                    System.out.println ("exiting child thread");
-                }
-                public static void main (String args[]) {
-                    new test();					//1. Calls constructor
-                }
+int main() {
+    std::vector<std::thread> vecThreads;
+    for (int i = 0; i&lt; 5; ++i) {
+        //Functor to create Threads
+        vecThreads.emplace_back(
+            [&]() {                             
+                fun(i);
             }
-            $ javac test.java
-            $ java test
-            $ java test
-            Parent Thread
-            Child Thread
-            Parent Thread
-            Child Thread
-            Parent Thread
-            Parent Thread
-            Child Thread
-            Parent Thread
-            Parent Thread
-            exiting child thread
-            exiting main thread
-        </code></pre>
-    </div>
+        );
+    }
+    for (auto& t : vecThreads)
+        t.join();
+    return 0;
+}
+                </pre></td>
 
-    <div id="posix" class="tabcontent">
-        <h3>POSIX</h3>
-        <pre><code class="language-css">
-            #include &lt;pthread.h&rt;
-                #include &lt;iostream&rt;
-                using namespace std;
-                #define NUM_OF_THREADS 5
-                
-                void* worker (void* arg) {
-                    <!--cout "<<" "Thread: " "<<" *((int*)arg) << " Created" << endl;-->
-                    cout &lt;&lt; "Thread: " &lt;&lt; *((int*)arg) &lt;&lt; " Created" &lt;&lt; endl;
-                }
-                
-                int main() {
-                    pthread_t thread_id[NUM_OF_THREADS];
-                    int thread_args[NUM_OF_THREADS], ret;
-                
-                    <!-- for (int i=0;i<NUM_OF_THREADS;++i) { -->
-                    for (int i=0;i&lt;NUM_OF_THREADS;++i) {
-                        thread_args[i] = i;
-                        ret = pthread_create(&thread_id[i], 0, worker, (void*)&thread_args[i]);
-                    }
-                
-                    for (int i=0; i &lt NUM_OF_THREADS;++i)
-                        pthread_join (thread_id[i], 0);
-                    return 0;
-                }
-                
-        </code></pre>
-    </div>
+                <td><pre>   <!--Rust-->
+$ cargo new thread1
 
-    <div id="cppt" class="tabcontent">
-        <h3>CPP Thread Class</h3>
-        <pre><code class="language-css">
-            #include &lt;thread&rt;
-                #include &lt;iostream&rt;
-                void fun(int a){
-                  std::cout &lt;&lt; "Hello" &lt;&lt; a &lt;&lt; "\n";
-                }
-                int main() { 
-                  int a = 10;
-                  std::thread t1(fun, a);            //Creates Thread Object, which is entity that can start execution immediately after creation
-                  t1.join();
-                  
-                  /* Not copy construtible */
-                  //std::thread t2 = t1		     //error: use of deleted function ‘std::thread::thread(std::thread&)’
-                  
-                  /* Not copy assignable */
-                  //std::thread t2(fun,3);           //error: use of deleted function ‘std::thread& std::thread::operator=(const std::thread&)’
-                  //t1 = t2;
-                }
-        </code></pre>
-    </div>
+$ cat main.rs
+use std::thread;
+fn fun1() {
+    println!("Thread-1");
+}
 
-    <div id="cppfun" class="tabcontent">
-        <h3>CPP Functor</h3>
-        <pre><code class="language-css">
-                #include &lt;thread&rt;
-                #include &lt;iostream&rt;
-                #include &lt;mutex&rt;
-                #include &lt;vector&rt;
-                std::mutex m;
-                
-                void fun(int tid) {
-                    int a;
-                    m.lock();
-                    a += 5;
-                    std::cout &lt;&lt; "Thread: " &lt;&lt; tid &lt;&lt; ", a:" &lt;&lt; a &lt;&lt; std::endl;
-                    m.unlock();
-                }
-                
-                int main() {
-                    std::vector<std::thread> vecThreads;
-                    for (int i = 0; i&lt; 5; ++i) {
-                        vecThreads.emplace_back(
-                            [&]() {                             //Functor to create Threads
-                                fun(i);
-                            }
-                        );
-                    }
-                    for (auto& t : vecThreads)
-                        t.join();
-                    return 0;
-                }
-                    </code></pre>
-    </div>
+fn main() {
+    //Thread-1
+    let handle1 = thread::spawn(fun1);
 
-    <div id="rust-ts" class="tabcontent">
-        <h3>Rust thread::spawn() (OS Thread)</h3>
-        <pre><code class="language-css">
-            $ cargo new thread1
-
-            $ cat main.rs
-            use std::thread;
-            fn fun1() {
-                println!("Thread-1");
+    //Thread-2 created using closure
+    let handle2 = thread::spawn(
+        || {
+            for i in 1..5 {
+                println! ("Thread-2");
+            thread::sleep (Duration::from_millis(1));
             }
-
-            fn main() {
-                let handle1 = thread::spawn(fun1);                      //Thread-1
-                let handle2 = thread::spawn(                           //Thread-2 created using closure       
-                    || {
-                        for i in 1..5 {
-                            println! ("Thread-2");
-                        thread::sleep (Duration::from_millis(1));
-                        }
-                    }
-                );
-                handle1.join().unwrap();                           //Thread1, Thread2 are joinable. main will not exit without t1,t2
-                handle2.join().unwrap();
-            }
-            $ cargo build
-            $ cargo run
-        </code></pre>
-    </div>
-
-    <script>
-        function opencode(evt, cityName) {
-          var i, tabcontent, tablinks;
-          tabcontent = document.getElementsByClassName("tabcontent");
-          for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-          }
-          tablinks = document.getElementsByClassName("tablinks");
-          for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-          }
-          document.getElementById(cityName).style.display = "block";
-          evt.currentTarget.className += " active";
         }
-    </script>
+    );
+    //Thread1, Thread2 are joinable. 
+    //main will not exit without t1,t2
+    handle1.join().unwrap();
+    handle2.join().unwrap();
+}
+$ cargo build
+$ cargo run
+                </pre></td>
 
-    <script src="/scripts/prism.js"></script>
+                <td><pre>       <!--Python-->
+import threading, zipfile
+
+class AsyncZip(threading.Thread):
+    def __init__(self, infile, outfile):              # Constructor
+        threading.Thread.__init__(self)
+        self.infile = infile
+        self.outfile = outfile
+
+    def run(self):
+        f = zipfile.ZipFile(self.outfile, 'w', zipfile.ZIP_DEFLATED)
+        f.write(self.infile)
+        f.close()
+        print('Finished background zip of:', self.infile)
+
+background = AsyncZip('mydata.txt', 'myarchive.zip')
+background.start()
+print('The main program continues to run in foreground.')
+
+background.join()    # Wait for the background task to finish
+print('Main program waited until background was done.')
+                </pre></td>
+
+                <td><pre>   <!--POSIX-->
+#include &lt;pthread.h&rt;
+#include &lt;iostream&rt;
+using namespace std;
+#define NUM_OF_THREADS 5
+
+void* worker (void* arg) {
+    <!--cout "<<" "Thread: " "<<" *((int*)arg) << " Created" << endl;-->
+    cout &lt;&lt; "Thread: " &lt;&lt; *((int*)arg) &lt;&lt; " Created" &lt;&lt; endl;
+}
+
+int main() {
+    pthread_t thread_id[NUM_OF_THREADS];
+    int thread_args[NUM_OF_THREADS], ret;
+
+    <!-- for (int i=0;i<NUM_OF_THREADS;++i) { -->
+    for (int i=0;i&lt;NUM_OF_THREADS;++i) {
+        thread_args[i] = i;
+        ret = pthread_create(&thread_id[i], 0, worker, (void*)&thread_args[i]);
+    }
+
+    for (int i=0; i &lt NUM_OF_THREADS;++i)
+        pthread_join (thread_id[i], 0);
+    return 0;
+}
+                </pre></td>
+
+                <td><pre>       <!--Java-->
+//Class should implement Runnable Interface to create Thread
+class test implements Runnable {		
+    test() {
+        Thread cur = Thread.currentThread();
+
+        //1. Created child thread
+        Thread t = new Thread (this, "New thread");
+
+        //2. Started child thread. 
+        //if start() is not called, Child Thread will not start
+        t.start();                                  
+        try {
+            for (int i = 0; i &lt; 6; ++i) {
+                //Parent process waits 1sec
+                System.out.println ("Parent Thread");
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            System.out.println ("Interrupted");
+        }
+        System.out.println ("exiting main thread");
+    }
+    public void run () {
+        try {
+            for (int i = 0; i &lt; 3; ++i) {
+                //Child Thread waits 2sec
+                System.out.println ("Child Thread");
+                Thread.sleep(2000);
+            }
+        }
+        catch (InterruptedException e) {
+            System.out.println ("child interrupted");
+        }
+        System.out.println ("exiting child thread");
+    }
+    public static void main (String args[]) {
+        new test();					//1. Calls constructor
+    }
+}
+$ javac test.java
+$ java test
+$ java test
+Parent Thread
+Child Thread
+Parent Thread
+Child Thread
+Parent Thread
+Parent Thread
+Child Thread
+Parent Thread
+Parent Thread
+exiting child thread
+exiting main thread
+                </pre></td>
+
+                <td><pre>       <!--Windows-->
+#include &lt;windows.h&rt;
+#include &lt;tchar.h&lrt;
+#include &lt;strsafe.h&rt;
+using namespace std;
+DWORD WINAPI worker(LPVOID param) {
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    int* data = (int*)param;
+    TCHAR buf[60];
+    DWORD dwChar;
+    StringCchPrintf(buf, 60, TEXT("val=%d"), *data);
+    WriteConsole(hStdout, buf, 10, &dwChar, nullptr);
+    return 0;
+}
+
+int _tmain() {
+    DWORD thread_id[5];
+    for (int i = 0; i &lt; 5; ++i) {
+        CreateThread(
+            NULL,               //Default security attributes
+            0,                  //Use default stack size
+            worker,             //thread function
+            (void*)i,           //argument to thread function
+            0,                  //Default creation flag
+            &thread_id[i]);     //Thread identifier returned
+    }
+
+}
+                </pre></td>
+            </tr>
+        </table>
+
+    </article>
+
 </body>
 
 </html>

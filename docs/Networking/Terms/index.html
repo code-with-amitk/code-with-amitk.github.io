@@ -125,7 +125,7 @@
                     - Simplify my N/w(as devices for VPN,LB,FW,SSL,DLP,IPS sitting in HQ) can be removed<br>
                     - Branch office to HQ WAN not needed this Saves Million of $<br>
                     <img 
-                    src="//www.plantuml.com/plantuml/png/VL9VJzj037_tfx2wbrG2QIqyxOcqC3HfWaWPGrlBWtivmYcfBxiue3BntHTVGZLMZHVhVd_EzlbyrWe5wROrj9NZXW9jqVXjuzcovBAhBGPhXBYiBQoIgn_JcnmNWTWyu9fVJzVtvWwfHTu16V419mk_MNEIkj3u8DE9YXk_mG_15h1QorhIsxnFqAT8cwPsXiHvRe_md8HYAdfgH-Dp5-pxLdKCvijbzgwrD0q0cDft1Vu6NB6LEtXvIymEcFa1StB0d2e33PcAIekJFCqlajo6HsSiUiQbUgSJTUDgQLbimEGcdyQkJCIzmhxexsRUiVZxBDZMiXdVdbrdCqo-kr0wTZJLuO_fsq-VYV8ZJBikZuDkV3EBXVfIvr-pMAAecu7u-UqgZSopC0rKVdiPcVQf78XbcY-6ngZTzDIBDjqtCCVaeWk-iR5jhJFNHmzTNrT2ITh90sR1Fxh2Xk7RVGL_xLP1GXjgxO9CLGRVSR7qjG-O_ke8NaMSf4RSeyLp5wpkqoxvKbWM9xj_abC1C4mFZu_Zmz_2EG0LUcOh7q63Wi42lXgL6MZOPm2zE4fpbIBG_GNWtIYSWWO5SKZmtnyVx2UWGO4kzlwicxj7kfndbejkM_y1"
+                    src="//www.plantuml.com/plantuml/png/VL9DJzj04BtFhnYb5qU2GmAddd0IYYfLnDAMeZRXCDbTpChExdQz3Z8L_xtxuKZGg1oycddlURwlEa_Ez_iMkaPfIuxsoCtU6YsrPtve9Jh9FUcwbR0fRdzExnWk76d-X5jzjDQF_06fGpq0SMySJXPcjzL5gPmrpaydaToP7NvoKi1cwxU-l6SXG0XHMjigJbuPtPtXYZobKFJSZSANticFfL6HnJVBwaDfpIq0yDRq0ly0RhJq3_3w7fYT8FCJvE84kOm8ME8DrH8dh6JN1PFkeBX4et4PjTD9LEDc6MOh7HPtR9gguiaFZ3OY_5iPfRrvh9pifEPZxzMwcc7nGxbQQKLJ3D0OlllyXOYTOTdtB0tQ6ZjBYKAgrRSgfH2jpS2lxxTbGbwyfWon-vk4TCzr1fObM-J2gDi5w3KM7GgOOt7TEsDbB3lbcSUcSzNhnbDHzlu9AsSEIaYNrsuQU7DRWZpjg9CBuatjJA_5qhJ6OVcx9pYIE2cvLmU9A-LalAUX-2h2Z9GV_WbE0Y1F3y_FK-FltJa0YMY73K7uefa5O9eHdq5ytZ0GVnp9UIIJ4-ytz3gCn2N49pffIF3VZMVv1SGdEl6mZtQ-tACNZ_DAQj7lsxy0"
                     alt="sase" style="width:500px;height:400px;">
                     <pre class="puml" visibility: hidden>
                         @startuml
@@ -172,10 +172,10 @@
                         center -- pop1
                         center -- pop2
                         
-                        ad -- net0
-                        net0 -- center
+                        ad -- net
+                        net -- center
                         ok -- net1
-                        net1 -- pop1
+                        net1 -- center
                         
                         pop2 -- net2
                         net2 --  bob

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>condition_variable</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What?</a>
+        <a href="#code">Code(Thread1 signalling Thread2</a>
+        <a>Ping pong game</a>
+        <ul>
+            <li><a href="#pppthread">Using pthread</a></li>
+            <li><a href="#ppcv">std::condition_variable, unique_lock&lt;mutex></a></li>
+        </ul>
+        
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h3 id="what">condition_variable / shared variable</h3>
+            <dd>
+                This blocks 1/multiple thread(s) until another thread modifies a shared variable (the condition), and notifies the condition_variable.
+            </dd>
+            <dl><strong>Advantages?</strong></dl>
+            <dd>
+            1. Avoids busy waiting, which spinlock does. For instance, if you have a thread (or multiple threads) that 
+            can't continue onward until a queue is empty, the busy waiting approach would be to just doing something.<br>
+            2. Similar to [Semaphores]: 
+                CV and semaphores are similar, both signals the sleeping threads, but counting semaphore 
+                is used for n available things.                
+            </dd>
+
+            <h3 id="code">Code (Thread1 signalling Thread2)</h3>
+            <pre>
+#include &lt;stdio.h>
+#include &lt;pthread.h>
+#include &lt;stdio.h>
+#include &lt;unistd.h>
+#include &lt;iostream>
+using namespace std;
+
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void *fun1(void* arg) {
+        //pthread_mutex_lock(&mutex);
+    cout &lt;&lt; "Thread1 waiting on condition\n";
+
+        //pthread_cond_wait() might provide unexepected result without mutex
+        pthread_cond_wait(&cond, &mutex);               
+    cout &lt;&lt; "Condition satisfied\n";
+        //pthread_mutex_unlock(&mutex);
+}
+void *fun2(void* arg) {
+        sleep(1);
+    cout &lt;&lt; "Thread2 signalled the condition\n";
+        pthread_cond_signal(&cond);
+}
+int main(){
+    pthread_t tid1,tid2;
+    pthread_create(&tid1, 0, fun1, 0);
+    pthread_create(&tid2, 0, fun2, 0);
+
+    pthread_join(tid1, 0);
+    pthread_join(tid2, 0);
+}
+$ ./a.out
+Thread1 waiting on condition
+Thread2 signalled the condition
+Condition satisfied                
+            </pre>
+
+            <h3 id="pppthread">Ping Pong Game (using pthread)</h3>
+            <pre>
+#include &lt;stdio.h>
+#include &lt;pthread.h>
+#include &lt;stdio.h>
+#include &lt;unistd.h>
+#include &lt;iostream>
+using namespace std;
+
+pthread_cond_t cond_ping = PTHREAD_COND_INITIALIZER;
+pthread_cond_t cond_pong = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+int j=0;
+
+void *pong(void* arg) {
+    while (j &lt; 10) {
+        pthread_mutex_lock(&mutex);
+        pthread_cond_wait(&cond_pong, &mutex);
+        ++j;
+        cout &lt;&lt; "Pong" &lt;&lt; ",j:"&lt;&lt; j &lt;&lt; "\n";
+        pthread_mutex_unlock(&mutex);
+        pthread_cond_signal(&cond_ping);
+    }
+}
+void *ping(void* arg) {
+    while( j &lt; 10) {
+        sleep(1);
+        pthread_cond_signal(&cond_pong);
+        pthread_mutex_lock(&mutex);
+        ++j;
+        cout &lt;&lt; "Ping" &lt;&lt; ",j:" &lt;&lt; j &lt;&lt; "\n";
+        pthread_cond_wait(&cond_ping, &mutex);
+        pthread_mutex_unlock(&mutex);
+    }
+}
+int main(){
+    pthread_t tid1,tid2;
+    pthread_create(&tid1, 0, ping, 0);
+    pthread_create(&tid2, 0, pong, 0);
+
+    pthread_join(tid1, 0);
+    pthread_join(tid2, 0);
+}
+$ ./a.out
+Ping,j:1
+Pong,j:2
+Ping,j:3
+Pong,j:4
+Ping,j:5
+Pong,j:6
+Ping,j:7
+Pong,j:8
+Ping,j:9
+Pong,j:10
+                    </pre>
+
+                    <h3 id="ppcv">Ping Pong Game (Using std::condition_variable, unique_lock &lt;mutex>)</h3>
+                    <dl>
+                        std::condition_variable only works with unique_lock<br>
+                        <i>Seqeunce:</i> 
+                        Thread-1 waiting on condition variable, thread-2 changes cond variable then thread-1 starts in critical section.
+                    </dl>
+                    <dl>
+                        <b>Thread-2 publishing on condition_variable:</b><br>
+                        - a. acquire a std::mutex (typically via std::lock_guard)<br>
+                        - b. perform the modification while the lock is held<br>
+                        - c. execute notify_one() or notify_all()<br><br>
+
+                        <b>Thread-1 waiting on condition_variable:</b><br>
+                        - a. acquire a std::unique_lock<std::mutex>, same mutex as used to protect the shared variable<br>
+                        - b. execute wait, wait_for, or wait_until.                        
+                    </dl>
+
+                    <table>
+                        <tr>
+                            <th>Using 2 threads</th>
+                            <th>Using 4 threads</th>
+                        </tr>
+                        <tr>
+                            <td><pre>
+#include &lt;iostream>
+#include &lt;thread>
+#include &lt;mutex>
+#include &lt;condition_variable>
+
+using namespace std;
+mutex mtx;
+condition_variable cv;
+bool start = false;
+int k = 0;
+
+//5. Control reaches ping()
+void ping() {								
+    while(1) {
+        //5a. mtx is owned by unique_lock
+        unique_lock &lt;mutex> ulock(mtx);
+        
+        //5b. `cv.wait(unique_lock, []{wait_condition});` 
+        //wait_condition==true.
+        //Hence go in. Print ping
+        //if wait condition is true ie start==false, go in
+        cv.wait(ulock, []{ return (start==false;); } );
+        
+        //5e. if we have not printed 10 times, goto pong()
+        if (k++ > 10)						
+            return;
+        start = true;
+        cout &lt;&lt; "Ping\n";
+        
+        //5c. unlock unique_lock.
+        ulock.unlock();         
+
+        //5d. notify_one() one of threads waiting on condition variable (start).                          
+        cv.notify_one();		
+    }
+}
+
+//2. Control reaches pong()
+void pong() {
+    while(1) {
+        //3. Own the `Mutex mtx` by creating unique_lock
+        unique_lock &lt;mutex> ulock(mtx);
+        
+        //4. `cv.wait(unique_lock, []{wait_condition});` 
+        //Wait on condition variable until wait_condition becomes true. 
+        //if wait_condition==false, Donot go in.
+        //Here start is false hence Pong will not be printed
+        
+        //if wait condition is true ie start==true, go in
+        cv.wait(ulock, []{ return (start==true;); } );
+        
+        if (k++ > 10)
+            return;
+        start = false;
+        cout &lt;&lt; "Pong\n";
+        ulock.unlock();
+        cv.notify_one();
+    }
+}
+
+int main() {
+    //1. Create 2 threads ping(), pong(). 
+    // Consider execution starts from pong()
+    thread t1(ping);		
+    thread t2(pong);
+    
+    t1.join();
+    t2.join();
+    return 0;
+}                                
+                            </pre></td>
+
+                            <td><pre>
+// Condition_Variable_PingPong.cpp : Defines the entry point for the application.
+#include &lt;iostream>
+#include &lt;thread>
+#include &lt;mutex>
+#include &lt;condition_variable>
+
+using namespace std;
+mutex mtx;
+condition_variable cv;
+bool start = false;
+int k = 1;
+
+void ping() {
+    while(1) {
+        unique_lock &lt;mutex> ulock(mtx);
+        cv.wait(ulock, []
+            {	//Wait until this code block return true
+                return !start;
+            }
+        );
+        if (k++ > 10)
+            return;
+        start = true;
+        cout &lt;&lt; "Ping\n";
+        ulock.unlock();
+        cv.notify_all();
+    }
+}
+
+void pong() {
+    while(1) {
+        unique_lock &lt;mutex> ulock(mtx);
+        cv.wait(ulock, []
+            {	//Wait until this code block return true
+                return start;
+            }
+        );
+        if (k++ > 10)
+            return;
+        start = false;
+        cout &lt;&lt; "Pong\n";
+        ulock.unlock();
+        cv.notify_all();
+    }
+}
+
+int main()
+{
+    thread t1(ping);
+    thread t2(pong);
+    thread t3(ping);
+    thread t4(pong);
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    return 0;
+}
+$ ./a.out
+Ping
+Pong
+Ping
+Pong
+Ping
+Pong
+Ping
+Pong
+Ping
+Pong                                
+                            </pre></td>
+                        </tr>
+                    </table>
+
+
+        </article>
+    </main>
+
+</body>
+</html>
