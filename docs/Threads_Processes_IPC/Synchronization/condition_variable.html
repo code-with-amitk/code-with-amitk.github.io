@@ -88,6 +88,7 @@ Condition satisfied
             </pre>
 
             <h3 id="pppthread">Ping Pong Game (using pthread)</h3>
+            <h4 id="pppthread">1. Using pthread</h4>
             <pre>
 #include &lt;stdio.h>
 #include &lt;pthread.h>
@@ -143,8 +144,10 @@ Ping,j:9
 Pong,j:10
                     </pre>
 
-                    <h3 id="ppcv">Ping Pong Game (Using std::condition_variable, unique_lock &lt;mutex>)</h3>
+                    
+                    <h4 id="ppcv">2. Ping Pong Game (Using std::condition_variable, unique_lock &lt;mutex>)</h4>
                     <dl>
+                        <b>condition_variable:</b> Block the thread until certain condition is met <br>
                         std::condition_variable only works with unique_lock<br>
                         <i>Seqeunce:</i> 
                         Thread-1 waiting on condition variable, thread-2 changes cond variable then thread-1 starts in critical section.
@@ -186,9 +189,14 @@ void ping() {
         
         //5b. `cv.wait(unique_lock, []{wait_condition});` 
         //wait_condition==true.
-        //Hence go in. Print ping
-        //if wait condition is true ie start==false, go in
-        cv.wait(ulock, []{ return (start==false;); } );
+        // Lambda, return true when you want to go inside, else false
+        auto wait_condition = [this]() {
+            if (start == false)
+                return true;
+            return false;
+        };
+
+        cv.wait(ulock, wait_condition);
         
         //5e. if we have not printed 10 times, goto pong()
         if (k++ > 10)						
@@ -212,11 +220,15 @@ void pong() {
         
         //4. `cv.wait(unique_lock, []{wait_condition});` 
         //Wait on condition variable until wait_condition becomes true. 
-        //if wait_condition==false, Donot go in.
-        //Here start is false hence Pong will not be printed
-        
+        // Lambda, return true when you want to go inside, else false
+        auto wait_condition = [this]() {
+            if (start == true)
+                return false;
+            return true;
+        };
+
         //if wait condition is true ie start==true, go in
-        cv.wait(ulock, []{ return (start==true;); } );
+        cv.wait(ulock, wait_condition);
         
         if (k++ > 10)
             return;
