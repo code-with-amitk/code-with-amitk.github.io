@@ -6,17 +6,39 @@
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
-    <div class="container">
-		<div class="menu">
-			<ul>
-				<li><a href="Creating_Async_Tasks.html">Creating Async Tasks</a></li>
-				<li><a href="Menu1">Menu1</a></li>
-				<!-- Add more menu items as needed -->
-			</ul>
-        </div>
-        <div class="content">
-            <!-- Main content area -->
-        </div>
-    </div>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">
+        <a href="#what">What is Tokio?</a>
+        <a href="#async">Async Task?</a>
+        <a href="Creating_Async_Tasks.html">Creating Async Tasks</a>
+    </aside>
+
+    <article style="margin-left:200px;">   <!-- It contains an article -->
+        <h3 id="what">What is Tokio?</h3>
+        <dt>
+            This is asynchronous runtime in rust, used for writing networking applications.
+        </dt>
+
+        <h3 id="async">Tasks/Green Thread != OS Thread</h3>
+        <dt>
+            Task can be concurrently executed with other tasks. ie Tasks are non-blocking.<br>
+            Again, task may or may not execute on seperate thread.
+        </dt>
+    </article>
+
 </body>
 </html>

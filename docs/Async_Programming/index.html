@@ -6,18 +6,62 @@
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
-    <div class="container">
-	<div class="menu">
-			<ul>
-				<li><a href="notify-rs.html">notify-rs(Watch changes in file)</a></li>
-				<li><a href="./Tokio">Tokio</a></li>
-				<li><a href="./InterTask_Communication">Intertask Communication(channel(), async_channel())</a></li>
-				<!-- Add more menu items as needed -->
-			</ul>
-        </div>
-        <div class="content">
-            <!-- Main content area -->
-        </div>
-    </div>
+
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">
+        <a href="#what">What is async</a>
+        <a href="notify-rs.html">notify-rs(Watch changes in file)</a>
+        <a href="./Tokio">Tokio</a>
+        <a href="./InterTask_Communication">Intertask Communication(channel(), async_channel())</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="what">What is Asynchronous?</h3>
+        <dt>
+            This is a programming paradigm that allows tasks to run concurrently without waiting/blocking for each other to complete. <br>
+            Eg: I/O-bound tasks(Network or file I/O)
+        </dt>
+        <table>
+            <tr>
+                <th></th>
+                <th>Async</th>
+                <th>Threading</th>
+            </tr>
+            <tr>
+                <td>Concurrency</td>
+                <td>Done inside single thread. Uses event loops or similar mechanisms to efficiently handle tasks</td>
+                <td>Executing multiple threads of execution concurrently.</td>
+            </tr>
+            <tr>
+                <td>Resource Overhead</td>
+                <td>lower resource overhead compared to multithreading. Since reduces context-switching and memory overhead</td>
+                <td>High resource overhead. Since each thread has its own stack and context</td>
+            </tr>
+            <tr>
+                <td>Complexity</td>
+                <td>Simpler for certains cases like I/O-bound operations bcoz avoids deadlocks, race conditions</td>
+                <td>More complex since it involves race conditions, deadlocks, and other concurrency issues</td>
+            </tr>
+            <tr>
+                <td>Performance</td>
+                <td>Better performance for I/O-bound applications. Not suited for CPU-bound tasks.</td>
+                <td>Better performance for CPU-bound tasks</td>
+            </tr>
+        </table>
+    </article>
 </body>
 </html>
