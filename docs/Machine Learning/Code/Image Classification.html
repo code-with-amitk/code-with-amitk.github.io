@@ -43,15 +43,30 @@
                 c. Add <a href="../Terms.html#lossf">loss function(categorical_crossentropy)</a>, 
                 <a href="../Terms.html#opt">Optimizer</a>, <a href="../Terms.html#metrics">Metrics</a>
             </dt>
-            <pre><code>
-                --2D_tensor-> [Dense-Layer-1]  --2D_tensor-> [Dense-Layer-2] --2D_tensor->
-                                  /\                             |
-                                  |                              \/
-                                  |                          Loss Function
-                                  |                          (loss score)
-                                  |                             /
-                                  |------------- Optimizer -----
-from keras import models
+
+            <img 
+      src="//www.plantuml.com/plantuml/png/LP31IWCn48RlUOfX7w2u0Q48IWNnL7fGRwuiGp8jeTd9CfdLNSHtDzrkeJqa9FD_7_d99YkA3bqq-HYuHy4ENEhwnCJwhbCa47AAV8XaE7c2QaU3O8GTwK-IOmM_vlE5E5ExnOcahHjkc0kJ-F6-jWq_EmtVgA7StoWENu0PVAnlBNjbrNStKavxxN1SF6l-J60bsQChPQnlFuXpafDlrwDTGuSgOQnEkFLw1Lj_HfUaDgRii5ezpNNAMiuM7aeEEiDbRYzCcMzJpl0wi9khDUnGwP0aE8ojan8IgwH-kcZBGnjYNpxv7m00"
+      alt="neural network" style="width:300px;height:300px;">
+      <pre class="puml" visibility: hidden>
+        @startuml
+        skinparam componentStyle rectangle
+        node "Neural Network" {
+        [Dense_Layer_1\n\nneuron=512\nActivation=Relu] as dl1
+        [Dense_Layer_2\n\nneuron=10\nActivation=softmax] as dl2
+        }
+        interface "2d_Tensor\n\n28x28 matrix" as 2dt
+        interface 2dTensor as 2dt1
+        
+        2dt ..> dl1
+        dl1 ..> dl2 : 2d tensor
+        dl2 ..> dl1 : Loss Function=\ncategorical_crossentropy
+        dl2 ..> 2dt1
+        
+        @enduml    
+        </pre>
+
+            <pre>
+from keras import models    #Keras is a library(having functions). We are using 1 class from keras having functions.
 from keras import layers
 from keras.datasets import mnist
 
@@ -59,7 +74,7 @@ network = models.Sequential()       //a
 network.add(layers.Dense(512, activation='relu', input_shape=(28*28,))) //b
 network.add(layers.Dense(10, activation='softmax'))
 network.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])  //c
-            </code></pre>
+            </pre>
 
             <h4>2. Prepare input data for neural network</h4>
             <pre><code>

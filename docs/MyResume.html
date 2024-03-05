@@ -170,48 +170,64 @@
 
             <br>
             <h3 id="workexp">Professional Work Experience</h3>
-            <dl><strong>Juniper Networks India Pvt Ltd. (Jun 2021 – Till Date)  Sr. Staff Software Engineer(C++, Rust, Cloud, Machine Learning)</strong></dl>
+            <dl><strong>Juniper Networks India Pvt Ltd. (Jun 2021 – Till Date) Staff Software Engineer(C++, Rust, Cloud, Machine Learning)</strong></dl>
             <details>
                 <summary>
-                    <i>1. Design, Develop, Test, Add new features to <a href="https://www.juniper.net/documentation/product/us/en/juniper-identity-management-service/">
+                    <i>Design, Develop, Test, Add new features to <a href="https://www.juniper.net/documentation/product/us/en/juniper-identity-management-service/">
                         JIMS(Juniper Identity Management Solution)</a></i>
                 </summary>
                     <dd>
+                        <u>What is JIMS?</u> 
                         JIMS is distributed service. Collector collects information(user,groups,devices,events) from Identity Providers(Active Directory, Azure, Okta)
-                        and provide to Server(which stores in Postgres). 
-                        SRX firewall queries Server on REST endpoint and server serves it.
+                        and provide to Server(which stores in Postgres). SRX firewall queries Server on REST endpoint and server serves it.<br>
+                        <u>My responsiblities</u> <br>
+                        - Design, code, enhance, bugfix on-prem, AWS cloud of JIMS & UI (Rust)
+                        - Write SRX multithreaded stub in Rust using async,tokio.<br>
+                        - Python scripting to dump Active directory(Win 2019,2022)
+                        information from customer's environment and simulate same in dev<br>
+                        - AWS jims-server serving <a href="https://www.juniper.net/us/en/products/security/srx-series.html">
+                        SRX firewall</a> <br>
+                        - Write <a href="https://prometheus.io/">Prometheus</a> endpoint to scrap metrics(counter, gauge, histogram, summary)
+                        serving <a href="https://grafana.com/">Grafanna</a><br>
+                        - <a href="https://kafka.apache.org/">Kafka Producer</a>, 
+                        Consumer to send topics(messages) to kafka broker
                     </dd>
-                    <dd>Design, code, enhance, bugfix on-prem, AWS cloud of JIMS & UI (Rust)</dd>
-                    <dd>Write SRX multithreaded stub in Rust using async,tokio.</dd>
-                    <dd>Python scripting to dump Active directory(Win 2019,2022)
-                        information from customer's environment and simulate same in dev</dd>
-                    <dd>AWS jims-server serving <a href="https://www.juniper.net/us/en/products/security/srx-series.html">
-                        SRX firewall</a> </dd>
-                    <dd>Write <a href="https://prometheus.io/">Prometheus</a> endpoint to scrap metrics(counter, gauge, histogram, summary)
-                        serving <a href="https://grafana.com/">Grafanna</a></dd>
-                    <dd><a href="https://kafka.apache.org/">Kafka Producer</a>, 
-                        Consumer to send topics(messages) to kafka broker</dd>
             </details>
 
             <details>
-            <summary><i>2. Design Azure, Okta Client to pull Identity information (Golang,Rust)</i></summary>
-                <dd>Write azure,okta client library to pull<br>
-                    users,groups,devices from Microsoft Azure,okta directory servers.<br>
-                    Push this information to JIMS server(on cloud)</dd>
+            <summary><i>Design Azure, Okta Client to pull Identity information (Golang,Rust)</i></summary>
+                <dd><u>Work? Write azure,okta client library to pull</u><br>
+                    - users,groups,devices from Microsoft Azure,okta directory servers.<br>
+                    - Push this information to JIMS server(on cloud)</dd>
             </details>
 
             <details>
-                <summary><i>3. User anomaly detection using Machine Learning with Active directory data</i></summary>
+                <summary><i>User anomaly detection using Machine Learning with Active directory data</i></summary>
                 <dd>Train ML model to detect anomalous pattern from Active Directory event logs</dd>
             </details>
 
             <details>
-                <summary><i>4. Optimizations in postgres</i></summary>
+                <summary><i>Optimizations in postgres</i></summary>
                 <dd>Postgres query for handing 1.5 millions req/sec</dd>
             </details>
 
             <details>
-                <summary><i>5. Multipod support to JIMS</i></summary>
+                <summary><i>Multipod support to JIMS</i></summary>
+            </details>
+
+            <details>
+                <summary><i>Troubleshooting issues in AWS Env</i></summary>
+                <dt>1. JIMS not validating it's own issued oauth Token</dt>
+                <dd><u>Background:</u> To hit REST endpoint exposed by JIMS any service need to provide JWT Token to JIMS.<br>
+                    - JIMS will get JWT token validated by kubernets API service, then provide its own oauth token, which 
+                    any service can use to hit the endpoint<br>
+                    <u>Root Cause:</u><br>
+                    - Deployment was done on 3 POP and 1 central region in AWS.<br>
+                    - istio sidecar was enabled on whole cluster at namespace level in all 4 regions.<br>
+                    - But JIMS server need not to be in sidecar model, since it recieves info from Active directory using collector<br>
+                    - Hence 3 IP addresses were getting assigned from IP Pool in VPC, which was causing misconfiguration.
+                </dd>
+
             </details>
 
             <br>
