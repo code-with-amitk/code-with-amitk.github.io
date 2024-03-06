@@ -3,7 +3,7 @@
 <head>
     <title>Thread Code</title>
     <link rel="stylesheet" href="/css/styles.css"/>
-    <!--<link rel="stylesheet" href="/css/prism.css" />-->
+    <link rel="stylesheet" href="/css/prism.css" />
 </head>
 
 <body>
@@ -39,11 +39,11 @@
                 <th>Windows</th>
             </tr>
             <tr>
-                <td><pre>        <!--cpp threadclass-->
-#include &lt;thread&rt;
-#include &lt;iostream&rt;
+                <td><pre><code class="language-css">        <!--cpp threadclass-->
+#include &lt;thread>
+#include &lt;iostream>
 void fun(int a){
-    std::cout &lt;&lt; "Hello" &lt;&lt; a &lt;&lt; "\n";
+    std::cout &lt;&lt; "Hello";
 }
 int main() { 
     int a = 10;
@@ -65,13 +65,35 @@ int main() {
     //std::thread t2(fun,3);
     //t1 = t2;
 }
-                </pre></td>
+                </code></pre>
+<br>
+- Thread calling method of class
+                <pre><code class="language-css">
+#include&lt;thread>
+class A {
+    void test(int a) {
+        cout &lt;&lt; a;
+    }
+public:
+    void fun(int a) {
+        //if we start thread on static function, 
+        //then this will not be passed
+        thread t1(&A::test, this, a);
+        t1.join();
+    }
+};
+int main() {
+    A obj;
+    obj.fun(1);
+}
+                </code></pre>
+            </td>
 
-                <td><pre>       <!--C++ Functor-->
-#include &lt;thread&rt;
-#include &lt;iostream&rt;
-#include &lt;mutex&rt;
-#include &lt;vector&rt;
+                <td><pre><code class="language-css">       <!--C++ Functor-->
+#include &lt;thread>
+#include &lt;iostream>
+#include &lt;mutex>
+#include &lt;vector>
 std::mutex m;
 
 void fun(int tid) {
@@ -99,9 +121,9 @@ int main() {
         t.join();
     return 0;
 }
-                </pre></td>
+                </code></pre></td>
 
-                <td><pre>   <!--Rust-->
+                <td><pre><code class="language-css">   <!--Rust-->
 $ cargo new thread1
 
 $ cat main.rs
@@ -130,9 +152,9 @@ fn main() {
 }
 $ cargo build
 $ cargo run
-                </pre></td>
+                </code></pre></td>
 
-                <td><pre>       <!--Python-->
+                <td><pre><code class="language-css">       <!--Python-->
 import threading, zipfile
 
 class AsyncZip(threading.Thread):
@@ -156,8 +178,8 @@ print('Main program waited until background was done.')
                 </pre></td>
 
                 <td><pre>   <!--POSIX-->
-#include &lt;pthread.h&rt;
-#include &lt;iostream&rt;
+#include &lt;pthread.h>
+#include &lt;iostream>
 using namespace std;
 #define NUM_OF_THREADS 5
 
@@ -180,9 +202,9 @@ int main() {
         pthread_join (thread_id[i], 0);
     return 0;
 }
-                </pre></td>
+                </code></pre></td>
 
-                <td><pre>       <!--Java-->
+                <td><pre><code class="language-css">       <!--Java-->
 //Class should implement Runnable Interface to create Thread
 class test implements Runnable {		
     test() {
@@ -236,12 +258,12 @@ Parent Thread
 Parent Thread
 exiting child thread
 exiting main thread
-                </pre></td>
+                </code></pre></td>
 
-                <td><pre>       <!--Windows-->
-#include &lt;windows.h&rt;
-#include &lt;tchar.h&lrt;
-#include &lt;strsafe.h&rt;
+                <td><pre><code class="language-css">       <!--Windows-->
+#include &lt;windows.h>
+#include &lt;tchar.h>
+#include &lt;strsafe.h>
 using namespace std;
 DWORD WINAPI worker(LPVOID param) {
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -266,12 +288,12 @@ int _tmain() {
     }
 
 }
-                </pre></td>
+                </code></pre></td>
             </tr>
         </table>
 
     </article>
-
+    <script src="/scripts/prism.js"></script>
 </body>
 
 </html>
