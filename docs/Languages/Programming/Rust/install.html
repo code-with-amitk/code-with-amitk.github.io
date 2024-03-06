@@ -3,6 +3,7 @@
     <head>
         <title>Install Rust</title>
         <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
         <!-- Add any necessary CSS and JavaScript files -->
     </head>
     <body>
@@ -27,23 +28,36 @@
         </aside>
 
         <article style="margin-left:200px;">
-            <h2 id="install">Install Rust</h2>
-            <dt>Linux</dt>
-                <pre>
-                $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
-                ...
-                Rust is installed now. Great!   //Rust Installed successfully
-                </pre>
-
-            <dt>Windows:<br>
-                a. Download installer & install. Rust is installed in C:\Users\amitk\.cargo<br>
-                b. Open cmd prompt & check PATH variable is configured correctly or not.
-            </dt>
-                <pre>
-                > C:\Users\amitk>rustc --version
-                rustc 1.51.0 (2fd73fabe 2021-03-23)                
-                </pre>
+            <h2 id="install">Install Rust & Cargo</h2>
+<table>
+    <tr>
+        <th>Ubuntu</th>
+        <th>WSL</th>
+        <th>Windows</th>
+    </tr>
+    <tr>
+        <td>
+            <pre><code  class="language-css">
+$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+...
+Rust is installed now. Great!
+            </code></pre>
+        </td>
+        <td>
+            <pre><code  class="language-css">
+$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+...
+Rust is installed now. Great!
+            </code></pre>
+        </td>
+        <td>
+            a. Download installer & install. Rust is installed in C:\Users\amitk\.cargo<br>
+            b. Open cmd prompt & check PATH variable is configured correctly or not.
+        </td>
+    </tr>
+</table>
         </article>
 
+        <script src="/scripts/prism.js"></script>
     </body>
 </html>
