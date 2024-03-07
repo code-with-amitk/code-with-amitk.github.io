@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Load Testing Tools</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#bombardier">Bombardier</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="bombardier"><a href="https://pkg.go.dev/github.com/codesenberg/bombardier">
+      Bombardier (HTTP Load Generation Tool)</a></h2>
+        <h4>Install</h4>
+        <pre><code class="language-css">
+$ go install github.com/codesenberg/bombardier@latest
+        </code></pre>
+
+        <h4>Load Test</h4>
+        <pre><code class="language-css">
+$ cd /home/amit/go/bin
+/go/bin$ ./bombardier -c 125 -n 1000 127.0.0.1:3000 -r 10000
+  Done!
+  Statistics        Avg      Stdev        Max
+    Reqs/sec      7866.21    3746.20   13538.46
+    Latency       19.01ms    10.71ms    69.92ms
+    HTTP codes:
+      1xx - 0, 2xx - 1000, 3xx - 0, 4xx - 0, 5xx - 0
+      others - 0
+    Throughput:     0.87MB/s
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
