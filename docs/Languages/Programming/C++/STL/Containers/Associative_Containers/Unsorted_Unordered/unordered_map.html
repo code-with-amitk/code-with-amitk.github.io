@@ -39,27 +39,27 @@
         </tr>
         <tr>
             <td>Create</td>
-            <td><pre>   <!--C++-->
+            <td><pre><code class="language-css">   <!--C++-->
 unordered_map&lt;string, int> um;
-            </pre></td>
+            </code></pre></td>
 
             <td>        <!--Rust-->
                 <table>
                     <tr>
                         <td>Empty</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 let hm:HashMap = HashMap::new()
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
                     <tr>
                         <td>Key ,value</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 let hm:HashMap&lt;i32, Vec&lt;i32>> = HashMap::new();
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
                     <tr>
                         <td>initialize</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 iter(): is called on the array to create
         an iterator over its elements
 cloned(): method is used to clone each
@@ -82,12 +82,12 @@ let hm: HashMap<i32, &str> = [
 .iter()
 .cloned()
 .collect();
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
                 </table>                
             </td>
 
-            <td><pre>                               <!--Python-->
+            <td><pre><code class="language-css">                               <!--Python-->
 #Empty
 self.hm = {}
 
@@ -98,21 +98,21 @@ self.hm={1:1, 2:2}
 um = {}
 value = [1,2,3]
 um[10] = value
-                </pre></td>
+            </code></pre></td>
 
-            <td><pre>                              <!--Go-->
+            <td><pre><code class="language-css">                              <!--Go-->
 hm := make(map[int]int) //[key]value
 OR
 var hm map[string[int]]  //key=string, value=int
-            </pre></td>
+            </code></pre></td>
         </tr>
 
         <tr>
             <td>Delete/Erase</td>
-            <td><pre>    <!--c++-->
+            <td><pre><code class="language-css">    <!--c++-->
 um.erase(key);
 Range: um.erase(start,end);
-            </pre></td>
+            </code></pre></td>
             <td></td>   <!--Rust-->
             <td></td>   <!--Python-->
             <td>        <!--Go-->
@@ -121,33 +121,33 @@ Range: um.erase(start,end);
 
         <tr>
             <td>Find</td>
-            <td><pre>    <!--C++-->
+            <td><pre><code class="language-css">    <!--C++-->
 if (um.find("key") != um.end())
 OR
 value=count(key)
 // Smallest Key
   min_element(um.begin(), um.end())
-            </pre></td>
+            </code></pre></td>
 
             <td>    <!--Rust-->
                 <table>
                     <tr>
                         <td>Search</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 if let Some(value) = hm.get(&key) {
 } else {
 }
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
                     <tr>
                         <td>Mutable</td>
                         <td>
-                        <pre>
+                        <pre><code class="language-css">
 if let Some(value) = hm.get_mut(&key) {
     value = 1;
 } else {
 }
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
                 </table>
             </td>
@@ -155,23 +155,23 @@ if let Some(value) = hm.get_mut(&key) {
             <td>                                   <!--Python-->
                 value = um[key]
             </td>
-            <td><pre>        <!--Go-->
+            <td><pre><code class="language-css">        <!--Go-->
 value = hm[key]
 if value != nil {
     //Found
 }
-            </pre></td>
+            </code></pre></td>
         </tr>
 
         <tr>
             <td>Insert</td>
-            <td><pre>   <!--c++-->
+            <td><pre><code class="language-css">   <!--c++-->
 vec.insert(v.begin() + 2, 7)
 
 //Count occurences
 for (auto&i:vec)
   um[i]++
-            </pre></td>
+            </code></pre></td>
 
 <td>
 <table>             <!-- Table1 -->
@@ -182,9 +182,9 @@ for (auto&i:vec)
     <tr>
         <td>Insert</td>
         <td>
-            <pre>
+            <pre><code class="language-css">
 hm.insert(key, value);
-            </pre>
+            </code></pre>
         </td>
     </tr>
     <tr>
@@ -198,7 +198,7 @@ hm.insert(key, value);
                 <tr>
                     <td>get_mut</td>
                     <td>
-                        <pre>
+                        <pre><code class="language-css">
 for i in 0..nums.len() {
     if let Some(val) = hm.get_mut(&nums[i]) {
         *val += 1;
@@ -206,15 +206,15 @@ for i in 0..nums.len() {
         hm.insert(nums[i],1);
     }
 } 
-                        </pre>
+                        </code></pre>
                     </td>
                 </tr>
                 <tr>
                     <td>entry</td>
-                    <td><pre>
+                    <td><pre><code class="language-css">
 // entry() returns enum{Occupied, Vacant}
 *hm.entry(nums[i]).or_insert(0) += 1;
-                    </pre></td>
+                    </code></pre></td>
                 </tr>
             </table>
         </td>
@@ -246,29 +246,29 @@ for i:=0; i&lt;len(nums);i++ {
 
         <tr>
             <td>Iterate over elements</td>
-            <td><pre>                   <!--c++-->
+            <td><pre><code class="language-css">                   <!--c++-->
 for (const auto& [key, value] : um) {
     out += value*(value-1)/2;
 }
-            </pre></td>
+            </code></pre></td>
 
             <td>                          <!--Rust-->
                 <table>
                     <tr>
                         <td>iter</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 for (key, value) in hm.iter() {
     println!("Key: {}, Value: {}", *key, *value);
 }
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
                     <tr>
                         <td>&hm</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 for (key, value) in &hm {
     println!("Key: {}, Value: {}", key, value);
 }
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
                 </table>
             </td>
@@ -277,11 +277,11 @@ for (key, value) in &hm {
 for key,value in um.items():
   
             </pre></td>
-            <td><pre>                   <!--Go-->
+            <td><pre><code class="language-css">                   <!--Go-->
 for key, value := range hm {
     out += (value-1)*value/2
 }
-            </pre></td>
+            </code></pre></td>
         </tr>
 
     </table>
