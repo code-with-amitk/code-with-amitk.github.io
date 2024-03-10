@@ -3,6 +3,7 @@
 <head>
     <title>condition_variable</title>
     <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
@@ -48,7 +49,7 @@
             </dd>
 
             <h3 id="code">Code (Thread1 signalling Thread2)</h3>
-            <pre>
+            <pre><code class="language-css">
 #include &lt;stdio.h>
 #include &lt;pthread.h>
 #include &lt;stdio.h>
@@ -85,11 +86,11 @@ $ ./a.out
 Thread1 waiting on condition
 Thread2 signalled the condition
 Condition satisfied                
-            </pre>
+            </code></pre>
 
             <h3 id="pppthread">Ping Pong Game (using pthread)</h3>
             <h4 id="pppthread">1. Using pthread</h4>
-            <pre>
+            <pre><code class="language-css">
 #include &lt;stdio.h>
 #include &lt;pthread.h>
 #include &lt;stdio.h>
@@ -142,7 +143,7 @@ Ping,j:7
 Pong,j:8
 Ping,j:9
 Pong,j:10
-                    </pre>
+                </code></pre>
 
                     
                     <h4 id="ppcv">2. Ping Pong Game (Using std::condition_variable, unique_lock &lt;mutex>)</h4>
@@ -169,7 +170,8 @@ Pong,j:10
                             <th>Using 4 threads</th>
                         </tr>
                         <tr>
-                            <td><pre>
+                            <td>
+                                <pre><code class="language-css">
 #include &lt;iostream>
 #include &lt;thread>
 #include &lt;mutex>
@@ -249,9 +251,10 @@ int main() {
     t2.join();
     return 0;
 }                                
-                            </pre></td>
+                            </code></pre></td>
 
-                            <td><pre>
+                            <td>
+                                <pre><code class="language-css">
 // Condition_Variable_PingPong.cpp : Defines the entry point for the application.
 #include &lt;iostream>
 #include &lt;thread>
@@ -322,13 +325,14 @@ Ping
 Pong
 Ping
 Pong                                
-                            </pre></td>
+                            </code></pre>
+                        </td>
                         </tr>
                     </table>
 
 
         </article>
     </main>
-
+    <script src="/scripts/prism.js"></script>
 </body>
 </html>
