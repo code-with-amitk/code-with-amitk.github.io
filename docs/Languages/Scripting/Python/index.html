@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#list">List</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="list">List</h3>
+        <pre><code class="language-css">
+a = []                           //1D list
+listofzeros = [0] * n            //1D list of zeros of size=n
+
+a = [[1, 2],                            //2-D List.Every row can different no of coloumns. `a[0][2]:Index error`
+        ['test', 4, 50.2],
+        ['play', 1990, 8, 9]
+    ]
+
+a = [                                         //3-D List. Packing 2 or more Matrices.
+        [
+            [1,2,3],
+            [4,5,6],
+        ],
+        [
+            [7,8,9],
+            [10,11,12],
+        ]
+    ]
+
+######## Slice ########
+a = [1,2,3,4,5,6]
+     0 1 2 3 4 5
+b = a[2:5]      #Index 2 to 5. 5 not included
+print(b)        #3,4,5
+        </code></pre>
+
+        </dl>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

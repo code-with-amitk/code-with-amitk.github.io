@@ -100,7 +100,7 @@
         
         <h3 id="systemapis">3. System APIs</h3>
         <dl><strong>1. <a href="#req1">add_place = HTTP POST</a></strong></dl>
-        <pre>
+            <pre><code class="language-css">
                 POST https://url/v1/add_place
                 header {
                     Authorization: {Bearer "API_KEY_TOKEN"},
@@ -110,10 +110,10 @@
                 body {
                     name, description, picture_url, video_url
                 }
-            </pre>
+              </code></pre>
 
             <dl><strong>2. <a href="#req2">update_place = HTTP PUT Place/person/thing information</a></strong></dl>
-            <pre>
+            <pre><code class="language-css">
                 GET https://url/v1/search_place
                 header {
                   Authorization: {Bearer "API_KEY_TOKEN"},
@@ -127,10 +127,10 @@
                     long: "",
                   },
                 }
-            </pre>
+              </code></pre>
 
             <dl><strong>4. <a href="#req4">search_place //HTTP GET. Place/person/thing information</a></strong></dl>
-            <pre>
+            <pre><code class="language-css">
                 GET https://url/v1/search_place
                 header {
                   Authorization: {Bearer "API_KEY_TOKEN"},
@@ -154,7 +154,7 @@
                     //business-2
                   },
                 }
-            </pre>
+              </code></pre>
 
             <h3 id="database">4. Databases</h3>
             <dl><strong><a href="/System_Design/Concepts/Databases/SQL_vs_NoSQL.html">We will use SQL, not noSQL?</a></strong></dl>
@@ -168,7 +168,7 @@
             </p>
 
             <dt><strong>1. Place table (indexing for faster searching)</strong></dt>
-            <pre>
+            <pre><code class="language-css">
 | ownerID(fk)[indexed] | lattitude | longitude | placeID(pk) | Description | categoryId(fk) | lastupdated_timestamp[indexed] |
 
 ownerID: id of person who created the entry
@@ -179,47 +179,47 @@ placeID(8 bytes): Uniquely identifies a location. LocationId is taken 8 bytes(64
     - 2<sup>64</sup> = Huge number of locations
 Description(512 bytes)
 Category(1 byte): E.g., coffee shop, restaurant, theater, etc.                
-            </pre>
+            </code></pre>
 
             <dt><strong>2. Place_owner table</strong></dt>
-            <pre>
+            <pre><code class="language-css">
 | ownerID(pk) | name | email | secret_key | placeID(fk) | created_timestamp |
 
 placeId: locations this owner owns
 created_timestamp: profile created by owner at this time                
-            </pre>
+            </code></pre>
 
             <dt><strong>3. Reviews table</strong></dt>
-            <pre>
+            <pre><code class="language-css">
 | review_id(pk) | creator_name | creator_email | review_description | placeID(fk) | created_timestamp |           
-            </pre>
+            </code></pre>
 
             <dt><strong>4. Place Photo table</strong></dt>
             <p>photos stored on object store</p>
-            <pre>
+            <pre><code class="language-css">
 | photo_id(pk) | active | photo_url | placeID(fk) | created_timestamp | marked_inactive_timestamp |
 
 active: Is photo active on website, ie getting displayed. We will remove photo from db
     after 30 days, if marks inactive
 photo_url:
-            </pre>
+            </code></pre>
 
             <dt><strong>5. Place video table</strong></dt>
             <p>videos stored on object store</p>
 
             <dt><strong>6. Reviews table</strong></dt>
             <p>Reviews stored on object store</p>
-            <pre>
+            <pre><code class="language-css">
 | reviewId(pk) | review-text-url | placeid(fk) | stars |
-            </pre>
+            </code></pre>
 
             <dt><strong>7. Category Table</strong></dt>
-            <pre>
+            <pre><code class="language-css">
 | categoryId(pk) | Category-text |
 
 Benefits of keeping seperate Category table:
 - Add/update category without affecting place table
-            </pre>
+            </code></pre>
 
             <dl id="partitioning"><strong>4.2 DB Scaling and Partitioning</strong></dl>
             <dt><u>Why we need DB Scaling?</u><br>
@@ -247,7 +247,9 @@ Benefits of keeping seperate Category table:
               - System will have Huge data. We assumed 200-300M entries.<br>
               - Now if someone want to get nearby places(within 10km), We need to perform following query on each entry of database
               (long-10 and long+10) and (lat-10 and lat+10)<br>
-              - Scanning the entire table and checking if it meets both criteria can be very time-consuming and expensive.
+              - Scanning the entire table and checking if it meets both criteria can be very time-consuming and expensive.<br>
+              - DB should store region specific data. DB-1(store Europe(Germany)), DB-2(store India(Delhi)) data.<br>
+              - Service instances should run on specific AWS regions, which will update/query data from local DB.
             </p>
 
             <dt><strong>2 ways in which Databases can be arranged</strong></dt>
@@ -291,7 +293,7 @@ Benefits of keeping seperate Category table:
               break it down into 4 dbs and distribute places b/w them.<br>
               - Thickly populated areas like San Francisco will have a lot of grids.
             </dt>
-            <pre>
+            <pre><code class="language-css">
               Quad Tree
                 [root]
                / | \ \
@@ -302,7 +304,7 @@ Benefits of keeping seperate Category table:
          double longitude-start,longitude-end;
          struct grid *child[4];
        }                
-            </pre>
+            </code></pre>
 
           <dl><strong><a href="#req1">Req-1: Add_place</a></strong></dl>
           <dt><b>
@@ -384,5 +386,6 @@ Benefits of keeping seperate Category table:
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
   </script>	
+  <script src="/scripts/prism.js"></script>
 </body>
 </html>

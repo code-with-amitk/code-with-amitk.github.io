@@ -357,31 +357,35 @@ class Neuron:
             </tr>
         </table>
         <pre><code class="language-css">
-            /////////// 2-D Tensor //////////////
-            Shape: (2,3)
-            Dimension/Rank/Axis/Ndim: 2
-                    | 1,2,3 |
-                    | 4,5,6 |
+            import numpy as np
+            ########## 2-D Tensor ###########
+            b = np.array(
+                [
+                    [0, 1, 2, 3],
+                    [4, 5, 6, 7],
+                    [8, 9, 10, 11],
+                ]
+            )
+            print("Dimension/Ndim:", b.ndim)        # 2         //2d array
+            print("Shape:", b.shape)                # (3, 4)    //(row,col)
             
-            /////////// 3-D Tensor example. Packing 2-D matrices //////////////
-            Shape: (3,3,5)
-            Dimension/Rank/Axis/Ndim: 3
-            
-            >> x = np.array([[
-                                  [5, 78, 2, 34, 0],
-                                  [6, 79, 3, 35, 1],
-                                  [7, 80, 4, 36, 2]
-                             ],
-                             [
-                                  [5, 78, 2, 34, 0],
-                                  [6, 79, 3, 35, 1],
-                                  [7, 80, 4, 36, 2]
-                             ],
-                             [
-                                  [5, 78, 2, 34, 0],
-                                  [6, 79, 3, 35, 1],
-                                  [7, 80, 4, 36, 2]
-                            ]])
+            ########## 3-D Tensor, Packing 2-D matrices ###########
+            c = np.array(
+                [
+                    [
+                        [0, 1, 2],
+                        [4, 5, 6],
+                        [8, 9, 10],
+                    ],
+                    [
+                        [10, 11, 12],
+                        [14, 15, 16],
+                        [18, 19, 110],
+                    ]
+                ]
+            )
+            print("Dimension/Ndim:", c.ndim)    # 3         //3d array
+            print("Shape:", c.shape)            # (2,3,3)   //(2=arrays, 3=row, 3=col)
             </code></pre>
 
         <h4>Tensor Terms</h4>
