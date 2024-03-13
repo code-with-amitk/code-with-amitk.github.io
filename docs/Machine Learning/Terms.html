@@ -73,9 +73,35 @@
         </table>
 
         <h3 id="ActivationFunction">Activation Function</h3>
-        <dl>Without an activation function(eg: relu, softmax), 
-            <a href="#layer">Dense layer</a> would always perform linear operations
-            (a dot product, an addition) on input tensors.</dl>
+        <dl><strong>Relu?</strong></dl>
+        <dt>Relu is operation carried on 2D Tensor.</dt>
+        <pre><code class="language-css">
+def relu(x):     #Means max(x,0)
+    if (element < 0)
+        Replace with 0
+    else
+        Keep element as it is
+
+def naive_relu(x):                      #x is 2D Tensor
+    assert len(x.shape) == 2
+
+    x = x.copy()                        #copy to avoid changing input
+    for i in range(x.shape[0]):         #x.shape[0]=2
+        for j in range(x.shape[1]):     #x.shape[1]=3
+            x[i, j] = max(x[i, j], 0)
+return x            
+
+a = np.array([              #Dimension=2. Shape(2,3)
+            [0, 1, -2],
+            [4, 5, -6],
+        ])
+b = naive_relu(a)
+print(b)
+[[0 1 0]
+ [4 5 0]]
+
+        </code></pre>
+
         <dl>Adding activation function to a layer introduces non-linearity into the model, 
             allowing it to learn more complex relationships between the input and output data</dl>
         <dl>Non-linear activation functions such as ReLU, Sigmoid, and Tanh can help the 
@@ -279,7 +305,7 @@ array([[1., 0., 0.],                //represents 0
         <dd>Neurons receive input signals, and each input is associated with a weight. 
             These weights represent the strength of the connection between the input and the neuron. 
         </dd>
-        <pre><code>
+        <pre><code class="language-css">
 class Neuron:
     def __init__(self, num_inputs):
         self.weights = initialize_weights(num_inputs)
@@ -308,7 +334,7 @@ class Neuron:
         <h4>Types of Tensors</h4>
         <table>
             <tr>
-                <th>Dimension/Rank/Axis/Ndim</th>
+                <th>Dimension/Rank<br>/Axis/Ndim</th>
                 <th>Name</th>
                 <th>Representation</th>
                 <th>Examples</th>
@@ -334,7 +360,10 @@ class Neuron:
             <tr>
                 <td>2</td>
                 <td>Matrix / 2D Tensor</td>
-                <td>{{1,2,3},{4,5,6}}</td>
+                <td><pre><code class="language-css">
+| 1 2 3 |
+| 4 5 6 |
+                </code></pre></td>
                 <td>samples</td>
                 <td>(2,3)</td>
                 <td>Dense Layer</td>
@@ -342,7 +371,15 @@ class Neuron:
             <tr>
                 <td>3</td>
                 <td>3D Tensor</td>
-                <td>{{{1,2,3},{4,5,6}},{{1,2,3},{4,5,6}}}</td>
+                <td><pre><code class="language-css">
+[
+    | 1 2 3 |
+    | 4 5 6 |,
+
+    | 1 2 3 |
+    | 4 5 6 |
+]
+                </code></pre></td>
                 <td>Timestamped data</td>
                 <td>(2,2,3)</td>
                 <td>Recurrent layers(eg: LSTM layer)</td>
@@ -386,6 +423,12 @@ class Neuron:
             )
             print("Dimension/Ndim:", c.ndim)    # 3         //3d array
             print("Shape:", c.shape)            # (2,3,3)   //(2=arrays, 3=row, 3=col)
+
+            ####### Operations ############
+                #all,row,col
+            d = c[:, 2:, 2:]            # Select all elements 2nd(row), 2nd(col) onwards.
+            print(d)                    #   [[[ 10]]  [[110]]]
+
             </code></pre>
 
         <h4>Tensor Terms</h4>
