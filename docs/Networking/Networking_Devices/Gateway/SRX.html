@@ -3,6 +3,7 @@
 <head>
     <title>Gateway</title>
     <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
@@ -53,7 +54,7 @@
             <p>Authentication table contains the IP addresses of active users. Each entry contains:<br>
                     username, device IP(from where logged in), domainname, groups.
             </p>
-            <code><pre>
+            <pre><code class="language-css">
                 1. On qa-central or dav-central.
                 $ get_vsrx_tanant <tanent-id>
                   TenantPop: uuid1
@@ -80,7 +81,7 @@
                     state: Valid
                     timestamp:
                     age: 150
-            </pre></code>
+            </code></pre>
 
             <dl id="commands"><strong>Commands</strong></dl>
             <dd>IP Addresses</dd>
@@ -90,7 +91,7 @@
             </pre>
 
             <dd>JIMS Configuration</dd>
-            <pre>
+            <pre><code class="language-css">
               root# cli
               root> edit
 
@@ -125,10 +126,10 @@
               root# commit
               root# set services user-identification identity-maangement connection primary client-secret test
               root# commit
-            </pre>
+            </code></pre>
 
             <dd>Logging</dd>
-            <pre>
+            <pre><code class="language-css">
               exit
               exit
               > configure
@@ -151,10 +152,10 @@
               show log jims-query.log
               or
               goto shell prompt and open /var/log/jims-query.log
-            </pre>
+            </code></pre>
 
             <dd>Counters, Status</dd>
-            <pre>
+            <pre><code class="language-css">
               # run show services user-identification identity-management counters
               # run show services user-identification identity-management status
                           Primary server :
@@ -180,7 +181,7 @@
                           Last received status message : OK (200)
                           Access token                 : <>
                           Token expire time            : 2022-01-31 16:22:19
-            </pre>
+                  </code></pre>
 
             <dd>Reboot</dd>
             <pre>
@@ -282,5 +283,6 @@
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
     </script>
+    <script src="/scripts/prism.js"></script>
 </body>
 </html>
