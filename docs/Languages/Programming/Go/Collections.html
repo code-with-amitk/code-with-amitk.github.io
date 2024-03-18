@@ -56,67 +56,75 @@ func main() {
 
         <h5>Declaration</h5>
         <pre><code class="language-css">
-            package main
-            func main() {
-            
-              var arr []int                       //Empty vector
-              slice := make([]int, 5)             //Slice size=5
+var arr []int                       //Empty vector
+slice := make([]int, 5)             //Slice size=5
         </code></pre>
 
         <h5>Initilization</h5>
         <pre><code class="language-css">
-              arr := []int {1,2,3,4,5,6}        //Length=6. number of elements provided
-              for i:=0; i&lt;5; i++ {
-                slice[i] = 0;
-              }
+arr := []int {1,2,3,4,5,6}        //Length=6. number of elements provided
+for i:=0; i&lt;5; i++ {
+    slice[i] = 0;
+}
         </code></pre>
             
         <h5>Modification</h5>
         <dt>Changing elements of a slice modifies the corresponding elements of its underlying array</dt>
         <pre><code class="language-css">        
-              slc[0] = 899
-              fmt.Println(arr[1])             //899
+slc[0] = 899
+fmt.Println(arr[1])             //899
         </code></pre>
             
         <h5>Length, Capacity</h5>
         <pre><code class="language-css">         
-            // length: no of elements slice contains
-            // capacity: no of elements in underlying array
-              fmt.Println(len(slc),cap(slc))  //3 5
+// length: no of elements slice contains
+// capacity: no of elements in underlying array
+    fmt.Println(len(slc),cap(slc))  //3 5
         </code></pre>    
 
         <h5>Nil Slice</h5>
         <pre><code class="language-css">
-              var nilSlc[]int
-              fmt.Println(len(nilSlc), cap(nilSlc))   //0 0
+var nilSlc[]int
+fmt.Println(len(nilSlc), cap(nilSlc))   //0 0
         </code></pre>
             
         <h5>ReSlice</h5>
         <pre><code class="language-css">        
-            //Slice the Slice's length to new length
-                slc1 := []int{10,20,30,40,50}
-                slc1 = slc1[:0]
-                fmt.Println(slc1)                       //[]
-                slc1 = slc1[:4]
-                fmt.Println(slc1)                       //[10,20,30,40]
-                slc1 = slc1[2:]
-                fmt.Println(slc1)                       //[30,40]
+//Slice the Slice's length to new length
+slc1 := []int{10,20,30,40,50}
+slc1 = slc1[:0]
+fmt.Println(slc1)                       //[]
+slc1 = slc1[:4]
+fmt.Println(slc1)                       //[10,20,30,40]
+slc1 = slc1[2:]
+fmt.Println(slc1)                       //[30,40]
         </code></pre>
             
         <h5>Make Slice</h5>
         <pre><code class="language-css">          
-            // make() allocates a zeroed array and returns a slice that refers to that array
-                slc2 :=make([]int, 5)                   //[0 0 0 0 0]
-                fmt.Println(slc2)
+// make() allocates a zeroed array and returns a slice that refers to that array
+slc2 :=make([]int, 5)                   //[0 0 0 0 0]
+fmt.Println(slc2)
         </code></pre>
             
-        <h5>Append to Slice</h5>
+        <h5>Append</h5>
         <pre><code class="language-css"> 
-            //append(slice, element). Append new element to slice
-                slc3 := []int{10,20,30,40,50}           //[10 20 30 40 50 60]
-                slc3 = append(slc3,60)
-                fmt.Println(slc3)
-            }            
+//append(slice, element). Append new element to slice
+slc3 := []int{10,20,30,40,50}           //[10 20 30 40 50 60]
+slc3 = append(slc3,60)
+fmt.Println(slc3)    
+        </code></pre>
+
+        <h5>Sort</h5>
+        <pre><code class="language-css"> 
+v := []int
+sort.Ints(v)
+
+// sort [][]
+v = :[][]
+sort.Slice(v, func(i, j int) bool {
+    return v[i][0] < v[j][0]
+})
         </code></pre>
 
         </article>
