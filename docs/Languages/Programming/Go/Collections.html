@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>collections</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#arrays">Arrays</a>
+            <a href="#channels">Channels</a>
+            <a href="#slices">Slice</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+        <h3>Collections in Go</h3>
+        <dt>go library provides built-in collection types to handle different data structures.</dt>
+        
+        <h4 id="arrays">Arrays</h4>
+        <dt>An array in Go is a fixed-size collection of elements of the same type. 
+            Once you define the size of an array, it cannot be changed</dt>
+        <pre><code class="language-css">
+func main() {
+    arr := [6]int{1,2,3,4,5,6}    //[n values] type {}
+    var len = len(arr);
+}
+        </code></pre>
+
+        <h4 id="channels">Channels</h4>
+        <dt>Communication and synchronization between goroutines=Tasks in Rust (concurrently executing functions). 
+            They provide a way to send and receive data safely between goroutines</dt>
+
+        <h4 id="slices">Slices [] (Dynamic Array) = C++(vector`<int>`) = Rust(vec`<i32>`)</h4>
+        <dt>A slice represents a view of contiguous sequence of elements in memory<br>
+            Slice contains 3 components:<br>
+            1. Pointer to underlying array: A slice holds a reference to the underlying array that stores the elements.<br>
+            2. Length: number of elements in slice.<br>
+            3. Capacity: maximum number of elements it can hold
+        </dt>
+
+        <h5>Declaration</h5>
+        <pre><code class="language-css">
+            package main
+            func main() {
+            
+              var arr []int                       //Empty vector
+              slice := make([]int, 5)             //Slice size=5
+        </code></pre>
+
+        <h5>Initilization</h5>
+        <pre><code class="language-css">
+              arr := []int {1,2,3,4,5,6}        //Length=6. number of elements provided
+              for i:=0; i&lt;5; i++ {
+                slice[i] = 0;
+              }
+        </code></pre>
+            
+        <h5>Modification</h5>
+        <dt>Changing elements of a slice modifies the corresponding elements of its underlying array</dt>
+        <pre><code class="language-css">        
+              slc[0] = 899
+              fmt.Println(arr[1])             //899
+        </code></pre>
+            
+        <h5>Length, Capacity</h5>
+        <pre><code class="language-css">         
+            // length: no of elements slice contains
+            // capacity: no of elements in underlying array
+              fmt.Println(len(slc),cap(slc))  //3 5
+        </code></pre>    
+
+        <h5>Nil Slice</h5>
+        <pre><code class="language-css">
+              var nilSlc[]int
+              fmt.Println(len(nilSlc), cap(nilSlc))   //0 0
+        </code></pre>
+            
+        <h5>ReSlice</h5>
+        <pre><code class="language-css">        
+            //Slice the Slice's length to new length
+                slc1 := []int{10,20,30,40,50}
+                slc1 = slc1[:0]
+                fmt.Println(slc1)                       //[]
+                slc1 = slc1[:4]
+                fmt.Println(slc1)                       //[10,20,30,40]
+                slc1 = slc1[2:]
+                fmt.Println(slc1)                       //[30,40]
+        </code></pre>
+            
+        <h5>Make Slice</h5>
+        <pre><code class="language-css">          
+            // make() allocates a zeroed array and returns a slice that refers to that array
+                slc2 :=make([]int, 5)                   //[0 0 0 0 0]
+                fmt.Println(slc2)
+        </code></pre>
+            
+        <h5>Append to Slice</h5>
+        <pre><code class="language-css"> 
+            //append(slice, element). Append new element to slice
+                slc3 := []int{10,20,30,40,50}           //[10 20 30 40 50 60]
+                slc3 = append(slc3,60)
+                fmt.Println(slc3)
+            }            
+        </code></pre>
+
+        </article>
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
