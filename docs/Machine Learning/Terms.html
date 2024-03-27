@@ -80,7 +80,9 @@
         <dl><strong>Relu?</strong></dl>
         <dt>Relu is operation carried on 2D Tensor. if value is less than 0, Take 0 else take the original value</dt>
         <pre><code class="language-css">
-def relu(x):     #Means max(x,0)
+#Means max(x,0)
+
+def relu(x):     
     if (element < 0)
         Replace with 0
     else
@@ -438,6 +440,9 @@ class Neuron:
             <h4>Tensor Operations</h4>
             <dl id="add_vector_matrix"><strong>Add vector(dimension=1) + matrix(dimension=2)</strong></dl>
             <pre><code class="language-css">
+|1 2 3| + | 1 2 3 | = |2 4 6|
+          | 4 5 6 |   |5 7 9|
+
 import numpy as np
 def naive_add_matrix_and_vector(x, y):
     assert len(x.shape) == 2
@@ -468,15 +473,13 @@ print(z)
             <dl id="tensor_dot"><strong>Dot Product (.) </strong></dl>
             <table>
                 <tr>
-                    <td>Dot Product</td>
-                    <td>Example</td>
-                    <td>Result</td>
+                    <td>2 Vectors = Scalar</td>
+                    <td>Vectors(1D).Matrix(2D) = vector</td>
                 </tr>
                 <tr>
-                    <td>2 Vectors</td>
                     <td>
                         <pre><code class="language-css">
-# [1,2,3].[2,3,4] = 20.0 (1*2+2*3+3*4)
+[1,2,3].[2,3,4] = 1*2+2*3+3*4 = 20.0
 
 import numpy as np
 def naive_vector_dot(x, y):
@@ -491,13 +494,21 @@ z = naive_vector_dot(x, y)
 print(z)        #20.0    
                         </code></pre>
                     </td>
-                    <td>Scalar</td>
-                </tr>
-                <tr>
-                    <td>Matrix(2D) & Vector(1D) </td>
+
                     <td>
                         <pre><code class="language-css">
-
+| 1 2 3 | . | 1 2 3 | = 
+            | 4 5 6 |
+import numpy as np
+def naive_matrix_vector_dot(x, y):
+    assert len(x.shape) == 2
+    assert len(y.shape) == 1
+    assert x.shape[1] == y.shape[0]
+    z = np.zeros(x.shape[0])
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            z[i] += x[i, j] * y[j]
+    return z
                         </code></pre>
                     </td>
                 </tr>
