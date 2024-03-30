@@ -18,10 +18,12 @@ body, h1, p, ul, li {
   }
   
   h1 {
+    font-family: 'Rakkas';
     font-size: 24px;
     margin-bottom: 10px;
   }
   h2 {
+    font-family: 'Rakkas';
     font-size: 18px;
     margin-bottom: 10px;
     color: brown;
@@ -29,7 +31,7 @@ body, h1, p, ul, li {
   h3 {
     font-size: 15px;
     margin-bottom: 10px;
-    color:darkgreen;
+    color:royalblue;
   }
   h4 {
     font-size: 13px;
@@ -170,22 +172,26 @@ summary {
 }
 /* sidebar end*/
 dl {
+  font-family: 'Poppins';
   margin-left: 16px;
   margin-top: 0;
-  font-size: 12px;
+  font-size: 13px;
 }
 dt {
+  font-family: 'Poppins';
   margin-left: 20px;
   margin-top: 10px;
-  font-size: 11px;
+  font-size: 12px;
 }
 dd {
+  font-family: 'Poppins';
   margin-left: 24px;
   margin-bottom: 10px;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 p {
+  font-family: 'Poppins';
   margin-left: 24px;
   margin-bottom: 10px;
   font-size: 10px;

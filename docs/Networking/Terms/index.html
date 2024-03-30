@@ -39,8 +39,10 @@
 
     <div style="margin-left:200px;">
         <h3 id="capportal">Captive Portal</h3>
-            <p>A captive portal is a web page that users must interact with before accessing a public network. 
-                It's often used by public venues that offer free Wi-Fi, such as airports, hotels, and coffee shops</p>
+            <dd>
+                captive portal is a web page that users must interact with before accessing a public network. 
+                It's often used by public venues that offer free Wi-Fi, such as airports, hotels, and coffee shops
+            </dd>
 
         <h3 id="whycloud">Why Cloud?</h3>
         <dt>
@@ -53,30 +55,29 @@
 
         <h3 id="gartner">Gartner Given Terms</h3>
         <h4 id="magicquadrant">Gartner Magic Quadrant</h4>
-        <dl>
+        <dd>
             The Gartner Magic Quadrant is a research report that helps identify and assess the top 10-12 players in a specific global market<br>
             It provides a visual representation of different types of technology providers and their position in fast-growing markets.
-        </dl>
+        </dd>
 
         <h4 id="sase">SASE(Secure Access Service Edge)</h4>
-        <dl><strong>What is SASE?</strong></dl>
-        <p>
-            - Gartner gave SASE term in year 2019 to define networking and security capabilities into a single service sitting on cloud.<br>
-            - Providing network security at wide-area networking (WAN) delivered as a cloud service.<br>
+        <dd>
+            - Gartner gave SASE term in year 2019 to define networking and security capabilities into a single service sitting on cloud.
+            Providing network security at wide-area networking (WAN) delivered as a cloud service.<br>
             - All users in branch office, home, roaming(airport) if he want to access any of cloud service()
             he will go thru SASE.<br>
             - Examples: 
             <a href="https://www.juniper.net/us/en/products/security/secure-edge.html">Juniper Secure Edge</a>, 
             <a href="https://www.zscaler.com/capabilities/secure-access-service-edge">ZScaler Zero Trust SASE</a>, 
             <a href="https://umbrella.cisco.com/info/package-comparison-and-consultation?utm_medium=search-paid&utm_source=google&utm_campaign=UMB_APJC_IN_EN_GSR_Branded_Cisco&utm_content=SIG-FY24-Q1-Umbrella-Content-product-package-comparison-download&_bt=688783193249&_bk=cisco%20umbrella&_bm=e&_bn=g&_bg=161647957401&gad_source=1&gclid=CjwKCAiAuNGuBhAkEiwAGId4aq-70lW7FCphZ340rHY8UAGdU8NGcOoKYSPv_iAVJWU_HOuJjxaQJhoCYyEQAvD_BwE">Cisco Umbrella</a>
-        </p>
+        </dd>
 
         <dl><strong>Example</strong></dl>
-        <p>
-        - Consider a multinational corporation(HCL Tech) with branch offices across different regions.<br>
-        - Each office requires secure access to the corporate network and cloud-based applications.<br>
+        <dd>
+        - Consider a multinational corporation(HCL Tech) with branch offices across different regions.
+        Each office requires secure access to the corporate network and cloud-based applications.<br>
         - With SASE, security and all services delivered from cloud, allowing employees to securely connect to the corporate network and cloud applications from any location using a unified and consistent security policy
-        </p>
+        </dd>
 
         <table>
             <tr>
@@ -86,6 +87,7 @@
             <tr>
                 <td>
                     <b>Challenges: How can change my Network when?</b><br>
+                    <dd>
                     - All applications(salesforce, office365) are moving to cloud<br>
                     - More users are moving out of office(WFH, Roaming, BYOD(bring your own device))<br>
                     - Companies have central HQ, where branch offices connect via WAN, home users via VPN(but also connecting to cloud directly)<br>
@@ -93,6 +95,7 @@
                     <img 
                     src="//www.plantuml.com/plantuml/png/NP5FQ-Cm4CNl-XHpt0KdbsLx2AN4-HDIIEDGquPYzw38uqJKbinetE9lNqbE8VIed_JUl7cQEvR4VTk8Oa7Ig0jajNe7wU0q7aMnNQSho3PBA4rfuFMmJtQBP7CSZtc-IrQxG_9uoAFgWh8InRhj6ZiWHeHj9uedUz8D_aarTPRuhnS_MzbgSuONXnJVjV69p_6MhVpzYSBjO7igZVqoKE6dLZX66wmVicniNq6E5BYxnf4DkjgImYIhQy__tVqlJTfrZLQIjJKk6gWW5S9OHY1zlZ3OUeo-jOuTv2pLHs0ELK-Q1v31mXU2RYOcq95NAeRU8JceoRQW3ICPP86cWc0inBN1oIHQmmoEwLwCMzv0NwW82_r2lhKRuZHpg4CRdqg9IE-dquUVJUP-gl_4Rm00"
                     alt="sase" style="width:350px;height:400px;">
+                    </dd>
                     <pre class="puml" visibility: hidden>
                         @startuml
                         [Branch Ofc] as branch 
@@ -118,6 +121,7 @@
                 </td>
                 <td>
                     <b>Solving the Challenges</b><br>
+                    <dd>
                     - All traffic(WFH, Office, Roaming) will go thru SASE<br>
                     - All security policies are applied, a single n/w stack is provided
                     <br><br>
@@ -125,8 +129,9 @@
                     - Uplevel my security<br>
                     - Simplify my N/w(as devices for VPN,LB,FW,SSL,DLP,IPS sitting in HQ) can be removed<br>
                     - Branch office to HQ WAN not needed this Saves Million of $<br>
+                    </dd>
                     <img 
-                    src="//www.plantuml.com/plantuml/png/VL9DJzj04BtFhnYb5qU2GmAddd0IYYfLnDAMeZRXCDbTpChExdQz3Z8L_xtxuKZGg1oycddlURwlEa_Ez_iMkaPfIuxsoCtU6YsrPtve9Jh9FUcwbR0fRdzExnWk76d-X5jzjDQF_06fGpq0SMySJXPcjzL5gPmrpaydaToP7NvoKi1cwxU-l6SXG0XHMjigJbuPtPtXYZobKFJSZSANticFfL6HnJVBwaDfpIq0yDRq0ly0RhJq3_3w7fYT8FCJvE84kOm8ME8DrH8dh6JN1PFkeBX4et4PjTD9LEDc6MOh7HPtR9gguiaFZ3OY_5iPfRrvh9pifEPZxzMwcc7nGxbQQKLJ3D0OlllyXOYTOTdtB0tQ6ZjBYKAgrRSgfH2jpS2lxxTbGbwyfWon-vk4TCzr1fObM-J2gDi5w3KM7GgOOt7TEsDbB3lbcSUcSzNhnbDHzlu9AsSEIaYNrsuQU7DRWZpjg9CBuatjJA_5qhJ6OVcx9pYIE2cvLmU9A-LalAUX-2h2Z9GV_WbE0Y1F3y_FK-FltJa0YMY73K7uefa5O9eHdq5ytZ0GVnp9UIIJ4-ytz3gCn2N49pffIF3VZMVv1SGdEl6mZtQ-tACNZ_DAQj7lsxy0"
+                    src="//www.plantuml.com/plantuml/png/VPB1Rjim38RlV0eYkzX0UqZQqqvrqguOCBG6jAxOaXmOMKs5E9GdqodIeUy-IrQ7jC5wY41-_nzIeddH2ddfjZMq6yiDUTgYTjl6iM5HigyDUgE5U5qRc6StF_CxXLDFh1znmQ_HxODU8hN8Uo0jpkDewbOBpWhh6-Sb7mLnvLRuoPiAvWjPI76l-W9zYQ9fQgj9hEFs12z9A9QYfpOPdpjlFhO6ns2-dfKVMjUw0G1Tkwx2Fu1pDhA4bxTWV4GcH-JiY9m70lzcXIDLgAjC6R-psg1Zd0LtFWf-dCyCY_6OtQaytal7l5SE2fJEihY7qflMi4uZA6_BCMO_h5zRjfHZZrAFzlCN8dM2HTUfEE_6DUFOhUzt-QsCVQgw6S2lxpT59C_2D21rVnr9-xGUmAnGqqWqjQiUlOIRznUOO7RLUTUOV9dwJDwz_NOZb1MTF6BftSvMnWyhu3Pmi6SL2QseDLFIcxLt7LSpLpkFnU-Eu5N4KQ75xWnUsj30-NtsjJ8iLlRlYbC5CCmHJq_Zwz-c4m2gGin6eF-5CCtTRH8VGpWE50X_JE8aY349kmp0-oISGpX24YS5__lsoNu6uGX9MF8KforEMLpK2yDLjwt_0W00"
                     alt="sase" style="width:500px;height:400px;">
                     <pre class="puml" visibility: hidden>
                         @startuml
@@ -154,9 +159,9 @@
                          [net4]
                         }
                         
-                        package "SASE(Service on Cloud)" {
+                        rectangle "SASE(Service on Cloud)" {
                           [Center (US)] as center
-                          node "PointofPresence \n\n POP1 (Virginia) \n Services:FaaS, AuuS" as pop1 {
+                          rectangle "PointofPresence \n\n POP1 (Virginia) \n Services:FaaS, AuuS" as pop1 {
                             [DLP] as dlp
                             [ZTNA] as ztna
                             [SWG] as swg
@@ -165,7 +170,7 @@
                           [POP2 (Europe)] as pop2
                         }
                         
-                        node "Okta(Auth Provider)" as ok
+                        rectangle "Okta(Auth Provider)" as ok
                         
                         skinparam databaseBackgroundColor Aqua
                         database "Active Directory(Identity Provider)" as ad
@@ -195,18 +200,19 @@
         </table>
 
         <h4 id="sdwan">SD-WAN (Software-Defined Wide Area Network)</h4>
-        <p><b>What?</b><br>
+        <dd>
+        <b>What?</b><br>
             - Helps organizations to connect branch offices, central office(HQ), Services on cloud in fast, cost effective way<br>
             - Uses <a href="#sdn">SDN(software defined network)</a> to separate hardware and control mechanisms.
-        </p>
-        <p>
+        </dd>
+        <dd>
             <b>Example</b><br> 
             - Consider a retail chain(Relaince) with numerous branch offices across the country. <br>
             - Each branch office(store) requires reliable connectivity to Central or HQ services(eg: DB) to POS devices.<br>
             - 1 solution is to use <a href="/Networking/OSI-Layers/Layer-2.5/mpls.html">MPLS</a> for connectivity 
             between stores and headquarters(But this is expensive), other is SD-WAN.<br>
             - With SD-WAN retail chain achieves cost savings, improved application performance
-        </p>
+        </dd>
         <img src="/images/sd-wan.PNG" alt="sdwan" style="width:500px;height:300px;">
 
         <h4 id="sse">SSE (Secure Service Edge)</h4>
