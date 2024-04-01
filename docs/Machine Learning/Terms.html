@@ -344,7 +344,7 @@ class Neuron:
                 <th>Name</th>
                 <th>Representation</th>
                 <th>Examples</th>
-                <th>Shape(Rows,cols)</th>
+                <th>Shape(Rows,cols)<br>Represents Number of elements in each direction</th>
                 <th>Processed By (Keras)</th>
             </tr>
             <tr>
@@ -360,7 +360,7 @@ class Neuron:
                 <td>vector</td>
                 <td>[1,2,3,4]</td>
                 <td></td>
-                <td>(4)</td>
+                <td>(4) <br>//Since 4 elements in 1 direction</td>
                 <td></td>
             </tr>
             <tr>
@@ -371,7 +371,7 @@ class Neuron:
 | 4 5 6 |
                 </code></pre></td>
                 <td>samples</td>
-                <td>(2,3)</td>
+                <td>(2,3) <br>//Since 2 elements in 1 direction & 3 in other</td>
                 <td>Dense Layer</td>
             </tr>
             <tr>
@@ -445,8 +445,8 @@ class Neuron:
 
 import numpy as np
 def naive_add_matrix_and_vector(x, y):
-    assert len(x.shape) == 2
-    assert len(y.shape) == 1
+    assert len(x.shape) == 2    #Matrix
+    assert len(y.shape) == 1    #vector
     assert x.shape[1] == y.shape[0]
 
     x = x.copy()
@@ -497,18 +497,28 @@ print(z)        #20.0
 
                     <td>
                         <pre><code class="language-css">
-| 1 2 3 | . | 1 2 3 | = 
+| 1 2 3 | . | 1 2 3 | = |1x1 + 2x2 + 3x3 , 1x4 + 2x5 + 3x6| = |13.0, 32.0|
             | 4 5 6 |
 import numpy as np
 def naive_matrix_vector_dot(x, y):
-    assert len(x.shape) == 2
-    assert len(y.shape) == 1
+    assert len(x.shape) == 2    #matrix
+    assert len(y.shape) == 1    #vector
     assert x.shape[1] == y.shape[0]
     z = np.zeros(x.shape[0])
     for i in range(x.shape[0]):
         for j in range(x.shape[1]):
             z[i] += x[i, j] * y[j]
     return z
+
+y = np.array([1,2,3])       #y.shape = (3)
+x = np.array(               #x.shape = (2,3) 
+                [
+                    [1,2,3],
+                    [4,5,6]
+                ]
+            )
+print(naive_matrix_vector_dot(x,y))
+[14. 32.]
                         </code></pre>
                     </td>
                 </tr>
