@@ -208,3 +208,8 @@ a:link {
   color:blue
 }
 /*a start*/
+
+aside {
+  font-family: 'Poppins';
+  font-size: 10px;
+}
