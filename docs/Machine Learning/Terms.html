@@ -194,13 +194,71 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         </table>
 
         <h3 id="learningtypes">Learning Types</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>Supervised Learning</th>
+                <th>Unsupervised Learning</th>
+                <th>Semisupervised Learning</th>
+                <th>Reinforcement learning</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Training data feed to the algorithm includes the desired solutions(called labels)</td>
+                <td>Dataset does not have labels. ML model tries to learn without teacher.</td>
+                <td>lot of unlabeled data and a little bit of labeled data</td>
+                <td>Agent(AI Program) can observe the environment, <br>select and perform actions, and get rewards in return</td>
+            </tr>
+            <tr>
+                <td>Types</td>
+                <td>
+                    <u>1. Classification (give yes/no):</u><br>
+                    a. Spam Filterning: Algo is trained with many example emails 
+                    along with their class (spam or ham). Each email has a label.<br>
+                    <u>2. Regression: (give % or numeric value):</u><br>
+                    Predict whether based on inputs, Predict price of car provided with some inputs((mileage, age, brand, etc.)<br>
+                    <u>3. Logistic Regression (yes/no with %):</u><br>
+                    Mix of classfication & Regression. Example: 20% of chances being a spam.
+                </td>
+                <td>
+                    <u>1. Clustering</u><br>
+                    <u>2. Visualization and dimensionality reduction</u><br>
+                    With unlabelled data this algorithm provides ouput which can be plotted on 2-D, 3-D plane.<br>
+                    <u>3. Association rule learning:</u><br>
+                    This provides output as relations between attributes.
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Algorithms</td>
+                <td>k-Nearest Neighbors,
+                    Linear Regression,
+                    Logistic Regression,
+                    Support Vector Machines (SVMs),
+                    Decision Trees & Random Forests,
+                    Neural networks
+                </td>
+                <td>
+                    Clustering: k-Means, Hierarchical Cluster Analysis (HCA), Expectation Maximization<br>
+                    Visualization and dimensionality reduction: Principal Component Analysis (PCA), Kernel PCA, 
+                    Locally-Linear Embedding (LLE), t-distributed Stochastic Neighbor Embedding (t-SNE)<br>
+                    Association rule learning: Apriori, Eclat
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
         <h4>A. Supervised Learning</h4>
-        <dl>The training data feed to the algorithm includes the desired solutions(called labels).</dl>
-        <dl>Supervised learning algorithms</dl>
-            <dd>k-Nearest Neighbors, <br>
-                Linear Regression, <br>Logistic Regression, <br>
-                Support Vector Machines (SVMs), <br>Decision Trees & Random Forests, <br>
-                Neural networks</dd>
+        <dl>The training data feed to the algorithm includes the desired solutions(called labels).
+            Supervised learning algorithms:
+        </dl>
+        <dd>k-Nearest Neighbors, <br>
+            Linear Regression, <br>Logistic Regression, <br>
+            Support Vector Machines (SVMs), <br>Decision Trees & Random Forests, <br>
+            Neural networks
+        </dd>
         <dl><strong>Types of Supervised learning</strong></dl>
         <dt><u>1.Classification (give yes/no)</u></dt>
         <dd>a. Spam Filterning: Algo is trained with many example emails along with their class (spam or ham), 

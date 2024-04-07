@@ -52,6 +52,14 @@
             - All application(FaaS, SaaS, Sharepoint, office365) as moving to cloud and organizations want secure, seemless access by all employees(in office, home, branch offices)
             to these applications
         </dt>
+        <br>
+        <dd>
+            Saas(Software as Service): Host S/W on cloud VM. SaaS is accessed using a thin client or by browser. Eg: Gmail, Salesforce, Office 365<br>
+            PaaS(Platform as Service): Provide Dashboard. upload button is provided you can upload your website. Write your code, 
+            Cloud provider will take care of it. Eg: GAE(Google App engine), Heroku, AWS(Elastic Bean stawk)<br>
+            IaaS(Infrastructure as Service): Provide VM. Cloud provider will give access to OS of server/VM, user can 
+            install/remove/do anything on Server. Highest control. Eg: 	AWS, GCP, Azure
+        </dd>
 
         <h3 id="gartner">Gartner Given Terms</h3>
         <h4 id="magicquadrant">Gartner Magic Quadrant</h4>
@@ -227,6 +235,52 @@
             - Allows organization to enforce consistent security policies, inspect and filter internet traffic, and detect and mitigate threats in real-time
         </dt>
         <img src="/images/sse-sdwan-sase.PNG" alt="sse" style="width:500px;height:300px;">
+
+        <h5>CASB, SWG, SASE</h5>
+        <table>
+            <tr>
+                <th></th>
+                <th>CASB(Cloud Access Security Broker)</th>
+                <th>SWG(Secure Web Gateway)</th>
+                <th><a href="#sase">SASE</a></th>
+            </tr>
+            <tr>
+                <td>Subset of SASE</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Purpose</td>
+                <td>Protects applications sitting on cloud<br>(SaaS, IaaS, PaaS)</td>
+                <td>Protects web traffic going to cloud<br> to access applications</td>
+                <td>Networking, Cloud services converged under 1 umbrella</td>
+            </tr>
+            <tr>
+                <td>Features</td>
+                <td>DLP, Access Control</td>
+                <td>SSL Inspection, Malware Detection</td>
+                <td>SWG, SD-WAN, ZTNA, CASB</td>
+            </tr>
+            <tr>
+                <td>Deployment</td>
+                <td>Cloud based(mostly)</td>
+                <td>Cloud & onprem</td>
+                <td>cloud based</td>
+            </tr>
+            <tr>
+                <td>Use Cases</td>
+                <td>
+                    Protecting data in cloud applications<br>
+                    Compliance with regulatory requirements
+                </td>
+                <td>
+                    Securing web browsing for employees<br>
+                    Blocking malicious web content
+                </td>
+                <td></td>
+            </tr>
+        </table>
 
         <h3 id="siem">Security information and event management(SIEM)</h3>
         <dt>This is a Solution that helps organizations recognize and address potential security threats and vulnerabilities.<br>

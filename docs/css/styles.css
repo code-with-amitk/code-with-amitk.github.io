@@ -84,9 +84,11 @@ body, h1, p, ul, li {
 
   /* Table styles Start */
   table {
+    font-family: Poppins;
     border-collapse: collapse;
     /*width: 100%;*/
     border: 1px solid black;
+    font-size: 14px;
   }
 
   /*
