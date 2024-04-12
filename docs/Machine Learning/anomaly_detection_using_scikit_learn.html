@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anomaly Detection using Scikit Learn</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#inout">Inlier, Outliner</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="inout">Inlier, Outliner, Novelty</h3>
+        <dl><strong>Inlier</strong></dl>
+        <dd>
+            New observation belongs to the same distribution as existing observations. No major deviation
+        </dd>
+        <dl><strong>Outliner</strong></dl>
+        <dd>
+            New observation are far from existent observations.
+        </dd>
+
+        <table>
+            <tr>
+                <th></th>
+                <th>Outliners / Unsupervised Anomaly Detection</th>
+                <th>Novelty / semi-supervised anomaly detection</th>
+            </tr>
+            <tr>
+                <td>Traning Data</td>
+                <td>Contains outliners</td>
+                <td>Does not contains outliners</td>
+            </tr>
+            <tr>
+                <td>New/Real time Data</td>
+                <td></td>
+                <td>Detects this data contains outliners</td>
+            </tr>
+            <tr>
+                <td>Density of data</td>
+                <td>Cannot form a dense cluster as available 
+                    estimators assume that the outliers/anomalies are located in low density regions</td>
+                <td>Can form a dense cluster, which is considered as normal in this context.</td>
+            </tr>
+        </table>
+    </article>
+
+</body>
+</html>
