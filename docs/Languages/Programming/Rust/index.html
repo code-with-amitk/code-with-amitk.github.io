@@ -3,6 +3,7 @@
     <head>
         <title>Rust</title>
         <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
         <!-- Add any necessary CSS and JavaScript files -->
     </head>
     <body>
@@ -22,9 +23,81 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#why">Why Rust Over C++</a>
             <a href="install.html">Install Rust</a>
             <a href="Functions.html">Functions(Closure)</a>
         </aside>
 
+        <article style="margin-left:200px;">
+            <h3 id="why">Why Rust Over C++</h3>
+            <h4>Ownership (avoid crash in Rust)</h4>
+            <dd>
+                Variable or data can have single owner at a time. When a value is assigned to a variable, that variable becomes 
+                the owner of the value. When the owner goes out of scope, Rust automatically deallocates the memory used by the value.<br>
+                Ownership rules are checked at compile time.<br>
+                Ownership applies to memory allocated on heap(dynamically),
+                 Eg: String(), vector ie those are moved. For variable allocated on Stack (Eg: int, float) variable is copied.
+            </dd>
+            <dd>
+                In Rust, raw pointers (*const T and *mut T) don't embody ownership semantics directly.
+                However, smart pointers like Box<T>, Rc<T>, and Arc<T> do.<br>
+                - Box<T>: It represents ownership of a heap-allocated value.<br>
+                - Rc<T>: It provides reference counting and allows multiple ownership.<br>
+                - Arc<T>: It's like Rc<T>, but with atomic reference counting, suitable for concurrent access.
+            </dd>
+            <table>
+                <tr>
+                    <td>C++ (Crash in C++)</td>
+                    <td>Rust (No null pointer Exception(Crash) in Rust)</td>
+                </tr>
+                <tr>
+                    <td>    <!--C++-->
+                        <pre><code class="language-css">
+int main() {
+    std::string* s = new std::string("hello");
+
+    // s1 now points to the same memory as s
+    std::string* s1 = s;
+
+    // Deallocate memory through s
+    delete s; 
+
+    // CRASH
+    // Accessing memory through s1 leads to undefined behavior
+    std::cout << *s1; 
+
+    return 0;
+} // Memory pointed to by s1 was 
+// deallocated by delete, but s1 still holds the address
+                        </code></pre> 
+                    </td>
+                    <td>
+                        <pre><code class="language-css">
+fn main() {
+    // Box owns the heap-allocated String
+    let s = Box::new(String::from("hello")); 
+
+    // Ownership transferred to s1
+    let s1 = s; 
+
+    // This line would cause a compilation error in Rust
+    // Error: value borrowed here after move
+    // The ownership of the String was moved to s1, 
+    //so s is no longer valid to use
+    // println!("{}", s);
+
+    // The String is still valid through s1
+    println!("{}", s1);
+} // Box goes out of scope, 
+// and the String is deallocated automatically
+                            
+                        </code></pre>
+                    </td>
+                </tr>
+            </table>
+
+
+        </article>
+        <script src="/scripts/prism.js"></script>
     </body>
 </html>

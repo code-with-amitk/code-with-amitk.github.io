@@ -101,30 +101,38 @@
                     - Companies have central HQ, where branch offices connect via WAN, home users via VPN(but also connecting to cloud directly)<br>
                     - How to do authentication, authorization
                     <img 
-                    src="//www.plantuml.com/plantuml/png/NP5FQ-Cm4CNl-XHpt0KdbsLx2AN4-HDIIEDGquPYzw38uqJKbinetE9lNqbE8VIed_JUl7cQEvR4VTk8Oa7Ig0jajNe7wU0q7aMnNQSho3PBA4rfuFMmJtQBP7CSZtc-IrQxG_9uoAFgWh8InRhj6ZiWHeHj9uedUz8D_aarTPRuhnS_MzbgSuONXnJVjV69p_6MhVpzYSBjO7igZVqoKE6dLZX66wmVicniNq6E5BYxnf4DkjgImYIhQy__tVqlJTfrZLQIjJKk6gWW5S9OHY1zlZ3OUeo-jOuTv2pLHs0ELK-Q1v31mXU2RYOcq95NAeRU8JceoRQW3ICPP86cWc0inBN1oIHQmmoEwLwCMzv0NwW82_r2lhKRuZHpg4CRdqg9IE-dquUVJUP-gl_4Rm00"
+                    src="//www.plantuml.com/plantuml/png/LP31RXGn38RlUGfhJo2n9mI7djgb1v0MTiK89DJf8PFnx4JDs97j58rGtvrDjeBsb7oVPFkthzMyM5cIquT8sOjV8F2IcP2iipKX20RpT4he_lrWinDFOOR353RW5GQ6Fmx01sE13IwvsVFxN-v-7MwXfq4YdM3b8ZtnRu8H7sF0IvELH_VqSigCVWH-dZ5VPi3Tp-Et-oeUCpNkkdrZrTJuTdziFARS-CknQnopDjxlxg5o6Ygc0RPbsugVt7FMhpp4X6zkecGMUmizVMU_rE0_5AMbaUBStQV4POGEfUwWq5DFqFc4Eh44V7UOfhD___53JpSvfnYyHIPjOK8jTOxO42IUPWEUO6RtcTKKElFXeHh5K2JQ2husy1HGhzmMih1XC2YAeZ09Bn39K0ZD8OrGspedfQsMXYiutypL-xuIkEHNF7F3IxHhfB4iwIy0"
                     alt="sase" style="width:350px;height:400px;">
                     </dd>
                     <pre class="puml" visibility: hidden>
                         @startuml
-                        [Branch Ofc] as branch 
-                        [HEAD OFC \n\n VPN,LB,FW \n\n SSL,DLP,IPS] as head
-                        [Employee] as emp
-                        [Mobile(Airport) \nRoaming User] as mobile
-                        [BYOD \nbring your\nown device] as byod
+                        skinparam componentStyle rectangle
+                        rectangle "Branch Ofc" as bo {
+                          actor "emp" as emp
+                          actor "BYOD \nbring your\nown device" as byod
+                        }
+                        rectangle "head ofc" as ho {
+                           [VPN] as vpn
+                           [SSL] as ssl
+                           [DLP] as dlp
+                           [IPS] as ips
+                           [LB]  as lb
+                           lb -u- ssl
+                        }
+                        actor "Mobile(Airport) \nRoaming User" as ru
+                        
                         [Cloud Services \n\n Salesforce,Office365\nApplications] as cloud
                         
-                        note right of head
+                        note right of ho
                         Hosts Stack of security appliances:
                         - protect users from internet
                         end note
                         
-                        branch -- head : WAN
-                        mobile -- head : VPN
-                        byod -- head : VPN
-                        emp -- head : sitting in ofc
-                        head <..> cloud
-                        
-                        @enduml            
+                        ru -u- lb: VPN
+                        byod -u- lb: VPN
+                        emp -u- lb: VPN
+                        ho -u- cloud
+                        @enduml
                     </pre>
                 </td>
                 <td>
@@ -139,35 +147,42 @@
                     - Branch office to HQ WAN not needed this Saves Million of $<br>
                     </dd>
                     <img 
-                    src="//www.plantuml.com/plantuml/png/VPB1Rjim38RlV0eYkzX0UqZQqqvrqguOCBG6jAxOaXmOMKs5E9GdqodIeUy-IrQ7jC5wY41-_nzIeddH2ddfjZMq6yiDUTgYTjl6iM5HigyDUgE5U5qRc6StF_CxXLDFh1znmQ_HxODU8hN8Uo0jpkDewbOBpWhh6-Sb7mLnvLRuoPiAvWjPI76l-W9zYQ9fQgj9hEFs12z9A9QYfpOPdpjlFhO6ns2-dfKVMjUw0G1Tkwx2Fu1pDhA4bxTWV4GcH-JiY9m70lzcXIDLgAjC6R-psg1Zd0LtFWf-dCyCY_6OtQaytal7l5SE2fJEihY7qflMi4uZA6_BCMO_h5zRjfHZZrAFzlCN8dM2HTUfEE_6DUFOhUzt-QsCVQgw6S2lxpT59C_2D21rVnr9-xGUmAnGqqWqjQiUlOIRznUOO7RLUTUOV9dwJDwz_NOZb1MTF6BftSvMnWyhu3Pmi6SL2QseDLFIcxLt7LSpLpkFnU-Eu5N4KQ75xWnUsj30-NtsjJ8iLlRlYbC5CCmHJq_Zwz-c4m2gGin6eF-5CCtTRH8VGpWE50X_JE8aY349kmp0-oISGpX24YS5__lsoNu6uGX9MF8KforEMLpK2yDLjwt_0W00"
+                    src="//www.plantuml.com/plantuml/png/VPDHJzim4CVVxrESoaigaOU4FI5D8YqCJPfej6n36kNXwXp5QcfxjWE2YU--scwpKbMyHFRFVz_zS-UxS9wixzSTk9LKXYojKUYrqOgLR_nBnsXPU5BBZk7kXhrRQSCeEidAtoCvL4xWYP5g1J0eSJInfCGZpXx4A8WM6ly2uc60OXUXI26EICgTf1maIC9hYoDUco96v-8zBHCj0-K2ypwFEUAst6rBU8FjbObUp5LMIMkqzMFyhcajrN9hV84dbbk0kxcV--gsmRcQAwoCwQGWBxLoftX9dg9FUdPRuMjl-MDfK2JnzRJ-KBeK1W14f_isbF5EAizMiR-7joEqF8xFZkDF0UzthgcQgwnX-oG5erOu3LV6-1c7nimK9nehP5Ddfnm2OlQp6KVF8ku1SIzqhQNo-g6sx5Y9RNdgMLrWzalQfLIInXk8s-pk_0jHSufLtpSnbT6cYDas-Iw_rJ5Fsva4Vl-ugI9vzOeIQcwl8t7FomIcLJD9xiWjDkWjEDyOA36xwgqs7Bp7FEL1LMOhJrdL-qUihNwIBTjnjAHNi3SvBNbQaEC9YTNIwbwrKzrfYzMVdc1tYADAUFd4U2b30crVigyjAo_zoq5mQW5I7J7Fuz-_tvO0kpPYRlEWJ-TnDnoTOp0UCgIdjNUfpUCVmAP28URmX61O1Hnd7C8dpyD4G5YdkHgUKK3b0HfMaSUQ3mPxyrzvXkVejZs70SPBz7n8ujmSi3WW5wpQVjtz0m00"
                     alt="sase" style="width:500px;height:400px;">
                     <pre class="puml" visibility: hidden>
                         @startuml
                         skinparam componentStyle rectangle
-                        [(NY)US Branch \n Branch Ofc] as ny
-                        actor "Bob\n(Airport)" as bob #red
+                        [Netskope client] as nsc #pink
+                        
+                        rectangle "Branch Ofc" as bo {
+                          [Netskope client1] as nsc1 #pink
+                          [Netskope client2] as nsc2 #pink
+                           actor "emp1" as e1
+                           actor "emp2" as e2
+                           e1 -u- nsc1
+                           e2 -u- nsc2
+                        }
+                        actor "Bob\n(Airport) Roaming" as bob #red
+                        
                         [\t\tAWS \n\n Applications, Data] as aws
                         [\t\tAzure \n\n Applications, Data] as azure
                         [\t\tGCP \n\n Applications, Data] as gcp
                         
                         
                         cloud {
-                         [net]
+                         [internet]
                         }
                         cloud {
-                         [net1]
+                         [internet2]
                         }
                         cloud {
-                         [net2]
+                         [internet3]
                         }
                         cloud {
-                         [net3]
-                        }
-                        cloud {
-                         [net4]
+                         [internet4]
                         }
                         
-                        rectangle "SASE(Service on Cloud)" {
+                        rectangle "SASE(Service on Cloud) = Netskope One Cloud" as r {
                           [Center (US)] as center
                           rectangle "PointofPresence \n\n POP1 (Virginia) \n Services:FaaS, AuuS" as pop1 {
                             [DLP] as dlp
@@ -186,21 +201,24 @@
                         center -- pop1
                         center -- pop2
                         
-                        ad -- net
-                        net -- center
-                        ok -- net1
-                        net1 -- center
+                        internet -r- ad
+                        center -r- internet : Authentication
+                        internet -d- ok
                         
-                        pop2 -- net2
-                        net2 --  bob
                         
-                        ny -- net4
-                        net4 -- casb
+                        swg -- internet2
+                        internet2 --  nsc 
+                        nsc -- bob
                         
-                        "SASE(Service on Cloud)" -- net3
-                        net3 -- aws
-                        net3 -- azure
-                        net3 -- gcp
+                        nsc1 -u- internet4
+                        nsc2 -u- internet4
+                        internet4 -u- casb
+                        
+                        center -up- internet3 : services
+                        internet3 -u- aws
+                        internet3 -u- azure
+                        internet3 -u- gcp
+                        
                         @enduml
                     </pre>
                 </td>
