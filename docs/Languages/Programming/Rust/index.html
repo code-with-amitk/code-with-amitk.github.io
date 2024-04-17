@@ -24,13 +24,16 @@
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#why">Why Rust Over C++</a>
+            <ul>
+                <li><a href="#ownership">Ownership</a></li>
+            </ul>
             <a href="install.html">Install Rust</a>
             <a href="Functions.html">Functions(Closure)</a>
         </aside>
 
         <article style="margin-left:200px;">
             <h3 id="why">Why Rust Over C++</h3>
-            <h4>Ownership (avoid crash in Rust)</h4>
+            <h4 id="ownership">Ownership (avoid crash in Rust)</h4>
             <dd>
                 Variable or data can have single owner at a time. When a value is assigned to a variable, that variable becomes 
                 the owner of the value. When the owner goes out of scope, Rust automatically deallocates the memory used by the value.<br>
