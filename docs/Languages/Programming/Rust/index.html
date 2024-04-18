@@ -34,7 +34,7 @@
 
         <article style="margin-left:200px;">
             <h3 id="why">Why Rust Over C++</h3>
-            <h4 id="ownership">Ownership (avoid crash in Rust)</h4>
+            <h4 id="ownership">Ownership <font color="red">(avoid crash in Rust)</font></h4>
             <dd>
                 Variable or data can have single owner at a time. When a value is assigned to a variable, that variable becomes 
                 the owner of the value. When the owner goes out of scope, Rust automatically deallocates the memory used by the value.<br>
@@ -101,8 +101,15 @@ fn main() {
             </table>
 
             <h4 id="borrowing">Safe Borrowing = Reference (&var)</h4>
+            <dl>Borrowing means passing the reference of a variable.</dl>
+
+            <dl id="danglingreferences"><strong>1. Dangling References (Allowed in C++, but not in Rust).
+                <font color="red">Avoids Crash in Rust</font>
+            </strong></dl>
             <dd>
-                Borrowing means passing the reference of a variable.
+                <u>Dangling pointer?</u> Pointer points to memory, memory is freed and pointer is used.<br>
+                <u>Dangling reference?</u> Similar to Dangling pointer, when reference to a value is used, 
+                value is freed and reference is used after that.
             </dd>
             <table>
                 <tr>
@@ -111,18 +118,9 @@ fn main() {
                     <th>Rust</th>
                 </tr>
                 <tr>
-                    <td>Mutable?</td>
-                    <td>By default, References in C++ are mutable(changable)</td>
-                    <td>By default, References in Rust are immutable, We need to explicitly make mutable</td>
-                </tr>
-                <tr>
-                    <td><b>Dangling References</b><br><br>
-                        <u>Dangling pointer?</u> Pointer points to memory, memory is freed and pointer is used.<br>
-                        <u>Dangling reference?</u> Similar to Dangling pointer, when reference to a value is used, <br>
-                        value is freed and reference is used after that.
-                    </td>
+                    <td>Dangling References</td>
                     <td>
-                        Allowed in C++
+                        Dangling References Allowed in C++
                         <pre><code class="language-css">
 //Function returning reference
 int& fun() {
@@ -142,7 +140,7 @@ int main() {
                     </code></pre>
                     </td>
                     <td>
-                        Not Allowed in Rust
+                        Dangling References Not Allowed in Rust
                         <pre><code class="language-css">
 fn fun() -> &i32 {
     let b = 10;
@@ -155,6 +153,79 @@ $ cargo build
 | fn fun() -> &i32
 |             ^ expected named lifetime parameter
                     </code></pre></td>
+                </tr>
+            </table>
+
+            <br>
+            <dl><strong>2. Mutable References</strong></dl>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>C++</th>
+                    <th>Rust</th>
+                </tr>
+                <tr>
+                    <td>Mutable?</td>
+                    <td>
+                        References are mutable by Default in C++
+                        <pre><code class="language-css">
+// Passed value by reference
+// Changed inside fun
+void test (int& a) {
+    a = 20;
+}
+int main()
+{
+    int a = 10;
+    test(a);
+    cout &lt;&lt; a;
+}
+                    </code></pre>
+                    </td>
+                    <td>
+                        References are IMMUTABLE by Default in Rust
+                        <table>
+                            <tr>
+                                <td>
+                                    References are IMMUTABLE by default
+                                    <pre><code class="language-css">
+fn fun(a: &i32) {
+    *a = 20;
+}
+fn main() {
+    let a = 10;
+    fun(&a);
+    println!("{}",a);
+}
+$ cargo build
+Error
+cannot mutate immutable variable `a`
+                                    </code></pre>
+                                </td>
+                                <td>
+                                    References are made MUTABLE explicitly
+                                    <pre><code class="language-css">
+// Passed mutable reference
+fn fun(a: &mut i32) {
+    *a = 20;
+}
+fn main() {
+    // variable made mutable
+    let mut a = 10;
+
+    // passed mutable ref
+    fun(&mut a);
+    println!("{}",a);
+}                                        
+                                    </code></pre>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+
+
                 </tr>
             </table>
 
