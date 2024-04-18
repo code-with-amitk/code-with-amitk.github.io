@@ -26,6 +26,7 @@
             <a href="#why">Why Rust Over C++</a>
             <ul>
                 <li><a href="#ownership">Ownership</a></li>
+                <li><a href="#borrowing">Safe Borrowing</a></li>
             </ul>
             <a href="install.html">Install Rust</a>
             <a href="Functions.html">Functions(Closure)</a>
@@ -99,6 +100,63 @@ fn main() {
                 </tr>
             </table>
 
+            <h4 id="borrowing">Safe Borrowing = Reference (&var)</h4>
+            <dd>
+                Borrowing means passing the reference of a variable.
+            </dd>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>C++</th>
+                    <th>Rust</th>
+                </tr>
+                <tr>
+                    <td>Mutable?</td>
+                    <td>By default, References in C++ are mutable(changable)</td>
+                    <td>By default, References in Rust are immutable, We need to explicitly make mutable</td>
+                </tr>
+                <tr>
+                    <td><b>Dangling References</b><br><br>
+                        <u>Dangling pointer?</u> Pointer points to memory, memory is freed and pointer is used.<br>
+                        <u>Dangling reference?</u> Similar to Dangling pointer, when reference to a value is used, <br>
+                        value is freed and reference is used after that.
+                    </td>
+                    <td>
+                        Allowed in C++
+                        <pre><code class="language-css">
+//Function returning reference
+int& fun() {
+    int b = 10;
+    return b;
+}
+
+int main() {
+    //a is reference variable pointing to b,
+    which does not exist    
+    int &a = fun();
+    cout &lt;&lt; a;            
+}
+# g++ test.cpp   //No compile error
+# ./a.out
+    Segmentation Fault
+                    </code></pre>
+                    </td>
+                    <td>
+                        Not Allowed in Rust
+                        <pre><code class="language-css">
+fn fun() -> &i32 {
+    let b = 10;
+    &b     //Reference returned
+}
+fn main() {
+    let a = fun();
+}
+$ cargo build
+| fn fun() -> &i32
+|             ^ expected named lifetime parameter
+                    </code></pre></td>
+                </tr>
+            </table>
 
         </article>
         <script src="/scripts/prism.js"></script>

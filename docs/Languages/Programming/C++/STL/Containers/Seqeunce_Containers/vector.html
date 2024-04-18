@@ -146,11 +146,21 @@ let v: Vec &lt;i32> = [1,2,3].to_vec();
                     </tr>
                     <tr>
                         <td>2D</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 let mut 2d_vec: Vec&lt;Vec&lt;i32>> = Vec::new();
+
 let mut 2d_vec: Vec&lt;Vec&lt;i32>> = 
 vec![vec![0; row as usize]; col as usize];
-                        </pre></td>
+
+/*
+    0 1 0 0
+    1 1 1 0
+*/
+let v: Vec<Vec<i32>> = vec![
+    vec![0, 1, 0, 0],
+    vec![1, 1, 1, 0],
+];
+                        </code></pre></td>
                     </tr>
                 </table>
             </td>
