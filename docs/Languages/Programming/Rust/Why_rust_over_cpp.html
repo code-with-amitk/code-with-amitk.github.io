@@ -250,12 +250,43 @@ fn main() {
                         </table>
                     </td>
                 </tr>
-                <tr>
-
-
-                </tr>
             </table>
 
+            <br>
+            <dl><strong>2.1 Borrow Transfers the ownership</strong></dl>
+            <table>
+                <td>
+                    <b><font color="red">Crash in C++:</font> If vector<int*> in place of vector<int></b>
+                    <pre><code class="language-css">
+int main()
+{
+    vector<int> v = { 1,2,3 };
+    int* a = &v[0];
+    v.push_back(4);
+    *a = 10;
+}
+                    </code></pre>
+                </td>
+                <td>
+                    <b><font color="green">Rust(No Crash)</font> Cannot Change Borrowed value</b>
+                    <pre><code class="language-css">
+fn main() {
+    let mut v = vec![1,2,3];
+    let mut a = &mut v[0];
+    v.push(4);
+    println!("{}", a);
+}
+$ cargo run
+error[E0499]: cannot borrow `v` as mutable more than once at a time
+ --> src/main.rs:4:5
+                    </code></pre>
+                    - The code might look like should work.<br>
+                    - Adding a new element onto the end of the vector might require allocating new memory and copying the old elements to the new space.<br>
+                    - if there isn’t enough room to put all the elements next to each other where the vector currently is. 
+                    In that case, the reference to the first element would be pointing to deallocated memory.<br>
+                    - The borrowing rules prevent programs from ending up in that situation.                    
+                </td>
+            </table>
         </article>
         <script src="/scripts/prism.js"></script>
     </body>
