@@ -287,6 +287,46 @@ error[E0499]: cannot borrow `v` as mutable more than once at a time
                     - The borrowing rules prevent programs from ending up in that situation.                    
                 </td>
             </table>
+
+            <br>
+            <dl><strong>2.2 Two Mutable references not allowed in same scope</strong></dl>
+            <table>
+                <td>
+                    <b><font color="red">C++ Crash</font></b>
+                    <pre><code class="language-css">
+int main()
+{
+    char* s1 = new char[1];
+    char* s2 = s1;
+    *s1 = 'a';
+    delete s1;
+    cout << "val=" << (*s2);
+}
+$ g++ test.cpp
+Crash or Undefined behaviour
+                    </code></pre>
+                </td>
+                <td>
+                    <font color="blue"><b>Rust(No Crash, But compiletime error)</b></font><br>
+                    Why not allowed in Rust?<br>
+                    This can be a race condition, where if both mutable references change the data, there is no mechanism 
+                synchronize access to the data
+                    <pre><code class="language-css">
+fn main() {
+    let mut s = String::from("hello");
+    let r1 = &mut s;
+    let r2 = &mut s;
+    println!("{}, {}", r1, r2);
+}
+$ cargo build
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+                                    </code></pre>
+                </td>
+            </table>
+
+            <dd>.</dd>
+
+
         </article>
         <script src="/scripts/prism.js"></script>
     </body>
