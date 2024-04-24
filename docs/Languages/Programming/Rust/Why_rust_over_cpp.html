@@ -32,6 +32,11 @@
             <a href="">Faster wrt C++</a>
             <ul>
                 <li><a href="#aco">4. Aggressive Complier Optimizations</a></li>
+                <li><a href="#rto">5. Less runtime overheads</a></li>
+            </ul>
+            <a href="">Smaller Binary wrt C++</a>
+            <ul>
+                <li><a href="#nortti">6. No RTTI in Rust</a></li>
             </ul>
         </aside>
 
@@ -46,6 +51,11 @@
                 <a><b>Faster wrt C++:</b></a>
                 <ul>
                     <li><a href="#aco">4. Aggressive Complier Optimizations</a></li>
+                    <li><a href="#rto">5. Lower Runtime overheads wrt C++</a></li>
+                </ul>
+                <a href=""><b>Smaller Binary wrt C++:</b></a>
+                <ul>
+                    <li><a href="#nortti">6. No RTTI in Rust</a></li>
                 </ul>
             </dl>
 
@@ -374,6 +384,121 @@ let arr: Vec<i32> = vec![0; 10];                    //malloc + memset
                 - LLVM is more aggressive about inlining functions, especially for small functions. 
                 Inlining avoids function call overhead and makes it fast.
             </dt>
+
+            <h3 id="rto">
+                5. Lower Runtime overheads wrt C++ <font color="green">(make Rust fast)</font>
+            </h3>
+            <h4>5.1 <a href="/Languages/Programming/C++/Terms.html#su">
+                <font color="red">C++ Stack Unwinding causes runtime slowness</font></a>
+            </h4>
+            <table>
+                <td>
+                    C++ (On Exception Stack Unwinding happens)
+                    <pre><code class="language-css">
+#include <iostream>
+#include <stdexcept>
+
+int divide(int a, int b) {
+    if (b == 0) {
+        throw std::runtime_error("Division by zero");
+    }
+    return a / b;
+}
+int main() {
+    try {
+        int result = divide(10, 0);
+        std::cout << "Result: " << result << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+    return 0;
+}        
+                    </code></pre>
+                </td>
+                <td>
+                    Rust (<b>Result and Option types</b> for error handling, <br>
+                    which are handled through pattern matching rather than exceptions)
+                    <pre><code class="language-css">
+fn divide(a: i32, b: i32) -> Result<i32, &'static str> {
+    if b == 0 {
+        return Err("Division by zero");
+    }
+    Ok(a / b)
+}
+
+fn main() {
+    match divide(10, 0) {
+        Ok(result) => println!("Result: {}", result),
+        Err(e) => eprintln!("Error: {}", e),
+    }
+}                        
+                    </code></pre>
+                </td>
+            </table>
+
+            <h4 id="nortti">5.2 <a href="/Languages/Programming/C++/Terms.html#rtti">
+                <font color="red">C++ Runtime Type Information (RTTI) increases binary size and runtime overhead</font></a>
+            </h4>
+            <dl>Rust's type system(based on traits and enums), enables polymorphic behavior and dynamic dispatch without the need for RTTI.</dl>
+            <table>
+                <tr>
+                    <td>
+                        C++
+                        <pre><code class="language-css">
+#include <iostream>
+#include <typeinfo>
+
+class Base {
+public:
+    virtual ~Base() {}
+};
+
+class Derived : public Base {};
+
+int main() {
+    Base* ptr = new Derived();
+    Derived* derived = dynamic_cast<Derived*>(ptr);
+    if (derived) {
+        std::cout << "Dynamic cast successful\n";
+    } else {
+        std::cout << "Dynamic cast failed\n";
+    }
+    delete ptr;
+    return 0;
+}
+                        </code></pre>
+                    </td>
+                    <td>
+                        <b>Rust</b><br><br>
+                        Box<dyn Printable> enable dynamic dispatch without the need for runtime type information. 
+<pre><code class="language-css">
+trait Printable {
+    fn print(&self);
+}
+
+struct Base;
+struct Derived;
+
+impl Printable for Base {
+    fn print(&self) {
+        println!("Base");
+    }
+}
+
+impl Printable for Derived {
+    fn print(&self) {
+        println!("Derived");
+    }
+}
+
+fn main() {
+    let base: Box<dyn Printable> = Box::new(Derived);
+    base.print(); // Dynamic dispatch without RTTI
+}    
+</code></pre>
+                    </td>
+                </tr>
+            </table>
 
         </article>
         <script src="/scripts/prism.js"></script>

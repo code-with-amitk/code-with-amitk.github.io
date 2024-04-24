@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Terms</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#su">Stack Unwinding</a>
+        <a href="#rtti">Runtime Type Information (RTTI)</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="su">Stack Unwinding</h3>
+        <dd>
+            Whenever a exception is thrown, process of deallocating resources and calling destructors for objects 
+            starts on the stack, this is called stack Unwinding.
+        </dd>
+        <table>
+            <tr>
+                <td>
+                <pre><code class="language-css">
+class Resource {
+public:
+    Resource() {
+        std::cout << "Resource acquired\n";
+    }
+
+    ~Resource() {
+        std::cout << "Resource released\n";
+    }
+};
+void foo() {
+    Resource res; // Resource acquired
+    throw std::runtime_error("Error in foo");
+}
+int main() {
+    try {
+        foo();
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Caught exception: " << e.what() << std::endl;
+    }
+    return 0;
+}                            
+                    </code></pre>
+                </td>
+                <td>
+                    <b>How Stack unwinding works</b><br>
+                    - foo() is called, it acquires a Resource object<br>
+                    - it then throws a std::runtime_error exception.<br>
+                    - As a result, the stack starts unwinding, and the destructor for res is called to release the Resource<br>
+                    - Then, exception is caught in the main() function.<br>
+                    - This ensures that resources are properly cleaned up even in the presence of exceptions.
+                </td>
+            </tr>
+        </table>
+        
+        <br>
+        <dl><strong><font color="red">Stack Unwinding has runtime overhead</font></strong></dl>
+        <dt>
+        - When there are deeply nested function calls or objects with complex destructors, it will take time to
+         deallocate the object.<br>
+        - <a href="/Languages/Programming/Rust/Why_rust_over_cpp.html#rto">How RUST removes this overhead</a>
+        </dt>
+
+        <h3 id="rtti">Runtime Type Information (RTTI)</h3>
+        <dt>
+            RTTI means performing dynamic type checking and type casting at runtime.
+        </dt>
+        <br>
+        <dl><strong>1. Increased Binary size with RTTI</strong></dl>
+        <dd>
+            When RTTI is enabled, the compiler includes additional metadata in the binary to support dynamic type information. <br>
+            This metadata typically includes:<br>
+            - type information tables (type descriptors)<br>
+            - virtual function tables (vtables) used for dynamic dispatch etc<br>
+            These tables increase the size of the binary, especially for programs with a large number of polymorphic classes.
+        </dd>
+        <dl><strong>2. Increased Execution time with RTTI</strong></dl>
+        <dt><u>2.1 Dynamic Casts</u></dt>
+        <dd>
+            Dynamic casts (dynamic_cast) involve runtime type checking to ensure the correctness of the cast. 
+            This type checking adds overhead to the execution time of the program.
+        </dd>
+        <dt><u>2.2 Virtual Function Calls</u></dt>
+        <dd>
+            Dynamic polymorphism in C++ works on virtual function calls, which require runtime lookup of the 
+            appropriate function. This lookup incurs additional runtime overhead compared to static dispatch
+        </dd>
+        <table>
+            <td>
+            <pre><code class="language-css">
+#include <iostream>
+#include <typeinfo>
+
+class Base {
+public:
+    virtual ~Base() {}
+};
+
+class Derived : public Base {};
+
+int main() {
+    Base* ptr = new Derived();
+    Derived* derived = dynamic_cast<Derived*>(ptr);
+    if (derived) {
+        std::cout << "Dynamic cast successful\n";
+    } else {
+        std::cout << "Dynamic cast failed\n";
+    }
+    delete ptr;
+    return 0;
+}                    
+            </code></pre>
+            </td>
+        </table>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
