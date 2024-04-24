@@ -28,38 +28,20 @@
 
     <article style="margin-left:200px;">
         <h3 id="inout">Inlier, outlier, Novelty</h3>
-        <dl><strong>Inlier</strong></dl>
-        <dd>
-            New observation belongs to the same distribution as existing observations. No major deviation
-        </dd>
-        <dl><strong>outlier</strong></dl>
-        <dd>
-            New observation are far from existent observations.
-        </dd>
+        <dl><strong>Inlier: </strong> A Data point that falls within the normal range defined by the majority of the data. it fits the expected pattern</dl>
+        <dl><strong>outlier:</strong> A data point that deviates significantly from the main cluster</dl>
 
-        <table>
-            <tr>
-                <th></th>
-                <th>outliers / Unsupervised Anomaly Detection</th>
-                <th>Novelty / semi-supervised anomaly detection</th>
-            </tr>
-            <tr>
-                <td>Traning Data</td>
-                <td>Contains outliers</td>
-                <td>Does not contains outliers</td>
-            </tr>
-            <tr>
-                <td>New/Real time Data</td>
-                <td></td>
-                <td>Detects this data contains outliers</td>
-            </tr>
-            <tr>
-                <td>Density of data</td>
-                <td>Cannot form a dense cluster as available 
-                    estimators assume that the outliers/anomalies are located in low density regions</td>
-                <td>Can form a dense cluster, which is considered as normal in this context.</td>
-            </tr>
-        </table>
+        <dl><strong>Anomaly Detection:</strong> Finding unusual patterns in data</dl>
+        <dt><u>1. Outlier Detection</u></dt>
+        <dd>
+            - Training data might contain some outliers already<br>
+            - Goal is to identify these outliers based on how far they deviate from the majority of the data
+        </dd>
+        <dt><u>2. Novelty Detection</u></dt>
+        <dd>
+            - Training data does not have outliers<br>
+            - Real time data/Production data has outliers, which needed to be found.
+        </dd>
     </article>
 
 </body>

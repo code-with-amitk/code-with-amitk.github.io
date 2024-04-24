@@ -25,8 +25,10 @@
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#why">Why Rust Over C++</a>
             <ul>
-                <li><a href="#ownership">Ownership</a></li>
-                <li><a href="#borrowing">Borrowing</a></li>
+                <li><a href="#ownership">Ownership(avoid Crash)</a></li>
+                <li><a href="#borrowing">Borrowing(avoid Crash)</a></li>
+                <li><a href="#mma">No Manual Memory management(avoid Crash)</a></li>
+                <li><a href="#aco">Aggressive Complier Optimizations(make fast)</a></li>
             </ul>
         </aside>
 
@@ -324,8 +326,36 @@ error[E0499]: cannot borrow `s` as mutable more than once at a time
                 </td>
             </table>
 
-            <dd>.</dd>
+            <h3 id="mma">No Manual Memory management <font color="red">(avoid crash in Rust)</font></h3>
+            <dt>
+                - Rust does not provide `new, delete` operators as in C++ for dynamically allocate memory.<br>
+                - Rust's ownership and borrowing rules ensure memory safety without the need for manual memory management. 
+            </dt>
+            <table>
+                <td>
+                    C++
+                    <pre><code class="language-css">
+int* ptr = new int[10]; // Allocates memory of 10 integer
+delete ptr; // Deallocates the memory pointed to by ptr
+                    </code></pre>
+                </td>
+                <td>
+                    Rust.
+                    <pre><code class="language-css">
+let mut arr: Vec<i32> = Vec::with_capacity(10);     //malloc
+let arr: Vec<i32> = vec![0; 10];                    //malloc + memset
+                    </code></pre>
+                </td>
+            </table>
 
+            <h3 id="aco">Aggressive Compiler Optimization <font color="green">(make Rust fast)</font></h3>
+            <h4>1. Inlining</h4>
+            <dt>
+                - Rust's Compiler(LLVM) optimizes code more aggressivly wrt C++ compiler
+                & this is because of ownership rules, LLVM can make assumptions.<br>
+                - LLVM is more aggressive about inlining functions, especially for small functions. 
+                Inlining avoids function call overhead and makes it fast.
+            </dt>
 
         </article>
         <script src="/scripts/prism.js"></script>
