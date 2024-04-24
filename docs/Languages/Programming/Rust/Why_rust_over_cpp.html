@@ -23,16 +23,32 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#why">Why Rust Over C++</a>
+            <a href="">Rust No Crash</a>
             <ul>
-                <li><a href="#ownership">Ownership(avoid Crash)</a></li>
-                <li><a href="#borrowing">Borrowing(avoid Crash)</a></li>
-                <li><a href="#mma">No Manual Memory management(avoid Crash)</a></li>
-                <li><a href="#aco">Aggressive Complier Optimizations(make fast)</a></li>
+                <li><a href="#ownership">1. Ownership</a></li>
+                <li><a href="#borrowing">2. Borrowing</a></li>
+                <li><a href="#mma">3. No Manual Memory management</a></li>
+            </ul>
+            <a href="">Faster wrt C++</a>
+            <ul>
+                <li><a href="#aco">4. Aggressive Complier Optimizations</a></li>
             </ul>
         </aside>
 
         <article style="margin-left:200px;">
+            <dl>
+                <a><b>No Crash in Rust due to:</b></a>
+                <ul>
+                    <li><a href="#ownership">1. Ownership</a></li>
+                    <li><a href="#borrowing">2. Borrowing</a></li>
+                    <li><a href="#mma">3. No Manual Memory management</a></li>
+                </ul>
+                <a><b>Faster wrt C++:</b></a>
+                <ul>
+                    <li><a href="#aco">4. Aggressive Complier Optimizations</a></li>
+                </ul>
+            </dl>
+
             <h2 id="why">Rust Over C++</h2>
             <table>
                 <tr>
@@ -55,7 +71,9 @@
                     <td>Safe (No crash)</td>
                 </tr>
             </table>
-            <h3 id="ownership">Ownership <font color="red">(avoid crash in Rust)</font></h3>
+
+
+            <h3 id="ownership">1. Ownership <font color="red">(avoid crash in Rust)</font></h3>
             <dt><b>Ownership?</b><br>
                 - Variable or data can have single owner at a time. When a value is assigned to a variable, that variable becomes 
                 the owner of the value. When the owner goes out of scope, Rust automatically deallocates the memory used by the value.<br>
@@ -121,13 +139,13 @@ fn main() {
                 </tr>
             </table>
 
-            <h3 id="borrowing">Borrowing = Reference (&var)</h3>
+            <h3 id="borrowing">2. Borrowing = Reference (&var)</h3>
             <dt><b>Borrowing?</b> <br>
                 - Borrowing means passing the reference of a variable.<br>
                 - Borrowing in Rust is Safer wrt C++, which avoids <font color="red">Crashes/Dangling References</font>.
             </dt>
 
-            <h4 id="danglingreferences">1. Dangling References (Allowed in C++, but not in Rust)
+            <h4 id="danglingreferences">2.1 Dangling References (Allowed in C++, but not in Rust)
             </h4>
 
             <dt>
@@ -182,7 +200,7 @@ $ cargo build
             </table>
 
             <br>
-            <h4>2. Mutable References</h4>
+            <h4>2.2 Mutable References</h4>
             <dt>
                 - References are mutable by Default in C++ <font color="red">(This can cause issues)</font><br>
                 - (By default)References are IMMUTABLE in Rust, we need to make them mutable explicitly.
@@ -255,7 +273,7 @@ fn main() {
             </table>
 
             <br>
-            <dl><strong>2.1 Borrow Transfers the ownership</strong></dl>
+            <dl><strong>2.2.1 Borrow Transfers the ownership</strong></dl>
             <table>
                 <td>
                     <b><font color="red">Crash in C++:</font> If vector<int*> in place of vector<int></b>
@@ -291,7 +309,7 @@ error[E0499]: cannot borrow `v` as mutable more than once at a time
             </table>
 
             <br>
-            <dl><strong>2.2 Two Mutable references not allowed in same scope</strong></dl>
+            <dl><strong>2.2.2 Two Mutable references not allowed in same scope</strong></dl>
             <table>
                 <td>
                     <b><font color="red">C++ Crash</font></b>
@@ -326,7 +344,7 @@ error[E0499]: cannot borrow `s` as mutable more than once at a time
                 </td>
             </table>
 
-            <h3 id="mma">No Manual Memory management <font color="red">(avoid crash in Rust)</font></h3>
+            <h3 id="mma">3. No Manual Memory management <font color="red">(avoid crash in Rust)</font></h3>
             <dt>
                 - Rust does not provide `new, delete` operators as in C++ for dynamically allocate memory.<br>
                 - Rust's ownership and borrowing rules ensure memory safety without the need for manual memory management. 
@@ -348,7 +366,7 @@ let arr: Vec<i32> = vec![0; 10];                    //malloc + memset
                 </td>
             </table>
 
-            <h3 id="aco">Aggressive Compiler Optimization <font color="green">(make Rust fast)</font></h3>
+            <h3 id="aco">4. Aggressive Compiler Optimization <font color="green">(make Rust fast)</font></h3>
             <h4>1. Inlining</h4>
             <dt>
                 - Rust's Compiler(LLVM) optimizes code more aggressivly wrt C++ compiler
