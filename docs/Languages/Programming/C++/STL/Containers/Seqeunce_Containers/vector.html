@@ -243,6 +243,26 @@ if let Some(a) = vec.pop() {
         </tr>
 
         <tr>
+            <td>Find</td>
+            <td><pre><code class="language-css">
+string word = "abcde";  char ch = 'd';
+auto it = find(word.begin(), word.end(), ch);
+                </code></pre>
+            </td>
+            <td><pre><code class="language-css">
+// Find returns a index(usize)
+let index = match word.find(ch) {
+    Some (a)=>a,
+    None => {
+        0
+    }
+};                
+            </code></pre></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
             <td>Max</td>
             <td>INT_MAX</td>
             <td><pre>       <!--Rust-->
@@ -366,6 +386,27 @@ for index, n := range nums {
             <td>Last element</td>
             <td>vec.back()</td>
             <td>if Some(l) = vec.last()</td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Reverse</td>
+            <td><pre><code class="language-css">
+reverse(str.begin(), str.end());
+            </code></pre></td>
+            <td><pre><code class="language-css">    <!--Rust-->
+fn reverse_string_till_index(text: &str, index: usize) -> String {
+    // Take characters up to index
+    let mut chars: Vec<char> = text.chars().take(index + 1).collect();
+
+    // Reverse the characters
+    chars.reverse();
+
+    // Convert the reversed characters back into a string
+    chars.into_iter().collect()
+}  
+            </code></pre></td>
+            <td></td>
             <td></td>
         </tr>
 
