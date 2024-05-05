@@ -23,13 +23,43 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="./Install_Go.html">Install Go</a>
-            <a href="Why_go_over_other_lang.html">Why Go Over Other Lang</a>
+            <a href="#install">Install Go</a>
         </aside>
 
         <article style="margin-left:200px;">
-        </article>
+            <h2 id="install">Install Go</h2>
+<table>
+    <tr>
+        <th>Ubuntu</th>
+        <th>WSL</th>
+        <th>Windows</th>
+    </tr>
+    <tr>
+        <td>
+            <pre><code  class="language-css">
+            </code></pre>
+        </td>
+        <td>
+            <pre><code  class="language-css">
+//Remove any go versions
+sudo rm -rf /usr/local/go* && sudo rm -rf /usr/local/go
+wget https://go.dev/dl/go1.18.linux-amd64.tar.gz
+tar -xvf go1.18.linux-amd64.tar.gz
+mv go go-1.18
+sudo mv go-1.18 /usr/local
+export GOROOT=/usr/local/go-1.18
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+Restart terminal
+go version
+            </code></pre>
+        </td>
+        <td>
+        </td>
+    </tr>
+</table>
 
+        </article>
         <script src="/scripts/prism.js"></script>
     </body>
 </html>

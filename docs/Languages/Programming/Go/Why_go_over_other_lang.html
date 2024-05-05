@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Why Go over other Languages</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#why">Why Go Over Other Languages</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="why">Go vs Other Languages</h2>
+            <h3>Memory</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Go</th>
+                    <th>CPP</th>
+                </tr>
+                <tr>
+                    <td>Memory Management</td>
+                    <td>Go has Automatic Garbage Collection, which means memory <br>
+                        allocation and deallocation are handled by the runtime</td>
+                    <td>CPP programmer has to do memory management using new, delete.</td>
+                </tr>
+                <tr>
+                    <td>Structural Differences</td>
+                    <td>
+                        No hidden function as compared to c++
+                        <pre><code class="language-css">
+type ListNode struct {
+    Val int
+    Next *ListNode
+}
+                        </code></pre>
+                    </td>
+                    <td>
+                        CPP have hidden functions, which can add overhead
+                        <pre><code class="language-css">
+class ListNode {
+    int val;
+    ListNode *next;
+public:
+    //constructor
+    //destructor
+};                            
+                        </code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RunTime overhead</td>
+                    <td>Less</td>
+                    <td>More due to Exception handling, virtual function calls, and dynamic dispatch</td>
+                </tr>
+            </table>
+
+            <h3>Time</h3>
+        </article>
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
