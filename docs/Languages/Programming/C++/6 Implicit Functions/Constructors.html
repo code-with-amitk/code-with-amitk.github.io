@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Constructor</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#ctr">Constructor</a>
+        <a href="#callinghierarchy">Ctr calling Hierarchy</a>
+        <a href="#ctrinitializerlist">Ctr Initializer list</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+
+        <h3 id="ctr">Constructor</h3>
+        <dd>
+            Same named function of class. Ctr is called when object of class is created. Used to provide values to data members.<br>
+            Return type:               None<br> 
+            Cannot access to address of ctr<br>
+            Inheriting ctr:           Cannot<br>
+            PRIVATE SCOPED CTR*:      Can ctr be inside private section(Yes. Single DP)
+        </dd>
+
+        <h4 id="callinghierarchy">Ctr calling Hierarchy (Base Class > Derv Class Ctr)</h4>
+        <dl>
+            Derived class object also have inherited properties of Base class, <br>
+            and only base class constructor can properly initialize base class members
+        </dl>
+        <pre><code class="language-css">
+class A{
+    public:
+        A() { cout<<"base ctr";  }
+        ~A() { cout<<"base dtr";  }
+};
+    
+class B: public A {
+    public:
+        B() { cout<<"Derv ctr";  }
+        ~B() { cout<<"Derv dtr";  }
+};
+int main(){
+    B obj;
+}
+$ a.out
+base ctr
+Derv ctr
+Derv dtr
+Base dtr
+            </code></pre>
+
+
+        <h4>Base class constructor should be defined</td>
+                <pre><code class="language-css">
+class A{
+    public:
+        A();
+        ~A();
+};
+class B: public A {
+public:
+    B() { cout<<"B ctr";  }
+    ~B() { cout<<"~B";  }
+};
+int main(){
+    B obj;
+}
+# ./a.out
+Error cannot find A::A()
+                </code></pre>
+
+        <h4 id="ctrinitializerlist">Ctr Initializer list</h4>
+        <dl>
+            In the initializer list, the order of execution takes place according to the order of declaration of member variables.
+        </dl>
+        <pre><code class="language-css">
+class test{
+    int a; //Declared 1st
+    int b; //Declared 2nd
+public:
+    test (int x): b(x), a(b * 2) {
+        cout << b << a;       //b=10, a=garbage
+    }
+};
+int main() {
+    test obj(10);
+    return 0;
+}
+$ ./a.exe
+b = 10
+a = garbage value
+This is because, a is declared before b. Initialization of a will happen before b.
+Since a = b*2, and b does not have value hence a is initialized to garbage.
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

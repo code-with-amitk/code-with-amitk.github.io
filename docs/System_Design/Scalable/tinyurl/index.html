@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tiny URL</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#what">What</a>
+    <a href="#req">Requirements</a>
+    <a href="#boe">BOE</a>
+    <a href="#systemapis">System APIs</a>
+    <a href="#partioning">Databases</a>
+    <ul>
+      <li><a href="#sqltables">SQL Tables</a></li>
+      <li><a href="#partitioning">DB Scaling & Paritioning</a></li>
+    </ul>
+    <a href="#hld">HLD</a>
+    <ul>
+      <li><a href="#authenticate">Authenticate to RESTful APIs</a></li>
+      <li><a href="#reachmicroservice">Reach Microservice from public network</a>
+      <li><a href="#bhld">Basic Design</a></li>
+      <li><a href="#problems">Problems in Basic Design</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+        <h3 id="what">What is Tiny URL</h3>
+        <dd>
+          This service will provide shortened aliases redirecting to long URLs. Users are redirected to longURL as they hit short URL.<br>
+          Short links save a lot of space when displayed, printed, messaged, or tweeted. Additionally, users are less likely to mistype shorter URLs.
+        </dd>
+        <dl>
+          This would be Read-Heavy, Read:Write=100:1
+        </dl>
+
+        <h3 id="req">1. Requirements</h3>
+        <h4>Functional</h4>
+        <dd>CRUD(Create=POST, Read=GET, Update=PUT, Delete=DELETE)</dd>
+        <dl id="req1"> 1. (Create) Create shorturl from long url //POST</dl>
+        <dl id="req2"> 2. (Read) Read Big URL From tinyurl</dl>
+        <dl id="req3"> 3. (Update) When bigurl is updated, old tinyurl should be updated</dl>
+        <dl id="req4"> 4. (Delete) Delete existing tinyurl</dl>
+
+        <h4>Non Functional</h4>
+        <dd>
+          S<sup>3</sup>:(Scalable,Secure,SOA), L<sup>3</sup>:(Latency, Load, Logging), 
+          A<sup>3</sup>:(Accurate, Available, Authenticated), C<sup>2</sup>:(Cache),
+          R<sup>2</sup>:(Reliable, Redundant) F<sup>2</sup>:(fast, Fault Tolerant)
+        </dd>
+        <dl id="nonfuncreq1">1. Scalable</dl>
+          <dd>if user creates, 100k urls at same time, system should not delay</dd>
+        <dl id="nonfuncreq2">2. Reliable: Everytime user hits shorturl, it should provide same bigurl</dl>
+        <dl id="nonfuncreq3">3. Available: On high load, system should be available. (CRUD=READ)</dl>
+
+        <h3 id="boe">2. BOE</h3>
+        <dl><strong>Storage Estimates:</strong></dl>
+        <p>
+            - 200M~300M business listings are present on google<br>
+            - Each place {string name, string address, double lat, double long, `vector<string> reviews`, string photos_url}  = 2000 KB<br>
+            - 300M * 2000k = 60 PB / year<br>
+            - User Reviews,Photos,Videos will keep on increasing. Suppose becomes 5 times per year.  300PB<br>
+            - New Businesses also gets added, old fade away. Suppose from last year it becomes twice.  120PB<br>
+            500 PB/year<br>
+            5 years = 2 Exabytes            
+        </p>
+
+        <dl><strong>QPS:</strong></dl>
+        <p>
+            - Assuming 100k user are accessing per sec<br>
+            - This may increase in peak season, and may decline/remain steady other times
+        </p>
+
+        <dl><strong>Bandwidth Estimates:</strong></dl>
+        <p>
+            - 100k req/s.<br>
+            - 1 GET request = 2KB<br>
+            - 1 UPDATE request = 4KB  //Avg of 2=3KB<br>
+          
+            Incoming bytes = 100k x 3k = 300MBytes/sec<br>
+            Outgoing bytes = 100k x (sizeof 1 listing) = 100k x 2000 KB(calculated above) = 20GB/sec            
+        </p>
+        
+        <h3 id="systemapis">3. System APIs</h3>
+        <dl><strong>1. <a href="#req1">add_place = HTTP POST</a></strong></dl>
+            <pre><code class="language-css">
+                POST https://url/v1/add_place
+                header {
+                    Authorization: {Bearer "API_KEY_TOKEN"},
+                    lat: "",
+                    longitude: ""
+                }
+                body {
+                    name, description, picture_url, video_url
+                }
+              </code></pre>
+
+            <dl><strong>2. <a href="#req2">update_place = HTTP PUT Place/person/thing information</a></strong></dl>
+            <pre><code class="language-css">
+                GET https://url/v1/search_place
+                header {
+                  Authorization: {Bearer "API_KEY_TOKEN"},
+                  sort: optional,
+                  business-id: id    //unique key
+                }
+                body {              //Server will compare the data and update the changed
+                  name, description, picture_url, video_url,
+                  userLocation {
+                    lat: "",
+                    long: "",
+                  },
+                }
+              </code></pre>
+
+            <dl><strong>4. <a href="#req4">search_place //HTTP GET. Place/person/thing information</a></strong></dl>
+            <pre><code class="language-css">
+                GET https://url/v1/search_place
+                header {
+                  Authorization: {Bearer "API_KEY_TOKEN"},
+                  userLocation {
+                    lat: "",
+                    long: "",
+                  },
+                  radius: 10km,  //default
+                  sort: optional,
+                  category: optional
+                }
+                //Returns json:
+                {
+                  {            //business-1
+                    name: business-name
+                    photo: photo_url,
+                    ratings: array<ratings>,
+                    open close time: string
+                  },
+                  {
+                    //business-2
+                  },
+                }
+              </code></pre>
+
+            <h3 id="database">4. Databases</h3>
+            <dl><strong><a href="/System_Design/Concepts/Databases/SQL_vs_NoSQL.html">We will use SQL, not noSQL?</a></strong></dl>
+            <p>
+              - NoSQL has good use when schema is dynamic, but we have fixed fields to store in DB here.
+            </p>
+
+            <dl id="sqltables"><strong>4.1 SQL Tables</strong></dl>
+            <p>
+                Following are entities in system: Place, Place_Owner(who adds entry), Reviews, Photos, Videos
+            </p>
+
+            <dt><strong>1. Place table (indexing for faster searching)</strong></dt>
+            <pre><code class="language-css">
+| ownerID(fk)[indexed] | lattitude | longitude | placeID(pk) | Description | categoryId(fk) | lastupdated_timestamp[indexed] |
+
+ownerID: id of person who created the entry
+lattitude: Geographic coordinate specifying north–south position of a point on the Earth's surface.
+longitude: Geographic coordinate specifying east–west position of a point on the Earth's surface.
+    - (lattitude, longitude): precise location of features on the surface of the Earth.
+placeID(8 bytes): Uniquely identifies a location. LocationId is taken 8 bytes(64 bits) considering future in mind.
+    - 2<sup>64</sup> = Huge number of locations
+Description(512 bytes)
+Category(1 byte): E.g., coffee shop, restaurant, theater, etc.                
+            </code></pre>
+
+            <dt><strong>2. Place_owner table</strong></dt>
+            <pre><code class="language-css">
+| ownerID(pk) | name | email | secret_key | placeID(fk) | created_timestamp |
+
+placeId: locations this owner owns
+created_timestamp: profile created by owner at this time                
+            </code></pre>
+
+            <dt><strong>3. Reviews table</strong></dt>
+            <pre><code class="language-css">
+| review_id(pk) | creator_name | creator_email | review_description | placeID(fk) | created_timestamp |           
+            </code></pre>
+
+            <dt><strong>4. Place Photo table</strong></dt>
+            <p>photos stored on object store</p>
+            <pre><code class="language-css">
+| photo_id(pk) | active | photo_url | placeID(fk) | created_timestamp | marked_inactive_timestamp |
+
+active: Is photo active on website, ie getting displayed. We will remove photo from db
+    after 30 days, if marks inactive
+photo_url:
+            </code></pre>
+
+            <dt><strong>5. Place video table</strong></dt>
+            <p>videos stored on object store</p>
+
+            <dt><strong>6. Reviews table</strong></dt>
+            <p>Reviews stored on object store</p>
+            <pre><code class="language-css">
+| reviewId(pk) | review-text-url | placeid(fk) | stars |
+            </code></pre>
+
+            <dt><strong>7. Category Table</strong></dt>
+            <pre><code class="language-css">
+| categoryId(pk) | Category-text |
+
+Benefits of keeping seperate Category table:
+- Add/update category without affecting place table
+            </code></pre>
+
+            <dl id="partitioning"><strong>4.2 DB Scaling and Partitioning</strong></dl>
+            <dt><u>Why we need DB Scaling?</u><br>
+              - Everyday new places(text, photos, videos, reviews) will get added, DB size will increase.<br>
+              - Given such a huge QPS = 100k req/sec and such a huge data to store 2Exabytes, we would need 
+              to partition our DB, we cannot store everything at 1 place.
+            </dt>
+            <dt>
+              We can do:<br>
+              - <a href="/System_Design/Concepts/Databases/DB_Scaling/Sharding/index.html#regionbasedpartition">Sharding based on location IDs</a>
+            </dt>
+
+            <h3 id="hld">5. High Level Design</h3>
+            <h4 id="authenticate"><a href="/System_Design/Scalable/Authentication/Authenticate_to_RESTful_API.html">
+              5.1 Authenticating to RESTful API using JWT(Json Web Tokens)
+            </a></h4>
+
+            <h4 id="reachmicroservice"><a href="/System_Design/Scalable/Methods%20to%20reach%20Microservice/index.html">
+              5.2 Reach Microservice from public network
+            </a></h4>
+
+            <h4  id="bhld">5.3 Basic Design</h4>
+            <dt><strong>Why we cannot store places directly on DB, Why we need to arrange DBs QuadTree Format?</strong></dt>
+            <p>
+              - System will have Huge data. We assumed 200-300M entries.<br>
+              - Now if someone want to get nearby places(within 10km), We need to perform following query on each entry of database
+              (long-10 and long+10) and (lat-10 and lat+10)<br>
+              - Scanning the entire table and checking if it meets both criteria can be very time-consuming and expensive.<br>
+              - DB should store region specific data. DB-1(store Europe(Germany)), DB-2(store India(Delhi)) data.<br>
+              - Service instances should run on specific AWS regions, which will update/query data from local DB.
+            </p>
+
+            <dt><strong>2 ways in which Databases can be arranged</strong></dt>
+            <table>
+              <tr>
+                <th></th>
+                <th><a href="https://github.com/amitkumar50/Code-examples/tree/master/DS_Questions/Data_Structures/Trees/M-Ary_Trees/Quad_Tree">Quad Tree</a>
+                  //Will Choose this</th>
+                <th>HashMap<zipcode, db-location></th>
+              </tr>
+              <tr>
+                <td>Advantages</td>
+                <td>
+                  - No problem in non-uniform distributed data. We can increase more DBs on heavy load.<br>
+                  - Allows for spatial indexing, enabling efficient range queries and proximity searches.
+                </td>
+                <td>
+                  - Simple to implement.<br>
+                  - Work well if data is uniformly distributed across zipcodes
+                </td>
+              </tr>
+              <tr>
+                <td>Disdvantages</td>
+                <td>
+                  - More Complex wrt Hash map<br>
+                  - Maintenance overhead as the system scales, especially in scenarios where data distribution changes frequently.
+                </td>
+                <td>
+                  - May not handle non-uniform data distribution effectively. 
+                  If certain regions have significantly more data than others, it could lead to load imbalance<br>
+                  - Adding or removing servers might be challenging
+                </td>
+              </tr>
+            </table>
+
+            <dt>
+              <b>QuadTree:</b><br>
+              - Whole whole world map is divided into grids. 1 grid can reside on multiple servers. 
+              Search Complexity for DB is O(logn).<br>
+              - Dynamically adjust the grid size such that whenever grid gets lot of places(maybe > 500) 
+              break it down into 4 dbs and distribute places b/w them.<br>
+              - Thickly populated areas like San Francisco will have a lot of grids.
+            </dt>
+            <pre><code class="language-css">
+              Quad Tree
+                [root]
+               / | \ \
+     
+       struct gridNode_or_dbNode {
+         uint32 gridId_or_dbID;            //gridId hash gives the DB where (latt-start,long-start,latt-end,long-end) are stored
+         double lattitude-start,lattitude-end;
+         double longitude-start,longitude-end;
+         struct grid *child[4];
+       }                
+            </code></pre>
+
+          <dl><strong><a href="#req1">Req-1: Add_place</a></strong></dl>
+          <dt><b>
+          <a href="/System_Design/Scalable/Methods%20to%20reach%20Microservice/index.html">
+            Components in reaching Microservice from public network
+          </a></b></dt>
+          <pre class="mermaid">
+            sequenceDiagram
+            rect rgb(221, 240, 221)
+              participant u as UserApp
+              box AWS
+              participant app as AppServer
+              participant dbf as DbFrontEnd<br>Diesel
+              participant db as QuadTree-DB
+              end
+
+              u ->> app: POST(data)
+              app ->> dbf: API call to insert
+              dbf ->> db: insert into table              
+            end
+          </pre>
+
+          <dl><strong><a href="#req4">Req-4: Search. Hotels Near me</a></strong></dl>
+          <pre class="mermaid">
+            sequenceDiagram
+            rect rgb(221, 240, 221)
+              participant u as UserApp
+              box AWS
+              participant app as AppServer
+              participant dbf as DbFrontEnd<br>Diesel
+              participant db as QuadTree-DB
+              end
+
+              u ->> app: HTTPS GET Hotels(long,lat)
+              app ->> dbf: Find root of DB-Quadtree<br>stored on db
+              dbf ->> db: Find root of DB-Quadtree<br>stored on db
+              db ->> dbf: root
+              dbf ->> app: root
+              app ->> dbf: traverse to DB which stores (lon, lat)
+              dbf ->> db: traverse to DB which stores (lon, lat)
+              app ->> dbf: hotels in 10km of (lat,lon)
+              dbf ->> db: hotels in 10km of (lat,lon)
+              db ->> dbf: Hotels
+              dbf ->> app: Hotels
+              note over app: Create json
+              app ->> u: Hotels json
+            end
+
+          </pre>
+
+          <h4  id="#problems">5.2 Problems in Basic Design </h4>
+          <dl><strong><a href="#nonfuncreq1">Non-Functional-Req-1. System should be Scalable, but it is not</a></strong></dl>
+          <p><u>Problem-1:</u> Only 1 application server serving all CREATE, READ. Will slow down on load<br>
+          Solution: Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</p>
+
+          <p><u>Problem-2:</u> Only 1 DB serving all CREATE, READ. Will slow down on load<br>
+          Solution: Master-Slave DB or Sharded Database</p>
+
+          <br>
+          <dl><strong><a href="#nonfuncreq2">Non-Functional-Req-2. Reliable, but it is not</a></strong></dl>
+          <p><u>Problem-1:</u> Only 1 application server serving all CREATE, READ. if it fails, system will die<br>
+            Solution: Multipod: Multiple instances of app-server behind load-balancer (this is horizontal scaling)</p>
+  
+            <p><u>Problem-2:</u> Only 1 DB serving all CREATE, READ. Will slow down on load<br>
+            Solution: Master-Slave DB or Sharded Database</p>
+
+          <br>
+          <dl><strong><a href="#nonfuncreq3">Non-Functional-Req-3. Fast, but it is not</a></strong></dl>
+          <p><u>Problem-1:</u> Only 1 application server serving all CREATE, READ. if it loaded system will be slow<br>
+            Solution:<br>
+            - Caching: store frequently accessed data in memory<br>
+            - CDNs: CDNs to cache static content and serve it from edge servers located closer to users</p>
+  
+            <p><u>Problem-2:</u> Only 1 DB serving all CREATE, READ. Will slow down on load<br>
+            Solution: Master-Slave DB or Sharded Database</p>
+
+    </article>
+  </main>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
+  </script>	
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>

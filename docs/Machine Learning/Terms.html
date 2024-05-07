@@ -30,6 +30,7 @@
         <a href="#bias">Bias/Sampling Bias</a>
         <a href="#cntk">CNTK</a>
         <a href="#keras">Keras</a>
+        <a href="#llm">Large language Model</a>
         <a href="#layer">Layer</a>
         <a href="#learningtypes">Learning Types</a>
         <a href="#lossf">Loss function</a>
@@ -167,11 +168,42 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
              GPU            CPU
         </pre></code>
 
+        <h3 id="llm">Large language model</h3>
+        <dd>
+            This is a computational model that can do natural language processing tasks such as <a href="#learningtypes">classification</a>.<br>
+            LLMs learns from LM by <a href="#learningtypes">self-supervised and semi-supervised training</a>.<br>
+            LLMs can be used for text generation, a form of generative AI, by taking an input text 
+        </dd>
+
+        <h4 id="llama">Llama (Large Language Model Meta AI)</h4>
+        <dd>
+            A <a href="#llm">LLMs</a> released by Meta AI starting in February 2023.
+        </dd>
+        
+        <dl><strong>Llama Models</strong></dl>
+        <table>
+            <tr>
+                <th></th>
+                <th>Llama 2 (Released on Jun,2023)</th>
+                <th>Llama 3 (Released on Apr,2024)</th>
+            </tr>
+            <tr>
+                <td>Trained Model sizes</td>
+                <td>7, 13, and 70 billion parameters</td>
+                <td>8B and 70B parameters</td>
+            </tr>
+            <tr>
+                <td>Improvments</td>
+                <td>fine-tuned for dialog wrt Llama-1</td>
+                <td>400B+ parameters is currently being trained</td>
+            </tr>
+        </table>
+
         <h3 id="layer">Layer / class or Function</h3>
-        <dl>Layer processes input data(tensor) and produces an output(tensor) in specific format. 
+        <dd>Layer processes input data(tensor) and produces an output(tensor) in specific format. 
             Neural network is created by cascading multiple layers.<br>
             Types of Layers:
-        </dl>
+        </dd>
         <table>
             <tr>
                 <th></th>
