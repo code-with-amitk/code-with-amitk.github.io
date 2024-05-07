@@ -66,37 +66,34 @@
           A<sup>3</sup>:(Accurate, Available, Authenticated), C<sup>2</sup>:(Cache),
           R<sup>2</sup>:(Reliable, Redundant) F<sup>2</sup>:(fast, Fault Tolerant)
         </dd>
-        <dl id="nonfuncreq1">1. Scalable</dl>
-          <dd>if user creates, 100k urls at same time, system should not delay</dd>
+        <dl id="nonfuncreq1">1. Scalable.
+          if user creates, 100k urls at same time, system should not delay</dl>
         <dl id="nonfuncreq2">2. Reliable: Everytime user hits shorturl, it should provide same bigurl</dl>
         <dl id="nonfuncreq3">3. Available: On high load, system should be available. (CRUD=READ)</dl>
 
         <h3 id="boe">2. BOE</h3>
-        <dl><strong>Storage Estimates:</strong></dl>
+        <dl><strong>QPS Estimates:</strong></dl>
         <p>
-            - 200M~300M business listings are present on google<br>
-            - Each place {string name, string address, double lat, double long, `vector<string> reviews`, string photos_url}  = 2000 KB<br>
-            - 300M * 2000k = 60 PB / year<br>
-            - User Reviews,Photos,Videos will keep on increasing. Suppose becomes 5 times per year.  300PB<br>
-            - New Businesses also gets added, old fade away. Suppose from last year it becomes twice.  120PB<br>
-            500 PB/year<br>
-            5 years = 2 Exabytes            
+          - 25000/86400 req/sec.  1 request/4 seconds<br>
+          - 25000 requests/day<br>
+          - 25000 x 30 = 750,000 requests/month<br>
+          - 750,000 x 12 x 5 = 450 Million requests/5years
         </p>
 
-        <dl><strong>QPS:</strong></dl>
+        <dl><strong>Storage Estimates:</strong></dl>
         <p>
-            - Assuming 100k user are accessing per sec<br>
-            - This may increase in peak season, and may decline/remain steady other times
+          Shortened URL: 6 bytes
+          Long URL: 250 bytes
+          Storage for 5 years: 260 x 450M = 117 GB
         </p>
 
         <dl><strong>Bandwidth Estimates:</strong></dl>
         <p>
-            - 100k req/s.<br>
+            - 1 request/4 seconds<br>
             - 1 GET request = 2KB<br>
-            - 1 UPDATE request = 4KB  //Avg of 2=3KB<br>
           
-            Incoming bytes = 100k x 3k = 300MBytes/sec<br>
-            Outgoing bytes = 100k x (sizeof 1 listing) = 100k x 2000 KB(calculated above) = 20GB/sec            
+            > Incoming bytes = 1 x 2k = 2000Bytes/5 sec<br>
+            > Outgoing bytes = same
         </p>
         
         <h3 id="systemapis">3. System APIs</h3>
