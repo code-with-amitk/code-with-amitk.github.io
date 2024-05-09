@@ -134,6 +134,30 @@
       By appropriately configuring these parameters, it's possible to tune Argon2 to be less susceptible to GPU-based attacks
     </dd>
 
+    <h4>Argon2, Argon2i, Argon2id</h4>
+    <table>
+      <tr>
+        <th></th>
+        <th>Usage/Feature</th>
+        <th>Resistant to</th>
+      </tr>
+      <tr>
+        <td>argon2</td>
+        <td>preferred for password hashing and key derivation</td>
+        <td>because it's resistant to side-channel attacks</td>
+      </tr>
+      <tr>
+        <td>argon2d</td>
+        <td></td>
+        <td>more resistant to GPU attacks</td>
+      </tr>
+      <tr>
+        <td>argon2id</td>
+        <td>hybrid of Argon2i and Argon2d</td>
+        <td></td>
+      </tr>
+    </table>
+
     <h3 id="mac">MAC</h3>
     <dd>
       Examples: CMAC, SHA1-HMAC, MD5-HMAC, UMAC
