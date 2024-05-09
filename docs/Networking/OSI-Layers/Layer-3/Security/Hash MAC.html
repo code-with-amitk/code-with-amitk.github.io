@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hash MessageDigest MAC HMAC</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#hash">Hash_MessageDigest</a>
+    <a href="#algos">Hashing Algorithms</a>
+    <a href="#mac">MAC</a>
+    <a href="#hmac">HMAC</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h3 id="hash">Hash or Message Digest</h3>
+    <dd>
+      Transforming String into FIXED-LENGTH string Value. From Hash Message cannot be retrieved back. 
+      Hash function should not generate same value for different input strings.<br>
+      MD5 started producing that and hence considered broken.
+    </dd>
+    <pre><code>
+      Kumar >  | Hash Function |  > random_string
+    </code></pre>
+
+    <dl><strong>Why to use Hash</strong></dl>
+    <dd>
+      For security, password Hash is stored. Whenever someone enters password hashes are compared.
+    </dd>
+
+    <dl><strong>How GPU can crack a Hash?</strong></dl>
+    <dd>
+      GPUs are particularly effective at performing parallel computations. <br>
+      They contain numerous cores that can execute instructions simultaneously, making them well-suited for tasks 
+      like hashing, which involve performing the same operation on multiple inputs simultaneously.<br>
+      GPUs can test a large number of password guesses(Brute force) in parallel, making them much faster at 
+      trying different combinations.<br>
+      But <a href="#argon">Argon2</a> hash is GPU resistant.
+    </dd>
+    
+    <h3 id="algos">Hashing Algorithms</h3>
+    <table>
+      <tr>
+        <th>Algo</th>
+        <th>SHA1,SHA0(broken)</th>
+        <th>SHA256 (or v2)(not broken)</th>
+        <th>SHA3/Keccak(or 512)</th>
+        <th>MD4,MD5(broken)</th>
+      </tr>
+      <tr>
+        <td>Published</td>
+        <td>1995</td>
+        <td>2012</td>
+        <td>2015</td>
+        <td>2015</td>
+      </tr>
+      <tr>
+        <td>Input</td>
+        <td>2128 bit</td>
+        <td>2128 bit</td>
+        <td>264 bit</td>
+        <td>infinite</td>
+      </tr>
+      <tr>
+        <td>Output Hash(bits)</td>
+        <td>160</td>
+        <td>256</td>
+        <td>512</td>
+        <td>128</td>
+      </tr>
+    </table>
+
+    <h4>MD5</h4>
+    <pre><code>
+      1. Take four 32-bit words, initialized to fixed constants.
+
+      C1(01 23 45 67), C2:(89 ab cd ef), C3(fe dc ba 98), C4(76 54 32 10)
+
+      2. Take 4 Functions
+      
+          f(x,y,z) = (x & y) | ((~x) & z)
+          g(x,y,z) = (x & z)| (y & (~z))
+          h(x,y,z) = x ^ y ^ z
+          i(x,y,z) = y ^ (x | (~z))
+
+      3. Break input into 32-bit words
+      
+                      Input(512 bits)  ->  |Break into 16 pieces| ->     m1 .. m16
+      if input is not 512 bit pad it
+
+      4. Perform 4 or 16 round Operations.
+      
+      //AM: Addition Modulo
+        Round-1:    F(K2,K3,K4) ->  AM ->  AM -> |Rotate left bit by s places| ->  AM -> K2
+                                    /\     /\                                      /\
+                                    C1     m1                                      C2
+        Round-2: For m2 and so on..
+    </code></pre>
+
+    <h4>Argon2</h4>
+    <dl id="argon"><strong>How Argon2 is GPU resistant?</strong></dl>
+    <dd>
+      <u>1. Memory Hardness:</u><br>
+      Argon2 is a memory-hard hashing algorithm, meaning that it requires a lot of memory to be computed.<br>
+      Since GPU typically have less memory available compared to CPUs. As a result, even though GPUs can perform computations quickly, 
+      they may struggle with the memory requirements of Argon2.
+    </dd>
+    <dd>
+      <u>2. Parallelism resistance:</u><br>
+      While GPUs excel at parallel computations, Argon2 is designed to require significant serial computation as well. <br>
+      This means that even though GPUs can try many password guesses in parallel, they may still be limited by the sequential nature of certain parts of the Argon2 algorithm.
+    </dd>
+    <dd>
+      <u>3. Configuration parameters</u><br>
+      Argon2 allows for the adjustment of parameters(such as the memory cost, time cost, and parallelism degree)<br>
+      By appropriately configuring these parameters, it's possible to tune Argon2 to be less susceptible to GPU-based attacks
+    </dd>
+
+    <h3 id="mac">MAC</h3>
+    <dd>
+      Examples: CMAC, SHA1-HMAC, MD5-HMAC, UMAC
+    </dd>
+    <pre><code>
+    (Message + Pvt Key) > |Hash function| > MAC
+    </code></pre>
+
+    <h3 id="hmac">HMAC(Hashed MAC)</h3>
+    <dd>More complex way of calculating MAC</dd>
+    <pre><code>
+      secret Key ->(XOR) <- Inner Pad     Secret Key-> (XOR) <- Outer Pad
+                    \/                                 \/
+                    M1                                 M2
+            |M-1| Message | M2 |      
+    </code></pre>
+
+  </article>
+
+</body>
+</html>
