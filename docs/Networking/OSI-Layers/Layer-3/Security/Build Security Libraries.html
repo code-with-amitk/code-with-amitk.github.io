@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Build Security Libraries</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#botan">Botan</a>
+    <a href="#openssl">Openssl</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h3 id="botan">Botan</h3>
+    <dl>
+      <a href="https://botan.randombit.net/handbook/api_ref/pbkdf.html#scrypt">Scrypt Hashing Algo</a><br>
+      <a href="https://botan.randombit.net/handbook/api_ref/hash.html#hash-example">SHA-256, SHA-384, and SHA-3 hash digests</a>
+    </dl>
+    <h4>Build</h4>
+    <pre><code class="language-css">
+$ git clone https://github.com/randombit/botan.git
+
+//https://github.com/randombit/botan/blob/master/doc/building.rst
+$ ./configure.py
+$ make
+$ make install
+    </code></pre>
+
+    <h4>Link Code</h4>
+    <pre><code class="language-css">
+#include <botan/hex.h>
+#include <botan/pwdhash.h>
+#include <botan/system_rng.h>
+#include <array>
+#include <iostream>
+int main() {
+    const std::string pbkdf_algo = "Argon2i";
+    auto pbkdf_runtime = std::chrono::milliseconds(300);
+    const size_t output_hash = 32;
+    const size_t max_pbkdf_mb = 128;
+
+    auto pwd_fam = Botan::PasswordHashFamily::create_or_throw(pbkdf_algo);
+
+    auto pwdhash = pwd_fam->tune(output_hash, pbkdf_runtime, max_pbkdf_mb);
+
+    std::cout << "Using params " << pwdhash->to_string() << '\n';
+
+    std::array<uint8_t, 32> salt;
+    Botan::system_rng().randomize(salt);
+
+    const std::string password = "tell no one";
+
+    std::array<uint8_t, output_hash> key;
+    pwdhash->hash(key, password, salt);
+
+    std::cout << Botan::hex_encode(key) << '\n';
+
+    return 0;
+}
+$ g++ argon2.cpp -I/home/amit/botan/build/include/public/ -L/usr/local/lib/ -lbotan-3 -std=c++20
+$ ./a.out
+Using params Scrypt(65536,8,1)
+EF3EE990AD3FCA2A107025A6A9029D265AC9B367FA687AE5CF5154F2E8CD56C7
+    </code></pre>
+
+    <h3 id="openssl">Openssl</h3>
+    <h4>Build</h4>
+    <table>
+      <tr>
+        <th>Static Libraray</th>
+        <th>Shared Library</th>
+      </tr>
+      <tr>
+        <td>
+          <pre><code class="language-css">
+$ git clone https://github.com/openssl/openssl.git
+$ cd openssl
+$ ./config no-shared
+$ make
+$ make install            
+          </code></pre>
+        </td>
+        <td>
+          <pre><code class="language-css">
+$ git clone https://github.com/openssl/openssl.git
+$ cd openssl
+$ ./config
+$ make  
+          </code></pre>
+        </td>
+      </tr>
+    </table>
+    
+  </article>
+
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>
