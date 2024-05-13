@@ -96,7 +96,9 @@ $ git clone https://github.com/openssl/openssl.git
 $ cd openssl
 $ ./config no-shared
 $ make
-$ make install            
+$ ls -ltr *.a
+-rw-r--r-- 1 amit amit 10962728 May 14 00:09 libcrypto.a
+-rw-r--r-- 1 amit amit  2029566 May 14 00:11 libssl.a      
           </code></pre>
         </td>
         <td>
@@ -109,7 +111,7 @@ $ make
         </td>
       </tr>
     </table>
-    
+
   </article>
 
   <script src="/scripts/prism.js"></script>
