@@ -47,11 +47,11 @@ $ make install
 
     <h4>Link Code</h4>
     <pre><code class="language-css">
-#include <botan/hex.h>
-#include <botan/pwdhash.h>
-#include <botan/system_rng.h>
-#include <array>
-#include <iostream>
+#include &lt;botan/hex.h>
+#include &lt;botan/pwdhash.h>
+#include &lt;botan/system_rng.h>
+#include &lt;array>
+#include &lt;iostream>
 int main() {
     const std::string pbkdf_algo = "Argon2i";
     auto pbkdf_runtime = std::chrono::milliseconds(300);
@@ -62,14 +62,14 @@ int main() {
 
     auto pwdhash = pwd_fam->tune(output_hash, pbkdf_runtime, max_pbkdf_mb);
 
-    std::cout << "Using params " << pwdhash->to_string() << '\n';
+    std::cout &lt;&lt; "Using params " &lt;&lt; pwdhash->to_string() &lt;&lt; '\n';
 
-    std::array<uint8_t, 32> salt;
+    std::array&lt;uint8_t, 32> salt;
     Botan::system_rng().randomize(salt);
 
     const std::string password = "tell no one";
 
-    std::array<uint8_t, output_hash> key;
+    std::array&lt;uint8_t, output_hash> key;
     pwdhash->hash(key, password, salt);
 
     std::cout << Botan::hex_encode(key) << '\n';
@@ -107,6 +107,144 @@ $ git clone https://github.com/openssl/openssl.git
 $ cd openssl
 $ ./config
 $ make  
+          </code></pre>
+        </td>
+      </tr>
+    </table>
+
+    <h4>Link Code</h4>
+    <table>
+      <tr>
+        <th>sha3-512</th>
+        <th>Scrypt</th>
+      </tr>
+      <tr>
+        <td>
+          <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;openssl/evp.h>
+#include &lt;iomanip>
+
+using namespace std;
+std::string computeSHA3_512(const std::string& message) {
+    EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
+    const EVP_MD *md = EVP_sha3_512();
+
+    if (mdctx == NULL) {
+        throw std::runtime_error("Error creating EVP_MD_CTX");
+    }
+    if (1 != EVP_DigestInit_ex(mdctx, md, NULL)) {
+        EVP_MD_CTX_free(mdctx);
+        throw std::runtime_error("Error initializing digest");
+    }
+    if (1 != EVP_DigestUpdate(mdctx, message.c_str(), message.size())) {
+        EVP_MD_CTX_free(mdctx);
+        throw std::runtime_error("Error updating digest");
+    }
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int hash_len;
+    if (1 != EVP_DigestFinal_ex(mdctx, hash, &hash_len)) {
+        EVP_MD_CTX_free(mdctx);
+        throw std::runtime_error("Error finalizing digest");
+    }
+    EVP_MD_CTX_free(mdctx);
+    std::ostringstream hex_stream;
+    hex_stream &lt;&lt; std::hex &lt;&lt; std::setfill('0');
+    for (unsigned int i = 0; i &lt; hash_len; ++i) {
+        hex_stream &lt;&lt; std::setw(2) &lt;&lt; static_cast&lt;int>(hash[i]);
+    }
+
+    return hex_stream.str();
+}
+int main() {
+  std::string message = "Hello, OpenSSL!";
+  try {
+      std::string hash = computeSHA3_512(message);
+      std::cout &lt;&lt; "SHA3-512 hash: " &lt;&lt; hash &lt;&lt; std::endl;
+  } catch (const std::runtime_error& e) {
+      std::cerr &lt;&lt; "Error: " &lt;&lt; e.what() &lt;&lt; std::endl;
+      return 1;
+  }
+  return 0;
+}
+$ g++ sha3-512_openssl.cpp -I/home/amit/openssl/include 
+-L/home/amit/openssl -l:libssl.a -l:libcrypto.a
+SHA3-512 hash: 1238451fd09cfd35f94cb224a7b7f15901429c0e
+2f71667c1668e8ad5467ff6d4f48ec7761aceec4d1ac8fcd2be4d9f
+621fab1f734cea9ccbfbb76188ce0cdd6
+          </code></pre>
+        </td>
+
+        <td>
+          <pre><code class="language-css">
+#include &lt;openssl/evp.h>
+#include &lt;openssl/kdf.h>
+#include &lt;iostream>
+#include &lt;vector>
+#include &lt;iomanip>
+
+void deriveScryptKey(const std::string& password, const std::string& salt, int N, int r, int p, size_t key_length, std::vector<unsigned char>& derived_key) {
+    EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_SCRYPT, NULL);
+    if (!pctx) {
+        throw std::runtime_error("Error creating EVP_PKEY_CTX");
+    }
+
+    if (EVP_PKEY_derive_init(pctx) &lt;= 0) {
+        EVP_PKEY_CTX_free(pctx);
+        throw std::runtime_error("Error initializing PKEY context");
+    }
+
+    if (EVP_PKEY_CTX_set1_pbe_pass(pctx, password.c_str(), password.size()) &lt;= 0 ||
+            EVP_PKEY_CTX_set1_scrypt_salt(
+              pctx, reinterpret_cast<const unsigned char*>(salt.c_str()), salt.size()) &lt;= 0 ||
+            EVP_PKEY_CTX_set_scrypt_N(pctx, N) &lt;= 0 ||
+            EVP_PKEY_CTX_set_scrypt_r(pctx, r) &lt;= 0 ||
+            EVP_PKEY_CTX_set_scrypt_p(pctx, p) &lt;= 0 ||
+            EVP_PKEY_CTX_set_scrypt_maxmem_bytes(pctx, 1024 * 1024 * 1024) &lt;= 0) {
+        EVP_PKEY_CTX_free(pctx);
+        throw std::runtime_error("Error setting Scrypt parameters");
+    }
+
+    derived_key.resize(key_length);
+
+    size_t outlen = derived_key.size();
+    if (EVP_PKEY_derive(pctx, derived_key.data(), &outlen) <= 0) {
+        EVP_PKEY_CTX_free(pctx);
+        throw std::runtime_error("Error deriving Scrypt key");
+    }
+
+    EVP_PKEY_CTX_free(pctx);
+}
+int main() {
+  std::string password = "password";
+  std::string salt = "salt";
+  int N = 1 &lt;&lt; 12;
+  int r = 8;
+  int p = 1;
+  size_t key_length = 64;
+
+  std::vector&lt;unsigned char> derived_key;
+
+  try {
+      deriveScryptKey(password, salt, N, r, p, key_length, derived_key);
+
+      std::cout << "Derived key: ";
+      for (unsigned char c : derived_key) {
+          std::cout &lt;&lt; std::hex &lt;&lt; 
+          std::setfill('0') &lt;&lt; std::setw(2) &lt;&lt; static_cast<int>(c);
+      }
+      std::cout &lt;&lt; std::endl;
+  } catch (const std::runtime_error& e) {
+      std::cerr &lt;&lt; "Error: " &lt;&lt; e.what() &lt;&lt; std::endl;
+      return 1;
+  }
+
+  return 0;
+}
+$ g++ scrypt_openssl.cpp -I/home/amit/openssl/include 
+-L/home/amit/openssl -l:libssl.a -l:libcrypto.a
+Derived key: e1d96c45c39931fbecda7a37cd6f64e0f43f12dcecce9d66cd3e279ffe603516f
+356033201f31c656f8966840b9ff3098d48565b8c55c738b3a1b21cca23093e
           </code></pre>
         </td>
       </tr>
