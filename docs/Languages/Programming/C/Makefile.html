@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Makefile</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#what">What</a>
+            <a href="#terms">Terms</a>
+            <a href="#examples">Examples</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h3 id="what">What is Makefile</h3>
+            <dd>
+                Makefile consists of a set of RULES. Rules consists of 3 parts<br>
+                &ensp; Target: target and pre-requisites are separated by a colon (:)<br>
+                &ensp; List of pre-requisites/Dependencies.<br>
+                &ensp; A command: The command must be preceded by a tab (NOT spaces)                
+            </dd>
+            <pre><code>
+target: pre-requisite-1 pre-requisite-2 ...
+command                
+            </code></pre>
+
+            <h3 id="terms">Terms</h3>
+            <h4>PHONY/Artificial Targets</h4>
+                <dd>
+                    These are not real name of a file, it is just a name for a recipe to be executed. Example: clean, all, install.
+                </dd>
+            <h4>Variable</h4>
+            <dd>
+                A variable begins with a `$`<br>
+            </dd>
+            <dl><strong>Types of Variables</strong></dl>
+            <dd>
+                1. Multicharacter variables are enclosed within parentheses (...) or braces {...}. Eg: (CC_FLAGS)<br>
+                2. Singlecharacter variables do not need the parentheses. Eg: ^<br>
+                3. Automatic Variables These are automatically(note automatically) set by make whenever rule is matched.
+            </dd>
+            <dt><strong>Automatic Variables</strong></dt>
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Meaning</th>
+                </tr>
+                <tr>
+                    <td>$@</td>
+                    <td>Target name, name of the file being generated</td>
+                </tr>
+                <tr>
+                    <td>$*</td>
+                    <td>Target filename without extension</td>
+                </tr>
+                <tr>
+                    <td>$&lt;</td>
+                    <td>1st Pre-requisite/Depends filename</td>
+                </tr>
+                <tr>
+                    <td>$^</td>
+                    <td>Filename of all Pre-requisites seperated by spaces(discard Duplicates)</td>
+                </tr>
+                <tr>
+                    <td>$+</td>
+                    <td>similar to $^, but includes duplicates</td>
+                </tr>
+                <tr>
+                    <td>$?</td>
+                    <td>names of all prerequisites that are newer than the target, separated by spaces</td>
+                </tr>
+                <tr>
+                    <td>$%</td>
+                    <td>target member name. When target is foo.a(bar.o) ‘$%’ is bar.o</td>
+                </tr>
+                <tr>
+                    <td>$(COMPILE.c)</td>
+                    <td>consists of compiler name and compiler options</td>
+                </tr>
+                <tr>
+                    <td>$(COMPILE.cpp)</td>
+                    <td>consists of compiler name and compiler options</td>
+                </tr>
+                <tr>
+                    <td>$(COMPILE.cpp)</td>
+                    <td>consists of compiler name and compiler options</td>
+                </tr>
+                <tr>
+                    <td>$(OUTPUT_OPTION)</td>
+                    <td>could be -o $@</td>
+                </tr>
+                <tr>
+                    <td>LINK.cc</td>
+                    <td>(CXXFLAGS) (LDFLAGS) $(TARGET_ARCH)</td>
+                </tr>
+                <tr>
+                    <td>$(LINK.cpp)</td>
+                    <td>Equal to $(LINK.cc)</td>
+                </tr>
+                <tr>
+                    <td>make --print-data-base</td>
+                    <td>ALL set of implicit pattern rules</td>
+                </tr>
+            </table>
+
+            <h3 id="examples">Examples</h3>
+            <h4>Hello World</h4>
+            <table>
+                <tr>
+                    <th>Code</th>
+                    <th>Makefile</th>
+                    <th>Explanation</th>
+                </tr>
+                <tr>
+                    <td><pre><code class="language-css">
+// hello.c
+#include <stdio.h>   
+int main() {
+    printf("Hello, world!\n");
+    return 0;
+}
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+//Running make without target hits `all`
+all: hello.exe
+
+hello.exe: hello.o
+        gcc -o hello.exe hello.o
+
+hello.o: hello.c
+        gcc -c hello.c
+        
+clean:
+        rm hello.o hello.exe                        
+                    </code></pre></td>
+                    <td>
+                        <b>make</b><br>
+                        1. make command reaches Rule = all.<br>
+                        &ensp; Rule = all has pre-requisite hello.exe(does not exist), so it looks for a rule to create it.<br>
+                        2. Reaches Rule = hello.exe<br>
+                        &ensp; Pre-requisite hello.o(does not exist) so it looks for a rule to create it.<br>
+                        3. Reaches Rule = hello.o<br>
+                        &ensp; Pre-requisite hello.c(exists, stay here and execute)<br>
+                        &ensp; Runs the command gcc -c hello.c<br>
+                        &ensp; Rule finishes, goes back to Rule = hello.exe<br>
+                        4. Reaches Rule = hello.exe<br>
+                        &ensp; Pre-requisite hello.o(exists)<br>
+                        &ensp; Run its command gcc -o hello.exe hello.o<br>
+                        5. Finally, Rule = all does nothing.<br><br>
+
+                        <b>make clean</b><br>
+                        Specifying the target to be build with make.
+                    </td>
+                </tr>
+            </table>
+
+            <h4>Example 2</h4>
+            <table>
+                <tr>
+                    <th>Code</th>
+                    <th>Makefile</th>
+                    <th>Explanation</th>
+                </tr>
+                <tr>
+                    <td><pre><code class="language-css">
+//init.cpp
+#include "openssl/bio.h"
+#include "openssl/ssl.h"
+#include "openssl/err.h"
+void initialize_openssl() {
+    /* Initializing OpenSSL */
+    SSL_load_error_strings();
+    ERR_load_BIO_strings();
+    OpenSSL_add_all_algorithms();
+}
+
+//init.h
+void initialize_openssl();
+
+//main.cpp
+#include<init.h>
+void main(){
+    initialize_openssl();
+}
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+# Declared Variables
+IDIR=.
+CC=gcc
+# List of flags to pass to compilation command
+CFLAGS=-I$(IDIR)
+LDFLAGS=-L/usr/lib64
+OBJ= init.o main.o
+
+make: $(OBJ)
+    $(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) -lssl -lcrypto
+                    </code></pre></td>
+                    <td>
+                        
+                    </td>
+                </tr>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
