@@ -3,6 +3,7 @@
 <head>
     <title>Docker Commands</title>
     <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
@@ -26,42 +27,42 @@
     </aside>
 
     <div style="margin-left:200px;">
-        <table>
-            <tr>
-                <th>Command</th>
-                <th>Meaning</th>
-            </tr>
-            <tr>
-                <td>Login</td>
-                <td><pre>
+        <h3>Commands</h3>
+        <h4>Create, Run commands inside container locally</h4>
+        <pre><code class="language-css">
+// Build a Docker image from a Dockerfile, stores in a local registry on your system
+// -t: name and tag of docker file
+$ docker build . -f Dockerfile -t test_image
+
+// View docker image stored in a local registry on your system
+$ docker image ls
+$ docker image rmi docker-image
+
+// Run Image Inside Container
+    //--volume ./test. mounts a volume into the container (./test)
+    //--user 1001. user ID inside the container.
+    //test-docker-image. Image name from which container is created
+    //cmd. Command executed inside container when its created
+$ docker run --volume ./test --user &lt;uid of user> test-docker-image cmd
+
+// Enter into container
+    //-i interactive. Keep STDIN open even if not attached
+    //-t Allocate a pseudo-TTY        
+    //-c CPU shares (relative weight)
+$ docker run -it --volume ./checker --entrypoint /bin/bash test-docker-amit -c 2
+$ docker run -it --volume ./checker --entrypoint /bin/bash test-docker-amit -c 2 
+        </code></pre>
+
+        <h4>Other Commands</h4>
+<pre><code class="language-css">
+//Login
 $ docker login repository
-                </pre></td>
-            </tr>
 
-            <tr>
-                <td>Pull docker image</td>
-                <td><pre>
+//Download docker image locally on system
 $ docker image pull artifactory/path:image-tag
-// Download docker image locally on system
-                </pre></td>
-            </tr>
-
-            <tr>
-                <td>List docker images present on system</td>
-                <td><pre>
-$ docker images
-                </pre></td>
-            </tr>
-
-            <tr>
-                <td>Build Docker image</td>
-                <td><pre>
-$ vim test.Dockerfile
-$ docker build . -f test.Dockerfile -t test_image
-                </pre></td>
-            </tr>
-        </table>
-
+</code></pre>
     </div>
+    
+    <script src="/scripts/prism.js"></script>
 </body>
 </html>

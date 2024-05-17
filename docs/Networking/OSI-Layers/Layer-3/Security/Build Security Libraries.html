@@ -27,6 +27,10 @@
   <aside class="sidebar">    <!--See .sidebar in styles.css-->
     <a href="#botan">Botan</a>
     <a href="#openssl">Openssl</a>
+    <ul>
+      <li><a href="#x86">Build on x86</a></li>
+      <li><a href="#arm">Cross Compile for ARM</a></li>
+    </ul>
   </aside>
 
   <article style="margin-left:200px;">
@@ -35,7 +39,6 @@
       <a href="https://botan.randombit.net/handbook/api_ref/pbkdf.html#scrypt">Scrypt Hashing Algo</a><br>
       <a href="https://botan.randombit.net/handbook/api_ref/hash.html#hash-example">SHA-256, SHA-384, and SHA-3 hash digests</a>
     </dl>
-    <h4>Build</h4>
     <pre><code class="language-css">
 $ git clone https://github.com/randombit/botan.git
 
@@ -43,10 +46,7 @@ $ git clone https://github.com/randombit/botan.git
 $ ./configure.py
 $ make
 $ make install
-    </code></pre>
 
-    <h4>Link Code</h4>
-    <pre><code class="language-css">
 #include &lt;botan/hex.h>
 #include &lt;botan/pwdhash.h>
 #include &lt;botan/system_rng.h>
@@ -83,7 +83,8 @@ EF3EE990AD3FCA2A107025A6A9029D265AC9B367FA687AE5CF5154F2E8CD56C7
     </code></pre>
 
     <h3 id="openssl">Openssl</h3>
-    <h4>Build</h4>
+    <h4>Build for x86</h4>
+    <dl><strong>Static, shared libs</strong></dl>
     <table>
       <tr>
         <th>Static Libraray</th>
@@ -112,7 +113,8 @@ $ make
       </tr>
     </table>
 
-    <h4>Link Code</h4>
+    <br>
+    <dl><strong>Link Code</strong></dl>
     <table>
       <tr>
         <th>sha3-512</th>
@@ -249,6 +251,14 @@ Derived key: e1d96c45c39931fbecda7a37cd6f64e0f43f12dcecce9d66cd3e279ffe603516f
         </td>
       </tr>
     </table>
+
+  <h4 id="arm">Cross Complile for ARM</h4>
+  <dl><strong>What is cross compile?</strong></dl>
+  <dt>
+    Cross-compiling means the process of compiling source code on one architecture (the host=x86) to 
+    generate binaries that can run on a different architecture (the target=ARM)<br>
+    Cross-compilation involves using a cross-compiler toolchain. Toolchain contains(compilers, linkers, and other build tools) for target architecture.
+  </dt>
 
   </article>
 
