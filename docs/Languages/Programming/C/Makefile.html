@@ -25,6 +25,11 @@
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#what">What</a>
             <a href="#terms">Terms</a>
+            <ul>
+                <li><a href="#targets">Targets</a></li>
+                <li><a href="#variables">Variables</a></li>
+                <li><a href="#terms">Terms</a></li>
+            </ul>
             <a href="#examples">Examples</a>
         </aside>
 
@@ -42,14 +47,16 @@ command
             </code></pre>
 
             <h3 id="terms">Terms</h3>
-            <h4>PHONY/Artificial Targets</h4>
+            <h4 id="targets">PHONY/Artificial Targets</h4>
                 <dd>
                     These are not real name of a file, it is just a name for a recipe to be executed. Example: clean, all, install.
                 </dd>
-            <h4>Variable</h4>
+
+            <h4 id="variables">Variables</h4>
             <dd>
                 A variable begins with a `$`<br>
             </dd>
+
             <dl><strong>Types of Variables</strong></dl>
             <dd>
                 1. Multicharacter variables are enclosed within parentheses (...) or braces {...}. Eg: (CC_FLAGS)<br>
@@ -167,6 +174,36 @@ clean:
 
                         <b>make clean</b><br>
                         Specifying the target to be build with make.
+                    </td>
+                </tr>
+                <tr>
+                    <td><pre><code class="language-css">
+// hello.c
+#include <stdio.h>   
+int main() {
+    printf("Hello, world!\n");
+    return 0;
+}                        
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+all: hello.exe
+
+hello.exe: hello.o
+    gcc -o $@ $&lt;
+                                        
+hello.o: hello.c
+    gcc -c $&lt;
+        
+clean:
+    rm hello.o hello.exe
+                    </code></pre></td>
+                    <td>
+                        1. Running make without target hits `all`<br><br>
+                        2. <b>gcc -o $@ $&lt;</b>  $&lt; means 1st pre-requisite filename = hello.o<br>
+                        &ensp; $@ means target file name = hello.exe<br><br>
+                        3. <b>gcc -o $@ $&lt;</b>  = gcc -o hello.exe hello.o<br>
+                        &ensp; $&lt; means 1st pre-requisite filename = hello.c<br><br>
+                        4. gcc -c $&lt;  =  gcc -c hello.c
                     </td>
                 </tr>
             </table>
