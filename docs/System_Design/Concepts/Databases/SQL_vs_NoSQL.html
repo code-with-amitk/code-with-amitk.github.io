@@ -58,18 +58,35 @@
                 </td>
             </tr>
             <tr>
+                <td>Advantage</td>
+                <td></td>
+                <td>
+                    1. Super low latency<br>
+                    2. Data are unstructured, or you do not have any relational data<br>
+                    3. Store a massive amount of data<br>
+                    4. Need to serialize and deserialize data (JSON, XML, YAML, etc.)
+                </td>
+            </tr>
+            <tr>
+                <td>Disadvantage</td>
+                <td></td>
+                <td>
+                    1. Join operations are not supported
+                </td>
+            </tr>
+            <tr>
                 <td>Format</td>
                 <td>Table(Records searched using primary key)
-                    <pre>
+                    <pre><code class="language-css">
 //Books Table
 
 | book-id(pk) | title | author | genre | comments |
-                    </pre>
+                    </code></pre>
                 </td>
                 <td>
                     &lt;key, value> or xml or json or objects<br>
                     Example: Book data stored in mongoDB in json format
-                    <pre>
+                    <pre><code class="language-css">
 // Same as books table
 /////// entry-1 /////////
 {       
@@ -101,7 +118,7 @@
     },
     "genre": "Adventure",
 }
-                    </pre>
+                    </code></pre>
                 </td>
             </tr>
             <tr>
@@ -137,6 +154,6 @@
 
     </article>
   </main>
-
+  <script src="/scripts/prism.js"></script>
 </body>
 </html>

@@ -101,7 +101,7 @@ body, h1, p, ul, li {
     padding: 5px;
     text-align: left;
     background-color: #f2f2f2;
-    font-size: smaller;
+    font-size: 13px;
   }
   /* Table styles end */
 
@@ -119,7 +119,7 @@ pre {
   /*padding: 10px;
   border-radius: 5px;*/
   font-family: monospace;
-  font-size: 9.5px;
+  font-size: 11px;
   /*line-height: 1.5;
   white-space: pre-wrap;*/
 }
@@ -196,7 +196,7 @@ p {
   font-family: 'Poppins';
   margin-left: 24px;
   margin-bottom: 10px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 /* li start*/

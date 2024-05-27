@@ -23,34 +23,84 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#">Commands</a>
+        <a href="#createrun">Create Docker Image. Run inside Container</a>
+        <a href="#enter">Enter inside Container</a>
+        <a href="#x86onarm">Running arm binaries on x86</a>
     </aside>
 
     <div style="margin-left:200px;">
         <h3>Commands</h3>
-        <h4>Create, Run commands inside container locally</h4>
+        <h4 id="createrun">Create Docker Image, Run inside Container</h4>
         <pre><code class="language-css">
-// Build a Docker image from a Dockerfile, stores in a local registry on your system
-// -t: name and tag of docker file
+/* 
+Build a Docker image from a Dockerfile, stores in a local registry on your system
+    -t: name and tag of docker file
+*/
 $ docker build . -f Dockerfile -t test_image
 
-// View docker image stored in a local registry on your system
+/* View docker image stored in a local registry on your system */
 $ docker image ls
 $ docker image rmi docker-image
 
-// Run Image Inside Container
-    //--volume ./test. mounts a volume into the container (./test)
-    //--user 1001. user ID inside the container.
-    //test-docker-image. Image name from which container is created
-    //cmd. Command executed inside container when its created
-$ docker run --volume ./test --user &lt;uid of user> test-docker-image cmd
+/* 
+Run Image Inside Container
+    --volume <host-dir>:<container-dir>[:options]
+            Mount a directory from the host system into the container. 
+            For example 
+                On host there are some files inside /home/amit, which i want to access inside container
+                I can mount using /home/amit:/test
+                All files in /home/amit would be present inside /test in container.
+    --user 1001. user ID inside the container.
+    test-docker-image. Image name from which container is created
+    cmd. Command executed inside container when its created
+*/    
+$ docker run --volume /home/amit:/test --user &lt;uid of user> test-docker-image cmd
+            </code></pre>
 
-// Enter into container
-    //-i interactive. Keep STDIN open even if not attached
-    //-t Allocate a pseudo-TTY        
-    //-c CPU shares (relative weight)
-$ docker run -it --volume ./checker --entrypoint /bin/bash test-docker-amit -c 2
-$ docker run -it --volume ./checker --entrypoint /bin/bash test-docker-amit -c 2 
+            <h4 id="enter">Run Interactive session inside Container</h4>
+            <pre><code class="language-css">            
+/* 
+Run session inside Container
+    -i interactive. Keep STDIN open even if not attached. allows you to interact with the container.
+    -t Allocate a pseudo-TTY. Helps to run an interactive shell session in the container.
+    --volume: explained above
+    --entrypoint: 
+        Overrides the default entry point of the Docker image
+        /bin/bash, container should start with the /bin/bash shell instead of the default entry point defined in the image.
+    brunneis/python:3.9.0-ubuntu: specific Docker image
+        brunneis: This is the username or organization on Docker Hub that owns the repository.
+        python: This is the name of the repository.
+        3.9.0-ubuntu: Tag for the image, indicating it contains Python 3.9.0 based on an Ubuntu operating system.
+    -c CPU shares (relative weight)
+
+Overall
+    Run Docker image(brunneis/python:3.9.0-ubuntu) inside container at /bin/bash
+    Mounts the /home/amit directory from the host to /test
+    Run command -c 'ls -ltr'
+*/
+$ docker run -it --volume /home/amit:/test --entrypoint /bin/bash brunneis/python:3.9.0-ubuntu -c 'ls -ltr'
+        </code></pre>
+
+        <h4 id="x86onarm">Running arm binaries on x86</h4>
+        <pre><code class="language-css">
+/*
+Run arm compiled binary on x86
+    --privileged:
+        flag gives the container extended privileges
+        When run with --privileged flag, container gains access to all the host's devices and can 
+        perform tasks that are otherwise restricted for security reasons. Eg:
+            Change kernel parameters
+            Access and manipulate system devices
+            Perform other operations typically limited to root access on the host
+    --rm:
+        Automatically removes the container once it exits, to keep system clean.
+    tonistiigi/binfmt:  Docker image available on Docker Hub
+        tonistiigi: This is the username or organization on Docker Hub that owns the repository.
+        binfmt: This is the name of the repository. Register new binary formats in the kernel,
+                allowing the host system to execute binaries of different architectures (e.g., ARM on x86_64)
+    --install all: tells binfmt to install support for all available binary formats
+*/
+$ docker run --privileged --rm tonistiigi/binfmt --install all            
         </code></pre>
 
         <h4>Other Commands</h4>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Load Balancer</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+  <aside class="sidebar">
+    <a href="#what">what</a>
+    <a href="#problemsolved">Failover problem Solved</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px">
+      <h2 id="what">What is Load Balancer?</h2>
+      <dl>
+        Node which evenly distributes incoming traffic among web servers that are defined in a load-balanced set.<br>
+        Users connect to the public IP of the load balancer, and web-servers are reachable over pvt IP from load balancer.
+      </dl>
+      <img src="/images/load-balancer.png" alt="load balancer" style="width:400px;height:400px;">
+
+      <h2 id="problemsolved">LB Solves Problem = FAILOVER</h2>
+      <dl>
+        If server 1 goes offline, all the traffic will be routed to server 2. This prevents the website
+        from going offline. We will also add a new healthy web server to the server pool to
+        balance the load.<br>
+        If the website traffic grows rapidly, and two servers are not enough to handle the traffic,
+        the load balancer can handle this problem gracefully.
+      </dl>
+    </article>
+  </main>
+
+</body>
+</html>

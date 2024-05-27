@@ -26,6 +26,10 @@
   <aside class="sidebar">    <!--See .sidebar in styles.css-->
     <a href="#hash">Hash_MessageDigest</a>
     <a href="#algos">Hashing Algorithms</a>
+    <ul>
+      <li><a href="#md5">MD5</a></li>
+      <li><a href="#argon2">Argon2</a></li>
+    </ul>
     <a href="#mac">MAC</a>
     <a href="#hmac">HMAC</a>
   </aside>
@@ -60,9 +64,9 @@
     <table>
       <tr>
         <th>Algo</th>
-        <th>SHA1,SHA0(broken)</th>
-        <th>SHA256 (or v2)(not broken)</th>
-        <th>SHA3/Keccak(or 512)</th>
+        <th>SHA1<br>SHA0(broken)</th>
+        <th>SHA256<br>(not broken)</th>
+        <th>SHA3_512<br>Keccak</th>
         <th>MD4,MD5(broken)</th>
       </tr>
       <tr>
@@ -88,7 +92,7 @@
       </tr>
     </table>
 
-    <h4>MD5</h4>
+    <h4 id="md5">MD5</h4>
     <pre><code>
       1. Take four 32-bit words, initialized to fixed constants.
 
@@ -115,7 +119,7 @@
         Round-2: For m2 and so on..
     </code></pre>
 
-    <h4>Argon2</h4>
+    <h4 id="argon2">Argon2</h4>
     <dl id="argon"><strong>How Argon2 is GPU resistant?</strong></dl>
     <dd>
       <u>1. Memory Hardness:</u><br>

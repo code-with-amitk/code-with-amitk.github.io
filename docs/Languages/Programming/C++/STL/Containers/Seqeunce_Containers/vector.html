@@ -104,25 +104,24 @@ v.clear();
                 <table>
                     <tr>
                         <td>1D</td>
-                        <td><pre>
-vector<int> v(size, init_value);
-    OR
+                        <td><pre><code class="language-css">
+//vector<int> v(size, init_value);
 v.assign(3,10);//10 10 10    
-                        </pre></td>
+                        </code></pre></td>
                     </tr>
 
                     <tr>
                         <td>2D</td>
-                        <td><pre>
-vector&lt;vector&lt;int>> vec = {
+                        <td><pre><code class="language-css">
+using vvI = vector&lt;vector&lt;int>>;
+vvI vec = {
     {1,2,3},
     {4,5,6}
 };
 OR
 //vec[row][col]
-vector&lt;vector&lt;int>> 
-v(row, vector&lt;int>(col,0));
-                        </pre></td>
+vvI v(row, vector&lt;int>(col,0));
+                        </code></pre></td>
                     </tr>                    
                 </table>
             </td>

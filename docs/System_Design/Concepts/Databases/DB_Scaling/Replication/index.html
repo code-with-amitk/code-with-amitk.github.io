@@ -23,14 +23,67 @@
 </nav>
 
   <aside class="sidebar">
-    <a href="./SQL_vs_NoSQL.html">SQL vs NoSQL</a>
-    <a href="./SQL/">SQL</a>
-    <a href="./DB_Scaling/">DB Scaling</a>
+    <a href="#what">What is Replication</a>
+    <a href="#types">Types of Replication</a>
   </aside>
 
   <main>
     <article style="margin-left:200px;">
-        
+        <h2 id="what">What is Replication?</h2>
+        <dl>
+          Keeping a copy of the same data on multiple machines. Each node that stores the copy is called Replica.
+        </dl>
+        <h3>Advantages of Replication</h3>
+        <dt>
+          1. Parallel Processing: : In the master-slave model, all writes and updates happen in master
+          nodes; whereas, read operations are distributed across slave nodes. This model improves
+          performance because it allows more queries to be processed in parallel.<br>
+          2. Reliability: If one of database servers is destroyed by a natural disaster(eg: earthquake),
+          do not need to worry about data loss because data is replicated across multiple locations<br>
+          3. High availability: By replicating data across different locations, your website remains in
+          operation even if a database is offline as you can access data stored in another database
+          server.
+        </dt>
+
+        <h2 id="types">Types of Replication</h2>
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Meaning</th>
+            <th>Digram</th>
+          </tr>
+          <tr>
+            <td>
+              Master/Slave or <br>
+              Leader/Follower
+            </td>
+            <td>
+              <b>What</b><br>
+              &ensp;1 node is designated as Leader/master. Client does RW operations with master, and only Read on any of slave.<br>
+              &ensp;Master stores session in it'd DB 1st then master writes(or slave reads) data to 
+              replicas/slaves(as replication log or change stream).<br>
+              <br>
+              <b>Disadvantage</b><br>
+              &ensp; a. Logic is required to promote slave to master(when master fails)<br>
+              &ensp; b. If high number of slaves, more write operations can lead to replication lag.
+            </td>
+            <td>
+              <img src="/images/databases/master-slave-replication.PNG"
+              alt="Master Slave DB" style="width:300px;height:400px;">
+
+            </td>
+          </tr>
+
+          <tr>
+            <td>Master/Master or <br>Active/Active or <br>Leader/Leader</td>
+            <td>
+              <b>What?</b><br>
+              There are 2 or more leader nodes. Client can write to any 1 of leader. 
+              Other leaders will act as slave and read all data from present leader.<br>
+
+            </td>
+          </tr>
+        </table>
     </article>
   </main>
 
