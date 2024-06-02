@@ -24,6 +24,7 @@
 
   <aside class="sidebar">
     <a href="#what">What</a>
+    <a href="#issues">Issues in Sharding</a>
     <a href="#scalablity">Sharding=Scalabilty?</a>
     <a href="#partitioningwithreplication">Sharding with Replication</a>
     <a href="#typesofsharding">Types of Sharding</a>
@@ -31,25 +32,47 @@
 
   <main>
     <article style="margin-left:200px;">
-        <h3 id="what">Partitioning/Sharding(MongoDB,ElasticSearch) / Region(HBase) / Bigtable(Tablet) / vNode(Cassandra) / vBucket(CouchBase)</h3>
-        <dt>
-            - Replication: Multiple copies of the same data on different nodes<br>
-            - Sharding: For very large datasets, breaking the data & storing into partitions is called partitioning or sharding.
-        </dt>
-        <pre>
-            hello world come here
+        <h2 id="what">Partitioning/Sharding(MongoDB,ElasticSearch) / Region(HBase) / Bigtable(Tablet) / vNode(Cassandra) / vBucket(CouchBase)</h2>
+        <dl>
+          Sharding separates large databases into smaller, more easily managed parts called shards<br>
+          Each shard shares the same schema, though the actual data on each shard is unique to the shard.
+        </dl>
 
-            |hello|     |world|     |come|        |here|
-            node-1      node-2      node-3        node-4            
-        </pre>
+        <dl>
+          <b>Sharding key/Partition key:</b> <br>
+          &ensp; Example: User data is allocated to a database server based on user IDs, a hash function is used to find the
+          corresponding shard.<br>
+          &ensp; Determine how data is distributed. In this example (key = user_id % 4)<br>
+          &ensp; Criteria is to choose a key that can evenly distributed data
+        </dl>
+        <img src="/images/databases/sharding.png" alt="Sharding" style="width:600px;height:400px;">
 
-        <dl id="scalablity"><strong>How Partioning achieves Scalabilty</strong></dl>
-        <dt>
+        <h2 id="issues">Issues/Complexities in Sharding</h2>
+        <h4>1. Resharding</h4>
+        <dl>
+        Resharding means redistributing the data among shards. <br>
+        <b>Why it is needed:</b><br>
+        &ensp; Certain shards might experience shard exhaustion faster than others due to uneven data distribution<br>
+        <b>How to achieve resharding</b><br>
+        &ensp; 1. Update the sharding function to move data around.<br>
+        &ensp; 2. Consistent Hashing
+        </dl>
+
+        <h4>2. Celebrity Problem (Hotspot key problem)</h4>
+        <dl>
+          Excessive access to a specific shard could cause server overload.<br>
+          Imagine data for Katy Perry, Justin Bieber, and Lady Gaga all end up on the same shard<br>
+          <b>How to Solve?</b> Allocate a shard for each
+          celebrity. Each shard might even require further partition
+        </dl>
+
+        <h2 id="scalablity">How Partioning achieves Scalabilty</h2>
+        <dl>
             - Different partitions can be placed on different nodes hence a large dataset is distributed across many disks, 
             and the query load can be distributed across many machines/processors.<br>
             - With partitioning we speard query load evenly across nodes. That means 10 nodes should be able to 
             handle 10 times read & write throughput wrt 1 node.
-        </dt>
+        </dl>
 
         <br>
         <dl id="partitioningwithreplication"><strong>Partitioning/Sharding with Replication</strong></dl>

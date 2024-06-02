@@ -33,8 +33,9 @@
         <h4 id="createrun">Create Docker Image, Run inside Container</h4>
         <pre><code class="language-css">
 /* 
-Build a Docker image from a Dockerfile, stores in a local registry on your system
-    -t: name and tag of docker file
+build: Build a Docker image from a Dockerfile, stores in a local registry on your system
+-t:     name and tag of docker file
+--build-arg="BASE_IMAGE=arm64v8/ubuntu:18.04" Ubuntu 18.04 image for the ARM64 architecture.
 */
 $ docker build . -f Dockerfile -t test_image
 
