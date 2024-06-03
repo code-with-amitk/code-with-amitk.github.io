@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rate Limiter</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#what">What</a>
+    <a href="#req">Requirements</a>
+    <a href="#hld">HLD</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Rate Limiter</h2>
+        <dl>
+          Restricts number of incoming <b>HTTP Requests/REST API calls</b> from client to server, which can overload the server.<br>
+          Eg: Only 2 HTTP Posts/sec, 10 accounts creation allowed from same IP address, 300 tweets/3 hours.
+        </dl>
+        <dl>
+        <b>AWS API gateway</b> is a fully managed service that supports rate limiting, SSL termination, 
+        authentication, IP whitelisting, servicing static content, etc
+        </dl>
+
+        <dl><strong>Benefits of RL</strong></dl>
+        <dd>
+          Prevent resource starvation caused by Denial of Service (DoS) attack<br>
+          Limiting excess requests means fewer servers(Cost reduction)<br>
+        </dd>
+
+        <h2>1. Requirements</h2>
+        <h3>Functional</h3>
+        <dd>CRUD(Create=POST, Read=GET, Update=PUT, Delete=DELETE)</dd>
+        <dl id="req1"> 1. Limit excessive requets (Criteria: UserId, IP Address etc)</dl>
+
+        <h3>Non Functional</h3>
+        <dd>
+          S<sup>3</sup>:(Scalable,Secure,SOA), L<sup>3</sup>:(Latency, Load, Logging), 
+          A<sup>3</sup>:(Accurate, Available, Authenticated), C<sup>2</sup>:(Cache),
+          R<sup>2</sup>:(Reliable, Redundant) F<sup>2</sup>:(fast, Fault Tolerant)
+        </dd>
+        <dl id="nonfuncreq1">1. Latency should be Low. ie dropped user should be quickly informed</dl>
+        <dl id="nonfuncreq2">2. Low Memory usage</dl>
+        <dl id="nonfuncreq3">3. Highly Reliable. (ie fault Tolerant)</dl>
+
+        <h2 id="hld">2. HLD</h2>
+        <dl>
+        Rate limiting can be implemented using different algorithms, and each of them has distinct pros and cons.
+        </dl>
+        <h3>Rate Limiting Algorithms</h3>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Used By</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>Token Bucket</td>
+            <td>Amazon, Stripe</td>
+            <td>
+              - <a href="https://github.com/code-with-amitk/pvt-research/blob/master/Projects/Clear2Pay/README.adoc#2-implement-token-bucket-algorithms">Description</a><br>
+              - Advatanges: Easy to implement, Memory Efficient, Allows a burst of traffic for short periods, ie requests can go until tokens are present then request stop for some time<br>
+              - Disdvatanges: Two parameters in the algorithm are bucket size and token refill rate, which might be challenging to tune.
+            </td>
+          </tr>
+          <tr>
+            <td>Leaky Bucket</td>
+            <td>Shopify</td>
+            <td>
+              - <a href="https://github.com/code-with-amitk/pvt-research/blob/master/Projects/Clear2Pay/README.adoc#2-leaky-bucket-queuefifo">Description</a><br>
+              - Advatanges: Memory efficient given the limited queue size, Requests are processed at a fixed rate(smoothens the bursty traffic)<br>
+              - Disdvatanges:  There are two parameters in the algorithm. It might not be easy to tune them properly
+            </td>
+          </tr>
+        </table>
+
+    </article>
+  </main>
+
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>

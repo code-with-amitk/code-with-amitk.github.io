@@ -325,7 +325,7 @@ vec[i] = ele
 
         <tr>
             <td>Iterate, Traverse</td>
-            <td><pre>   <!--c++-->
+            <td><pre><code class="language-css">   <!--c++-->
 vector&lt;int> v;
 for_each(v.begin(),v.end(),[&](int ele){
 });
@@ -335,7 +335,16 @@ for (auto it=v.begin(); it!=v.end()-1; ++it) {
     auto next = std::next(it);
     out = (*it)*(*next);
 }
-            </pre></td>
+
+// Reversing the string
+void reverseString(vector<char>& s) {
+    for (auto it=s.begin(),itr = s.end() - 1; //Multiple Initializations
+        it &lt; itr;                            //Check
+        ++it, --itr                         //Multiple inc,dec
+        )
+        swap(*it, *itr);
+}
+            </code></pre></td>
 
             <td><pre>   <!--Rust-->
 fun(nums: Vec&lt;i32>) {
