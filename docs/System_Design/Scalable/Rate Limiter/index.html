@@ -26,6 +26,16 @@
     <a href="#what">What</a>
     <a href="#req">Requirements</a>
     <a href="#hld">HLD</a>
+    <ul>
+      <li><a href="#rla">Rate Limiting Algorithms</a></li>
+      <li><a href="#implement_req1">Req1</a></li>
+      <li><a href="#implement_req2">Req2</a></li>
+    </ul>
+    <a href="#issues">Issues</a>
+    <ul>
+      <li><a href="#racecondition">Race Condition</a></li>
+      <li><a href="#synchronizationissue">Synchronization issue</a></li>
+    </ul>
   </aside>
 
   <main>
@@ -66,7 +76,8 @@
         <dl>
         Rate limiting can be implemented using different algorithms, and each of them has distinct pros and cons.
         </dl>
-        <h3>Rate Limiting Algorithms</h3>
+
+        <h3 id="rla">Rate Limiting Algorithms</h3>
         <table>
           <tr>
             <th>Name</th>
@@ -93,7 +104,7 @@
           </tr>
         </table>
 
-        <h4>
+        <h4 id="implement_req1">
           <a href="#req1">Req1. Limit excessive requets (Criteria: UserId, IP Address etc)</a>
         </h4>
         <dl>
@@ -101,7 +112,7 @@
           Ratelimiting HW will store the rules on the disk. Workers frequently pull rules from the disk and store them in the cache<br>
         </dl>
 
-        <h5>Counters</h5>
+        <h5 id="counters">Counters</h5>
         <dt>
           To keep track of how many requests are sent from the same user, IP address, etc. If the counter is
           larger than the limit, the request is disallowed<br>
@@ -110,9 +121,9 @@
           <b><u>For 1 million users:</u></b> <br>
           &ensp; 5 million counters. if each user is rate limited on 5 parameters<br>
           <pre><code class="language-css">
-            <------------     Allowed(per minute)   ------------->
-Userid      TCP SYN(Connect req)   HTTP GET
-  1                10                 5
+Userid      TCP SYN Rcvd/sec(Connect req)   HTTP GET Rcvd
+  1                10                           5
+  5                1000                         5000      //Pumping huge traffic
           </code></pre>
           
           <br>
@@ -121,18 +132,51 @@ Userid      TCP SYN(Connect req)   HTTP GET
           Option-2: inmemory store = Redis
         </dt>
 
-        <h5>Rate Limiting Rules</h5>
+        <h5 id="rules">Rate Limiting Rules</h5>
+        <dl>
+          Requests allowed in particular category. <br>
+          Rules are stored on the disk. Workers frequently pull rules from the disk and store them in the cache
+        </dl>
+        <pre><code class="language-css">
+Examples:
 
-        <h5>Flow:</h5>
-        <dt>
-          1. Client sends a request to the server, the request is sent to the rate limiter middleware first.<br>
-          2. Rate limiter middleware loads rules from the cache. It fetches counters and last request timestamp from Redis cache.<br>
-          3. Based on the response, the rate limiter decides <br>
-          &ensp; forward to API Server, if not rate limited<br>
-          &ensp; Returns 429 too many requests, if the request is rate limited
-        </dt>
+domain: messaging
+descriptors:
+  - key: message_type
+    Value: marketing                //Only 5 marketing messages/day.
+    rate_limit:
+      unit: day
+      requests_per_unit: 5
 
-        <h4>
+domain: auth
+descriptors:
+  - key: auth_type
+    Value: login                 // Only 5 login requests/minute
+    rate_limit:
+      unit: minute
+      requests_per_unit: 5      
+        </code></pre>
+
+        <h5>Architecture & Flow</h5>
+        <table>
+          <tr>
+            <td>
+              <img src="/images/rate_limiter/architecture.PNG" alt="trie" style="width:500px;height:300px;">
+            </td>
+            <td>
+              <b>Flow:</b><br>
+              1. Client sends a request to the server, the request is sent to the rate limiter middleware first.<br>
+              2. Rate limiter middleware loads <a href="#rules">rules from the cache</a>. It fetches 
+              <a href="#counters">counters</a> and last request timestamp from Redis cache.<br>
+              3. Based on the response, the rate limiter decides <br>
+              &ensp; Forward to API Server, if not rate limited<br>
+              &ensp; Returns 429 too many requests, if the request is rate limited    
+            </td>
+          </tr>
+        </table>
+        
+
+        <h4 id="implement_req2">
           <a href="#req2">Req2. Inform user when his request is dropped</a>
         </h4>
         <dl>
@@ -140,6 +184,32 @@ Userid      TCP SYN(Connect req)   HTTP GET
           - X-Ratelimit-Remaining: The remaining number of allowed requests within the window.<br>
           - X-Ratelimit-Limit: It indicates how many calls the client can make per time window.<br>
           - X-Ratelimit-Retry-After: The number of seconds to wait until you can make a request again without being throttled
+        </dl>
+
+        <h2 id="issues">Issues</h2>
+        <h3 id="racecondition">1. Race condition</h3>
+        <dl><strong>Race Condition in reading counter from Redis</strong></dl>
+        <dl>
+          • Read the counter value from Redis.<br>
+          • Check if ( counter + 1 ) exceeds the threshold.<br>
+          • If not, increment the counter value by 1 in Redis.<br>
+          - Assume the counter value in Redis is 3. If two requests concurrently read the counter value
+          before either of them writes the value back, each will increment the counter by one and write
+          it back without checking the other thread. <br>
+          - Both requests (threads) believe they have the
+            correct counter value 4. However, the correct counter value should be 5.
+        </dl>
+        
+        <img src="/images/rate_limiter/redis_race_condition.PNG" alt="trie" style="width:400px;height:200px;">
+
+        <dl><strong>How to avoid Race Condition?</strong></dl>
+        <dl>
+          Lua script and sorted sets data structure in Redis
+        </dl>
+
+        <h3 id="synchronizationissue">2. Synchronization issue</h3>
+        <dl>
+
         </dl>
 
     </article>

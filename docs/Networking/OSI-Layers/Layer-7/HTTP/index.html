@@ -197,10 +197,32 @@ Upgrade-Insecure-Requests: 1
           Cross-site Script Inclusion('XSSI'), timing attacks, and cross-origin information leaks<br>
           - <b><a href="https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_header_name">Forbidden header name:</a></b> 
           These headers are prefixed with Sec-, and hence have forbidden header names.<br>
-          A forbidden header name is the name of any HTTP header that cannot be modified programmatically(ie using javascript)
-          <pre><code class="language-css">
-Sec-Fetch-Site  
-          </code></pre>
+          A forbidden header name is the name of any HTTP header that cannot be modified programmatically(ie using javascript)<br><br>
+
+          <table>
+            <tr>
+              <th>Header</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>Sec-Fetch-Site</td>
+              <td>
+                - Tells relationship between a Request initiator's origin and the Requested resource's Origin.
+                <pre><code class="language-css">
+Sec-Fetch-Site: same-origin                  
+/*
+Meaning: Initiator is directly requesting the resource
+Example: User sitting on laptop opens(https://www.espn.com). Since user is typing resource directly
+*/
+
+Sec-Fetch-Site: cross-site      
+Sec-Fetch-Site: same-site
+Sec-Fetch-Site: none
+                  
+                </code></pre>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
