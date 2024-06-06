@@ -83,6 +83,7 @@ $ docker run -it --volume /home/amit:/test --entrypoint /bin/bash brunneis/pytho
         </code></pre>
 
         <h4 id="x86onarm">Running arm binaries on x86</h4>
+        <dl><strong>1. Enable multiple platform builds on docker. Create arm build on docker</strong></dl>
         <pre><code class="language-css">
 /*
 Run arm compiled binary on x86
@@ -100,8 +101,28 @@ Run arm compiled binary on x86
         binfmt: This is the name of the repository. Register new binary formats in the kernel,
                 allowing the host system to execute binaries of different architectures (e.g., ARM on x86_64)
     --install all: tells binfmt to install support for all available binary formats
+
+// docker run: This command runs a new container.
+// --privileged: gives the container extended privileges
+// --rm: container is automatically removed after it exits.
+// tonistiigi/binfmt: is a pre-built docker image that contains the necessary tools to install binary format handlers
+// install support for all available binary formats.
 */
 $ docker run --privileged --rm tonistiigi/binfmt --install all            
+        </code></pre>
+
+        <dl><strong>2. docker build. Create docker image from docker file</strong></dl>
+        <pre><code class="language-css">
+/*
+BASE_IMAGE: placeholder used in the Dockerfile to specify the base image for the build process
+    = arm64v8/ubuntu:18.04  //dynamically change the base image without modifying the Dockerfile.
+*/
+$ docker build --build-arg="BASE_IMAGE=arm64v8/ubuntu:18.04" . -t tag1
+        </code></pre>
+
+        <dl><strong>3. Run make command for ARM env inside docker container</strong></dl>
+        <pre><code class="language-css">
+$ docker run --volume test:/checker --user $(shell id -u) tag2 make BUILD_DIR=build-docker-arm TARGET_ARM=1 -C /checker/cpu clean all
         </code></pre>
 
         <h4>Other Commands</h4>

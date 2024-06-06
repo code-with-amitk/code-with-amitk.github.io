@@ -49,7 +49,8 @@
         <h2>1. Requirements</h2>
         <h3>Functional</h3>
         <dd>CRUD(Create=POST, Read=GET, Update=PUT, Delete=DELETE)</dd>
-        <dl id="req1"> 1. Limit excessive requets (Criteria: UserId, IP Address etc)</dl>
+        <dl id="req1">1. Limit excessive requets (Criteria: UserId, IP Address etc)</dl>
+        <dl id="req2">2. Inform user when his request is dropped</dl>
 
         <h3>Non Functional</h3>
         <dd>
@@ -91,6 +92,55 @@
             </td>
           </tr>
         </table>
+
+        <h4>
+          <a href="#req1">Req1. Limit excessive requets (Criteria: UserId, IP Address etc)</a>
+        </h4>
+        <dl>
+          Rate limiting is done using above Rate limiting algorithms<br>
+          Ratelimiting HW will store the rules on the disk. Workers frequently pull rules from the disk and store them in the cache<br>
+        </dl>
+
+        <h5>Counters</h5>
+        <dt>
+          To keep track of how many requests are sent from the same user, IP address, etc. If the counter is
+          larger than the limit, the request is disallowed<br>
+
+          <br>
+          <b><u>For 1 million users:</u></b> <br>
+          &ensp; 5 million counters. if each user is rate limited on 5 parameters<br>
+          <pre><code class="language-css">
+            <------------     Allowed(per minute)   ------------->
+Userid      TCP SYN(Connect req)   HTTP GET
+  1                10                 5
+          </code></pre>
+          
+          <br>
+          <b><u>Where to store counters?</u></b> REDIS<br>
+          Option-1: File on Hard Disk (slow)<br>
+          Option-2: inmemory store = Redis
+        </dt>
+
+        <h5>Rate Limiting Rules</h5>
+
+        <h5>Flow:</h5>
+        <dt>
+          1. Client sends a request to the server, the request is sent to the rate limiter middleware first.<br>
+          2. Rate limiter middleware loads rules from the cache. It fetches counters and last request timestamp from Redis cache.<br>
+          3. Based on the response, the rate limiter decides <br>
+          &ensp; forward to API Server, if not rate limited<br>
+          &ensp; Returns 429 too many requests, if the request is rate limited
+        </dt>
+
+        <h4>
+          <a href="#req2">Req2. Inform user when his request is dropped</a>
+        </h4>
+        <dl>
+          User is informed using <a href="/Networking/OSI-Layers/Layer-7/HTTP/#methods">HTTP Response headers</a><br>
+          - X-Ratelimit-Remaining: The remaining number of allowed requests within the window.<br>
+          - X-Ratelimit-Limit: It indicates how many calls the client can make per time window.<br>
+          - X-Ratelimit-Retry-After: The number of seconds to wait until you can make a request again without being throttled
+        </dl>
 
     </article>
   </main>
