@@ -3,6 +3,7 @@
 <head>
     <title>Memory</title>
     <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
@@ -34,6 +35,7 @@
             <li><a href="#mmu">MMU</a></li>
             <li><a href="#tlb">TLB</a></li>
         </ul>
+        <a href="translate">Translate Virtual to Physical Address</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
@@ -61,11 +63,8 @@
             </tr>
             <tr>
                 <td>Contains</td>
-                <td id="page"><b>Pages</b> are fixed sized blocks of Virtual Memory. <br>Size(typically 4KB) but varies as per OS.<br>
-                    Pages are mapped to frames in physical memory</td>
-                <td id="frame"><b>Frames</b> are fixed-size blocks of physical memory.<br>Page and frame are of same size<br>
-                    Physical memory is divided into frames<br>
-                    Pages from virtual memory are loaded into available frames in physical memory.</td>
+                <td><a href=#page">Pages</a></td>
+                <td><a href="#frame">Frames</a></td>
             </tr>
             <tr>
                 <td>Memory Allocation</td>
@@ -86,8 +85,20 @@
         </table>
 
         <h2 id="terms">Terms</h2>
-        <h3><a href="#page">Page</a></h3>
-        <h3><a href="#frame">Frame</a></h3>
+        <h3 id="page">Page</h3>
+        <dl>
+            Pages are fixed sized blocks of Virtual Memory. <br>
+            <b>Size:</b> Page size is typically 4KB, but varies as per OS(upto 64KB).<br>
+            Pages are mapped to frames in physical memory
+        </dl>
+
+        <h3 id="frame">Frame</h3>
+        <dl>
+            Frames are fixed-size blocks of physical memory.<br>Page and frame are of same size<br>
+            Physical memory is divided into frames<br>
+            Pages from virtual memory are loaded into available frames in physical memory
+        </dl>
+
         <h3 id="paging">Paging</h3>
         <dl>
             Memory management scheme that eliminates the need for contiguous allocation of physical memory/RAM<br>
@@ -228,8 +239,44 @@
             Cache present on MMU.
         </dl>
 
+        <h3 id="translate">Translation from Virtual Address(Hard Disk) to Physical Address(RAM)</h3>
+        <dl>
+            Translation typically involves two components: a page number (or fragment) and an offset.<br>
+            &ensp; Fragment: identifies a page in the virtual address space
+            &ensp; Offset: specifies the exact location within a page.
+        </dl>
+        <h4>Conversion Example(32 bit system)</h4>
+        <table>
+            <tr>
+                <th></th>
+                <th>16 bit Architecture</th>
+                <th>32 bit Architecture</th>
+                <th>64 bit Architecture</th>
+            </tr>
+            <tr>
+                <td>Fragment</td>
+                <td>4 bits</td>
+                <td>12 bits</td>
+            </tr>
+            <tr>
+                <td>Offset</td>
+                <td>20 bits</td>
+                <td>12 bits</td>
+            </tr>
+        </table>
+
+        <pre><code class="language-css">
+            32 bit = Page-No(20 bits) + Offset(12 bits)
+            2^12 = 4096. Access every bit inside Page
+            Page size = 4KB
+        </code></pre>
+        <dl>
+             
+
+        </dl>
+
     </article>
     </main>
-
+    <script src="/scripts/prism.js"></script>
 </body>
 </html>
