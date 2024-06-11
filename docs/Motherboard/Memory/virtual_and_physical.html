@@ -25,6 +25,15 @@
         <a href="#why">Why Virtual Memory</a>
         <a href="#comparison">Comparison</a>
         <a href="#terms">Terms</a>
+        <ul>
+            <li><a href="#page">Page</a></li>
+            <li><a href="#frame">Frame</a></li>
+            <li><a href="#paging">Paging</a></li>
+            <li><a href="#pdp">Pure Demand Paging</a></li>
+            <li><a href="#pagetable">Page Table</a></li>
+            <li><a href="#mmu">MMU</a></li>
+            <li><a href="#tlb">TLB</a></li>
+        </ul>
     </aside>
 
     <main>  <!--Here is our page's main content-->
@@ -46,12 +55,17 @@
             <tr>
                 <td>Size</td>
                 <td>Bigger</td>
-                <td>Smaller wrt HD</td>
+                <td>Smaller wrt HD. 
+                    Stores data and machine code currently being used by the system.
+                </td>
             </tr>
             <tr>
                 <td>Contains</td>
-                <td><b>Pages</b> inside Virtual Table</td>
-                <td><b>Frames</b> inside Page Table. Pages & Frames are of same size.</td>
+                <td id="page"><b>Pages</b> are fixed sized blocks of Virtual Memory. <br>Size(typically 4KB) but varies as per OS.<br>
+                    Pages are mapped to frames in physical memory</td>
+                <td id="frame"><b>Frames</b> are fixed-size blocks of physical memory.<br>Page and frame are of same size<br>
+                    Physical memory is divided into frames<br>
+                    Pages from virtual memory are loaded into available frames in physical memory.</td>
             </tr>
             <tr>
                 <td>Memory Allocation</td>
@@ -72,24 +86,148 @@
         </table>
 
         <h2 id="terms">Terms</h2>
+        <h3><a href="#page">Page</a></h3>
+        <h3><a href="#frame">Frame</a></h3>
+        <h3 id="paging">Paging</h3>
         <dl>
-            <b>Page?</b> Block of memory on Hard Disk.<br>
-            <b>Frame?</b> Block of memory on RAM/Physical Memory.<br>
-            <b>Paging?</b> Process of dividing Hard-Disk to equal-sized blocks is called paging.<br>
-            <b>Demand Paging?</b> Loading the pages into RAM whenever they are required.<br>
-            <b>Pure Demand Paging?</b> Page fault occurs to bring every page in RAM. Steps
-            <pre>
-    1. Start process without page in RAM.
-    2. Page fault occurs
-    3. Bring page to RAM
-    4. Continue to execute
-    5. Page not found [Go tp step2]                
-            </pre>       
-            <b>Page Fault:</b><br>
-            &ensp; CPU issues trap() system call.<br>
-            &ensp; OS picks a LRU Frame(from Physical Memory/RAM) and moves/writes back to the Hard-Disk/Virtual-Memory.<br>
-            &ensp; Then copies Page into RAM. MMU updates mapping.
+            Memory management scheme that eliminates the need for contiguous allocation of physical memory/RAM<br>
+            It divides both virtual and physical memory into fixed-sized blocks, called <a href=#page">pages</a>
+            and <a href="#frame">frames</a> respectively.<br>
+            When a program accesses data, the operating system maps the <a href="#comparison">virtual address to a physical address</a>
+             using page tables.<br>
+            And program gets executed even if they are not entirely loaded into physical memory/RAM.
         </dl>
+
+        <h3 id="pdp">Pure Demand Paging</h3>
+        <dl>
+            Type of <a href="#paging">paging</a> where <a href="#page">pages</a> are loaded into RAM/memory only when they 
+            are needed (i.e., on demand).<br>
+            Initially, none of the program’s pages are loaded into RAM/physical memory.<br>
+            When a <a href="#page">page</a> is accessed for the first time, a page fault occurs, and the operating system 
+            loads the required page from Virtual Memory/Hard disk into a free <a href="#frame">frame</a> in RAM/physical memory.<br>
+            <b>Advantage of Paging:</b> Minimizes RAM usage and allows for efficient use of available RAM/memory.
+        </dl>
+
+        <h4 id="pagefault">Page Fault</h4>
+        <dl>
+            Page fault occurs to bring <a href="#page">page(From Virtual Memory)</a> to RAM/Physical Memory.<br> 
+            MMU uses a <b><a href="#trap">trap instruction</a></b> to switch control to kernel mode.
+        </dl>
+
+        <h5 id="trap">Trap Instruction (trap())</h5>
+        <dl>
+            To bring required <a href="#page">pages(From Virtual Memory)</a> to RAM/Physical Memory, CPU uses a trap instruction to switch control to kernel mode.
+        </dl>
+        <img
+        src="//www.plantuml.com/plantuml/png/XLJRQXin47tNLmm95FiXZTDBqnhSnCqbBKt0vD8dGr5MOw_mhYIaMSUXzDyh3QlQQwVK3nQhcNFcCcTq6aXwQkfAk7ZgGZjf2EHhN27803AU7SlPv27T5wxfND_Sy7LTTwydSextyh5YBaSTsnvvwNwMqgWAVQy_DLFZ6sEqcOCsS3k-sKiWAhkWhzAhWtCT5eS_TCnRLknLAY6C9GIxHCz90-oVFKiZnaM18S1WTVJcxJlHQq4WbVBnlY_GA62a40mx-9ng6y8jIfLHQ-PeYiJVIxdGub97g2kVWoxMXAAmFfxE6fKA8PivSXmX4aUCKjSnoXN67crHmCpwtSZH7VQlzRoaAuzenBbUQeMj7sX3LWWNkmscgH_HZuw4dSq2qcYm6dJ2rpM7TpI4Rm4ccn1mCJuQEX6E_gOOl_rpmcRhLbATh2RZgmku73zStqFGr4ZIreWxFJUoOkMG1Hr2Wv1ct-llfiMzZtCe6ifEKvFEY8DWP_GaFQPoqVl6aVZ7RExa4g5el4UJyhP90pqMTLy4aX7o2iAJfg9CAItG6wn4RHNkpedA8Lnq4e9MinkngSnz-58rABhAXby2UD9vm7O6MOTfPD7AMkBnMGD9uf0aBdvlf4FbMZKwLbVZ2tmypvFSp9WwasR7g8NZZvzQfb8Drs5RIwasOQFL85rso_nVdKmvyuZnJzOHnwkyMGcLRP2rx-5I5wHhc9eEQ2CVNaUjq92UQMnxbLJFORWzMTKFJgK1imVnsyCItYZ3KQvYeir2y0watoLJjIi5SRVUVpX-UG8CkMVoXiEfZe1tpLbDZbvUUk4eezkuBI0zIlcgA_PMw-mOAPeQ0rY7dfTkdVRskvWVHkVjFDOReL85AAoXjDkIKkT7swKBSHe_chhw0m00"
+        alt="accessing physical page" style="width:800px;height:700px;">
+        <pre class="puml" visibility: hidden>
+            @startuml
+            participant a.exe as aexe
+            participant CPU as cpu
+            participant MMU as mmu
+            participant PageTable as pt
+            participant "trap_handler()\n\nrunning in RAM" as th
+            participant "Hard-Disk/Virtual" as hd
+            
+            note over aexe  #Cyan
+            Access 0x1234
+            (Virtual address)
+            end note 
+            
+            aexe -> cpu: Read 0x1234
+            note over cpu  #Khaki
+            Find physical address
+            corresponding to 0x1234
+            end note
+            
+            cpu -> mmu: Get Physical address for 0x1234
+            note over mmu #LightGreen
+            Divide 0x1234 into
+            
+            page number=1
+            offset=0x034
+            end note
+            
+            mmu -> pt: Is Page number=1 present?
+            pt -> mmu: entry not present
+            note over mmu  #LightGreen
+            PAGE FAULT situation
+            Signal CPU to issue trap()
+            end note
+            
+            mmu -> cpu: execute trap()\ntrap is software interrupt
+            
+            note over cpu  #Khaki
+            Save current process(a.exe)
+            state & switch to kernel
+            mode
+            end note
+            
+            cpu -> th: Execute trap() handler
+            note over th  #LightBlue
+            trap_handler() {
+              Get address of Virtual page
+              Find page on Hard Disk
+            }
+            end note
+            
+            th -> mmu: Give me address of Virtual Page?
+            mmu -> th: page address=0x789
+            th -> hd: Find page=0x789
+            hd -> th: page=x0789
+            
+            note over th   #LightBlue
+            trap_handler() {
+              Find free frame on RAM
+            }
+            end note
+            th -> th: Find free/victim \nframe on RAM
+            
+            hd -> th: Read identified page into frame
+            
+            th -> pt: Update page table entry
+            note over pt  #LightPink
+            Page     Frame
+            0x1234   0x567
+            end note
+            
+            th -> mmu: Page Table updated
+            mmu -> cpu: Page Table updated
+            cpu -> pt: Get Physical address
+            pt -> cpu: 0x567
+            cpu -> aexe: 0x567
+            
+            note over cpu #Khaki
+            cpu resumes operation
+            end note
+            
+            note over aexe   #Cyan
+            program reads content
+            at RAM=0x567
+            end note
+            
+            @enduml
+        </pre>
+
+        <h3 id="pagetable">Page Table</h3>
+        <dl>
+            Stores mapping of Pages(Hard Disk/Virtual Memory) to Frames(RAM/Physical memory).
+        </dl>
+        <img src="/images/Memory/PageTable.png" alt="trie" style="width:200px;height:300px;">
+
+        <h4 id="mmu">MMU(Memory Management Unit) Translate Virtual to Physical Address</h4>
+        <dl>
+            Takes Virtual address(of Virtual Memory/Hard Disk) as Input provides Physical Address(of RAM) as output ie translate virtual to physical address.<br>
+            CPU and MMU are present on single Die, ie on same chip.
+            Mapping of Virtual Address to Physical Address is stored in PAGE TABLE.
+        </dl>
+
+        <h4 id="tlb">TLB(Translation lookaside buffer)</h4>
+        <dl>
+            Cache present on MMU.
+        </dl>
+
     </article>
     </main>
 
