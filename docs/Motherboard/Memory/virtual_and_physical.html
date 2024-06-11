@@ -35,7 +35,11 @@
             <li><a href="#mmu">MMU</a></li>
             <li><a href="#tlb">TLB</a></li>
         </ul>
-        <a href="translate">Translate Virtual to Physical Address</a>
+        <a href="#translate">Translate Virtual to Physical Address</a>
+        <ul>
+            <li><a href="#16bit">Conversion Example(16 bit system)</a></li>
+            <li><a href="#3264bit">Conversion Example(32,64 bit system)</a></li>
+        </ul>
     </aside>
 
     <main>  <!--Here is our page's main content-->
@@ -236,16 +240,27 @@
 
         <h4 id="tlb">TLB(Translation lookaside buffer)</h4>
         <dl>
-            Cache present on MMU.
+            Practically from complete <a href="#pagetable">Page Table</a> only a small fraction of the page table entries are 
+            heavily read; the rest are barely used.<br>
+            TLB is hardware inside MMU which stores only few entries(8-256) for Virtual-to-Physical mapping.
+        </dl>
+        <dl>
+            <b>TLB Example:</b> Request for Virtual Page comes to TLB<br>
+            - if TLB entry found-> TLB Hit<br>
+            - else TLB miss(goes to Page Table), find entry updates Page Table. restarts trap instruction.
+        </dl>
+        <h5>Problem with TLB</h5>
+        <dl>
+            TLB being small, if it happens process tries to get unused page every time, there will be lot of TLB misses<br>
+            Solution: Software to maintain a cache internally.
         </dl>
 
         <h3 id="translate">Translation from Virtual Address(Hard Disk) to Physical Address(RAM)</h3>
         <dl>
-            Translation typically involves two components: a page number (or fragment) and an offset.<br>
-            &ensp; Fragment: identifies a page in the virtual address space
-            &ensp; Offset: specifies the exact location within a page.
+            Translation typically involves two components: <br>
+            - Page number(or fragment): identifies a page in the virtual address space<br>
+            - Offset: specifies the exact location within a page.
         </dl>
-        <h4>Conversion Example(32 bit system)</h4>
         <table>
             <tr>
                 <th></th>
@@ -254,26 +269,112 @@
                 <th>64 bit Architecture</th>
             </tr>
             <tr>
-                <td>Fragment</td>
-                <td>4 bits</td>
-                <td>12 bits</td>
+                <td>Bus Size</td>
+                <td>
+                    16 bit = 2 bytes<br>
+                    - 2<sup>16</sup>=65535 (can access 64KB memory)<br>
+                    - you can plug huge Hard disk but that will be no use<br> since in 1 go Only 2 bytes can be accessed
+                </td>
+                <td>
+                    32 bit = 4 bytes<br>
+                    - 2<sup>32</sup>=4,294,967,296 (can access 4GB memory)<br>
+                    - you can plug huge Hard disk but that will be no use<br> since in 1 go Only 4 bytes can be accessed
+                </td>
+                <td>
+                    64 bit = 8 bytes<br>
+                    - 2<sup>64</sup>=18x10<sup>18</sup> (can access 18x10<sup>9</sup>GB memory)<br>
+                </td>
             </tr>
             <tr>
-                <td>Offset</td>
+                <td>Fragment</td>
+                <td>4 bits</td>
                 <td>20 bits</td>
+            </tr>
+            <tr>
+                <td>Offset <br>2^12 = 4096<br>Can access every bit inside page</td>
+                <td>12 bits</td>
                 <td>12 bits</td>
             </tr>
         </table>
 
-        <pre><code class="language-css">
-            32 bit = Page-No(20 bits) + Offset(12 bits)
-            2^12 = 4096. Access every bit inside Page
-            Page size = 4KB
-        </code></pre>
+        <h4 id="16bit">Conversion Example(16 bit system)</h4>
         <dl>
-             
-
+            We have above <a href="#pagetable">page table</a>
         </dl>
+        <pre><code class="language-css">
+            Virtual Memory/Hard Disk	Physical Memory/RAM
+    Size	64KB	                    32KB
+    Count	64k/4k = 16 Pages	        32k/4k = 8 Frames
+        </code></pre>
+
+        <dl><strong>1. Program accesses virtual address=0</strong></dl>
+        <pre><code>
+        Code-Segment    
+            MOV REG 0 ----> CPU
+                             --Get Physical Address for 0--> MMU
+                             <--Physical Address 8192-  Page-0 maps to Frame-2
+          //MMU has mapped all virtual addresses between 0-4095 onto physical addresses 8192-12287.                   
+        </code></pre>
+
+        <dl><strong>2. Program accesses virtual address=8192</strong></dl>
+        <pre><code>
+        Code-Segment    
+            MOV REG 8192 -> CPU
+                             --Get Physical Address for 8192-->       MMU
+                             <--Physical Add (24k=24x1024=24576)-- Page-3 maps to Frame-6                
+        </code></pre>
+
+        <dl><strong>3. Program accesses virtual address=20500</strong></dl>
+        <dt>
+            1stPage(0-4095), 2nd(4096-8191), 3rd(8192-12281), 4th(12282-16383), 5th(16384-20479), 6th(20480-24576)<br>
+            20500 falls 20 byte inside 6th Page.            
+        </dt>
+        <pre><code>
+        Code-Segment    
+            MOV REG 20500 -> CPU
+                              -Get Physical Address for 20500-->       MMU
+                                                                  Page-6 maps to Frame3
+                              <--Physical Add 12302---- Frame-3-start:12282. PhysicalAdd=12282+20=12302             
+        </code></pre>
+
+        <dl><strong>4. Program accesses unmapped address virtual address=24576</strong></dl>
+        <dt>
+            Page Fault? CPU issues trap() system call. OS picks a LRU Frame(from Physical Memory/RAM) 
+            and moves/writes back to the Hard-Disk/Virtual-Memory. Then copies Page into RAM. MMU updates mapping.<br>
+            Page Eviction: Movement of pages in/out of RAM is done by SWAPPER.          
+        </dt>
+        <pre><code>
+        Code-Segment
+            MOV REG 24576 ---> CPU
+                                --Return PhyAdd for 24576-> MMU
+                                                            not present
+                                                            trap()
+                                                                RAM(PM)                             Hard-Disk(VM)
+                                                                  --Frame=0 moved to VM-------------->
+                                                                  <-Page 24576 loaded in RAM(at address 0)--
+                                                      MMU(Updates Mapping)
+                                                      Page(12K not mapped)  
+                                                      Page-24K maps to Frame0
+                                <---Virtual Address 0----           
+        </code></pre>
+
+        <h4 id="3264bit">Conversion Example(32,64 bit system)</h4>
+        <h5>Problem with Page Table</h5>
+        <dt>
+            32 bit = 4 bytes. 2<sup>32</sup> = 4,294,967,296 (can access 4GB memory)<br>
+            4294967296/4096 = 10,48,576 = 1 Million Page entries in Virtual Page Table
+        </dt>
+
+        <h5>Solution-1: <a href="#tlb">TLB</a></h5>
+
+        <h5>Solution-2: Multilevel Page Tables(32 Bit system)</h5>
+        <dl>
+            32 bit address = 10 Bit(Page-Table-1. 2<sup>10</sup>=1024 pages) + 10 Bit(Page-Table-2. 1024 pages) + 12 Bit(offset).<br>
+            <br>
+            Page-Table-1: Contains 1024 pages, each of size = 4KB <br>
+            Page-Table-2: Contains 1024 pages, each of size = 4KB.
+        </dl>
+        <img id="multilevel-page-table" src="/images/Memory/multilevel-page-table.png" width="500" height="350" alt="multilevel-page-table">
 
     </article>
     </main>
