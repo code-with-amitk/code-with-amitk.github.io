@@ -12,4 +12,13 @@
       evt.currentTarget.className += " active";
     }
 
+    document.addEventListener("DOMContentLoaded", () => {
+      const images = document.querySelectorAll('.zoomable-image');
+  
+      images.forEach(image => {
+          image.addEventListener('click', () => {
+              image.classList.toggle('zoomed');
+          });
+      });
+  });
   

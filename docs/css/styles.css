@@ -215,3 +215,31 @@ aside {
   font-family: 'Poppins';
   font-size: 10px;
 }
+
+.image-container {
+  display: inline-block; /* Ensures the container shrinks to fit the image */
+  margin: 0; /* Removes margin around the container */
+  padding: 0; /* Removes padding around the container */
+}
+
+.zoomable-image {
+  width: 100%; /* Adjusts the image to fit the container */
+  height: auto;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.zoomed {
+  transform: scale(2); /* Adjust scale as needed */
+}
+
+.image-table {
+  width: 100%;
+  border-collapse: collapse; /* Removes default spacing between table cells */
+}
+
+.image-table td {
+  padding: 0; /* Removes padding inside table cells */
+  margin: 0;  /* Removes margin inside table cells */
+  text-align: center;
+}
