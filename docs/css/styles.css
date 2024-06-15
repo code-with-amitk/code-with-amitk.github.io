@@ -243,3 +243,12 @@ aside {
   margin: 0;  /* Removes margin inside table cells */
   text-align: center;
 }
+
+#searchResults {
+  margin-top: 20px;
+}
+
+#searchResults div {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}

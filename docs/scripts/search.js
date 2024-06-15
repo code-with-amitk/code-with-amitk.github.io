@@ -1,14 +1,21 @@
-  document.getElementById('searchForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    performSearch(document.getElementById('searchInput').value);
-  });
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('searchForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
 
-  function performSearch(query) {
-    // Assuming 'content' is an array of your content
-    const results = content.filter(item => item.includes(query));
-    displayResults(results.join('<br>'));
-    }
+        var searchQuery = document.getElementById('searchInput').value.toLowerCase();
+        var content = document.getElementById('content');
+        var paragraphs = content.getElementsByTagName('p');
 
-  function displayResults(results) {
-      document.getElementById('searchResults').innerHTML = results;
-  }
+        // Reset previous search results
+        for (var i = 0; i < paragraphs.length; i++) {
+            paragraphs[i].classList.remove('hidden');
+        }
+
+        // Perform the search
+        for (var i = 0; i < paragraphs.length; i++) {
+            if (!paragraphs[i].innerText.toLowerCase().includes(searchQuery)) {
+                paragraphs[i].classList.add('hidden');
+            }
+        }
+    });
+});
