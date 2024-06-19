@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memory Types</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#registers">1. CPU Registers</a>
+        <a href="#cache">2. CPU Cache</a>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+    <article style="margin-left:200px;">   <!-- It contains an article -->
+        <h2>Memory Types</h2>
+        <table>
+            <tr>
+                <td>
+<pre><code>
+CPU-Registers  L1-Cache/   L2-Cache/   L3-Cache/    Physical_Memory/  Hard_Disk/Secondary_Memory  Tertiary_Memory/
+SRAM         SRAM        DRAM        RAM/Main Memory    SSD                        remote_storge
+<------------------[Speed, Cost increases]   [Size Decreases]-----------------------------            
+</code></pre>
+                </td>
+                <td>
+                    <div class="image-container">
+                        <img src="/images/Memory/Memory_types.jpg" alt="Memory Types" class="zoomable-image" id="zoomableImage2">
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <h3 id="registers">1. CPU Registers</h3>
+        <img src="/images/Memory/x86-32_64 Registers.jpg" alt="registers" style="width:500px;height:300px;">
+        <table>
+            <tr>
+                <th>Register Name</th>
+                <th>Types</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>General Purpose Registers</td>
+                <td>RAX, RBX, RCX, RDX, RDI, RSI, RSP, RBP, R8 through R15.</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>RAX(64 bit)accumulator</td>
+                            <td>
+                                Can be read as EAX(32 bit), AX(16 bit), AH(8 bit), AL(8 bit). Each register is divided into 16bit, 8bits parts<br>
+                                <b>Usage:</b><br>
+                                a. Stores intermidiate sum,subtract,divide within the function<br>
+                                b. {Return value} rax stored return value of function. Larger return types like structs are returned using the stack.<br>
+                                c. {Division Operation} rax = quotient, rdx = reminder
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RBX</td>
+                            <td>Memory pointer, base register</td>
+                        </tr>
+                        <tr>
+                            <td>RSP(stack pointer)</td>
+                            <td>points to head of stack</td>
+                        </tr>
+                        <tr>
+                            <td>RBP(base pointer)</td>
+                            <td> points to base of stack</td>
+                        </tr>
+                        <tr>
+                            <td>AVX(Advanced Vector Extensions)</td>
+                            <td>64 byte Registor present in Intel and AMD</td>
+                        </tr>
+                        <tr>
+                            <td>EDI/RDI, RSI, RDX, RCX, R8, R9</td>
+                            <td>Stores 1st 6 arguments to function.<br>
+                                If there are more than 6 parameters, then the program’s stack is used to pass in<br>
+                                additional parameters to the function
+                                <pre><code>
+- RDI = 1st argument
+- RSI = 2nd argument. Also used for String instructions
+- RDX = 3rd argument. Also used for Divide & Multiply
+- RCX = 4th argument. Also used for loop counter
+- R8 = 5th argument
+- R9 = 6th argument
+                                </code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Segment Registers(16 bit)</td>
+                <td>Holds segment addresses. Segment register initialization and management is
+                     normally handled by the operating system</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Type</td>
+                            <td>desc</td>
+                        </tr>
+                        <tr>
+                            <td>CS/CODE SEGMENT</td>
+                            <td>Contains address of the code segment of the currently executing instruction</td>
+                        </tr>
+                        <tr>
+                            <td>DS/DATA SEGMENT</td>
+                            <td>Contains address of that data segment which belongs to Current Program</td>
+                        </tr>
+                        <tr>
+                            <td>STACK SEGMENT/SS</td>
+                            <td>stores memory address inside stack that CPU is using at this point of time</td>
+                        </tr>
+                        <tr>
+                            <td>ES/EXTRA SEGMENT</td>
+                            <td>a spare segment that may be used for specifying a location in memory</td>
+                        </tr>
+                        <tr>
+                            <td>FS, GS</td>
+                            <td>They are both additional segments with no specific job or specialty</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Special Purpose</td>
+                <td>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>name</td>
+                            <td>desc</td>
+                        </tr>
+                        <tr>
+                            <td>IP(Instruction Pointer) / PC(Program Counter) RIP/EIP</td>
+                            <td>Holds offset address of the next machine instruction to be executed in 
+                                the current code segment. IP can neither read from nor written directly by user.</td>
+                        </tr>
+                        <tr>
+                            <td>Program Status Word / PSW (16 bit) {Tells about status of Processor}</td>
+                            <td>
+                                Usage? Contains bits which stores status or result of operations.<br>
+                                Example: Bits of PSW tells sign of previous operation. Eg: previous operation produced -ve,+ve or 0 result.<br>
+                                Bits 7(unused), 9(used): 3(control flags), 6(status flags). Control Flags: Set/Reset by programmer
+                                <pre><code>
+a. DF(Direction Flag): Controls direction of operation of string operation. (DF=0 Ascending order DF=1 Descending order)
+b. IF(Interrupt Flag): controls the interrupt operation in 8086µP. (IF=0 Disable interrupt IF=1 Enable interrupt)
+c. TF(Trap Flag): Controls the operation of the microprocessor. (TF=0 Normal operation TF=1 Single Step operation)
+                                </code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status flags</td>
+                            <td>Set/reset depending on the results of some arithmetic or logical operations
+                                <pre><code>
+d. CF (Carry Flag): is set (CF=1) if there is a carry out of the MSB position resulting from an addition operation or subtraction.
+e. AF (Auxiliary Carry Flag) AF is set if there is a carry out of bit 3 resulting from an addition operation.
+f. SF (Sign Flag) set to 1 when result is negative. When result is positive it is set to 0.
+g. ZF (Zero Flag) is set (ZF=1) when result of an arithmetic or logical operation is zero. For non-zero result this flag is reset (ZF=0).
+h. PF (Parity Flag) this flag is set to 1 when there is even number of one bits in result, and to 0 when there is odd number of one bits.
+i. OF (Overflow Flag) set to 1 when there is a signed overflow. For example, when you multiply FFH by 11H (result is not one byte)
+                                </code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>XMM Registers</td>
+                <td></td>
+                <td>
+                    These support: 64-bit and 32-bit floating-point operations and Single Instruction Multiple Data (SIMD) instructions.<br>
+                    The SIMD instructions allow a single instruction to be applied simultaneously to multiple data items. This results in significant performance increase
+                </td>
+            </tr>
+            <tr>
+                <td>RFLAGS Register (64 Bits)</td>
+                <td></td>
+                <td>
+                    Each bit representing: status of results of logical and arithmetic operations, System control bits(used by OS)<br>
+                    <pre><code>
+Bit     Name            Symbol      Use
+0     Carry Flag          CF      Status
+1     Reserved                      1
+2     Parity Flag         PF      Status
+3     Reserved                      0
+4  Auxiliary Carry Flag   AF      Status
+5     Reserved                      0
+6     Zero Flag           ZF      Status
+7   Sign Flag             SF      Status
+8   Trap Flag             TF      System
+9   Interrupt Enable Flag IF      System
+10  Direction Flag        DF      Control
+11  Overflow Flag         OF      Status
+12  I/O Privilege Level Bit 0   IOPL System
+13 I/O Privilege Level Bit 1    IOPL System
+14 Nested Task           NT       System
+15    Reserved                      0
+16    Resume Flag        RF       System
+17  Virtual 8086 Mode    VM       System
+18  Alignment Check      AC       System
+19  Virtual Interrupt Flag VIF    System
+20  Virtual Interrupt Pending VIP System
+21  ID Flag             ID        System
+22 - 31 Reserved 0
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
+
+        <h3 id="cache">2. CPU Cache</h3>
+        <dl>Most frequently used data(from RAM) is kept by CPU into cache.
+        </dl>
+        <h4 id="cachetypes">Types of CPU Cache</h4>
+        <pre><code>
+Type    |   Where                  |               What                |   Size    |   Access Delay
+--------|--------------------------|-----------------------------------|-----------|------------------
+ L1    | Always inside CPU        | Holds decoded instructions of CPU | 16KB Each | None
+ L2    | Have x MB of memory data |                                   |           |1-2 clock cycles            
+        </code></pre>
+
+        <h4>Terms</h4>
+        <dl><strong>Cache Lines/cache block</strong></dl>
+        <dt>CPU Cache content which is copied from RAM to cache. Data is transferred 
+            from RAM to CPU cache and is stored as cache line</dt>
+        <pre><code>
+Cache line 0 = 0 to 64 bytes
+Cache line 1 = 65 to 127 bytes
+so on
+4095            
+        </code></pre>
+            <dl><strong>Cache Hit?</strong></dl>
+            <dt>When the CPU want to RW data from RAM, it first checks for a data in cache. if data is found its cache hit else its cache miss
+            </dt>
+
+            <br>
+            <dl><strong>Number of Cache lines?</strong></dl>
+            <dt>Typically 4096 with each holding 64 bytes of data.</dt>
+
+    </article>
+    </main>
+        
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
