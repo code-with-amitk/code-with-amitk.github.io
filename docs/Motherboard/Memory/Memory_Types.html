@@ -24,7 +24,26 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#registers">1. CPU Registers</a>
+        <a href="#registers">CPU Registers</a>
+        <ul>
+            <li><a href="#general">1. General Purpose Registers</a></li>
+            <ul>
+                <li><a href="#rsp">RSP(stack pointer)</a></li>
+                <li><a href="#rbp">RBP(base pointer)</a></li>
+            </ul>
+            <li><a href="#segment">2. Segment Registers(16 bit)</a></li>
+            <ul>
+                <li><a href="#code">Code segment</a></li>
+                <li><a href="#data">Data segment</a></li>
+                <li><a href="#stack">Stack segment</a></li>
+                <li><a href="#extra">Extra segment</a></li>
+            </ul>
+            <li><a href="#special">3. Special Purpose</a></li>
+            <ul>
+                <li><a href="#ip">IP(Instruction Pointer)</a></li>
+                <li><a href="#psw">Process Status word</a></li>
+            </ul>
+        </ul>
         <a href="#cache">2. CPU Cache</a>
     </aside>
 
@@ -47,7 +66,7 @@ SRAM         SRAM        DRAM        RAM/Main Memory    SSD                     
                 </td>
             </tr>
         </table>
-        <h3 id="registers">1. CPU Registers</h3>
+        <h3 id="registers">CPU Registers</h3>
         <img src="/images/Memory/x86-32_64 Registers.jpg" alt="registers" style="width:500px;height:300px;">
         <table>
             <tr>
@@ -56,7 +75,7 @@ SRAM         SRAM        DRAM        RAM/Main Memory    SSD                     
                 <th>Details</th>
             </tr>
             <tr>
-                <td>General Purpose Registers</td>
+                <td id="general">1. General Purpose Registers</td>
                 <td>RAX, RBX, RCX, RDX, RDI, RSI, RSP, RBP, R8 through R15.</td>
                 <td>
                     <table>
@@ -75,11 +94,11 @@ SRAM         SRAM        DRAM        RAM/Main Memory    SSD                     
                             <td>Memory pointer, base register</td>
                         </tr>
                         <tr>
-                            <td>RSP(stack pointer)</td>
+                            <td id="rsp">RSP(stack pointer)</td>
                             <td>points to head of stack</td>
                         </tr>
                         <tr>
-                            <td>RBP(base pointer)</td>
+                            <td id="rbp">RBP(base pointer)</td>
                             <td> points to base of stack</td>
                         </tr>
                         <tr>
@@ -105,7 +124,7 @@ SRAM         SRAM        DRAM        RAM/Main Memory    SSD                     
                 </td>
             </tr>
             <tr>
-                <td>Segment Registers(16 bit)</td>
+                <td id="segment">2. Segment Registers(16 bit)</td>
                 <td>Holds segment addresses. Segment register initialization and management is
                      normally handled by the operating system</td>
                 <td>
@@ -115,19 +134,19 @@ SRAM         SRAM        DRAM        RAM/Main Memory    SSD                     
                             <td>desc</td>
                         </tr>
                         <tr>
-                            <td>CS/CODE SEGMENT</td>
+                            <td id="code">CS/CODE SEGMENT</td>
                             <td>Contains address of the code segment of the currently executing instruction</td>
                         </tr>
                         <tr>
-                            <td>DS/DATA SEGMENT</td>
+                            <td id="data">DS/DATA SEGMENT</td>
                             <td>Contains address of that data segment which belongs to Current Program</td>
                         </tr>
                         <tr>
-                            <td>STACK SEGMENT/SS</td>
+                            <td id="stack">STACK SEGMENT/SS</td>
                             <td>stores memory address inside stack that CPU is using at this point of time</td>
                         </tr>
                         <tr>
-                            <td>ES/EXTRA SEGMENT</td>
+                            <td id="extra">ES/EXTRA SEGMENT</td>
                             <td>a spare segment that may be used for specifying a location in memory</td>
                         </tr>
                         <tr>
@@ -138,7 +157,7 @@ SRAM         SRAM        DRAM        RAM/Main Memory    SSD                     
                 </td>
             </tr>
             <tr>
-                <td>Special Purpose</td>
+                <td id="special">3. Special Purpose</td>
                 <td>
                 </td>
                 <td>
@@ -148,12 +167,12 @@ SRAM         SRAM        DRAM        RAM/Main Memory    SSD                     
                             <td>desc</td>
                         </tr>
                         <tr>
-                            <td>IP(Instruction Pointer) / PC(Program Counter) RIP/EIP</td>
+                            <td id="ip">IP(Instruction Pointer) / PC(Program Counter) RIP/EIP</td>
                             <td>Holds offset address of the next machine instruction to be executed in 
                                 the current code segment. IP can neither read from nor written directly by user.</td>
                         </tr>
                         <tr>
-                            <td>Program Status Word / PSW (16 bit) {Tells about status of Processor}</td>
+                            <td id="psw">Program Status Word / PSW (16 bit) {Tells about status of Processor}</td>
                             <td>
                                 Usage? Contains bits which stores status or result of operations.<br>
                                 Example: Bits of PSW tells sign of previous operation. Eg: previous operation produced -ve,+ve or 0 result.<br>
@@ -166,7 +185,7 @@ c. TF(Trap Flag): Controls the operation of the microprocessor. (TF=0 Normal ope
                             </td>
                         </tr>
                         <tr>
-                            <td>Status flags</td>
+                            <td id="flags">Status flags</td>
                             <td>Set/reset depending on the results of some arithmetic or logical operations
                                 <pre><code>
 d. CF (Carry Flag): is set (CF=1) if there is a carry out of the MSB position resulting from an addition operation or subtraction.
@@ -224,7 +243,7 @@ Bit     Name            Symbol      Use
             </tr>
         </table>
 
-        <h3 id="cache">2. CPU Cache</h3>
+        <h3 id="cache">CPU Cache</h3>
         <dl>Most frequently used data(from RAM) is kept by CPU into cache.
         </dl>
         <h4 id="cachetypes">Types of CPU Cache</h4>

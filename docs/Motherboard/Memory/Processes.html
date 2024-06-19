@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processes</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#layout">Memory Layout of a Process</a>
+        <ul>
+            <li><a href="#cs">Code Segment</a></li>
+            <li><a href="#ds">Data Segment</a></li>
+            <li><a href="#ss">Stack Segment</a></li>
+            <ul>
+                <li><li><a href="#stackframe">Stack Frame</a></li></li>
+            </ul>
+            <li><a href="#hs">Heap Segment</a></li>
+            
+        </ul>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2 id="layout">Memory Layout of a Process</h2>
+            <dl>
+                After compilation obj file is created 
+                <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/C/Compile/Object_File">ELF(Executable and linking format) format</a>. 
+                This ELF file has (.text=CS, .data & .rodata = DS and others)
+                This file is loaded in memory which creates Memory layout of the process.
+            </dl>
+            <pre><code>
+                   |                                                                                               |
+                   |                          <------DATA SEGMENT (static, global) ----------->                    |
+[Kernel] Process-2 |[STACK] shared_libraries {PTR-To-HEAP} {Uninitialized_BSS} {Initialized DS} [TEXT/CODE SEGMENT]|
+                   | ----->                                BlockStartedBySymbol <-RW--><--RO-->              0x0000|
+                   |                                                                                               |
+                
+Object/ELF File ===> |ELF Header|.data Header|.rodata Header|.text Header |.data|.rodata|.text|
+                                                                          /             /       \                         
+                                                                        /              /         \
+Memory Layout ==>                                                      | Data Segment |Code Segment| Stack |
+            </code></pre>
+            <img src="/images/Memory/memory-layout-of-process.png" 
+            alt="Memory layout of a process" style="width:500px;height:200px;">
+
+            <table>
+                <tr>
+                    <th>Segment</th>
+                    <th>Details</th>
+                </tr>
+                <tr>
+                    <td id="cs"><b>Code/Text Segment (Read Only) Size = 8k</b></td>
+                    <td>
+                        (RO) Have Executable Instructions. Neither grows nor shrinks.<br>
+                        When a process is run twice OS maintains 1 set of pages kept in main memory. Both processes points to same memory (ie does not have personal CS)
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ds"><b>Data Segment {Global, Static}</b></td>
+                    <td>
+                        <table>
+                            <tr>
+                                <th>Part</th>
+                                <th>desc</th>
+                            </tr>
+                            <tr>
+                                <td>Initialized DS</td>
+                                <td>
+                                    Initialized by Coder. Again its divided into 2 parts
+                                    <table>
+                                        <tr>
+                                            <td>RO(READ ONLY)</td>
+                                            <td>Global constants are stored here. Eg: const char *a = "test"</td>
+                                        </tr>
+                                        <tr>
+                                            <td>RW(READ WRITE)</td>
+                                            <td>Stores Initialized globals, extern variables, local static
+                                                <pre><code>
+char s[] = "test";  //Initialized Globals
+int a = 1;        
+static int b = 1;
+
+extern int a;     //Extern variable
+
+static int a;     //Local static
+                                                </code></pre>
+                                            </td>
+                                        </tr>
+                                    </table>                                  
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Unintialized DS / BSS(Block Started by Symbol)</td>
+                                <td>Stores uninitialized global and static. Data is Initialized to 0(by kernel) before code start executing.
+                                    <pre><code>
+int a;
+static int b;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pointer-to-Heap</td>
+                                <td>Data Segment also stored pointer to heap. As memory is allocated/deallocated on heap using malloc() DS grows/shrinks.
+                                    <pre><code>
+malloc()->brk()
+realloc()->sbrk()
+                                    </code></pre>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ss"><b>Stack Segment</b></td>
+                    <td>
+                        Stores: Local variables, Registers, Stack Frame pointer, return address, stack-based parameters, stack frame as LL<br>
+                        <br>
+                        <h4 id="stackframe">Stack Frame: {Input_parameters} {Return_address} {Local_variables}</h4>
+                        &ensp; Return address: The address to which control should return after the function call completes.
+                        <pre><code>
+add(int a, int b){          //0x33
+    int c;               //Local
+    }
+main(int argc, char *argv[]){   //0x22
+    int a ,b;
+    add(a,b);
+}   
+From OS:Call to main()      //0x11
+
+--------stack allocated in this direction---->
+[ argv[] argc | 0x11 | b a ]  [ | b a | 0x22+offset | c | ]     //Input parameters are pushed in reverse order
+/\<--- sf of main()  ----->  <------ sf of add()     ---->/\
+|                                                         |
+|                                                         rsp Stack pointer(Points to the top of the stack)
+|
+rbp Base pointer(Points to the base of the current stack frame. Remains fixed)
+                        </code></pre>               
+
+                        <h5>Popping of Stack frame</h5>
+                        Function add() finishes, 
+                        <b><a href="/Motherboard/Memory/Memory_Types.html#ip">Instruction pointer(is set to prev address)=0x22+offset</a></b><br>
+                        Then add() stack is cleared, Similarly main() stack is cleared<br>
+                        rsp, rbp are set to old values
+                    </td>
+                </tr>
+            </table>            
+        </article>
+    </main>
+
+</body>
+</html>
