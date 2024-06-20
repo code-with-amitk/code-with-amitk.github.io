@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>fork</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#fork">fork(). Create child process</a>
+        <a href="#clone">clone()</a>
+        <a href="#cow">COW(Copy on Write)</a>
+        <a href="#examples">Code examples</a>
+        <ul>
+            <li><a href="#1child">1 child of parent</a></li>
+            <li><a href="#nforks">n forks</a></li>
+            <li><a href="#2children">2 children of parent</a></li>
+        </ul>
+    </aside>
+
+
+    
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2 id="fork">Child Process=fork()</h2>
+            <dl>
+                fork() is internally implemented using clone()<br>
+                Creates a new child process. Compelte <a href="#layout">|CS|DS|SS|HS|</a> of parent is duplicated to child.<br>
+                New <a href="#pcb">Process control block</a> is created for child. Code Segment is Duplicated using 
+                <a href="#cow">COW(Copy on Write)</a>
+            </dl>
+            <pre><code>
+                -------------2. fork() Duplicates----------
+                |                                         \/                  
+                PARENT                                   CHILD
+       Stack   Heap     Data Segment              Stack   Heap     Data Segment
+    1. | pPtr | "PARN" | g_a=1, g_b=0 |          | pPtr | "PARN" | g_a=1, g_b=0 | 
+         |       /\                             
+          --------                               3. Child changes its values
+                                                   Stack   Heap     Data Segment
+                                                 | pPtr | "CHLD" | g_a=10, g_b=50 |
+                                                    |       /\
+                                                    -------- 
+   
+    4. 
+     PARENT pPtr=PARN, g_a=1, g_b=0
+     CHILD  pPtr=CLD, g_a=10, g_b=0
+
+     //Complete Tree
+     # pstree -hp |grep a.out
+       |-gnome-terminal-(4730)-+-bash(4737)---su(4886)---bash(4908)---a.out(10005)---a.out(10006)
+     Parent PID=10005   Child PID=10006
+     
+     //PID of parent in child
+       pid_t ppid = getppid();
+            </code></pre>
+            <pre><code class="language-css">
+#include&lt;unistd.h>  //fork
+#include&lt;iostream>
+#include&lt;cstring>
+
+//DS
+int g_a = 1;    //Initialized
+int g_b;        //Uninitialized
+
+int main(){
+    string str;                       //Stack
+
+    char *p = new char[7];                //Heap
+    strcpy(p, "Parent");
+
+    std::cout &lt;&lt; "[Before fork] g_a: " &lt;&lt; g_a\
+    &lt;&lt; ", g_b: " &lt;&lt; g_b\
+            &lt;&lt; ", p: " &lt;&lt; p &lt;&lt; std::endl;
+
+    int k = fork();
+
+    if (k==0){      //CHILD
+        g_a = 10;                        //DS
+        strcpy(p,"Child");            //Stack
+        std::cout &lt;&lt; "\n[CHILD] g_a: " << g_a\
+        &lt;&lt; ", g_b: " &lt;&lt; g_b\
+        &lt;&lt; ", p: " &lt;&lt; p << std::endl;
+    }else{
+        std::cout &lt;&lt; "Parent";
+    }
+
+    std::cout &lt;&lt; "\n[AFTER fork] g_a: " &lt;&lt; g_a\
+    &lt;&lt; ", g_b: " &lt;&lt; g_b\
+    &lt;&lt; ", p:" &lt;&lt; p &lt;&lt; std::endl;
+
+    delete p;
+    return 0;
+}
+
+# ./a.out
+[Before fork] g_a: 1, g_b: 0, pPtr: PARN
+
+[PARENT]
+[CHILD] g_a: 10, g_b: 0, pPtr: CHLD
+
+[AFTER] g_a: 1, g_b: 0, pPtr: PARN		//Notice Executed Twice, 1 for Parent, 1 for Child
+[AFTER] g_a: 10, g_b: 0, pPtr: CHLD
+            </code></pre>
+
+            <h2 id="clone">clone</h2>
+            <pre><code>
+int clone(int (*fn)(void *), void *stack, int flags, void arg, .../ pid_t *parent_tid, void *tls, pid_t *child_tid */ );
+            </code></pre>
+            <dl>
+                What? API creates a new child process, in a manner similar to fork(2).<br>
+                Unlike fork(2), the clone(2) allows the child process to share parts of its execution context with the calling process, 
+                such as the memory space, the table of file descriptors, and the table of signal handlers. <br>
+                You can pass different namespace flags to clone(2) to create new namespaces for the child process.
+            </dl>
+
+            <h2 id="cow">COW(Copy on Write)</h2>
+            <dl>
+                CS, DS, SS, HS all are shared between parent & child Initially. 
+                If any one of them Modifies, New page is created & modified data is copied
+            </dl>
+            <pre><code class="language-css">
+#include &lt;unistd.h>
+
+/*Code-1: Parent & child process executing same code
+void main(){
+    fork();
+    printf("Hello");
+}
+Output
+    Hello    //Child
+    Hello    //Parent
+Why? CS for parent and child are same
+*/
+
+
+/*Code-2: COW*/
+int dsVar = 10;    //DS variable
+void main(){
+        int stackVar=10;        //stack variable
+        int *heapVar  = malloc(sizeof(int));
+        *heapVar=10;    //Heap variable
+
+        if(fork() == 0){    //Child
+                stackVar = *heapVar = dsVar = 20;        //Child CS Changed
+                printf("%d %d  %d\n", stackVar, *heapVar, dsVar);   //     20 20 20
+        }else{    //Parent
+                printf("%d %d  %d\n", stackVar, *heapVar, dsVar);   //     10 10 10
+        }
+}
+Output:
+10 10  10
+20 20  20
+            </code></pre>
+
+            <h2 id="examples">Code Examples</h2>
+            <h4 id="1child">1 child of parent</h4>
+            <pre><code class="language-css">
+#include&lt;unistd.h>
+
+int main(){
+    int ret;
+    ret = fork();
+    if (ret == 0){                       //Child
+        printf ("Inside Child\n");
+        printf ("[Child] Parent's PID=%d\n", getppid());      //175. Parent's PID is always smaller since its created earlier.
+        printf ("[Child] Self PID=%d\n", getpid());           //176
+    } else {                            //Parent
+        printf ("Inside Parent\n");
+        printf ("[Parent] Parent's PID=%d\n", getppid());     //92
+        printf ("[Parent] Self PID=%d\n", getpid());          //175
+    }
+}
+$ ./a.out
+Inside Parent
+Inside Child
+[Parent] Parent's PID=92
+[Child] Parent's PID=175
+[Parent] Self PID=175
+[Child] Self PID=176
+            </code></pre>
+
+            <h4 id="nforks">n forks</h4>
+            <dl>if we call fork() n number of times. Common code is executed 2n times.</dl>
+            <pre><code class="language-css">
+#include&lt;unistd.h>  //fork
+int main(){
+    fork();
+    fork();
+    fork();
+    
+    cout &lt;lt; "Out\n";    //called 8 times
+}
+
+# ./a.out
+Out
+Out
+Out
+Out
+Out
+Out
+Out
+Out
+                            fork()
+                           /       \
+                ---------fork()   fork()-----------
+                |         fork()   fork()          |
+               / \        / \        /\            /\
+            </code></pre>
+
+            <h4 id="2children">2 Children of a parent</h4>
+            <dl>To create 2 children we need to call fork inside parent.</dl>
+            <pre><code class="language-css">
+#include &lt;unistd.h>
+
+void error(char* cString) {
+    perror(cString);
+    printf("%d", errno);
+    exit(0);
+}
+
+#include &lt;unistd.h>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;error.h>
+#include &lt;string>
+#include &lt;iostream>
+extern int errno;
+
+void error(std::string cString) {
+    //perror(cString);
+    printf("%d", errno);
+    exit(0);
+}
+
+int main() {
+    pid_t child_a, child_b;
+
+    child_a = fork();
+
+    if (child_a == 0) {
+        /* Child A code */
+        sleep(1);
+        std::cout &lt;&lt; "Child1:" &lt;&lt; getpid() &lt;&lt; "\n";
+    } else {
+        child_b = fork();
+        std::cout &lt;&lt; "Parent:" &lt;&lt; getpid() &lt;&lt; "\n";
+
+        if (child_b == 0) {
+            /* Child B code */
+            std::cout &lt;&lt; "Child2:"&lt;&lt; getpid() &lt;&lt; "\n";
+        } else {
+            /* Parent Code */
+            std::cout &lt;&lt; "Parent:" &lt;&lt; getpid() &lt;&lt; "\n";
+        }
+    }
+}
+
+$ a.out
+Child1: 1234
+Parent: 780
+Child2: 1235
+Parent: 780
+            </code></pre>
+
+        </article>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

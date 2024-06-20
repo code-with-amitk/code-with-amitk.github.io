@@ -22,21 +22,41 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#process">Process</a>
+        <ul>
+            <li><a href="./fork.html">Child Process=fork()</a></li>
+        </ul>
         <a href="#layout">Memory Layout of a Process</a>
         <ul>
-            <li><a href="#cs">Code Segment</a></li>
-            <li><a href="#ds">Data Segment</a></li>
+            <li><a href="#cs">Code Segment(.text)</a></li>
+            <li><a href="#ds">Data Segment(.data, .bss)</a></li>
             <li><a href="#ss">Stack Segment</a></li>
             <ul>
-                <li><li><a href="#stackframe">Stack Frame</a></li></li>
+                <li><a href="#stackframe">Stack Frame</a></li>
+                <li><a href="#stackoverflow">Stack Overflow</a></li>
+                <li><a href="#stacksmashing">Stack Smashing</a></li>
+                <li><a href="#maxstack">MAX Stack Size</a></li>
+                <li><a href="#segfault">Segmentation Fault</a></li>
             </ul>
-            <li><a href="#hs">Heap Segment</a></li>
-            
+            <li><a href="#heap">Heap</a></li>
+            <ul>
+                <li><a href="#memoryleak">Heap Overflow / Memory leak</a></li>
+            </ul>
         </ul>
+        <a href="#states">Process States</a>
+        <a href="#pcb">Process Control Block</a>
+        <a href="#processtable">Process Table</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
         <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2 id="process">What is process?</h2>
+            <dl>
+                Running instance of program. All processes are decedents of swapper process(PID=0). 
+                Both(threads, processes) are independent sequence of operations
+            </dl>
+            <a href="./fork.html"><h4>fork() = Create child process</h4></a>
+
             <h2 id="layout">Memory Layout of a Process</h2>
             <dl>
                 After compilation obj file is created 
@@ -157,9 +177,108 @@ rbp Base pointer(Points to the base of the current stack frame. Remains fixed)
                         <b><a href="/Motherboard/Memory/Memory_Types.html#ip">Instruction pointer(is set to prev address)=0x22+offset</a></b><br>
                         Then add() stack is cleared, Similarly main() stack is cleared<br>
                         rsp, rbp are set to old values
+                        
+                        <h4 id="stackoverflow">Stack Overflow</h4>
+                        When process uses all its stack. At end of process's stack there is a GUARD PAGE, when process goes into it.
+                        <pre><code>
+fun() {
+    fun();
+}
+                        </code></pre>
+
+                        <h4 id="stacksmashing">Stack Samshing</h4>
+                        Stack overflow caused deliberately as part of an attack.
+
+                        <h4 id="maxstack">MAX Stack Size / Maximum stack allocated to process at start</h4>
+                        <pre><code>
+8 MB(Default)  #cat /proc/pid/limits     //Linux
+1 MB(Default)                            //Windows
+
+$ ulimit -u unlimited                    //Changing stack size                            
+                        </code></pre>
+                        <u>Why 8MB of stack?</u> Atleast large and difficult to overflow<br>
+                        <u>Why Stack size != Virtual Memory size (As Heap size = Virtual Memory size)?</u><br>
+                        &ensp; Every thread has its own Stack.if thread-1 consumes all virtual memory and nothing left for thread-2.
+
+                        <h4 id="sefault">Segmentation Fault</h4>
+                        Program tries to access memory that it's not allowed to access (memory violation)<br>
+                        eg: null pointer (a pointer that doesn't point to any valid memory location), Accessing memory beyond bounds a[5]. access a[5]
                     </td>
                 </tr>
-            </table>            
+                <tr>
+                    <td id="heap">Heap</td>
+                    <td>
+                        Heap is not part of process Memory layout, but process stores pointer to its heap area<br>
+                        Heap is allocated on <a href="/Motherboard/Memory/virtual_and_physical.html">Virtual Memory/hard Disk</a> & is used for dynamic Memory allocation.<br>
+                        <b>Max Heap Size</b> = <a href="/Motherboard/Memory/virtual_and_physical.html">Virtual memory size</a>.
+
+                        <h4 id="memoryleak">Heap Overflow / Memory leak</h4>
+                        When process keeps on allocating more and more memory without freeing it causes Heap overflow.<br>
+                        Aftermaths: System shutdown, Crash, System becoming dead-slow.
+                        <pre><code>
+while(1){ 
+    char *p = (char *) malloc(12); 
+}                            
+                        </code></pre>
+                    </td>
+                </tr>
+            </table>        
+            
+            <h2 id="states">Process States</h2>
+            <dl>
+                When a process executes, it passes through different states.<br>
+                <b>a. Start:</b> Initial state when a process is first started/created.<br>
+                <b>b. Ready:</b> The process is waiting to be assigned to a processor.<br>
+                <b>c. Running(Flag R):</b> Once the process has been assigned to a processor by the OS scheduler state changes to running.<br>
+                <b>d. Waiting/Sleeping(Flag S):</b> Process moves into the waiting state if it needs to wait for a resource, eg: waiting for user input or file.<br>
+                <b>e. Terminated or Exit:</b> Once the process finishes its execution, or it is terminated by the OS. Here it waits to be removed from main memory.                
+            </dl>
+
+            <h2 id="pcb">PCB / Process Control Block / Process Context</h2>
+            <dl>
+                PCB is a data structure(struct task_struct) for storing all information of a process inside kernel.<br>
+            </dl>
+            <dl>
+                <b>Why needed?</b> When process changes state (ie switched from running to waiting/sleeping state(due to 
+                <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms#context-switch">context switch</a> or 
+                <a href="/Operating%20System/Linux/Kernel/Interrupts/">interrupt</a>)) kernel stores info in PCB,
+                so that process can resumed later from same point using this information.<br>
+                Information of child processes is stored in PCB of parent process etc.
+            </dl>
+            <pre><code>
+struct task_struct {
+    long                 priority;
+    struct task_struct   *next_task, *prev_task;            //DOUBLY LL
+    int                  pid;                               //PID
+    int                  pgrp;								//Process Group
+    struct task_struct   *p_opptr, *p_pptr, *p_cptr,        //Pointers to parent, youngest child, silbilings etc
+    unsigned short       uid,suid,gid,sgid..;               //UID,GID
+    struct fs_struct     *fs;                               //File system information
+    struct sem_queue     *semsleeping;                      //IPC Information
+    struct mm_struct     *mm;                               //memory management info
+    struct signal_struct *sig;                              //signal handlers
+    //Register information.
+};                
+            </code></pre>
+
+            <h4>Information stored in PCB</h4>
+            <dt>
+            <a href="/Motherboard/Memory/Memory_Types.html">Register values of present process, stack pointer (rbp) etc</a><br>
+            Process-state: Any of 5<br>
+            pid: process-id<br>
+            <a href="/Motherboard/Memory/Memory_Types.html">Program Counter/Instruction Pointer:</a> 
+            Address of next instruction to be executed on Code segment of this process.<br>
+            priority: This is a number. Process having higher priority execute 1st.<br>
+            <a href="/Motherboard/Memory/Memory_Types.html">General purpose registers:</a> Stores results of calculations done by process in Memory segment.<br>
+            List of open files, list of open devices. This all information is called PROCESS CONTEXT.
+            </dt>
+
+
+            <h2 id="processtable">Process Table</h2>
+            <dl>
+                Process Table stores mapping of PID to PCB inside kernel.
+            </dl>
+            <img src="/images/Memory/Process_table.png" alt="Process Table" style="width:500px;height:300px;">            
         </article>
     </main>
 
