@@ -41,8 +41,8 @@
             <h2 id="fork">Child Process=fork()</h2>
             <dl>
                 fork() is internally implemented using clone()<br>
-                Creates a new child process. Compelte <a href="#layout">|CS|DS|SS|HS|</a> of parent is duplicated to child.<br>
-                New <a href="#pcb">Process control block</a> is created for child. Code Segment is Duplicated using 
+                Creates a new child process. Compelte <a href="/Motherboard/Memory/Processes.html#layout">|CS|DS|SS|HS|</a> of parent is duplicated to child.<br>
+                New <a href="/Motherboard/Memory/Processes.html#pcb">Process control block</a> is created for child. Code Segment is Duplicated using 
                 <a href="#cow">COW(Copy on Write)</a>
             </dl>
             <pre><code>
