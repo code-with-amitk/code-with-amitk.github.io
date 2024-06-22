@@ -44,8 +44,11 @@
             </ul>
         </ul>
         <a href="#states">Process States</a>
-        <a href="#pcb">Process Control Block</a>
         <a href="#processtable">Process Table</a>
+        <ul>
+            <li><a href="#pcb">Process Control Block(PCB)</a></li>
+        </ul>
+        <a href="#ways">Ways of Process Creation, Terminaton</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
@@ -234,9 +237,61 @@ while(1){
                 <b>e. Terminated or Exit:</b> Once the process finishes its execution, or it is terminated by the OS. Here it waits to be removed from main memory.                
             </dl>
 
-            <h2 id="pcb">PCB / Process Control Block / Process Context</h2>
+            <h2 id="processtable">Process Table</h2>
             <dl>
-                PCB is a data structure(struct task_struct) for storing all information of a process inside kernel.<br>
+                <b>What is Process Table?</b><br>
+                Process Table is Array of structures (called Process Control Blocks), one entry per process.<br>
+                Entry contains important information about the process's state:<br>
+                &ensp; Its <a href="/Motherboard/Memory/Memory_Types.html#ip">Program counter</a>: Store address from where to start again<br>
+                &ensp; stack pointer<br>
+                &ensp; memory allocation<br>
+                &ensp; the status of its open files<br>
+                &ensp; Process's accounting and scheduling information<br>
+                &ensp; And everything else about the process that must be saved when the process is switched from running to ready or blocked state so that it can be restarted later
+            </dl>
+            <dl>
+                <b>Why Process Table?</b> The main objective of process table entry is to restart process from state where it left off, as it had never stopped.
+            </dl>
+            <table>
+                <tr>
+                    <td>
+                        <div class="image-container">
+                        <img src="/images/Memory/Process_table.png" alt="Process Table" class="zoomable-image" id="zoomableImage2">
+                        </div>
+                    </td>
+                    <td>
+                        <h3>Process Control Block</h3>
+                        <pre><code>
+struct task_struct {
+    long                 priority;
+    //DOUBLY LL
+    struct task_struct   *next_task, *prev_task;
+    //Process PID
+    int                  pid;
+    //Process Group
+    int                  pgrp;
+    //Pointers to parent, youngest child, silbilings etc
+    struct task_struct   *p_opptr, *p_pptr, *p_cptr,
+    //UID,GID
+    unsigned short       uid,suid,gid,sgid..;
+    //File system information
+    struct fs_struct     *fs;
+    //IPC Information
+    struct sem_queue     *semsleeping;
+    //memory management info
+    struct mm_struct     *mm;
+    //signal handlers
+    struct signal_struct *sig;
+    //Register information.
+};
+                        </code></pre>
+                    </td>
+                </tr>
+            </table>
+
+            <h3 id="pcb">PCB / Process Control Block / Process Context</h3>
+            <dl>
+                PCB is a data structure(struct task_struct) for storing all information of a process inside process table
             </dl>
             <dl>
                 <b>Why needed?</b> When process changes state (ie switched from running to waiting/sleeping state(due to 
@@ -245,21 +300,6 @@ while(1){
                 so that process can resumed later from same point using this information.<br>
                 Information of child processes is stored in PCB of parent process etc.
             </dl>
-            <pre><code>
-struct task_struct {
-    long                 priority;
-    struct task_struct   *next_task, *prev_task;            //DOUBLY LL
-    int                  pid;                               //PID
-    int                  pgrp;								//Process Group
-    struct task_struct   *p_opptr, *p_pptr, *p_cptr,        //Pointers to parent, youngest child, silbilings etc
-    unsigned short       uid,suid,gid,sgid..;               //UID,GID
-    struct fs_struct     *fs;                               //File system information
-    struct sem_queue     *semsleeping;                      //IPC Information
-    struct mm_struct     *mm;                               //memory management info
-    struct signal_struct *sig;                              //signal handlers
-    //Register information.
-};                
-            </code></pre>
 
             <h4>Information stored in PCB</h4>
             <dt>
@@ -274,13 +314,54 @@ struct task_struct {
             </dt>
 
 
-            <h2 id="processtable">Process Table</h2>
+            <h2 id="ways">Ways of Process Creation, Terminaton</h2>
+            <h3>Process Creation Ways</h3>
             <dl>
-                Process Table stores mapping of PID to PCB inside kernel.
+                1. System initialization: At boot numerous processes are created.<br>
+                2. Execution of a process-creation system call by a running process. fork(), CreateProcess()=Windows<br>
+                3. A user request to create a new process.<br>
+                4. Initiation of a batch job.
             </dl>
-            <img src="/images/Memory/Process_table.png" alt="Process Table" style="width:500px;height:300px;">            
+            <h3>Process Termination ways</h3>
+            <table>
+                <tr>
+                    <th>way</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td>1. Normal exit (voluntary)</td>
+                    <td>Most processes terminate because they have done their work</td>
+                    <td>Scheduler terminates them</td>
+                </tr>
+                <tr>
+                    <td>2. Error exit (voluntary)</td>
+                    <td> process discovers a fatal error</td>
+                    <td>
+                        `gcc foo.c` is intended for reading file but does not exists. It may exit
+                    </td>
+                </tr>
+                <tr>
+                    <td>3. Fatal error (involuntary)</td>
+                    <td>Code bug</td>
+                    <td>
+                        divide by 0, but this may be handled by process itself using Interrupt(signals).
+                    </td>
+                </tr>
+                <tr>
+                    <td>4. Killed by another process (involuntary)</td>
+                    <td>1 process tells OS to kill other process</td>
+                    <td>
+                        `kill` system call. `TerminateProcess` on windows
+                    </td>
+                </tr>
+            </table>
+
         </article>
     </main>
+
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
 
 </body>
 </html>
