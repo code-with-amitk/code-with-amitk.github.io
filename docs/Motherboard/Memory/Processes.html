@@ -197,7 +197,7 @@ fun() {
 8 MB(Default)  #cat /proc/pid/limits     //Linux
 1 MB(Default)                            //Windows
 
-$ ulimit -u unlimited                    //Changing stack size                            
+$ ulimit -u unlimited                    //Changing stack size
                         </code></pre>
                         <u>Why 8MB of stack?</u> Atleast large and difficult to overflow<br>
                         <u>Why Stack size != Virtual Memory size (As Heap size = Virtual Memory size)?</u><br>
@@ -250,7 +250,9 @@ while(1){
                 &ensp; And everything else about the process that must be saved when the process is switched from running to ready or blocked state so that it can be restarted later
             </dl>
             <dl>
-                <b>Why Process Table?</b> The main objective of process table entry is to restart process from state where it left off, as it had never stopped.
+                <b>Why Process Table?</b> <br>
+                The main objective of process table entry is to restart process from state where it left off, as it had never stopped.<br>
+                Process state which is interrupted using Interrupt is also saved on process table for later resumption.
             </dl>
             <table>
                 <tr>

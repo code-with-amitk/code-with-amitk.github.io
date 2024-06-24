@@ -47,11 +47,89 @@
         <table class="image-table">
             <tr>
                 <td>
+                    <dl><strong><a href="/Motherboard/Memory/Processes.html#processtable">Process Control Block(PCB)</a></strong></dl>
                     <div class="image-container">
                         <img 
-                      src="//www.plantuml.com/plantuml/png/XP91ZzCm48Nl_XN3Se43uju3MbGaL2r2LNUNqrvSUvGEYSTcF0w4Nu_TBTkagEAMp7nlvirBRhDQqH86yog9xO85nVWRL0gQL3laA5bMUCmeO3EKHVKEftsqujUHLU8mF3EzMq0tMucTs13iVa1uuWqhYfIaS9RTD5sY2-5w-rZnhmyxs18V4PVA4daPziJVq6cKXxRboDAeLzbxb94Sxc9HuXEUnHYEYX1752ZmUZrPDccm4t478Ow41jb3O-QaIvNzGjr1FmlY_nMpsOAvneKJH8R-bELCKU3TXvhcgkKCHnYzwLsh9ghbm_kVG7-FcY-eNJXvIiIzyUZ88oIXAAIJ-PWpTNpMmdZCphmfJ3yAmkRJsvcDH6rbk_DovJA4HGfRMp8-Pm0jaRrr_MncvTjC6dNrZmqWRshZPUVcVdSMP5d1zn9I1etj3QptBPcPbrQjPkuEjYTJnO2_q1MboE1YI0FguhDSlw7-Vo2OIy1ihbvoMnzB6Fu0"
+                      src="//www.plantuml.com/plantuml/png/XP9FSnen3CNl_XIQS6aFcTuvT09asiaqoJ2GzCJ5U1LGsRLS_u7oxIijBDbja_R2Cl9FxqdFladPnboQsWJvagDWVORdX15iWZAeViFZb6siPknpvBe-CJitW08vhLxD8s-YRHgxhd7bxtp664l8hxrNWpONIjiscpyB_VYqWFdTun1PJ1uK4T6XeLjtXWvJMlcp1KnhThihWD7aPx635jhdjkKorSf_HvSvmfEEExIb5F-4bnZtv10MN39vuOtdZC1xZ51WD3jQRze8GssFv3VGy9xGX2ZpOGKxF09x8v-rncdGLw02nXIu_Yo1ZZLgEEDcvxGQIChRJmUWRew-gwO-kgVDDi_9xymjEgfG58WZvQEPf4GR_zeAr7SDf0vw1UBmZe7Up-WhrvLaKnAUDchtkmYzZI_j7c4-WypoE-t1YkXURZs65gfiji1UiRwK0EPMZv90LGTSo--7S7fZuBZep1-bkimsbmGBt52Iqjz-SlTZ-49IreijIQz7qf3o9OExvHFOgjButzxfdgseua78nMcn_uGmswBRmM5BRWlnF5eoauYYWfLijJwgrh_IwThUIKYPziMWppqBzeFKEra9RGopY3PZkqVALkPxuQXJ3A1srKSyhBoSTAaCY1-b2P1PutmhDM5WD4NQe16_wdJBBv4RkBn_LSPVw4eczk2u2JLcV3VISwOBJ9d5JHTiLSt3vKskTHqvAqrVvaR-bgR-3G00"
                       alt="Interrupt flow" class="zoomable-image" id="zoomableImage1">
                     </div>
+                      <pre class="puml" visibility: hidden>
+                        @startuml
+                        participant User as u
+                        participant KeyBoardController as kc
+                        participant pic as "Programmable\nInterruptController"
+                        participant cpu as "CPU\nINTR PIN"
+                        participant RAM as ram
+                        participant pcb as "Process\nControl Block"  #Aqua
+                        participant ivt as "Interrupt\nVector Table"
+                        participant isr as "Interrupt\nService Routine"
+                        
+                        note over u #Cyan
+                        User playing movie
+                        pressed key on
+                        keyboard
+                        end note
+                        
+                        u -> kc: Key pressed
+                        kc -> pic: h/w interrupt
+                        
+                        note over pic #LightPink
+                        Decide priority
+                        Assign interrupt id
+                        end note
+                        
+                        pic -> cpu: hw interrupt
+                        
+                        note over cpu #Gold
+                        pause movie play
+                        end note
+                        
+                        note over cpu #Gold
+                        Save PC to PCB
+                        end note
+                        
+                        cpu -> pcb: Save data on PCB
+                        
+                        note over pcb
+                        Data saved on PCB
+                        - PC(program counter)
+                        - Status Register
+                        end note
+                        
+                        cpu -> ivt: Find isr using id
+                        ivt -> cpu: IST address
+                        
+                        note over cpu #Gold
+                        Load new ISR to PC
+                        end note
+                        
+                        note over cpu #Gold
+                        Check which registers
+                        Are needed by ISR
+                        end note
+                        
+                        cpu -> pcb: Save register on PCB
+                        
+                        note over pcb
+                        Save present registers
+                        on PCB
+                        end note
+                        cpu -> ram: Create new stack for ISR
+                        cpu -> ram: Load New\nISR address
+                        cpu -> ram: jump to isr address
+                        
+                        note over ram #Beige
+                        read data from keyboard
+                        ISR execution complete
+                        end note
+                        
+                        note over cpu  #Gold
+                        Restores PCB data
+                        Movie playback resume
+                        end note
+                        
+                        @enduml
+                      </pre>
                 </td>
                 <td>
                     <div class="image-container">
