@@ -36,21 +36,33 @@
                 <table>
                     <tr>
                         <td>Empty</td>
-                        <td><pre>
-unordered_set<string> us;
-                        </pre></td>
+                        <td><pre><code class="language-css">
+unordered_set&lt;string> us;
+                        </code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>set of pairs</td>
+                        <td><pre><code class="language-css">
+using mpair = pair&lt;double, double>;
+struct Hash {
+    size_t operator()(const mpair& p) const {
+        return hash&lt;double>()(p.first) ^ hash&lt;double>()(p.second);
+    }
+};
+unordered_set&lt;mpair, Hash> us(s.begin(), s.end());
+                        </code></pre></td>
                     </tr>
                     <tr>
                         <td>Filled<br> from String</td>
-                        <td><pre>
+                        <td><pre><code class="language-css">
 string s = "abcda";
-unordered_set<char> us(s.begin(), s.end());
-                        </pre></td>
+unordered_set&lt;char> us(s.begin(), s.end());
+                        </code></pre></td>
                     </tr>
                     <tr>
                         <td>n sets</td>
                         <td><pre>
-unordered_set<string> us(n);
+unordered_set&lt;string> us(n);
                         </pre></td>
                     </tr>                    
                 </table>
@@ -60,14 +72,14 @@ unordered_set<string> us(n);
                     <tr>
                         <td>Empty</td>
                         <td><pre>
-let mut hs:HashSet<String> = HashSet::new();
+let mut hs:HashSet&lt;String> = HashSet::new();
                         </pre></td>
                     </tr>
                     <tr>
                         <td>Filled <br>From String</td>
                         <td><pre>
 let s = String::from("abcda");
-let mut us:HashSet<char> = s.chars().collect();
+let mut us:HashSet&lt;char> = s.chars().collect();
                         </pre></td>
                     </tr>
                 </table>

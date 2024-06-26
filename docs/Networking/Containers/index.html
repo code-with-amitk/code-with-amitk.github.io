@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Containers</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#container">What is Container</a>
+        <dl>
+            <li><a href="#issues">Issues without containers</a></li>
+            <li><a href="#comp">Container vs VM</a></li>
+            <li><a href="#adv">Advantages</a></li>
+        </dl>
+        <a href="./Docker/">Docker Container</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="container">Container</h2>
+        <dl>
+            This is a self contained package that contains everything that your binary/application need to run.<br>
+            Only 1 Application can run inside container and all its dependent libraries. 
+            Each container has its own: Network interface, IP address, file system, All containers share the kernel of the host.<br>
+            Isolation(achieved using kernel namespace, 
+            <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Operating_Systems/Linux/Resource_Control/Kernel_Namespaces">cgroups</a>) 
+            processes running on single host. Isolated from other processes
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code>
+|-----------------------|
+| binary(*.exe),        |
+| runtime(tokio-1.2),   |
+| libraries(utc.so...), |
+| other packages        |
+|------Container--------|
+                </code></pre>
+                <img src="/images/networking/containers/TraditionalOS_vs_Containers.jpg" alt="trie" style="width:250px;height:150px;">
+                </td>
+                <td>
+                    <div class="image-container">
+                        <img src="/images/networking/containers/container.png" alt="Container" class="zoomable-image" id="zoomableImage">
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <h3 id="issues">Issues without containers?</h3>
+        <dl>
+            1. Application-1 developed have dependency on a shared library(libcv1) that isn’t available on production OS or different version is available(libcv2)<br>
+            2. Multiple applications on a 1 machine require all programs to share same versions of shared libraries on production system, which makes application tightly coupled
+        </dl>
+
+        <h3 id="comp">Container vs VM</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>Container</th>
+                <th>VM</th>
+            </tr>
+            <tr>
+                <td>size</td>
+                <td>smaller</td>
+                <td>Bigger wrt container</td>
+            </tr>
+            <tr>
+                <td>capability</td>
+                <td>smaller</td>
+                <td>Bigger wrt container</td>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Pacakaged s/w</td>
+                <td>Copy of OS</td>
+            </tr>
+        </table>
+        <h3 id="adv">Advantages</h3>
+        <dl>
+            1. lightweight Use less memory:* Simple web application running inside container takes 100MB space.<br>
+            2. Secure: Reduces the chance that malicious code present in one container impacting other containers or invade the host system.<br>
+            3. Portable: abstraction from the host operating system makes containerized applications portable ie able to run on any OS,VM.
+        </dl>
+    </article>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
