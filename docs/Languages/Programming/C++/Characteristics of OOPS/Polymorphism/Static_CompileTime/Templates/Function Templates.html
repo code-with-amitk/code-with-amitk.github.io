@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Function Templates</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#functiontemplates">Function Templates</a>
+        <a href="#notallowed">Not Allowed</a>
+        <ul>
+            <li><a href="#doubles">Double, objects</a></li>
+        </ul>
+        <a href="#assembly">Assembly (Function Templates)</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="functiontemplates">Function Templates</h2>
+        <dl>
+            Generic function that can operate with generic types.
+        </dl>
+        <pre><code class="language-css">
+//At compile time, compiler creates 2 overloaded versions of maxof function.
+//maxof(int a, int b){ }
+//maxof(const char*, const char*){  }
+
+template &lt;class T>
+T maxof(T a, T b) {
+    return (a>b)?a:b;
+}
+
+int main() {
+    cout &lt;&lt; maxof(4,5);                 //Calls as maxof<int> (4,5)
+    //cout &lt;&lt; maxof(5,7.8);             //error: no matching function for call to ‘maximum(int, double)’
+    cout &lt;&lt; maxof("hellome","hello");   //hellome.  calls as maxof&lt;const char*>("hellome", "hello")
+}
+        </code></pre>
+
+        <h2 id="notallowed">Not Allowed</h2>
+        <h3 id="doubles">Double, class object are not allowed template parameters</h3>
+        <pre><code class="language-css">
+//ERROR:  ‘double’ is not a valid type for a template non-type parameter
+template &lt;double T, typename T1>
+void fun () {  }
+// if you replace double with int, it will compile
+
+//‘class A’ is not a valid type for a template non-type parameter
+class A{};
+template &lt;A s, typename T1>
+void fun () {   }
+
+//‘class std::__cxx11::basic_string<char>’ is not a valid type for a template non-type parameter
+template &lt;string s, typename T1>
+void fun () {  }
+        </code></pre>
+
+        <h2 is="assembly">Assembly (Function Templates)</h2>
+        <pre><code>
+            /*      function_template_assembly.cpp
+
+            ********POINTS TO REMEMBER:**********
+            1. Stack grows in reverse direction.
+              |----stack grows-----|-------------&lt;<------heap grows------
+             0x450                0x200
+             rbp                  rsp
+            
+            2. Arguments to function are stored in registers:  rdi, rsi, rdx, rcx, r8...
+            *************************************
+            
+            **************HOW TEMPLATES WORKS INTERNALLY? *********
+            Function overloading
+            
+             - Types are defined using Angular brackets &lt;>
+             - User-defined-function        Complier-generated-function
+                    maximum(4,5)            int maximum &lt;int>(int, int)
+                    maximum('a','b')        char maximum &lt;char>(char, char)
+                    maximum(4,4.5)          int maximum &lt;int, double>(int, double)
+            ********************************************************
+            
+            */
+            #include<iostream>
+            using namespace std;
+            
+            template &lt;class T>                      //OR template <typename T>
+            T maximum(T a, T b){
+                    return (a>b)?a:b;
+            }
+            
+            int main(){
+                    cout&lt;&lt;maximum(4,5);
+                    cout&lt;&lt;maximum('a','b');
+            }
+            
+            /*
+             ASSEMBLY:
+            
+            int maximum&lt;int>(int, int):
+                    push    rbp                     //4a
+                    mov     rbp, rsp                //4b
+                    mov     DWORD PTR [rbp-4], edi  //5 Arguments of function stored on stack. *(rbp-4)=edi=4
+                    mov     DWORD PTR [rbp-8], esi  //5 Arguments of function stored on stack. *(rbp-4)=esi=5
+                    mov     eax, DWORD PTR [rbp-4]  //6 eax=*(rbp-4)=4
+                    cmp     eax, DWORD PTR [rbp-8]  //7 if(eax == *(rbp-8))
+                    jle     .L4
+                    mov     eax, DWORD PTR [rbp-4]
+                    jmp     .L6
+            .L4:
+                    mov     eax, DWORD PTR [rbp-8]
+            .L6:
+                    pop     rbp
+                    ret
+            
+             main:
+                    push    rbp             //1a
+                    mov     rbp, rsp        //1b
+                    mov     esi, 5          //2a.   2nd Function Argument
+                    mov     edi, 4          //2b.   1st Function Argument
+                    call    int maximum &lt;int>(int, int)      //3
+                    mov     esi, eax
+                    mov     edi, OFFSET FLAT:_ZSt4cout
+                    call    std::basic_ostream&lt;char, std::char_traits<char> >::operator<<(int)
+                    mov     esi, 98
+                    mov     edi, 97
+                    call    char maximum &lt;char>(char, char)
+                    movsx   eax, al
+                    mov     esi, eax
+                    mov     edi, OFFSET FLAT:_ZSt4cout
+                    call    std::basic_ostream &lt;char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char)
+                    mov     eax, 0
+                    pop     rbp
+                    ret
+            
+            STEPS:
+            1. Function Epilogue.
+               a.Push value of rbp0 somewhere on stack
+               ------------                        Head
+               rbp0     rsp0                Stack | rbp0=0x450 |
+            
+               b.Move rbp to rsp
+               --------------main---
+                        rbp1     rsp1
+            
+            2. Store function arguments in registers.       Registers
+                                                            edi=4
+                                                            esi=5
+            3. call maximum<int> function.
+            
+            4. Function Epilogue.
+               a.Push value of rbp1 somewhere on stack
+               --------------------                 Head
+                       rbp1      rsp1         Stack | rbp0=0x450 | rbp1=0x400 |
+            
+               b.Move rbp to rsp
+               -------main------------maximum<int>(int, int)---
+                                 rbp2                        rsp2
+            
+            5. Store parameters of function onto stack
+               -------main------------maximum<int>(int, int)---
+                                 rbp2 4 5                    rsp2
+            
+            6. Store arguments in eax                       Registers
+                                                            eax=4
+            
+            7. Compare operands. Subtracts 1st operand from other for comparing them, updates Flag register to show results.
+            */
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
