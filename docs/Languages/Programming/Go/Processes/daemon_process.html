@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Daemon Process</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#daemon">Detached Daemon Process</a>
+            <ul>
+                <li><a href="#child">Child Process</a></li>
+                <ul>
+                    <li><a href="#log">Log CPU usage into file</a></li>
+                </ul>
+            </ul>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="daemon">Detached Daemon Process</h2>
+            <dl>
+                We will create a detached child process in Go that continues to run even after the parent process has exited.
+            </dl>
+
+            <h3 id="child">Child Process</h3>
+            <h4 id="log">Log CPU usage into file cpu_usage.log</h4>
+            <table>
+                <td>
+                    <pre><code class="language-css">
+package main
+
+/* Import/include external packages/modules into this program */
+import (
+    "log"
+    "os"
+    "time"
+    "github.com/shirou/gopsutil/v3/cpu"
+)
+
+func main() {
+    /* Opens or creates cpu_usage.log with appropriate permissions. */
+    logFile, err := os.OpenFile("cpu_usage.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+    if err != nil {
+        log.Fatalf("failed to open log file: %v", err)
+    }
+
+    /* Ensures the file is closed properly using defer
+     defer keyword is used to delay the execution of a 
+     function until the surrounding function completes
+    */
+    defer logFile.Close()
+
+    /* log module is a standard library package that provides 
+    basic logging functionalities. It allows you to print log messages 
+    to the console or write them to a file. Initializes a logger that 
+    writes log entries to the log file with date, time, and short file information
+     */
+    logger := log.New(logFile, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+
+    for {   /* Infinite loop */
+
+        /* Query the CPU usage percentage over a 1 sec interval. */
+        usage, err := cpu.Percent(time.Second, false)
+        if err != nil {
+            logger.Printf("failed to get CPU usage: %v", err)
+            continue
+        }
+
+        /* Logs the CPU usage percentage to the log file */
+        logger.Printf("CPU Usage: %.2f%%", usage[0])
+        
+        /* Sleep for 10 seconds */
+        time.Sleep(10 * time.Second)
+    }
+}
+                    </code></pre>
+                </td>
+
+                <td>
+                    <b>Build code</b>
+                    <pre><code>
+$ go build test.go
+no required module provides package github.com/shirou/gopsutil/v3/cpu
+                    </code></pre>
+                    
+                </td>
+            </table>
+
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

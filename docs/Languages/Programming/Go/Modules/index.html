@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Go modules and Packages</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#import">import statement</a>
+            <a href="#package">Package (small)</a>
+            <a href="#module">Module (Big)</a>
+            <ul>
+                <li><a href="#error">error package</a></li>
+            </ul>
+            <a href="#gomod">go.mod file</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2>Packages and Module</h2>
+            <h3 id="package">Packages(small)</h3>
+            <dl>
+                Go standard library, for example, consists of many packages such as fmt, os, net, and so on<br>
+                Special package name, main.  This package contains the main() function, which is the entry point for a project<br>
+                Every project meant to eventually become an executable must contain the main() function, and therefore the main package.
+            </dl>
+            <h3 id="module">Module(Big)</h3>
+            <dl>
+                Collection of related Go packages
+            </dl>
+
+            <h3 id="import">import statement</h3>
+            <dl>import keyword is used to include external packages/modules in Go program.</dl>
+            <pre><code>
+import "fmt"
+or
+import (              //import multiple packages
+    "fmt"
+    "math"
+)
+
+// Use functions in package using dot statement
+fmt.Println("Hello, world!")
+            </code></pre>
+
+            <h3 id="packages">Packages</h3>
+            <h4 id="error">error package</h4>
+            <dl>errors package is a standard package provided by go's standard library. 
+                It is used to create and manipulate errors in a consistent and idiomatic way</dl>
+            <pre><code>
+package main
+import (
+    "errors"
+    "fmt"
+)
+func divide(a, b int) (int, error) {	//Function returning int AND error
+    if b == 0 {
+        return 0, errors.New("division by zero")
+    }
+    return a / b, nil
+}
+func main() {
+    result, err := divide(10, 2)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+    fmt.Println("Result:", result)
+}
+            </code></pre>
+
+            <h2 id="gomod">go.mod file</h2>
+            <dl>
+                List all externally hosted packages which require operation(like go get <package>).<br>
+                When you run a command like `go get github.com/user/repo`, the Go tooling will fetch the module from that location<br>
+            </dl>
+            <pre><code class="language-css">
+$ go.mod
+/*Specifies the the module's path*/
+module test
+
+go 1.0
+
+/*lists the specific versions of all dependencies required by the module
+It helps ensure that the correct versions of dependencies are used
+*/
+require (
+        github.com/auth0/go-jwt-middleware/v2 v2.2.1
+)
+
+require (
+        github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
+)
+            </code></pre>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
