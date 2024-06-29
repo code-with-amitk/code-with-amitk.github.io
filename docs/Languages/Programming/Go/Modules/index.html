@@ -30,6 +30,7 @@
                 <li><a href="#error">error package</a></li>
             </ul>
             <a href="#gomod">go.mod file</a>
+            <a href="#gosum">go.sum file</a>
         </aside>
 
         <article style="margin-left:200px;">
@@ -107,6 +108,24 @@ require (
 require (
         github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 )
+            </code></pre>
+
+            <h2 id="gosum">go.sum file</h2>
+            <dl>
+                The go build command uses the Go module cache to find dependencies and will not automatically download dependencies 
+                if they are missing. <br>
+                Once dependency is downloaded entry is created in go.sum file<br>
+                When 1st time go.mod is modified, you need to run go mod download command to download the module and update the go.sum file
+            </dl>
+            <pre><code class="language-css">
+$ go.sum
+golang.org/x/sync v0.6.0 h1:5BMeUDZ7vkXGfEr1x9B4bRcTH4lpkTkpdh0T/J+qjbQ=
+
+// Need to run after making entry in go.mod
+go mod download github.com/shirou/gopsutil/v3
+
+// Then run
+go mod tidy
             </code></pre>
         </article>
 
