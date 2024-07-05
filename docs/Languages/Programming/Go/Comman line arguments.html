@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Go</title>
+        <title>Go Command line Arguments</title>
         <link rel="stylesheet" href="/css/styles.css"/>
         <link rel="stylesheet" href="/css/prism.css"/>
         <!-- Add any necessary CSS and JavaScript files -->
@@ -23,22 +23,35 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
-
+            <a href="#cla">Parse Command line arguments</a>
         </aside>
 
         <article style="margin-left:200px;">
-            <dl>
-            <ul>
-                <li><a href="Comman line arguments.html">Command line Arguments</a></li>
-                <li><a href="/Languages/Programming/C++/STL/Containers/Associative_Containers/Unsorted_Unordered/unordered_map.html">Collections (map)</a></li>
-                <li><a href="./Install_Go.html">Install Go</a></li>
-                <li><a href="/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector.html">loops (for)</a></li>
-                <li><a href="Modules/">Modules</a></li>
-                <li><a href="Processes/">Processes</a></li>
-                <li><a href="Web_Server.html">Web Server/a></li>
-                <li><a href="Why_go_over_other_lang.html">Why Go Over Other Lang</a></li>
-            </ul>
-            </dl>
+            <h2 id="cla">Parse Command line arguments</h2>
+            <pre><code class="language-css">
+package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func main() {
+    fmt.Println ("Number of command line args", len(os.Args))
+    for i := 0; i < len(os.Args); i++ {
+        fmt.Println ("args[", i, "]", os.Args[i])
+    }
+}
+$ go build parse_commandline.go
+$ ./parse_commandline test tt asa da
+Number of command line args 5
+args[0]:  ./parse_commandline
+args[ 0 ] ./parse_commandline
+args[ 1 ] test
+args[ 2 ] tt
+args[ 3 ] asa
+args[ 4 ] da
+            </code></pre>
         </article>
 
         <script src="/scripts/prism.js"></script>

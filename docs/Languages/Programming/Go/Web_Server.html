@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Web Server in Go</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#webs">Web Server</a>
+            <a href="#ex2">1 Endpoint to increment, other to return(synchronization)</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="webs">Web Server in Go</h2>
+            
+            <pre><code class="language-css">
+package main
+import (
+    "fmt"
+    "log"
+    "net/http"
+)
+func main() {
+    // fun() function to incoming URLs that beg in with /
+    http.HandleFunc ("/", fun)
+
+    // start server listening for incoming requests on port 8000
+    log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+func fun(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf (w, "hi")
+}
+            </code></pre>
+
+            <h2 id="ex2">1 Endpoint to increment, other to return(synchronization)</h2>
+            <pre><code class="language-css">
+package main
+import (
+    "fmt"
+    "log"
+    "net/http"
+    "sync"
+)
+
+var mu sync.Mutex
+var count int
+
+func main() {
+    // fun() function to incoming URLs that beg in with /
+    http.HandleFunc ("/", fun)      //Increment
+    http.HandleFunc ("/count", counter)      //return counter
+
+    // start server listening for incoming requests on port 8000
+    log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+
+//SYNCHRONIZATION
+// server runs the handler for each incoming request in a separate goroutine so that it can serve multiple
+// requests simultaneously. if two concurrent requests try to update count at the same
+// time, it might not be incremented consistently. Race condition
+// To avoid this problem, we must ensure that at most one goroutine
+// accesses the variable at a time, which is the purpose of the mu.Lock() and mu.Unlock() calls
+func fun(w http.ResponseWriter, r *http.Request) {
+    mu.Lock()
+    count++
+    fmt.Fprintf (w, "incremented")
+    mu.Unlock()
+}
+func counter(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf (w, count)
+}
+            </code></pre>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

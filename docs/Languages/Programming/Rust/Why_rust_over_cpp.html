@@ -106,22 +106,24 @@
                 <tr>
                     <td>    <!--C++-->
                         <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;memory>  // For std::unique_ptr
+using namespace std;
+
 int main() {
-    std::string* s = new std::string("hello");
+    // Create a unique_ptr to manage the std::string object
+    unique_ptr &lt;string> s = make_unique<string>("hello");
 
-    // s1 now points to the same memory as s
-    std::string* s1 = s;
+    // Transfer ownership to s1
+    unique_ptr &lt; string> s1 = move(s);
 
-    // Deallocate memory through s
-    delete s; 
+    // No compile time check. Run time Segmentation fault
+    cout &lt;&lt; *s;
 
-    // CRASH
-    // Accessing memory through s1 leads to undefined behavior
-    std::cout << *s1; 
+    std::cout &lt;&lt; *s1;
 
     return 0;
-} // Memory pointed to by s1 was 
-// deallocated by delete, but s1 still holds the address
+}
                         </code></pre> 
                     </td>
                     <td>
@@ -133,11 +135,11 @@ fn main() {
     // Ownership transferred to s1
     let s1 = s; 
 
-    // This line would cause a compilation error in Rust
-    // Error: value borrowed here after move
+    // Compilation error
+    // value borrowed here after move
     // The ownership of the String was moved to s1, 
     //so s is no longer valid to use
-    // println!("{}", s);
+    println!("{}", s);
 
     // The String is still valid through s1
     println!("{}", s1);
@@ -357,6 +359,7 @@ error[E0499]: cannot borrow `s` as mutable more than once at a time
             <h3 id="mma">3. No Manual Memory management <font color="red">(avoid crash in Rust)</font></h3>
             <dt>
                 - Rust does not provide `new, delete` operators as in C++ for dynamically allocate memory.<br>
+                - Though C++ provides smart pointers, still someone can leak using C++98 new() and delete()<br>
                 - Rust's ownership and borrowing rules ensure memory safety without the need for manual memory management. 
             </dt>
             <table>

@@ -177,17 +177,36 @@ OR
 arr = []
             </pre></td>
 
-            <td><pre>                       <!--Go-->
+            <td><pre><code class="language-css">                       <!--Go-->
 ////// 1D
-var arr []int     //Empty vector
-slice := make([]int, 5) //Slice size=5
-for i:=0; i&lt;5; i++ {
-    slice[i] = 0;
-}
+// range() function produces
+// index and value
+package main
+import (
+    "fmt"
+)
+func main() {
+    a := make([]int, 5)
+    for i:=0;i &lt;5; i++ {
+        a[i] = i+3
+    }
 
+
+    for index, val := range(a) {
+        fmt.Println (index, val)
+    }
+}
+$ go build test.go
+$ ./test
+index   value
+0        3
+1        4
+2        5
+3        6
+4        7
 /////// 2D
 
-            </pre></td>
+            </code></pre></td>
 
             <td>                            <!--C-->
                 <table>
