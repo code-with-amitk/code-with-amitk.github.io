@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Go</title>
+        <title>Function in Go</title>
         <link rel="stylesheet" href="/css/styles.css"/>
         <link rel="stylesheet" href="/css/prism.css"/>
         <!-- Add any necessary CSS and JavaScript files -->
@@ -23,23 +23,24 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
-
+            <a href="#range">range()</a>
         </aside>
 
         <article style="margin-left:200px;">
+            <h3>range()</h3>
             <dl>
-            <ul>
-                <li><a href="Comman line arguments.html">Command line Arguments</a></li>
-                <li><a href="/Languages/Programming/C++/STL/Containers/Associative_Containers/Unsorted_Unordered/unordered_map.html">Collections (map)</a></li>
-                <li><a href="./Functions.html">Functions (range())</a></li>
-                <li><a href="./Install_Go.html">Install Go</a></li>
-                <li><a href="/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector.html">loops (for)</a></li>
-                <li><a href="Modules/">Modules</a></li>
-                <li><a href="Processes/">Processes</a></li>
-                <li><a href="Web_Server.html">Web Server</a></li>
-                <li><a href="Why_go_over_other_lang.html">Why Go Over Other Lang</a></li>
-            </ul>
+                for iterating over slice or map.<br>
+                Returns: Iterate over slice(index, element), Iterate over map(key, value)<br>
+                index or value anything can be skipped using "_"
             </dl>
+            <pre><code class="language-css">
+for key, value := range hm {        //Map
+    out += value
+}
+for _, val := range(a) {        //Vector
+    fmt.Println (val)
+}
+            </code></pre>
         </article>
 
         <script src="/scripts/prism.js"></script>

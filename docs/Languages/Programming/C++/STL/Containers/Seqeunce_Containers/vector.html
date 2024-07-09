@@ -12,7 +12,7 @@
           <li><a href="/">Home</a></li>
           <li><a href="#">Our team</a></li>
           <li><a href="#">Projects</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/contact.html">Contact</a></li>
           <li>
             <form>
                 <input type="search" name="q" placeholder="Search site" />
@@ -164,7 +164,7 @@ let v: Vec<Vec<i32>> = vec![
                 </table>
             </td>
 
-            <td><pre>                   <!--Python-->
+            <td><pre><code>                   <!--Python-->
 ######### 1 D
 a = []              #Empty
 OR
@@ -175,12 +175,13 @@ arr = [[0 for _ in range(cols)]
 for _ in range(rows)]
 OR
 arr = []
-            </pre></td>
+            </code></pre></td>
 
-            <td><pre><code class="language-css">                       <!--Go-->
+            
+            <td>                                        <!--Go-->
+                <a href="/Languages/Programming/Go/Functions.html">range()</a>
+                <pre><code class="language-css">                       
 ////// 1D
-// range() function produces
-// index and value
 package main
 import (
     "fmt"
@@ -190,7 +191,6 @@ func main() {
     for i:=0;i &lt;5; i++ {
         a[i] = i+3
     }
-
 
     for index, val := range(a) {
         fmt.Println (index, val)
@@ -204,8 +204,12 @@ index   value
 2        5
 3        6
 4        7
-/////// 2D
 
+/////// 2D
+a := make([][]uint8, cols)
+for i := range a {
+    a[i] = make([]uint8, rows)
+}
             </code></pre></td>
 
             <td>                            <!--C-->
