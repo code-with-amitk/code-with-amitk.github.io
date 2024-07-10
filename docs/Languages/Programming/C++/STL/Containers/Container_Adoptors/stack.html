@@ -43,102 +43,145 @@
         <tr>
             <td>Declaration</td>
 
-            <td><pre>    <!--c++-->
+            <td><pre><code class="language-css">    <!--c++-->
 stack&lt;int> st;
-            </pre></td>
+</code></pre></td>
 
-            <td><pre>    <!--rust-->
+            <td><pre><code class="language-css">    <!--rust-->
 let mut stack: Vec<i32> = Vec::new();
-            </pre></td>
+</code></pre></td>
 
-            <td><pre>    <!--python-->
+            <td><pre><code class="language-css">    <!--python-->
 Python doesn't have built-in Stack.
 Its implemented using a list.
 st = []
-            </pre></td>
+</code></pre></td>
 
-            <td>
+            <td>                    <!--Go-->
+                Go doesn't have a built-in stack data structure like C++<br>
+                stack in Go is implemented using a slice.
+                <pre><code class="language-css">
+type Stack struct {
+    vals []int
+}
+                </code></pre>
             </td>
         </tr>
 
         <tr>
             <td>Empty</td>
-            <td><pre>               <!--c++-->
+            <td><pre><code class="language-css">               <!--c++-->
 !st.empty()
-            </pre></td>
-            <td><pre>               <!--Rust-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
 self.s1.is_empty()                
-            </pre></td>
-            <td><pre>               <!--Python-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Python-->
 len(st)
-            </pre></td>
+</code></pre></td>
             <td>                    <!--Go-->
-
-            </td>   
+            <b>Method Reciever (s *Stack)</b><br>
+            (s *Stack) before the function name is a method receiver.<br>
+            This associates the function to Stack type & allows the method to access/modify the Stack member variables.<br>
+            Similar to how you we define method in class in C++ or Java
+            <pre><code class="language-css">
+func (o *Stack)IsEmpty() bool {
+    if len(o.vals) == 0 {
+        return true
+    }
+    return false
+}
+            </code></pre></td>
         </tr>
 
         <tr>
             <td>Last</td>
-            <td><pre>               <!--c++-->
+            <td><pre><code class="language-css">               <!--c++-->
 st.back()
-            </pre></td>
-            <td><pre>               <!--Rust-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
 //pub fn last(&self) -> Option<&T>
 if let Some(&ele) = self.s1.last() {
     
 }                
-            </pre></td>
+</code></pre></td>
             <td><pre>               <!--Python-->
             </pre></td>
             <td>                    <!--Go-->
+<pre><code class="language-css">
 
+</code></pre>
             </td>   
         </tr>
 
         <tr>
             <td>Pop</td>
-            <td><pre>               <!--c++-->
+            <td><pre><code class="language-css">               <!--c++-->
 st.pop()
-            </pre></td>
-            <td><pre>               <!--Rust-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
 if let Some(ele) = self.s1.pop() {
     //ele removed
 }
-            </pre></td>
-            <td><pre>               <!--Python-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Python-->
 st.pop()
-            </pre></td>
-            <td><pre>               <!--Go-->
-self.dq.pop(), self.dq.popleft()
-            </pre></td>
+</code></pre></td>
+            <td>                                   <!--Go-->
+                if array size>0, store 1 less element from back
+                <pre><code class="language-css">
+func (o *Stack)Pop() {
+    if len(o.val) > 0 {
+        o.val = o.val[:len(o.val)-1]
+    }
+}
+
+//a= [1,2,3,4,5]
+a = a[:4]   //1,2,3,4
+</code></pre></td>
         </tr>
 
         <tr>
-            <td>push_back</td>
-            <td><pre>               <!--c++-->
+            <td>push</td>
+            <td><pre><code class="language-css">               <!--c++-->
 st.push(a)
-            </pre></td>
-            <td><pre>               <!--Rust-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
 self.s1.push(x);
-            </pre></td>
-            <td><pre>               <!--python-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--python-->
 st.append(item)
-            </pre></td>
-            <td></td>
+</code></pre></td>
+            <td>                                            <!--Go-->
+                Push element at end of slice and store back into vals
+                <pre><code class="language-css">
+func (o *Stack)Push(item int) {
+    o.vals = append(o.vals, item)
+}
+</code></pre></td>
         </tr>
 
         <tr>
             <td>Top</td>
-            <td><pre>           <!--c++-->
+            <td><pre><code class="language-css">           <!--c++-->
 st.top()
-            </pre></td>
-            <td><pre>               <!--rust-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--rust-->
 self.st.last()
-            </pre></td>
-            <td><pre>               <!--Python-->
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Python-->
 st[-1]
-            </pre></td>
-            <td></td>
+</code></pre></td>
+            <td>
+                <pre><code class="language-css">                <!--Go-->
+func (o *Stack)Top() int {
+    if len(o.val) > 0 {
+        return o.val[len(o.val)-1]
+    }
+    return 0
+}
+                </code></pre>
+            </td>
         </tr>
 
     </table>

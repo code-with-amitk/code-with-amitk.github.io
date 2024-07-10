@@ -127,6 +127,36 @@ sort.Slice(v, func(i, j int) bool {
 })
         </code></pre>
 
+        <h5>2D vector</h5>
+        <pre><code class="language-css">
+// Method-1: Declare a 2D vector
+var test [][]int     
+
+// Method-2: Declare an empty 2D vector
+test := make([][]int, rows)
+// Initialize each row with specific length
+for i := range vector {
+    test[i] = make([]int, cols)
+}
+
+// Method-3: Declare an empty 2D vector
+var test [][]int
+// Initialize each row with specific length
+for i := 0; i &lt; rows; i++ {
+    test = append(test, make([]int, cols))
+}
+
+
+// Initialize the 2D vector with values
+test = [][]int {
+    1,2,3
+    4,5,6
+}
+
+// Accessing elements in the 2D vector
+fmt.Println(vector[0][0]) // Output: 1
+        </code></pre>
+
         </article>
         <script src="/scripts/prism.js"></script>
     </body>
