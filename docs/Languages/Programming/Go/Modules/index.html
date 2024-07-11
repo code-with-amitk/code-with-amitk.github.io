@@ -31,6 +31,7 @@
             </ul>
             <a href="#gomod">go.mod file</a>
             <a href="#gosum">go.sum file</a>
+            <a href="#addexternalmodule">How to add external module to code</a>
         </aside>
 
         <article style="margin-left:200px;">
@@ -126,6 +127,31 @@ go mod download github.com/shirou/gopsutil/v3
 
 // Then run
 go mod tidy
+            </code></pre>
+
+            <h2 id="addexternalmodule">How to add external module to code?</h2>
+            <pre><code class="language-css">
+$ main.go
+package main
+import (
+    "github.com/shirou/gopsutil/v4/process"     //External module for psutil
+)
+func main() {
+    ..
+}
+
+// 1. Go to documentation and find versions
+// https://godocs.io/github.com/shirou/gopsutil/v4/process
+// https://godocs.io/github.com/shirou/gopsutil/v4/process?view=versions (v4.24.6)
+
+// 2. Add package path & version
+$ go.mod
+require (
+    github.com/shirou/gopsutil/v4 v4.24.6
+)
+
+// 3. Run command to download and cache in go.sum
+$ go mod download github.com/shirou/gopsutil/v4
             </code></pre>
         </article>
 
