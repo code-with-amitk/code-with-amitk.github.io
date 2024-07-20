@@ -225,7 +225,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
             </tr>
         </table>
 
-        <h3 id="learningtypes">Learning Types</h3>
+        <h2 id="learningtypes">Learning Types</h2>
         <table>
             <tr>
                 <th></th>
@@ -282,7 +282,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
             </tr>
         </table>
 
-        <h4>A. Supervised Learning</h4>
+        <h3>A. Supervised Learning</h3>
         <dl>The training data feed to the algorithm includes the desired solutions(called labels).
             Supervised learning algorithms:
         </dl>
@@ -291,30 +291,46 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
             Support Vector Machines (SVMs), <br>Decision Trees & Random Forests, <br>
             Neural networks
         </dd>
-        <dl><strong>Types of Supervised learning</strong></dl>
-        <dt><u>1.Classification (give yes/no)</u></dt>
-        <dd>a. Spam Filterning: Algo is trained with many example emails along with their class (spam or ham), 
-            and it must learn how to classify new emails. Each email has a label.</dd>
+        <h4>Types of Supervised learning</h4>
+        <h5>1. Classification (give yes/no)</h5>
+        <dd>
+            a. Spam Filterning: Algo is trained with many example emails along with their class (spam or not), 
+            and it must learn how to classify new emails. Each email has a label.
+        </dd>
+        <dl><strong>Types of Classification models</strong></dl>
+        <dd>
+            <u>1. Binary classification:</u><br>
+            &ensp; Model output a value from a class that contains only two values, for example rain or no rain<br>
 
-        <dt><u>2. Regression: (give % or numeric value)</u></dt>
+            <u>2. Multiclass classification:</u><br>
+            &ensp; Output a value from a class that contains more than 2 values. Eg: rain, hail, snow, or sleet
+        </dd>
+
+        <h5>2. Regression: (give % or numeric value)</h5>
         <dd>Predictors(Predict something):<br>
             Predict whether based on inputs, Predict price of car provided with some inputs((mileage, age, brand, etc.)</dd>
         
         <dt>3. Logistic Regression (yes/no with %)</dt>
         <dd>Mix of classfication & Regression. Example: 20% of chances being a spam.</dd>
 
-        <h4>B. Unsupervised Learning</h4>
-        <dl>Dataset does not have labels. ML model tries to learn without teacher.</dl>
-        <dl><strong>Types of unsupervised learning</strong></dl>
-        <dt><u>1. Clustering</u></dt>
-        <dd>Algorithms used: (k-Means, Hierarchical Cluster Analysis (HCA), Expectation Maximization)</dd>
-        <dt><u>2. Visualization and dimensionality reduction</u></dt>
+        <h3>B. Unsupervised Learning</h3>
+        <dl>Dataset does not have labels. ML has to estimate whether it's correct/incorrect and create its own rules</dl>
+
+        <h4>Types of unsupervised learning</h4>
+        <h5>1. Clustering</h5>
+        <dd>
+            The model finds data points that demarcate natural groupings.<br>
+            Algorithms used: (k-Means, Hierarchical Cluster Analysis (HCA), Expectation Maximization)
+        </dd>
+
+        <h5>2. Visualization and dimensionality reduction</h5>
         <dd>
             With unlabelled data this algorithm provides ouput which can be plotted on 2-D, 3-D plane.<br>
             Algorithms used: <br>
             Principal Component Analysis (PCA), Kernel PCA, Locally-Linear Embedding (LLE), t-distributed Stochastic Neighbor Embedding (t-SNE)
         </dd>
-        <dt><u>3. Association rule learning</u></dt>
+
+        <h5>3. Association rule learning</h5>
         <dd>
             This provides output as relations between attributes.<br>
             Algorithms used: Apriori, Eclat<br>
@@ -324,18 +340,30 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
             Thus, you may want to place these items close to each other
         </dd>
 
-        <h4>C. Semisupervised Learning</h4>
+        <h3>C. Semisupervised Learning</h3>
         <dt>lot of unlabeled data and a little bit of labeled data<br>
             Algorithms: Deep belief networks (DBNs),<br>
             Examples: 1. FB Photos: When we load photos, we provide labels to few and leave others.
              AI identifies photos.
         </dt>
 
-        <h4>D. Reinforcement learning</h4>
-        <dt>Agent(AI Program) can observe the environment, select and perform actions, and get rewards in return
+        <h3>D. Reinforcement learning</h3>
+        <dt>Agent(AI Program) can observe the environment, select and perform actions, and get rewards/punishment in return
         </dt>
 
-        <h3 id="lossf">Loss Function</h3>
+        <h3 id="#genai">E. Generative AI</h3>
+        <dd>
+            Class of models that creates content from user input. For example, generative AI can create unique images, music etc<br>
+            Example:<br>
+            Text-to-text<br>
+            Text-to-image<br>
+            Text-to-video<br>
+            Text-to-code<br>
+            Text-to-speech<br>
+            Image and text-to-image
+        </dd>
+
+        <h2 id="lossf">Loss Function</h2>
         <p>In Keras, a loss function is used during the training of a neural network. 
             It measures the difference between the model's predictions and the actual target values. 
             The goal of training is to minimize this loss</p>
@@ -383,7 +411,7 @@ array([[1., 0., 0.],                //represents 0
 
         </code></pre>
 
-        <h3 id="matplotlib">Matplotlib</h3>
+        <h2 id="matplotlib">Matplotlib</h2>
         <dd>
             Popular plotting library for Python that provides a variety of high-quality 2D and 3D plots and visualizations.<br>
             <u>Matplotlib.pyplot</u> is a collection of functions that make Matplotlib work like MATLAB, allowing you to create plots, charts<br>
@@ -391,10 +419,10 @@ array([[1., 0., 0.],                //represents 0
                 cmap=colormap for mapping the data values to colors in the plot. plt.cm.binary = black and white colors.
         </dd>
 
-        <h3 id="metrics">Metrics</h3>
+        <h2 id="metrics">Metrics</h2>
         <p>Metrics to monitor during training and testing</p>
 
-        <h3 id="neuron">Neuron / Node / Function or class</h3>
+        <h2 id="neuron">Neuron / Node / Function or class</h2>
         <dl>A neuron is the basic unit within a layer. 
             It takes input, performs a computation, and produces an output.</dl>
         <dl>Each neuron has weight, bias, activation function</dl>
@@ -419,13 +447,13 @@ class Neuron:
         return output        
         </code></pre>
 
-        <h3 id="neuralnetwork">Neural Network</h3>
+        <h2 id="neuralnetwork">Neural Network</h2>
         <dd>It try to emulate the human brain, combining computer 
             science and statistics to solve common problems in the field of AI<br>
             It contains an input layer, one or more hidden layers, and an output layer.
         </dd>
 
-        <h3 id="tensor">Tensor = n-D Matrix</h3>
+        <h2 id="tensor">Tensor = n-D Matrix</h2>
         <dd>This is matrix(as in maths). Multi-dimensional numpy arrays used to store numbers during computation.</dd>
 
         <h4>Types of Tensors</h4>
