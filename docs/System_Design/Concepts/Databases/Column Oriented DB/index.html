@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Databases</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#speed">Column DB faster than row</a>
+    <a href="#diff">Difference</a>
+    <a href="#olap">OLAP</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+      <h2 id="speed">Column DB faster than row</h2>
+      <table>
+        <tr>
+          <th>Row oriented</th>
+          <th>Coloumn oriented</th>
+        </tr>
+        <tr>
+          <td>
+            Consider employee data is stored
+            <pre><code class="language-css">
+ID	  Name	  Age	Salary
+1	    Alice	  30	50000
+2	    Bob	    25	60000
+3	    Carol	35	70000
+4	    Dave	40	80000
+
+On Row Oriented DB its Stored as(On Disk):
+1, Alice, 30, 50000
+2, Bob, 25, 60000
+3, Carol, 35, 70000
+4, Dave, 40, 80000
+
+Query: SELECT AVG(Salary) FROM Employees;
+DB system needs to read each row, extract the Salary value, and then compute the average
+            </code></pre>
+          </td>
+          <td>
+            Same data is stored as:
+            <pre><code class="language-css">
+ID:    1,     2,    3,    4
+Name:  Alice, Bob, Carol, Dave
+Age:   30,    25,   35,   40
+Salary:50000, 60000, 70000, 80000
+
+Query: SELECT AVG(Salary) FROM Employees;
+DB system only needs to read the Salary row
+
+Remember, Only some queries are faster. if we do SELECT * from employee where age>27;
+row oriented would be faster.
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="diff">Difference Row vs Column DB</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Row Oriented</th>
+          <th>Column Oriented <b>(Best for Analytical Queries)</b></th>
+        </tr>
+        <tr>
+          <td>SQL</td>
+          <td>yes</td>
+          <td>yes</td>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>data is stored row by row. Eg: MySQL, Postgres</td>
+          <td>data is stored column by column. Eg: Amazon Redshift, SAP HANA, Google PowerDrill</td>
+        </tr>
+        <tr>
+          <td>Use Case</td>
+          <td></td>
+          <td>
+            <b><a href="#olap">OLAP</a></b> needs complex queries that 
+            require the processing of large volumes of data to generate insights. Example<br>
+            &ensp; Finding Average(SELECT AVG(Salary) FROM Employees)<br>
+            &ensp; Aggregating Queries (SELECT AVG(Salary), MIN(Age), MAX(Age) FROM Employees;)<br>
+            &ensp; Filtering with Aggregation (SELECT Department, COUNT(*) FROM Employees WHERE Age > 30 GROUP BY Department;)
+            </ul>
+          </td>
+        </tr>
+      </table>
+
+      <h2>OLAP Scenario</h2>
+      <h3 id="olap">What is OLAP(Online Analytical Processing)</h3>
+      <dl>
+        OLAP scenarios require real-time responses on top of large datasets for complex analytical queries with the following characteristics:<br>
+        1. Datasets would be massive - billions or trillions of rows<br>
+        2. Only a few columns are selected to answer any particular query<br>
+        3. Results must be returned in milliseconds or seconds<br>
+        4. OLAP scenario is very different from other popular scenarios (such as OLTP or Key-Value access).<br>
+        5. MongoDB or Redis for analytics will get very poor performance compared to OLAP databases
+      </dl>
+
+      <h3 id="adv">Advatanges on IO</h3>
+      <dl>
+        1. For an analytical query, only a small number of table columns need to be read.
+      </dl>
+      <dd>
+        In a column-oriented database, you can read just the data you need. <br>
+        For example, if you need 5 columns out of 100, you can expect a 20-fold reduction in I/O
+      </dd>
+      <dl>2. Data in columns is also easier to compress.</dl>
+      <dl>3. Due to the reduced I/O, more data fits in the system cache.</dl>
+    </article>
+  </main>
+
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>
