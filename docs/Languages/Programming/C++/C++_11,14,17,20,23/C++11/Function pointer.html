@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Function Pointer</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">std::function</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">std::function in C++11</h2>
+        <dl>
+            Instances of std::function can store, copy, and invoke any CopyConstructible Callable functions(ie targets)<br>
+        </dl>
+        <pre><code class="language-css">
+#include &lt;functional>
+class C {
+    int n;
+public:
+    C(int a) : n(a) {}
+    void print() {
+        cout &lt;&lt; n;
+    }
+};
+
+void f1(int a) {
+    cout &lt;&lt; a;
+}
+int main() {
+    // Function pointer to function taking argument=int & returning=void
+    std::function &lt;void(int)> ptr_f1 = f1;
+    ptr_f1(3);                                                      //3
+
+    // Pointer to lambda
+    std::function &lt;void()> ptr_lambda = []() { f1(42); };
+    ptr_lambda();                                                   //42
+
+    C objC(2);
+    // Pointer to class member, returning void
+    function &lt;void()> ptr_class_mem = [&objC]() { objC.print(); };   //2
+    ptr_class_mem();
+
+    // Or Bind the member function to the object instance using std::bind
+    function &lt;void()> ptr_class_mem = bind(&C::print, &objC);        //2
+
+    // Pointer to comparison function in C++11
+    function &lt;bool(int, int)> ptr_great = greater &lt;int>();
+    if (ptr_great (2,1))
+        cout &lt;&lt; "2 greater than 1\n";                     //output: 2 less than 1
+    function &lt;bool(int, int)> ptr_less = less &lt;int>();
+    if (ptr_less (1,2))
+        cout &lt;&lt; "1 less than 2\n";                        //output: 1 less than 2
+}
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
