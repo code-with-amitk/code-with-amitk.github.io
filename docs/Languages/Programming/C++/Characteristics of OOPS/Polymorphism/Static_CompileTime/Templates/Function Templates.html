@@ -36,19 +36,19 @@
             Generic function that can operate with generic types.
         </dl>
         <pre><code class="language-css">
-//At compile time, compiler creates 2 overloaded versions of maxof function.
-//maxof(int a, int b){ }
-//maxof(const char*, const char*){  }
+//At compile time, compiler creates 2 overloaded versions of sum function.
+//sum(int a, int b){ }
+//sum(double, double){  }
 
 template &lt;class T>
-T maxof(T a, T b) {
-    return (a>b)?a:b;
+T sum(T a, T b) {
+    return a+b;
 }
 
 int main() {
-    cout &lt;&lt; maxof(4,5);                 //Calls as maxof<int> (4,5)
-    //cout &lt;&lt; maxof(5,7.8);             //error: no matching function for call to ‘maximum(int, double)’
-    cout &lt;&lt; maxof("hellome","hello");   //hellome.  calls as maxof&lt;const char*>("hellome", "hello")
+    cout &lt;&lt; sum(4,5);                 // 9
+    cout &lt;&lt; sum(4.1,5.1);                 // 9.2
+    //cout &lt;&lt; sum(5,7.8);             // error: no matching function for call to sum(int, double)’
 }
         </code></pre>
 
