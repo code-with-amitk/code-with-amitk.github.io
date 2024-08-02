@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>lvalue, rvalue</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">lvalue, rvalue</a>
+        <a href="#lref">lvalue reference</a>
+        <ul>
+            <li><a href="#copy">Copy Constructor</a></li>
+        </ul>
+        <a href="#rref">rvalue reference</a>
+        <ul>
+            <li><a href="#move">Move Constructor</a></li>
+        </ul>
+        <a href="#xvalue">XValue/Expiring Value</a>
+        <a href="#prvalue">PRvalue</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">lvalue, rvalue</h2>
+        <dl>
+            <b>lvalue(locator value): </b> Anything that can hold a address. Appear on the left-hand side of an assignment.<br>
+            <b>rvalue(read value): </b> temporary value that does not occupy a persistent memory location. Appears on the right-hand side of an assignment
+        </dl>
+        <pre><code class="language-css">
+int a = 10;                 // a is l value
+                            // 10 is rvalue
+int x = a+b;                // x is l value
+                            // a+b is rvalue
+        </code></pre>
+
+        <h2 id="lref">lvalue reference (&)</h2>
+        <dl>
+            Reference to bind to lvalue.<br>
+            <b>Usage:</b> Pass large objects without copying.
+        </dl>
+        <pre><code class="language-css">
+int a = 10;
+int &b = a;         // lvalue reference
+b = 11;
+cout &lt;&lt; a;    // 11
+        </code></pre>
+
+        <h4 id="copy">Copy Constructor</h4>
+        <dl><strong>Copy Ctr(Creates copy of object) is lvalue reference</strong></dl>
+        <pre><code class="language-css">
+using vi = vector &lt;int>;
+class A {
+    vi a;
+    void print() {
+        for (decltype(auto)i:a)
+            cout &lt;&lt; i;
+    }
+public:
+    A(vi& b):a(b) { // copy ctr (using lvalue ref). Created a copy
+        cout &lt;&lt; "\nCopy ctr\n";
+        print();
+    }
+};
+int main() {
+    vi a = {1,2,3};
+    A obj(a);           // Copy ctr called. Local copy remains present
+    cout &lt;&lt; "\nAfter copy ctr in main()\n";
+    for(decltype(auto)i:a)
+        cout &lt;&lt; i;
+}
+/*
+$ ./a.out
+Copy ctr
+1 2 3
+
+After copy ctr in main()
+1 2 3
+$ 
+*/
+        </code></pre>
+
+        <h2 id="rref">rvalue reference (&&)</h2>
+        <dl>
+            Reference that binds to an rvalue(temporary value).<br>
+            <b>Usage:</b> <br>
+            &ensp;  Move semantics (ie moving a temporary withut copying it).<br>
+            &ensp;  Perfect forwarding in template functions.
+        </dl>
+        <pre><code class="language-css">
+int a = 10;
+int &&b = 10;            // rvalue reference
+        </code></pre>
+
+        <h4 id="move">Move Constructor</h4>
+        <dl><strong>Move Ctr(moves the object) is rvalue reference</strong></dl>
+        <pre><code class="language-css">
+using vi = vector &lt;int>;
+class A {
+    vi a;
+    void print() {
+        for (decltype(auto)i:a)
+            cout &lt;&lt; i;
+    }
+public:
+    //A(vi&& b):a(b)       ///////// This will make copy. Not correct move ctr ///////////
+    A(vi&& b):a(move(b)) {  // move ctr (using rvalue ref).
+        cout &lt;&lt; "\nmove ctr\n";
+        print();
+    }
+};
+int main() {
+    vi a = {1,2,3};
+    A obj(a);           // Copy ctr called. Local copy remains present
+
+    // move invokes a r value ref
+    A obj1(move(a));            // move(a) is equal to (int &&x = a)
+    cout &lt;&lt; "\nAfter move ctr in main()\n";
+    for(decltype(auto)i:a)
+        cout &lt;&lt; i;
+}
+/*
+$ ./a.out
+move ctr
+1 2 3
+
+After move ctr in main()    //Value moved not availble in main
+$
+*/
+        </code></pre>
+
+        <h2 id="xvalue">XValue / Expiring Value</h2>
+        <dl>(b+c) is called xvalue/temporary value which is ready to expire</dl>
+        <pre><code class="language-css">
+a = b+c;  
+        </code></pre>
+
+        <h2 id="prvalue">PRValue / Pure R  Value</h2>
+        <dl>Literal value is called pure R value</dl>
+        <pre><code class="language-css">
+a = 42;
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
