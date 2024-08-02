@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lambda Expression</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#syntax">Syntax</a>
+        <a href="#examples">Examples</a>
+        <ul>
+            <li><a href="#val">Pass by Value</a></li>
+            <li><a href="#ref">Pass by Reference</a></li>
+        </ul>
+        <a href="#ret">Break, return in lambda</a>
+        <a href="#genlambda">Generic lambda</a>
+        <a href="#capinit">Lambda capture initializers</a>
+        <a href="#classmembers">Access class members inside lambda</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Lambda</h2>
+        <dl>
+            Function does not have a name, defined inside other function. <br>
+            <b>Lambda usecases?</b><br>
+            &ensp; 1. If some logic/function need to be called again and again, then function call is not good(stack creation/destroy). Store in variable(pointer).<br>
+            &ensp; 2. save stack creation/deletion, jump instruction time
+        </dl>
+
+        <h2 id="syntax">Syntax of Lambda</h2>
+        <pre><code class="language-css">
+function_pointer  = [ ] () mutable throw -> return_type { 
+    .....function body ......
+};
+
+[   ] called Capture List
+    - captures local/Global variables defined outside lambda to be used inside lambda function.
+    - Changing Values of passed variables:
+    - Passed by value `[=]` are RO: These cannot be changed.
+    - Passed as reference `[&]`: Can be changed.
+() called Parameter list which is Optional
+    - Function Parameters to be passed.
+mutable keyword is Optional
+throw keyword is Optional
+return type is Optional.  //if return type is not specified its Deduced Automatically
+        </code></pre>
+
+        <h2 id="examples">Examples</h2>
+        <table>
+            <tr>
+                <th>Example</th>
+                <th>Code</th>
+            </tr>
+            <tr>
+                <td id="val">
+                    <b>Pass by Value (RO)</b><br><br> Outside variable cannot be modified in lambda.
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Passing 1 outside variable to lambda</td>
+                            <td>
+                                <pre><code class="language-css">
+int i = 1;
+auto p =  [ i ]  (int a, int b)  ->  int {
+    return a + b + i;
+};
+cout << p(2,3) << endl;            //6
+                                </code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Passing all outside variables to lambda</td>
+                            <td>
+                                <pre><code class="language-css">
+int i = 1, j = 2;
+auto p =  [ = ]  (int a, int b)  ->  int {
+    //j=3;        //Error. assignment of read-only variable j
+    return a + b + i + j;
+};
+cout << p(3,4) << endl;            //10
+                                </code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr id="ref">
+                <td>
+                    <b>Pass by Reference(&) RW</b>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Passing 1 outside variable inside lambda</td>
+                            <td>
+                                <pre><code class="language-css">
+int i = 1;
+auto p = [ &i ] (int a, int b)  ->  int {
+    i = 5;  return a + b + i;
+};
+cout << p(2,3) << endl;            //10
+                                </code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Passing all outside variables to lambda</td>
+                            <td>
+                                <pre><code class="language-css">
+int i = 1, j = 2;
+auto p = [ & ] (int a, int b)  ->  int {
+    return a + b + i + j;
+};
+cout << p(3,4);    //10
+                                </code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Pass by ref and value in capture list</b>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Capture by reference all except 1</td>
+                            <td>
+                                <pre><code class="language-css">
+// Except "j" everything else is captured as reference
+auto p7  =  [ &, j ]  (int a, int b)  ->  int {
+    i=7;
+    return a + b + i;
+};
+                                </code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Capture by Value all except 1</td>
+                            <td>
+                                <pre><code class="language-css">
+// Except "i" nothing can be changed.
+auto p8  =  [ =, &i ]  (int a, int b)  ->  int {  
+    i=95;  return a + b + i; 
+};
+                                </code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="ret">return, break in lambda</h2>
+        <pre><code class="language-css">
+int main() {
+    string s = "abcdfg";
+    for_each(s.begin(), s.end(), [&um, &out](const char ele){
+        auto it = um.find(ele);
+        if (it == um.end()) {
+            out = ele;
+            return;     //break cannot be used in lambda. This break will exit lambda not function
+        } else {
+            um[ele]--;
+            if (um[ele] == 0)
+                um.erase(it);
+        }
+    });
+}
+        </code></pre>
+
+        <h2 id="genlambda">Generic Lambda (C++14)</h2>
+        <dl>Now lambda can be made Generic, for example auto can be used inside lambda. Earlier this use to give error.</dl>
+        <pre><code class="language-css">
+auto ptr = [](auto x, auto y){ return x+y; };
+string a = "Never", b = "GiveUp";
+
+cout << ptr(1,2) << endl;                            //3
+cout << ptr(a,b) << endl;                            //NeverGiveUp   
+        </code></pre>
+
+        <h2 id="capinit">Lambda capture initializers</h2>
+        <pre><code class="language-css">
+// Allows lambda captures initialized with arbitrary expressions.
+auto f = [x = test(2)] { return x; };           //20  
+        </code></pre>
+
+        <h2 id="classmem">Accessing class members inside lambda</h2>
+        <h4>Call by Value</h4>
+        <pre><code class="language-css">
+class A {
+    int  a = 3;
+public:
+    void f(){
+        auto ptr = [*this] {    // this has to be captured to access members
+            //a = 3;            // Error. Changing value of RO Object is not allowed
+            cout << a;
+        };
+    }
+};
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
