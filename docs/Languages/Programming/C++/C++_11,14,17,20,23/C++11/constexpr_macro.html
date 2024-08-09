@@ -24,9 +24,12 @@
         <a href="#constexpr">constexpr</a>
         <a href="#usecases">constexpr usecases</a>
         <a href="#vsmacro">constexpr vs macro</a>
+        <a href="#var">constexpr variables</a>
+        <a href="#fun">constexpr function</a>
+        <a href="#ctr">constexpr constructor</a>
     </aside>
 
-    <div style="margin-left:200px;">
+    <article style="margin-left:200px;">
         <h3 id="constexpr">constexpr (constant expression)</h3>
             <dl>Tells compiler that function or variable should be evaluated at compile time, allowing the compiler 
                 to perform computations during compilation rather than at runtime.<br>
@@ -129,7 +132,24 @@ int main() {
                 }                
             </code></pre>
 
-    </div>
+            <h3 id="var">constexpr variables</h3>
+            <dl>
+                1. must be immediately initialized<br>
+                2. Must have constant destruction. if of class type(class must have constexpr destructor).
+            </dl>
+
+            <h3 id="fun">constexpr function</h3>
+            <dl>
+                1. Should not be virtual<br>
+                2. Must not be a coroutine<br>
+                3. function body must not contain: goto block
+            </dl>
+
+            <h3 id="ctr">constexpr contructor</h3>
+            <dl>
+                1. whose function body is not = delete;
+            </dl>
+        </article>
     <script src="/scripts/prism.js"></script>
 </body>
 </html>
