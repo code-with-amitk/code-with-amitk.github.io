@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++ 17</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Fold Expression</a>
+        <a href="#types">Types of folds</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Fold Expression</h2>
+        <dl>
+            It simplifies operations over parameter packs. 
+        </dl>
+
+        <h3 id="#types">Types of Fold Expressions</h3>
+        <table>
+            <tr>
+                <td><b>Unary left fold</b><br>
+                    Ellipses on left side of argument
+                </td>
+                <td><b>Binary left fold</b><br>
+                    Has initial value. Ellipses on left side of argument
+                </td>
+                <td><b>Unary right fold</b><br>
+                    Ellipses on right side of argument
+                </td>
+                <td><b>Binary right fold</b><br>
+                    Ellipses on right side of argument
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <pre><code class="language-css">
+// (... + args);  = 0+arg1+arg2+..
+template &lt;class ... T>
+int sum(T ... v) {
+    return (... + v);
+}
+int main() {
+    sum (1,2,3);        //6
+}
+                    </code></pre>
+                </td>
+                <td>
+                    <pre><code class="language-css">
+// (3 + ... + args);  = 3+arg1+arg2+..
+template &lt;class ... T>
+int sum(T ... v) {
+    return (3 + ... + v);
+}
+int main() {
+    sum (1,2,3);        //9
+}
+                    </code></pre>
+                </td>
+                <td>
+                    <pre><code class="language-css">
+// (v + ...);  = arg1+arg2+0
+template &lt;class ... T>
+int sum(T ... v) {
+    return (v + ...);
+}
+int main() {
+    sum (1,2,3);        //9
+}
+                    </code></pre>
+                </td>
+                <td>
+                    <pre><code class="language-css">
+// (v + ... + 5);  = arg1+arg2+5
+template &lt;class ... T>
+int sum(T ... v) {
+    return (v + ... + 5);
+}
+int main() {
+    sum (1,2,3);        //11
+}
+                    </code></pre>
+                </td>
+            </tr>
+
+        </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
