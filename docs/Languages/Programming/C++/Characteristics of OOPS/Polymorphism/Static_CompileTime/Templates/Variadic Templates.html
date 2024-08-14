@@ -32,14 +32,42 @@
     <article style="margin-left:200px;">
         <h2 id="what">What is Variadic Templates</h2>
         <dl>
-            Function taking arbitary/variable number of arguments same as va_ family functions in C.<br>
-            But good thing is unlike C, all arguments and function definition is resolved at compile time.
+            A template with at least one 
+            <a href="/Languages/Programming/C++/Characteristics%20of%20OOPS/Polymorphism/Static_CompileTime/Templates/Template%20Parameter%20Pack.html">parameter pack</a> 
+            is called a variadic template.
         </dl>
 
         <h2>Types of Variadic Templates</h2>
         <h3 id="class">Variadic Class Template</h3>
+        <h4>1 Argument</h4>
+        <h4>2 or more arguments</h4>
+        <dl>
+            Template parameter pack must be the final parameter in the template parameter list.
+        </dl>
+        <pre><code class="language-css">
+template &lt;typename U, typename... Ts>    // OK: can deduce U
+class A {};
+
+// template &lt;typename... Ts, typename U> // Error: Ts... not at the end
+// class A {};
+        </code></pre>
         
         <h3 id="fun">Variadic Function Template</h3>
+        <dl>
+            Variadic function template means function taking <a href="/Languages/Programming/C++/Characteristics%20of%20OOPS/Polymorphism/Static_CompileTime/Templates/Template%20Parameter%20Pack.html">a parameter pack</a><br>
+            ... is <a href="/Languages/Programming/C++/C++_11,14,17,20,23/C++17/Fold%20Expression.html">Left Fold Expression?</a>
+        </dl>
+        <pre><code class="language-css">
+template &lt;class ... T>
+void f1(T ... val) {
+    (cout &lt;&lt; ... &lt;&lt; val);   //Expanded to cout &lt;&lt; arg1 &lt;&lt; arg2 ..
+}
+
+int main(){
+    f1('a');          //Expanded as f1 &lt;char> ()     //output = a
+    f1(2," cd ");   //f1 &lt;char, int, char const*> ()//output = 2 cd
+}
+        </code></pre>
 
     </article>
 
