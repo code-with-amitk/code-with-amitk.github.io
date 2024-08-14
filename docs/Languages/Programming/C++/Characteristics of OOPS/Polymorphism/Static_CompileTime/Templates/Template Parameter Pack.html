@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template Parameter Pack</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Parameter Pack?</a>
+        <ul>
+            <li><a href="#left">Parameter Pack with left fold</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Parameter Pack</h2>
+        <dl>
+            Template parameter that accepts 0 or more template arguments.
+        </dl>
+
+        <h4 id="left">Parameter Pack with Left Fold Expression</h4>
+        <dl>
+            <a href="/Languages/Programming/C++/C++_11,14,17,20,23/C++17/Fold%20Expression.html">Left Fold Expression?</a>
+        </dl>
+        <pre><code class="language-css">
+template &lt;class ... T>
+void f1(T ... val) {
+    (cout &lt;&lt; ... &lt;&lt; val);   //Expanded to cout &lt;&lt; arg1 &lt;&lt; arg2 ..
+}
+
+int main(){
+    f1('a');          //Expanded as f1 &lt;char> ()     //output = a
+    f1(2," cd ");   //f1 &lt;char, int, char const*> ()//output = 2 cd
+}
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
