@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rust enum</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#what">What is enum</a>
+            <a href="">enum Types</a>
+            <ul>
+                <li><a href="#not">Not holding data</a></li>
+                <li><a href="#hold">holding data</a></li>
+            </ul>
+            <a href="#option">Option Enum = NULL</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="what">What is enum</h2>
+            <dl>
+                Enums are User defined data type(Similar to other languages) which can be assigned some limited values. 
+                In rust enum variable can/cannot hold the data (Eg: String).
+            </dl>
+
+            <h2 id="">enum types</h2>
+            <h3 id="not">1. Not holding data</h3>
+            <pre><code class="language-css">
+#[derive(Debug)]            //To print debugging information
+enum Color{                 //Declare enum
+    Red,
+    Blue,
+    Green
+}
+
+fn fun (a:Color) {          //Print enum after passing to function
+    println!("{:#?}",a);
+}
+
+fn main() {
+    let a:Color = Color::Red; //Initialize variable with enum value
+    fun(a);
+}
+            </code></pre>
+
+            <h3 id="hold">2. Enum Holding the data</h3>
+            <pre><code class="language-css">
+// Enum holding 1 datatype
+use std::{string::String, u32};
+
+#[derive(Debug)]
+enum Address{                     //1. Enum variable storing string data
+    IPv4(String),
+    IPv6(String),
+}
+
+fn fun (addr:&Address) {          //3. Passing enum variable to function and print
+    println!("{:#?}",addr);
+}
+
+fn main() {
+    let router1:Address = 
+      Address::IPv4(String::from("192.168.1.1"));   //2. Creating enum variable having string data(192.168.1.1)
+    fun(&router1);
+}
+
+# rustc test.rs
+# ./test.exe
+IPv4(
+    "192.168.1.1",
+)
+
+// Enum Holding Multiple Datatypes
+use std::{string::String, u32};
+
+#[derive(Debug)]                
+enum Address{                   //1. Enum data structure holding 3 variables
+    NoIP,                       //NoIP does not hold any data
+    IPv4(u8,u8,u8,u8),          //IPv4 holding 4 u8 types
+    IPv6(String),               //IPv6 holding String type
+}
+
+/*THIS IS EQUIVALENT TO:
+struct NoIP;
+struct IPv4 {
+    a: i32,
+    b: i32,
+    c: i32,
+    d: i32,
+}
+struct IPv6 {
+    e:String
+}    
+*/
+
+fn fun (addr1:&Address,addr2:Address, addr3:Address) {         //3. Printing enum variables
+    println!("IPv4 {:#?}",addr1);
+    println!("IPv6 {:#?}",addr2);
+    println!("Disconnected {:#?}",addr3);
+}
+
+fn main() {
+    let router1:Address = 
+      Address::IPv4(10,11,12,13);                         //2. Router1 variable type=IPv4
+    let router2:Address = Address::IPv6(String::from("::1"));   //router2 of IPv6
+    let disconnectedDevice:Address = Address::NoIP;             //disconnectedIP of no ip
+    fun(&router1,router2);
+}
+
+# rustc test.rs
+# .\test.exe
+IPv4 IPv4(
+    10,
+    11,
+    12,
+    13,
+)
+IPv6 IPv6(
+    "::1",
+)
+Disconnected NoIP
+            </code></pre>
+
+            <h2 id="option">Option Enum = NULL</h2>
+            <pre><code class="language-css">
+enum Option &lt;T> {        //T is template which can take any type: i32, i64 etc
+    Some (T),
+    None,
+}
+
+1. Initializing and using Option &lt;T>
+fn main() {
+    let a : Option &lt;i32> = Some(2);
+    let b : Option &lt;i32> = None;
+
+    println! ("a:{:#?}",a);
+    println! ("b:{:#?}",b);
+}    
+$ ./main.exe
+a : Some(
+    2,
+)     
+b : None
+
+2. Option &lt;T> cannot be added to non-Option &lt;T>
+fn main() {
+    let x: i8 = 5;
+    let y: Option &lt;i8> = Some(5);
+
+    let sum = x + y;                //Compliation Error
+}    
+            </code></pre>
+
+            <h3 id="nullmistake">Creating NULL was mistake?</h3>
+            <dl>
+                Tony Hoare(inventor of NULL) said invention of NULL is his Billion dollar mistake. Why?<br>
+                Using NULL value as non-NULL value. Eg: derefercing NULL ptr. It will crash. Problem is not in NULL but at places it gets misused.<br>
+                There are multiple situations, where crash is caused due to NULL. Example: NULL References when derefrenced will cause crash
+            </dl>
+            <pre><code class="language-css">
+int fun(struct A*& p){              //Funtion taking NULL reference
+    if (p == nullptr)
+        cout &lt;&lt; "Got Null ptr reference\n";
+    cout &lt;&lt; p->a;
+}
+int main(){
+    struct A* p = nullptr;
+    fun(p);
+}
+$ ./a.out
+Got Null ptr reference
+Segmentation Fault
+            </code></pre>
+
+            <h3 id="avoidnull">How Rust avoid Null ptr?</h3>
+            <dl>
+                1. Variable that can have NULL/other value is declared as Option &lt;T><br>
+                2. Rust does not allow creating structure object without initializing its members.
+                It can be initialized with Some or None. No crash, None will be printed.
+            </dl>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

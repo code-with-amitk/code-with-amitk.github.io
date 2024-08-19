@@ -81,8 +81,9 @@
 
             <h3 id="ownership">1. Ownership <font color="red">(avoid crash in Rust)</font></h3>
             <dt><b>Ownership?</b><br>
-                - Variable or data can have single owner at a time. When a value is assigned to a variable, that variable becomes 
-                the owner of the value. When the owner goes out of scope, Rust automatically deallocates the memory used by the value.<br>
+                - Defines how memory is managed by Rust program.<br>
+                - With ownership, memory can be managed safely without need of garbage collector.<br>
+                - Every Variable/data have single owner at a time. When the owner goes out of scope, Rust automatically deallocates the memory.<br>
                 - Ownership rules are checked at compile time. Ownership applies to memory allocated on heap(dynamically),
                  Eg: String(), vector ie those are moved. For variable allocated on Stack (Eg: int, float) variable is copied.
             </dt>
