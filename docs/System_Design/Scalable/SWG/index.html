@@ -24,9 +24,10 @@
 
   <aside class="sidebar">
     <a href="#what">What</a>
-    <a href="#req">Requirements</a>
-    <a href="#boe">BOE</a>
-    <a href="#db">DB & Pipelines</a>
+    <a href="#req">1. Requirements</a>
+    <a href="#boe">2. BOE</a>
+    <a href="#db">3. DB & Pipelines</a>
+    <a href="#hld">4. HLD</a>
   </aside>
 
   <main>
@@ -78,7 +79,8 @@
             <td>MySQL</td>
             <td>1. Cust-Public,pvt keys are stored in HSM(Hardware security module): 
               When tenant is onboarded, Cert hierarchy is created. All keys, certs, signatures stored here.<br>
-              2. All tenant data
+              2. All tenant data<br>
+              3. Storing meta data for Druid cluster
             </td>
           </tr>
           <tr>
@@ -86,31 +88,29 @@
             <td>Generic task queing and task broker(Apart from kafka, when all nodes are not prod,cons)</td>
           </tr>
           <tr>
-            <td>Redis (key/value store)</td>
-            <td>Generic task queing and task broker(Apart from kafka, when all nodes are not prod,cons)</td>
+            <td>Mongodb</td>
+            <td>Events which are fed to kafka are stored here and it acts as source of truth</td>
           </tr>
         </table>
 
-        <h4>Event Pipeline</h4>
-        <table>
-          <tr>
-            <th>Name/th>
-            <th>Use Case</th>
-          </tr>
-          <tr>
-            <td>Kafka</td>
-            <td>
-              Event Producers: Services. Services reach Evt-Svc, which puts events in kafka<br>
-              Events Consumers: Druid OLAP
-            </td>
-          </tr>
-          <tr>
-            <td>Zero MQ</td>
-            <td></td>
-          </tr>
-        </table>
+        <h4>Event Pipeline/Message Buses</h4>
+        <dl>
+          <b>1. Kafka:</b> Event Producers: Services. Services reach Evt-Svc, which puts events in kafka & also into mongodb<br>
+          Events Consumers: Druid OLAP<br>
+          <b>2. Zero MQ:</b> In memory fast storage, high performance. Whereas kafka is persistant datasource
+        </dl>
 
-        <h3>4. HLD</h3>
+        <h4>Metadata of Distributed Systems</h4>
+        <dl>Zookeeper</dl>
+
+         <h4>Observability</h4>
+        <dl>Sumologic, Datadog(Bit inexpensive wrt sumo), SignalFX(Best solution for scaling the app), ELK(Druid Logging)
+        </dl>
+
+        <h4>Load Balancing</h4>
+        <dl>ngnix, haproxy, F5</dl>
+
+        <h3 id="hld">4. HLD</h3>
         <pre class="puml" visibility: hidden>
           @startuml
           !pragma teoz true

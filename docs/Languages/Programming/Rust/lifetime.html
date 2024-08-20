@@ -27,9 +27,74 @@
         </aside>
 
         <article style="margin-left:200px;">
+            <h2 id="what">What is lifetime</h2>
             <dl>
                 Lifetimes tells how long references would be valid, ensuring memory safety without a garbage collector.
             </dl>
+            <table>
+                <tr>
+                    <th>Does not compile</th>
+                    <th>Compile (With Lifetime Annotation)</th>
+                </tr>
+                <tr>
+                    <td>
+                        <pre><code class="language-css">
+fn longest (x:& str, y:& str) -> & str{
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+fn main() {
+    let string1 = String::from("Hi");
+    {
+        let string2 = String::from("Hello");
+        let result = longest (string1.as_str(), string2.as_str());
+        println! ("{result}");
+    }
+}
+
+$ cargo build
+3 | fn longest(x:& str, y:& str) -> & str{
+    |              -----    -----     ^ expected named lifetime parameter
+    |
+    = help: this function's return type contains a borrowed value, but 
+    the signature does not say whether it is borrowed from `x` or `y`
+  help: consider introducing a named lifetime parameter
+                        </code></pre>
+                    </td>
+                    <td>
+                        <pre><code class="language-css">
+fn longest &lt;'k> (x:&'k str, y:&'k str) -> &'k str{
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+fn main() {
+    let string1 = String::from("Hi");
+    {
+        let string2 = String::from("Hello ");
+        let result = longest (string1.as_str(), string2.as_str());
+        println! ("{result}");
+    }
+}
+
+$ cargo run
+Hello
+                        </code></pre>
+                    <br>
+                    <b>How this worked?</b><br>
+                    &ensp; Rust can’t tell whether the reference being returned refers to x or y<br>
+                    &ensp; Borrow checker can’t determine lifetime of return value will relate to x or y.<br>
+                    &ensp; With changed function signature, We tell compiler, returned reference will be valid as long as both the parameters are valid.<br>
+                    
+                    </td>
+                </tr>
+            </table>
+
         </article>
         <script src="/scripts/prism.js"></script>
     </body>
