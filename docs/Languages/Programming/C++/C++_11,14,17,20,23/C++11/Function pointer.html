@@ -22,14 +22,21 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">std::function</a>
+        <a href="#fp">Function pointer</a>
+        <ul>
+            <li><a href="#fpcpp">C++ (std::function)</a></li>
+            <li><a href="">C</a></li>
+        </ul>
+        <a href="#callback">Callback Function</a>
     </aside>
 
     <article style="margin-left:200px;">
-        <h2 id="what">std::function in C++11</h2>
+        <h2 id="fp">Function Pointer</h2>
+        <h3 id="fpcpp">C++ (std::function)</h3>
         <dl>
             Instances of std::function can store, copy, and invoke any CopyConstructible Callable functions(ie targets)<br>
         </dl>
+
         <pre><code class="language-css">
 #include &lt;functional>
 class C {
@@ -45,7 +52,7 @@ void f1(int a) {
     cout &lt;&lt; a;
 }
 int main() {
-    // Function pointer to function taking argument=int & returning=void
+    // Function pointer to function taking int & returning void
     std::function &lt;void(int)> ptr_f1 = f1;
     ptr_f1(3);                                                      //3
 
@@ -71,6 +78,80 @@ int main() {
 }
         </code></pre>
 
+        <h3 id="fpc">C Function Pointer</h3>
+        <pre><code class="language-css">
+// Pointer to function returning void, accepting void
+void fun(){
+    cout &lt;&lt; "fun";
+}
+void (*ptr)() = fun;
+ptr();
+
+// Pointer to class method
+class A {
+public:
+    typedef int (A::*ptr)();      //1. Declare function pointer to class A method returning int, accepting nothing
+    int fun() {
+    cout &lt;&lt; "fun";
+    }
+};
+int main() {
+    A* obj = new A();            //2. Create object
+    A::ptr p = &A::test();       //3. Create Function pointer p pointing to test
+    (obj->*p)();                 //4. Invoke function using function pointer
+}
+        </code></pre>
+
+        <h2 id="callback">Callback Function</h2>
+        <dl>
+            A callback is a function that is passed as an argument to another function and is intended to be "called back" at 
+            a later time within that other function.<br>
+            In C++, callbacks are often implemented using function pointers, functors, or std::function objects.
+        </dl>
+        <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;functional>
+using namespace std;
+
+// function that we will use as a callback
+void callBack (int x) {
+    cout &lt;&lt; "fun " &lt;&lt; x;
+}
+
+// A function that accepts a callback as an argument
+// void executeCallback(void (*funcPtr)(int))
+void executeCallback (std::function &lt;void(int)> p) {
+    p(10);
+}
+
+int main() {
+    // Pass the callback function
+    executeCallback (callBack);
+    return 0;
+}
+/*
+fun 10
+*/
+        </code></pre>
+
+        <h2 id="vs">Callback vs Function pointer</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Function pointer</th>
+                <th>Callback</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>This is low-level mechanism that points to a function</td>
+                <td>High-level concept where a function is passed as an argument to be executed later.</td>
+            </tr>
+            <tr>
+                <td>Usage, Ease</td>
+                <td>Function pointers are more common in C and simpler C++ applications</td>
+                <td>Callbacks using std::function are preferred in modern C++ because they provide more flexibility and ease of use</td>
+            </tr>
+        </table>
     </article>
 
     <script src="/scripts/prism.js"></script>
