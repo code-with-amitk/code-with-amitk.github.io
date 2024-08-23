@@ -30,13 +30,13 @@
         <h2 id="what">What is noexcept</h2>
         <dl>
             throw is deprecated in C++11, will be removed in C++20.<br>
-            noexcept returns true or false based on calculation that function can throw exception or not.
         </dl>
 
         <h2 id="operator">noexcept operator</h2>
         <dl>
-            noexcept operator returns true if expression is declared to not throw any exceptions.<br>
-            Even if noexcept(expr) is true, an evaluation of expr may still throw as the result of encountering undefined behavior.
+            A specifier that indicates a function will not throw any exceptions.<br>
+            If a noexcept function throws an exception, the program terminates via std::terminate().<br>
+            This can potentially enable the compiler to perform optimizations, as it doesn't need to generate code for exception handling within the function.
         </dl>
         <pre><code>
 noexcept(constant_expression)
