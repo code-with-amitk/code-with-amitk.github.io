@@ -22,24 +22,23 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#pointers">Pointers</a>
-        <dl>
-            <li>
-                <a href="#raw">Raw</a>
-                <a href="#smart">Smart</a>
-                <dl>
-                    <li>
-                        <a href="#unique">Unique</a>
-                        <a href="#shared">Shared</a>
-                        <dl>
-                            <li>
-                                <a href="#internal">Internal Implementation</a>
-                            </li>
-                        </dl>
-                    </li>
-                </dl>
-            </li>
-        </dl>
+        <a href="#">Pointers</a>
+        <a href="#raw">Raw</a>
+        <a href="#smart">Smart</a>
+        <ul>
+            <li><a href="#unique">Unique</a></li>
+            <ul>
+                <li><a href="#ucc">Copy Constructible</a></li>
+                <li><a href="#umc">Move Constructible</a></li>
+                <li><a href="#make_unique">make_unique</a></li>
+            </ul>
+            <li><a href="#shared">Shared</a></li>
+            <ul>
+                <li><a href="#scc">Copy Constructible</a></li>
+                <li><a href="#sci">Copy Initializable</a></li>
+                <li><a href="#make_shared">make_shared</a></li>
+            </ul>
+        </ul>
     </aside>
 
     <article style="margin-left:200px;">
@@ -57,15 +56,16 @@
             <b>How?</b> Allocate memory in ctr, Delete memory in dtr. Bcoz Destructors are automatically executed when Object goes out of scope.<br>
             <b>Why?</b> Programmer may allocate memory using new() & later might forget to use delete().
         </dl>
+        <dl><b>Smart Pointer Implementation Example</b></dl>
         <pre><code class="language-css">
-template <class T>		
+template &lt;class T>
 class A{                    //This class is Smart pointer
     T *a;         //int *a;
 public:
-    A(T *r):a(r){ cout << "Allocated\n"; }              //A(int *r):a(r)
+    A(T *r) : a(r) { cout &lt;&lt; "Allocated\n"; }              //A(int *r):a(r)
     ~A(){
         delete a;
-        cout << "Freed\n";
+        cout &lt;&lt; "Freed\n";
     }
     T &operator *(){        //int &operator *()    //& returns a only, does not create new copy
         return *a;
@@ -74,11 +74,11 @@ public:
 
 int main(){
     //Automatic template type deduction => Provided in C++17
-    A <int> obj(new int());	//obj is my pointer now. I can carry all pointer operations
+    A &lt;int> obj(new int());	//obj is my pointer now. I can carry all pointer operations
     *obj = 10;
-    cout<<*obj<<"\n";
+    cout &lt;&lt; *obj;
 
-    A <float> obj1(new float());
+    A  &lt;float> obj1(new float());
 }
 
 # g++ smart_pointers
@@ -113,110 +113,83 @@ Freed
                 <td>Yes</td>
             </tr>
         </table>
-        <h4 id="unique">1. Unique pointer (type of smart pointer)</h4>
-        <table>
-            <tr>
-                <td>
-                    <pre><code class="language-css">
-int main(){
-    unique_ptr&lt;int> p(new int(5));          //Unique Pointer for int
-    cout &lt;&lt; *p;                               //5
 
-    //error: use of deleted function. copy of UP is not allowed
-    //unique_ptr&lt;int> p1 = p;
-    
-    //Moving ownership
-    unique_ptr&lt;int> p2 = std::move(p);      
-    cout &lt;&lt; *p2;                              //5
-    //cout &lt;&lt; *p;                             //Segmentation Fault
-    p2.reset();
-/*
-make_unique<T>()
+        <h3 id="unique">Unique pointer (type of smart pointer)</h3>
+        <h4 id="ucc">Copy Constructible(No)</h4>
+            There can be only one unique_ptr to any resource, any attempt to make a copy of a 
+            unique_ptr will cause a compile-time error.
+            <pre><code class="language-css">
+unique_ptr&lt;int> p(new int(5))       // Okay
+unique_ptr&lt;T> c = p;              // Error: Can't copy unique_ptr
+            </code></pre>
+
+        <h4 id="umc">Move Constructible(Yes)</h4>
+            <pre><code class="language-css">
+unique_ptr&lt;int> p(new int(5))            // Okay
+unique_ptr&lt;T> cptr = std::move(ptr);     // Okay, resource now stored in cptr
+            </code></pre>
+
+        <h4 id="make_unique">Creating unique_ptr using make_unique</h4>
+        <pre><code class="language-css">
+make_unique &lt;T>()
     - Avoid use of new operator
     - Provides exception safety, as new and delete internally handled by compiler. 
     - Memory is allocated to 0.
-*/
-    unique_ptr&lt;int> p1 = make_unique<int>();  //Create UP using make_unique()
-    cout&lt;&lt;*p1 &lt;&lt; endl;               //0
-        
-//////UP for char array////////
-    std::unique_ptr&lt;PWSTR[]>    m_pwstrPath;    //PWSTR: pointer to wide str
 
-    //Allocate char array of 260 chars and Initialize to ()
-    m_pwstrPath = (PWSTR*) new TCHAR[260]();    
-}
-                    </code></pre>
-                </td>
-                <td>
-                    <b>Copy Constructible(No):</b> There can be only one unique_ptr to any resource,<br>
-                    any attempt to make a copy of a unique_ptr will cause a compile-time error.
-                    <pre><code class="language-css">
-unique_ptr&lt;T> ptr(new T);       // Okay
-unique_ptr&lt;T> cptr = ptr;       // Error: Can't copy unique_ptr
-                    </code></pre>
+    struct Config {
+        int a;
+        Config() {
+            a = g;
+        }
+    };
+    int main() {
+        shared_ptr &lt;Config> ptr = make_unique <Config>(); //Call default constructor of class Config
+        cout &lt;&lt; ptr->a;                                   //15
+    }
+        </code></pre>
 
-                    <b>Move Constructible(Yes)</b>
-                    <pre><code class="language-css">
-unique_ptr<T> ptr(new T);             // Okay
-unique_ptr&lt;T> cptr = std::move(ptr);  // Okay, resource now stored in cptr
-                    </code></pre>
-                </td>
-            </tr>
-        </table>
-
-        <h4 id="shared">2. Shared pointer (type of smart pointer)</h4>
-        <table>
-            <tr>
-                <td>
-                    <pre><code class="language-css">
-int main(){
-    //Allocated int, made shared_ptr point to it
-    shared_ptr &lt;int> ptr (new int(5));
-    //ptr,ptr1 now points to same memory
-    shared_ptr &lt;int> ptr1 = ptr;
-
-    cout &lt;&lt; *ptr;     //Ouput:5
-    cout &lt;&lt; *ptr1;    //Output:5
-
-    ptr.reset();        //Deleting ptr
-    cout &lt;&lt; *ptr1;  //5 But ptr1 still points to memory
-
-    ptr1.reset();            //Deleting ptr1
-    //cout &lt;&lt; *ptr;    //Segmentation Fault
-}
-                    </code></pre>
-                </td>
-                <td>
-                    <b>Copy Constructible(Yes):</b> Multiple pointers can point to same resource<br>
-                    Owner count is maintained using reference counting<br>
-                    When none is referencing the memory, it's deleted automatically.
-                    <pre><code class="language-css">
+        <h3 id="shared">Shared pointer (type of smart pointer)</h3>
+        <h4 id="scc">Copy Constructible(Yes)</h4>
+        <dl>
+            Multiple pointers can point to same resource, 
+            Owner count is maintained using reference counting
+            When none is referencing the memory, it's deleted automatically.
+        </dl>
+        <pre><code class="language-css">
 shared_ptr &lt;int> p   =   int* p   //We can think like this
 
-shared_ptr &lt;T> ptr(new T);       // Okay
+shared_ptr &lt;T> ptr(new int(2));       // Okay
 shared_ptr &lt;T> cptr = ptr;       // Okay.  Are Copy Constructible
-                    </code></pre>
-                    <br>
+        </code></pre>
 
-                    <b>Copy Initialization(No):</b> When we initialise with =, we invoke copy-initialisation<br>
-                    Why CI not allowed? Because shared_ptr constructor is explicit and a <br>
-                    explicit construtor is not copy-assignable
+        <h4 id="sci">Copy Initialization(No)</h4> 
+        <dl>
+        When we initialise with =, we invoke copy-initialisation<br>
+        Why CI not allowed? Because shared_ptr constructor is explicit and a explicit construtor is not copy-assignable
+        </dl>
 <pre><code class="language-css">
+int* b = new int;
+shared_ptr &lt;int> a = b;      //Error
+        </code></pre>
+
+
+        <h4 id="make_shared">Create shared pointer using make_shared</h4>
+        <pre><code class="language-css">
+#include &lt;memory>
+#include &lt;iostream>
+using namespace std;
+constexpr int g = 15;
+struct Config {
+    int a;
+    Config() {
+        a = g;
+    }
+};
 int main() {
-    int* b = new int;
-
-    //Copy Initialization. conversion from 'int*' 
-    // to non-scalar type 'std::shared_ptr' requested
-    shared_ptr &lt;int> a = b;     
-    ..
-    // second ptr holding b... fails concept of shared_ptr
-    shared_ptr &lt;int> a1 = b;   
+    shared_ptr &lt;Config> ptr = make_shared &lt;Config>(); //Call default constructor of class Config
+    cout &lt;&lt; ptr->a;                                   //15
 }
-                </code></pre>
-                </td>
-            </tr>
-        </table>
-
+        </code></pre>
         <h5 id="internal">How shared_ptr is implemented internally?</h5>
         <dl>
             shared_ptr maintains 2 things.<br>
