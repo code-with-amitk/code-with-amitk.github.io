@@ -24,6 +24,8 @@
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#what">What is lifetime</a>
+            <a href="#struct">lifetime in struct</a>
+            <a href="#elision">lifetime Elision</a>
         </aside>
 
         <article style="margin-left:200px;">
@@ -63,8 +65,12 @@ $ cargo build
     the signature does not say whether it is borrowed from `x` or `y`
   help: consider introducing a named lifetime parameter
                         </code></pre>
+                        <b>Why compliation error?</b><br>
+                        Compiler is unable to infer the lifetimes of parameters
                     </td>
                     <td>
+                        <b>Lifetime?</b><br>
+                        &ensp; Prefix every parameter with 'k. Apostrophe ('k), denotes reference has generic lifetime.
                         <pre><code class="language-css">
 fn longest &lt;'k> (x:&'k str, y:&'k str) -> &'k str{
     if x.len() > y.len() {
@@ -94,6 +100,91 @@ Hello
                     </td>
                 </tr>
             </table>
+
+            <h2 id="struct">Lifetime in struct</h2>
+            <h4>Why we need lifetime in struct?</h4>
+            <dl>
+                if we want to store reference in struct, ie struct does not hold Owned types.
+            </dl>
+            <table>
+                <tr>
+                    <th>Will not compile</th>
+                    <th>Compiles (With Lifetime)</th>
+                </tr>
+                <tr>
+                    <td>
+                        <pre><code class="language-css">
+struct A {
+    x:&str
+}
+fn main() {
+    let m = String::from("test");
+    let o = A {
+        x : &m,
+    };
+    println!("{}", o.x);
+}
+$ cargo run
+missing lifetime specifier
+--> src/main.rs:6:7
+6 |     x:&str
+  |       ^ expected named lifetime parameter
+                        </code></pre>
+                    </td>
+                    <td>
+                        <pre><code class="language-css">
+struct A &lt;'a> {
+    x : &'a str,
+}
+fn main() {
+    let m = String::from("test");
+    let o = A {
+        x : &m,
+    };
+    println!("{}", o.x);
+}
+$ cargo run
+test
+                        </code></pre>
+                    </td>
+                </tr>
+            </table>
+
+            <h2 id="elision">Lifetime Ellision</h2>
+            <dl>
+                The patterns programmed into Rust complier which applies lifetime rules in desired situtation automatically.<br>
+                These are not rules for programmers to follow; they’re a set of particular cases that the compiler will consider, and if your code fits these cases, you don’t need to write the lifetimes explicitly.<br>
+                <b>Input Lifetime:</b> Lifetimes on function or method parameters<br>
+                <b>Output lifetimes:</b> lifetimes on return values
+            </dl>
+            <h3>3 rules to figure out the lifetimes</h3>
+            
+            <h4>Rule-1(applies to input lifetimes)</h4>
+            <dl>
+                compiler assigns a lifetime parameter to each parameter that’s a reference.<br>
+                1 parameter gets one lifetime parameter, 2 parameters gets 3 separate lifetime parameters & so on
+            </dl>
+            <pre><code class="language-css">
+                fn foo (x: &i32); becomes
+                fn foo &lt;'a>(x: &'a i32);
+
+                fn foo (x:&i32, y:&i32) becomes
+                fn foo &lt;'a, 'b>(x: &'a i32, y: &'b i32)
+            </code></pre>
+            
+            <h4>Rule-2(applies to input lifetimes)</h4>
+            <dl>
+                if there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters.
+            </dl>
+            <pre><code class="language-css">
+                fn foo &lt;'a>(x: &'a i32) -> &'a i32
+            </code></pre>
+
+            <h4>Rule-3</h4>
+            <dl>
+                if there are multiple input lifetime parameters, but one of them is &self or &mut self, 
+                lifetime of self is assigned to all output lifetime parameters.
+            </dl>
 
         </article>
         <script src="/scripts/prism.js"></script>
