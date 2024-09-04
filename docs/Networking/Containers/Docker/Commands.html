@@ -41,6 +41,10 @@ $ docker build . -f Dockerfile -t test_image
 
 /* View docker image stored in a local registry on your system */
 $ docker image ls
+
+/* Save docker image in current working directory */
+$ docker save -o docker-image newsreader-cli-test
+
 $ docker image rmi docker-image
 
 /* 
