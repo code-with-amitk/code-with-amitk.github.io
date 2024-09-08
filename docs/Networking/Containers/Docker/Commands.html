@@ -25,10 +25,11 @@
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#createrun">Create Docker Image. Run inside Container</a>
         <a href="#enter">Enter inside Container</a>
-        <a href="#x86onarm">Running arm binaries on x86</a>
+        <a href="#x86onarm">Run arm binaries on x86</a>
+        <a href="#load">Load Docker Image</a>
     </aside>
 
-    <div style="margin-left:200px;">
+    <article style="margin-left:200px;">
         <h3>Commands</h3>
         <h4 id="createrun">Create Docker Image, Run inside Container</h4>
         <pre><code class="language-css">
@@ -60,6 +61,9 @@ Run Image Inside Container
     cmd. Command executed inside container when its created
 */    
 $ docker run --volume /home/amit:/test --user &lt;uid of user> test-docker-image cmd
+
+// Run commands present inside test.sh inside docker container
+$ docker run --platform linux/amd64 -i newsreader-cli-test &lt; ~/test.sh
             </code></pre>
 
             <h4 id="enter">Run Interactive session inside Container</h4>
@@ -137,7 +141,35 @@ $ docker login repository
 //Download docker image locally on system
 $ docker image pull artifactory/path:image-tag
 </code></pre>
-    </div>
+
+    <h4 id="load">Loading Docker Image</h4>
+    <pre>
+        Loading means untar the docker image and load inside docker engine, still image is not running. To run the 
+        image still we need to do "docker run"
+    </pre>
+    <pre><code class="language-css">
+        // docker desktop should be running
+
+        cmd> docker load -i fragmuffin-pygcode_oci.tar.gz
+        Loaded image: fragmuffin-pygcode:latest
+
+        // List
+        cmd> docker images
+        REPOSITORY            TAG       IMAGE ID       CREATED        SIZE
+        fragmuffin-pygcode    latest    d0da2aa0fd41   13 hours ago   87.3MB
+        newsreader-cli-test   latest    59c21a173ad7   21 hours ago   579MB
+
+        // Inspect OS of docker image
+        > docker inspect --format='{{.Os}}/{{.Architecture}}' 59c21a173ad7
+        'linux/amd64'
+
+        // Unload
+        cmd> docker image rmi fragmuffin-pygcode
+        Untagged: fragmuffin-pygcode:latest
+        Deleted: sha256:d0da2aa0fd41ee2604c74a93748e85452b3fa1d665df61f4dfc62f077f9131a6
+
+    </code></pre>
+    </article>
     
     <script src="/scripts/prism.js"></script>
 </body>

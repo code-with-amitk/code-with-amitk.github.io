@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dockerfile</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#instructions">Dockerfile Instructions</a>
+        <a href="#df">Dockerfile</a>
+        <a href="#image">Create docker image</a>
+        <a href="#check">Check docker image</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="instructions"> Dockerfile Instructions</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Meaning</th>
+            </tr>
+            <tr>
+                <td>FROM</td>
+                <td>
+                    This is the first instruction in every Dockerfile. It specifies the base Docker image
+                    <table>
+                        <tr>
+                            <td>FROM python:3-slim</td>
+                            <td>
+                                This is an official Python image from Docker Hub.<br>
+                                It includes Python 3 and is a smaller, slimmed-down version compared to the full Python image.<br>
+                                Slim images have fewer packages installed by default to keep the size small, but they still provide 
+                                the essential tools to run Python applications.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>WORKDIR</td>
+                <td>
+                    sets the working directory inside the container
+                <table>
+                    <tr>
+                        <td>WORKDIR /app</td>
+                        <td>Means create /app inside container.<br>
+                            Any subsequent COPY, RUN, or other commands in the Dockerfile will operate relative to this directory
+                        </td>
+                    </tr>
+                </table>
+                </td>
+            </tr>
+            <tr>
+                <td>COPY src dst</td>
+                <td>Copy files or directories from your local file system (the host) to the Docker container's file system.
+                    <table>
+                        <tr>
+                            <td>COPY requirements.txt ./</td>
+                            <td>Copy requirements.txt from your local machine to the current working directory (/app, as set by WORKDIR)<br>
+                                ./ means the file is placed directly inside /app (the working directory).
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>RUN</td>
+                <td>Execute a command in the Docker image at build time.</td>
+            </tr>
+            <tr>
+                <td>ENTRYPOINT</td>
+                <td>This command specifies the default command that will run when the container starts.</td>
+            </tr>
+        </table>
+
+        <h2 id="df">Dockerfile</h2>
+        <h4>What is Dockerfile?</h4>
+        <dl>
+            From Dockerfile, docker image is created which runs inside container.
+        </dl>
+        <h4>Example</h4>
+        <dl>Let's create a docker image.<br>
+            We will use the code from this repository https://github.com/meobilivang/newsreader-cli
+        </dl>
+
+        <pre><code class="language-css">
+// Step-1: Clone the code
+cmd> git clone https://github.com/meobilivang/newsreader-cli
+cmd> cd newsreader-cli
+
+// Step-2: Create run_test.py file in root of cloned repo
+#!/bin/bash
+
+set -euo pipefail
+cd /app
+pytest
+
+// Step-3. Dockerfile content. Create Dockerfile in root of cloned repo
+# Download python-slim image from docker hub
+FROM python:3-slim
+
+# Create /app directory if not present.
+# All COPY, RUN commands will be executed relative to WORKDIR.
+# Set the working directory
+WORKDIR /app
+
+# We are inside /app. Copy requirements.txt from your local machine to the current working directory (/app)
+COPY requirements.txt ./
+
+# RUN executes a command in the Docker image at build time.
+RUN pip install --no-cache-dir -r requirements.txt
+
+# copies the entire contents of your current directory (cloned repository on your host machine) into the /app/
+# COPY src(everything from present dir) dst(/app folder in docker image)
+COPY . /app
+
+# RUN executes a command in the Docker image at build time
+# Install the pytest inside container
+RUN pip3 install --no-cache-dir pytest
+RUN pip3 install --no-cache-dir py==1.11.0
+
+# Install the package
+# either a setup.py or pyproject.toml file need to be present in root directory of the project.
+# RUN pip install --no-cache-dir -e .
+
+# Run test cases to ensure everything is working
+# run pytest inside docker container
+# pytest should look for tests in the /app/tests/ directory.
+# --maxfail=1: Tells pytest to stop after the first test failure
+# --disable-warnings: Suppresses any warnings, so they are not shown in the test output.
+RUN python -m pytest /app/tests/ --maxfail=1 --disable-warnings
+
+# This changes the working directory back to / (the root directory) after the tests have been run
+# This ensures that the next commands or any processes executed will be run from the root directory of the container, not /app
+WORKDIR /
+
+# copies the run_tests.sh script from your local machine into the root directory (/)
+COPY run_tests.sh ./
+RUN chmod +x /run_tests.sh
+
+# This is the command specifies the default command that will run when the container starts.
+# /bin/bash: Specifies that a Bash shell should be used.
+# -s: This tells Bash to read from standard input.
+ENTRYPOINT ["/bin/bash", "-s"]
+        </code></pre>
+
+        <h2 id="image">Create Docker image</h2>
+        <dl>
+            Create docker image using docker file created in above step
+        </dl>
+        <pre><code class="language-css">
+> docker build --platform linux/amd64 -t newsreader-cli-test .
+[+] Building 33.0s (15/15) FINISHED                                                                             docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                            0.2s
+ => => transferring dockerfile: 886B                                                                                            0.1s
+ => [internal] load metadata for docker.io/library/python:3-slim                                                                1.8s
+ => [internal] load .dockerignore                                                                                               0.1s
+ => => transferring context: 2B                                                                                                 0.0s
+ => [ 1/11] FROM docker.io/library/python:3-slim@sha256:c24c34b502635f1f7c4e99dc09a2cbd85d480b7dcfd077198c6b5af138906390        0.0s
+ => [internal] load build context                                                                                               0.1s
+ => => transferring context: 5.16kB                                                                                             0.1s
+ => CACHED [ 2/11] WORKDIR /app                                                                                                 0.0s
+ => CACHED [ 3/11] COPY requirements.txt ./                                                                                     0.0s
+ => CACHED [ 4/11] RUN pip install --no-cache-dir -r requirements.txt                                                           0.0s
+ => [ 5/11] COPY . /app/                                                                                                       12.9s
+ => [ 6/11] RUN pip3 install --no-cache-dir pytest                                                                              4.1s
+ => [ 7/11] RUN pip3 install --no-cache-dir py==1.11.0                                                                          3.1s
+ => [ 8/11] RUN python -m pytest /app/tests/ --maxfail=1 --disable-warnings                                                     2.4s
+ => [ 9/11] COPY run_tests.sh ./                                                                                                0.1s
+ => [10/11] RUN chmod +x /run_tests.sh                                                                                          0.6s
+ => exporting to image                                                                                                          6.9s
+ => => exporting layers                                                                                                         6.6s
+ => => writing image sha256:5f77f59a7ebf7e5c4357e0c1532cac0cd417e1f2a2700c7d8bf757a89a21f9cd
+        </code></pre>
+
+        <h2 id="check">Check Docker Image</h2>
+        <dl>
+            Now we have created docker image, its time to go inside it and check the contents.
+        </dl>
+        <pre><code class="language-css">
+> docker images
+REPOSITORY            TAG       IMAGE ID       CREATED         SIZE
+newsreader-cli-test   latest    5f77f59a7ebf   7 minutes ago   734MB
+
+// Check Architecture
+> docker inspect --format='{{.Os}}/{{.Architecture}}' 5f77f59a7ebf
+'linux/amd64'
+
+// Run tests inside docker container
+// Check run command on Commands page
+> docker run --platform linux/amd64 -i newsreader-cli-test &lt; pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.5, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: /app
+collected 3 items
+
+tests/test_article.py .                                                  [ 33%]
+tests/test_web_scraper.py .                                              [ 66%]
+tests/test_data/test_newsreadercli.py .                                  [100%]
+
+=============================== warnings summary ===============================
+../usr/local/lib/python3.12/site-packages/certifi/core.py:36
+  /usr/local/lib/python3.12/site-packages/certifi/core.py:36: DeprecationWarning: path is deprecated. Use files() instead. Refer to https://importlib-resources.readthedocs.io/en/latest/using.html#migrating-from-legacy for migration advice.
+    _CACERT_CTX = get_path("certifi", "cacert.pem")
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+========================= 3 passed, 1 warning in 0.65s =========================
+
+// Enter inside docker container
+> docker images
+REPOSITORY            TAG       IMAGE ID       CREATED         SIZE
+newsreader-cli-test   latest    2376cae71f9e   7 minutes ago   734MB
+
+> docker run -it --entrypoint /bin/bash newsreader-cli-test
+
+// Check contents of /app folder
+root@0e8f62096f71:/# ls /app
+ Dockerfile  LICENSE   README.md   docker-image   newsreadercli   requirements.txt   run_tests.sh   tests
+
+// Check location of run_tests.sh
+root@0e8f62096f71:/# ls run_tests.sh
+run_tests.sh
+root@0e8f62096f71:/# pwd
+/
+root@0e8f62096f71:/#
+
+        </code></pre>
+    </article>
+    
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
