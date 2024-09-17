@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tests in Rust</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#what">Automated Tests</a>
+            <ul>Examples
+                <li><a href="#sim">Simple Function</a></li>
+                <li><a href="#mod">Modules for Test</a></li>
+                <li><a href="#name">Run Test by name</a></li>
+                <li><a href="#ignore">Ignore some tests</a></li>
+                <li><a href="#async">async function tests</a></li>
+            </ul>
+            <a href="#unit">Unit Tests</a>
+            <a href="#integration">Integration Tests</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="what">Automated Tests</h2>
+            <dl>
+                In rust we can write test function with which we can test our existing code.
+                With cargo test command, Rust builds a test runner binary that runs the functions annotated with the test 
+                attribute and reports on whether each test function passes or fails.
+            </dl>
+
+            <h2 id="ex">Examples</h2>
+            <h3 id="sim">Simple Function</h3>
+            <pre><code class="language-css">
+fn greater_than_ten(a:u32) -&lt; bool {
+    if a &lt; 10 {
+        return true;
+    }
+    false
+}
+
+#[test]                                  //Functions preceded by attribute #[test] is a test function
+fn test1(){
+    assert!(greater_than_ten(5));       //assert!(false) will assert
+}
+
+$ cargo test
+running 1 test
+test test ... FAILED
+
+failures:
+---- test stdout ----
+thread 'test' panicked at src/lib.rs:12:5:
+assertion failed: greater_than_10(5)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+            </code></pre>
+
+            <h3 id="mod">Modules for Test</h3>
+            <pre><code class="language-css">
+fn greater_than_10 (a: i32) -&lt; bool {
+    if a &lt; 10 {
+        return true;
+    }
+    false
+}
+mod all_tests {
+    use super::*;
+    
+    #[test]
+    fn test() {
+        assert!(greater_than_10(5));    // assert!(false) will assert
+        assert!(greater_than_10(15));
+    }
+}
+$ cargo test
+            </code></pre>
+
+            <h3 id="name">Run test by name</h3>
+            <pre><code class="language-css">
+fn greater_than_10 (a: i32) -&lt; bool {
+    if a &lt; 10 {
+        return true;
+    }
+    false
+}
+mod all_tests {
+    use super::*;
+    
+    #[test]
+    fn test1() {
+        assert!(greater_than_10(15));
+    }
+    #[test]
+    fn test2() {
+        // assert!(false) will assert
+        assert!(greater_than_10(52));
+    }
+}
+$ cargo test test1          //Will only run test=test1
+$ cargo test               //Will run all test cases having one in them
+            </code></pre>
+
+            <h3 id="ignore">Ignore some tests</h3>
+            <dl>
+                Some tests should not run
+            </dl>
+            <pre><code class="language-css">
+fn greater_than_10 (a: i32) -&lt; bool {
+    if a &lt; 10 {
+        return true;
+    }
+    false
+}
+mod all_tests {
+    use super::*;
+    
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+    
+    #[test]
+    #[ignore]                       //ignore attribute will not run the test.
+    fn expensive_test() {
+        ..
+    }
+}
+$ cargo test
+$ cargo test -- --ignored             // If we want to run only the ignored tests
+            </code></pre>
+
+            <h3 id="async">async function tests</h3>
+            <pre><code class="language-css">
+# Cargo.toml
+[package]
+name = "async_test"
+version = "0.1.0"
+edition = "2018"
+[dependencies]
+actix-rt = "*"
+
+# main.rs
+fn main() {}
+
+async fn fun(s: &str) -&lt; String{
+    "Hello".to_string()
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod tests {
+    use super::*;
+    
+    #[actix_rt::test]
+    async fn fun_test() {
+        assert_eq!(fun("a").await, "Hello".to_string());
+    }
+}
+$ cargo test
+            </code></pre>
+
+            <h2 id="unit">Unit Tests</h2>
+            <dl>
+                These tests are placed in same src file where source code is placed.<br>
+                The convention is to create a <b>module named tests</b> in each file to contain the test functions and to annotate the module with <b>cfg(test)</b>.
+                <b>#[cfg(test)]</b> annotation on the tests module only runs with cargo test command not with cargo build, saving Compile time.<br>
+                Also tests module annotated with #[cfg(test)] is not included in compiled artifact hence space not increased.
+            </dl>
+
+            <h2 id="integration">Integration Tests</h2>
+            <dl>
+                These are placed in DIFFERENT DIRECTORY. These don’t need the #[cfg(test)] annotation.<br>
+                These tests use our library in the same way any other code would, which means they can only call functions that are part of your library’s public API. ie pub fn fun()..<br>
+                We need to create a <b>tests directory</b> at the top level of our project directory, next to src. We can then make as many test files as we want to in this directory, and Cargo will compile each of the files as an individual crate.<br>
+                If our project is a binary crate that only contains a src/main.rs file and doesn’t have a src/lib.rs file, <b>WE CANNOT</b> create integration tests in the tests directory. Why?<br>
+                &ensp; Only library crates expose functions that other crates can use; binary crates are meant to be run on their own.
+            </dl>
+            <pre>
+project
+|- src
+|- tests      //Cargo will look for integration test files in this directory
+    |- test1
+    |- test2
+            </pre>
+        </article>
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
