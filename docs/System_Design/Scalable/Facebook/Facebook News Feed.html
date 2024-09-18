@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Facebook News Feed</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#req">Requirements</a>
+    <a href="#boe">Back of Envelope</a>
+    <a href="#api">API Design</a>
+    <a href="#db">DB Schema</a>
+    <ul>
+      <li><a href="#sql">SQL DB</a></li>
+      <li><a href="#kv">Key Value DB</a></li>
+      <li><a href="#obj">Object Store</a></li>
+    </ul>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="req">Requirements (CRUD)</h2>
+    <h4>Functional</h4>
+    <dl id="func-req">
+      1. User can Read the feed.<br>
+      2. User can Create the feed(images, text, videos)
+    </dl>
+    <h4>Non Functional</h4>
+    <dl>
+      1. Update the feed<br>
+      2. Delete the item from feed<br>
+      3. News feed keep on extending when it gets over
+    </dl>
+
+    <h2 id="boe">Back of Envelope</h2>
+    <pre>
+      World Population      | InternetUsers(60%)    | FB Users(80-85% of Internet users) | Active FB Users(20%)
+      ----------------------|-----------------------|------------------------------------|--------------------
+      7 Billion //Year 2020 | 7 x 0.6 = 4.2 Billion |    4.2 x 0.8 = 3.5 Billion         | 3.5 x .2 = 700 Million
+    </pre>
+    <h4 id="traffic">Traffic Estimates (Incoming Requests/sec)</h4>
+    <pre>
+      700 Million pulling their new feed 5 times a day. Total New feed requests = 700 x 5 = 3500 Million requests/day.
+      3500/24x60x60 = Around 39,000 Requests/sec.
+    </pre>
+    <h4 id="storage">Storage Estimates</h4>
+    <pre>
+      <b>Cache/CDN</b>
+      Suppose We want to keep 500 posts/user on CDN for quick fetch.
+      Total posts to be stored. 500 x 700 Million = 350 Billion.
+      Let's assume on average each posts is 1 KB in size. Total bytes = 350 TB
+      Assuming 1 server can cache is 100GB. Total servers needed = 350 TB / 100 GB = 3500 Machines needed in total
+    </pre>
+
+    <h2 id="api">API Design</h2>
+      <h4 id="#func-req">1. Create Record</h4>
+      <pre><code class="language-css">
+POST https://url/v1/post_feed
+header {
+    Authorization: {Bearer "API_KEY_TOKEN"},
+}
+body {
+    heading, description, picture_url, video_url
+}
+      </code></pre>
+
+      <h4 id="#func-req">2. Reading the Feed</h4>
+      <pre><code class="language-css">
+GET HTTP/2 https://url/v1/read_feed
+header {
+    Authorization: {Bearer "API_KEY_TOKEN"},
+}
+body {
+    to be filled
+}
+      </code></pre>
+
+      <h2 id="db">DB Schema</h2>
+      <h4 id="sql">SQL DB</h4>
+      <dl>For storing user information</dl>
+      <pre><code class="language-css">
+User Table
+| username | user_id(pk) | created_at | enabled |
+
+Comment Table 
+| comment_id (pk) | user_id (fk) | text-id(fk) | video-id(fk) | photo-id(fk) | created_at |
+        </code></pre>
+
+        <h4 id="kv">Key Value DB</h4>
+        <pre><code class="language-css">
+Text Table
+| key=text_id (pk) | value=text url |
+
+Photo Table
+| key=text_id (pk) | value=text url |
+      </code></pre>
+
+      <h4 id="obj">Object Store (storing Photos, Videos, Text)</h4>
+      <pre><code class="language-css">
+
+      </code></pre>
+
+  </article>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>
