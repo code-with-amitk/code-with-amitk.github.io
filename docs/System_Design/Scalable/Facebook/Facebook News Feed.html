@@ -30,7 +30,11 @@
     <ul>
       <li><a href="#sql">SQL DB</a></li>
       <ul>
-        <li><a href="#problemsinsqldb">Problems in using SQL DB</a></li>
+        <li><a href="#problemsind1">Problems in Above design</a></li>
+        <ul>
+          <li><a href="#redis">Sol1=Redis</a></li>
+          <li><a href="#neoj4">Sol2=neoj4</a></li>
+        </ul>
       </ul>
     </ul>
   </aside>
@@ -112,12 +116,38 @@ Text Table                                likes Table                           
         t1              hello                   l1                (user2, user3, user4 ..)
       </code></pre>
 
-      <h5 id="problemsinsqldb">Problems in using SQL DB</h5>
+      <h5 id="problemsind1">Problems in Above design (likes table)</h5>
       <dl>1. Race Condition, when number of likes on comment grows in Millions</dl>
       <dd>We will keep appending userid's on in same file (ie same row). if new like comes in DB has to read entire line
         then add userid at end and update table.<br>
         This can cause race condition (if 100's of users try to like same comment at same time).
       </dd>
+
+      <h6 id="redis">Solution-1 (Key-Value DB: Redis)</h6>
+      <dl>
+        Seperate row for each like. Key-Value DBs can handle huge datasets with fast lookups<br>
+        Precomputing the number of likes.
+      </dl>
+      <pre><code class="language-css">
+likes Table
+SADD comment_id1 user1
+SADD comment_id1 user2
+SADD comment_id1 user3
+SADD comment_id2 user2
+SREM comment_id1 user2   # Unlike
+SCARD comment:id1:likes        # Get like count
+      </code></pre>
+
+      <h6 id="neoj4">Solution-2 (Graph DB(neoj4))</h6>
+      <dl>
+        In a graph database, you can model User and Comment as nodes and the LIKES relationship as an edge.<br>
+        Likes = Number of edges
+      </dl>
+      <pre><code class="language-css">
+        user-1    ----authored-->     comment-1
+                                        /\
+        user2 ----------liked------------|
+      </code></pre>
 
   </article>
   <script src="/scripts/prism.js"></script>
