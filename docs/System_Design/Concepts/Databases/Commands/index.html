@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Commands</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#ex1">JOIN Tables</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+      <h3 id="ex1">JOIN 2 tables</h3>
+      <dl>
+        1. Create 2 tables (Person, PersonFriend)<br>
+        2. Find friends of Bob from PersonFriend table.<br>
+        https://onecompiler.com/mysql/42szxs8p5
+      </dl>
+      <pre><code class="language-css">
+create table Person(ID int primary key, Person text);
+insert into Person values(1, 'alice');
+insert into Person values(2, 'Bob');
+insert into Person values(99, 'zach');
+select * from Person;
+
+create table PersonFriend(PersonID int, FriendID int);
+insert into PersonFriend values(1, 2);
+insert into PersonFriend values(2, 1);
+insert into PersonFriend values(2, 99);
+insert into PersonFriend values(99, 1);
+select * from PersonFriend;
+
+#1 Person table is aliased as p1. Select Person from Person table
+#2 Person table is aliased as p1.
+#3 INNER JOIN
+#   Person Table(ID) & PersonFriend.FriendID
+#4 INNER JOIN
+#   PersonTable=p2. 
+#5 Filter the records where Person=Bob
+
+SELECT p1.Person                    #1
+FROM Person p1                      #2
+JOIN PersonFriend ON PersonFriend.FriendID = p1.ID   #3
+JOIN Person p2 ON PersonFriend.PersonID = p2.ID   #4
+WHERE p2.Person = 'Bob'             #6
+
+Output:
++----+--------+
+| ID | Person |
++----+--------+
+|  1 | alice  |
+|  2 | Bob    |
+| 99 | zach   |
++----+--------+
++----------+----------+
+| PersonID | FriendID |
++----------+----------+
+|        1 |        2 |
+|        2 |        1 |
+|        2 |       99 |
+|       99 |        1 |
++----------+----------+
++--------+
+| Person |
++--------+
+| alice  |
+| zach   |
++--------+
+      </code></pre>
+
+    </article>
+  </main>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>

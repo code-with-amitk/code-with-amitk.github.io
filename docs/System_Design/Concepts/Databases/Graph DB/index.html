@@ -68,10 +68,39 @@
             rather than the size of the overall graph
           </td>
         </tr>
+        <tr>
+          <td>Friends of Friend Query</td>
+          <td>
+            <a href="/System_Design/Concepts/Databases/Commands/index.html#ex1">Query to get friend of Bob on SQL database</a> is complex<br>
+            When we want Friends of friends of Bob(it will get more complicated), bcoz it will involve<br>
+            &ensp;<b>Recursive JOINS</b><br>
+            &ensp;<b>Traversing whole DB</b>
+            <pre><code class="language-css">
+Person Table:
++----+--------+
+| ID | Person |
++----+--------+
+|  1 | alice  |
+|  2 | Bob    |
+| 99 | zach   |
++----+--------+
+PersonFriend Table:
++----------+----------+
+| PersonID | FriendID |
++----------+----------+
+|        1 |        2 |
+|        2 |        1 |
+|        2 |       99 |
+|       99 |        1 |
++----------+----------+
+            </code></pre>
+          </td>
+          <td></td>
+        </tr>
       </table>
 
     </article>
   </main>
-
+  <script src="/scripts/prism.js"></script>
 </body>
 </html>
