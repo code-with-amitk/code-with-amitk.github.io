@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Graph Databases</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#what">What is Graph DB?</a>
+    <a href="#represent">Represent Entities & Relations</a>
+    <a href="#adv">Advatanges over SQL</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+      <h2 id="what">What is Graph DB</h2>
+      <dl> In graph DB entities(are nodeds) and edges are relationships how these nodes are connected</dl>
+
+      <h2 id="represent">Represent Entities & Relations</h2>
+      <table>
+        <tr>
+          <th>Small Social Graph(Eg: Twitter)</th>
+          <th>Ruth has published Messages</th>
+        </tr>
+        <tr>
+          <td><img src="/images/Graphs/Twitter_Graph.PNG" alt="trie" style="width:200px;height:100px;"></td>
+          <td>
+            - Ruth has published a string of messages. Her most recent message can be found marked CURRENT.<br>
+            - The PREVIOUS relationships then create Ruth’s timeline.<br>
+            <img src="/images/Graphs/Publishing messages.PNG" alt="trie" style="width:200px;height:200px;">
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="adv">Advatanges over SQL</h2>
+      <h4>Connected Data</h4>
+      <table>
+        <tr>
+          <th></th>
+          <th>SQL</th>
+          <th>Graph DB</th>
+        </tr>
+        <tr>
+          <td>Which DB to choose for Connected Dataset</td>
+          <td>join-intensive query performance deteriorates as the dataset gets bigger<br>
+            Since need to traverse whole graph
+          </td>
+          <td>performance remain relatively constant, even as the dataset grows, because queries are
+            localized to a portion of the graph<br>
+            Execution time for each query is proportional only to the size of the part of the graph traversed
+            rather than the size of the overall graph
+          </td>
+        </tr>
+        <tr>
+          <td>Friends of Friend Query / Friends of Friends of Friend Query</td>
+          <td>
+            <a href="/System_Design/Concepts/Databases/Commands/index.html#ex1">Query to get friend of Bob on SQL database</a> is complex<br>
+            When we want Friends of friends of Bob(it will get more complicated), bcoz it will involve<br>
+            &ensp;<b>Recursive JOINS</b><br>
+            &ensp;<b>Traversing whole DB</b>
+            <pre><code class="language-css">
+Person Table:
++----+--------+
+| ID | Person |
++----+--------+
+|  1 | alice  |
+|  2 | Bob    |
+| 99 | zach   |
++----+--------+
+PersonFriend Table:
++----------+----------+
+| PersonID | FriendID |
++----------+----------+
+|        1 |        2 |
+|        2 |        1 |
+|        2 |       99 |
+|       99 |        1 |
++----------+----------+
+            </code></pre>
+          </td>
+          <td>
+            We can add any number of relationships in graph database.
+            <img src="/images/Graphs/Friends_of_Friends.PNG" alt="trie" style="width:300px;height:300px;">
+            <br><br>
+            <b>Execution time comparison</b>
+            <table>
+              <tr>
+                <th>Depth</th>
+                <th>RDBMS Execution time(s)</th>
+                <th>Neo4j execution time(s)</th>
+                <th>Records returned</th>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>0.016</td>
+                <td>0.01</td>
+                <td>~2500</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>30.267</td>
+                <td>0.168</td>
+                <td>~110,000</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>1543.505</td>
+                <td>1.359</td>
+                <td>~600,000</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Unfinished </td>
+                <td>2.132</td>
+                <td>~800,000</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+    </article>
+  </main>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>
