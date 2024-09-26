@@ -9,10 +9,10 @@
     <body>
         <nav class="navbar">
             <ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="#">Our team</a></li>
             <li><a href="#">Projects</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/contact.html">Contact</a></li>
             <li>
                 <form>
                     <input type="search" name="q" placeholder="Search site" />
@@ -23,17 +23,20 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="features">Features of Rust</a><br>
+            
         </aside>
 
         <article style="margin-left:200px;">
+            <h3>Features of Rust</h3>
             <dl>
                 <b>1. High Performance:</b> Designed to be efficient and fast with low level control over resources.<br>
                 <b>2. Concurrency:</b> Better wrt C++<br>
                 <b>3. Memory safety:</b> Uses <a href="/Languages/Programming/Rust/Why_rust_over_cpp.html">Ownership and borrowing</a> without runtime overhead.<br>
                 <b>4. Zero cost Abstraction:</b> Code optimization is done by complier, hence 0 cost.<br>
                 <b>5. Macros:</b> macros generates optimized code.<br>
-                <b>6. Error Reporting:</b> Improved wrt C++. Provides more detialed information with colors.
+                <b>6. Error Reporting:</b> Improved wrt C++. Provides more detialed information with colors.<br>
+                <b><a href="./lifetime.html">7. Lifetime:</a></b> Describes relationships between data and its lifetime. 
+                Its a sort of label attached by compiler to check validity of variable.
             </dl>
         </article>
         <script src="/scripts/prism.js"></script>

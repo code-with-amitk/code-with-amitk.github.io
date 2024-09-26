@@ -9,10 +9,10 @@
     <body>
         <nav class="navbar">
             <ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="#">Our team</a></li>
             <li><a href="#">Projects</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/contact.html">Contact</a></li>
             <li>
                 <form>
                     <input type="search" name="q" placeholder="Search site" />
@@ -81,8 +81,7 @@
 
             <h3 id="ownership">1. Ownership <font color="red">(avoid crash in Rust)</font></h3>
             <dt><b>Ownership?</b><br>
-                - Defines how memory is managed by Rust program.<br>
-                - With ownership, memory can be managed safely without need of garbage collector.<br>
+                - Defines how memory is managed safely(without need of garbage collector) by Rust program.<br>
                 - Every Variable/data have single owner at a time. When the owner goes out of scope, Rust automatically deallocates the memory.<br>
                 - Ownership rules are checked at compile time. Ownership applies to memory allocated on heap(dynamically),
                  Eg: String(), vector ie those are moved. For variable allocated on Stack (Eg: int, float) variable is copied.
@@ -150,7 +149,8 @@ fn main() {
 
             <h3 id="borrowing">2. Borrowing = Reference (&var)</h3>
             <dt><b>Borrowing?</b> <br>
-                - Borrowing means passing the reference of a variable.<br>
+                - Getting temporary access of resource(eg: variable) without getting permanent ownership.<br>
+                - Borrowing ensures no new copies are created, achieved by passing the reference of a variable.<br>
                 - Borrowing in Rust is Safer wrt C++, which avoids <font color="red">Crashes/Dangling References</font>.
             </dt>
 

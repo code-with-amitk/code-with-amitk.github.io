@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Modules Rust</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Our team</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>    
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#what">What</a>
+            <a href="#create">Creating a Module</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h3 id="what">What</h3>
+            <dl>
+                Module is a block to manage the code in Rust. Module can have(functions, constants, enums, triats, structs etc)<br>
+                Similar to <b>namespaces, modules in c++</b> & <b>modules in python</b>. <br>
+                We can create module using mod module_name {}
+            </dl>
+
+            <h3 id="create">Creating a module & accessing its function</h3>
+            <dl>
+                1. Complete Hierarchy has to be made expilicitly public ie module_b & fun(). By default everything is private and cannot be accessed.<br>
+                2. functions can be accessed either using Absolute or relative path.<br>
+                Absoulte path: starts from crate, 
+                Relative path: starts from scope in which module is called. //Preffered
+            </dl>
+            <pre><code class="language-css">
+crate
+└── module_a
+    |── module_b
+        ├── fun1
+        └── fun2
+
+mod module_a {
+    pub mod module_b {              //1. module_b made public
+        pub fn fun1() {              //1. fun() made public
+            print!("fun");
+        }
+        fn fun2(){}
+    }
+}
+
+fn main(){
+    crate::module_a::module_b::fun1();   //2. Absolute path
+    module_a::module_b::fun1();          //2. Relative path
+    
+    module_a::module_b::fun2();         //Error, cannot access private
+}
+            </code></pre>
+        </article>
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
