@@ -25,6 +25,14 @@
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#what">What</a>
             <a href="#create">Creating a Module</a>
+            <a href="#super">super keyword</a>
+            <a href="#struct">struct inside module</a>
+            <a href="#enum">enum inside module</a>
+            <a href="#use">use keyword</a>
+            <ul>
+                <li><a href="#useas">use as</a></li>
+                <li><a href="#pubuse">pub use / Reexporting</a></li>
+            </ul>
         </aside>
 
         <article style="margin-left:200px;">
@@ -37,10 +45,10 @@
 
             <h3 id="create">Creating a module & accessing its function</h3>
             <dl>
-                1. Complete Hierarchy has to be made expilicitly public ie module_b & fun(). By default everything is private and cannot be accessed.<br>
+                1. Complete Hierarchy has to be made explicitly public ie module_b & fun(). By default everything is private and cannot be accessed.<br>
                 2. functions can be accessed either using Absolute or relative path.<br>
-                Absoulte path: starts from crate, 
-                Relative path: starts from scope in which module is called. //Preffered
+                Absolute path: starts from crate, 
+                Relative path: starts from scope in which module is called. //Preferred
             </dl>
             <pre><code class="language-css">
 crate
@@ -63,6 +71,139 @@ fn main(){
     module_a::module_b::fun1();          //2. Relative path
     
     module_a::module_b::fun2();         //Error, cannot access private
+}
+            </code></pre>
+
+            <h3 id="super">super keyword</h3>
+            <dl>
+                With keyword super, We can construct relative paths that begin in the parent module. This is like starting a filesystem path with the .. syntax
+            </dl>
+            <pre><code class="language-css">
+mod module_a {
+    fn fun_a(){}
+    pub mod module_b {
+        fn fun_b(){}
+        pub mod module_c {
+            pub fn fun_c() {
+                print!("fun_c");
+            }
+            //super::fun_a();     //Will not compile. fun_a() is not in parent module ie module_b.
+            super::fun_b();       //fun_b() is in parent module ie module_b its ok!
+        }
+    }
+}
+
+fn main(){
+    crate::module_a::module_b::module_c::fun_c();   //Absolute path
+    //module_a::module_b::fun();          //Relative path
+}
+
+////////Similar to filesystem///////////
+crate
+    └── module_a
+        ├── fun_a
+        └── module_b      &lt;-------
+            ├── fun_b              |
+            └── module_c          super can reach parent (../)
+                └── fun_c          |
+                └── super ---------
+            </code></pre>
+
+            <h3 id="struct">struct inside module</h3>
+            <pre>
+                1. To access structure has to declared public, but still all feilds of struct remains private.
+                2. To access any field, that feild has to be made public.
+                3. We need to define a implementation fo access fields in module_a::st since there is a private member.
+                4. Then we can access members using dotted notation.
+            </pre>
+            <pre><code class="language-css">
+mod module_a {
+    pub struct st{           //1
+        pub a:u32,          //2
+        b:u16,              //This remains pvt
+    }
+
+    impl test {                         //3
+        pub fn fun(x: u32) -> st {
+            st {
+                a: x,
+                b: 10,
+            }
+        }//fun
+    }//test
+}//module_a
+
+pub fn fun1 {
+    let mut var = crate::test::fun(30);         //4
+    println!("{}", var.st.a);               //30
+    println!("{}", var.st.b);               //10
+}
+            </code></pre>
+
+            <h3 id="enum">enum inside module</h3>
+            <pre>
+                Unlike structure in module, if enum is public all its variants are also public. We need to explicitly make every enum variant as public as in struct.
+            </pre>
+            <pre><code class="language-css">
+mod module_a {
+    pub enum color {
+        red,          //all enum variants are public if enum is public
+        yellow,
+    }
+}
+
+pub fn fun() {
+    let var = module_a::color::red;
+}
+            </code></pre>
+
+            <h3 id="use">use keyword</h3>
+            <dl>Similar to type alias/using keyword in c++, use is used to bring Paths into Scope.</dl>
+            <pre><code class="language-css">
+mod module_a {
+    pub mod module_b {
+        pub fn fun() {}
+    }
+}
+
+use crate::module_a::module_b;
+
+pub fn fun1() {
+    module_b::fun();                        //Now module_b becomes a valid Name(as defined in crate scope)
+}
+            </code></pre>
+
+            <h4 id="useas">use as</h4>
+            <dl>Defining shorter name for path.</dl>
+            <pre><code class="language-css">
+use std::fmt::Result as FmtResult;
+use std::io::Result as IoResult;
+
+fn function1() -> FmtResult {
+    // --snip--
+}
+
+fn function2() -> IoResult<()> {
+    // --snip--
+}
+            </code></pre>
+
+            <h4 id="pubuse"> pub use / Reexporting</h4>
+            <pre>
+                After bringing a name into scope with the use keyword, the name available in the new scope is private, To use it we combine pub and use.
+This technique is called re-exporting because we’re bringing an item into scope but also making that item available for others to bring into their scope.
+            </pre>
+            <pre><code class="language-css">
+mod module_a {
+    pub mod module_b {
+        pub fn fun() {}
+    }
+}
+
+pub use crate::module_a::module_b;
+
+pub fn fun2() {
+    module_b::fun();
 }
             </code></pre>
         </article>
