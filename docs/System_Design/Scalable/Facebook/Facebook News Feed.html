@@ -114,6 +114,8 @@ Comments Table: Comment can have text,video,image,@,#,likes,shares
 Text Table                                likes Table                                               Media Table (Photo, text, video)
 | key=text_id (pk) | value=text url |     | key=like_id (pk) | value=file url storing all likes |   | key=text_id (pk) | value=text url |
         t1              hello                   l1                (user2, user3, user4 ..)
+
+>> Friends & Friends of Friends stored in Graph DB
       </code></pre>
 
       <h5 id="problemsind1">Problems in Above design (likes table)</h5>
@@ -138,7 +140,7 @@ SREM comment_id1 user2   # Unlike
 SCARD comment:id1:likes        # Get like count
       </code></pre>
 
-      <h6 id="neoj4">Solution-2 (Graph DB(neoj4))</h6>
+      <h6 id="neoj4"><a href="/System_Design/Concepts/Databases/Graph%20DB/">Solution-2 (Graph DB(neoj4))</a></h6>
       <dl>
         In a graph database, you can model User and Comment as nodes and the LIKES relationship as an edge.<br>
         Likes = Number of edges

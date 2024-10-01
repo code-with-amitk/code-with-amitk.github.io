@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>String</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Our team</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>    
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#literal">String literal</a>
+            <a href="#vs">String Slice vs String</a>
+            <a href="#operations">Opeartions on String</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="literal">String Literal</h2>
+            <dl>
+                String Both have different ownership and mutability characteristics.
+                String literal: string local variable, stored on stack
+            </dl>
+            <pre><code class="language-css">
+let a:string = "test";
+            </code></pre>
+
+            <h2 id="vs">String Slice vs String</h2>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>&str(String Slice or Reference)</th>
+                    <th>String</th>
+                </tr>
+                <tr>
+                    <td>What</td>
+                    <td>
+                        Part of string string[starting_index, ending_index). It cannot grow.<br>
+                        Allocated on Data Segment(String is nothing but bytes)
+                    </td>
+                    <td>Can grow. Allocated on Heap</td>
+                </tr>
+                <tr>
+                    <td>How created</td>
+                    <td>
+                        Using String Literal let s = "test"; OR<br>
+                        Convert bytes to str
+                    </td>
+                    <td>
+                        let mut s = String::from("he"); OR <br>
+                        s.push_str(", world!");
+                    </td>
+                </tr>
+            </table>
+
+            <h2 id="operations">Operations on String</h2>
+            <pre><code class="language-css">
+/////////////  Concatenate /////////////////////////
+// push_str()
+let s2 = String::from("Hello");
+s2.push_str(" World");                       //push_str() appends string.
+s2.push(' k');                               //push() appends 1 character
+
+// +
+let s1 = String::from("Test");
+let s2 = String::from("Foo");
+let s3 = s1 + &s2;             //Why reference. Operator + uses add method `fn add(self, s: &str) -> String {..}`
+//println!("{}",s1);           //Since s1 is moved not copied
+
+// format()
+let s1 = String::from("Test");
+let s2 = String::from("Foo");
+let s3 = format!("{} {}",s1,s2);            //Test Foo  
+
+///////////// Reverse the string ////////////////
+strA = strA.chars().rev().collect::&lt;String>();      
+
+///////////// Tokenize ////////////////////
+let a = "40:20".to_string();
+let vec:Vec &lt;&str> = a.split(':').collect();
+
+//////////// Conversion //////////////////
+let a = my_string.parse::&lt;i32>().unwrap();      //string to int
+let mut strA = a.to_string();                       //int to string
+
+/////////// Print Characters ////////////
+let hello = "Здравствуйте";
+for a in hello.chars() {
+    println!("{}",a)
+}
+            </code></pre>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
