@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Trait Rust</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Our team</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>    
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#what">What</a>
+            <a href="#dec">Declaration & Definition</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="triat">What is Triat in Rust</h2>
+            <dl>
+                Interface/class in Rust(declared with keyword trait) having Virtual Functions(not pure Virtual) declared or defined 
+                inside it. These functions are implemented(overridden) on type.
+            </dl>
+
+            <h2 id="dec">Declaration & Definition</h2>
+            <h4 id="declaration">Declaration</h4>
+            <dl>Trait declared having functions</dl>
+            <pre><code class="language-css">
+pub struct Employee{                          //Declared "struct Employee"
+    pub name:String,
+    pub emp_id:u32,
+}
+
+pub struct Contractor{                        //Declared "struct Contractor".
+    pub contractor_name:String,
+}
+
+pub trait CompanyDB {                         //Trait Declaration
+    fn add_to_db(&self);
+}
+            </code></pre>
+
+            <h4 id="definition">Definition</h4>
+            <dl>
+                Trait is implemented for particular types. Eg: add_to_db() function is overridden for Employee, Contractor Type.
+            </dl>
+            <pre><code class="language-css">
+// Trait Definition. Implemented trait/Overridden for Type="Employee struct"                
+impl CompanyDB for Employee{                  
+    fn add_to_db(&self) {
+        println!("Added {} {}", self.name, self.emp_id);
+    }
+}
+            </code></pre>
+
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

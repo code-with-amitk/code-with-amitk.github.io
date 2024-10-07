@@ -223,7 +223,7 @@ aside {
 }
 
 .zoomable-image {
-  width: 100%; /* Adjusts the image to fit the container */
+  width: 30%; /* Adjusts the image to fit the container */
   height: auto;
   transition: transform 0.3s ease;
   cursor: pointer;

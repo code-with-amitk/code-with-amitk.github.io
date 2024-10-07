@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cookies for Domain based Authentication</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#cookieauth">Per browser Cookie based Auth</a>
+  </aside>
+
+  <main style="margin-left:200px;">
+    <h2 id="cookieauth">Cookie based Authentication for seperate Browser login</h2>
+    <dl><strong>Cookie Authentication</strong></dl>
+    <dt>Cookie based authentication is used for browser based login. ie when we want to authenticate to facebook.com(from Chrome)
+        a seperate browser based domain cookie is used and for facebook.com(from Edge) seperate domain cookie is used.
+    </dt>
+    <br>
+    <dl><strong><a href="">JWT based Authentication</a></strong></dl>
+    <dt>When user want to login to service(eg: user want to login to facebook app), then JWT token is used
+    </dt>
+
+    <h4 id="authenticate">Cookie Auth to Browser(Authenticate User to Facebook)</h4>
+    <dl>
+      <b>Dom cookie(Browser specific cookie)(short lived: 8 hours)?</b><br>
+      &ensp; <u>Purpose:</u> User access page(facebook.com) using 1 browser(Eg: Chrome). 
+      Once user is authenticated, this cookie is added into app/browser, app/browser will present this while accessing the domain.<br>
+      &ensp; User has to take new domain cookie when accessing same page using other browser(Eg: Edge, firefox).<br>
+      <b>Glo Cookie(long lived 3 years)?</b><br> 
+      &ensp; <u>Purpose:</u> This is also set in browser, After glo cookie expiry user need to relogin again(on all domains browser/apps).
+    </dl>
+    <div class="image-container">
+    <img 
+    src="//www.plantuml.com/plantuml/png/lLL1K_Cs4BthLsppNM0c7vHZSoYaCQJC0CqqT7hnHP5aMuEiTIMP0B--AojEBT9XUYedl6_txRxdpVh61-v2tnhsG-TutN882ZyWk5wnZX0jTCTjWDcgSTYgqlxYSE-Lcm7t87PPJl6qZL5fVHPU5Kz3ihICxV0D90zSA1kKWsztmzzFFqBUx06vf5RSS2iElSmkJxdJJksvCQNTE7nx7tAgVPwpx4C3srSnW9mUSlX--NX4DMzpS8D6YqJR3Vz-ekwwqcwLUpsCnprJLWBf-zIZs2H-sJ5cCIX0AedE_K4k0dQAtAh8ZntYouN05hHboMlO9Qi7ubZAcDZ1zv-ZmGjYtW1MfPtMpXX1b47q2nZmQFvO9gIbib-VdpUmldqkRHDxTBnMCqRGM3QR4cP9sVJ7E3IaRhDSGQMDOW51QgT4WE1uLMa10PbLt2aVe1XV_4HInWhV7dJTX8ssB-msva5F-kSTz_x414EpZbgO6KBLVX8wyb8O3iHhfvHb1IeFJlqL9sUI71UaLgjhzeGNS4Lp1atQ-jnv8ea6ZKr_LmUPPt6jmB-AyzBspYoW2Q5RN5x6y4KWrT76oqYcvM7o27sPDpKbujdqznvgWuUPeIDZoT4qUrntUj22XvFv8qziJdk-WBKAa5eb_bQ51YKZx6G-V0dyE__etOGZkd0A9t6qvuj_tXeOhBLb51ph-6H6oKOajTmk7nzWwQauQBIbJIFc9QMj7VRTrJo1SuajrpQJbtZYbPaQIKZcuygfQDDwTJGfqqz0fdUh0eL0s_5N-MzxMDgplGuD9PxdApcYVuxeVzjEA5RNG6_sEEB_kuPVRs6n6hSFAdIaAeuwsbfCR9tQw5M8sAbroRWYD-u4I_BJFPxW4Kh1iNHO4iyodpC1TB_DUnG00csbQzfWcOYrycp7FJsY7Nb6BJdXz5mjZS4ze8D2sVUJky7zv38r4G4k77eAtr7DRw4XmiENrP_TobhD8NxWAdmx1y_ZgNKebFUWut9qqMF9RgXDtvg_0G00"
+    alt="authenticate to fb" class="zoomable-image" id="zoomableImage2" style="width:300px;height:500px;">
+    </div>
+    <pre class="puml" visibility: hidden>
+        @startuml
+        !pragma teoz true
+        participant "Chrome\nBrowser" as cb
+        participant DNS as dns
+        participant CDN as cdn
+        
+        box datacenter #FFFFFF90 
+        participant "Load\nBalancer" as lb
+        participant "Firewall\nProxy" as fw
+        participant "Auth Svc" as auth
+        participant "IAM Svc" as iam
+        participant "Policy" as policy
+        participant "App\nServer" as as
+        end box
+        participant "IDP" as idp
+        
+        note over cb
+        User opens
+        facebook.com in
+        Chrome browser
+        end note
+        
+        cb -> dns: "IP of\nfacebook.com"
+        dns -> cb: IP of CDN
+        
+        cb -> cdn: "HTTP GET\nhome page"
+        cdn -> cb: "facebook.com\nhome page"
+        note over cb
+        home page has PAC file
+        to direct traffic to
+        nearest Datacenter
+        end note
+        
+        note over cb #LightPink
+        Enter user,pass
+        end note
+        
+        cb -> lb: HTTP GET
+        lb -> fw: HTTP GET
+        note over fw  #LightGreen
+        Does req has
+        dom cookie?
+        No. 1st time user
+        end note
+        
+        fw -> cb: HTTP Redirect (auth svc)\nurl: http://auth.test.com/userid
+        cb -> auth: http://auth.test.com/userid
+        
+        note over auth #LightGreen
+        Is glo cookie present?
+        No. Authenticate user
+        end note
+        
+        auth -> iam: Get userid auth method
+        iam -> auth: http://okta-azure
+        
+        auth -> cb: http://okta-azure
+        cb -> idp: user,pass login
+        idp -> cb: authenticated
+        
+        idp -> auth: SAML Assertion\nuserid authenticated\ngroup1,userid,domain
+        auth -> iam: SAML data
+        
+        note over iam #LightGreen
+        Create GC
+        end note
+        iam -> auth: GC
+        auth -> cb: Set GC in browser
+        
+        cb -> lb: HTTP GET\n(with GC)
+        lb -> fw: HTTP GET\n(With GC)
+        note over fw  #LightGreen
+        Does req has DC? No.
+        end note
+        fw -> cb: HTTP Redirect (auth svc)\nurl: http://auth.test.com/userid
+        cb -> auth: http://auth.test.com/userid
+        note over auth #LightGreen
+        Is DC present for GC? No
+        Create DC
+        end note
+        auth -> cb: set DC
+        cb -> lb: HTTP GET(with DC)
+        lb -> fw: HTTP GET(with DC)
+        fw -> policy: HTTP GET(DC)
+        policy -> fw: groups
+        
+        note over fw #LightGreen
+        Apply pre configured policies
+        based on groups
+        end note
+        
+        note over fw #LightPink
+        Allow or Deny
+        end note
+        
+        fw -> as: HTTP GET
+        hnote across: For Other Browsers(Edge, Firefox) same process is repeated
+        @enduml
+    </pre>
+
+  </main>
+  <script src="/scripts/common.js"></script>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>

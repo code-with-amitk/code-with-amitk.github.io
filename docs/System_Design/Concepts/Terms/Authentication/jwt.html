@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Authentication to RESTFul APIs</title>
+    <title>Terms</title>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="/css/prism.css"/>
   </head>
@@ -23,13 +23,46 @@
   </nav>
 
   <aside class="sidebar">
+    <a href="#jwt">Json Web Token</a>
     <a href="#authenticatetorestful">Authenticate to RESTFul APIs</a>
   </aside>
 
   <main style="margin-left:200px;">
-    <h3 id="authenticatetorestful">Authenticate to RESTFul APIs</h3>
-    <dl><strong>
-        <a href="/System_Design/Concepts/Terms/index.html#jwt">JWT(Json Web Token)</a></strong></dl>
+    <h2 id="jwt">Json Web Token</h2>
+    <dl><strong>Usage?</strong></dl>
+    <dt>For authentication on the web, ie authentication to RESTFul APIs
+        They are used to securely transmit information between parties as a JSON object.<br>
+        JWTs consist of three parts: [header + payload + signature].
+        These parts are concatenated together with dots to form the token
+    </dt>
+
+    <br>
+    <dl><strong>How JWTs are used for authentication</strong></dl>
+    <pre class="mermaid">
+        sequenceDiagram
+            rect rgb(221, 240, 221)
+            participant ub as User-Browser
+            participant app as Application<br>Storing user,pass
+            participant ra as RESTFul Application
+
+            note over ub: open https://test.com
+            app -> ub: TLS handshake
+            note over ub: session key
+            note over app: session key
+            ub ->> app: username, pass(encrypted using session key)
+            note over app: Verifies user,Pass
+            note over app: Create JWT=Json Object<br> Sends
+            app ->> ub: JWT=(header + payload(username) + signature(Digital signature of payload))
+            note over ub: Stores JWT in cookie or cache
+            ub ->> ra: CRUD(header(bearer token=JWT) + Body)
+            ra ->> app: verify JWT
+            app ->> ra: Valid
+        end
+
+    </pre>
+
+    <h2 id="authenticatetorestful">Authenticate to RESTFul APIs</h2>
+    <dl><strong><a href="#jwt">JWT(Json Web Token)</a></strong></dl>
     <pre class="mermaid">
         sequenceDiagram
         rect rgb(221, 240, 221)
@@ -56,12 +89,11 @@
             note over u: JWT would be used by <br>to communicate with RESTful APIs
         end
     </pre>
-  </main>
 
+  </main>
 
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
   </script>	
-
 </body>
 </html>
