@@ -41,6 +41,11 @@
     <ul>
       <li><a href="#auth">Authenticate User to Facebook</a></li>
       <li><a href="#post">POST Message</a></li>
+      <li><a href="#get">GET Newsfeed</a></li>
+      <ul>
+        <li><a href="#push">Push Model</a></li>
+        <li><a href="#pull">Pull Model</a></li>
+      </ul>
     </ul>
   </aside>
 
@@ -159,8 +164,11 @@ SCARD comment:id1:likes        # Get like count
       <h2 id="hld">HLD</h2>
       <h4 id="auth"><a href="/System_Design/Concepts/Terms/Authentication/jwt.html">JWT based authentication to facebook.com</a></h2>
       <h4 id="post">POST Message</h4>
+      <dl>
+        The system limits the number of posts a user can make within a certain period, vital to prevent spam and abusive content
+      </dl>
       <img
-      src="//www.plantuml.com/plantuml/png/RO_1JiGW48RlynIJFQylq8FPLgDxsCIDhV5eXZ8H8eL9eHiVN-1WGx8dXk_xVoQSOg8rROi3oQUThP1F-3Bq8aWHIGHK-CN-Ssm2bq1wA06d6fvh8wytNcivDkw9PiE5psLerEjAOfw78hK2zXhpKW3ZGs8CzJcH3ZzYcRPasESg9TP7D7JZohvI-67VT2BqUzW6VuHtol9Y5vki_wwBIXo0HF3X4Ptgy3nDLxo-ZHCUpknSE81JnL6yvoWMLt_K_SDwBLoh7S8fhziMzmS0"
+      src="//www.plantuml.com/plantuml/png/LP51Qm8n48Nl-HN1SxjYsvFGebRQFGXAjPJ2WamsOpSO9o4PnVRNDmcqkgUTUM--USDc4Xa27mzM-FGrhV50B5zcK-ybH0dU2-NESlgnxWqi7EXP7h2gfoTiZU64eS2nvpr3ss7MsrpqhDS0lfkNXLe992rJg10TEKRfohfqZtYFkJfoXvHGODIYXXDAXH0mRDdjaGgTkJuUnVJ26KStuWsIkJ07muQ-hgYSTFiahHhBUhDPoTLolP4xQ54vjwzQTnYUHiCTecweggeQGME8gMee9pWsFoNWSNHt_z1GwuYHUClV7Y-THMgeyBFb_BF0Z6SU3sgqrWs4LVa4YDSd_7aGirV-uVXVB6tMjRg84oITNlON"
       alt="post comment" style="width:400px;height:300px;">
       <code class="puml" visibility: hidden>
         @startuml
@@ -172,20 +180,66 @@ SCARD comment:id1:likes        # Get like count
         participant GraphDB as db
         end box
         
-        hnote over app: User authenticated, have auth_token
+        hnote over app 
+        User authenticated
+        Have bearer_token
+        end note
+        
         hnote over as
         Authentication,
         Rate Limiting
         end note
         
-        app -> lb: HTTP POST "Hello"
+        app -> lb: HTTP POST facebook.com/v1/feed\n...Headers...\nAuthotization=1234\ncontent_type\ncontent_len\n\n...BODY...\ntext:"Hello"
         lb -> as: HTTP POST "Hello"
         as -> cache: "Hello"
         cache -> db: "Hello"
-        
         @enduml
       </code>
 
+      <h4 id="get">GET Newsfeed</h4>
+      <table>
+        <tr>
+          <th></th>
+          <th id="push">Push Model</th>
+          <th id="pull">Pull Model</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>Whenever someone posts a item(text, video, audio), Generate newsfeed for all friends/followers 
+            and send to friend/follower. Client side browser caches it and delivers when client comes online
+          </td>
+          <td>
+            Only Generate feed whenever request to retrieve comes from client
+          </td>
+        </tr>
+        <tr>
+          <td>Advantage, Disadvatange</td>
+          <td>
+            <b>Adv:</b> Newfeed is calculated in advance, which leads to very less delay on client to read news feed<br>
+            <b>Disadv:</b> For inactive users/friends also newfeed is calculated. More resources are used upfront
+          </td>
+          <td>
+            <b>Adv:</b> Newfeed is calculated for active users only, which leads to low resource usage<br>
+            <b>Disadv:</b> Client can get significant latency in receiving newsfeed as its calculated when client asks
+          </td>
+        </tr>
+        <tr>
+          <td>Usecase</td>
+          <td>
+            we use a push model for the majority of users
+          </td>
+          <td>
+            Celebrity Case: Whenever a celebrity posts a message. Feed for its followers is calculated and delivered.
+          </td>
+        </tr>
+      </table>
+
+      <h5>What we will do?</h5>
+      <dl>
+        We will use both of approaches based on the situation. See usecase in above table
+      </dl>
+  
   </article>
   <script src="/scripts/prism.js"></script>
   <script src="/scripts/common.js"></script>
