@@ -25,6 +25,10 @@
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#what">What</a>
             <a href="#dec">Declaration & Definition</a>
+            <ul>
+                <li><a href="#user">User Defined Traits</a></li>
+                <li><a href="#inbuilt">Inbuilt Defined Traits</a></li>
+            </ul>
         </aside>
 
         <article style="margin-left:200px;">
@@ -35,35 +39,49 @@
             </dl>
 
             <h2 id="dec">Declaration & Definition</h2>
-            <h4 id="declaration">Declaration</h4>
-            <dl>Trait declared having functions</dl>
-            <pre><code class="language-css">
-pub struct Employee{                          //Declared "struct Employee"
-    pub name:String,
-    pub emp_id:u32,
-}
-
-pub struct Contractor{                        //Declared "struct Contractor".
-    pub contractor_name:String,
-}
-
-pub trait CompanyDB {                         //Trait Declaration
-    fn add_to_db(&self);
-}
-            </code></pre>
-
-            <h4 id="definition">Definition</h4>
             <dl>
                 Trait is implemented for particular types. Eg: add_to_db() function is overridden for Employee, Contractor Type.
             </dl>
-            <pre><code class="language-css">
-// Trait Definition. Implemented trait/Overridden for Type="Employee struct"                
-impl CompanyDB for Employee{                  
-    fn add_to_db(&self) {
-        println!("Added {} {}", self.name, self.emp_id);
+            <h3 id="user">User Defined Triats</h3>
+            <table>
+                <tr>
+                    <td>
+                        <b>Trait Declaration</b>
+                        <pre><code class="language-css">
+pub trait T {
+    fn add(&self);
+}
+                        </code></pre>
+                    </td>
+                    <td>
+                        <b>Type on which trait is defined</b>
+                        <pre><code class="language-css">
+pub struct S {
+    pub x: i32,
+    pub y: i32,
+}
+                        </code></pre>
+                    </td>
+                    <td>
+                        <b>Trait Definition</b>
+                        <pre><code class="language-css">
+//impl triat for type
+impl T for S {
+    fn add(&self) {
+        println!("Sum: {}", self.x + self.y);
     }
 }
-            </code></pre>
+fn main() {
+    let a = S {
+        x: 1,
+        y: 2,
+    };
+    a.add();
+}
+                        </code></pre>
+                    </td>
+                </tr>
+            </table>
 
         </article>
 

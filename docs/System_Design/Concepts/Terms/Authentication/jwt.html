@@ -28,7 +28,7 @@
   </aside>
 
   <main style="margin-left:200px;">
-    <h2 id="jwt">Json Web Token</h2>
+    <h2 id="jwt">Json Web Token / oauth_token / auth_token</h2>
     <dl><strong>Usage?</strong></dl>
     <dt>For authentication on the web, ie authentication to RESTFul APIs
         They are used to securely transmit information between parties as a JSON object.<br>
@@ -40,23 +40,37 @@
     <dl><strong>How JWTs are used for authentication</strong></dl>
     <pre class="mermaid">
         sequenceDiagram
-            rect rgb(221, 240, 221)
+            rect rgb(236, 232, 242)
+            participant dns as DNS
+            participant cdn as CDN
             participant ub as User-Browser
-            participant app as Application<br>Storing user,pass
-            participant ra as RESTFul Application
+            box AWS
+            participant lb as LoadBalancer
+            participant as as Application Server<br>RESTFul Service
+            participant auth as Auth_Service
+            end
+            participant idp as IDP
 
-            note over ub: open https://test.com
-            app -> ub: TLS handshake
-            note over ub: session key
-            note over app: session key
-            ub ->> app: username, pass(encrypted using session key)
-            note over app: Verifies user,Pass
-            note over app: Create JWT=Json Object<br> Sends
-            app ->> ub: JWT=(header + payload(username) + signature(Digital signature of payload))
+            note over ub: HTTP GET test.com
+            ub ->> dns: IP of test.com
+            dns ->> ub: IP of CDN
+            ub ->> cdn: HTTP GET test.com
+            cdn ->> ub: Home Page
+            note over ub: User enters username,pass
+            ub ->> lb: HTTP GET test.com(user,pass)
+            lb ->> as: HTTP GET test.com(user,pass)
+            as ->> ub: HTTP Redirect http://auth_svc
+
+            ub ->> auth: http://auth_svc?user?pass
+            auth ->> idp: ?user?pass
+            idp ->> auth: SAML Assertion(Authenticated)
+            auth ->> ub: JWT Token(Json Object)
+
+            note over auth:JWT=(header + payload(username) <br>+ signature(Digital signature of payload))
             note over ub: Stores JWT in cookie or cache
-            ub ->> ra: CRUD(header(bearer token=JWT) + Body)
-            ra ->> app: verify JWT
-            app ->> ra: Valid
+            ub ->> as: CRUD(header(bearer token=JWT) + Body)
+
+            note over as: JWT expiry in 5 hours<br>Reissue JWT
         end
 
     </pre>

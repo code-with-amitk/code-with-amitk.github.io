@@ -40,6 +40,7 @@
     <a href="#hld">HLD</a>
     <ul>
       <li><a href="#auth">Authenticate User to Facebook</a></li>
+      <li><a href="#post">POST Message</a></li>
     </ul>
   </aside>
 
@@ -157,6 +158,33 @@ SCARD comment:id1:likes        # Get like count
 
       <h2 id="hld">HLD</h2>
       <h4 id="auth"><a href="/System_Design/Concepts/Terms/Authentication/jwt.html">JWT based authentication to facebook.com</a></h2>
+      <h4 id="post">POST Message</h4>
+      <img
+      src="//www.plantuml.com/plantuml/png/RO_1JiGW48RlynIJFQylq8FPLgDxsCIDhV5eXZ8H8eL9eHiVN-1WGx8dXk_xVoQSOg8rROi3oQUThP1F-3Bq8aWHIGHK-CN-Ssm2bq1wA06d6fvh8wytNcivDkw9PiE5psLerEjAOfw78hK2zXhpKW3ZGs8CzJcH3ZzYcRPasESg9TP7D7JZohvI-67VT2BqUzW6VuHtol9Y5vki_wwBIXo0HF3X4Ptgy3nDLxo-ZHCUpknSE81JnL6yvoWMLt_K_SDwBLoh7S8fhziMzmS0"
+      alt="post comment" style="width:400px;height:300px;">
+      <code class="puml" visibility: hidden>
+        @startuml
+        participant FBApp as app
+        box AWS
+        participant LoadB as lb
+        participant AppServer as as
+        participant Cache as cache
+        participant GraphDB as db
+        end box
+        
+        hnote over app: User authenticated, have auth_token
+        hnote over as
+        Authentication,
+        Rate Limiting
+        end note
+        
+        app -> lb: HTTP POST "Hello"
+        lb -> as: HTTP POST "Hello"
+        as -> cache: "Hello"
+        cache -> db: "Hello"
+        
+        @enduml
+      </code>
 
   </article>
   <script src="/scripts/prism.js"></script>
