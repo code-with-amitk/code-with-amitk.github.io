@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rust Provided Triats</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#default">default trait</a>
+        <a href="#drop">drop trait</a>
+        <a href="#future">future trait</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="default">Default trait</h2>
+        <dl>Used to give default value</dl>
+        <table>
+            <tr>
+                <th>#[derive(Default)]</th>
+                <th>Default value by user</th>
+            </tr>
+            <tr>
+                <td>
+                    Rust to provide Default implementation
+                    <pre><code class="language-css">
+#[derive(Default)]
+pub struct Test {
+    a : i32,
+}
+fn main() {
+    let test1: Test = Default::default();
+    println!("{}",test1.a);
+}
+$ cargo run
+0        //0 is initialized by rust system
+                    </code></pre>
+                </td>
+                <td>
+                    User overrides the default() function provided by Default Trait
+                    <pre><code class="language-css">
+pub struct test {
+    a : i32,
+}
+impl Default for test{
+    fn default() -> Self {
+        Self {
+            a: 48,
+        }
+    }
+}
+fn main() {
+    let test1: Test = Default::default();
+    println!("{}",test1.a);             //48
+}
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="drop">drop trait</h2>
+        <dl>
+            Custom code within the destructor.<br>
+            When a value is no longer needed, Rust runs a “destructor” on that value, but if we want to perform some 
+            task in destructor, use drop trait.
+        </dl>
+        <pre><code class="language-css">
+#[derive(Default)]
+pub struct S {
+    x : i32,
+}
+impl Drop for S {
+    fn drop(&mut self){
+        println!("Dropping");
+    }
+}
+fn main() {
+    {
+        let s:S = Default::default();
+        println!("{}", s.x);
+    }
+    println!("After scope");
+}
+$ cargo run
+0
+Dropping
+After scope
+        </code></pre>
+
+        <h2 id="future">future trait</h2>
+        <dl>
+            future is a "asynchronous value" that may not have finished computing yet. 
+            Thread waits on future to become available. These are similar to epoll(), not smilar to poll() or select().
+        </dl>
+        <pre><code class="language-css">
+pub trait Future {
+    //The type of value produced on completion.
+    type Output;                 
+    
+    /*Description:
+        This method resolves future into a final value. This is aync method does not block if value is not ready
+        Returns:
+        Poll::Pending if the future is not ready. 
+        Poll::Ready(val) with the result val of this future if it finished successfully.
+        */
+    fn poll(self: Pin &lt;&mut Self>, cx: &mut Context &lt;'_>) -> Poll &lt;Self::Output>;
+}
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

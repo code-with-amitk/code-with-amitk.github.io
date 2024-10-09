@@ -27,7 +27,16 @@
             <a href="#dec">Declaration & Definition</a>
             <ul>
                 <li><a href="#user">User Defined Traits</a></li>
-                <li><a href="#inbuilt">Inbuilt Defined Traits</a></li>
+                <ul>
+                    <li><a href="#arg">Traits as fun arg</a></li>
+                    <li><a href="#ret">Returning trait from fun</a></li>
+                </ul>
+                <li><a href="Rust Provided Triats/">Rust Lib provided Traits</a></li>
+            </ul>
+            <a href="#bound">Trait Bound</a>
+            <ul>
+                <li><a href="#usingplus">Using +</a></li>
+                <li><a href="#usingwhere">Using where</a></li>
             </ul>
         </aside>
 
@@ -49,8 +58,13 @@
                         <b>Trait Declaration</b>
                         <pre><code class="language-css">
 pub trait T {
+    // No need to add pub in front of function
+    // Trait methods are public by default
     fn add(&self);
-	fn test(&self) {        // Functions can be defined with default implementation 
+
+    // Functions can be defined
+    // with default implementation 
+	fn test(&self) {
 	    println!("test()");
 	}
 }
@@ -85,6 +99,68 @@ fn main() {
                     </td>
                 </tr>
             </table>
+
+            <h4 id="arg">Passing trait as argument to function</h4>
+            <pre><code class="language-css">
+// trait T defined above
+pub fn fun(t: &impl T) {
+    t.test();
+}
+fn main() {
+    let a = S {
+        x: 1,
+        y: 2,
+    };
+    fun(&a);
+}
+$ cargo run
+test()
+            </code></pre>
+
+            <h4 id="ret">Returning trait from function</h4>
+            <pre><code class="language-css">
+// trait T defined above
+// This function can return struct of type S also
+pub fn ret_trait() -> impl T {
+    S {
+        x: 1,
+        y: 2,
+    }
+}
+            </code></pre>
+
+            <h2 id="bound">Trait Bound</h2>
+            <dl>
+                These are generic functions(templates) but must implement one or more traits,
+                 which ensures that the type provides certain behavior or methods
+            </dl>
+            <pre><code class="language-css">
+// Trait(T) is defined above
+            //&lt; type: TraitName> (var: type)
+pub fn fun1 &lt;t: T> (item: &t) {
+    item.test();
+}
+$ cargo run
+test()
+            </code></pre>
+
+            <h4 id="usingplus">Using + //Friend Function</h4>
+            <dl>There can be a function which takes 2 or more traits(virtual function).</dl>
+            <pre><code class="language-css">
+pub fn test &lt;T: Trait1 + Trait2> (param: &T) {
+OR
+pub fn test (param: &(impl Trait1 + Trait2) {
+            </code></pre>
+
+            <h4 id="usingwhere">Using where clause //Friend Function</h4>
+            <pre><code class="language-css">
+pub fn test &lt;T: Trait1 + Triat2, U: Triat2 + Triat2>(t: &T, u: &U) -> i32 {
+OR
+pub fn test &lt;T, U>(t: &T, u: &U) -> i32
+    where T: Triat2 + Triat2
+            U: Triat2 + Triat3
+{
+            </code></pre>
 
         </article>
 
