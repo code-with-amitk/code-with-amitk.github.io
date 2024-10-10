@@ -45,6 +45,7 @@
       <ul>
         <li><a href="#push">Push Model</a></li>
         <li><a href="#pull">Pull Model</a></li>
+        <li><a href="#newsfeedarch">Newfeed Architecture</a></li>
       </ul>
     </ul>
   </aside>
@@ -239,7 +240,71 @@ SCARD comment:id1:likes        # Get like count
       <dl>
         We will use both of approaches based on the situation. See usecase in above table
       </dl>
-  
+
+      <h5 id="newsfeedarch">Newfeed Architecture</h5>
+      <div class="image-container">
+        <img src="//www.plantuml.com/plantuml/png/VP9BSzCm4CVl-oaMzm93EN3DGAUFqj0P7cLQXeilYhrADBLNZXuDzDEZbHmtJIWpEKJx_tb_QsjFVL0knBw3LuDJorvX8Fk8mKK2K4sm3gCdXyfZXCPoSBR3wcmOQhubzs0Qgb8cFqGy-cAMgt3UHNf2hnJR69xJskwYwqYHiFfAtgibrVn3pfdhrqzzVbbtJyxd-WPnJuUmiB_pfEq2ZyuUeoCW3YRymP-fUA6Q5ScJJKpvzEYDuNjeLL0BvIc3b-T2ZH3kQkQEY86unMI2h1ki3mUwAhjgladXvNcLfODG_p1M1QfvxjIm6cc1_oDbsdXDrBwW_JR6HSnwrpjzootq_5POxr_Y98xuxYGXCxpvVdk7rMVgEbk1ybAMjvjDDJb9LOfxeBQpV4FNxSVtDLyuKe7Qt15WwMmSSFxf3g-SILgFLaymQ9j5KNhEAQ0kJCqZP0IIM32XNeGAaqSfENR61tdHtHba4_3AT86SFv2NNZNhakzv3_DTPIczDhfcmN0bInxbCtZRasLwKqOfpdwzdVAwnRSeotBTGh-MR3D3MIFOvE5Ob-C7MKdJ7ez3d41A163jHpxzcwv7ffK789qcAXTMR0EXVI0dHIXtLIBfpAgdOnoSJIz4C9WcH4V74gFi6760V32zMfOjadvRTvpb9KRPG83J5CU--mi0" 
+        alt="Get Newsfeed" class="zoomable-image" id="zoomableImage2">
+      </div>
+      <code class="puml" visibility: hidden>
+        @startuml
+        !pragma teoz true
+        
+        actor user as u
+        control "App\nService" as as    #LightBlue
+        control "Fanout\nService" as fo #LightBlue
+        queue "Message\nQueue" as mq
+        control "Workers" as w      #LightBlue
+         
+        box userdb #Azure
+        entity UserCache as cudb    #LightPink
+        database UserDB as udb           #LightGreen
+        end box
+        
+        box postdb #Azure
+        entity "Cache\nPostDB" as cpdb #LightPink
+        database "PostDB\nGraphDB" as pdb   #LightGreen
+        end box
+        
+        box newsfeed #Azure
+        entity "Cache\nNewsfeed" as cnf #LightPink
+        control "Newsfeed\nService" as nfs    #LightBlue
+        end box
+        
+        u -> as: POST "Hello"
+        as -> cpdb: "Hello"
+        cpdb -> pdb: "Hello"
+        as -> fo: userId=1\nCreated POST
+        
+        group GET Friends of userId=1
+        fo -> cudb: Get friends\nof userid=1
+        cudb -> udb:Get friends\nof userid=1
+        udb -> fo: friend list
+        end
+        
+        group GET User Filters
+        fo -> cudb: Get userid\nfilters
+        cudb -> udb:Get userid\nfilters
+        udb -> fo: filters(if\nuser has muted someone)
+        end
+        
+        fo -> mq: friendId + PostId
+        mq -> w: data
+        w -> cnf: data<postid, userid>
+        cnf -> nfs: data
+        nfs -> pdb: Get post
+        pdb -> nfs: post
+        hnote over nfs
+        Create post
+        username, profile
+        picture,post content
+        post image
+        end note
+        nfs -> u: news feed
+        
+        @enduml
+      </code>
+
   </article>
   <script src="/scripts/prism.js"></script>
   <script src="/scripts/common.js"></script>
