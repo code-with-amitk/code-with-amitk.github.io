@@ -22,12 +22,77 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#copyclone">Copy & Clone trait</a>
         <a href="#default">default trait</a>
         <a href="#drop">drop trait</a>
         <a href="#future">future trait</a>
     </aside>
 
     <article style="margin-left:200px;">
+        <h2 id="copyclone">Copy & Clone Triats</h2>
+        <dl>Both are used for duplicating the values.</dl>
+        <dl style="color:red;">All types that implement Copy must also implement Clone, but the reverse is not true</dl>
+        <table>
+            <tr>
+                <th></th>
+                <th>Copy (Shallow Copy)</th>
+                <th>Clone (Deep Copy)</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Type implementing(copy triat) can be duplicated simply by Bitwise Copying</td>
+                <td>For types that require more complex duplication logic.</td>
+            </tr>
+            <tr>
+                <td>Efficient</td>
+                <td>More efficient since it involves a simple bitwise copy</td>
+                <td>May involve more complex operations and potentially higher overhead</td>
+            </tr>
+            <tr>
+                <td>Used for</td>
+                <td>Simple scalar types(Eg: int, struct containing simple types)</td>
+                <td>For complex datatypes which manage resources on heap(like String, Vec, etc)</td>
+            </tr>
+            <tr>
+                <td>Example</td>
+                <td>
+                    <pre><code class="language-css">
+// Only Copy triat is used, but to use
+// Copy, we need to derive Clone
+#[derive(Copy, Clone)]
+pub struct S {
+    x : i32,
+    y : i32,
+}
+fn main() {
+    let a = S {
+        x: 1,
+        y: 5,
+    };
+    let b = a;
+    println!("b = {}, {}", b.x, b.y);
+}
+                </td>
+                <td>
+                    <pre><code class="language-css">
+#[derive(Clone)]
+pub struct S {
+    x : Vec<i32>,
+}
+fn main() {
+    let a = S {
+        x: vec![1,2,3],
+    };
+    let b = a;
+    for i in 0..b.x.len() {
+        println!("{} ", b.x[i]);
+    }
+}
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
+
         <h2 id="default">Default trait</h2>
         <dl>Used to give default value</dl>
         <table>
