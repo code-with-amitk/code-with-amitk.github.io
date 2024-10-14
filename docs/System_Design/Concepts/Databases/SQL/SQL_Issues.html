@@ -30,22 +30,39 @@
   <main>
     <article style="margin-left:200px;">
         <h3 id="issues">Scaling Issues with SQL DB</h3>
+        <pre><code>
+          Customer Table      Orders Table
+          Id(pk) | name       OrderId | CustId (FK) | Amnt
+          --------------      ----------------------------
+            1    | A            101   |   1         | -
+            2    | B            102   |   2         | -
+            3    | C            103   |   1         | -
+        </code></pre>
         <dl id="refintegrity"><strong>Referential Integrity</strong></dl>
         <dt><u>Definition:</u></dt>
         <dd>
-            1. Relation between 2 or more tables remain consistent (on same server)<br>
-            2. Relation between 1 table when its distributed on shards(multiple servers) remain consistent.
+          This is a concept that ensures the relationships between tables are maintained properly by enforcing valid data 
+          in the foreign key relationships. It is a key aspect of database integrity, ensuring that the foreign key in one 
+          table correctly refers to a valid primary key in another table.
+        </dd>
+        <dt><u>CASCADE OPERATIONS</u></dt>
+        <dd>
+          When a row in the referenced table (the table with the primary key) is updated or deleted, the related foreign 
+          key values in the other table may need to be adjusted or removed to maintain integrity. This is often handled with 
+          CASCADE operations: delete, add
         </dd>
         <dt><u>Challenges in Referential Integrity across Shards:</u></dt>
         <dd>1. Transaction Coordination: 
             if transaction requires to write data on same table in different shards, it becomes challenging.<br>
             2. Latency in data synchronization: 
-            Changes made to 1 shard may not be immediately reflected in another, can lead to situations where data 
-            reads on different shards return inconsistent results<br>
+            Every time you need to validate a foreign key, it may require a network call to 
+            another shard, which slows down the query performances<br>
             3. Joins: 
             joins across shards are less efficient, and careful query planning is required to minimize the impact on performance<br>
-            4. Partitioning Strategy: 
-            strategy used for partitioning data across shards can impact referential integrity.<br>
+            4. Orphaned Records and Inconsistent State: 
+            For example, an Order record in one shard might refer to a Customer record in another shard that 
+            has been deleted, leading to data inconsistencies<br>
+            Data replication lag and eventual consistency models, can further complicate maintaining consistency between dependent records.
         </dd>
 
         <dl id="why"><strong>SQL Cannot support Large data</strong></dl>
