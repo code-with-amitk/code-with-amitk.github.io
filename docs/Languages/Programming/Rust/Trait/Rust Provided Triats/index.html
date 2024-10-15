@@ -26,6 +26,7 @@
         <a href="#default">default trait</a>
         <a href="#drop">drop trait</a>
         <a href="#future">future trait</a>
+        <a href="#iterator">Iterator trait</a>
     </aside>
 
     <article style="margin-left:200px;">
@@ -186,6 +187,19 @@ pub trait Future {
     fn poll(self: Pin &lt;&mut Self>, cx: &mut Context &lt;'_>) -> Poll &lt;Self::Output>;
 }
         </code></pre>
+
+        <h2 id="iterator">Iterator trait</h2>
+        <dl>
+            Used for processing sequences of data, allowing you to traverse or consume elements one by one.<br>
+            With Iterators only Rust handles collections, streams of data, and other sequential operations.
+        </dl>
+        <pre><code class="language-css">
+pub trait Iterator {
+    type Item;  // The type of the elements being iterated over.
+    fn next(&mut self) -> Option<Self::Item>;       //The Iterator trait requires one method to be implemented
+}            
+        </code></pre>
+
     </article>
 
     <script src="/scripts/prism.js"></script>
