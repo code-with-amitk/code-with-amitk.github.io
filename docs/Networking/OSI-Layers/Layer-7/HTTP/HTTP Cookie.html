@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>HTTP Cookie</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#what">What is HTTP Cookie</a>
+    <a href="#why">Why Cookie</a>
+    <a>Terms</a>
+    <ul>
+      <li><a href="#stolen">Stolen Cookie</a></li>
+      <li><a href="#surrogate">Cookie Surrogate</a></li>
+    </ul>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="what">HTTP Cookie / Web cookie / Internet cookie / browser cookie</h2>
+    <dl><strong>What is Cookie</strong></dl>
+    <dd>
+      Web Server asks web browser to store some information on user’s PC. Information is stored in a file(called Cookie) 
+      created by Web browser & placed on the user’s computer.
+    </dd>
+    <pre><code class="language-css">
+      Example:
+      * _Path:_ "C:\Users\user_name\AppData\Local\Google\Chrome\User Data\Default\Network\Cookie(SQL Lite DB)"
+      * _In Browser:_ Right-click on your browser window > Inspect > Applications tab > Cookies > Check installed cookies
+      # cat "C:\Users\user_name\AppData\Local\Google\Chrome\User Data\Default\Network\Cookie"
+      cookie_name      cookie_value				domain			valid_timestamp			cookie_len	cookie_priority
+      cookie_1	lwyMCcUDlsziLcAF/AOF3W1gCBO1aeb291	.google.com	/	2024-10-09T14:58:52.469Z	51			High
+    </code></pre>
+
+    <dl id="why"><strong>Why Cookie needed</strong></dl>
+    <dd>
+      To track the user’s browsing activity(clicking particular buttons, recording which pages were visited in the past, 
+      User Preferences)<br>
+      Saving info user entered in forms: names, addresses, passwords(stored as hashed), and payment card numbers.
+    </dd>
+    <pre><code class="language-css">
+      Web Browser                                   Web server
+      -- GET /sample_page.html HTTP/2.0 ->
+         Host: www.example.org
+
+      <------- HTTP/2.0 200 OK---------------
+              Content-Type: text/html
+              Set-Cookie: yummy_cookie=choco       //Store cookie
+              Set-Cookie: tasty_cookie=strawberry
+              [page content]
+
+store information
+in Cookie file
+    </code></pre>
+
+    <h2>Cookie Terms</h2>
+    <h4 id="stolen">Stolen Cookie</h4>
+    <dl>
+      If hacker steals and installs your cookies into their web browser, hacker will get access your account.<br>
+      How cookie theaft can be avoided? Cleaning cookies every 7-14 days.
+    </dl>
+
+    <h4 id="surrogate">Cookie Surrogate(Meaning Substitute)</h4>
+    <dd>
+      This feature allows web applications to manage user sessions and authentication for users who are not authenticated 
+      or identified. Useful when multiple users might share the same IP address, such as in terminal server environments or public networks.
+    </dd>
+    <dl><strong>How it works</strong></dl>
+    <dd>
+      <u>Authenticated user</u>: When a user accesses a web application, the application typically checks for an authentication 
+      cookie to identify the user. If the cookie is present, the user is considered authenticated.<br><br>
+      <u>Handling Unknown Users</u>: <br>
+      User is unauthenticated (i.e., no cookie is found), the cookie surrogate mechanism kicks in.<br>
+      Instead of blocking access or denying service, the application can apply certain policies for unknown users.<br>
+      Application can implement real-time protection policies that dictate what actions can be performed by unauthenticated users,
+      For instance, it might allow browsing of certain resources while restricting access to sensitive areas.
+    </dd>
+
+
+  </article>
+  
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>

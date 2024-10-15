@@ -196,8 +196,11 @@ pub trait Future {
         <pre><code class="language-css">
 pub trait Iterator {
     type Item;  // The type of the elements being iterated over.
-    fn next(&mut self) -> Option<Self::Item>;       //The Iterator trait requires one method to be implemented
-}            
+
+    // The Iterator trait requires one method to be implemented
+    // This method advances the iterator and returns the next item in the sequence wrapped in Option
+    fn next(&mut self) -> Option<Self::Item>;
+}
         </code></pre>
 
     </article>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>HTTP</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#what">What is HTTP</a>
+    <a href="#features">Features of HTTP</a>
+    <a href="#adv">Advatanges, Disadvatanges</a>
+    <a href="#methods">HTTP Methods</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="what">What is HTTP</h2>
+    <dl>
+      Client-server/Request-Response protocol. Default port 80, other can be used. Uses TCP, does not use UDP. 
+      Google’s QUIC uses HTTP over UDP<br>
+      HTTP Clients: Web-browser, Any process can create socket and get information from server.
+    </dl>
+
+    <h2 id="features">Features of HTTP</h2>
+    <dl>
+      1. CONNECTIONLESS: HTTP-client(browser) initiates an HTTP request and after a request is made, the client disconnects from the server and waits for a response. 
+      server processes the request and re-establishes the connection with the client to send a response back.<br>
+      2. MEDIA INDEPENDENT: Any type of data can be sent by HTTP as long as both the client and the server know how to handle the data content.<br>
+      3. STATELESS: No session information is stored either by client or server.<br>
+      4. Persistant & Parallel Connection: 2 access requests can be sent back-2-back without waiting for response to arrive.      
+    </dl>
+    <pre><code>
+      Client                         Server
+      <-----TCP-3-way-handshake---->
+      --------GET Page-1----------->
+      --------GET Page-2----------->
+      <-------Page-1---------------
+      <-------Page-2---------------      
+    </code></pre>
+
+    <h2 id="adv">Advatanges, Disadvatanges/pitfalls of HTTP</h2>
+    <h3>Advatanges</h3>
+    <dl>
+      1. Flexible. Whenever there are additional capabilities needed by an application, HTTP has the capability to extend. These can include Flash players and Acrobat reader.<br>
+      2. Less connections. With HTTP2 and HTTP3 multiple requests can be sent in 1 packet.<br>
+      3. Network BW: Less dues to less connections as HTTP2, HTTP3 sends multiple requests in 1 connection.<br>
+      4. Error reporting: Reports errors without closing the TCP connection.
+    </dl>
+
+    <h3>DisAdvatanges</h3>
+    <dl>
+      1. Can only be used for point to point connection.<br>
+      2. Does not have push capabilities as in [Long Pooling or server sent Events](/Networking/OSI-Layers/Layer5/WebServer_to_WebClient_Connection_Methods).<br>
+      3. HTTPv2 does not offer reliable exchange (without retry logic).      
+    </dl>
+
+    <h2 id="methods">HTTP Methods</h2>
+    <dl>
+      Method? Operations are called methods for requesting web page or content.<br>
+      Safe methods? Those which donot change state of server. Eg: GET, HEAD<br>
+      Read only methods? GET, OPTIONS, HEAD<br>
+      Idempotent methods? A operation that will produce the same results if executed once 
+      or multiple times. Eg: GET, HEAD, PUT, DELETE, TRACE, OPTIONS<br>
+      CRUD Operations: Protocol should support minimum these operations/methods.      
+    </dl>
+    <pre><code>
+      Create = POST
+      Read = GET
+      Update = PUT
+      Delete = DELETE
+    </code></pre>
+
+  </article>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>
