@@ -3,6 +3,7 @@
 <head>
     <title>Processes</title>
     <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
@@ -257,13 +258,11 @@ while(1){
             <table>
                 <tr>
                     <td>
-                        <div class="image-container">
-                        <img src="/images/Memory/Process_table.png" alt="Process Table" class="zoomable-image" id="zoomableImage2">
-                        </div>
+                        <img src="/images/Memory/Process_table.png" alt="Process Table" style="width:500px;height:300px">
                     </td>
                     <td>
                         <h3>Process Control Block</h3>
-                        <pre><code>
+                        <pre><code class="language-css">
 struct task_struct {
     long                 priority;
     //DOUBLY LL

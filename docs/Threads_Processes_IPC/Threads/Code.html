@@ -23,23 +23,22 @@
     </nav>
 
 
-    <article style="margin-left:200px;">
+    <div style="margin-left:200px;">
         <h3 id="code">Thread Creation Code</h3>
-        <dl>
-            CPP Threadclass, CPP Functor, Rust, Python, POSIX, Java, Windows
-        </dl>
-        <table>
-            <tr>
-                <th>C++ Threadclass</th>
-                <th>C++ Functor</th>
-                <th>Rust</th>
-                <th>Python</th>
-                <th>POSIX</th>
-                <th>Java</th>
-                <th>Windows</th>
-            </tr>
-            <tr>
-                <td><pre><code class="language-css">        <!--cpp threadclass-->
+        <div class="tab">
+            <button class="tablinks" onclick="opencode(event, 'cppthreadclass')">CPP(Thread class)</button>
+            <button class="tablinks" onclick="opencode(event, 'cppfunctor')">CPP(Functor)</button>
+            <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
+            <button class="tablinks" onclick="opencode(event, 'python')">Python</button>
+            <button class="tablinks" onclick="opencode(event, 'posix')">POSIX</button>
+            <button class="tablinks" onclick="opencode(event, 'java')">Java</button>
+            <button class="tablinks" onclick="opencode(event, 'windows')">Windows</button>
+        </div>
+
+        <!-- Tab content -->
+        <div id="cppthreadclass" class="tabcontent">
+            <h4>CPP(Thread class)</h4>
+            <pre><code class="language-css">
 #include &lt;thread>
 #include &lt;iostream>
 void fun(int a){
@@ -86,10 +85,12 @@ int main() {
     A obj;
     obj.fun(1);
 }
-                </code></pre>
-            </td>
+            </code></pre>
+        </div>
 
-                <td><pre><code class="language-css">       <!--C++ Functor-->
+        <div id="cppfunctor" class="tabcontent">
+            <h4>CPP(Functor)</h4>
+<pre><code class="language-css">
 #include &lt;thread>
 #include &lt;iostream>
 #include &lt;mutex>
@@ -112,7 +113,7 @@ int main() {
     for (int i = 0; i&lt; 5; ++i) {
         //Functor to create Threads
         vecThreads.emplace_back(
-            [&]() {                             
+            [&]() {
                 fun(i);
             }
         );
@@ -121,9 +122,12 @@ int main() {
         t.join();
     return 0;
 }
-                </code></pre></td>
+</code></pre>
+    </div>
 
-                <td><pre><code class="language-css">   <!--Rust-->
+    <div id="rust" class="tabcontent">
+        <h4>Rust</h4>
+        <pre><code class="language-css">
 $ cargo new thread1
 
 $ cat main.rs
@@ -133,28 +137,25 @@ fn fun1() {
 }
 
 fn main() {
-    //Thread-1
-    let handle1 = thread::spawn(fun1);
+    let handle1 = thread::spawn(fun1);      //Thread-1
 
-    //Thread-2 created using closure
-    let handle2 = thread::spawn(
-        || {
-            for i in 1..5 {
-                println! ("Thread-2");
-            thread::sleep (Duration::from_millis(1));
-            }
-        }
-    );
-    //Thread1, Thread2 are joinable. 
-    //main will not exit without t1,t2
+    let handle2 = thread::spawn(||{         //Thread-2 created using closure
+            println! ("Thread-2");
+        });
+
+    //Thread1, Thread2 are joinable. main will not exit without t1,t2
+    // spawn() returns Struct std::thread::JoinHandle which has method join() 
     handle1.join().unwrap();
     handle2.join().unwrap();
 }
 $ cargo build
 $ cargo run
-                </code></pre></td>
+        </code></pre>
+    </div>
 
-                <td><pre><code class="language-css">       <!--Python-->
+    <div id="python" class="tabcontent">
+        <h4>Python</h4>
+        <pre><code class="language-css">
 import threading, zipfile
 
 class AsyncZip(threading.Thread):
@@ -175,9 +176,12 @@ print('The main program continues to run in foreground.')
 
 background.join()    # Wait for the background task to finish
 print('Main program waited until background was done.')
-                </pre></td>
+        </code></pre>
+    </div>
 
-                <td><pre>   <!--POSIX-->
+    <div id="posix" class="tabcontent">
+        <h4>POSIX</h4>
+        <pre><code class="language-css">
 #include &lt;pthread.h>
 #include &lt;iostream>
 using namespace std;
@@ -202,9 +206,12 @@ int main() {
         pthread_join (thread_id[i], 0);
     return 0;
 }
-                </code></pre></td>
+        </code></pre>
+    </div>
 
-                <td><pre><code class="language-css">       <!--Java-->
+    <div id="java" class="tabcontent">
+        <h4>Java</h4>
+        <pre><code class="language-css">
 //Class should implement Runnable Interface to create Thread
 class test implements Runnable {		
     test() {
@@ -258,9 +265,12 @@ Parent Thread
 Parent Thread
 exiting child thread
 exiting main thread
-                </code></pre></td>
+        </code></pre>
+    </div>
 
-                <td><pre><code class="language-css">       <!--Windows-->
+    <div id="windows" class="tabcontent">
+        <h4>Windows</h4>
+        <pre><code class="language-css">
 #include &lt;windows.h>
 #include &lt;tchar.h>
 #include &lt;strsafe.h>
@@ -286,14 +296,13 @@ int _tmain() {
             0,                  //Default creation flag
             &thread_id[i]);     //Thread identifier returned
     }
-
 }
-                </code></pre></td>
-            </tr>
-        </table>
+        </code></pre>
+    </div>
 
-    </article>
+    </div>
     <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
 </body>
 
 </html>

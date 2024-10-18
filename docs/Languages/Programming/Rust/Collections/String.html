@@ -24,7 +24,7 @@
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#literal">String literal</a>
-            <a href="#vs">String Slice vs String</a>
+            <a href="/Languages/Programming/Rust/Slice.html">String Slice</a>
             <a href="#operations">Opeartions on String</a>
         </aside>
 
@@ -37,34 +37,6 @@
             <pre><code class="language-css">
 let a:string = "test";
             </code></pre>
-
-            <h2 id="vs">String Slice vs String</h2>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>&str(String Slice or Reference)</th>
-                    <th>String</th>
-                </tr>
-                <tr>
-                    <td>What</td>
-                    <td>
-                        Part of string string[starting_index, ending_index). It cannot grow.<br>
-                        Allocated on Data Segment(String is nothing but bytes)
-                    </td>
-                    <td>Can grow. Allocated on Heap</td>
-                </tr>
-                <tr>
-                    <td>How created</td>
-                    <td>
-                        Using String Literal let s = "test"; OR<br>
-                        Convert bytes to str
-                    </td>
-                    <td>
-                        let mut s = String::from("he"); OR <br>
-                        s.push_str(", world!");
-                    </td>
-                </tr>
-            </table>
 
             <h2 id="operations">Operations on String</h2>
             <pre><code class="language-css">
