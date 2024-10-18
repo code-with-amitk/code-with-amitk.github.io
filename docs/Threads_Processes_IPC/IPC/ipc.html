@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IPC</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+
+        <div style="margin-left:200px;">
+            <h3 id="code">Thread Creation Code</h3>
+            <div class="tab">
+                <button class="tablinks" onclick="opencode(event, 'rustchannel')">Rust (Channels)</button>
+                <!--
+                <button class="tablinks" onclick="opencode(event, 'cppfunctor')">CPP(Functor)</button>
+                <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
+                <button class="tablinks" onclick="opencode(event, 'python')">Python</button>
+                <button class="tablinks" onclick="opencode(event, 'posix')">POSIX</button>
+                <button class="tablinks" onclick="opencode(event, 'java')">Java</button>
+                <button class="tablinks" onclick="opencode(event, 'windows')">Windows</button>
+                -->
+            </div>
+    
+            <!-- Tab content -->
+            <div id="rustchannel" class="tabcontent">
+                <h4>Rust (Channels)</h4>
+                <dl><b>What is Channel?</b></dl>
+                <dt>
+                    Sender<T> and Receiver<T> are connected via Channel.<br>
+                    They can send/recv data via channel
+                </dt>
+
+                <br>
+                <dl><b>Types Channels?</b></dl>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th><a href="#mpsc">mpsc / Multi-Producer, Single-Consumer</a></th>
+                        <th><a href="#async">tokio async_channel / Multi-Producer, Multiple-Consumer</a></th>
+                    </tr>
+                    <tr>
+                        <td>Producer, Consumer</td>
+                        <td>Multi Producer, 1 Consumer</td>
+                        <td>Multi Producer, Multi Consumer</td>
+                    </tr>
+                    <tr>
+                        <td>Provided by</td>
+                        <td>Standard library</td>
+                        <td>Tokio runtime</td>
+                    </tr>
+                    <tr>
+                        <td>Unbounded</td>
+                        <td>
+                            Unbounded means that the channel has no limit on the number of messages it can hold at a time.<br>
+                            Sender can continue sending messages indefinitely, they will accumulate in memory until the receiver consumes them.<br><br>
+                            <b>Yes</b>
+                        </td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>Asynchronous</td>
+                        <td>
+                            Means that the sending and receiving operations are non-blocking<br>
+                            Sender and receiver can proceed independently<br><br>
+                            <b>NO. This is synchronous</b>
+                        </td>
+                        <td>
+                            Operations are non-blocking and can be awaited. <br><br>
+                            <b>Yes. This is Asynchronous</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Blocking</td>
+                        <td>
+                            <b>Yes its Blocking,</b> since its not synchronous
+                        </td>
+                        <td>
+                            No blocking<br>
+                            No one waits on channel(neither sender, nor rcvr)<br>
+                            When all Senders or all Receivers are dropped, the channel becomes closed
+                        </td>
+                    </tr>
+                </table>
+                <dl>
+                    <ul>
+                        <li></a></li>
+                        <li></li>
+                    </ul>
+                </dl>
+
+                <h5 id="mpsc">mpsc(Multi-Producer, Single-Consumer)</h5>
+                <pre><code class="language-css">
+fn main() {
+    let (tx, rx) = std::sync::mpsc::channel();
+
+    match tx.send(1) {      //send() returns Result
+        Ok(o) => o,
+        Err(e) => println!("Sending error {}", e)
+    };
+    match rx.recv() {       //recv() returns Result
+        Ok(o) => {
+            println!("Recieved {}", o);
+        },
+        Err(e) => println!("Sending error {}", e)
+    };
+}
+$ cargo run
+1
+                    </code></pre>
+
+                <h5 id="async">Asynchronous channel (multi-producer, multi-consumer)</h5>
+                <pre><code class="language-css">
+# Cargo.toml
+[package]
+name = "async_channel"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+async-channel = {version = "1.5"}
+tokio = {version = "0.2.*", features = ["full"] }
+
+# main.rs
+use async_channel;
+async fn fun() {
+    let (s, r) = async_channel::unbounded();
+
+    // Send on channel
+    assert_eq!(s.send("Hello").await, Ok(()));
+
+    // Receive on channel
+    assert_eq!(r.recv().await, Ok("Hello"));
+}
+
+fn main() {
+    let mut rt = tokio::runtime::Runtime::new().unwrap(); //1. Start tokio runtime
+    let local = tokio::task::LocalSet::new();
+    local.block_on(&mut rt, async move { fun().await });
+}
+                </code></pre>
+            </div>
+
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

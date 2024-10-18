@@ -127,9 +127,14 @@ int main() {
 
     <div id="rust" class="tabcontent">
         <h4>Rust</h4>
-        <pre><code class="language-css">
-$ cargo new thread1
-
+        <table>
+            <tr>
+                <th>Normal Threads(Created using spawn)</th>
+                <th>Scoped Threads(Borrow from env)</th>
+            </tr>
+            <tr>
+                <td>
+                    <pre><code class="language-css">
 $ cat main.rs
 use std::thread;
 fn fun1() {
@@ -150,7 +155,28 @@ fn main() {
 }
 $ cargo build
 $ cargo run
-        </code></pre>
+                    </code></pre>
+                </td>
+                <td>
+                    Normal Threads cannot borrow from their environment,<br>
+                    but scoped threads can<br><br>
+                    <b>Scoped threads are not required to joined:</b><br>
+                    - Reason being, when scoped thread completes, its required<br>
+                    to return the borrowed data
+                    <pre><code class="language-css">
+fn main() {
+    let a = 1;
+
+    thread::scope(|scope| {
+        scope.spawn(|| {
+            println!("{}", a);
+        });
+    });
+}
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div id="python" class="tabcontent">
