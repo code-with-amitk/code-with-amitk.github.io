@@ -29,7 +29,7 @@
     <main>  <!--Here is our page's main content-->
 
         <div style="margin-left:200px;">
-            <h3 id="code">Thread Creation Code</h3>
+            <h2 id="code">IPC</h2>
             <div class="tab">
                 <button class="tablinks" onclick="opencode(event, 'rustchannel')">Rust (Channels)</button>
                 <!--
@@ -44,20 +44,33 @@
     
             <!-- Tab content -->
             <div id="rustchannel" class="tabcontent">
-                <h4>Rust (Channels)</h4>
-                <dl><b>What is Channel?</b></dl>
+                <h3>Rust (Channels)</h3>
+                <dl>
+                    <b>Content</b>
+                    <ul>
+                        <li><a href="#what">Channel?</a></li>
+                        <li><a href="#types">Types of Channels</a></li>
+                        <ul>
+                            <dt>
+                            <li><a href="#t1">Unbounded, sync, (Multi-Producer Single-Consumer)</a></li>
+                            <li><a href="#t2">Bounded, sync, (Multi-Producer Single-Consumer)</a></li>
+                            <li><a href="#t3">Unbounded, async, (Multi-Producer Multi-Consumer)</a></li>
+                            </dt>
+                        </ul>
+                    </ul>
+                </dl>
+
+                <h4 id="what">What is Channel?</h4>
                 <dt>
-                    Sender<T> and Receiver<T> are connected via Channel.<br>
-                    They can send/recv data via channel
+                    Sender<T> and Receiver<T> are connected via Channel. They can send/recv data via channel.
                 </dt>
 
-                <br>
-                <dl><b>Types Channels?</b></dl>
+                <h4>Types Channels?</h4>
                 <table>
                     <tr>
                         <th></th>
                         <th><a href="#mpsc">mpsc / Multi-Producer, Single-Consumer</a></th>
-                        <th><a href="#async">tokio async_channel / Multi-Producer, Multiple-Consumer</a></th>
+                        <th><a href="#t3">tokio async_channel / Multi-Producer, Multiple-Consumer</a></th>
                     </tr>
                     <tr>
                         <td>Producer, Consumer</td>
@@ -69,7 +82,7 @@
                         <td>Standard library</td>
                         <td>Tokio runtime</td>
                     </tr>
-                    <tr>
+                    <tr id="unbounded">
                         <td>Unbounded</td>
                         <td>
                             Unbounded means that the channel has no limit on the number of messages it can hold at a time.<br>
@@ -78,7 +91,7 @@
                         </td>
                         <td>Yes</td>
                     </tr>
-                    <tr>
+                    <tr id="asynchronousmeaning">
                         <td>Asynchronous</td>
                         <td>
                             Means that the sending and receiving operations are non-blocking<br>
@@ -102,20 +115,24 @@
                         </td>
                     </tr>
                 </table>
-                <dl>
-                    <ul>
-                        <li></a></li>
-                        <li></li>
-                    </ul>
-                </dl>
 
-                <h5 id="mpsc">mpsc(Multi-Producer, Single-Consumer)</h5>
-                <pre><code class="language-css">
+                <h5 id="mpsc">Multi-Producer, Single-Consumer (mpsc)</h5>
+                <table>
+                    <tr>
+                        <th id="t1">Unbounded, synchronous Channel</th>
+                        <th id="t2">Bounded, synchronous Channel</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#unbounded">Unbounded?</a><br>
+                            <a href="#asynchronousmeaning">Synchronous?</a>
+                            <pre><code class="language-css">
 fn main() {
     let (tx, rx) = std::sync::mpsc::channel();
-
     match tx.send(1) {      //send() returns Result
-        Ok(o) => o,
+        Ok(_o) => {
+            println!("Sent");
+        },
         Err(e) => println!("Sending error {}", e)
     };
     match rx.recv() {       //recv() returns Result
@@ -126,10 +143,61 @@ fn main() {
     };
 }
 $ cargo run
-1
-                    </code></pre>
+Sent
+Recieved 1
+                        </code></pre></td>
+                        <td><pre><code class="language-css">
+use std::thread;
+use std::time::Duration;
+use std::sync::mpsc;
 
-                <h5 id="async">Asynchronous channel (multi-producer, multi-consumer)</h5>
+fn main() {
+    let mut handles = vec![];
+
+    // Create a synchronous channel with a buffer size of 1
+    let (t,r) = mpsc::sync_channel::<i32>(1);
+    
+    // Create 3 threads using a for loop
+    for i in 0..3 {
+        let tx = t.clone();     // Clone the sender for each thread
+        // Spawn a new thread
+        let handle = thread::spawn(move || {
+            println!("Thread {} has finished", i);
+            tx.send(i as i32).unwrap();
+        });
+
+        // Store the thread handle to join later
+        handles.push(handle);
+    }
+
+    // Receive messages from threads
+    for _ in 0..3 {
+        let received = r.recv().unwrap(); // Receive from the channel
+        println!("Received from thread: {}", received);
+    }
+    
+    // Wait for all threads to finish
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("All threads have completed.");
+}
+$ cargo run
+Thread 0 has finished
+Thread 1 has finished
+Thread 2 has finished
+Received from thread: 0
+Received from thread: 1
+Received from thread: 2
+All threads have completed.
+                        </code></pre></td>
+                    </tr>
+                </table>
+                
+
+
+                <h5 id="t3">Asynchronous channel (multi-producer, multi-consumer)</h5>
                 <pre><code class="language-css">
 # Cargo.toml
 [package]

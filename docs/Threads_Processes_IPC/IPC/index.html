@@ -22,14 +22,48 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#whyprocess">Why Processes</a>
-        <a href="./Threads">Threads</a>
-        <a href="./IPC/">InterProcess/Interthread Communication</a>
+        <a href="ipc.html">IPC(Rust)</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
         <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2>IPC?</h2>
+            <dl>
+                For communication between 2 processes, Parent and child as well.
+            </dl>
 
+            <h4>Types of IPC</h4>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>Communication</th>
+                </tr>
+                <tr>
+                    <td>1. Pipe, <a href="./ipc.html">Rust Channels</a></td>
+                    <td>Parent to child viceversa</td>
+                </tr>
+                <tr>
+                    <td>2.Named pipes, fifo</td>
+                    <td>Multiple process can communicate. Process-1 to process-2</td>
+                </tr>
+                <tr>
+                    <td>3.Message Queues</td>
+                    <td>Multiprocess. Process-1 to process-2</td>
+                </tr>
+                <tr>
+                    <td>4.Shared Memory</td>
+                    <td>Multiprocess. Process-1 to process-2. Fastest(No Inherent Synchronization)</td>
+                </tr>
+                <tr>
+                    <td>5.Memory mapped files</td>
+                    <td>
+                        Map a file onto process Virtual address space and do RW.<br>
+Advantages? 1. Mapping a file is cheaper than using I/O system calls for RW 2. Same file can be mapped to 2-or-more processes at same time. Write by 1 is visible to other instantly.
+                    </td>
+                </tr>
+            </table>
+
+            <h4><a href="./ipc.html">IPC in Rust: Channels</a></h4>
         </article>
     </main>
 
