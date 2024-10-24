@@ -22,12 +22,19 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is Synchronization</a>
         <a href="./mutex.html">Mutex</a>
         <a href="./condition_variable.html">condition_variable(Signalling)</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
         <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2 id="what">What is Synchronization</h2>
+            <dl>
+                Coordination b/w processes/threads to access shared resources so that deadlock & race conditions can be avoided.<br>
+                Ex-1? When multiple threads need to modify a shared resource(eg: global variable) we should lock the resource to guarantee at most 1 thread can do modification.<br>
+                Ex-2? When 2 threads are putting data on top of stack, without synchronization it's immpossible to tell what is on top of the stack at any one time.
+            </dl>
         </article>
     </main>
 

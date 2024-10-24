@@ -125,11 +125,28 @@ int main() {
     </div>
 
     <div id="rust" class="tabcontent">
-        <h4>Rust</h4>
+        <h3>Rust</h3>
+        <dl>
+            <b>Creating Threads</b>
+            <ul>
+                <li><a href="#spawn">1. std::thread::spawn</a></li>
+                <li><a href="#builder">2. std::thread::Builder()</a></li>
+                <li><a href="#async">3. Asynchronous Frameworks (e.g., Tokio)</a></li>
+            </ul>
+        </dl>
+
+
+        <h4>Creating Threads</h4>
+        <h5 id="spawn">1. std::thread::spawn</h5>
+        <dl>
+            thread::spawn() takes a <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/Rust/Functions#closure">closure</a> 
+            as an argument, which contains the code to be executed in the new thread
+        </dl>
         <table>
             <tr>
-                <th>Normal Threads(Created using spawn)</th>
+                <th>Normal Closure</th>
                 <th>Scoped Threads(Borrow from env)</th>
+                <th>Move Closure</th>
             </tr>
             <tr>
                 <td>
@@ -143,16 +160,17 @@ fn fun1() {
 fn main() {
     let handle1 = thread::spawn(fun1);      //Thread-1
 
-    let handle2 = thread::spawn(||{         //Thread-2 created using closure
+    let handle2 = thread::spawn(||{         //Thread-2
             println! ("Thread-2");
         });
 
-    //Thread1, Thread2 are joinable. main will not exit without t1,t2
-    // spawn() returns Struct std::thread::JoinHandle which has method join() 
+    // Thread1, Thread2 are joinable.
+    // main will not exit without t1,t2
+    // spawn() returns Struct std::thread::JoinHandle 
+    // which has method join() 
     handle1.join().unwrap();
     handle2.join().unwrap();
 }
-$ cargo build
 $ cargo run
                     </code></pre>
                 </td>
@@ -174,8 +192,56 @@ fn main() {
 }
                     </code></pre>
                 </td>
+                <td>
+                    <dl>
+                        The move keyword indicates that the closure <br>
+                        will take ownership of any variables it <br>
+                        captures from its environment.
+                    </dl>
+<pre><code class="language-css">
+use std::thread;
+
+fn main() {
+    let a = 10;
+    let handle = thread::spawn(move || {
+        println!("Thread {}", a);
+    });
+
+    handle.join().unwrap(); // Wait for the thread to finish
+}
+</code></pre>
+                </td>
             </tr>
         </table>
+
+        <h5 id="builder">2. std::thread::Builder</h5>
+        <dl>
+            Allows for more control over thread creation, such as setting stack size or naming the thread
+        </dl>
+        <pre><code class="language-css">
+use std::thread;
+
+let builder = thread::Builder::new().name("my_thread".into()).stack_size(32 * 1024);
+let handle = builder.spawn(|| {
+    println!("Hello from a custom thread!");
+}).unwrap();
+handle.join().unwrap();
+        </code></pre>
+
+        <h5 id="async">3. Asynchronous Frameworks (e.g., Tokio)</h5>
+        <dl>
+            For asynchronous programming, you can use libraries like Tokio, which allows you to spawn tasks on a runtime.
+        </dl>
+        <pre><code class="language-css">
+#[tokio::main]
+async fn main() {
+    tokio::spawn(async {
+        println!("Hello from an async task!");
+    });
+    // Other async code...
+}
+        </code></pre>
+
     </div>
 
     <div id="python" class="tabcontent">
