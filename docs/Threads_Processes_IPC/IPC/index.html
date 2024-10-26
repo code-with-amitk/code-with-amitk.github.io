@@ -37,10 +37,12 @@
                 <tr>
                     <th>Method</th>
                     <th>Communication</th>
+                    <th>Synchronization</th>
                 </tr>
                 <tr>
                     <td>1. Pipe, <a href="./ipc.html">Rust Channels</a></td>
                     <td>Parent to child viceversa</td>
+                    <td>Yes</td>
                 </tr>
                 <tr>
                     <td>2.Named pipes, fifo</td>
@@ -48,11 +50,18 @@
                 </tr>
                 <tr>
                     <td>3.Message Queues</td>
-                    <td>Multiprocess. Process-1 to process-2</td>
+                    <td>
+                        Multiprocess. Process-1 to process-2<br>
+                        Rust: v_queue, posixmq, Channels are also sort of Message Queues
+                    </td>
+                    <td>Yes</td>
                 </tr>
                 <tr>
                     <td>4.Shared Memory</td>
-                    <td>Multiprocess. Process-1 to process-2. Fastest(No Inherent Synchronization)</td>
+                    <td>
+                        Multiprocess. Process-1 to process-2. Fastest
+                    </td>
+                    <td>No</td>
                 </tr>
                 <tr>
                     <td>5.Memory mapped files</td>
