@@ -282,31 +282,119 @@ int main(){
 
             <div id="rust" class="tabcontent">
                 <h2>Rust</h2>
-                <h3>Creating Mutex</h3>
+
+                <dl>
+                    Table of Content<br>
+                    <ul>
+                    <li><a href="#create">Creating Mutex</a></li>
+                    <li><a href="#mutexarc">Mutex cannot be used without Arc in threads</a></li>
+                    </ul>
+                </dl>
+
+                <h3 id="create">Creating Mutex</h3>
                 <dl>
                     In Rust, data and mutex are not seperate. ie data can be accessed inside mutex only.<br>
-                    This solves the problem which we found in CPP
+                    This solves the problem which we is present in CPP
                 </dl>
                 <pre><code class="language-css">       <!--Rust-->
 use std::sync::Mutex;
 fn main() {
-    //1. Create mutex and associate a 
-    //i32 data with it(whose initial value=5).
+    // Create mutex and associate a i32 data with it(whose initial value=5).
     let m = Mutex::new(5);                   
     {
-        //2. Access to data inside Mutex 
-        // is only allowed after lock() the mutex.
-
-        //3. After acquiring lock, data inside 
-        // mutex can be changed(treated as mutable reference).
+        //After acquiring lock, data inside mutex can be changed
         let mut num = m.lock().unwrap();     
         *num = 6;
     }            
-    //4. Once mutex goes out of scope, 
-    // data can be used without mutex.                            
-    println!("m = {:?}", m);
 }
                     </code></pre>
+
+                    <h3 id="mutexarc">Mutex cannot be used without Arc in threads</h3>
+                    <table>
+                        <tr>
+                            <th>Mutex used inside threads</th>
+                            <th>Arc &lt;Mutex></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Problem:</b> 
+                                &ensp; std::sync::Mutex does not implement the 
+                                <a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#copyclone">Copy trait</a>, 
+                                hence it cannot be moved between multiple threads.<br>
+                                &ensp; That means if we want to use mutex between threads, shared reference 
+                                (ie <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a>) need to be used
+                                <pre><code class="language-css">
+use std::sync::Mutex;
+use std::thread;
+fn main() {
+    int mut val = 1;
+
+    // Initialize a Mutex protecting an integer
+    let mutex = Mutex::new(val); 
+    let mut handles = vec![];
+
+    for i in 0..3 {
+        // Spawn threads
+        let h = thread::spawn(move || {
+
+            // Lock the mutex to gain access
+            let mut num = mutex.lock().unwrap();
+
+            *num += 1; // Modify the protected data
+            println!("Thread {} incremented value to {}", i, *num);
+        });
+        handles.push(h);
+    }
+
+    for h in handles {
+        h.join().unwrap(); // Wait for all threads to finish
+    }
+}
+$ cargo run
+`mutex` has type `Mutex<i32>`, which does not implement the `Copy` trait
+10 |         let h = thread::spawn(move || {
+   |                               ------- value moved into closure here, in previous iteration of loop
+                         </code></pre>
+                            </td>
+                            <td>
+                                <b>How Using Mutex inside Arc solves the problem?</b><br>
+                                &ensp; <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a> is Shared 
+                                reference counting. <br>
+                                &ensp; That means Mutex is not copied between threads, but only reference is incremented.
+                                <pre><code class="language-css">
+use std::sync::{Mutex, Arc};
+use std::thread;
+
+fn main() {
+    // Initialize a Mutex protecting an integer
+    let shared_variable = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for i in 0..3 {
+        // Every thread will have new Reference. Arc is reference counted
+        let shared_var_clone = Arc::clone(&shared_variable);
+        
+        let h = thread::spawn(move || {
+            // Lock the Arc &lt;Mutex> to gain access
+            let mut num = shared_var_clone.lock().unwrap();
+            *num += 1; // Modify the protected data
+            println!("Thread {} incremented value to {}", i, *num);
+        });
+        handles.push(h);
+    }
+
+    for h in handles {
+        h.join().unwrap(); // Wait for all threads to finish
+    }
+
+    // Final value after all increments
+    println!("Final value: {}", *shared_variable.lock().unwrap());
+}
+                                </code></pre>
+                            </td>
+
+                        </tr>
+                    </table>
             </div>
 
         </article>

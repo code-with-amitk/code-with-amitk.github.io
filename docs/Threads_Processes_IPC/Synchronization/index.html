@@ -72,6 +72,20 @@
                     <td>
                         Synchronization: Yes
                     </td>
+                    <td>
+                        <b>Disadv:</b><br>
+                        &ensp; Plain mutex cannot be used across threads.
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="/Threads_Processes_IPC/Synchronization/mutex.html#mutexarc">Arc &lt;Mutexes></a></td>
+                    <td>
+                        Synchronization: Yes
+                    </td>
+                    <td>
+                        <b>Adv:</b><br>
+                        &ensp; Mutex inside Arc can be used across threads
+                    </td>
                 </tr>
                 <tr>
                     <td>Atomic Types (std::sync::atomic)</td>
