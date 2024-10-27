@@ -26,6 +26,7 @@
         <ul>
             <li><a href="#rustsync">Synchronization in Rust</a></li>
         </ul>
+        <a href="Arc.html">Arc</a>
         <a href="./mutex.html">Mutex</a>
         <a href="./condition_variable.html">condition_variable(Signalling)</a>
     </aside>
@@ -44,16 +45,27 @@
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Advantage, Disadvantage</th>
                 </tr>
                 <tr>
-                    <td>Channels (std::sync::mpsc)</td>
+                    <td><a href="./Arc.html">Arc(Atomically Reference Counted)</a></td>
+                    <td>
+                        IPC: No<br>
+                        Synchronization: Yes
+                    </td>
+                    <td>
+                        Disadv: Immutable Reference to data. Data cannot be modified.
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="../IPC/index.html">Channels (std::sync::mpsc)</a></td>
                     <td>
                         IPC: Yes (Safe message passing)<br>
                         Synchronization: Yes (block until both sender and receiver are ready, providing built-in synchronization)
                     </td>
                 </tr>
                 <tr>
-                    <td>Mutexes and RwLocks</td>
+                    <td><a href="./mutex.html">Mutexes</a> and RwLocks</td>
                     <td>
                         Synchronization: Yes
                     </td>

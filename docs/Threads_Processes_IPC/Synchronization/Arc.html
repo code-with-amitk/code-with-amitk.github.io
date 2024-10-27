@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arc</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is Arc</a>
+        <a href="#features">Features of Arc</a>
+        <a href="#vs">Rc&lt;T> vs Arc&lt;T></a>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h3 id="what">Arc(Atomically Reference Counted) = Shared pointer</h3>
+            <pre><code>
+                    data shared b/w threads (vec![1,2,3])
+        refCount    1           2               n
+                    /\          /\              /\
+                    |           |               |
+            Arc::clone()       Arc::clone()     Arc::clone()
+            thread-1           thread-2         thread-n
+            </code></pre>
+            <dl>
+                Arc provides shared ownership of <b>immutable data</b> across multiple threads,
+                With Arc::clone() reference count is incremented, and resource is freed when count=0<br>
+                if you try to change data wrapped inside Arc, It gives compilation error
+            </dl>
+
+            <h3 id="features">Features of Arc</h3>
+            <dl>1. Mutable Data:</dl>
+            <dd>
+                if you try to change data wrapped inside Arc, It will give <font color="red">compilation error</font><br>
+                We should use Mutex or Rwlock inside Arc.
+            </dd>
+            <dl>2. Thread Safety:</dl>
+                <dd>Arc uses atomic operations for reference counting making it thread safe</dd>
+            <dl>3. Reference Counting:</dl>
+            <dd>
+                <b>clone() on Arc</b>, produces a new Arc instance, which points to the same allocation on the heap as the source Arc, only reference count is increased.<br>
+                When the last Arc pointer to a given allocation is destroyed, the value stored in that allocation (often referred to as “inner value”) is also dropped.
+            </dd>
+            <dl>4. Mutable References</dl>
+            <dd>
+                Not allowed inside Arc<br>
+                Use Arc&lt;Mutex&lt;Value>> or Arc&lt;RwLock&lt;Value>> for changing the value inside Arc
+            </dd>
+
+            <h4>Changing data in Arc gives Compilation Error</h4>
+            <pre><code class="language-css">
+use std::{sync::Arc, thread};
+fn main() {
+    let mut data = Arc::new(vec![1,2,3]);
+    let mut handles = vec![];
+    for i in 0..3 {
+        let data_clone = Arc::clone(&data);
+
+        //data_clone[2] = 1;        //Compilation Error
+
+        let h = thread::spawn(move||{
+            println!("{} {:?}",i, data_clone); 
+        });
+        handles.push(h);
+    }
+    for i in handles {
+        i.join().unwrap();
+    }
+}
+            </code></pre>
+
+            <h3>Rc&lt;T> vs Arc&lt;T></h3>
+<pre><code>
+                                RC&lt;T>                                Arc&lt;T>
+        ---------------|-----------------------------|---------------------------------
+        What           |    Not Thread Safe          |   Thread Safe
+        Internally     |                             |   Uses atomic operations for reference counting
+        Memory overhead|    less                     |   More
+</code></pre>
+        </article>
+    </main>
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

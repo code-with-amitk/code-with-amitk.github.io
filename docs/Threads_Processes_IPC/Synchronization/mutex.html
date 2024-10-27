@@ -3,6 +3,7 @@
 <head>
     <title>Mutex</title>
     <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
@@ -74,7 +75,7 @@
                 1. Making mutex and data as single entity as done in Rust<br>
                 2. All times keeping in mind that data should not handled outside mutex guards
             </dd>
-            <pre>
+            <pre><code class="language-css">
 #include&lt;iostream>
 #include&lt;thread>
 #include&lt;mutex>
@@ -84,7 +85,7 @@ int a = 1;
 void test(int tid) {
     m.lock();
     a++;
-    std::cout << "Thread-" << tid << ", a=" << a << "\n";
+    std::cout &lt;&lt; "Thread-" &lt;&lt; tid &lt;&lt; ", a=" &lt;&lt; a &lt;&lt; "\n";
     m.unlock();
 }
 int main() {
@@ -99,7 +100,7 @@ int main() {
 $ ./a.out
 Thread-1: 5
 Thread-2: Random value                
-            </pre>
+                </code></pre>
 
             <h3 id="create">Creating Mutex</h3>
             <table>
@@ -109,7 +110,7 @@ Thread-2: Random value
                     <th>Rust</th>
                 </tr>
                 <tr>
-                    <td><pre>
+                    <td><pre><code class="language-css">
 // Note asynchronous nature of threads
 // Thread-2 starts earlier than thread-1.
 #include &lt;iostream>
@@ -144,11 +145,11 @@ Thread: Thread: 1, a:7
 ///Output with m.lock(), m.unlock()///
 Thread: 2, a:6                        
 Thread: 1, a:7
-                    </pre></td>
+                    </code></pre></td>
 
-                    <td><pre>
-#include<pthread.h>
-#include<stdio.h>
+                    <td><pre><code class="language-css">
+#include &lt;pthread.h>
+#include &lt;stdio.h>
 
 int counter;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
@@ -168,9 +169,9 @@ int main(){
     pthread_join(tid1, NULL);
     pthread_join(tid2, NULL);
 }                        
-                    </pre></td>
+                    </code></pre></td>
 
-                    <td><pre>       <!--Rust-->
+                    <td><pre><code class="language-css">       <!--Rust-->
 use std::sync::Mutex;
 fn main() {
     //1. Create mutex and associate a 
@@ -189,7 +190,7 @@ fn main() {
     // data can be used without mutex.                            
     println!("m = {:?}", m);
 }                        
-                    </pre></td>
+                    </code></pre></td>
                 </tr>
             </table>
 
@@ -202,10 +203,10 @@ fn main() {
                 We do mutex.lock() before going into CS and mutex.unlock() at exit.<br>
                 lock_guard owns the mutex, then this mutex is handled with lock_guard.
             </dd>
-            <pre>
+            <pre><code class="language-css">
 mutex mtx;
-lock_guard<mutex> lgLock(mtx);           //Mutex(mtx) is owned by lock_guard
-            </pre>
+lock_guard &lt;mutex> lgLock(mtx);           //Mutex(mtx) is owned by lock_guard
+            </code></pre>
 
             <dl><strong>Templated class lock_guard</strong></dl>
             <dd>
@@ -215,8 +216,8 @@ lock_guard<mutex> lgLock(mtx);           //Mutex(mtx) is owned by lock_guard
             We cannot copy lock_guard, because operator = is deleted. Hence its not copy or move assignable.<br>
             Why? If someone locks the mutex and forgets to unlock, then whole process will block.
             </dd>
-            <pre>
-template<typename T>
+            <pre><code class="language-css">
+template &lt;typename T>
 class lock_guard {
 public:
     lock_guard(T a):mutex(a){
@@ -227,9 +228,9 @@ public:
     }
     operator=[deleted]           //Cannot copy lock_guard
 };                
-            </pre>
+            </code></pre>
             <dt><strong>Code Example</strong></dt>
-            <pre>
+            <pre><code class="language-css">
 #include<iostream>
 #include<thread>
 #include<mutex>
@@ -261,7 +262,7 @@ T1: 2
 T2: 0
 T2: 1
 T2: 2                
-            </pre>
+            </code></pre>
 
             <h4 id="ul">2. unique_lock</h4>
             <dd>
@@ -282,6 +283,7 @@ mtx.try_lock_for(5 millisec);
 
         </article>
     </main>
-
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
 </body>
 </html>
