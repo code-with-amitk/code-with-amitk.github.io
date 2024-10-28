@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Problems on Synchronization</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#dining">Dining Philosphers Problem</a>
+        
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h3 id="dining">Dining Philosphers Problem (Concurrency Problem)</h3>
+            <dl>
+                5 philosophers dine together at the same table. Each philosopher has their own place at the table. 
+                There is a fork between each plate. The dish served is a kind of spaghetti which has to be eaten with two forks. 
+                Each philosopher can only alternately think and eat. Moreover, a philosopher can only eat their spaghetti when 
+                they have both a left and right fork. Thus 2 forks will only be available when their 2 nearest neighbors are 
+                thinking, not eating. After an individual philosopher finishes eating, they will put down both forks.
+            </dl>
+            <pre><code class="language-css">
+use std::sync::{mpsc, Arc, Mutex};
+use std::thread;
+use std::time::Duration;
+
+struct Fork;
+
+struct Philosopher {
+    name: String,
+    left_fork: Arc<Mutex<Fork>>,
+    right_fork: Arc<Mutex<Fork>>,
+    thoughts: mpsc::SyncSender<String>,
+}
+
+impl Philosopher {
+    fn think(&self) {
+        self.thoughts
+            .send(format!("Eureka! {} has a new idea!", &self.name))
+            .unwrap();
+    }
+
+    fn eat(&self) {
+        //println!("{} is trying to eat", &self.name);
+        let _left = self.left_fork.lock().unwrap();
+        let _right = self.right_fork.lock().unwrap();
+
+        println!("{} is eating...", &self.name);
+        thread::sleep(Duration::from_millis(10));
+    }
+}
+
+static PHILOSOPHERS: &[&str] =
+    &["Ph1", "Ph2", "Ph3", "Ph4", "Ph5"];
+
+fn main() {
+    let (tx, rx) = mpsc::sync_channel(10);
+
+    //let forks = (0..PHILOSOPHERS.len())
+    //    .map(|_| Arc::new(Mutex::new(Fork)))
+    //    .collect::<Vec<_>>();
+    
+    // Create a vector=forks of 5 Arc::Mutex
+    // These represents 5 forks lying between philophers
+    let mut forks = vec![];
+    for _ in 0..PHILOSOPHERS.len() {
+        forks.push(Arc::new(Mutex::new(Fork)));
+    }
+
+    for i in 0..PHILOSOPHERS.len() {
+        let tx = tx.clone();
+        let mut left_fork = Arc::clone(&forks[i]);
+        let mut right_fork = Arc::clone(&forks[(i + 1) % forks.len()]);
+
+        // To avoid a deadlock, we have to break the symmetry
+        // somewhere. This will swap the forks without deinitializing
+        // either of them.
+        if i == forks.len() - 1 {
+            std::mem::swap(&mut left_fork, &mut right_fork);
+        }
+
+        let philosopher = Philosopher {
+            name: PHILOSOPHERS[i].to_string(),
+            thoughts: tx,
+            left_fork,
+            right_fork,
+        };
+
+        thread::spawn(move || {
+            for _ in 0..10 {
+                philosopher.eat();
+                philosopher.think();
+            }
+        });
+    }
+
+    drop(tx);
+    for thought in rx {
+        println!("{thought}");
+    }
+}
+            </code></pre>
+
+        </article>
+    </main>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

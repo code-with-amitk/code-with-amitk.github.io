@@ -390,6 +390,11 @@ fn main() {
     // Final value after all increments
     println!("Final value: {}", *shared_variable.lock().unwrap());
 }
+$ cargo run
+Thread 0 incremented value to 1
+Thread 1 incremented value to 2
+Thread 2 incremented value to 3
+Final value: 3
                                 </code></pre>
                             </td>
 
