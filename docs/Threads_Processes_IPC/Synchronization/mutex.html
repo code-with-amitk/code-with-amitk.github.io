@@ -22,10 +22,6 @@
         </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What is Mutex</a>
-    </aside>
-
     <main>  <!--Here is our page's main content-->
         <article style="margin-left:200px;">   <!-- It contains an article -->
             <h2 id="what">1. Mutex / Mutual Exculsion / Locking mechanism / Block / Sleep</h2>
@@ -57,16 +53,17 @@
         
             <div id="cpp" class="tabcontent">
                 <h2>CPP</h2>
-                <dl>
-                    Table of Content<br>
-                    <a href="#problems">Problems with Mutex</a><br>
-                    <a href="#create">Code Creating Mutex</a><br>
-                    <a href="#">Wrappers over Mutex</a><br>
+                <aside class="sidebar">
+                    <a href="#what">What is Mutex</a>
+                    <a href="#problems">Problems with Mutex</a>
+                    <a href="#create">Code Creating Mutex</a>
+                    <a href="#">Wrappers over Mutex</a>
                     <ul>
                         <li><a href="#lg">Lock Guard</a></li>
                         <li><a href="#ul">unique_lock</a></li>
                     </ul>
-                </dl>
+                </aside>
+
                 <h3 id="problems">Problems with Mutex</h3>
                 <table>
                     <tr>
@@ -253,8 +250,13 @@ Thread-2: Random value
             </div>
 
             <div id="posix" class="tabcontent">
+                <aside class="sidebar">
+                    <a href="#what">What is Mutex</a>
+                    <a href="#posixmutex">POSIX Mutex</a>
+                </aside>
+
                 <h2>POSIX</h2>
-                <h3>Creating mutex</h3>
+                <h3 id="posixmutex">Creating mutex</h3>
                 <pre><code class="language-css">       <!--posix-->
 #include &lt;pthread.h>
 #include &lt;stdio.h>
@@ -282,14 +284,16 @@ int main(){
 
             <div id="rust" class="tabcontent">
                 <h2>Rust</h2>
-
-                <dl>
-                    Table of Content<br>
+                <aside class="sidebar">
+                    <a href="#what">What is Mutex</a>
+                    <a href="#create">Creating Mutex</a>
+                    <a href="#">Mutex in threads</a>
                     <ul>
-                    <li><a href="#create">Creating Mutex</a></li>
-                    <li><a href="#mutexarc">Mutex cannot be used without Arc in threads</a></li>
+                        <li><a href="#mutexthreads">Mutex in threads(without Arc)</a></li>
+                        <li><a href="#arcmutex">Arc &lt;Mutex></a></li>
                     </ul>
-                </dl>
+                </aside>
+                
 
                 <h3 id="create">Creating Mutex</h3>
                 <dl>
@@ -309,21 +313,17 @@ fn main() {
 }
                     </code></pre>
 
-                    <h3 id="mutexarc">Mutex cannot be used without Arc in threads</h3>
-                    <table>
-                        <tr>
-                            <th>Mutex used inside threads</th>
-                            <th>Arc &lt;Mutex></th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Problem:</b> 
-                                &ensp; std::sync::Mutex does not implement the 
-                                <a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#copyclone">Copy trait</a>, 
-                                hence it cannot be moved between multiple threads.<br>
-                                &ensp; That means if we want to use mutex between threads, shared reference 
-                                (ie <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a>) need to be used
-                                <pre><code class="language-css">
+                    <h3>Mutex in threads</h3>
+                    <h4 id="mutexthreads">Mutex without Arc used inside threads(Code not compile)</h4>
+                    <dl>
+                        <b>Problem:</b> 
+                        &ensp; std::sync::Mutex does not implement the 
+                        <a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#copyclone">Copy trait</a>, 
+                        hence it cannot be moved between multiple threads.<br>
+                        &ensp; That means if we want to use mutex between threads, shared reference 
+                        (ie <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a>) need to be used
+                    </dl>
+                    <pre><code class="language-css">
 use std::sync::Mutex;
 use std::thread;
 fn main() {
@@ -353,15 +353,17 @@ fn main() {
 $ cargo run
 `mutex` has type `Mutex<i32>`, which does not implement the `Copy` trait
 10 |         let h = thread::spawn(move || {
-   |                               ------- value moved into closure here, in previous iteration of loop
-                         </code></pre>
-                            </td>
-                            <td>
-                                <b>How Using Mutex inside Arc solves the problem?</b><br>
-                                &ensp; <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a> is Shared 
-                                reference counting. <br>
-                                &ensp; That means Mutex is not copied between threads, but only reference is incremented.
-                                <pre><code class="language-css">
+    |                               ------- value moved into closure here, in previous iteration of loop
+                            </code></pre>
+
+                    <h4 id="arcmutex">Arc &lt;Mutex></h4>
+                    <dl>
+                    <b>How Using Mutex inside Arc solves the problem?</b><br>
+                    &ensp; <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a> is Shared 
+                    reference counting. <br>
+                    &ensp; That means Mutex is not copied between threads, but only reference is incremented.
+                    </dl>
+                    <pre><code class="language-css">
 use std::sync::{Mutex, Arc};
 use std::thread;
 
@@ -395,11 +397,7 @@ Thread 0 incremented value to 1
 Thread 1 incremented value to 2
 Thread 2 incremented value to 3
 Final value: 3
-                                </code></pre>
-                            </td>
-
-                        </tr>
-                    </table>
+                </code></pre>
             </div>
 
         </article>
