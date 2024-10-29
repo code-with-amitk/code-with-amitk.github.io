@@ -27,6 +27,7 @@
         <a href="#drop">drop trait</a>
         <a href="#future">future trait</a>
         <a href="#iterator">Iterator trait</a>
+        <a href="#sendsync">Send, Sync trait</a>
     </aside>
 
     <article style="margin-left:200px;">
@@ -202,6 +203,20 @@ pub trait Iterator {
     fn next(&mut self) -> Option<Self::Item>;
 }
         </code></pre>
+
+        <h2 id="sendsync"><a href="https://doc.rust-lang.org/std/marker/trait.Send.html">Send, Sync trait</a></h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Send</th>
+                <th>Sync</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Types (T) that can be transferred across thread boundaries.</td>
+                <td>Types for which it is safe to share references (&T) between threads.</td>
+            </tr>
+        </table>
 
     </article>
 

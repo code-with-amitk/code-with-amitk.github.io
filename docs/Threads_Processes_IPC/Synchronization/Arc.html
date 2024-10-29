@@ -30,7 +30,9 @@
 
     <main>  <!--Here is our page's main content-->
         <article style="margin-left:200px;">   <!-- It contains an article -->
-            <h3 id="what">Arc(Atomically Reference Counted) = Shared pointer</h3>
+            <h3 id="what">
+                <a href="https://doc.rust-lang.org/std/sync/struct.Arc.html">Thread-Safe Arc(Atomically Reference Counted) = Shared pointer</a>
+            </h3>
             <pre><code>
                     data shared b/w threads (vec![1,2,3])
         refCount    1           2               n
@@ -46,22 +48,25 @@
             </dl>
 
             <h3 id="features">Features of Arc</h3>
-            <dl>1. Mutable Data:</dl>
+            <dl>1. Shared Ownership:</dl>
             <dd>
-                if you try to change data wrapped inside Arc, It will give <font color="red">compilation error</font><br>
-                We should use Mutex or Rwlock inside Arc.
+                - Arc&lt;T> provides shared ownership of a value of type T, allocated in the heap. <b>clone()</b> on Arc 
+                produces a new Arc instance, which points to the same allocation on the heap as the source Arc, while increasing a reference count.<br>
+                - When the last Arc pointer to a given allocation is destroyed, the value stored in that allocation (<b>inner value</b>) is also dropped.
             </dd>
-            <dl>2. Thread Safety:</dl>
-                <dd>Arc uses atomic operations for reference counting making it thread safe</dd>
-            <dl>3. Reference Counting:</dl>
+            <dl>2. Mutable References:</dl>
             <dd>
-                <b>clone() on Arc</b>, produces a new Arc instance, which points to the same allocation on the heap as the source Arc, only reference count is increased.<br>
-                When the last Arc pointer to a given allocation is destroyed, the value stored in that allocation (often referred to as “inner value”) is also dropped.
+                - Shared references in Rust disallow mutation by default, and Arc is no exception: you cannot obtain a mutable reference to something inside an Arc<br>
+                - If you need to mutate through an Arc, use Mutex, RwLock, or one of the Atomic types. Eg: Arc&lt;Mutex&lt;Value>> or Arc&lt;RwLock&lt;Value>>
             </dd>
-            <dl>4. Mutable References</dl>
+            <dl>3. Thread Safety:</dl>
             <dd>
-                Not allowed inside Arc<br>
-                Use Arc&lt;Mutex&lt;Value>> or Arc&lt;RwLock&lt;Value>> for changing the value inside Arc
+                - Unlike Rc &lt;T>, Arc &lt;T> uses atomic operations for its reference counting.<br>
+                - The disadvantage is that atomic operations are more expensive than ordinary memory accesses. Consider using Rc&lt;T> for lower overhead
+            </dd>
+            <dl><a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/index.html#sendsync">4. Send, Sync Triats on Arc &lt;T>:</a></dl>
+            <dd>
+                Arc&lt;T> will implement Send and Sync as long as the T implements Send and Sync
             </dd>
 
             <h4>Changing data in Arc gives Compilation Error</h4>
