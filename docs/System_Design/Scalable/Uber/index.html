@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Uber System Design</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+      <a href="#req">Requirements</a>
+      <a href="#boe">BOE</a>
+      <a href="#hld">HLD</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="req">Requirements</h2>
+    <h4>Functional</h4>
+    <dl>There would be 2 entities(User & driver) which will use this system</dl>
+    <dl>User Requirements:</dl>
+    <dt>
+      1. User can create his profile on system.<br>
+      2. User should be able to see near by cabs on real time.  //READ<br>
+      3. User can book the cab. //Create<br>
+      4. User can cancel the ride after successful booking.   //Delete<br>
+      5. User can modify the ride.  //Update
+    </dt>
+    <dl>Driver's Requirements:</dl>
+    <dt>
+      1. Driver can create his profile on system. <br>
+      2. Location of driver is updated on real time.  //Update<br>
+      3. Driver gets notification of near users asking for booking. //Read<br>
+      4. Driver can cancel ride after booking.
+    </dt>
+
+    <h2 id="boe">BOE</h2>
+    <dl>
+      Assumed. Users(300 Million) Drivers(1M)<br>
+      DAU(1M), DA Drivers(500k). Daily rides(1M)<br>
+      Drivers update their location every 5 seconds.
+    </dl>
+
+    <h2 id="hld">HLD</h2>
+    <dl>
+      We will extend <a href="/System_Design/Scalable/yelpProximityServer_nearbyRecommendationSystem/#ull">quadtree design</a> of yelp here
+    </dl>
+    <dl><b>Frequent Updates on quadtree:</b></dl>
+    <dd>
+      Difference b/w Uber & yelp is there would be more frequent updates on quadtree wrt yelp.
+      Since Drivers update their location(driver_id, lat, long) every 5 seconds, Will we update quadtree on every update?<br>
+      <b>No.</b> We will create a local datastructure(Hash Table), which will store info of drivers and will send the information
+      after 10-15 seconds. This will reduce frequent updates on system.
+    </dd>
+    <pre><code class="language-css">
+      Hash Table:
+      key=driver_id(3 bytes), value={lat(8bytes), long(8bytes)} //19 bytes
+    
+      500k driver. 10Mbytes of storage
+    </code></pre>
+  </article>
+
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>
