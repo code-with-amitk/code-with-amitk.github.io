@@ -91,14 +91,43 @@ fn main() {
 }
             </code></pre>
 
-            <h3>Rc&lt;T> vs Arc&lt;T></h3>
-<pre><code>
-                                RC&lt;T>                                Arc&lt;T>
-        ---------------|-----------------------------|---------------------------------
-        What           |    Not Thread Safe          |   Thread Safe
-        Internally     |                             |   Uses atomic operations for reference counting
-        Memory overhead|    less                     |   More
-</code></pre>
+            <h3 id="vs"><a href="/Languages/Programming/Rust/Smart%20Pointers/index.html#what">Rc&lt;T></a> vs Arc&lt;T></h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th><a href="/Languages/Programming/Rust/Smart%20Pointers/index.html#what">RC&lt;T> (Reference Counted Smart Pointer)</a></th>
+                    <th>Arc&lt;T> (Atomically Reference Counted)</th>
+                </tr>
+                <tr>
+                    <td>What</td>
+                    <td>Reference Counted Smart Pointer</td>
+                    <td>Same (Internally Uses atomic operations for reference counting)</td>
+                </tr>
+                <tr>
+                    <td>Thread Safe</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>What</td>
+                    <td>Reference Counted Smart Pointer</td>
+                    <td>Same</td>
+                </tr>
+                <tr>
+                    <td>Memory overhead</td>
+                    <td>Less</td>
+                    <td>More (Since it uses atomic operations Internally)</td>
+                </tr>
+                <tr>
+                    <td>clone()</td>
+                    <td>
+                        Invoking clone produces a new pointer to the same allocation in the heap<br>
+                        When the last Rc pointer to a given allocation is destroyed, the value stored<br>
+                        in that allocation (often referred to as “inner value”) is also dropped
+                    </td>
+                    <td>Same</td>
+                </tr>
+            </table>
         </article>
     </main>
     <script src="/scripts/common.js"></script>
