@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Async Programming</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">
+        <a href="#what">What is async</a>
+        <a href="#async">async, await, block_on()</a>
+        <a href="#future">Future</a>
+        <a href="#vs">Async vs Threading</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Asynchronous?</h2>
+        <dt>
+            This is concurrency model where multiple tasks are executed 
+            <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms">concurrently</a> 
+            by executing each task until it would block, then switching to another task that is ready to make progress.<br>
+            Model runs larger number of tasks on a limited number of threads, because the per-task overhead is typically very low.<br>
+            Eg: I/O-bound tasks(Network or file I/O)
+        </dt>
+
+        <h3 id="async">async, await, block_on()</h3>
+        <dl>
+            <b>async:</b> keyword is syntactic sugar. The compiler replaces the return type with a future<br>
+            <b>await: </b> asynchronously waits for the completion of another operation can only be used inside an async function (or block)<br>
+            <b>async main(): </b> You cannot make main async, without additional instructions to the compiler
+            You need an executor to run async code<br>
+            <b>block_on(): </b> blocks the current thread until the provided future has run to completion
+        </dl>
+        <pre><code class="language-css">
+use futures::executor::block_on;
+
+async fn count_to(count: i32) {
+    for i in 0..count {
+        println!("Count is: {i}!");
+    }
+}
+
+async fn async_main(count: i32) {
+    count_to(count).await;
+}
+
+fn main() {
+    block_on(async_main(4));
+}
+$ cargo run
+Count is: 0
+Count is: 1
+Count is: 2
+Count is: 3
+        </code></pre>
+
+        <h3 id="future">Future</h3>
+        <dl>
+            Asynchronous operation is based on "futures", which represent work that may be completed in the future. 
+            Futures are "polled" until they signal that they are complete
+        </dl>
+
+        <h2 id="vs">Async vs Threading</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Async</th>
+                <th>Threading</th>
+            </tr>
+            <tr>
+                <td>Concurrency</td>
+                <td>Done inside single thread. Uses event loops or similar mechanisms to efficiently handle tasks</td>
+                <td>Executing multiple threads of execution concurrently.</td>
+            </tr>
+            <tr>
+                <td>Resource Overhead</td>
+                <td>lower resource overhead compared to multithreading. Since reduces context-switching and memory overhead</td>
+                <td>High resource overhead. Since each thread has its own stack and context</td>
+            </tr>
+            <tr>
+                <td>Complexity</td>
+                <td>Simpler for certains cases like I/O-bound operations bcoz avoids deadlocks, race conditions</td>
+                <td>More complex since it involves race conditions, deadlocks, and other concurrency issues</td>
+            </tr>
+            <tr>
+                <td>Performance</td>
+                <td>Better performance for I/O-bound applications. Not suited for CPU-bound tasks.</td>
+                <td>Better performance for CPU-bound tasks</td>
+            </tr>
+        </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
