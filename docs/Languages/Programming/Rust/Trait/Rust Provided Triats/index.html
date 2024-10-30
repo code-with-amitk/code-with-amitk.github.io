@@ -216,6 +216,55 @@ pub trait Iterator {
                 <td>Types (T) that can be transferred across thread boundaries.</td>
                 <td>Types for which it is safe to share references (&T) between threads.</td>
             </tr>
+            <tr>
+                <td><a href="/Languages/Programming/Rust/Unsafe/index.html">unsafe</a> trait</td>
+                <td>Yes</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Automatically derived trait</td>
+                <td>
+                    Yes<br>
+                    if type is thread-safe, then it Automatically derived Send,sync<br>
+                    Apart from Rc and UnsafeCell, all types are Send, Sync.
+                </td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Can be implemented</td>
+                <td>
+                    Yes
+                    <pre><code class="language-css">
+struct MyBox(*mut u8);
+unsafe impl Send for MyBox {}
+                    </code></pre>
+                </td>
+                <td>Yes
+                    <pre><code class="language-css">
+struct MyBox(*mut u8);
+unsafe impl Sync for MyBox {}
+                    </code></pre>                        
+                </td>
+            </tr>
+            <tr>
+                <td>Can be unimplemented</td>
+                <td>
+                    Yes
+                    <pre><code class="language-css">
+#![feature(negative_impls)]
+
+// I have some magic semantics for some synchronization primitive!
+struct SpecialThreadToken(u8);
+
+impl !Send for SpecialThreadToken {}
+                    </code></pre>
+                </td>
+                <td>Yes
+                    <pre><code class="language-css">
+impl !Sync for SpecialThreadToken {}
+                    </code></pre>                        
+                </td>
+            </tr>
         </table>
 
     </article>

@@ -32,8 +32,16 @@
     <article style="margin-left:200px;">
         <h3 id="what">What is Asynchronous?</h3>
         <dt>
-            This is a programming paradigm that allows tasks to run concurrently without waiting/blocking for each other to complete. <br>
+            This is concurrency model where multiple tasks are executed 
+            <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms">concurrently</a> 
+            by executing each task until it would block, then switching to another task that is ready to make progress.<br>
+            Model runs larger number of tasks on a limited number of threads, because the per-task overhead is typically very low.<br>
             Eg: I/O-bound tasks(Network or file I/O)
+        </dt>
+        <dt>
+            <b>Futures:</b> <br>
+            Asynchronous operation is based on "futures", which represent work that may be completed in the future. 
+            Futures are "polled" until they signal that they are complete
         </dt>
         <table>
             <tr>
