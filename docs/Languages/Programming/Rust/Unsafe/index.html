@@ -37,17 +37,45 @@
                     <th>Unsafe Rust (Like C Programming language)</th>
                 </tr>
                 <tr>
-                    <td>What</td>
-                    <td>Compiler takes care of type-safety, memory-safety, thread safety etc</td>
-                    <td>Like C, Compiler does not check safety rules and coder does at its own risk</td>
+                    <td>Memory safety</td>
+                    <td>
+                        Guarantees enforced at compile time, ie Compiler takes<br>
+                        care of type-safety, memory-safety, thread safety etc
+                    </td>
+                    <td>
+                        Like C, Compiler does not check safety rules and coder does at its own risk<br>
+                        Eg: In unsafe code you can dereference null pointer at your own risk
+                    </td>
+                </tr>
+                <tr>
+                    <td>5 Things</td>
+                    <td>
+                        Not allowed
+                    </td>
+                    <td>
+                        Unsafe superpowers:<br>
+                        1. Dereference a raw pointer<br>
+                        2. Call an unsafe function or method<br>
+                        3. Access or modify a mutable static variable<br>
+                        4. Implement an unsafe trait<br>
+                        5. Access fields of a union
+                    </td>
+                </tr>
+                <tr>
+                    <td>How to be implemented</td>
+                    <td>
+                    </td>
+                    <td>
+                        Access to unsafe code should be done via safe API
+                    </td>
                 </tr>
             </table>
 
             <h2 id="why">Why we need Unsafe Rust</h2>
             <dl>
-                We want low level control over implementation details <br>
-                Maybe you're writing a low-level abstraction not exposed by the standard library<br>
-                Dereference raw pointers etc
+                Underlying computer hardware is inherently unsafe, if unsafe operations are not allowed, Rust programmers 
+                couldn’t do certain tasks. Eg: Writing device drivers, Interaction with OS, or Writing own OS<br> 
+                Maybe you're writing a low-level abstraction not exposed by the standard library.
             </dl>
         </article>
 
