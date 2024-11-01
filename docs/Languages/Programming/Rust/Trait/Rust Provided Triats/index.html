@@ -175,18 +175,17 @@ After scope
             Thread waits on future to become available. These are similar to epoll(), not smilar to poll() or select().
         </dl>
         <pre><code class="language-css">
+use std::pin::Pin;
+use std::task::Context;
+
 pub trait Future {
-    //The type of value produced on completion.
-    type Output;                 
-    
-    /*Description:
-        This method resolves future into a final value. This is aync method does not block if value is not ready
-        Returns:
-        Poll::Pending if the future is not ready. 
-        Poll::Ready(val) with the result val of this future if it finished successfully.
-        */
+    type Output;
     fn poll(self: Pin &lt;&mut Self>, cx: &mut Context &lt;'_>) -> Poll &lt;Self::Output>;
 }
+pub enum Poll &lt;T> {
+    Ready(T),
+    Pending,
+}            
         </code></pre>
 
         <h2 id="iterator">Iterator trait</h2>

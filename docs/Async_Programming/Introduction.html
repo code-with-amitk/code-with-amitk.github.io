@@ -25,8 +25,6 @@
 
     <aside class="sidebar">
         <a href="#what">What is async</a>
-        <a href="#async">async, await, block_on()</a>
-        <a href="#future">Future</a>
         <a href="#vs">Async vs Threading</a>
     </aside>
 
@@ -39,44 +37,7 @@
             Model runs larger number of tasks on a limited number of threads, because the per-task overhead is typically very low.<br>
             Eg: I/O-bound tasks(Network or file I/O)
         </dt>
-
-        <h3 id="async">async, await, block_on()</h3>
-        <dl>
-            <b>async:</b> keyword is syntactic sugar. The compiler replaces the return type with a future<br>
-            <b>await: </b> asynchronously waits for the completion of another operation can only be used inside an async function (or block)<br>
-            <b>async main(): </b> You cannot make main async, without additional instructions to the compiler
-            You need an executor to run async code<br>
-            <b>block_on(): </b> blocks the current thread until the provided future has run to completion
-        </dl>
-        <pre><code class="language-css">
-use futures::executor::block_on;
-
-async fn count_to(count: i32) {
-    for i in 0..count {
-        println!("Count is: {i}!");
-    }
-}
-
-async fn async_main(count: i32) {
-    count_to(count).await;
-}
-
-fn main() {
-    block_on(async_main(4));
-}
-$ cargo run
-Count is: 0
-Count is: 1
-Count is: 2
-Count is: 3
-        </code></pre>
-
-        <h3 id="future">Future</h3>
-        <dl>
-            Asynchronous operation is based on "futures", which represent work that may be completed in the future. 
-            Futures are "polled" until they signal that they are complete
-        </dl>
-
+        
         <h2 id="vs">Async vs Threading</h2>
         <table>
             <tr>
@@ -105,7 +66,142 @@ Count is: 3
                 <td>Better performance for CPU-bound tasks</td>
             </tr>
         </table>
+        <br>
+        
+        <div>
+            <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
+            <button class="tablinks" onclick="opencode(event, 'cpp')">C++</button>
+        </div>
+        
+        <div id="rust" class="tabcontent">
+            <aside class="sidebar">
+                <a href="#what">What is async</a>
+                <a href="#vs">Async vs Threading</a>
+                <a href="#async">async, await, block_on()</a>
+                <a href="#future">Future</a>
+                <a href="#awaitvsblockon">await vs block_on()</a>
+            </aside>
+            <h2>Rust</h2>
+
+            <h3 id="async">async, await, block_on()</h3>
+            <dl>
+                <b>async:</b> keyword is syntactic sugar. The compiler replaces the return type with a future<br>
+                <b><a href="#await">await</a></b><br>
+                <b>async main(): </b> You cannot make main async, without additional instructions to the compiler
+                You need an executor to run async code<br>
+                <b>block_on(): </b> blocks the current thread until the provided future has run to completion
+            </dl>
+                <pre><code class="language-css">
+use futures::executor::block_on;
+
+async fn count_to(count: i32) {
+    for i in 0..count {
+        println!("Count is: {i}!");
+    }
+}
+
+async fn async_main(count: i32) {
+    count_to(count).await;
+}
+
+fn main() {
+    block_on(async_main(4));
+}
+$ cargo run
+Count is: 0
+Count is: 1
+Count is: 2
+Count is: 3
+                </code></pre>
+
+            <h3 id="future">Future</h3>
+            <dl>
+                Asynchronous operation is based on "futures", which represent work that may be completed in the future. 
+                Futures are "polled" until they signal that they are complete<br>
+                <a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#future">future is trait</a>.
+            </dl>
+            <h3 id="await">await</h3>
+            <dl>
+                The .await keyword, applied to a Future, causes the current async function to pause until that Future is ready, 
+                and then evaluates to its output.<br>
+                await is used to wait for another async function.
+            </dl>
+
+            <h3 id="awaitvsblockon">await vs block_on()</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>await</th>
+                    <th>block_on()</th>
+                </tr>
+                <tr>
+                    <td>Blocks current thread</td>
+                    <td>no</td>
+                    <td>yes</td>
+                </tr>
+                <tr>
+                    <td>wait for future to complete</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                </tr>
+                <tr>
+                    <td>Other tasks in async function can run?</td>
+                    <td>yes</td>
+                    <td>no</td>
+                </tr>
+            </table>
+          </div>
+
+          <div id="cpp" class="tabcontent">
+            <h2>C++</h2>
+            <dl>
+                Future object is returned by the async function.<br>
+                Promise is returned by async.
+            </dl>
+            <table>
+                <tr>
+                    <td>
+                        <pre><code class="language-css">
+include &lt;iostream>
+#include &lt;future>
+#include &lt;thread>
+int main() {
+    // future from an async()
+    std::future &lt;int> f2 = std::async(std::launch::async,
+                                []{                 //Creating lambda
+                                    return 8;
+                                });
+    f2.wait();
+    std::cout &lt;&lt; "Done!\nResults are:" &lt;&lt; f2.get();
+}
+$ g++ test.cpp -lpthread
+$ ./a.out
+Done 8
+                        </code></pre>
+                    </td>
+                    <td>
+                        <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;thread>
+#include &lt;iostream>
+#include &lt;future>
+
+void fun(){
+    std::cout &lt;&lt; "Hello";
+}
+int main() {
+    auto fut = std::async (std::launch::async, fun);
+}
+$ ./a.out
+Hello
+                        </code></pre>    
+                    </td>
+                </tr>
+            </table>
+          </div>
+
     </article>
     <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
 </body>
 </html>
