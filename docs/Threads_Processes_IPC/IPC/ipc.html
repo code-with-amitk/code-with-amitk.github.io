@@ -22,10 +22,6 @@
         </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        
-    </aside>
-
     <main>  <!--Here is our page's main content-->
 
         <div style="margin-left:200px;">
@@ -41,31 +37,33 @@
                 <button class="tablinks" onclick="opencode(event, 'windows')">Windows</button>
                 -->
             </div>
+
+
     
             <!-- Tab content -->
             <div id="rustchannel" class="tabcontent">
-                <h3>Rust (Channels)</h3>
-                <dl>
-                    <b>Content</b>
-                    <ul>
-                        <li><a href="#what">Channel?</a></li>
-                        <li><a href="#types">Types of Channels</a></li>
-                        <ul>
-                            <dt>
-                            <li><a href="#t1">Unbounded, sync, (Multi-Producer Single-Consumer)</a></li>
-                            <li><a href="#t2">Bounded, sync, (Multi-Producer Single-Consumer)</a></li>
-                            <li><a href="#t3">Unbounded, async, (Multi-Producer Multi-Consumer)</a></li>
-                            </dt>
-                        </ul>
-                    </ul>
-                </dl>
+                <h2>Rust (Channels)</h2>
 
-                <h4 id="what">What is Channel?</h4>
+                <aside class="sidebar">    <!--See .sidebar in styles.css-->
+                    <a href="#what">Channel?</a>
+                    <a href="#types">Types of Channels</a>
+                    <ul>
+                        <li><a href="#mpsc">Multi-Producer Single-Consumer (mpsc)</a></li>
+                        <ul>
+                            <li><a href="#11unbounded">1 Sender 1 Reciever (Unbounded, synchronous)</a></li>
+                            <li><a href="#41">4 Sender 1 Reciever (Unbounded, synchronous)</a></li>
+                            <li><a href="#11bounded">1 Sender 1 Reciever (Bounded, synchronous)</a></li>
+                        </ul>
+                        <li><a href="#multi">Multi-Producer Multi-Consumer (Unbounded, async)</a></li>
+                    </ul>
+                </aside>
+
+                <h3 id="what">What is Channel?</h3>
                 <dt>
                     Sender<T> and Receiver<T> are connected via Channel. They can send/recv data via channel.
                 </dt>
 
-                <h4>Types Channels?</h4>
+                <h3>Types Channels?</h3>
                 <table>
                     <tr>
                         <th></th>
@@ -94,39 +92,27 @@
                     <tr id="asynchronousmeaning">
                         <td>Asynchronous</td>
                         <td>
-                            Means that the sending and receiving operations are non-blocking<br>
+                            Means that the sending and receiving operations are <b>non-blocking</b><br>
                             Sender and receiver can proceed independently<br><br>
-                            <b>NO. This is synchronous</b>
+                            <b>NO. This is synchronous, ie blocking</b>
                         </td>
                         <td>
-                            Operations are non-blocking and can be awaited. <br><br>
-                            <b>Yes. This is Asynchronous</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Blocking</td>
-                        <td>
-                            <b>Yes its Blocking,</b> since its not synchronous
-                        </td>
-                        <td>
-                            No blocking<br>
-                            No one waits on channel(neither sender, nor rcvr)<br>
-                            When all Senders or all Receivers are dropped, the channel becomes closed
+                            Operations are non-blocking ie No one waits on channel(neither sender, nor rcvr) <br>
+                            When all Senders or all Receivers are dropped, the channel becomes closed <br><br>
+                            <b>Yes. This is Asynchronous ie non-blocking</b>
                         </td>
                     </tr>
                 </table>
 
-                <h5 id="mpsc">Multi-Producer, Single-Consumer (mpsc)</h5>
+                <h3 id="mpsc">Multi-Producer, Single-Consumer (mpsc)</h3>
                 <table>
                     <tr>
-                        <th id="t1">Unbounded, synchronous Channel</th>
-                        <th id="t2">Bounded, synchronous Channel</th>
+                        <th id="11unbounded">1 Sender 1 Reciever (Unbounded, synchronous)</th>
+                        <th id="41">4 Sender 1 Reciever (Unbounded, synchronous)</th>
+                        <th id="11bounded">1 Sender 1 Reciever (Bounded, synchronous)</th>
                     </tr>
                     <tr>
-                        <td>
-                            <a href="#unbounded">Unbounded?</a><br>
-                            <a href="#asynchronousmeaning">Synchronous?</a>
-                            <pre><code class="language-css">
+                        <td><pre><code class="language-css">
 fn main() {
     let (tx, rx) = std::sync::mpsc::channel();
     match tx.send(1) {      //send() returns Result
@@ -145,6 +131,48 @@ fn main() {
 $ cargo run
 Sent
 Recieved 1
+                        </code></pre></td>
+                        <td><pre><code class="language-css">
+use std::{sync::mpsc, thread};
+fn main() {
+    println!("Hello, world!");
+    let mut handles = vec![];
+    let (t,r) = mpsc::channel();
+    for i in 0..3 {
+        let tx = t.clone();
+        // Create 3 threads using for loop
+        // And push joinHandles inside vector
+        handles.push(thread::spawn(move || {
+            match tx.send(i) {
+                Ok(_o) => {
+                    println!("Sent by thread {}", i);
+                },
+                Err(e) => {
+                    println!("Send Error {}", e);
+                }
+            };
+        }));
+    }
+    drop(t);
+
+    // Single Reciever, recieves all messages
+    loop {
+        match r.recv() {
+            Ok(o) => {
+                println!("Rcvd {}", o);
+            },
+            Err(e) => {
+                println!("Recv Error {}", e);
+                break;
+            }
+        };
+    }
+
+    // Wait on thread's Handles
+    for h in handles {
+        h.join().unwrap();
+    }
+}
                         </code></pre></td>
                         <td><pre><code class="language-css">
 use std::thread;
@@ -194,10 +222,8 @@ All threads have completed.
                         </code></pre></td>
                     </tr>
                 </table>
-                
 
-
-                <h5 id="t3">Asynchronous channel (multi-producer, multi-consumer)</h5>
+                <h3 id="multi">Multi-Producer, Multi-Consumer (Unbounded, Asynchronous)</h3>
                 <pre><code class="language-css">
 # Cargo.toml
 [package]
