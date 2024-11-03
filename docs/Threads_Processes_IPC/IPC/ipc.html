@@ -226,31 +226,67 @@ All threads have completed.
                 <h3 id="multi">Multi-Producer, Multi-Consumer (Unbounded, Asynchronous)</h3>
                 <pre><code class="language-css">
 # Cargo.toml
-[package]
-name = "async_channel"
-version = "0.1.0"
-edition = "2018"
-
 [dependencies]
+tokio = { version = "1", features = ["full"] }
 async-channel = {version = "1.5"}
-tokio = {version = "0.2.*", features = ["full"] }
 
 # main.rs
 use async_channel;
-async fn fun() {
-    let (s, r) = async_channel::unbounded();
+use tokio::task;
+use tokio;
+use tokio::sync::Mutex;
+use std::sync::Arc;
 
-    // Send on channel
-    assert_eq!(s.send("Hello").await, Ok(()));
+async fn send_thread(t: async_channel::Sender<Arc<Mutex<i32>>>, var: Arc<Mutex<i32>>) {
+    {
+        let mut a= var.lock().await;        //returns MutexGuard<_, i32>
+        *a += 1;
+    }
+    match t.send(var).await{    //returns Result<(), SendError<i32>>
+        Ok(_o) => {
+            println!("Sent Arc<Mutex> on channel");
+        }, 
+        Err(e) => {
+            println!("Error: {}", e);
+        }
+    };
 
-    // Receive on channel
-    assert_eq!(r.recv().await, Ok("Hello"));
 }
+async fn recv_thread(r: async_channel::Receiver<Arc<Mutex<i32>>>) {
+    match r.recv().await{    //returns MutexGuard<_, i32>
+        Ok(o) => {
+            println!("Recieved Mutex");
+            let a = o.lock().await;
+            println!("{} ", *a);
+        }, 
+        Err(e) => {
+            println!("Error: {}", e);
+        }
+    };
+}
+#[tokio::main]
+async fn main() {
+    //This would be passed between threads
+    let var = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+    let (t, r) = async_channel::unbounded();
+    // Create 3 tokio tasks, sending on channel
+    for _ in 0..3 {
+        let tx = t.clone();
+        let var_clone = var.clone();
+        let handle = task::spawn(send_thread(tx, var_clone));
+        handles.push(handle);
+    }
 
-fn main() {
-    let mut rt = tokio::runtime::Runtime::new().unwrap(); //1. Start tokio runtime
-    let local = tokio::task::LocalSet::new();
-    local.block_on(&mut rt, async move { fun().await });
+    for _ in 0..3 {
+        let rx = r.clone();
+        let handle = task::spawn(recv_thread(rx));
+        handles.push(handle);
+    }
+
+    for h in handles {
+        h.await.unwrap();
+    }
 }
                 </code></pre>
             </div>
