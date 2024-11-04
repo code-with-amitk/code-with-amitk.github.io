@@ -45,7 +45,7 @@
                 New <a href="/Motherboard/Memory/Processes.html#pcb">Process control block</a> is created for child. Code Segment is Duplicated using 
                 <a href="#cow">COW(Copy on Write)</a>
             </dl>
-            <pre><code>
+            <pre><code class="language-css">
                 -------------2. fork() Duplicates----------
                 |                                         \/                  
                 PARENT                                   CHILD
@@ -120,11 +120,11 @@ int main(){
             </code></pre>
 
             <h2 id="clone">clone</h2>
-            <pre><code>
+            <pre><code class="language-css">
 int clone(int (*fn)(void *), void *stack, int flags, void arg, .../ pid_t *parent_tid, void *tls, pid_t *child_tid */ );
             </code></pre>
             <dl>
-                What? API creates a new child process, in a manner similar to fork(2).<br>
+                API creates a new child process, in a manner similar to fork(2).<br>
                 Unlike fork(2), the clone(2) allows the child process to share parts of its execution context with the calling process, 
                 such as the memory space, the table of file descriptors, and the table of signal handlers. <br>
                 You can pass different namespace flags to clone(2) to create new namespaces for the child process.
@@ -132,8 +132,8 @@ int clone(int (*fn)(void *), void *stack, int flags, void arg, .../ pid_t *paren
 
             <h2 id="cow">COW(Copy on Write)</h2>
             <dl>
-                CS, DS, SS, HS all are shared between parent & child Initially. 
-                If any one of them Modifies, New page is created & modified data is copied
+                Initially, CS, DS, SS, HS all are shared between parent & child . <br>
+                If any one of them(either parent or child) modifies the data, New page is created & modified data is copied
             </dl>
             <pre><code class="language-css">
 #include &lt;unistd.h>
@@ -197,7 +197,7 @@ Inside Child
             </code></pre>
 
             <h4 id="nforks">n forks</h4>
-            <dl>if we call fork() n number of times. Common code is executed 2n times.</dl>
+            <dl>if we call fork() n number of times. Common code is executed 2<sup>n</sup> times.</dl>
             <pre><code class="language-css">
 #include&lt;unistd.h>  //fork
 int main(){
