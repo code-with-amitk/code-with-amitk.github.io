@@ -304,12 +304,17 @@ int main(){
 use std::sync::Mutex;
 fn main() {
     // Create mutex and associate a i32 data with it(whose initial value=5).
-    let m = Mutex::new(5);                   
+    let mtx = Mutex::new(5);                   
     {
         //After acquiring lock, data inside mutex can be changed
-        let mut num = m.lock().unwrap();     
-        *num = 6;
-    }            
+        let mut n = mtx.lock().unwrap();     
+        *n = 6;
+    }
+    {
+        // Print after acquiring the lock
+        let n = mtx.lock().unwrap();
+        println!("{}", n);
+    }    
 }
                     </code></pre>
 
@@ -327,27 +332,20 @@ fn main() {
 use std::sync::Mutex;
 use std::thread;
 fn main() {
-    int mut val = 1;
-
-    // Initialize a Mutex protecting an integer
-    let mutex = Mutex::new(val); 
+    let mtx = Mutex::new(0);                //Initialize a Mutex protecting an integer
     let mut handles = vec![];
 
-    for i in 0..3 {
-        // Spawn threads
-        let h = thread::spawn(move || {
+    for i in 0..2 {
+        let h = thread::spawn(move || {     //Spawn threads
 
-            // Lock the mutex to gain access
-            let mut num = mutex.lock().unwrap();
-
-            *num += 1; // Modify the protected data
-            println!("Thread {} incremented value to {}", i, *num);
+            let mut n = mtx.lock().unwrap();
+            *n += 1;                        // Modify the protected data
         });
         handles.push(h);
     }
 
-    for h in handles {
-        h.join().unwrap(); // Wait for all threads to finish
+    for h in handles {                      // Wait for all threads to finish
+        h.join().unwrap(); 
     }
 }
 $ cargo run
@@ -368,35 +366,32 @@ use std::sync::{Mutex, Arc};
 use std::thread;
 
 fn main() {
-    // Initialize a Mutex protecting an integer
-    let shared_variable = Arc::new(Mutex::new(0));
+    let mtx = Arc::new(Mutex::new(0));      // Initialize a Mutex protecting an integer
     let mut handles = vec![];
 
-    for i in 0..3 {
-        // Every thread will have new Reference. Arc is reference counted
-        let shared_var_clone = Arc::clone(&shared_variable);
+    for i in 0..2 {
+        let c = Arc::clone(&mtx);           // Every thread will have new Reference. Arc is reference counted
         
-        let h = thread::spawn(move || {
-            // Lock the Arc &lt;Mutex> to gain access
-            let mut num = shared_var_clone.lock().unwrap();
-            *num += 1; // Modify the protected data
-            println!("Thread {} incremented value to {}", i, *num);
+        let h = thread::spawn(move || {     // Spawn threads
+            let mut n = c.lock().unwrap();
+            *n += 1;                        // Modify the protected data
         });
         handles.push(h);
     }
 
     for h in handles {
-        h.join().unwrap(); // Wait for all threads to finish
+        h.join().unwrap();                  // Wait for all threads to finish
     }
 
     // Final value after all increments
-    println!("Final value: {}", *shared_variable.lock().unwrap());
+    let c1 = Arc::clone(&mtx);
+    let n = c1.lock().unwrap();
+    println!("Final value: {}", *n);        // 2
 }
 $ cargo run
 Thread 0 incremented value to 1
 Thread 1 incremented value to 2
-Thread 2 incremented value to 3
-Final value: 3
+Final value: 2
                 </code></pre>
             </div>
 
