@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Moodboard App</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#what">What is Moodboard?</a>
+    <a href="#req">Requirements</a>
+    <a href="#boe">BOE</a>
+    <a href="#api">System APIs</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="what">What is Moodboard (Digital pinboard)</h2>
+    <dl>
+      Suppose you are going on vacation and you created pinboard where you will pin (photos, videos, text)
+    </dl>
+
+    <h2 id="req">Requirements</h2>
+    <h4>Functional (CRUD)</h4>
+    <dl>
+      1. Create. User can create the pinboard<br>
+      2. Read. User can see the created pinboard<br>
+      3. Update. User can add/delete/update text/video/image on pinboard<br>
+      4. Delete. User can delete pinboard.
+    </dl>
+
+    <h4>Non-Functional</h4>
+    <dl>
+      1. Reliable. Once board created, it should be not autoremove image,text,video on board<br>
+      2. Consistent<br>
+      3. Secure: Board should be visible to friends only 
+    </dl>
+
+    <h2 id="boe">BOE</h2>
+    <dl>
+      BW requirements not huge, User can create video(upload), then photo(upload) etc.
+    </dl>
+
+    <h2 id="api">System APIs</h2>
+
+  </article>
+
+</body>
+</html>
