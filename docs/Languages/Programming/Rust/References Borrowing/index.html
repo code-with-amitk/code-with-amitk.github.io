@@ -23,36 +23,63 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#what">What is Borrowing</a>
+            <a href="#what">Borrowing, Reference?</a>
             <a href="#types">Types of references</a>
             <ul>
                 <li><a href="#dangling">Dangling References</a></li>
                 <li><a href="#mutable">Exclusive/Mutable References</a></li>
+                <li><a href="#2mutable">Two Mutable references</a></li>
+                <li><a href="#mutimmutable">1 Immutable, 1 Mutable ref</a></li>
             </ul>
         </aside>
 
         <article style="margin-left:200px;">
-            <h2 id="what">What is Borrowing = Reference</h2>
+            <h2 id="what">What is Borrowing, Reference (&)</h2>
             <dl>
-                This is a way to access another value without taking ownership of the value<br>
-                Shared references are read-only, and the referenced data cannot change.<br>
-                Rust does not automatically create references for you - the & is always required<br>
-                Rust is tracking the lifetimes of all references to ensure they live long enough<br>
+                In reference & Borrowing ownership of the value is not taken.<br>
+                References are always created using &<br>
+                Rust track lifetimes of all references to ensure they live long enough<br>
                 <b>Wrt to C++:</b><br>
                 &ensp; Safer avoids Crashes/Dangling References.<br>
                 &ensp; no new copies are created, achieved by passing the reference of a variable.
             </dl>
-            <pre><code class="language-css">
+
+            <h4>Reference vs Borrowing</h4>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Reference (immutable)</th>
+                    <th>Borrowing (Mutable Reference)</th>
+                </tr>
+                <tr>
+                    <td>Definition</td>
+                    <td>
+                        A reference is just a pointer storing address of variable.<br>
+                        References are immutable.
+                        <pre><code class="language-css">
 fn main() {
-    // A reference value is made with the & operator
-    // * operator "dereferences" a reference, yielding its value
-    let a = 'A';
-    let mut b:&char = &a;
-    println!("{}", *b);
+    let a = 10;
+    let b = &a;
+    //b = 2;        Error
+    println!("b={}",b);
 }
 $ cargo run
-A
-            </code></pre>
+10
+                        </code></pre>
+                    </td>
+                    <td>
+                        Borrowed value can be changed.
+                        <pre><code class="language-css">
+fn main() {
+    let mut a = 10;
+    let b = &mut a;
+    *b = 11;
+    println!("b={}",b);
+}
+                        </code></pre>
+                    </td>
+                </tr>
+            </table>
 
             <h2 id="types">Types of Borrowing</h2>
             <h4 id="dangling">Dangling References (Allowed in C++, but not in Rust)</h4>
@@ -170,7 +197,11 @@ B
                 </tr>
             </table>
 
-            <h4>Two Mutable references not allowed in same scope</h4>
+            <h4 id="2mutable">Two Mutable references not allowed in same scope</h4>
+            <dl>
+                <b>Why Rust avoids 2 mutable ref in same scope?</b><br>
+                &ensp; To prevent data race b/w 2 threads. 1 mutable ref change and other also change.
+            </dl>
             <table>
                 <td>
                     <b><font color="red">C++ Crash</font></b>
@@ -202,6 +233,21 @@ fn main() {
 $ cargo build
 error[E0499]: cannot borrow `s` as mutable more than once at a time
                                     </code></pre>
+                </td>
+            </table>
+
+            <h4 id="mutimmutable">1 Immutable, 1 Mutable reference not allowed in same scope</h4>
+            <table>
+                <td>
+                    This happens because immutable reference is used after mutable
+                    <pre><code class="language-css">
+fn main() {
+    let mut a = 10;
+    let c = &a;
+    let b = &mut a;     //Error cannot borrow `a` as mutable because it is also borrowed as immutable
+    println!("b={} {c}",b);
+}
+                    </code></pre>
                 </td>
             </table>
 
