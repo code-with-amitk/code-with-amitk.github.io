@@ -30,7 +30,7 @@
   </aside>
 
   <article style="margin-left:200px;">
-    <h2 id="what">What is Moodboard (Digital pinboard)</h2>
+    <h2 id="what">What is Moodboard (Digital pinboard) = ID App by Amo</h2>
     <dl>
       Suppose you are going on vacation and you created pinboard where you will pin (photos, videos, text)
     </dl>
@@ -38,17 +38,17 @@
     <h2 id="req">Requirements</h2>
     <h4>Functional (CRUD)</h4>
     <dl>
-      1. Create. User can create the pinboard<br>
-      2. Read. User can see the created pinboard<br>
-      3. Update. User can add/delete/update text/video/image on pinboard<br>
-      4. Delete. User can delete pinboard.
+      <dt id="req_create">1. Create. User can create the pinboard</dt>
+      <dt id="req_read">2. Read. User can see the created pinboard</dt>
+      <dt id="req_update">3. Update. User can add/delete/update text/video/image on pinboard</dt>
+      <dt id="req_delete">4. Delete. User can delete pinboard</dt>
     </dl>
 
     <h4>Non-Functional</h4>
     <dl>
-      1. Reliable. Once board created, it should be not autoremove image,text,video on board<br>
-      2. Consistent<br>
-      3. Secure: Board should be visible to friends only 
+      <dt id="req_reliable">1. Reliable. Once board created, it should be not autoremove image,text,video on board</dt>
+      <dt id="req_latency">2. Latency: No latency in viewing/editing the Moodboard</dt>
+      <dt id="req_secure">3. Secure: Board should be visible to friends only</dt>
     </dl>
 
     <h2 id="boe">BOE</h2>
@@ -57,8 +57,24 @@
     </dl>
 
     <h2 id="api">System APIs</h2>
+    <h4><a href="#req_create">1. Create</a></h4>
+    <pre><code class="language-css">
+POST https://url/v1/board/create            //url=id.amo.com
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  Content-len: 0                        //Mandatory added by HTTP
+  Host:                                 //Mandatory added by HTTP. Calculated when req is sent
+  UserAgent: Postman                    //Mandatory added by HTTP.
+  Accept: */*                           //Mandatory added by HTTP.
+  Accept-Encoding: gzip, deflate, br    //Mandatory added by HTTP.
+  Connection: Keepalive                 //Mandatory added by HTTP.
+}
+Params {
+  board_name: us_board                  //Suppose travelling to US
+}
+    </code></pre>
 
   </article>
-
+  <script src="/scripts/prism.js"></script>
 </body>
 </html>
