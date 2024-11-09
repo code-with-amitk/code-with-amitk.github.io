@@ -56,23 +56,93 @@
       BW requirements not huge, User can create video(upload), then photo(upload) etc.
     </dl>
 
-    <h2 id="api">System APIs</h2>
-    <h4><a href="#req_create">1. Create</a></h4>
-    <pre><code class="language-css">
-POST https://url/v1/board/create            //url=id.amo.com
+    <h2 id="api">System APIs (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
+    <dl>
+    <a href="/Networking/OSI-Layers/Layer-7/REST%20API">REST API? <br>REST API Versioning(v1,v2)</a>
+    </dl>
+    <table>
+      <tr>
+        <th><h4><a href="#req_create">1. Create</a></h4></th>
+        <th><h4><a href="#req_read">2. Read</a></h4></th>
+        <th><h4><a href="#req_update">3. Update</a></h4></th>
+        <th><h4><a href="#req_delete">4. Delete</a></h4></th>
+      </tr>
+      <tr>
+        <td>
+          <pre><code class="language-css">
+curl -X POST -H "Content-Type: application/json" 
+-d '{"name": "board_us"}' http://127.0.0.1:8080/v1/board/create -vvv
+          </code></pre>
+        </td>
+        <td><pre><code class="language-css">
+curl -X GET http://127.0.0.1:8080/v1/board/get -vvv
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X PUT -H "Content-Type: application/json" -d 
+'{"old_name": "board", "new_name": "NewBoard2"}' 
+http://127.0.0.1:8080/v1/board/update -vvv
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X DELETE -H "Content-Type: application/json" 
+-d '{"old_name": "board_us"}' 
+http://127.0.0.1:8080/v1/board/delete -vvv
+        </code></pre></td>
+      </tr>
+
+      <tr>
+        <td><pre><code class="language-css">
+POST https://url/v1/board/create   //url=id.amo.com
 header {
   Authorization: {Bearer "API_KEY_TOKEN"},
-  Content-len: 0                        //Mandatory added by HTTP
-  Host:                                 //Mandatory added by HTTP. Calculated when req is sent
-  UserAgent: Postman                    //Mandatory added by HTTP.
-  Accept: */*                           //Mandatory added by HTTP.
-  Accept-Encoding: gzip, deflate, br    //Mandatory added by HTTP.
-  Connection: Keepalive                 //Mandatory added by HTTP.
+
+  /*Mandatory added by HTTP Start*/
+  Content-len: 0                        
+  Host:        //Calculated when req is sent
+  UserAgent: Postman
+  Accept: */*       
+  Accept-Encoding: gzip, deflate, br
+  Connection: Keepalive
+  /*Mandatory added by HTTP End*/
 }
-Params {
-  board_name: us_board                  //Suppose travelling to US
+body {  //JSON
+  //Suppose travelling to US
+  name: us_board
 }
-    </code></pre>
+          </code></pre></td>
+          <td><pre><code class="language-css">
+//All boards of a user
+GET https://url/v1/boards
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "old_name": "Board", 
+  "new_name": "NewBoard2"
+}
+          </code></pre></td>
+          <td><pre><code class="language-css">
+// Update existing board name
+PUT http://url/v1/board/update
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+          </code></pre></td>
+        <td><pre><code class="language-css">
+// Delete existing board name
+Delete http://url:8080/v1/board/delete
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "old_name": "Board_to_be_deleted", 
+  "new_name": "test"
+}
+        </code></pre></td>
+      </tr>
+    </table>
 
   </article>
   <script src="/scripts/prism.js"></script>

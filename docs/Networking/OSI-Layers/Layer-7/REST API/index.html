@@ -34,6 +34,10 @@
       <li><a href="#restvssoap">REST vs SOAP</a></li>
       <li><a href="#restvsgrpc">REST vs gRPC</a></li>
     </ul>
+    <a href="#versioning">Versioning</a>
+    <ul>
+      <li><a href="#howver">How Implemented</a></li>
+    </ul>
     <a href="#code">Code Implementations</a>
   </aside>
 
@@ -160,15 +164,15 @@ http://<ip-address>/api/resource-name
     </table>
 
     <h2 id="versioning">Versioning</h2>
-    <h4>What</h4>
-    <dl>Version numbers (like v1, v2, etc.) added to REST APIs</dl>
-    <h4>Why</h4>
     <dl>
+      <b>What?</b> Version numbers (like v1, v2, etc.) added to REST APIs<br><br>
+      <b>Why?</b> 
       Allows developers to introduce new features, deprecate old ones, and make modifications without disrupting 
       existing applications<br>
       Eg: new authentication methods, performance optimizations, security methods might be added to v2
     </dl>
-    <h4>How versioning is implemented</h4>
+
+    <h4 id="howver">How versioning is implemented</h4>
     <h5>URL Path Versioning (Most Common, easy to identify)</h5>
     <dl>version number is embedded in the URL path, such as /api/v1/resource</dl>
     <pre><code class="language-css">
