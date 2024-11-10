@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Indexing</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#indexing">Indexing</a>
+    <a href="#rindexing">Reverse Indexing</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+      <h2 id="indexing">What is Indexing?</h2>
+      <dl>
+        Storing &lt;key="user's node address", value="user's node address"> into seperate database for faster reterival is indexing.<br>
+        <b>Example:</b><br>
+        &ensp; consider 100M entries in facebook social Graph. if user wants to see his news feed, we cannot search all nodes
+        Rather start at node(for user), and this is achieved by storing node's address.
+      </dl>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+Hash Table: (Key: user_id, Value: user_address)
+
+key(userid)       Value=Address in Memory
+123456            0x40      //user1
+42                0x66      //user2
+              </code></pre>
+          </td>
+          <td>
+            <img src="/images/databases/indexing.png" 
+            alt="Indexing" style="width:300px;height:200px;">
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="rindexing">Reverse Indexing</h2>
+      <dl>
+        Reverse indexing is used for efficient reverse lookups.<br>
+        See <a href="#indexing">Indexing</a>.<br>
+        Reverse Indexing is reverse mapping. &lt;key=user's node address, value=user_id's>, it will help to map all userId's 
+        associated with a particular address.<br>
+      </dl>
+      <pre><code class="language-css">
+Reverse Hash Table: 
+
+(Key: user_address, Value: List of user_ids associated with that address)
+      </code></pre>
+      <h4>When Reverse Lookup is useful</h4>
+      <dl>
+        when we need to perform lookups based on attributes other than the primary key (user ID)
+      </dl>
+      
+    </article>
+  </main>
+  <script src="/scripts/prism.js"></script>
+
+</body>
+</html>

@@ -27,6 +27,8 @@
     <a href="#req">Requirements</a>
     <a href="#boe">BOE</a>
     <a href="#api">System APIs</a>
+    <a href="#db">DB</a>
+    <a href="#hld">HLD</a>
   </aside>
 
   <article style="margin-left:200px;">
@@ -143,6 +145,26 @@ body {  //JSON
         </code></pre></td>
       </tr>
     </table>
+
+    <h2 id="db">DB Schema</h2>
+    <pre><code class="language-css">
+user Table
+| userid(pk) | username | created_at(timestamp) | enabled |
+
+password Table 
+| user_id(pk) | password_hash | created_at | expiry_at |
+
+- Photos, Videos will be stored in Object Store
+- Friends list, comments would be stored in Graph DB.
+ 
+Photo Table
+| photo_id(pk) | photo_url(url on object store) | user_id (fk) | comment_id |
+
+MoodBoard Table
+| moodboard_id(pk) | user_id(fk) | 
+    </code></pre>
+
+    <h2 id="hld">HLD</h2>
 
   </article>
   <script src="/scripts/prism.js"></script>

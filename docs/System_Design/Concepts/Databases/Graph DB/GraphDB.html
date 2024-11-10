@@ -25,13 +25,17 @@
   <aside class="sidebar">
     <a href="#what">What is Graph DB?</a>
     <a href="#represent">Represent Entities & Relations</a>
+    <ul>
+      <li><a href="#comments">Comments on Photo</a></li>
+      <li><a href="#how">How particular node is searched in graphDB</a></li>
+    </ul>
     <a href="#adv">Advatanges over SQL</a>
   </aside>
 
   <main>
     <article style="margin-left:200px;">
       <h2 id="what">What is Graph DB</h2>
-      <dl> In graph DB entities(are nodeds) and edges are relationships how these nodes are connected</dl>
+      <dl> In graph DB entities(are nodes) and edges are relationships how these nodes are connected</dl>
 
       <h2 id="represent">Represent Entities & Relations</h2>
       <table>
@@ -48,6 +52,68 @@
           </td>
         </tr>
       </table>
+
+      <h3 id="comments">Comments on Photos by users</h3>
+      <dl>
+        Consider facebook social graph, User1 uploaded a photo1<br>
+        User2, User3 added comment2, comment3 on the photo1.
+      </dl>
+      <table>
+        <tr>
+          <td>
+            <img src="/images/Graphs/Graph_Users_Commenting_on_Photos.png" alt="trie" style="width:300px;height:300px;">
+          </td>
+          <td>
+            <b><u>Nodes:</u></b><br>
+            - <b>User Node:</b> Represents each user (e.g., User1, User2)<br> 
+            - <b>Photo  Node:</b> Represents photo uploaded<br>
+            - <b>Comment Node:</b> Represents each comment made on the photo
+            <pre><code class="language-css">
+// Neoj4. property graph model
+User1: (:User {id: "user1", name: "User 1"})
+User2: (:User {id: "user2", name: "User 2"})
+Photo: (:Photo {id: "photo1", url: "http://example.com/photo.jpg"})
+Comment1: (:Comment {id: "comment1", text: "Nice photo!"})
+Comment2: (:Comment {id: "comment2", text: "Great shot!"})
+            </code></pre>
+            <br><br>
+            <b><u>Relationships:</u></b><br>
+            - <b>COMMENTED_ON:</b> Relationship from a User node to the Photo node indicating<br> 
+            that the user commented on that photo.<br>
+            - <b>HAS_COMMENT:</b> Relationship from the Photo node to each Comment node <br>
+            indicating that the photo has these comments.<br>
+            - <b>WRITTEN_BY:</b> Relationship from each Comment node to the User node who wrote it.
+            <pre><code class="language-css">
+(:User {id: "user1"})-[:COMMENTED_ON]->(:Photo {id: "photo1"})
+(:Photo {id: "photo1"})-[:HAS_COMMENT]->(:Comment {id: "comment1"})
+(:Comment {id: "comment1"})-[:WRITTEN_BY]->(:User {id: "user1"})
+            </code></pre>
+          </td>
+          <td>
+            <b>Count Comments:</b><br>
+            Reach Photo node, count the number of HAS_COMMENT relationships
+            <pre><code class="language-css">
+// Get all comments on a specific photo
+MATCH (:Photo {id: "photo1"})-[:HAS_COMMENT]->(c:Comment)
+RETURN c.text
+            </code></pre>
+
+            <b>All photos commented on by a specific user:</b>
+            <pre><code class="language-css">
+MATCH (u:User {id: "user1"})-[:COMMENTED_ON]->(p:Photo)
+RETURN p.url
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="how">How efficiently particular node is searched in graphDB?</h3>
+      <h4>Method-1 (Store address of user nodes)</h4>
+      <dl>
+        In seperate database directly store addresses of user nodes, whenever
+        user quries, directly start from that node
+      </dl>
+      <h4>Method-2 (Indexing)</h4>
 
       <h2 id="adv">Advatanges over SQL</h2>
       <h4>Connected Data</h4>
