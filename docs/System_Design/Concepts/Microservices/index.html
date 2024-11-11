@@ -22,41 +22,192 @@
     </ul>
   </nav>
   <aside class="sidebar">
+    <a href="#what">Microservice?</a>
+    <ul>
+      <li><a href="#adv">Advantages?</a></li>
+      <li><a href="#disadv">Disadvantages?</a></li>
+    </ul>
+    <a href="#mono">Deployment Monolith</a>
+    <ul>
+      <li><a href="#monoadv">Advantages?</a></li>
+      <li><a href="#monodisadv">Disadvantages?</a></li>
+      <li><a href="#monolithsituation">Situations where monolithic is suitable</a></li>
+    </ul>
+    <a href="#comp">Microservice vs Deployment Monolith</a>
     <a href="#microservicesdp">Microservices Design Patterns</a>
   </aside>
 
     <main style="margin-left:200px;">
+      <h2 id="what">What is Microservices</h2>
+      <dl>
+        Bigger project is broken into independent modules/processes(called microservice) running on independent VM or Docker 
+        container. Size of microservices can vary from 100 LOC to 10k.<br>
+        Microservices are stateless because new MS boots in to serve existing request, it should not care about states.
+      </dl>
+      <h4 id="adv">Advatanges of Microservices</h4>
+      <dl>
+        <b>1. Independent deployble modules:</b> All teams can work independently of each other. Teams can make their own technology decisions.<br>
+        <b>2. Adopting New Technology:</b> Developers can employ a completely new technology stack (without affecting the others).<br>
+        <b>3. Easy replacement:</b> Complete microservice can be re-engineered or replaced easily, without affecting other microservices<br>
+        <b>4. Resilience:</b> If 1 microservice of a system fails, failure will not cascade to rest of the system. Rest of system can carry on working.<br>
+        <b>5. Scaling:</b> Each microservice can be scaled independently.
+      </dl>
+      <h4 id="disadv">Disadvatanges of Microservices</h4>
+      <dl>
+        <b>1. Increased Operation effort:</b> MS system have many more units wrt deployment monolith hence requires larger operations efforts<br>
+        <b>2. Increased Latency:</b> MS communicate over network, hence will take more time wrt file based communication.<br>
+        <b>3. Testing all microservice together:</b> if 1 microservice is broken, it will break whole system.
+      </dl>
+
+      <h2 id="mono">Deployment Monolith</h2>
+      <dl>
+        All components are integrated into a single codebase.
+      </dl>
+      <h4 id="monoadv">Advantages of Monolith</h4>
+      <dl>
+        <b>1. Simplicity in Development:</b> With everything in one place, development is often faster and simpler, making it easier for new team members to onboard<br>
+        <b>2. Ease of Deployment:</b> Deploying a monolithic application involves managing fewer moving parts<br>
+        <b>3. Simplified Testing:</b> all components are part of a single unit, allowing for efficient end-to-end testing without complex inter-service communication<br>
+        <b>4. Low Latency:</b> Since all components run within the same process, IPC takes less time.
+      </dl>
+      <h4 id="monodisadv">Disadvantages of Monolith</h4>
+      <dl>
+        <b>1. Scalability Challenges:</b> If 1 module need more resources, entire application must be scaled up, since other modules might not function with new resource, this leads to unneccessary time wastage.<br>
+        <b>2. Slower Development Speed:</b> Dev1 working on part1, dev2 on part2. Integration testing might need more time. dev1 might use lib1 and dev2 lib2<br>
+        <b>3. Technology Constraints:</b> challenging to adopt new technologies or frameworks without significant rework<br>
+        <b>4. High Dependency Risks:</b> An issue in one component can affect the entire application’s functionality.
+      </dl>
+      <h4 id="monolithsituation">Situations where monolithic is suitable</h4>
+      <dl>
+        <b>1. Startups and Small Teams:</b> Small teams (2 to 5 members), a monolithic architecture allows for faster development and deployment<br>
+        <b>2. Proof of Concept Development:</b> Creating MVP(Minimum Viable Product)<br>
+        <b>3. Simple Non-Scalable Application:</b> If application has simple functionality and does not have complexity or scalability demands<br>
+        <b>4. Min Latency required:</b> Spacecraft system. A delay of microseconds b/w component communication is not acceptable<br>
+        <b>5. Less Operational Complexity:</b> For systems which need less Operational complexity, monolith is preferred.
+      </dl>
+
+      <h2 id="comp">Microservice vs Deployment Monolith</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Microservice</th>
+          <th>Monolith</th>
+        </tr>
+        <tr>
+          <td>CI/CD pipeline</td>
+          <td>Smaller</td>
+          <td>Huge. Time taken to execute CI/CD is big. Machine needed to build CI/CD should be high end</td>
+        </tr>
+        <tr>
+          <td>Debugging</td>
+          <td>Easy. Memory leak in MS will crash MS only</td>
+          <td>Hard. Memory leak in monolith will crash whole system & hard to debug</td>
+        </tr>
+        <tr>
+          <td>Communication</td>
+          <td>network. Add latency</td>
+          <td>files, IPC</td>
+        </tr>
+        <tr>
+          <td>Stateless</td>
+          <td>Yes</td>
+          <td>No. Modules will be tightly coupled</td>
+        </tr>
+        <tr>
+          <td>security</td>
+          <td>More. since all MS are isolated from each other</td>
+        </tr>
+        <tr>
+          <td>delivery to Market</td>
+          <td>Fast</td>
+          <td>slow</td>
+        </tr>
+        <tr>
+          <td>Complexity</td>
+          <td>Small code, easy to understand</td>
+          <td>Huge code, tough to correlate</td>
+        </tr>
+        <tr>
+          <td>Database</td>
+          <td>Each should have its own DB or atleast its own DB schema.</td>
+          <td>Might use common</td>
+        </tr>
+      </table>
+
         <h3 id="microservicesdp">Microservices Design Patterns</h3>
-        <img src="/images/microservices_design_patterns.PNG"
-        alt="microservices_design_patterns" style="width:500px;height:400px;">
-        <p>These are software patterns that create reusable, autonomous services</p>
+        <dl>These are software patterns that create reusable, autonomous services</dl>
+
         <table>
+          <tr>
+            <th>Pattern Name</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+          <tr>
+            <td>1. API Gateway</td>
+            <td>
+              Single entry point for clients to access multiple microservices. 
+              Client will hit APIs and rest of services sit behind API gateway.<br>
+              Useful for routing, authentication, rate limiting, and other cross-cutting concerns.</td>
+            <td>Netflix</td>
+          </tr>
+          <tr>
+            <td>2. Service Discovery Pattern</td>
+            <td>
+              Enables a service client(such as an API gateway), to determine the network location of a service instance so
+              that it can invoke it.
+            </td>
+            <td>zookeeper</td>
+          </tr>
+          <tr>
+            <td>3. Circuit Breaker Pattern</td>
+            <td>
+              Service1 makes call to Service2. And Service2 is in failure state, instead of keep on trying again and again,
+              Calls to Service2 are stopped after x attempts for n number of seconds.
+            </td>
+            <td>SRX Config pushed to ConfigPusher and waiting for ACK</td>
+          </tr>
             <tr>
-                <td>1. Externalized Configuration</td>
+                <td>4. Externalized Configuration</td>
                 <td>Configuration settings should be externalized from the codebase, allowing services 
-                    to be more configurable without requiring redeployment. This can be achieved using tools 
-                    like ArgoCD manifests, Spring Cloud Config.</td>
+                    to be more configurable without requiring redeployment. 
+                </td>
+                <td>
+                    ArgoCD manifests, Spring Cloud Config
+                </td>
             </tr>
             <tr>
-                <td>2. API Gateway</td>
-                <td>single entry point for clients to access multiple microservices. It can handle routing, 
-                    authentication, rate limiting, and other cross-cutting concerns.</td>
+                <td>5. Event-Driven Architecture</td>
+                <td>Microservices can communicate asynchronously using events</td>
+                <td>Kafka producer consumer</td>
             </tr>
             <tr>
-                <td>3. Event-Driven Architecture</td>
-                <td>Microservices can communicate asynchronously using events. 
-                    Eg: Event Sourcing and CQRS (Command Query Responsibility Segregation) </td>
+                <td>6. Saga Pattern</td>
+                <td>
+                  A DB transaction is broken into smaller transactions & each transaction is handled by seperate service.
+                </td>
+                <td>
+                  e-commerce order.<br>
+                  Reserve the product.<br>
+                  Charge the customer’s card.<br>
+                  Reduce the stock<br>
+                  Ship the product
+                </td>
             </tr>
             <tr>
-                <td>4. Saga Pattern</td>
-                <td>To maintain data consistency, break the transaction into a series of smaller, compensating transactions</td>
-            </tr>
-            <tr>
-                <td>5. CQRS</td>
-                <td>A separate service, model, and database for insert operations in the database. 
-                    It also has a separate service, model, and database for query data.</td>
+                <td>7. CQRS (Command Query Responsibility Segregation)</td>
+                <td>
+                  Responsibility of quering data and handling/processing data is handled by different components<br>
+                  This pattern splits the responsibility of handling commands from retrieving data.
+                </td>
+                <td>e-commerce platforms</td>
             </tr>
         </table>
+
+        <img src="/images/microservices_design_patterns.PNG"
+        alt="microservices_design_patterns" style="width:500px;height:400px;">
+        
+
     </main>
 
 </body>
