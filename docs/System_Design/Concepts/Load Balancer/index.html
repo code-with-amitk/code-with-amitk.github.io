@@ -33,7 +33,52 @@
         Node which evenly distributes incoming traffic among web servers that are defined in a load-balanced set.<br>
         Users connect to the public IP of the load balancer, and web-servers are reachable over pvt IP from load balancer.
       </dl>
-      <img src="/images/load-balancer.png" alt="load balancer" style="width:200px;height:200px;">
+      <div class="image-container">
+        <img 
+      src="//www.plantuml.com/plantuml/png/TP3DhjCm48NtynH3M6CfuRyBT9KMBaXNA58hiUbcd0ofXMCNssafJuz_6X4MhEBvvkZCoNdmWLoO9mtFpex6YJ2m_Ot1pGnmZYlLgpEPWBklUoIFW_7_OEdirRDBAmaWxI-i7gqTDUDMstceyFcJ6a-XrT6FJL3XXjMJfQ4bJQPdTpIrQCHByQfA5beMYsyiSS_kmiul3fqoFzQNiwXewgDvBTw8j-9TDhdw-Z_2vcYoJBo_2njWCs0y2T1R4vpLkAN-n6dRfyUIUHsv1AsXHDsr-8dSjCJStiZ0G84aUSPTM-VIPBrcJM5_ZozVa2y-f8OtEEOEHMydY3D6B3TuRmfacdK4dm-73Xy_7i3OmEZIVUYSkb2SldGUWHpZx7b0-6uTHhTfDggdeAo1gmedzANad22P0EZi7ZjSsI-iMJ68aaXBJHlyERExGHvAkdfXyHb9-j-5FCHhywJ_0000"
+      alt="load balancer" class="zoomable-image" id="zoomableImage2">
+      </div>
+      <pre class="puml" visibility: hidden>
+@startuml
+!pragma teoz true
+
+participant DNS as dns
+participant browser as b
+
+box "Google Cloud" #LightBlue
+entity "LoadBalancer\n1.2.3.4" as lb
+box "Web Servers" #LightPink
+participant "WebServer1\n5.6.7.8" as ws1
+participant "WebServer2\n6.7.8.9" as ws2
+end box
+
+control Cache as cache
+entity LoadBalancer as lb1
+
+box "DB Farm" #LightCyan
+database DB1 as db1
+database DB2 as db2
+end box
+end box
+
+b-> dns: google.com
+dns -> b: 1.2.3.4
+b -> lb: HTTP GET
+note right
+Private IPs 
+are used 
+for communication
+with servers
+end note
+
+lb -> ws1: HTTP GET
+lb -> ws2: HTTP GET
+
+ws1 -> cache: query
+cache -> lb1: query
+lb1 -> db2: query
+@enduml
+      </pre>
 
       <h2 id="problemsolved">LB Solves Problem = FAILOVER</h2>
       <dl>
@@ -45,6 +90,8 @@
       </dl>
     </article>
   </main>
-
+          
+  <script src="/scripts/common.js"></script>
+  <script src="/scripts/prism.js"></script>
 </body>
 </html>
