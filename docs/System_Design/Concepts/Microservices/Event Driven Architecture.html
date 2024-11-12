@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Event Driven Architecture</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+  <aside class="sidebar">
+    <a href="#what">EDA?</a>
+    <a href="#comp">Components of EDA</a>
+    <a href="#benefits">Benefits of EDA</a>
+    <a href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/MOM_ESB/Apache_Kafka">
+      Apache Kafka
+    </a>
+  </aside>
+
+    <main style="margin-left:200px;">
+      <h2 id="what">What is Event Driven Architecture (EDA)?</h2>
+      <dl>
+        Software development approach in which services (operations) of the software are triggered by events<br>
+        <b>Event?</b> User takes an action in the application, a state change happens and a event is generated. Examples: <br>
+        &ensp; 1. User fills form click submit, event is generated<br>
+        &ensp; 2. You click the subscribe button on a YouTube channel. Subscription event is generated.<br>
+        &ensp; 3. Write Email, Click Send button. Send event generated
+      </dl>
+
+      <h2 id="comp">Components of EDA (Loosely coupled)</h2>
+      <dl>
+        <b>1. Event</b><br>
+        <b>2. Event Producer:</b> Send event to handler/broker<br>
+        <b>3. Router / Broker:</b> Recieves incoming event and send event to appropriate subscribers.<br>
+        <b>4. Event Consumer:</b> Broker sends event to consumer
+      </dl>
+
+      <h2 id="benefits">Benefits of EDA</h2>
+      <dl>
+        <b>1. Scalability:</b> Scale up/down of consumer, producer easily<br>
+        <b>2. Interoperability:</b> Go application can send events to Rust or Kotlin application.<br>
+        <b>3. asynchronous:</b> Producer sends the event to broker, Now producer is not blocked for response.
+      </dl>
+
+    </main>
+
+</body>
+</html>
