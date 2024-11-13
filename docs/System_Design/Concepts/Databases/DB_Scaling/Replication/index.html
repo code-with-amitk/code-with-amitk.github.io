@@ -34,16 +34,11 @@
           Keeping a copy of the same data on multiple machines. Each node that stores the copy is called Replica.
         </dl>
         <h3>Advantages of Replication</h3>
-        <dt>
-          1. Parallel Processing: : In the master-slave model, all writes and updates happen in master
-          nodes; whereas, read operations are distributed across slave nodes. This model improves
-          performance because it allows more queries to be processed in parallel.<br>
-          2. Reliability: If one of database servers is destroyed by a natural disaster(eg: earthquake),
-          do not need to worry about data loss because data is replicated across multiple locations<br>
-          3. High availability: By replicating data across different locations, your website remains in
-          operation even if a database is offline as you can access data stored in another database
-          server.
-        </dt>
+        <dl>
+          <b>1. Parallel Processing:</b> Master: Handles all write operations, Slaves:  Handles all read operations<br>
+          <b>2. Reliable(Data is served even DB crashes, or some DB goes down under load):</b> Data will be served from other slave<br>
+          <b>3. Highly available(Even if some of DBs are down, client will get response):</b> Since some slaves will be up.
+        </dl>
 
         <h2 id="types">Types of Replication</h2>
         <table>
@@ -54,7 +49,7 @@
           </tr>
           <tr>
             <td>
-              Master/Slave or <br>
+              Master/Slave or <br><br>
               Leader/Follower
             </td>
             <td>
