@@ -53,11 +53,14 @@
               Leader/Follower
             </td>
             <td>
-              <b>What</b><br>
-              &ensp;1 node is designated as Leader/master. Client does RW operations with master, and only Read on any of slave.<br>
-              &ensp;Master stores session in it'd DB 1st then master writes(or slave reads) data to 
-              replicas/slaves(as replication log or change stream).<br>
-              <br>
+              <b>Master/Leader:</b> 1 node is designated as master. Client does RW operations with master. Session is stored in 
+              master's DB. Then slaves read from it.<br>
+              <b>Slaves:</b> Read Only.  slave database gets copies of the data from the master database. 
+              All slaves replicate data from most updated slave via replication log.<br><br>
+              <b>Advantage</b><br><br>
+              &ensp; <u>1. Parallel Processing:</u> Read(Slaves), Write(Master) is supported paralally<br>
+              &ensp; <u>2. Reliable:</u> Since multiple copies of data is maintained<br>
+              &ensp; <u>3. Highly availabile:</u> <br><br>
               <b>Disadvantage</b><br>
               &ensp; a. Logic is required to promote slave to master(when master fails)<br>
               &ensp; b. If high number of slaves, more write operations can lead to replication lag.
@@ -72,10 +75,8 @@
           <tr>
             <td>Master/Master or <br>Active/Active or <br>Leader/Leader</td>
             <td>
-              <b>What?</b><br>
               There are 2 or more leader nodes. Client can write to any 1 of leader. 
               Other leaders will act as slave and read all data from present leader.<br>
-
             </td>
           </tr>
         </table>
