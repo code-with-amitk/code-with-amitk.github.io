@@ -23,15 +23,22 @@
   </nav>
   <aside class="sidebar">
     <a href="#what">what</a>
-    <a href="#problemsolved">Failover problem Solved</a>
+    <a href="#adv">Advatanges of LB</a>
+    <ul>
+      <li><a href="#failover">1. Failover</a></li>
+    </ul>
+    <a href="#types">Types of LB</a>
+    <a href="#places">Places where LB can be kept</a>
+    <a href="#schedulingalgo">Scheduling Algorithms for LB</a>
   </aside>
 
   <main>
     <article style="margin-left:200px">
       <h2 id="what">What is Load Balancer?</h2>
       <dl>
-        Node which evenly distributes incoming traffic among web servers that are defined in a load-balanced set.<br>
-        Users connect to the public IP of the load balancer, and web-servers are reachable over pvt IP from load balancer.
+        Load Balancer evenly distributes incoming traffic/load among webservers/workers that are defined in a load-balanced set.<br>
+        Users connect to the public IP of the load balancer, and web-servers are reachable over <font color="red">private IP</font> from load balancer.<br>
+        Ex: Ngnix, Amazon ELB
       </dl>
       <div class="image-container">
         <img 
@@ -80,14 +87,132 @@ lb1 -> db2: query
 @enduml
       </pre>
 
-      <h2 id="problemsolved">LB Solves Problem = FAILOVER</h2>
+      <h2 id="adv">Advantages of LB</h2>
+      <h4 id="failover">1. Failover</h4>
       <dl>
-        If server 1 goes offline, all the traffic will be routed to server 2. This prevents the website
-        from going offline. We will also add a new healthy web server to the server pool to
-        balance the load.<br>
+        If Web-Server1 goes offline, all the traffic will be routed to Web-Server2. This prevents the website from going 
+        offline.<br>
         If the website traffic grows rapidly, and two servers are not enough to handle the traffic,
-        the load balancer can handle this problem gracefully.
+        new web servers can be added to pool
       </dl>
+
+      <h2 id="types">Types of LB</h2>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>ALB/Layer-7/Application LB/Also called Reverse Proxy</td>
+          <td>
+            LB looks into Layer-7 Application packet(Eg: HTTP/HTTPS) and performs load balancing based on Header content
+          </td>
+        </tr>
+        <tr>
+          <td>Layer 4 LB / Transport Layer LB</td>
+          <td>
+            Operate at transport layer(TCP, UDP, TLS). Packet is routed based on Src,dst Ports(without looking into packet).<br><br>
+            <b>Problem: Small Sized HTTP Response via LB</b><br>
+            &ensp; <u>Issue:</u> Incoming request passes via LB and response is also sent via LB. if response is small(2MB) & if LB
+            is serving larger sized requests, this small response has to wait unneccesarily.<br>
+            &ensp; <u>Solution= DSR (Direct Server Return Mode):</u> backends will answer directly to the clients, without passing through LB
+          </td>
+        </tr>
+        <tr>
+          <td>Layer 3 LB / NLB(Network LB) / VPN LB</td>
+          <td>
+            LB decision is made based on IP Address
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="places">Places where LB can be kept</h2>
+      <table>
+        <tr>
+          <th>Place</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>Between Client(browser) and Webserver</td>
+          <td>LB will send pkt to free webserver</td>
+        </tr>
+        <tr>
+          <td>Between App-servers and cache</td>
+          <td>we can have 100s of cache servers, those needed load balancing</td>
+        </tr>
+        <tr>
+          <td>Between cache and DB servers</td>
+          <td></td>
+        </tr>
+      </table>
+
+      <h2 id="schedulingalgo">Scheduling Algorithms for LB</h2>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>1. Round Robin</td>
+          <td>Send request one after other.</td>
+        </tr>
+        <tr>
+          <td>2. Least Connections</td>
+          <td>Sends requests to the server with the lowest number of active connections</td>
+        </tr>
+        <tr>
+          <td>3. Least time</td>
+          <td>Sends requests to the server selected by a formula that combines the fastest response time and fewest active connections</td>
+        </tr>
+        <tr>
+          <td>4. Hash</td>
+          <td>Distributes requests based on a key you define, such as the client IP address or the request URL</td>
+        </tr>
+        <tr>
+          <td>5. IP HASH: (HTTP only)</td>
+          <td>Distributes requests based on the first three octets of the client IP address</td>
+        </tr>
+        <tr>
+          <td>6. Random with 2 Choices</td>
+          <td>Picks two servers at random and sends the request to the one that is selected by then applying the Least Connections algorithm</td>
+        </tr>
+        <tr>
+          <td>7. DNS Round Robin with Load Balancing</td>
+          <td>
+            Assign multiple IPs(IP1, IP2, IP3) to 1 domain.<br>
+            When a DNS server receives a query for that domain, it responds with one of the available IP addresses in a rotating manner.<br>
+            Each time an IP address is returned, it is placed at the end of the list, ensuring that all servers receive approximately equal traffic over time.
+          </td>
+        </tr>
+        <tr>
+          <td>8. Sub domain DNS Delegation with Round Robin</td>
+          <td>When we have multiple subdomains (hr.example.com, payroll.example.com) inside main domain(example.com). 
+            subdomains have their own nameservers. Now when request comes in for resource inside hr.example.com primary 
+            nameserver(example.com) will forward to subdomains nameservers.
+          </td>
+        </tr>
+        <tr>
+          <td>9. Client side random load balancing</td>
+          <td>Deliver a list of server IPs to the client, and then to have client randomly select the IP from the list on each connection. 
+            This essentially relies on all clients generating similar loads.</td>
+        </tr>
+        <tr>
+          <td>10. Server side load balancers</td>
+          <td>Load balancer binds and listens on port. Forwards the request to all backend servers, 
+            which ever responds 1st. it caters the request.</td>
+        </tr>
+        <tr>
+          <td>11. IP ADDRESS based</td>
+          <td>If request comes from IP Address within range from (x to y) forward packet to backend server-1, if request comes 
+            from IP Address range from (a to c) forward packet to backend server-2 and so on</td>
+        </tr>
+        <tr>
+          <td>12. Layer 5 Aware</td>
+          <td>Look into layer-5 protocol(Eg: HTTP). They can look into HTTP-header can decide what to do with 
+            packet whether to send to server-1 or 2</td>
+        </tr>
+      </table>
+
     </article>
   </main>
           
