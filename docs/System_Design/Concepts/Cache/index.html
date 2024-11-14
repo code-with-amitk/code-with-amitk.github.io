@@ -28,6 +28,7 @@
     <a href="#appserveranddb">Cache Between AppServer & DB</a>
     <ul>
       <li><a href="#eviction">Cache Eviction Policies</a></li>
+      <li><a href="#redisvmemcached">Redis vs Memcached</a></li>
     </ul>
   </aside>
 
@@ -136,12 +137,12 @@
       Volatile TTL removing keys, that have an expiration time set, by the shortest time to live first.
     </dl>
 
-    <h3>Redis vs Memcached</h3>
+    <h3 id="redisvmemcached">Redis vs Memcached</h3>
     <table>
       <tr>
         <th></th>
-        <th>Redis (implemented in C)</th>
-        <th>Memcached(implemented in C)</th>
+        <th>Redis (Open source implemented in C)</th>
+        <th>Memcached(Open source implemented in C)</th>
       </tr>
       <tr>
         <td>In Memory</td>
@@ -157,7 +158,7 @@
         <td>Speed</td>
         <td>less. It does not have any inbuilt datatypes</td>
         <td>
-          More. Bcoz it supports datatypes as(string,hash,list,set)
+          More. Bcoz it supports datatypes as(string,hash,list,set,sorted set etc)
         </td>
       </tr>
       <tr>
