@@ -147,6 +147,7 @@ body {  //JSON
     </table>
 
     <h2 id="db">DB Schema</h2>
+    <dl><a href="/System_Design/Concepts/Databases/Graph%20DB/">Graph DB</a></dl>
     <pre><code class="language-css">
 user Table
 | userid(pk) | username | created_at(timestamp) | enabled |
@@ -165,6 +166,31 @@ MoodBoard Table
     </code></pre>
 
     <h2 id="hld">HLD</h2>
+    <img 
+        src="//www.plantuml.com/plantuml/png/RT3DJiCm30Vmkv_2wWcGU84UqEW7S1W2RUK1dCQ7IbaSnIw2jwTjqBH9kqN-EVdRsQbHjlaKW4QJZ5_A6Kbn1YS_M7LaX2r7urn1MZgdSKeK3VT2lg50SIpzmLtnSqf7pj_5IA-icrWvhE2t4tWoSgICNRDL7N3qkEG3pFZuXC7L-3OCd_ZQ3tWIyKueUmXkHTARIBfY2QYnElRxlXtm0LyE7-yLbFhMuMxe-U5Hed4qY6ACKjQ1DZCPbz03QvAe38tutxjp_FssmNhhVv2vlfXjj-3outy0"
+        alt="mpls" style="width:400px;height:400px;">
+    <pre class="puml" visibility: hidden>
+      @startuml
+actor User as u
+box "Data Center"
+participant LoadBalancer as lb
+participant AppServer as as
+participant Diesel as diesel
+database DB as db
+end box
+
+u -> lb: HTTP GET moodboard
+lb -> as: HTTP GET moodboard
+as -> diesel: "SELECT * FROM"
+diesel -> db: "SELECT * FROM"
+db -> as: content
+note over as
+Create HTTP Response
+Body(moodboard)
+end note
+as -> u: moodboard
+@enduml
+    </pre> 
 
   </article>
   <script src="/scripts/prism.js"></script>
