@@ -25,6 +25,10 @@
     <a href="#what">What is Cache</a>
     <a href="#types">Types of Cache</a>
     <a href="#where">Where Caches can be placed?</a>
+    <a href="#appserveranddb">Cache Between AppServer & DB</a>
+    <ul>
+      <li><a href="#eviction">Cache Eviction Policies</a></li>
+    </ul>
   </aside>
 
   <main style="margin-left:200px;">
@@ -83,7 +87,9 @@
                 from same server and can be cached <br><br>
                 <b>CACHE-CONTROL HEADER:</b><br>
                 HTTP server instructs browser(http client) to cache a particular content for<br>
-                 TTL duration in cache control header. Format: Response Header {cache-control: public, max-age: 45223}     
+                 TTL duration in cache control header. Format: Response Header {cache-control: public, max-age: 45223} <br>
+                 
+                 <img src="/images/databases/cache/http_response_header.png" style="width:250px;height:250px;">
               </td>
               <td>
                 <img
@@ -111,14 +117,68 @@
               </td>
             </tr>
           </table>
-
         </td>
+      </tr>
+      <tr>
+        <td>Between Application Server and Database</td>
+        <td></td>
       </tr>
     </table>
 
-    <script src="/scripts/prism.js"></script>
-    <script src="/scripts/common.js"></script>
+    <h2 id="appserveranddb">Cache Between AppServer & DB</h2>
+    <h3 id="eviction">Cache Eviction Policies</h3>
+    <dl>
+      No eviction returning an error the memory limit is reached<br>
+      All keys LRU removing keys by the least recently used first<br>
+      Volatile LRU removing keys, that have an expiration time set, by the least recently used first.<br>
+      All keys random removing keys randomly<br>
+      Volatile random removing keys, that have an expiration time set, randomly<br>
+      Volatile TTL removing keys, that have an expiration time set, by the shortest time to live first.
+    </dl>
+
+    <h3>Redis vs Memcached</h3>
+    <table>
+      <tr>
+        <th></th>
+        <th>Redis (implemented in C)</th>
+        <th>Memcached(implemented in C)</th>
+      </tr>
+      <tr>
+        <td>In Memory</td>
+        <td>y</td>
+        <td>y</td>
+      </tr>
+      <tr>
+        <td>Key-value pair</td>
+        <td>y (key &lt; 250B, value &lt; 1MB) </td>
+        <td>y (key &lt; 512MB, value &lt; 512MB) </td>
+      </tr>
+      <tr>
+        <td>Speed</td>
+        <td>less. It does not have any inbuilt datatypes</td>
+        <td>
+          More. Bcoz it supports datatypes as(string,hash,list,set)
+        </td>
+      </tr>
+      <tr>
+        <td>How internally implemented</td>
+        <td>Slab Allocator</td>
+        <td>Encapsulated version of the malloc/free</td>
+      </tr>
+      <tr>
+        <td>Scaling</td>
+        <td>Multi-threaded. Scales vertically. Give more cores, more memory</td>
+        <td>Single Threaded. Scales horizontally</td>
+      </tr>
+      <tr>
+        <td>Cache Eviction policies</td>
+        <td>Only 1 LRU</td>
+        <td>6 different policies</td>
+      </tr>
+    </table>
 
   </main>
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
 </body>
 </html>
