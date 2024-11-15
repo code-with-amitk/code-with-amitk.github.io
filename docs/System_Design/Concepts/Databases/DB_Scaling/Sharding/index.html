@@ -24,6 +24,8 @@
 
   <aside class="sidebar">
     <a href="#what">What</a>
+    <a href="#when">When to use Sharding</a>
+    <a href="#how">How App Server interacts with shards</a>
     <a href="#issues">Issues in Sharding</a>
     <a href="#scalablity">Sharding=Scalabilty?</a>
     <a href="#partitioningwithreplication">Sharding with Replication</a>
@@ -46,6 +48,19 @@
           &ensp; Criteria is to choose a key that can evenly distributed data
         </dl>
         <img src="/images/databases/sharding.png" alt="Sharding" style="width:600px;height:400px;">
+
+        <h2 id="when">When to use Sharding</h2>
+        <dl>
+          <b>1. Huge data stored in DB:</b> if data stored in DB is so huge that i exceeds capacity of DB server<br>
+          <b>2. High traffic to application:</b> Application experience high query loads, sharding will balance the load across multiple database instances
+        </dl>
+
+        <h2 id="how">How App Server interacts with shards</h2>
+        <dl>
+          <b>1. Direct Requests:</b> Application calculates which shard to query based on a predefined sharding key(Hash 
+          e.g., user ID, geographic location). Application must implement logic to route requests to the appropriate shard.<br>
+          <b>2. via Load Balancer(Not Used/recommended):</b> Application itself handles routing requests to the correct shard based on the sharding key
+        </dl>
 
         <h2 id="issues">Issues/Complexities in Sharding</h2>
         <h4>1. Resharding</h4>
