@@ -25,6 +25,11 @@
   <aside class="sidebar">
       <a href="#req">Requirements</a>
       <a href="#boe">BOE</a>
+      <a href="#api">API Design</a>
+      <ul>
+        <li><a href="#api_user">User APIs</a></li>
+        <li><a href="#api_driver">Driver APIs</a></li>
+      </ul>
       <a href="#hld">HLD</a>
   </aside>
 
@@ -32,28 +37,133 @@
     <h2 id="req">Requirements</h2>
     <h4>Functional</h4>
     <dl>There would be 2 entities(User & driver) which will use this system</dl>
-    <dl>User Requirements:</dl>
+    <h5>User Requirements:</h5>
+    <dt>1. User can create his profile on system.
+    <dt id="req_read_user">2. [READ] User should be able to see near by cabs on real time.</dt>
+    <dt id="req_create_user">3. [Create] User can book the cab</dt>
+    <dt id="req_delete_user">4. [Delete] User can Cancel the ride after successful booking.</dt>
+    <dt id="req_update_user">5. [Update] User can modify the ride</dt>
+
+    <h5>Driver's Requirements:</h5>
     <dt>
-      1. User can create his profile on system.<br>
-      2. User should be able to see near by cabs on real time.  //READ<br>
-      3. User can book the cab. //Create<br>
-      4. User can cancel the ride after successful booking.   //Delete<br>
-      5. User can modify the ride.  //Update
-    </dt>
-    <dl>Driver's Requirements:</dl>
-    <dt>
-      1. Driver can create his profile on system. <br>
-      2. Location of driver is updated on real time.  //Update<br>
-      3. Driver gets notification of near users asking for booking. //Read<br>
-      4. Driver can cancel ride after booking.
+      1. [Create] Driver can create his profile on system.<br>
+      2. [Update] Location of driver is updated on real time.<br>
+      3. [READ] Driver gets notification of near users asking for booking.<br>
+      4. [Delete] Driver can cancel ride after booking.
     </dt>
 
     <h2 id="boe">BOE</h2>
-    <dl>
-      Assumed. Users(300 Million) Drivers(1M)<br>
-      DAU(1M), DA Drivers(500k). Daily rides(1M)<br>
+    <dt>
+      Assumed. Users(300 Million) Drivers(1M). DAU(1M), DA Drivers(500k). Daily rides(1M)<br>
       Drivers update their location every 5 seconds.
+    </dt>
+    <br>
+
+    <table>
+      <tr>
+        <td>QPS (Queries Per Second)</td>
+        <td>
+          User Queries: 1M / 86400 = 12 queries per second<br>
+          Driver does not do queries, but updates are pushed to driver when driver is not on trip.
+        </td>
+      </tr>
+      <tr>
+        <td>Bandwidth Estimates</td>
+        <td>
+          1 User Requests for cab location size = 90 bytes. 12 x 90 = 1080 bytes/sec<br>
+          <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Networking/OSI-Layers#hs">TCP, IP, DL Header sizes</a>
+          <pre><code class="language-css">
+|App Hdr + (userlong, lat, userId, preference)|Transport TCP(src,dst port)|NW(src, dst IP)| DL Hdr(src, dst MAC) |
+  20bytes         17bytes                       20 bytes                    20 bytes         14 bytes             => 90bytes 
+          </code></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Storage Estimates</td>
+        <td>
+          Not Huge. We need to store user's & drivers rides 
+        </td>
+      </tr>
+    </table>
+
+    <h2 id="api">APIs (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
+    <h4 id="api_user">User APIs</h4>
+    <dl>
+    <a href="/Networking/OSI-Layers/Layer-7/REST%20API">REST API? <br>REST API Versioning(v1,v2)</a>
     </dl>
+    <table>
+      <tr>
+        <th><h4><a href="#req_create_user">1. User Creates a booking</a></h4></th>
+        <th><h4><a href="#req_read_user">2. User gets all nearby cabs</a></h4></th>
+        <th><h4><a href="#req_delete_user">4. User can cancel the ride</a></h4></th>
+      </tr>
+      <tr>
+        <td>
+          <pre><code class="language-css">
+curl -X POST -H "Content-Type: application/json" 
+-d '{"user_id": "", "driver_id": "", "to": "", 
+"from": "", "initial_price": "", "duration": "", }' 
+http://127.0.0.1:8080/v1/booking/create -vvv
+          </code></pre>
+        </td>
+        <td><pre><code class="language-css">
+curl -X GET -H "Content-Type: application/json" 
+-d '{"user_id": "", "long": "", "lat": ""}' 
+http://127.0.0.1:8080/v1/booking/read -vvv
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X DELETE -H "Content-Type: application/json" 
+-d '{"user_id": "", "booking_id": ""}' 
+http://127.0.0.1:8080/v1/booking/cancel -vvv
+          </code></pre></td>
+      </tr>
+      <tr>
+        <td><pre><code class="language-css">
+POST https://url/v1/booking/create   //url=uber.com
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+
+  /*Mandatory added by HTTP Start*/
+  Content-len: 0                        
+  Host:        //Calculated when req is sent
+  UserAgent: Postman
+  Accept: */*       
+  Accept-Encoding: gzip, deflate, br
+  Connection: Keepalive
+  /*Mandatory added by HTTP End*/
+}
+body {  //JSON
+"user_id": "", "driver_id": "", "to": "", 
+"from": "", "initial_price": "", "duration": "", 
+}
+        </code></pre></td>
+        <td><pre><code class="language-css">
+// All free cabs near user
+GET https://url/v1/get_cabs
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "long": ""
+  "lat": ""
+}
+        </code></pre>
+        <td><pre><code class="language-css">
+// User cancels the ride
+GET https://url/v1/cancel_cab
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "user_id": ""
+  "booking_id": ""
+}
+          </code></pre>
+        </td>
+      </tr>
+    </table>
 
     <h2 id="hld">HLD</h2>
     <dl>
