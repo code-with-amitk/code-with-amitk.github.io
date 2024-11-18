@@ -295,16 +295,34 @@ Benefits of keeping seperate Category table:
               - Thickly populated areas like San Francisco will have a lot of grids.
             </dt>
             <pre><code class="language-css">
-              Quad Tree
-                [root]
-               / | \ \
-     
-       struct gridNode_or_dbNode {
-         uint32 gridId_or_dbID;            //gridId hash gives the DB where (latt-start,long-start,latt-end,long-end) are stored
-         double lattitude-start,lattitude-end;
-         double longitude-start,longitude-end;
-         struct grid *child[4];
-       }                
+      //quad means 4, it will always have 4 children
+      Quad Tree
+        [root]
+        / | \ \
+
+struct gridNode_or_dbNode {
+  uint32 gridId_or_dbID;            //gridId hash gives the DB where (latt-start,long-start,latt-end,long-end) are stored
+
+  /*
+    child   start-lat   end-lat   start-long  end-long
+    1         1           10        101       111
+    2         11          20        111       121
+    3         20          30        121       131
+    4         30          180       131       -
+  */
+  struct child_lat_long {
+    double child_lattitude-start, child_lattitude-end;
+    double child_longitude-start, child_longitude-end;
+  } CLL;
+  struct CLL[4];
+
+  double lattitude-start,lattitude-end;
+  double longitude-start,longitude-end;
+  struct grid *gridNode_or_dbNode[4];       //4 children
+};
+
+if (incoming_lat, long falls b/w range of any child)
+  jump to child
             </code></pre>
 
           <dl><strong><a href="#req1">Req-1: Add_place</a></strong></dl>
@@ -312,49 +330,59 @@ Benefits of keeping seperate Category table:
           <a href="/System_Design/Scalable/Methods%20to%20reach%20Microservice/index.html">
             Components in reaching Microservice from public network
           </a></b></dt>
-          <pre class="mermaid">
-            sequenceDiagram
-            rect rgb(221, 240, 221)
-              participant u as UserApp
-              box AWS
-              participant app as AppServer
-              participant dbf as DbFrontEnd<br>Diesel
-              participant db as QuadTree-DB
-              end
 
-              u ->> app: POST(data)
-              app ->> dbf: API call to insert
-              dbf ->> db: insert into table              
-            end
-          </pre>
+          <div class="image-container">
+            <img src="//www.plantuml.com/plantuml/png/RP31IiGm48RlynHpLAWli0TPbu97bLrlUvasFn9e9t4o5H_ViLga80GIvl_-Bp37vcA-p1F9wCNujS4UQcLflD1GFZc92uzGXr4DD8-vYZe7T8Pzm0ADiylwZ8RfEqZhQnU-B98k1lId5HW8cZX-8bhuxZvc1tv-Ebzk9l5kAjgfpEZoB6-u9Mc1_4eF_0Zdzx2v0MobEFqacsOTxIjP6yol-g_zhvs63OtBorMbLYlLiZYuFn4TeIcMzWK0"
+      alt="yelp post" class="zoomable-image" id="zoomableImage2" style="width:250px;height:250px;">
+          </div>
+      <pre class="puml" visibility: hidden>
+@startuml
+actor UserApp as u
+box data center
+participant AppServer as as
+participant Diesel as diesel
+participant QuadTreeDB as db
+end box
 
-          <dl><strong><a href="#req4">Req-4: Search. Hotels Near me</a></strong></dl>
-          <pre class="mermaid">
-            sequenceDiagram
-            rect rgb(221, 240, 221)
-              participant u as UserApp
-              box AWS
-              participant app as AppServer
-              participant dbf as DbFrontEnd<br>Diesel
-              participant db as QuadTree-DB
-              end
+u -> as: POST(lat,lon,name,image)
+as -> diesel: Get quadtree root
+diesel -> as: root
+as -> diesel: insert\n(lat,lon,name,image)
+diesel -> db: insert into\nappropriate DB
 
-              u ->> app: HTTPS GET Hotels(long,lat)
-              app ->> dbf: Find root of DB-Quadtree<br>stored on db
-              dbf ->> db: Find root of DB-Quadtree<br>stored on db
-              db ->> dbf: root
-              dbf ->> app: root
-              app ->> dbf: traverse to DB which stores (lon, lat)
-              dbf ->> db: traverse to DB which stores (lon, lat)
-              app ->> dbf: hotels in 10km of (lat,lon)
-              dbf ->> db: hotels in 10km of (lat,lon)
-              db ->> dbf: Hotels
-              dbf ->> app: Hotels
-              note over app: Create json
-              app ->> u: Hotels json
-            end
+@enduml
+        </pre>
 
-          </pre>
+        <dl><strong><a href="#req4">Req-4: Search. Hotels Near me</a></strong></dl>
+        <div class="image-container">
+          <img src="//www.plantuml.com/plantuml/png/ZP0_JyGm3CNtV0gF8D4ArWxLSIgw6_bJjYv9Or15wXJ7GI34TyUwLXozwQGEbT_p-_bbayIov34OsqjaU4x8jzC4Da4sBdw2jsAXHn9aCwbrw8V9ae2Qdf0_aDMgtqfh1amOG0L_-5k93zdwbX6RxS7W39879HcJeQXrLi6-RUzXTzTsj8-28S50ccH75EIEuWlSNB-D5y7ALOXqQMpInGLLmGu5tfKXoW2EKSoiBE7pQBtIijKY2K4YDDkEaaGUw1MEY6E4TsVvtVzyxqvkqC792TeMpYcxlaGvHRr4B4fH_xtW8wOfKiAENFHVtsKv0yhoH-55dQk5QCm6oUSn_080"
+    alt="yelp get" class="zoomable-image" id="zoomableImage2" style="width:250px;height:250px;">
+        </div>
+        <pre class="puml" visibility: hidden>
+@startuml
+actor UserApp as u
+box data center
+participant AppServer as as
+participant Diesel as diesel
+participant QuadTreeDB as db
+end box
+
+u -> as: HTTP GET\nHotels in diameter\nof 10km(lat,lon)
+as -> diesel: Get quadtree root
+diesel -> as: root
+as -> diesel: Traverse to DB\nstoring (lat,lon)
+diesel -> db: Traverse to DB\nstoring (lat,lon)
+db -> diesel: db
+diesel -> as: db
+
+as -> diesel: GET Hotels in diameter\nof 10km(lat,lon)
+diesel -> db:
+db->diesel:
+diesel->as: HTTP Response\nbody{..Hotels..}
+as->u: Hotels
+
+@enduml
+        </pre>
 
           <h4  id="#problems">5.2 Problems in Basic Design </h4>
           <dl><strong><a href="#nonfuncreq1">Non-Functional-Req-1. System should be Scalable, but it is not</a></strong></dl>
@@ -414,5 +442,6 @@ Benefits of keeping seperate Category table:
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
   </script>	
   <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
 </body>
 </html>
