@@ -43,7 +43,8 @@
     <dt id="req_create">1. User can create Account on Bump</dt>
     <dt id="req_read">2. Read location of friend on bump app</dt>
     <dt id="req_update">3. Update self profile to include friends(whom you will follow)</dt>
-    <dt id="req_delete">4. Delete friend, Delete account</dt>
+    <dt id="req_delete">4. Delete friend</dt>
+    <dt id="req_account">5. Delete account</dt>
 
     <h4>Non-Functional</h4>
       <dt id="req_nonfunc_available">1. Highly available</dt>
@@ -81,7 +82,8 @@
         <th><h4><a href="#req_create">1. User can create Account on Bump</a></h4></th>
         <th><h4><a href="#req_read">2. Read location of friend on bump app</a></h4></th>
         <th><h4><a href="#req_update">3. Update self profile to include friends(whom you will follow)</a></h4></th>
-        <th><h4><a href="#req_delete">4. Delete friend, Delete account</a></h4></th>
+        <th><h4><a href="#req_delete_friend">4. Delete friend</a></h4></th>
+        <th><h4><a href="#req_delete_account">5. Delete Account</a></h4></th>
       </tr>
       <tr>
         <td>
@@ -92,25 +94,119 @@ http://127.0.0.1:8080/v1/create_account -vvv
           </code></pre>
         </td>
         <td><pre><code class="language-css">
-curl -X GET http://127.0.0.1:8080/v1/get_location -vvv
--d '{"name": "friend_id"}'
+// data sent as query parameter
+// instead of sending as json data
+curl -X GET http://127.0.0.1:8080/v1/get_location?friend_id=friend_id
         </code></pre></td>
         <td><pre><code class="language-css">
 curl -X PUT -H "Content-Type: application/json" -d 
-'{"old_name": "name1", "new_name": "name2"}' 
+'{
+  "user_id": "current_user_id", 
+  "friends_to_follow": ["new_friend_id"]
+}' 
 http://127.0.0.1:8080/v1/update -vvv
         </code></pre></td>
         <td><pre><code class="language-css">
 curl -X DELETE -H "Content-Type: application/json" 
--d '{"user_id": "id1"}' 
-http://127.0.0.1:8080/v1/delete -vvv
+http://127.0.0.1:8080/v1/delete_friend
+-d '{
+  "user_id": "id1",
+  "friend_id": "friend_to_delete"
+}' 
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X DELETE -H "Content-Type: application/json" 
+http://127.0.0.1:8080/v1/delete_account
+-d '{
+  "user_id": "id1",
+}'
         </code></pre></td>
       </tr>
 
+      <tr>
+        <td><pre><code class="language-css">
+// Create account
+//url=bump.amo.com
+POST https://url/v1/create_account 
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+
+  /*Mandatory added by HTTP Start*/
+  Content-len: 0                        
+  Host:        //Calculated when req is sent
+  UserAgent: Postman
+  Accept: */*       
+  Accept-Encoding: gzip, deflate, br
+  Connection: Keepalive
+  /*Mandatory added by HTTP End*/
+}
+body {  //JSON
+  "user_name": "",
+  "lattitude": "",
+  "longitude": ""
+}
+        </code></pre></td>
+        <td><pre><code class="language-css">
+//Read Location of friends
+GET https://url/v1/get_location
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "my_username": "", 
+  "friend_name": "",
+}
+          </code></pre></td>
+          <td><pre><code class="language-css">
+// Add new friends to look
+PUT http://url/v1/update
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "my_username": "", 
+  "friend_name": "",
+}
+        </code></pre></td>
+        <td><pre><code class="language-css">
+// Add new friends to look
+PUT http://url/v1/delete_friend
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "my_username": "",
+  "friend_id": ""
+}
+        </code></pre></td>
+        <td><pre><code class="language-css">
+// Add new friends to look
+PUT http://url/v1/delete_account
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "my_username": ""
+}
+        </code></pre></td>
+      </tr>
     </table>
 
+    <h2 id="db">DB Schema</h2>
+    <pre><code class="language-css">
+// user Table
+| userid (pk) | username | creation_timestamp | initial_location (long, latt) |
+
+// friends table
+-> Would be stored on Graph DB
+    </code></pre>
 
   </article>
+
   <script src="/scripts/prism.js"></script>
   <script src="/scripts/common.js"></script>
 </body>
