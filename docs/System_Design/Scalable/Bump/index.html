@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bump by Amo</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#what">What is Bump</a>
+    <a href="#req">Requirements</a>
+    <a href="#boe">BOE</a>
+    <a href="#api">API Design</a>
+    <a href="#db">DB Schema</a>
+    <a href="#hld">HLD</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="what">What is Bump</h2>
+    <dl>
+      Bump is location sharing Mobile App. Install bump on 2 phones(add as friends).<br>
+      Phone1 can see location of Phone2 on bump. Helpful if someone is travelling alone in new area
+    </dl>
+
+    <h2 id="req">Requirements (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
+    <h4>Functional</h4>
+    <dt id="req_create">1. User can create Account on Bump</dt>
+    <dt id="req_read">2. Read location of friend on bump app</dt>
+    <dt id="req_update">3. Update self profile to include friends(whom you will follow)</dt>
+    <dt id="req_delete">4. Delete friend, Delete account</dt>
+
+    <h4>Non-Functional</h4>
+      <dt id="req_nonfunc_available">1. Highly available</dt>
+      <dt id="req_nonfunc_secure">2. Secure</dt>
+      <dt id="req_nonfunc_reliable">3. Reliable. Location given of Phone2 should be correct</dt>
+
+    <h2 id="boe">BOE</h2>
+    <table>
+      <tr>
+        <th>Metric</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>QPS(Queries per second)</td>
+        <td>Very low, as in when someone opens app then request is sent to system and system sends location back</td>
+      </tr>
+      <tr>
+        <td>BW Estimates</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Storage Requirements</td>
+        <td>
+          Data to be stored for 1 user: &lt; user_id(8 byte), longitude(8 bytes), lattitude(8 bytes), followed_by(8 * 50 bytes) > <br>
+          Total storage required: 400 bytes(for 1 user) <br>
+          100 Million users. 40G bytes(for 5 years)
+        </td>
+      </tr>
+    </table>
+
+    <h2 id="api">API Design (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
+    <dl><a href="/Networking/OSI-Layers/Layer-7/REST%20API">REST API? <br>REST API Versioning(v1,v2)</a></dl>
+    <table>
+      <tr>
+        <th><h4><a href="#req_create">1. User can create Account on Bump</a></h4></th>
+        <th><h4><a href="#req_read">2. Read location of friend on bump app</a></h4></th>
+        <th><h4><a href="#req_update">3. Update self profile to include friends(whom you will follow)</a></h4></th>
+        <th><h4><a href="#req_delete">4. Delete friend, Delete account</a></h4></th>
+      </tr>
+      <tr>
+        <td>
+          <pre><code class="language-css">
+curl -X POST -H "Content-Type: application/json" 
+-d '{"name": "user_id", "long", "lat"}' 
+http://127.0.0.1:8080/v1/create_account -vvv
+          </code></pre>
+        </td>
+        <td><pre><code class="language-css">
+curl -X GET http://127.0.0.1:8080/v1/get_location -vvv
+-d '{"name": "friend_id"}'
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X PUT -H "Content-Type: application/json" -d 
+'{"old_name": "name1", "new_name": "name2"}' 
+http://127.0.0.1:8080/v1/update -vvv
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X DELETE -H "Content-Type: application/json" 
+-d '{"user_id": "id1"}' 
+http://127.0.0.1:8080/v1/delete -vvv
+        </code></pre></td>
+      </tr>
+
+    </table>
+
+
+  </article>
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+</html>
