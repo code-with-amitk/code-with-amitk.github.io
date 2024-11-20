@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Why Cloud</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#whycloud">Why Cloud</a>
+        <a href="#planes">Data, Control Plane</a>
+    </aside>
+
+    <div style="margin-left:200px;">
+        <h3 id="whycloud">Why Cloud?</h3>
+        <dt>
+            - Cloud adoption is all time high and constantly growing. 
+            The demand for remote workforce is increasing and per Gartner research demand for remote working is set to increase 30% by 2030, 
+            post coronavirus pandemic which has forced world wide organizations to adopt a hybrid working model.<br>
+            - All application(FaaS, SaaS, Sharepoint, office365) as moving to cloud and organizations want secure, seemless access by all employees(in office, home, branch offices)
+            to these applications
+        </dt>
+        <br>
+        <dd>
+            Saas(Software as Service): Host S/W on cloud VM. SaaS is accessed using a thin client or by browser. Eg: Gmail, Salesforce, Office 365<br>
+            PaaS(Platform as Service): Provide Dashboard. upload button is provided you can upload your website. Write your code, 
+            Cloud provider will take care of it. Eg: GAE(Google App engine), Heroku, AWS(Elastic Bean stawk)<br>
+            IaaS(Infrastructure as Service): Provide VM. Cloud provider will give access to OS of server/VM, user can 
+            install/remove/do anything on Server. Highest control. Eg: 	AWS, GCP, Azure
+        </dd>
+
+        <h3 id="planes">Data Plane, Control Plane, Forwarding Plane, Management Plane</h3>
+        <dt>
+            Why planes are seperated? Technologies can be developed independetly.
+        </dt>
+        <table>
+            <tr>
+                <th>Plane</th>
+                <th>Kind of Traffic</th>
+            </tr>
+            <tr>
+                <td>Control(CPU Intersive)</td>
+                <td>Routing traffic:OSPF, ping, management etc</td>
+            </tr>
+            <tr>
+                <td>Data/Forwarding(Less CPU intensive)</td>
+                <td>This is not my packet, I just need to forward</td>
+            </tr>
+            <tr>
+                <td>Management</td>
+                <td>Management traffic(SSH, SNMP, Telnet)</td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>
