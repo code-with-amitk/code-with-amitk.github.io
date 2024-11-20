@@ -197,6 +197,7 @@ body {  //JSON
     </table>
 
     <h2 id="db">DB Schema</h2>
+    <dl><b><a href="/System_Design/Concepts/Databases/Graph%20DB/GraphDB.html">Graph DB</a></b></dl>
     <pre><code class="language-css">
 // user Table
 | userid (pk) | username | creation_timestamp | initial_location (long, latt) |
@@ -205,8 +206,89 @@ body {  //JSON
 -> Would be stored on Graph DB
     </code></pre>
 
-  </article>
+    <h2 id="hld">HLD</h2>
+    <div class="image-container">
+      <img src="//www.plantuml.com/plantuml/png/fLJVQzim47xNNt6mXwMGfMips1QszKUwfc5j2IGT30hbR9rJ4KNo9BcfzzVFXnpFWhwCvYMoxhxlq-a-tQaFw4ArrIAt9ZYhuU9s2UX16Yyo-mnp8nL2_BsvLkl7CAtH2Co3TN3doN5o9SX8QD8P0XSO4APa0ZbHDkmgLoMQ0DSMvJbgD7b4wIm9dvNbajnJZA4Nlokg27vWiK7UsV0Y0ImRqPZjUPMANLB87sEqY4iXCM26dY2tnboSSuXNCajEVxU4fDnVfBNTjGLVEiMvJBe79QfZ9nVDPtssc7CD_8sbyXtPGfcD4CO60ikLjWVdFz0snw2i0Lk0AA9Gi53v9e7NZEfXkx9YfHvQYD0Omb1RinQLLsODQslNce2FrEEfuDqtRl84S6j7kTsAveFtgWaSZOv7uz67cAEp2LojLWkOVL_TcyEdeyCrXOVzOK-YweEINpz--YnqnX3q_m4HoBAnlHDOsLBb0quld94Tvk3UtFZrWE-2SKV7u-6zINWE13CWKxKNyoeoqP8mNpJ916OKzfSyNuYuc-Z5u5lFuJv1qM3L4q59Rgkyvnx7ni9iiHH5mY6jeGJSMYXbRpSZERD0RgsJoc0WBue4brlNHThDH96jCcJJg519saidAJ_9gQB-b_c23Rj7m-D1JC-cL_FR6OYbCZbrrlO27K7Xg7dR9kXQeD-G7CAE86zGA2KWJB7X0urrullUiHAhlDJPxfpSrgwfmyhl-zqpIto1hsGJp9AQXKVZW8DDkqvQi_JrdaVrwC-ew4EhNYzWqDCwwDzt9MvifZJnl0JfSES5mXPBG2F1FzgTaCe7v6lFAEo8J3jC-g-_5VqILTkl3L49lEQfqKsZgfHi7Q16l8Rn-oOZjynsscHMM_qN" 
+      alt="Amo App" class="zoomable-image" id="zoomableImage2" style="width:450px;height:350px;">
+    </div>
+    <pre class="puml" visibility: hidden>
+      @startuml
+      control DNS as dns
+      box India       #LightCyan
+      actor User as u
+      end box
+      box Data Center
+      participant LoadBalancer as lb
+      participant AppServer as as
+      queue Kafka as kafka
+      participant Sender as sender
+      participant Fetcher as fetcher
+      database connDB as conndb
+      end box
+      box US        #LightYellow
+      actor Friend as f
+      end box
+      participant 3rdPartyAPIs as 3rdapis   #LightPink
+      
+      note over sender
+      send location of 
+      friend to user
+      end note
+      
+      note over fetcher
+      Fetches friend 
+      latt,long
+      using google APIs
+      end note
+      
+      u -> dns: amo.com
+      dns -> u: 1.2.3.4
+      u -> lb: HTTP GET\n/v1/get_location?friend_id=789
+      lb -> as: HTTP GET\n/v1/get_location?friend_id=789
+      
+      as -> kafka: Topic(get_frnd_location)\nMsg(user_id=123,\nfriend_id=789)
+      kafka -> fetcher: Topic(get_frnd_location)\nMsg(user_id=123,\nfriend_id=789)
+      
+      fetcher -> conndb: Get friend IP
+      conndb -> fetcher: friend's IP
+      
+      fetcher -> f: Give permission to use GPS
+      f -> fetcher: done
+      
+      fetcher -> 3rdapis: friend's IP
+      3rdapis -> f: GPS coordinates
+      f -> 3rdapis: corrdinates
+      3rdapis -> fetcher: long,lattitude
+      fetcher -> fetcher: Verify long,latt
+      
+      note over fetcher        #Cyan
+      CACHING 
+      Since locations
+      are frequently
+      asked, we can
+      add a Cache layer
+      end note
+      
+      fetcher -> kafka: Topic(frnd_location)\nMsg(long,latt\nfrnd_id=789,usr_id=123)
+      kafka -> sender: Topic(frnd_location)\nMsg(long,latt\nfrnd_id=789,usr_id=123)
+      
+      sender -> conndb: User(123) IP?
+      conndb -> sender: x.y.z.f
+      
+      sender -> u: long,latt (frnd_id=789)
+      
+      note over u
+      Mobile App draws
+      a map and show
+      distance between
+      friends
+      end note
+      
+      sender <-> u: sender keep sending location updates every 30 seconds
+      @enduml
+    </pre>
 
+  </article>
   <script src="/scripts/prism.js"></script>
   <script src="/scripts/common.js"></script>
 </body>
