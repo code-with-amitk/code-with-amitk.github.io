@@ -74,19 +74,35 @@
 
     <h2 id="methods">HTTP Methods</h2>
     <dl>
-      Method? Operations are called methods for requesting web page or content.<br>
-      Safe methods? Those which donot change state of server. Eg: GET, HEAD<br>
-      Read only methods? GET, OPTIONS, HEAD<br>
-      Idempotent methods? A operation that will produce the same results if executed once 
+      <b>Method / Operations</b> Methods for requesting web page or content.<br>
+      &ensp; <u>Safe methods?</u> Those which donot change state of server. Eg: GET, HEAD<br>
+      &ensp; <u>Read only methods?</u> GET, OPTIONS, HEAD<br>
+      &ensp; <u>Idempotent methods?</u> A operation that will produce the same results if executed once 
       or multiple times. Eg: GET, HEAD, PUT, DELETE, TRACE, OPTIONS<br>
-      CRUD Operations: Protocol should support minimum these operations/methods.      
+      &ensp; <u>CRUD Operations:</u> Protocol should support minimum these operations/methods.
     </dl>
-    <pre><code>
-      Create = POST
-      Read = GET
-      Update = PUT
-      Delete = DELETE
-    </code></pre>
+    <table>
+      <tr>
+        <th>Method</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Create (POST)</td>
+        <td>Send data to server, Server will create entry. Eg: Form submittion.</td>
+      </tr>
+      <tr>
+        <td>Read (GET)</td>
+        <td>Reading data(page,object etc) from web server</td>
+      </tr>
+      <tr>
+        <td>Update (PUT)</td>
+        <td>Update existing data on web server.</td>
+      </tr>
+      <tr>
+        <td>Delete (DELETE)</td>
+        <td>Delete content from server</td>
+      </tr>
+    </table>
 
   </article>
   <script src="/scripts/prism.js"></script>
