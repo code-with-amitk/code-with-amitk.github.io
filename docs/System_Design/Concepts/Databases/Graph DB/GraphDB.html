@@ -107,6 +107,39 @@ RETURN p.url
         </tr>
       </table>
 
+      <h3 id="video">3 Friends(A,B,C). A created video. B commented. C shared and liked</h3>
+      <table>
+        <tr>
+          <td>
+            <b>Nodes</b><br>
+            User: Represents users like UserA, UserB, and UserC.<br>
+            Video: Represents each video uploaded.<br>
+            Comment: Represents comments on videos.<br>
+            Like: Represents likes on videos.
+            <br><br>
+            <b>Relationships: </b><br>
+            &ensp; FRIEND: Connects User nodes (e.g., UserA is FRIEND with UserB and UserC).<br>
+            &ensp; CREATED: Connects User to Video (e.g., UserA CREATED Video1).<br>
+            &ensp; COMMENTED: Connects User to Comment (e.g., UserB COMMENTED Comment1).<br>
+            &ensp; LIKED: Connects User to Video (e.g., UserC LIKED Video1).<br>
+            &ensp; SHARED: Connects User to Video (e.g., UserC SHARED Video1).<br>
+            &ensp; ON: Connects Comment to Video (e.g., Comment1 ON Video1).
+          </td>
+          <td>
+            <img src="/images/Graphs/Graph_Users_Commenting_on_Video.png" alt="trie" style="width:300px;height:300px;">
+          </td>
+          <td><pre><code class="language-css">
+(UserA)-[:CREATED]->(Video1 {url: "https://objectstore.com/video1"})
+(UserB)-[:FRIEND]->(UserA)
+(UserC)-[:FRIEND]->(UserA)
+(UserB)-[:COMMENTED]->(Comment1 {text: "Great video!"})-[:ON]->(Video1)
+(UserC)-[:LIKED]->(Video1)
+(UserC)-[:SHARED]->(Video1)
+          </code></pre></td>
+        </tr>
+      </table>
+
+
       <h3 id="how">How efficiently particular node is searched in graphDB?</h3>
       <h4>Method-1 (Store address of user nodes)</h4>
       <dl>
