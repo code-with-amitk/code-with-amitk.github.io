@@ -26,6 +26,7 @@
         <a href="#what">What</a>
         <a href="#how">How it works</a>
         <a href="#policy">Policy types in Netskope</a>
+        <a href="#configurations">Configurations in Netskope</a>
     </aside>
 
     <article style="margin-left:200px;">
@@ -67,16 +68,21 @@
                     Traffic is bypassed from Netskope SWG and is sent direct to the destination. Types of bypass
                     <table>
                         <tr>
-                            <td>Steering Bypass</td>
+                            <td><a href="#steering">Steering Configuration</a></td>
                             <td>
-                                Traffic is bypassed entirely from Netskope at the device level and is sent direct to the destination. It will never reach the Netskope Cloud.
+                               This is not a policy But a mode
                             </td>
                         </tr>
                         <tr>
-                            <td>SSL Decryption Bypass</td>
+                            <td>ByPass policy = SSL Decryption Policy</td>
                             <td>
-                                Applicable to Web and SSL/TLS encrypted traffic only.
-                                The traffic is sent to the Netskope Cloud, but bypassed from SSL Inspection
+                                <img src="/images/Netskope/ssl-bypass.png" 
+                                alt="ssl bypass policies" style="width:400px;height:200px;" class="zoomable-image" id="zoomableImage2"><br>
+                                Whenever SSL traffic comes to Netskope, there can be 2 modes:<br>
+                                &ensp; - Donot decrypt(ByPass). Note <a href="#actionbypass">(RTP policy evaluation (action=bypass))</a>
+                                can still happen.
+                                <br>
+                                &ensp; - Decrypt
                             </td>
                         </tr>
                     </table>
@@ -93,12 +99,61 @@
                 <td>Real-time Protection</td>
                 <td>
                     Policies matched against pre-defined Categories. Set action based on criteria. For Real time traffic.
+                    <table>
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td id="actionbypass"><u>Bypass Specific Traffic <br>(action = Bypass)</u></td>
+                            <td>
+                                Policies > RTP > (Source=user/group/OU, Destination=CloudApps(Gdrive), Action=Bypass)<br>
+                                Policies > RTP > (Source=user/group/OU, Destination=Category(Alcohol, Drugs, Abusing), Action=Bypass)<br>
+                                Policies > RTP > (Source=user/group/OU, Destination=AppInstance(), Action=Bypass)<br>
+                                Policies > RTP > (Source=user/group/OU, Destination=Any Web Traffic(Browse/Upload/Download), Action=Bypass)<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Alert,Allow,Isolate,Block Policies</td>
+                            <td>
+                                All same categories, Just Action is different
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr>
                 <td>Threat Protection</td>
                 <td>
                     Detect and prevent advanced threats, including malware and phishing attacks
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="configurations">Configurations in Netskope</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td id="steering"><a href="https://docs.netskope.com/en/steering-configuration/">Steering Configurations</a></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                Settings > Security Cloud Platform > Steering Configuration
+                                <img src="https://netskope-techdocs.github.io/doc-stage/en/image/uuid-ce676729-5821-2cbd-c9a4-aeab15a1cfc5.png" 
+            alt="netskope steering config" style="width:230px;height:170px;" class="zoomable-image" id="zoomableImage2">
+                            </td>
+                            <td>
+                                Controls, which traffic gets steered to Netskope for real-time deep analysis and which traffic gets bypassed.<br>
+                                By default all traffic from tenant is steered to netskope<br>
+                                Traffic is bypassed entirely from Netskope at the device level and is sent direct to the destination. 
+                                It will never reach the Netskope Cloud.
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
