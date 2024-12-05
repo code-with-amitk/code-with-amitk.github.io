@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Netskope SWG</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#how">How it works</a>
+        <a href="#policy">Policy types in Netskope</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What Netskope SWG?</h2>
+        <dl>
+            Netskope SWG (Secure Web Gateway) functions as a cloud-based security solution that monitors and controls web traffic by 
+            inspecting URLs, analyzing content, and applying policies to detect and block malicious websites, malware, and data leaks
+        </dl>
+
+        <h2 id="how">How SWG works</h2>
+        <dl>
+            1. Admin creates policies in UI (Eg: browser=Chrome, action=drop) which is passed to Policy Enginer module<br>
+            2. When packet hits SWG, data is extracted from header (eg: user-agent, browser etc) and a event message is created with <key,value> fields<br>
+            3. Event message is passed to policy module, which takes action based on fields from event message
+        </dl>
+
+        <h2 id="types">Policy types in Netskope SWG</h2>
+        <div class="image-container">
+            <img src="https://netskope-techdocs.github.io/doc-stage/en/image/uuid-dc0f6d7a-3b0f-3cf2-e56e-62a71e3ecab8.png" 
+            alt="netskope policies" style="width:250px;height:230px;" class="zoomable-image" id="zoomableImage2">
+        </div>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Access Control Protection</td>
+                <td>
+                    control access to websites, applications, and cloud services based on user roles, device types, and network locations
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <a href="https://docs.netskope.com/en/add-bypasses-in-netskope/#:~:text=There%20are%20two%20types%20of%20bypasses%20when%20it,Applicable%20to%20Web%20and%20SSL%2FTLS%20encrypted%20traffic%20only.">
+                        Bypass Policies</a></td>
+                <td>
+                    Traffic is bypassed from Netskope SWG and is sent direct to the destination. Types of bypass
+                    <table>
+                        <tr>
+                            <td>Steering Bypass</td>
+                            <td>
+                                Traffic is bypassed entirely from Netskope at the device level and is sent direct to the destination. It will never reach the Netskope Cloud.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>SSL Decryption Bypass</td>
+                            <td>
+                                Applicable to Web and SSL/TLS encrypted traffic only.
+                                The traffic is sent to the Netskope Cloud, but bypassed from SSL Inspection
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Data Loss Prevention (DLP) Protection</td>
+                <td>
+                    Protect sensitive data by detecting and preventing unauthorized data transfers.
+                    Can be customized for specific type of data eg: Personally Identifiable Information (PII) or Payment Card Information (PCI).
+                </td>
+            </tr>
+            <tr>
+                <td>Real-time Protection</td>
+                <td>
+                    Policies matched against pre-defined Categories. Set action based on criteria. For Real time traffic.
+                </td>
+            </tr>
+            <tr>
+                <td>Threat Protection</td>
+                <td>
+                    Detect and prevent advanced threats, including malware and phishing attacks
+                </td>
+            </tr>
+        </table>
+    </article>
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
