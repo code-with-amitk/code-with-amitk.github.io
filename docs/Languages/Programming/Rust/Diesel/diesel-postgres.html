@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diesel Postgres</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#install">Install postgres, Create user</a>
+        <a href="#create">Create DB, Table</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <a href="https://diesel.rs/guides/getting-started">CRUD using Diesel (postgres)</a>
+        
+        <h2 id="install">Install postgres, Create user</h2>
+        <pre><code class="language-css">
+$ sudo apt install postgresql postgresql-contrib
+$ sudo apt install libpq-dev
+$ psql --version
+$ sudo service postgresql status
+$ sudo netstat -plunt |grep postgres    //Check port
+tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      255/postgres        
+$
+        </code></pre>
+
+        <h3>Set password for user(postgres)</h3>
+        <dl>
+        When installing postgres DB on ubuntu, Installation scripts creates a local user=postgres, this user is used to login to postgres DB<br>
+        User postgres is default user (created on system which have access to db)<br>
+        Also, Change the passwd of postgres user, because Rust backend will connect to DB using user/pass
+        </dl>
+<pre><code class="language-css">
+# cat /etc/passwd|grep postgres
+postgres:x:105:109:PostgreSQL administrator,,,:/var/lib/postgresql:/bin/bash
+
+// Change passwd of DB User (inside postgres)
+$ su - postgres         //login to postgres user
+$ sudo passwd postgres  //Change Unix password of postgres user
+$ psql                  //login to db
+psql (16.6 (Ubuntu 16.6-0ubuntu0.24.04.1))
+Type "help" for help.
+
+postgres=# \du
+                             List of roles
+ Role name |                         Attributes                         
+-----------+------------------------------------------------------------
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS
+
+postgres=# ALTER USER postgres WITH PASSWORD 'new_password';    //Change password
+ALTER ROLE
+postgres=#
+</code></pre>
+
+        <h3 id="create">DB, Table Creation</h3>
+        <h4>1. Manually entering username(emai), password_hash in table</h4>
+<pre><code class="language-css">
+# sudo service postgresql status
+
+// Login as user=postgres
+# sudo -u postgres psql
+
+postgres=# create database teachers;
+CREATE DATABASE
+
+postgres=# \c;
+You are now connected to database "teachers" as user "postgres".
+teachers=# CREATE TABLE teachers_login (
+        id serial PRIMARY KEY,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL
+);
+CREATE TABLE
+
+teachers=# INSERT INTO teachers_login (email, password_hash)
+VALUES ('teacher1@test.com', 12117530842303537118);
+INSERT 0 1
+teachers=# \dt
+             List of relations
+ Schema |      Name      | Type  |  Owner   
+--------+----------------+-------+----------
+ public | teachers_login | table | postgres
+(1 row)
+
+teachers=# SELECT * FROM teachers_login;
+ id |       email       |    password_hash     
+----+-------------------+----------------------
+  1 | teacher1@test.com | 12117530842303537118
+(1 row)
+
+teachers=# \q
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diesel Migration</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#whatcli">diesel-cli?</a>
+        <a href="#what">What is Diesel Migration</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <dl>
+        <a href="https://diesel.rs/guides/getting-started">CRUD using Diesel (postgres)</a>
+    </dl>
+        
+        <h2 id="whatcli">diesel-cli</h2>
+        <pre><code class="language-css">
+$ cargo install diesel_cli --no-default-features --features postgres
+        </code></pre>
+        <dl>
+            Command-line interface (CLI) tool provided by the "Diesel" Rust library, which is used to manage and interact 
+            with your database schema.
+        </dl>
+        <h4>Usage of diesel CLI</h4>
+        <dl>
+            <b>1. Running Database Migrations scripts</b><br>
+            <b>2. Generating Rust Code for Your Database Schema</b>
+        </dl>
+
+        <h2 id="what">Diesel Migration Scripts</h2>
+        <dl>
+            Migrations are essentially scripts that make changes to your database schema. 
+        </dl>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
