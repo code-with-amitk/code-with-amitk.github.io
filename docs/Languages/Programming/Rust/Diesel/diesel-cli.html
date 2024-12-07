@@ -64,14 +64,32 @@ $ echo DATABASE_URL=postgres://username:password@localhost/database_name > .env
         </code></pre>
 
         <h4>2. Create database using diesel</h4>
-        <h5>Database & migrations directory using command <font color="red"><code>diesel setup</code></font></h5>
+        <h5>Database & migrations directory Creation using command <font color="red"><code>diesel setup</code></font></h5>
         <pre><code class="language-css">
 $ cd /root/code/rust/personalized_report_card/backend
-$ diesel setup
 backend# diesel setup
 Creating migrations directory at: /root/code/rust/personalized_report_card/backend/migrations
 Creating database: teachers
+root@Amit:~/code/rust/personalized_report_card/backend# ls
+Cargo.lock  Cargo.toml  Docs  diesel.toml  migrations  src  target
         </code></pre>
+
+        <h5><code>diesel setup</code> will also creates <font color="red"><code>diesel.toml</code></font></h5>
+        <dl>
+            When we ran diesel setup, a file called diesel.toml was created which tells Diesel to maintain a file at src/schema.rs for us
+        </dl>
+        <pre><code class="language-css">
+# For documentation on how to configure this file,
+# see https://diesel.rs/guides/configuring-diesel-cli
+
+[print_schema]
+file = "src/schema.rs"          // Schema will be dumped into this file
+custom_type_derives = ["diesel::query_builder::QueryId", "Clone"]
+
+[migrations_directory]
+dir = "/root/code/rust/personalized_report_card/backend/migrations"
+        </code></pre>
+
 
         <h5>Connect to DB to check database(teachers) created?</h5>
         <pre><code class="language-css">
