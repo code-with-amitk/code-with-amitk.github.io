@@ -96,7 +96,7 @@ postgres=# \c;              //Connect to DB
             </tr>
             <tr>
                 <td>
-                    List Database, tables
+                    List Database<br> List Tables<br> Show Table schema
                 </td>
                 <td><pre><code class="language-css">
 ********** Lists all available commands **********
@@ -121,6 +121,17 @@ teachers=# \dt
  --------+----------------+-------+----------
   public | teachers_login | table | postgres
  (1 row)
+
+********** Table Schema **********
+teachers=# \d teachers_login
+                                       Table "public.teachers_login"
+    Column     |          Type          | Collation | Nullable |                  Default                   
+---------------+------------------------+-----------+----------+--------------------------------------------
+ id            | integer                |           | not null | nextval('teachers_login_id_seq'::regclass)
+ email         | character varying(255) |           | not null | 
+ password_hash | text                   |           | not null | 
+ password_salt | text                   |           | not null | 
+ active        | boolean                |           | not null | false
                 </code></pre></td>
             </tr>
             <tr>
