@@ -159,17 +159,98 @@
             </tr>
         </table>
 
+        <h2 id="cep">Cloud Explicit Proxy Netskope</h2>
+        <dl>
+            Way to direct traffic from any device to the Netskope Cloud by using a Proxy Auto Configuration (PAC) file configured in browser.<br>
+            This is orthogonal to nsclient installed on device and sending traffic to Netskope cloud.
+            <br><br>
+
+            <b>When Explicit proxy is useful?</b> When installing the client is not feasible<br>
+        </dl>
+
         <h2 id="proxychain">Proxy Chaining Netskope</h2>
         <dl>
-            Route network traffic from your existing on-premises 
-            <a href="https://github.com/code-with-amitk/Code-examples/blob/master/System-Design/Concepts/Proxy_Servers/README.adoc">proxy server</a> 
-            to the Netskope Cloud, allowing you to leverage your current proxy infrastructure while still benefiting from Netskope's security features 
-            by forwarding traffic through it to the Netskope service.
+            Customer will setup a onpremises proxy(netskope or other). User browser will hit onpremises proxy for HTTP requests.
+            onpremises proxy will connect proxy2 on Netskope cloud. And proxy2 will connect to destination server.<br>
+            Here 2 proxies are present, proxy1(onpremises), proxy2(On netskope cloud), hence its proxy Chaining.<br>
+            
+            What is <a href="https://github.com/code-with-amitk/Code-examples/blob/master/System-Design/Concepts/Proxy_Servers/README.adoc">proxy server?</a> 
             <br><br>
 
             <b>How its done?</b><br>
-            Configuring on-premises proxy to send traffic to Netskope and adding your proxy's IP address to a Netskope allowlist
+            Configure on-premises proxy to send traffic to Netskope proxy and add Proxy1(onpremises proxy) IP address to allowlist.
         </dl>
+
+        <div class="image-container">
+            <img src="//www.plantuml.com/plantuml/png/RLB1RXen4BtxAqRf9P5ALMXF7ABGfKce8dNL4BK7BcOzB1PUZsLxGr3LV-zumuQrmccTDs_UU_F2JOZInxOnOaqlKBGXKeCUIe-D3XW0FXG7QOLZagwqapR2Kq3_pTEUFo03jEjiEgUzDIJLwr1biukVDWcpEhqSnYkRk25wb4Ve8gsuiK2hWEE8BjDYNaAcaW3cQULoeiKOTkGGAaDjRjofJphrIRuqnn2rbL5JVcHDL1jC6_LfOMif8j0pUax9rJpeUXjBRNTYmNT8OquPYXbKwADuMi0rF69aaphmis2Gl-9HrvOXvdNoIJZNdq1caEk8zAvQh-C1YdGjb4R63Vc69-bOXhTI9mS6PaeTAuT5AI819wKz61tYmBnTm-WQr1Jkz3D2Wr3E2hZL1eLAWtOzJSWW8qCYSPJsMCKWefURZQw03SWwZuteJDzPkF4KxfVB4kw-BuyzVwge4KAQ2BADMxHHLzs_13OSDAzTp4uC56r0Fp1mupvgP_3rynVuXLs-xcTp3A2LEoKG_5U_z42rjfT9ywEJ8LmD-Mzelv3EI5bWJXOJEBG-sRhKmSh--Bs49UtGdYbXPUzHAlINRwIhT5D_ZfkSxQlV2jE_0_cL_JEw9R-NNg5Ahz4hwvzmaoHMd---xiElIHs4k67xjZ7_0G00"
+             alt="Proxy Chaining Netskope" class="zoomable-image" id="zoomableImage2">
+          </div>
+        <pre class="puml" visibility: hidden>
+            @startuml
+            box Customer Premises  #Cyan
+            participant UserBrowser as ub
+            participant Downloader as d
+            participant "OnPrem Proxy1\nDownstream Proxy" as p1
+            end box
+            
+            box IDP 
+            participant IDP as idp
+            end box
+            
+            box netskope cloud
+            participant Proxy2 as p2
+            end box
+            
+            box Destination
+            participant google as g
+            end box
+            
+            hnote over p1  #LightPink
+            Install netskope CA cert
+            UI > Settings > Certs >
+            Signing CA
+            end note
+            
+            hnote over p2   #LightPink
+            UI > Settings 
+            > Security Cloud Platform
+            > Proxy Chaining
+            > Add Proxy1 IP
+            to allow list
+            end note
+            
+            ub -> d: Give me PAC File
+            d -> ub: PAC
+            hnote over ub
+            PAC directs
+            traffic to onprem
+            Proxy
+            end note
+            
+            ub -> p1: HTTP GET google.com
+            
+            alt authentication flow
+            hnote over p1
+            Authenticate
+            user
+            end note
+            
+            p1 -> ub: HTTP 403 Redirect IDP
+            ub -> idp: HTTP GET
+            idp -> ub: Login(user,pass)
+            ub -> idp: user,pass
+            idp -> p1: Auth Done
+            idp -> ub: HTTP Redirect proxy\nJWT Token
+            ub -> p1: HTTP GET\nHeader(JWT Token)
+            end
+            
+            p1 -> p2: HTTP GET google.com\nHeaders:{\nJWT Token\nX-Forwarded-For-Header}
+            p2 -> g: HTTP GET google.com
+            g -> ub: body
+            
+            @enduml
+        </pre>
+
     </article>
     <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>
