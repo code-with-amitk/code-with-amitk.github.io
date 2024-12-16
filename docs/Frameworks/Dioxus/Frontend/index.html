@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dioxus Frontend</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#rsx">What RSX</a>
+        
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="rsx"><a href="https://dioxuslabs.com/learn/0.6/essentials/rsx/">UIs with RSX</a></h2>
+        <dl>
+            Dioxus renders to HTML
+        </dl>
+
+        <h4>Webpage</h4>
+        <pre><code class="language-css">
+$ mkdir test; cd test
+
+// Create a New project
+$ dx new --template gh:dioxuslabs/dioxus-template
+
+// 
+$ rustup target add wasm32-unknown-unknown
+$ src/main.rs
+pub fn main() {
+    dioxus_web::launch(app);
+}
+fn app(cx: Scope) -> Element {
+    cx.render(rsx!(
+        div {
+            h1 {"Hello 12"}
+        }
+    ))
+}
+$ dx serve
+http://127.0.0.1:8080/
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
