@@ -1,44 +1,62 @@
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM fully loaded and parsed');
+document.addEventListener("DOMContentLoaded", () => {
+    const searchForm = document.getElementById("searchForm");
+    const searchInput = document.getElementById("searchInput");
+    const searchResults = document.getElementById("searchResults");
 
-    var searchForm = document.getElementById('searchForm');
-    if (!searchForm) {
-        console.error('Search form not found');
-        return;
-    }
+    searchForm.addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent form submission
+        const query = searchInput.value.trim().toLowerCase();
 
-    searchForm.addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting normally
-        console.log('Search form submitted');
-
-        var searchInput = document.getElementById('searchInput');
-        if (!searchInput) {
-            console.error('Search input not found');
+        if (!query) {
+            searchResults.innerHTML = "<li>Please enter a keyword to search.</li>";
             return;
         }
 
-        var searchQuery = searchInput.value.toLowerCase();
-        console.log('Search query:', searchQuery);
+        try {
+            const links = await getSiteLinks();
+            const results = links.filter((page) =>
+                page.text.toLowerCase().includes(query) || page.url.toLowerCase().includes(query)
+            );
 
-        var content = document.getElementById('content');
-        if (!content) {
-            console.error('Content element not found');
-            return;
-        }
-
-        var paragraphs = content.getElementsByTagName('p');
-        console.log('Number of paragraphs:', paragraphs.length);
-
-        // Reset previous search results
-        for (var i = 0; i < paragraphs.length; i++) {
-            paragraphs[i].classList.remove('hidden');
-        }
-
-        // Perform the search
-        for (var i = 0; i < paragraphs.length; i++) {
-            if (!paragraphs[i].innerText.toLowerCase().includes(searchQuery)) {
-                paragraphs[i].classList.add('hidden');
-            }
+            displayResults(results);
+        } catch (error) {
+            console.error("Error during search:", error);
+            searchResults.innerHTML = "<li>Search failed. Try again later.</li>";
         }
     });
+
+    async function getSiteLinks() {
+        const response = await fetch(window.location.origin);
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const links = Array.from(doc.querySelectorAll("a"))
+            .filter((a) => a.href.startsWith(window.location.origin))
+            .map((a) => ({
+                text: a.innerText || "No Title",
+                url: a.href,
+            }));
+
+        return links;
+    }
+
+    function displayResults(results) {
+        searchResults.innerHTML = ""; // Clear previous results
+
+        if (results.length === 0) {
+            searchResults.innerHTML = "<li>No results found.</li>";
+            return;
+        }
+
+        results.forEach((result) => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = result.url;
+            link.textContent = result.text;
+
+            listItem.appendChild(link);
+            searchResults.appendChild(listItem);
+        });
+    }
 });
