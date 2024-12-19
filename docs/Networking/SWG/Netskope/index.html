@@ -182,7 +182,7 @@
         </dl>
 
         <div class="image-container">
-            <img src="//www.plantuml.com/plantuml/png/RLB1RXen4BtxAqRf9P5ALMXF7ABGfKce8dNL4BK7BcOzB1PUZsLxGr3LV-zumuQrmccTDs_UU_F2JOZInxOnOaqlKBGXKeCUIe-D3XW0FXG7QOLZagwqapR2Kq3_pTEUFo03jEjiEgUzDIJLwr1biukVDWcpEhqSnYkRk25wb4Ve8gsuiK2hWEE8BjDYNaAcaW3cQULoeiKOTkGGAaDjRjofJphrIRuqnn2rbL5JVcHDL1jC6_LfOMif8j0pUax9rJpeUXjBRNTYmNT8OquPYXbKwADuMi0rF69aaphmis2Gl-9HrvOXvdNoIJZNdq1caEk8zAvQh-C1YdGjb4R63Vc69-bOXhTI9mS6PaeTAuT5AI819wKz61tYmBnTm-WQr1Jkz3D2Wr3E2hZL1eLAWtOzJSWW8qCYSPJsMCKWefURZQw03SWwZuteJDzPkF4KxfVB4kw-BuyzVwge4KAQ2BADMxHHLzs_13OSDAzTp4uC56r0Fp1mupvgP_3rynVuXLs-xcTp3A2LEoKG_5U_z42rjfT9ywEJ8LmD-Mzelv3EI5bWJXOJEBG-sRhKmSh--Bs49UtGdYbXPUzHAlINRwIhT5D_ZfkSxQlV2jE_0_cL_JEw9R-NNg5Ahz4hwvzmaoHMd---xiElIHs4k67xjZ7_0G00"
+            <img src="//www.plantuml.com/plantuml/png/TL9DRnen4BtxLuoIIo8rRQ4zSOX2btnGHUgg8MeFkPZri5XuFPRj3Q2g_xqUBGkuWjDwdz_7czcz2r7ws3P6p6a3HHiYDUYXzDZeW07WijXAArmYwKexQIEy1lJVFAtJ0sI0TfxTJcXj3KdLNQhixkA7PUFaJflju889RY3GAaZXGYmjHGHwHy_ms0I2GXg3Ih1fY1xbJlj9t6-SIRQnUsSFO7LkCinCpafuykcaXAnh0hYVLkvGa8aMOrYHGwWCjTbudUymgJWv4qqmH6rbr9IliYQg3RAYFhC6WCjdNIzZgUrAJ6s8QPP3Xs8C5VeeNgTm2oyOKqWTqh58O7gA5rtR12NUkGr15f3x23vNhTTn2mLF2wMHSK6-IJSyR8ANKdD20iPATU00fgM81AafhS7e48_2spdSt88QmQD-HsWGod413zgWK7pHpaUC77LCa62EqXwh64JqSh7G5QG0iivZ8_hFcKUumGYUPhCI7kzdkpr_hAWHGfe8ierBj55N_4aiB5BH__--0mD56z0V1RX1LtKNyFNp5_Y9NJ_-RNO5j7A71YAzzQ9dghMzOiyFJePmVSpVexs0n-0kC26B36RH-rZ7EtYptt_DO4Ohj2UMy6QVK2hqLtlIDS_KZ-E69_VLgyBepv7zc_rzyq1-BRr2nQURZlLNk26RrQTtN_VbvwIsGjob-BOn_m00"
              alt="Proxy Chaining Netskope" class="zoomable-image" id="zoomableImage2">
           </div>
         <pre class="puml" visibility: hidden>
@@ -190,8 +190,19 @@
             box Customer Premises  #Cyan
             participant UserBrowser as ub
             participant Downloader as d
-            participant "OnPrem Proxy1\nDownstream Proxy" as p1
+            participant "OnPrem Proxy1" as p1
             end box
+            
+            hnote over p1
+            Also Called
+            Downstream Proxy/
+            Explicit Proxy
+            end note
+            
+            hnote over p2
+            Also Called
+            Explicit Proxy
+            end note
             
             box IDP 
             participant IDP as idp
