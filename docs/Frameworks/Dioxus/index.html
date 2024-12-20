@@ -3,6 +3,7 @@
 <head>
     <title>Dioxus Rust</title>
     <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
 </head>
 <body>
@@ -24,6 +25,13 @@
     <aside class="sidebar">   <!-- Sidebar -->
         <a href="#what">What is Dioxus?</a>
         <a href="Frontend/">Frontend using Dioxus</a>
+        <a href="#terms">Terms</a>
+        <ul>
+            <li><a href="#components">Components</a></li>
+            <li><a href="#rsx">rsx macro</a></li>
+            <li><a href="#eventhand">Event Handlers</a></li>
+            <li><a href="#states">States</a></li>
+        </ul>
     </aside>
 
     <article style="margin-left:200px;">
@@ -31,7 +39,112 @@
         <dl>
             Framework for building cross-platform apps(frontend, backend, mobile apps) with the Rust programming language
         </dl>
-    </article>
 
+        <h2>Terms</h2>
+        <h3 id="components"><a href="https://dioxuslabs.com/learn/0.6/guide/component">Dioxus Components</a></h3>
+        <dl>
+            In Dioxus, apps are comprised of individual functions(called Components) that take in some Properties and render an Element<br>
+            All Props structs in Dioxus need to derive the Properties trait which requires both Clone and PartialEq
+
+            <br><br>
+            <b>#[component] macro</b><br>
+            Dioxus provides the #[component] macro for simplifying how components are defined.<br>
+            This macro converts the parameters of the annotated function into a hidden accompanying struct.<br>
+            When building apps, you'll frequently use the #[component] macro. When building libraries, we generally suggest 
+            deriving Props instead.
+            <br><br>
+
+            <b>Components are rerendered</b><br>
+            Just like React, Dioxus will calls component function multiple times throughout its lifecycle<br>
+            <u>But Why?</u><br> it compares the Element returned from the last render against the Element returned in the current render<br>
+            In Dioxus, re-renders are extremely cheap (much cheaper than React!)
+        </dl>
+        <pre><code class="language-css">
+            #[derive(Props, PartialEq, Clone)]
+struct DogAppProps {
+    breed: String
+}
+
+fn DogApp(props: DogAppProps) -> Element {
+    // ...
+}
+
+// This macro converts the parameters of the annotated function into a hidden accompanying struct
+#[component]
+fn DogApp(breed: String) -> Element {
+    // ...
+}
+        </code></pre>
+
+        <h3 id="rsx">rsx! {} macro</h3>
+        <dl>
+            Dioxus provides the rsx! {} macro for assembling Elements in your app
+        </dl>
+        <pre><code class="language-css">
+        rsx! {
+            if show_title {
+                "title!"
+            }
+
+            ul {                //for inside ul
+                for item in 0..5 {
+                    "{i}"
+                }
+            }
+
+            for user in users {
+                div {
+                    key: "{user.id}",       //lists
+                    "{user.name}"
+                }
+            }
+        }
+        </code></pre>
+
+        <h3 id="eventhand"><a href="https://dioxuslabs.com/learn/0.6/reference/event_handlers/">Event Handlers</a></h3>
+        <dl>
+            Event handlers are used to respond to user actions. For example, an event handler could be triggered when the user 
+            clicks, scrolls, moves the mouse, or types a character.<br>
+            Event handlers are attached to elements their name usually starts with on- and they accept closures as values.<br>
+            The closure will be called whenever the event it listens for is triggered and will be passed that event.<br>
+            Event handlers receive an Event object containing information about the event. 
+        </dl>
+        <pre><code class="language-css">
+#[component]
+fn DogView() -> Element {
+    // Closure for event handler
+    let save = move |evt| {
+        println!("Inside save");
+    };
+
+    rsx! {
+        div { id: "dogview",
+            img { src: "https://images.dog.ceo/breeds/pitbull/dog-3981540_1280.jpg" }
+        }
+        div { id: "buttons",
+        button { onclick: save, id: "save",  "save!" }
+        }
+    }
+}
+        </code></pre>
+
+        <h3 id="states">States</h3>
+        <dl>
+            App is defined as a function of the current state.
+            As the state changes, the parts of your app that depend on that state will automatically re-run<br>
+            You can create mutable state in Dioxus with Signals
+        </dl>
+
+        <h4 id="signals">Signals</h4>
+        <dl>
+            Signals are used to manage states,
+            Wrap any value inside Signal and do Read/write. There are 2 ways to create signals:<br>
+            1. Signal::new() <br>
+            2.  use_signal hook (Recommended. cleans the Signal up for you automatically.)
+        </dl>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
 </body>
 </html>

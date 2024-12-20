@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dioxus Frontend</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#hotdog">Hotdog</a>
+        <a href="#install">Installation & project setup</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2><a href="https://dioxuslabs.com/learn/0.6/guide/">What is Hotdog</a></h2>
+        <dl>
+            We'll be building a small app called: HotDog - basically Tinder, but for dogs! 
+            This app will serve as a great way to learn about building UIs, adding state, and deploying.
+            By the end of this tutorial, you will launch your very own web, desktop, and mobile apps and a backend deployed to Fly.io
+            <br><br>
+
+            <b>Feature of Hotdog App</b><br>
+            Engage with a stream of cute dog photos
+            Swipe right if we want to save the dog photo to our collection
+            Swipe left if we don't want to save the dog photo
+            View the dog photos we saved later
+        </dl>
+
+        <h2 id="install">Installation & project setup</h2>
+        <pre><code class="language-css">
+            $ Install vscode. Extensions(Rust Analyzer, Dioxus)
+            $ cargo install dioxus-cli
+            $ dx --version
+            $ dx new hot_dog
+            $ cd hot_dog
+            $ dx serve
+            http://127.0.0.1:8080
+        </code></pre>
+        <video width="320" height="240" controls>
+            <source src="https://dioxuslabs.com/assets/dx_new_06-9fb37539c317d2f8.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          </video> 
+
+    </article>
+
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
