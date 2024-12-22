@@ -152,6 +152,58 @@ fn DogView() -> Element {
             2. use_effect: Executes side effects based on changes to reactive dependencies.<br>
             3. use_ref: Maintains mutable references without triggering re-renders
         </dl>
+        <table>
+            <tr>
+                <td>
+                    <b>Increment variable on Mouse Click</b><br>
+                    This will display a button. Everytime we click on button a variable(counter) is incremented.
+                    <div class="image-container">
+                        <img src="/images/dioxus/use_signal.png" alt="use_signal" class="zoomable-image" id="zoomableImage2"
+                        style="width:200px;height:100px;">
+                    </div>
+                    <pre><code class="language-css">
+fn main() {
+    dioxus::launch(App);
+}
+fn App() -> Element {
+    rsx! {
+        button_comp {}
+    }
+}
+fn button_comp() -> Element {
+    let mut counter = use_signal(|| 0);
+
+    rsx! {
+        button { onclick: move |_oc: Event<MouseData>| {
+                // Closure capturing Event data
+                counter += 1;
+            }, 
+            "Button Text" }
+        div { "Counter value: {counter}" }
+    }
+}
+                    </code></pre>
+                </td>
+                <td>
+                    <pre><code class="language-css">
+                        // Create a variable(val) & make it 1
+                        let mut val = use_signal(|| 0);
+                        val.set(1);
+                        
+                        // Read the variable & modify it
+                        let value = *val.read();
+                        val.set(value + 1);      // Modify afterwards
+                        
+                        let value: &mut i32 = &mut val.write();
+                        
+                        let a = use_effect(move||{
+                            val += 1;
+                        });
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
+
 
     </article>
     <script src="/scripts/prism.js"></script>
