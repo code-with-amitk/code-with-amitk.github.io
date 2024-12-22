@@ -31,6 +31,9 @@
             <li><a href="#rsx">rsx macro</a></li>
             <li><a href="#eventhand">Event Handlers</a></li>
             <li><a href="#states">States</a></li>
+            <ul>
+                <li><a href="#signals">Signals</a></li>
+            </ul>
         </ul>
     </aside>
 
@@ -41,14 +44,14 @@
         </dl>
 
         <h2>Terms</h2>
-        <h3 id="components"><a href="https://dioxuslabs.com/learn/0.6/guide/component">Dioxus Components</a></h3>
+        <h3 id="components"><a href="https://dioxuslabs.com/learn/0.6/guide/component">Components = Functions</a></h3>
         <dl>
-            In Dioxus, apps are comprised of individual functions(called Components) that take in some Properties and render an Element<br>
-            All Props structs in Dioxus need to derive the Properties trait which requires both Clone and PartialEq
+            In Dioxus, apps are comprised of individual functions(called Components) that take in some Properties(structures) and render an Element<br>
+            All Properties(structs) in Dioxus need to derive the Properties trait which requires both Clone and PartialEq
 
             <br><br>
             <b>#[component] macro</b><br>
-            Dioxus provides the #[component] macro for simplifying how components are defined.<br>
+            Dioxus provides the #[component] macro for simplifying how components are defined.
             This macro converts the parameters of the annotated function into a hidden accompanying struct.<br>
             When building apps, you'll frequently use the #[component] macro. When building libraries, we generally suggest 
             deriving Props instead.
@@ -60,7 +63,7 @@
             In Dioxus, re-renders are extremely cheap (much cheaper than React!)
         </dl>
         <pre><code class="language-css">
-            #[derive(Props, PartialEq, Clone)]
+#[derive(Props, PartialEq, Clone)]
 struct DogAppProps {
     breed: String
 }
@@ -81,24 +84,24 @@ fn DogApp(breed: String) -> Element {
             Dioxus provides the rsx! {} macro for assembling Elements in your app
         </dl>
         <pre><code class="language-css">
-        rsx! {
-            if show_title {
-                "title!"
-            }
+rsx! {
+    if show_title {
+        "title!"
+    }
 
-            ul {                //for inside ul
-                for item in 0..5 {
-                    "{i}"
-                }
-            }
-
-            for user in users {
-                div {
-                    key: "{user.id}",       //lists
-                    "{user.name}"
-                }
-            }
+    ul {                //for inside ul
+        for item in 0..5 {
+            "{i}"
         }
+    }
+
+    for user in users {
+        div {
+            key: "{user.id}",       //lists
+            "{user.name}"
+        }
+    }
+}
         </code></pre>
 
         <h3 id="eventhand"><a href="https://dioxuslabs.com/learn/0.6/reference/event_handlers/">Event Handlers</a></h3>
@@ -141,6 +144,13 @@ fn DogView() -> Element {
             Wrap any value inside Signal and do Read/write. There are 2 ways to create signals:<br>
             1. Signal::new() <br>
             2.  use_signal hook (Recommended. cleans the Signal up for you automatically.)
+            <br><br>
+
+            <b>Reactive Primitives</b><br>
+            Dioxus, common reactive primitives include:<br>
+            1. use_state: Manages component state and triggers a re-render when the state changes.<br>
+            2. use_effect: Executes side effects based on changes to reactive dependencies.<br>
+            3. use_ref: Maintains mutable references without triggering re-renders
         </dl>
 
     </article>
