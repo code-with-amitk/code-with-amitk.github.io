@@ -32,7 +32,15 @@
             <li><a href="#eventhand">Event Handlers</a></li>
             <li><a href="#states">States</a></li>
             <ul>
-                <li><a href="#signals">Signals</a></li>
+                <li><a href="#localvar">Local Vars</a></li>
+                <ul>
+                    <li><a href="#signals">Signals</a></li>
+                </ul>
+                <li><a href="#globalvariables">Global Vars</a></li>
+                <ul>
+                    <li><a href="#context">Context</a></li>
+                    <li><a href="#globalsignal">Global Signal</a></li>
+                </ul>
             </ul>
         </ul>
     </aside>
@@ -138,7 +146,8 @@ fn DogView() -> Element {
             You can create mutable state in Dioxus with Signals
         </dl>
 
-        <h4 id="signals">Signals</h4>
+        <h3 id="localvars">Local Variables</h3>
+        <h5 id="signals">Signals (local variables)</h5>
         <dl>
             Signals are used to manage states,
             Wrap any value inside Signal and do Read/write. There are 2 ways to create signals:<br>
@@ -199,6 +208,70 @@ fn button_comp() -> Element {
                         let a = use_effect(move||{
                             val += 1;
                         });
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
+
+        <h3 id="globalvariables">Global Variables/Global State</h3>
+        <h5 id="context">Context</h5>
+        <h5 id="globalsignal">Global Signal</h5>
+        <table>
+            <tr>
+                <th>Context</th>
+                <th>Global Signal</th>
+            </tr>
+            <tr>
+                <td>
+                    Variable can be declared in 1 function. Value can be assigned to variable there.<br>
+                    And variable can be used in other function.<br>
+                    App() => Variable Declaration<br>
+                    test_ele() => Variable accessed & Used
+                    <pre><code class="language-css">
+use dioxus::prelude::*;
+static CSS: Asset = asset!("/assets/main.css");
+use std::fmt;
+
+#[derive(Props, PartialEq, Clone, Debug)]
+struct Dog {
+    breed: String
+}
+impl fmt::Display for Dog {
+    fn fmt(&self, f: &mut fmt::Formatter&lt;'_>) -> fmt::Result {
+        write!(f, "Breed: {}", self.breed)
+    }
+}
+fn main() {
+    dioxus::launch(App);
+}
+fn App() -> Element {
+    let a = Dog {           // Declared var here
+        breed: "Husky".to_string()
+    };
+    use_context_provider(||a);
+    rsx! {
+        test_ele {}
+    }
+}
+fn test_ele() -> Element {
+    let name = use_context::<Dog>();    // Used Var here
+    rsx! {
+        h1 { "{name}" }
+    }
+}
+                </code></pre></td>
+                <td>
+                    Declare a global variable and use it in any function
+                    <pre><code class="language-css">
+static GLO_NAME:GlobalSignal<String> = Signal::global(|| "Ram".to_string());
+fn main() {
+    dioxus::launch(App);
+}
+fn App() -> Element {
+    rsx! {
+        h1 { "{GLO_NAME}" }
+    }
+}
                     </code></pre>
                 </td>
             </tr>

@@ -25,6 +25,7 @@
     <aside class="sidebar">   <!-- Sidebar -->
         <a href="#hotdog">Hotdog</a>
         <a href="#install">Installation & project setup</a>
+        <a href="#code">Code</a>
     </aside>
 
     <article style="margin-left:200px;">
@@ -56,6 +57,113 @@
             <source src="https://dioxuslabs.com/assets/dx_new_06-9fb37539c317d2f8.mp4" type="video/mp4">
           Your browser does not support the video tag.
           </video> 
+
+          <h2 id="code">Code</h2>
+          <table>
+            <tr>
+                <td>
+                    - On every click of "Next Dog!", We pick a random dog. And show its pic
+                    <br><br>
+                    <div class="image-container">
+                        <img src="/images/dioxus/hot_dog.png" alt="hot dog" class="zoomable-image" id="zoomableImage2">
+                    </div>
+                    <pre><code class="language-css">
+src/main.rs
+use dioxus::prelude::*;
+use web_sys::console;
+use reqwest;
+
+fn main() {
+    // launch function calls the platform-specific launch function 
+    // depending on which feature (web/desktop/mobile) is enabled on dioxus
+    // launch accepts a root component, typically called App
+    dioxus::launch(app);
+}
+
+fn app() -> Element {
+    rsx! {
+        dog_view {}
+    }
+}
+
+#[derive(serde::Deserialize)]
+struct DogApi {
+    message: String,
+}
+impl DogApi {
+    fn new() -> Self {
+        DogApi {
+            message: "".to_string()
+        }
+    }
+}
+
+fn dog_view() -> Element {
+    // Resources are pieces of state whose value is dependent on the 
+    // completion of some asynchronous work. The use_resource hook provides a Resource
+    // object with helpful methods to start, stop, pause, 
+    // and modify the asynchronous state. Resources are very powerful: they 
+    // integrate with Suspense, Streaming HTML, reactivity, and more.
+    let mut img_src = use_resource(|| async move {
+        let message = reqwest::get("https://dog.ceo/api/breeds/image/random")
+            .await
+            .unwrap()
+            .json::<DogApi>()
+            .await
+            .unwrap()
+            .message;
+        message
+    });
+
+    rsx! {
+        div { id: "dogview",
+            img { src: img_src.cloned().unwrap_or_default() }
+        }
+        div { id: "buttons",
+            button { onclick: move |_| img_src.restart(), id: "next", "Next Dog!" }
+        }
+    }
+}
+                    </code></pre>
+                </td>
+                <td>
+                    <pre><code class="language-css">
+Cargo.toml
+[package]
+name = "hot_dog"
+version = "0.1.0"
+authors = ["amit kumar <23084104+code-with-amitk@users.noreply.github.com>"]
+edition = "2021"
+
+[dependencies]
+dioxus = { version = "0.6.0", features = [] }
+reqwest = { version = "0.12.9", features = ["json"] }
+serde = { version = "1.0.216", features = ["derive"] }
+web-sys = { version = "0.3", features = ["console"] }
+
+
+[features]
+default = ["web"]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
+
+                    </code></pre>
+                </td>
+            </tr>
+          </table>
 
     </article>
 
