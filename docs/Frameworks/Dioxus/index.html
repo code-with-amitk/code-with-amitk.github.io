@@ -41,6 +41,7 @@
                     <li><a href="#context">Context</a></li>
                     <li><a href="#globalsignal">Global Signal</a></li>
                 </ul>
+                <li><a href="#routers">Routers</a></li>
             </ul>
         </ul>
     </aside>
@@ -277,6 +278,37 @@ fn App() -> Element {
             </tr>
         </table>
 
+        <h3 id="route">Creating a Route</h3>
+        <dl>
+            For example, on web, whenever you visit the /favorites url in your browser, the corresponding Favorites page will load.
+        </dl>
+        <dl>How to achieve this?</dl>
+        <pre><code class="language-css">
+// Add the "Router" feature to the Cargo.toml
+$ Cargo.toml
+[dependencies]
+dioxus = { version = "0.6.0", features = ["fullstack", "router"] } # <----- add "router"
+
+// Dioxus router is defined as an enum with the Routable derive attribute
+// Whenever someone reaches root(/), DogView component is rendered
+$ main.rs
+#[derive(Routable, Clone, PartialEq)]
+enum Route {
+    #[route("/")]       //route specifics the route's URL
+    DogView,
+}
+fn DogView() -> Element { /* */ }
+
+fn main() {
+    dioxus::launch(app);
+}
+fn app() -> Element {
+    rsx! {
+        // Now render the Route instead of rendering each component seperately
+        Router::<Route> {}
+    }
+}
+        </code></pre>
 
     </article>
     <script src="/scripts/prism.js"></script>
