@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSX</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is JSX</a>
+        <a href="#ex">Examples</a>
+        <ul>
+            <li><a href="#embed">Embedding Expressions in JSX</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what"><a href="https://legacy.reactjs.org/docs/introducing-jsx.html">JSX(JavaScript Syntax eXtension)</a></h2>
+        <dl>
+            This is XML-like extension to the JavaScript language syntax<br>
+            Example of JSX code
+        </dl>
+        <pre><code class="language-css">
+const element = <h1>Hello, world!</h1>;
+        </code></pre>
+
+        <h4>Why this unusual syntax?</h4>
+        <dl>
+            Instead of artificially separating technologies by putting markup and logic in separate files, 
+            React separates concerns with loosely coupled units called “components” that contain both
+        </dl>
+
+        <h2 id="ex">Examples</h2>
+        <h4 id="embed">Embedding Expressions in JSX</h4>
+        <dl>
+            we declare a variable called name and then use it inside JSX by wrapping it in curly braces<br>
+            We can put any valid JavaScript expression inside the curly braces in JSX. For example, 2 + 2, user.firstName, 
+            or formatName(user) are all valid JavaScript expressions
+        </dl>
+        <pre><code class="language-css">
+const name = 'Josh Perez';
+const element = &lt;h1>Hello, {name}&lt;/h1>;
+
+function formatName(user) {
+    return user.firstName + ' ' + user.lastName;
+  }
+  
+  const user = {
+    firstName: 'Harper',
+    lastName: 'Perez'
+  };
+  
+  const element = (
+    &lt;h1>
+      Hello, {formatName(user)}!
+    &lt;/h1>
+  );
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

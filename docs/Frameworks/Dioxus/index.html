@@ -196,19 +196,19 @@ fn button_comp() -> Element {
                 </td>
                 <td>
                     <pre><code class="language-css">
-                        // Create a variable(val) & make it 1
-                        let mut val = use_signal(|| 0);
-                        val.set(1);
-                        
-                        // Read the variable & modify it
-                        let value = *val.read();
-                        val.set(value + 1);      // Modify afterwards
-                        
-                        let value: &mut i32 = &mut val.write();
-                        
-                        let a = use_effect(move||{
-                            val += 1;
-                        });
+// Create a variable(val) & make it 1
+let mut val = use_signal(|| 0);
+val.set(1);
+
+// Read the variable & modify it
+let value = *val.read();
+val.set(value + 1);      // Modify afterwards
+
+let value: &mut i32 = &mut val.write();
+
+let a = use_effect(move||{
+    val += 1;
+});
                     </code></pre>
                 </td>
             </tr>
