@@ -27,7 +27,10 @@
         <a href="#terms">Terms</a>
         <ul>
             <li><a href="#components">Components</a></li>
-            <li><a href="lists">Rendering lists</a></li>
+            <li><a href="#lists">Rendering lists</a></li>
+            <li><a href="#handler">Event Handler</a></li>
+            <li><a href="#state">Remembering State</a></li>
+            <li><a href="#sharing">Sharing data between components</a></li>
         </ul>
     </aside>
 
@@ -112,6 +115,126 @@ Welcome to my app<br>
             </tr>
         </table>
 
+        <h4 id="handler">Event Handler</h4>
+        <dl>
+            You can respond to events by declaring event handler functions
+        </dl>
+        <table>
+            <tr>
+                <td>
+                    <pre><code class="language-css">
+function handler() {
+    alert('You clicked me');
+}
+function Button() {    //Component
+    return (
+        &lt;button onclick={handler}>
+            Submit
+        &lt;/button>  
+    );
+}
+export default function main() {
+    return (
+    &lt;div>
+            &lt;h1>Welcome to my app&lt;/h1>
+            &lt;Button /> 
+    &lt;/div>
+    );
+}
+                    </code></pre>
+                </td>
+                <td><pre>
+Welcome to my app
+ -------
+|Submit|    << When click, alert is seen
+ -------
+                </pre></td>
+            </tr>
+        </table>
+        
+        <h4 id="state"><a href="https://react.dev/learn#updating-the-screen">Remembering State</a></h4>
+        <dl>
+            Often, we want our component to “remember” some information and display it. For example, maybe we want to count the 
+            number of times a button is clicked. To do this, add state to our component
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import { useState } from 'react';
+
+export default function MyApp() {
+    return (
+    &lt;div>
+        &lt;h1>Counters</h1>
+        &lt;MyButton />             // Calls MyButton Component
+    &lt;/div>
+    );
+}
+
+function MyButton() {
+    // useState() will return 2 things.
+    // current state variable (a), and the function that update it (setA).
+    const [a, setA] = useState(0);
+
+    function handleClick() {
+        setA(a + 1);
+    }
+
+    return (
+    &lt;button onClick={handleClick}>
+        Clicked {a} times
+    &lt;/button>
+    );
+}
+                </code></pre></td>
+                <td>
+                    <img src="/images/react/state_variables.png" alt="State variables" style="width:200px;height:100px;">
+                </td>
+            </tr>
+        </table>
+
+        <h4 id="sharing"><a href="https://react.dev/learn#sharing-data-between-components">
+            Sharing data between components</a></h4>
+        <dl>
+
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import { useState } from 'react';
+
+export default function MyApp() {          //Execution Starts here
+    const [a, setA] = useState(0);               //Varaiable storing value
+
+    function handleClick() {
+        setA(a + 1);
+    }
+
+    return (
+        // 2 instances of MyButton() called.
+        // State(a) is passed to each MyButton()
+        // The information you pass down like this is called props
+    &lt;div>
+        &lt;h1>Counters that update together&lt;/h1>
+        &lt;MyButton a={a} onClick={handleClick} />
+        &lt;MyButton a={a} onClick={handleClick} />
+    &lt;/div>
+    );
+}
+
+function MyButton({ a, onClick }) {        //Arguments(var, eventHandler)
+    return (
+    &lt;button onClick={onClick}>
+        Clicked {a} times
+    &lt;/button>
+    );
+}
+                </code></pre></td>
+                <td>
+                    <img src="/images/react/sharing_info_between_components.png" alt="Shared State variables" style="width:200px;height:100px;">
+                </td>
+            </tr>
+        </table>
     </article>
 
     <script src="/scripts/prism.js"></script>
