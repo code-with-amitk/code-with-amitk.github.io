@@ -28,6 +28,7 @@
         <a href="#policy">Policy types in Netskope</a>
         <a href="#configurations">Configurations in Netskope</a>
         <a href="#proxychain">Proxy Chaining Netskope</a>
+        <a href="#events">Events</a>
     </aside>
 
     <article style="margin-left:200px;">
@@ -261,6 +262,46 @@
             
             @enduml
         </pre>
+
+        <h2 id="events">Events</h2>
+        <dl>
+            Event is web traffic log which help organization for deeper inspection of packet.
+            The events are designed to provide near real-time insights into web transactions
+        </dl>
+        <h4>Types of Events</h4>
+        <table>
+            <tr>
+                <th>Event</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Page Event</td>
+                <td>Detailed logs about web page interactions</td>
+            </tr>
+            <tr>
+                <td>App Event</td>
+                <td>Information about cloud application usage</td>
+            </tr>
+            <tr>
+                <td>Transaction Event</td>
+                <td>
+                    Detailed HTTP web traffic logs, provide granular information about websites users have accessed
+                    <br><br>
+
+                    <b>Configure Transaction Event:</b><br>
+                    Settings > Tools > REST API v2 > New Token > Add Endpoint > 
+                    /api/v2/events/token/transaction_events endpoint > create the API token.
+                    <br><br>
+
+                    <b>Query Transaction Event</b><br>
+                    - Netskope retains transaction events for seven days by default if not consumed.<br>
+                    - Transaction events are stored in Google PubSubLite by Netskope ingestion services.<br>
+                    - Once configured, these can be queried at endpoint token/transaction_events.<br>
+                    - subscription/backlog_message_count: Number of messages that have been sent to a PubSubLite subscription<br>
+                    - 
+                /td>
+            </tr>
+        </table>
 
     </article>
     <script src="/scripts/common.js"></script>
