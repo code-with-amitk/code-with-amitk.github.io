@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native TextInput</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">What</a>
+        <a href="">Examples</a>
+        <ul>
+            <li><a href="#conv">Convert to Pizza</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2><a href="https://reactnative.dev/docs/textinput" target="_blank">What is textinput?</a></h2>
+        <dl>React native Component to take user inputs</dl>
+
+        <h2>Examples</h2>
+        <h4 id="conv">Convert text to Pizza</h4>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import React, { useState } from 'react';
+import {Text, TextInput, View} from 'react-native';     //1
+
+const TranslateComp = () => {
+    const [text, setText] = useState('');           //2
+    return (
+        &lt;View style={{padding:10}}>              //3
+            &lt;TextInput                           //4
+                style={{height: 40}}
+                placeholder="Write anything!"
+                onChangeText={newText => setText(newText)}
+            >
+            &lt;/TextInput>
+
+            // This is another element shown below textinput
+            &lt;Text>           //5
+            {
+                text.         //text variable, filled from textInput
+                split(' ')    //split text into substring using seperator
+                .map(w => w && '🍕')    //For each word=w, and it with🍕
+                .join()     //Adds all the elements of an array into a 
+                            //string, separated by the specified separator string.
+            }
+            &lt;/Text>
+        
+        &lt;/View>
+    );
+}
+const Main = () => {
+    return (
+        &lt;>
+            &lt;TranslateComp/>
+        &lt;/>
+    );
+};
+
+export default Main;
+                </code></pre></td>
+                <td>
+                    1. import TextInput from react-native<br>
+                    2. Local variable to store text entered in textinput textbox<br>
+                    3. View Component with padding=10. padding defines space b/w page top and box<br>
+                    4. define textinput inside View<br>
+                    <b>Props of textInput</b><br>
+                    &ensp; <u>1. onChangeText(Prop for TextInput):</u> triggers a function every time the 
+                    text in the input field changes. 
+                    <pre><code class="language-css">
+onChangeText={
+    //text => call_this_function
+    newText => setText(newText)
+}
+                    </code></pre> 
+                    onChangeText(text) function returns user entered text in newText. call setText(newText). <br>
+                    Now, text = newText<br>
+                    5. This is another element shown below TextInput. We will show text variable in this component.
+                </td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+
+</body>
+</html>
