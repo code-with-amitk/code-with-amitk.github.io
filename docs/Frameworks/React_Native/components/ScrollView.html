@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native ScrollView</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">What</a>
+        <a href="">Examples</a>
+        <ul>
+            <li><a href="#simple">Simple ScrollView</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2><a href="https://reactnative.dev/docs/using-a-scrollview" target="_blank">What is ScrollView?</a></h2>
+        <dl>generic scrolling container that can contain multiple components and views
+        </dl>
+
+        <h2>Examples</h2>
+        <h4 id="simple">Simple ScrollView</h4>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import React from 'react';
+import {Image, ScrollView, Text} from 'react-native';
+
+const logo = {
+  uri: 'https://reactnative.dev/img/tiny_logo.png',
+  width: 64,
+  height: 64,
+};
+const App = () => (
+    &lt;ScrollView>
+        &lt;Text style={{fontSize: 96}}>Scroll me plz&lt;/Text>
+        &lt;Image source={logo} />
+        &lt;Text style={{fontSize: 96}}>If you like&lt;/Text>
+        &lt;Image source={logo} />
+    &lt;/ScrollView>
+);
+
+export default App;
+                </code></pre></td>
+                <td>
+                </td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+
+</body>
+</html>
