@@ -34,34 +34,78 @@
         <h2><a href="https://reactnative.dev/docs/using-a-listview" target="_blank">What is FlatList?</a></h2>
         <dl>displays a scrolling list of changing, but similarly structured, data.
             Unlike the more generic ScrollView, the FlatList only renders elements that are currently
-             showing on the screen, not all the elements at once.
+            showing on the screen, not all the elements at once.<br>
+            Designed to efficiently render large lists of data with optimal performance.
+            FlatList component requires two props: data and renderItem
         </dl>
 
         <h2>Examples</h2>
-        <h4 id="simple">Simple ScrollView</h4>
+        <h4 id="simple">Simple FlatList</h4>
         <table>
             <tr>
                 <td><pre><code class="language-css">
-import React from 'react';
-import {Image, ScrollView, Text} from 'react-native';
+import {View, FlatList, Text, Image, TextInput} from 'react-native';    //1
 
-const logo = {
-  uri: 'https://reactnative.dev/img/tiny_logo.png',
-  width: 64,
-  height: 64,
+const data = [                                  //2 
+    {id:1, cust:"alex", ph:"123", follow:"1/2/2025"},
+    {id:2, cust:"bob", ph:"345", follow:"1/2/2025"}
+];
+
+interface DataItem {                            //3
+    id: number;
+    cust: string;
+    ph: string;
+    follow: string;
+}
+const FlatListComp = () => {
+    const renderItem = ({ item }: { item: DataItem }) => (  
+    &lt;View>
+        &lt;Text>Customer: {item.cust}&lt;/Text>
+        &lt;Text>Phone: {item.ph}&lt;/Text>
+        &lt;Text>Follow-up: {item.follow}&lt;/Text>
+    &lt;/View>
+    );
+
+    return (
+    &lt;FlatList                                    //4
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+    />
+    );
 };
-const App = () => (
-    &lt;ScrollView>
-        &lt;Text style={{fontSize: 96}}>Scroll me plz&lt;/Text>
-        &lt;Image source={logo} />
-        &lt;Text style={{fontSize: 96}}>If you like&lt;/Text>
-        &lt;Image source={logo} />
-    &lt;/ScrollView>
-);
 
-export default App;
+const Main = () => {
+    return (
+        &lt;FlatListComp />
+    );
+};
+
+export default Main;
                 </code></pre></td>
                 <td>
+1. import<br>
+2. Create Array of Object in JavaScript. [] is Array, {} is Object
+<br><br>
+&ensp; Array/list/collection [] is collection of values, Can contain multiple elements of different types<br>
+&ensp; Object/HashMap/Dictionary {}: key-value pair collection<br>
+&ensp; Nested Objects in Arrays. Placing {} inside [] creates an array of objects
+<br><br>
+3. Interface: Defines the shape of data
+<br><br>
+4. FlatList props<br>
+<pre><code class="language-css">
+&lt;FlatList
+    data={data}                     // The array of items to render
+    renderItem={renderItem}         // Function defining how each item is displayed
+    keyExtractor={(item) => item.id.toString()}  // Unique key generator
+/>
+</code></pre>
+<b>This format will remain consistent across React Native FlatList implementations:</b><br>
+&ensp; data provides the source array<br>
+&ensp; renderItem defines rendering logic<br>
+&ensp; keyExtractor generates unique keys for list items
+
                 </td>
             </tr>
         </table>

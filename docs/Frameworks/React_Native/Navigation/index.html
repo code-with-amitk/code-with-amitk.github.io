@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>React Native</title>
+    <title>React Native Navigation</title>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="/css/prism.css"/>
     <!-- Add any necessary CSS and JavaScript files -->
@@ -27,16 +27,20 @@
     </aside>
 
     <article style="margin-left:200px;">
+        <h2>Navigation</h2>
         <dl>
-            <a href="https://github.com/code-with-amitk/Code-examples/blob/master/Frameworks/React_Native/What_Create1stApp.adoc" target="_blank">
-                What is react native</a><br>
-            <a href="https://github.com/code-with-amitk/Code-examples/blob/master/Frameworks/React_Native/What_Create1stApp.adoc" target="_blank">
-                React vs React Native</a><br>
-            <a href="./components/">Component(text, textinput, view, FlatList, ScrollView)</a><br>
-            <a href="./components/">Terms (props, State)</a><br>
-            <a href="./Navigation/">Navigation b/w Screens</a>
+            Managing the presentation of, and transition between, multiple screens is typically handled by what is known 
+            as a navigator.
         </dl>
-    </article>
+        <pre><code class="language-css">
+$ npm install @react-navigation/native @react-navigation/native-stack
 
+// Install for expo managed project
+$ npx expo install react-native-screens react-native-safe-area-context
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
 </body>
 </html>
