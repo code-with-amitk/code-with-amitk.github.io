@@ -23,11 +23,12 @@
     </nav>
 
     <aside class="sidebar">   <!-- Sidebar -->
-
+        <a href="#what">Navigation</a>
+        <a href="#create2">Creating 2 screens</a>
     </aside>
 
     <article style="margin-left:200px;">
-        <h2>Navigation</h2>
+        <h2 id="what">Navigation</h2>
         <dl>
             Managing the presentation of, and transition between, multiple screens is typically handled by what is known 
             as a navigator.
@@ -38,6 +39,59 @@ $ npm install @react-navigation/native @react-navigation/native-stack
 // Install for expo managed project
 $ npx expo install react-native-screens react-native-safe-area-context
         </code></pre>
+
+        <h2 id="create2">Creating 2 screens</h2>
+        <dl>
+            We will create 2 screens (home, profile) and navigate between them
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import {Text, Button} from 'react-native';
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack'   //1
+
+const HomeScreen = ({navigation}: any) => {                     //5
+    return (
+    &lt;Button
+        title="Go to Jane's profile"
+        onPress={() =>
+        navigation.navigate('Profile', {name: 'Jane'})          //5
+        }
+    />
+    );
+};
+const ProfileScreen = ({navigation, route}: any) => {
+    return &lt;Text>This is {route.params.name}'s profile&lt;/Text>;
+};
+
+const Stack = createNativeStackNavigator();
+const Main = () => {
+    return (
+        &lt;Stack.Navigator>            //2
+            &lt;Stack.Screen name="Home" component={HomeScreen} options={{title: 'Welcome Screen'}} />      //3, 4
+            &lt;Stack.Screen name="Profile" component={ProfileScreen} options={{title: 'Profile Screen'}}/>
+        &lt;/Stack.Navigator>
+    );
+};
+
+export default Main;
+                </code></pre></td>
+                <td>
+                    1. import createNativeStackNavigator<br>
+                    2. Whole app need to wrapped inside createNativeStackNavigator().Navigator in App.js<br>
+                    3. Stack.Screen defines 2 screens:<br>
+                    &ensp; name="Home"<br>
+                    &ensp; name="Profile"<br>
+                    4. We can set options such as the screen title for each screen in the options prop of Stack.Screen.<br>
+                    options={{title: 'Welcome Screen'}}<br>
+                    options={{title: 'Profile Screen'}}<br>
+                    5. Each screen takes <b>navigation prop</b>. This prop has various methods to link to other screen<br>
+                    &ensp; navigation.navigate to go to profile screen.
+                </td>
+            </tr>
+        </table>
 
     </article>
     <script src="/scripts/prism.js"></script>
