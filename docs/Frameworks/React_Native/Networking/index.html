@@ -51,7 +51,7 @@ const App = () => {
 
     const getMovies = async () => {
     try {
-        const response = await fetch('https://reactnative.dev/movies.json');
+        const response = await fetch('https://reactnative.dev/movies.json');    //3
         const json = await response.json();
         setData(json.movies);
     } catch (error) {
@@ -61,12 +61,12 @@ const App = () => {
     }
     };
 
-    useEffect(() => {
-    getMovies();
+    useEffect(() => {                                                           //4
+        getMovies();
     }, []);
 
     return (
-    &lt;View style={{flex: 1, padding: 24}}>
+    &lt;View style={{flex: 1, padding: 24}}>                                    //5
     {isLoading ? (
         &lt;ActivityIndicator />
     ) : (
@@ -75,7 +75,7 @@ const App = () => {
             &lt;Text style={{flex: 1, fontWeight: 'bold'}}>Title&lt;/Text>
             &lt;Text style={{flex: 1, fontWeight: 'bold'}}>Release Year&lt;/Text>
         &lt;/View>
-        &lt;FlatList
+        &lt;FlatList                                                            //6
             data={data}
             keyExtractor={({id}) => id}
             renderItem={({item}) => (
@@ -102,7 +102,19 @@ export default App;
                     &ensp; isLoading: Tracks whether the data is still being fetched. Initially set to true and 
                     switched to false when loading is complete<br>
                     &ensp; data: Stores the list of movies fetched from the API<br>
-                    3. 
+                    3. fetch() = HTTP GET. <br>
+                    &ensp; response.json(): Converts the response into a JSON object.<br>
+                    &ensp; setData(): Sets the movies into data variable<br>
+                    &ensp; setLoading(false): Stops the loading indicator once data is fetched.<br>
+                    4. Use <a href="/Frameworks/React_Native/hooks/index.html">useEffect hook.</a> useEffect ensures function is called 
+                    only once after re-render<br>
+                    5. 2 View blocks<br>
+                    &ensp; Outer View: wraps for consistency and padding<br>
+                    &ensp; Inner View: Contains the FlatList and its header, & in FlatList data recieved from REST endpoint is rendered<br>
+                    6. FlatList explanation<br>
+                    &ensp; data: The array of items to render.<br>
+                    &ensp; keyExtractor: Provides a unique key for each item, which is critical for performance.<br>
+                    &ensp; renderItem: A function that renders each item in the list.
                 </td>
             </tr>
         </table>
