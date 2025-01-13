@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native Introduction</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">React Native?</a>
+        <a href="#vs">React vs React Native</a>
+        <a href="#create">Create 1st app and see in Andriod</a>
+        <a href="#apk">Create apk file using expo</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is React Native?</h2>
+        <dl>
+            React Native is an open source framework for 
+            building Android and iOS applications using React and the app platform’s native capabilities
+        </dl>
+
+        <h2 id="vs">React vs React Native</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>React</th>
+                <th>React Native</th>
+            </tr>
+            <tr>
+                <td>Platform</td>
+                <td>Web browsers</td>
+                <td>iOS and Android devices</td>
+            </tr>
+            <tr>
+                <td>UI Components</td>
+                <td>HTML and CSS</td>
+                <td>Native mobile components (View, Text)</td>
+            </tr>
+            <tr>
+                <td>Rendering</td>
+                <td>Virtual DOM in browsers</td>
+                <td>Bridge to native mobile UI elements</td>
+            </tr>
+        </table>
+
+        <h2 id="create"><a href="https://docs.expo.dev/get-started/create-a-project/">
+            Create 1st app and see in Andriod</a></h2>
+        <pre><code class="language-css">
+$ mkdir react; cd react
+
+// Node Package eXecute. NPM package runner. It allows developers to execute any Javascript Package available on the NPM registry
+$ npx create-expo-app@latest
+
+// Node Package Manager, a free, open-source registry and command-line tool for JavaScript software packages
+$ npm install @expo/ngrok
+
+// Start app in tunnel mode
+$ npx expo start --tunnel
+        </code></pre>
+
+        <h4>Open app on Andriod phone</h4>
+        <dl>
+            Install expo Go App on Phone, Scan QR code which appears on vscode screen after running npx expo start
+        </dl>
+
+        <h2 id="apk">Create apk file using expo</h2>
+        <dl>goto project containing react-native code</dl>
+        <pre><code class="language-css">
+$  npm install -g eas-cli
+$  eas login
+$  eas whoami
+$  eas build:configure
+eas.json
+{
+    "build": {
+    "preview": {
+        "android": {
+        "buildType": "apk"
+        },
+        "distribution": "internal"
+    }
+    }
+}
+
+$ eas build -p android --profile preview
+- This will show scanner from which apk file will be downloaded from expo UI
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
