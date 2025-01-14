@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What</h2>
+        <dl>
+            Python is interpreted(executes statement line by line), general Purpose language. Other Interpreted languages: Ruby, R, PHP, JS.
+        </dl>
+
+        <h3>Features</h3>
+        <h4>Python is dynamic typed language</h4>
+        <dl>
+            Dynamic typed means type checking is done at run time.
+            What is Typed? This means type checking.
+        </dl>
+        <pre>
+            "1" + 2 results in type error   //Strongly Typed Language	
+            "1" + 2 = "12". Eg: Javascript  //Weakly Typed Language
+        </pre>
+
+        <h4>virtualenv / virtual enviornment</h4>
+        <dl>
+            Virtual environment is like vm for python program each with their own independent set of Python packages installed in their site directories.
+        </dl>
+        <pre><code class="language-css">
+C:\Users\amitk\source\repos\Python>pip3 install virtualenv
+C:\Users\amitk\source\repos\Python>python3 -m venv venv_ml
+C:\Users\amitk\source\repos\Python>venv_ml\Scripts\activate
+
+(venv_ml) C:\Users\amitk\source\repos\Python>
+(venv_ml) C:\Users\amitk\source\repos\Python>venv_ml\Scripts\deactivate.bat
+C:\Users\amitk\source\repos\Python>
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
