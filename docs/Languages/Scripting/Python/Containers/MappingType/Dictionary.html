@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#comprehension">Comprehension</a>
+        <a href="#enumerate">enumerate</a>
+        <a href="#removal">Removal</a>
+        <a href="#zip">Zip(iteratable)</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What</h2>
+        <dl>
+            Keys are immutable(non changable). If we try entering value of existant key, the old value associated with that key is 
+            overwritten.<br>
+            Example of keys: strings, numbers, Tuples if they contain only strings, numbers, or tuple, 
+            Lists cannot be used as keys as lists can be modified in place using index assignment
+        </dl>
+
+        <h2>Methods on Dictionary</h2>
+        <h4 id="comprehension">Comprehension</h4>
+        <dl>
+            Make new dictionary where each element is the result of some operation in just 1 
+            line or few lines, rather than writing whole function. Example-1: Squaring
+        </dl>
+        <pre><code class="language-css">
+print({i: i**2 for i in (2, 3, 4)})     #{2:4, 3:9, 4:16} 
+        </code></pre>
+
+        <h4 id="enumerate">enumerate()</h4>
+        <dl>retrieve (index,key) from dictionary</dl>
+        <pre><code class="language-css">
+d = {5: 'e', 1: 'a', 2: 'b', 3: 'c', 4: 'd'}
+for i, j in enumerate(d):
+    print(i,j)                        #0 5    1 1   2 2   3 4
+        </code></pre>
+
+        <h4 id="removal">Removal</h4>
+        <dl>
+            Remove odd keys from Dictionary
+            We cannot iterate and remove elements from dictionary at same time. What we will do? 1st iterate over the dictionary 
+            and create a list of 
+            keys that need to be deleted from dictionary. 2nd iterate over this list of keys and delete their entries from dictionary
+        </dl>
+        <pre><code class="language-css">
+d = {1:'a', 2:'b', 3:'c', 4:'d', 5:'e'}
+print(d)                                  #{1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e'}
+tempList = list()
+for i,j in d.items() :                    //2 Create list of odd keys
+    if i % 2 != 0:
+        tempList.append(i)
+
+for i in tempList:                        //3 Iterate over list and delete from dictionary
+    if i in d :
+        del d[i]
+
+print(d)                                #{2: 'b', 4: 'd'}
+        </code></pre>
+
+        <h4 id="zip">zip(iteratable)</h4>
+        <dl>
+            Take iterables(zero or more), pack them in a tuple, and return it. iterables like: list, string, dict
+        </dl>
+        <pre><code class="language-css">
+questions=['a','b','c']
+answers=['x','y','z']
+for i, j in zip(questions, answers):
+    print(format('Question:{0} Answer:{1}'.format(i,j)))    #Question:a Answer:x
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
