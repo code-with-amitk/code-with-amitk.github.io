@@ -60,6 +60,37 @@
             </tr>
         </table>
 
+        <h2 id="astudio"><a href="https://reactnative.dev/docs/set-up-your-environment">
+            Developing on Andriod Studio</a></h2>
+        <dl>
+            Andriod Studio is andriod emulator, and you can develop using the same
+        </dl>
+        <h4>Installation</h4>
+        <pre><code class="language-css">
+1. 
+a. Install Node via Chocolatey (Node version 18 or Greater)
+- Open powershell (As Administrator) and run below command
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+b. Install microsoft-jsk via Chocolatey (JDK=17)
+- Open powershell (As Administrator) and run below command
+choco install -y nodejs-lts microsoft-openjdk17
+
+2. Download and install Andriod Studio
+https://developer.android.com/studio/index.html
+SDK Platforms = Android SDK Platform 35
+SDK Tools = 35.0.0
+Apply
+
+3. Set ANDROID_HOME environment variable
+%LOCALAPPDATA%\Android\Sdk = C:\Users\ursam\AppData\Local\Android\Sdk
+
+4. Add executables path to PATH variable
+%LOCALAPPDATA%\Android\Sdk\platform-tools
+
+5. Launch AVD(Andriod Virtual Device) on Andriod Studio
+        </code></pre>
+
         <h2 id="create"><a href="https://docs.expo.dev/get-started/create-a-project/">
             Create 1st app and see in Andriod</a></h2>
         <pre><code class="language-css">
