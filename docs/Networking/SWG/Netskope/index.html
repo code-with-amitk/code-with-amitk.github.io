@@ -25,6 +25,7 @@
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#what">What</a>
         <a href="#how">How it works</a>
+        <a href="#terms">Terms</a>
         <a href="#policy">Policy types in Netskope</a>
         <a href="#configurations">Configurations in Netskope</a>
         <a href="#proxychain">Proxy Chaining Netskope</a>
@@ -44,24 +45,32 @@
             2. When packet hits SWG, data is extracted from header (eg: user-agent, browser etc) and a event message is created with <key,value> fields<br>
             3. Event message is passed to policy module, which takes action based on fields from event message
         </dl>
-
-        <h2 id="types">Policy types in Netskope SWG</h2>
         <div class="image-container">
             <img src="https://netskope-techdocs.github.io/doc-stage/en/image/uuid-dc0f6d7a-3b0f-3cf2-e56e-62a71e3ecab8.png" 
             alt="netskope policies" style="width:250px;height:230px;" class="zoomable-image" id="zoomableImage2">
         </div>
+
+        <h2 id="terms">Terms</h2>
+        <table>
+            <tr>
+                <th>Term</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Data Loss Prevention (DLP) Protection</td>
+                <td>
+                    Protect sensitive data by detecting and preventing unauthorized data transfers.
+                    Can be customized for specific type of data eg: Personally Identifiable Information (PII) or Payment Card Information (PCI).
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="types">Policy types in Netskope SWG</h2>
         <table>
             <tr>
                 <th>Name</th>
                 <th>Description</th>
             </tr>
-            <tr>
-                <td>Access Control Protection</td>
-                <td>
-                    control access to websites, applications, and cloud services based on user roles, device types, and network locations
-                </td>
-            </tr>
-            
             <tr>
                 <td>
                     <a href="https://docs.netskope.com/en/add-bypasses-in-netskope/#:~:text=There%20are%20two%20types%20of%20bypasses%20when%20it,Applicable%20to%20Web%20and%20SSL%2FTLS%20encrypted%20traffic%20only.">
@@ -76,7 +85,10 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>ByPass policy = SSL Decryption Policy</td>
+                            <td>
+                                1. SSL DND (action=bypass): Bypass the traffic donot decrypt<br>
+                                2. SSL Decrypt
+                            </td>
                             <td>
                                 <img src="/images/Netskope/ssl-bypass.png" 
                                 alt="ssl bypass policies" style="width:400px;height:200px;" class="zoomable-image" id="zoomableImage2"><br>
@@ -88,13 +100,6 @@
                             </td>
                         </tr>
                     </table>
-                </td>
-            </tr>
-            <tr>
-                <td>Data Loss Prevention (DLP) Protection</td>
-                <td>
-                    Protect sensitive data by detecting and preventing unauthorized data transfers.
-                    Can be customized for specific type of data eg: Personally Identifiable Information (PII) or Payment Card Information (PCI).
                 </td>
             </tr>
             <tr>
@@ -115,19 +120,27 @@
                                 Policies > RTP > (Source=user/group/OU, Destination=Any Web Traffic(Browse/Upload/Download), Action=Bypass)<br>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Alert,Allow,Isolate,Block Policies</td>
-                            <td>
-                                All same categories, Just Action is different
-                            </td>
-                        </tr>
                     </table>
                 </td>
             </tr>
             <tr>
-                <td>Threat Protection</td>
                 <td>
-                    Detect and prevent advanced threats, including malware and phishing attacks
+                    Egress IP Policy
+                </td>
+                <td>
+                    <b>Egress IP:</b> Interface network address that identifies traffic leaving a system or network. Outgoing
+                    packet's source IP will be Egress IP of router/gateway. That means all outgoing packets will same same source IP
+                    ie of gateway<br><br>
+
+                    <b>Egress IP Policy(Netskope):</b> Natskope cloud only accept packets from dedicated(pre configured)
+                    Egress IP addresses.
+                </td>
+            </tr>
+            <tr>
+                <td>Enterprise Browser Policy (not RBI)</td>
+                <td>
+                    <b>Natskope One Enterprise Browser?</b> This is not a seperate standalone browser, rather this is some security features enabled
+                    in any browser mkaing it dedicated browser designed for company use. But it uses RBI to render contents on user's device.
                 </td>
             </tr>
         </table>
