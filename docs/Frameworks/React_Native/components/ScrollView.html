@@ -23,19 +23,22 @@
     </nav>
 
     <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#what">What</a>
-        <a href="">Examples</a>
+        <a href="#what">ScrollView?</a>
         <ul>
             <li><a href="#simple">Simple ScrollView</a></li>
+        </ul>
+        <a href="#whatparallax">ParallaxScrollView?</a>
+        <ul>
+            <li><a href="#vs">ParallaxScrollView vs ScrollView</a></li>
         </ul>
     </aside>
 
     <article style="margin-left:200px;">
-        <h2><a href="https://reactnative.dev/docs/using-a-scrollview" target="_blank">What is ScrollView?</a></h2>
+        <h2 id="what"><a href="https://reactnative.dev/docs/using-a-scrollview" target="_blank">ScrollView?</a></h2>
         <dl>generic scrolling container that can contain multiple components and views
         </dl>
 
-        <h2>Examples</h2>
+        <h3>Examples</h3>
         <h4 id="simple">Simple ScrollView</h4>
         <table>
             <tr>
@@ -63,6 +66,40 @@ export default App;
                 </td>
             </tr>
         </table>
+
+            <h2 id="whatparallax" href="https://www.npmjs.com/package/react-native-parallax-scroll-view" target="_blank">
+                ParallaxScrollView</h2>
+            <dl>
+                A ScrollView-like component that:<br>
+                &ensp; Has a parallax header(Header using parallax effect to create the illusion of depth)<br>
+                &ensp; background header image moves at a different speed than the foreground content, creating a depth effect<br>
+                &ensp; Has an optional sticky header<br>
+                &ensp; Can be nested within other views<br>
+                &ensp; Works on iOS and Android
+            </dl>
+            <h4 id="vs">ParallaxScrollView vs ScrollView</h4>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>ParallaxScrollView</th>
+                    <th>ScrollView</th>
+                </tr>
+                <tr>
+                    <td>Scrolling Behavior</td>
+                    <td>Parallax effect while scrolling</td>
+                    <td>Normal scrolling</td>
+                </tr>
+                <tr>
+                    <td>Header Background</td>
+                    <td>Allows setting a headerBackgroundColor</td>
+                    <td>No background customization</td>
+                </tr>
+                <tr>
+                    <td>Use Case</td>
+                    <td>Engaging UI with an animated background</td>
+                    <td>Standard scrolling pages</td>
+                </tr>
+            </table>
 
     </article>
 
