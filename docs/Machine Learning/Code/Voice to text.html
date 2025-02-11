@@ -24,21 +24,15 @@
     </nav>
 
     <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#voicertotext">1. Voice to Text(using python)</a>
-        <a href="#sendtexttochatbottorespond">2. Call openAI APIs using code</a>
+        <a href="#voicertotext">Voice to Text(using python)</a>
     </aside>
 
     <article style="margin-left:200px;">
-        <h3 id="voicertotext">1. Voice to Text. Speak in Mic and print in text</h3>
+        <h3 id="voicertotext">Voice to Text. Speak in Mic and print in text</h3>
 
-            <dl><strong>1. Create & Start the Virtual Env</strong></dl>
-            <pre><code class="language-css">
-// Create a new environment named virtual_avatar, install Python 3.11.5
-cmd> C:\Users\amitk\source\repos\Python\ML>C:\Users\amit\miniconda3\Scripts\conda create --name virtual_avatar python=3.11.5
-
-// Activate venv
-c:\Users\amit\miniconda3\envs>c:\Users\amit\miniconda3\Scripts\activate virtual_avatar
-            </code></pre>
+            <dl><strong>
+                <a href="/Machine%20Learning/Code/VirtualEnv.html" target="_blank">1. Create & Start the Virtual Env</a>
+            </strong></dl>
 
             <dl><strong>2. Install voice recognition system with Python(SpeechRecognition, PyAudio)</strong></dl>
             <pre><code class="language-css">
@@ -108,71 +102,6 @@ if __name__ == "__main__":
 (virtual_avatar) c:\go-here\Code\python\virtual_avatar>python code.py
 Listening ..
                 </code></pre>
-
-            <h3 id="sendtexttochatbottorespond">
-                <a href="https://platform.openai.com/docs/api-reference/authentication" target="_blank">
-                    2. Call openai APIs from code(get response from chatbot)</a></h3>
-                <dl><strong><a href="https://platform.openai.com/api-keys" target="_blank">a. Get openaAI API Key</a></strong></dl>
-                <dl><strong>b. Call/Check openai APIs using <a href="https://web.postman.co/workspace/openai" target="_blank"
-                    >Postman</a></strong></dl>
-                <pre><code class="language-css">
-GET https://api.openai.com/v1/models
-Header
-    Authorization: Bearer API_KEY
-
-POST https://api.openai.com/v1/chat/completions
-Header
-    Authorization: Bearer API_KEY
-Body
-    {
-        "model": "gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": "What is capital of France?"}],
-        "temperature": 0.7
-    }    
-                </code></pre>
-
-            <dl><strong>c. Calling APIs using code</strong></dl>
-            <pre><code class="language-css">
-// Install openai
-(virtual_avatar) c:\go-here\Code\python\virtual_avatar>pip install openai
-
-//Set API Key in User environment variable
-OPENAI_API_KEY = value
-            </code></pre>
-
-            <dt><strong>Call APIs from code</strong></dt>
-            <pre><code class="language-css">
-from openai import OpenAI
-
-def get_chatgpt_response():
-    client = OpenAI()
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": 
-                "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
-            {"role": "user", "content": 
-                "Compose a poem that explains the concept of recursion in programming."}
-        ]
-    )
-
-OR
-
-def get_chatgpt_response():
-    client = OpenAI()
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "user",
-                "content": "What's Capital of Russia?"
-            }
-        ]
-    )
-    print(completion.choices[0].message)        //Moscow
-
-get_chatgpt_response()
-        </code></pre>
 
     </article>
 
