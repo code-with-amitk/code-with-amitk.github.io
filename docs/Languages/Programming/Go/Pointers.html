@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pointers</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#pointer">Pointers</a>
+            <a href="#sll">Single Linked List</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="pointer">Pointer</h2>
+            <dl>
+            <b>& operator</b> generates pointer to operand. * operator derefences pointer’s value. Unlike C there is no pointer arithematic in go
+            </dl>
+            <pre><code class="language-css">
+package main
+import "fmt"
+func main() {
+        a := 1
+        ptr := &a                       //Points to a
+        fmt.Println(*ptr)               //1
+        //ptr = ptr + 1;                //not allowed
+}
+# /usr/local/go/bin/go build pointer.go
+# ./pointer
+1
+            </code></pre>
+
+            <h2 id="sll">Single Linked list</h2>
+            <pre><code class="language-css">
+type ListNode struct {
+    Val int
+    Next *ListNode
+}
+func test(node *ListNode) bool {
+    if node == nil {		// nil, Not NULL
+        return false
+    }
+    var val int = node.Val
+    var next ListNode* = node.Next		//Value accessed from pointer using .
+}
+            </code></pre>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>
