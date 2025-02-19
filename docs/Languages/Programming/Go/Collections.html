@@ -9,10 +9,10 @@
     <body>
         <nav class="navbar">
             <ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="#">Our team</a></li>
             <li><a href="#">Projects</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/contact.html">Contact</a></li>
             <li>
                 <form>
                     <input type="search" name="q" placeholder="Search site" />
@@ -25,7 +25,11 @@
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
             <a href="#arrays">Arrays</a>
             <a href="#channels">Channels</a>
-            <a href="#slices">Slice</a>
+            <a href="#slices">Slice (vector)</a>
+            <a href="#queue">Queue(using slice)</a>
+            <a href="#stack">Stack(using slice)</a>
+            <a href="#struct">struct = class</a>
+            <a href="#linkedlist">Linked List</a>
         </aside>
 
         <article style="margin-left:200px;">
@@ -46,7 +50,7 @@ func main() {
         <dt>Communication and synchronization between goroutines=Tasks in Rust (concurrently executing functions). 
             They provide a way to send and receive data safely between goroutines</dt>
 
-        <h4 id="slices">Slices [] (Dynamic Array) = C++(vector`<int>`) = Rust(vec`<i32>`)</h4>
+        <h4 id="slices">Slices [] (Dynamic Array) = C++(vector&lt;int>) = Rust(vec&lt;i32>)</h4>
         <dt>A slice represents a view of contiguous sequence of elements in memory<br>
             Slice contains 3 components:<br>
             1. Pointer to underlying array: A slice holds a reference to the underlying array that stores the elements.<br>
@@ -156,6 +160,69 @@ test = [][]int {
 // Accessing elements in the 2D vector
 fmt.Println(vector[0][0]) // Output: 1
         </code></pre>
+
+        <h4 id="queue">Queue(Implemented using slice)</h4>
+        <pre><code class="language-css">
+package main
+import "fmt"
+type test struct {		//Declare a struct having slice which will act as queue
+    q []int
+}
+func Constructor() test {
+    return test{}
+}
+func (this *test) Push(x int)  {
+    this.q = append(this.q, x)		//Push() append x to queue
+}
+func (this *MyStack) Pop() {
+    this.q = this.q[1:]   		//Pop() Remove 1st element
+}
+func (this *MyStack) Top() int {
+    return this.q[0]			//Top()
+}
+func (this *MyStack) Empty() bool {	//Size()
+    if len(this.q) == 0 {
+        return true
+    }
+    return false
+}
+        </code></pre>
+
+        <h4 id="stack">
+            <a href="/Languages/Programming/C++/STL/Containers/Container_Adoptors/stack.html">Stack using slice</a> </h4>
+
+        <h4 id="struct">(struct = class)</h4>
+        <dl>
+            Class is defined as struct type. Example: Person is defined of type struct.<br>
+            The struct type can be considered similar to a class, as it allows you to define fields and associated methods.
+        </dl>
+        <pre><code class="language-css">
+package main
+import "fmt"
+
+type student struct {		// Define a struct type
+    name string
+    age  int
+    marks []int		// slice = dynamic ints
+    misc []interface{}	// misc is a slice that can hold values of any type
+}
+
+// Define a method associated with the Person struct
+// To associate a method with a struct, define a method with a receiver type that matches the struct type.
+func (p Person) SayHello() {
+    fmt.Printf("Hello, my name is %s and I am %d years old.\n", p.name, p.age)
+}
+
+func main() {
+    // Create a new instance of Person
+    person := Person{name: "John", age: 30}
+
+    // Call the SayHello method
+    person.SayHello()
+}
+        </code></pre>
+
+        <h4 id="linkedlist"><a href="/DS_Questions/Data_Structures/Linked_List/Compared_c++_rust_python_go.html">Linked List</a></h4>
 
         </article>
         <script src="/scripts/prism.js"></script>
