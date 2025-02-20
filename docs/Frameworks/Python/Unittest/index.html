@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unittest or Pyunit</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">Unittest</a>
+        <a href="#">Examples</a>
+        <ul>
+            <li><a href="#ex1">Simple Test</a></li>
+            <li><a href="#ex2">Writing Mock object</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Pyunit or Unitest</h2>
+        <dl>
+            Used to test a unit of source code
+            <br><br>
+
+            <b>Features:</b><br>
+            &ensp; 1. PyUnit is very simple yet very flexible<br>
+            &ensp; 2. Test report formats generated: XML, unittest xml reports<br>
+            &ensp; 3. Supports fixtures, test cases, test suites and test runners for automation of testing
+            <br><br>
+
+            <b>How Code is tested?</b><br>
+            &ensp; 1. Create the class which need to be tested<br>
+            &ensp; 2. Create seperate module(which import above class)  & calls its functions for testing.
+        </dl>
+
+        <h2 id="examples">Examples</h2>
+        <h3 id="ex1">Ex1: Simple Test</h3>
+            <pre><code class="language-css">
+# car.py        # Class to test
+class car:
+    name = ""
+
+    def set(self, name) -> bool():
+        self.name = name
+        return True
+
+    def get(self):
+        return self.name
+            
+if __name__ == '__main__':
+    c = car()
+    if c.set('BMW') == True:
+        print('car BMW has been added')
+    else:
+        print('car add failed')
+    print('car is ', c.get())
+
+> python.exe .\car.py
+car BMW has been added
+car is  "BMW"
+
+
+# car_testing.py        # Write the unittest module(which will test car class)
+import unittest
+import car as c     # import the class which we want to test
+
+class car_testing(unittest.TestCase):       # This class should inherit unittest.TestCase
+    car = c.car()       # Create object of car class
+
+    """
+    Note unittest module executes the test functions in the order of their name
+    since we want our set() test to execute first, we have named our test case
+    functions as test_0_set() and test_1_get()
+    """
+    def test_0_set(self):           # Any method which starts with ``test_`` will considered as a test case.
+        print ("\nStart set() test..")
+        self.car.set('Audi')
+        print("Finish set() test\n")
+
+    def test__1_get(self):
+        print("\nStart get() test..")
+        # 5. if 2 parameters does not match test case will fail
+        var = self.car.get()
+        print (var)
+        self.assertEqual(var, 'Audi')
+        print("Finish get() test\n")
+
+if __name__ == '__main__':
+    unittest.main()
+    
+> python.exe .\car_testing.py
+
+Start set() test..
+Finish set() test
+
+.
+Start get() test..
+Audi
+Finish get() test
+
+.
+----------------------------------------------------------------------
+Ran 2 tests in 0.009s
+OK
+                </code></pre>
+
+        <h3 id="ex2">Ex2: Writing Mock object</h3>
+        <dl>
+            <b>How it works?</b><br>
+            1. We create mock object.<br>
+            2. Assign mock object a function call which need to be mocked. For example:<br>
+            &ensp; <u>requests.get():</u> We will mock this API, since this can take n/w delay which is not needed while testing<br>
+            3. Write assert() and compare return value from mock.
+        </dl>
+        <pre><code class="language-css">
+// File to be tested
+# weather.py
+import requests
+
+def get_weather(city):
+    response = requests.get(f"https://api.weather.com/{city}")
+    if response.status_code == 200:
+        return response.json()["weather"]
+    return None
+
+// test module. This will test weather.get_weather()
+import unittest
+from unittest.mock import patch
+from weather import get_weather
+
+class TestWeather(unittest.TestCase):
+
+    """
+    weather.requests.get = { status_code=200, json.return_value = {"weather": "Sunny"} }
+                            mock object = mock_get = mock response
+    """
+    # The @patch decorator is used to replace an object or function with a mock object during the test.
+    # This replaces weather.requests.get with a mock object(mock_get)
+    @patch("weather.requests.get")
+    def test_get_weather_success(self, mock_get):
+        mock_response = mock_get.return_value       #Create a local reference to the mock object
+        mock_response.status_code = 200     # Setting values in the mock response
+        mock_response.json.return_value = {"weather": "Sunny"}  # Setting values in the mock response
+
+        city = "NewYork"
+        result = get_weather(city)      #Call the function to test
+
+        self.assertEqual(result, "Sunny")   # Test. fail on 2 results are unequal
+
+        # Test. Ensures that requests.get was called exactly once with the expected URL
+        # If mock_get was never called or called multiple times, the test fails.
+        mock_get.assert_called_once_with(f"https://api.weather.com/{city}") 
+
+    @patch("weather.requests.get")
+    def test_get_weather_failure(self, mock_get):
+        # Mock response with a failure status code
+        mock_response = mock_get.return_value
+        mock_response.status_code = 404
+
+        city = "InvalidCity"
+        result = get_weather(city)
+
+        # Assertions
+        self.assertIsNone(result)
+        mock_get.assert_called_once_with(f"https://api.weather.com/{city}")
+
+if __name__ == "__main__":
+    unittest.main()
+
+> python test.py
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+OK
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
