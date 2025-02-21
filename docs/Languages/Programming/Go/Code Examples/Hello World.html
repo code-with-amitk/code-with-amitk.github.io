@@ -27,14 +27,34 @@
         </aside>
 
         <article style="margin-left:200px;">
+            <h2 id="hello">Hello World Program</h2>
+            <dl>
+                <u>go mod init test</u> will create <a href="/Languages/Programming/Go/Modules/">go module = test</a>
+            </dl>
             <pre><code class="language-css">
 $ mkdir test
 $ cd test
-$ go mod init test
+$ go mod init test      //This will create a go.mod file
+$ cat go.mod
+module test
+
+go 1.24.0
             </code></pre>
             <dl>
+                Create main.go
             </dl>
-            
+            <pre><code class="language-css">
+// main.go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hi")
+}
+$ go run main.go
+Hi
+            </code></pre>
 
         </article>
 

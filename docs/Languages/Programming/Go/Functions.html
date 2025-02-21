@@ -23,7 +23,8 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#naked">Multiple Returns, Naked Return</a>
+            <a href="#multiple">Multiple Returns</a>
+            <a href="#naked">Naked Return</a>
             <a href="#values">Function as values</a>
             <a href="#closure">Closure</a>
             <a href="#range">range()</a>
@@ -48,13 +49,26 @@ func add(x, y int) int {	//valid
 }
             </code></pre>
 
-            <h4 id ="naked">Multiple Returns, Naked Return</h4>
+            <h4 id ="multiple">Multiple Returns</h4>
             <pre><code class="language-css">
-//The swap function returns two strings.
-func swap(x, y string) (string, string) {
-    return y, x
+package main
+import "fmt"
+
+// Function returning 2 values
+func fun(x int, y int) (int, int) {
+    return y,x
 }
 
+func main() {
+    x := 1  //auto type deduction
+    y := 2
+    a,b := fun(x,y) //Assignment of a,b
+    fmt.Println( a , b)
+}
+            </code></pre>
+
+            <h4 id="naked">Naked Return</h4>
+            <pre><code class="language-css">
 //NAKED RETURNS: return statement without arguments
 func split(sum int) (x, y int) {
     x = sum * 4 / 9
