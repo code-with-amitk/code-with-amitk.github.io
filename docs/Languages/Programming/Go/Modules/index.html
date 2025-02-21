@@ -23,49 +23,95 @@
         </nav>
 
         <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#pacmod">Package, Module</a>
             <a href="#import">import statement</a>
-            <a href="#package">Package (small)</a>
-            <a href="#module">Module (Big)</a>
-            <ul>
-                <li><a href="#error">error package</a></li>
-            </ul>
             <a href="#gomod">go.mod file</a>
             <a href="#gosum">go.sum file</a>
             <a href="#addexternalmodule">How to add external module to code</a>
         </aside>
 
         <article style="margin-left:200px;">
-            <h2>Packages and Module</h2>
-            <h3 id="package">Packages(small)</h3>
+            <h2 id="pacmod">Packages and Module</h2>
             <dl>
-                Go standard library, for example, consists of many packages such as fmt, os, net, and so on<br>
-                Special package name, main.  This package contains the main() function, which is the entry point for a project<br>
-                Every project meant to eventually become an executable must contain the main() function, and therefore the main package.
+                Go, packages and modules serve distinct but related roles in organizing and managing code
             </dl>
-            <h3 id="module">Module(Big)</h3>
-            <dl>
-                Collection of related Go packages
-            </dl>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Module(Big, Complete Project)</th>
+                    <th>Package(Small)</th>
+                </tr>
+                <tr>
+                    <td>What</td>
+                    <td>Entire project is a Go module, managed by the go.mod file. This is Collection of Go packages</td>
+                    <td>A directory is automatically considered a package by Go. So package is directory containing 1 or more Go source files.
+                        Every Go source file belongs to a package, declared at the beginning of the file using package `packagename`.
+                    </td>
+                </tr>
+                <tr>
+                    <td>Creation</td>
+                    <td>
+                        <pre><code class="language-css">
+$ mkdir mymodule
+$ cd mymodule
+                        </code></pre>
+                        <br>
+Command creates a <a href="#gomod">go.mod file</a> that defines your module path & initializes it
+                        <pre><code class="language-css">
+$ go mod init mymodule
+$ ls -ltr 
+go.mod
+$ cat go.mod
+module mymodule
 
-            <h3 id="import">import statement</h3>
-            <dl>import keyword is used to include external packages/modules in Go program.</dl>
-            <pre><code>
-import "fmt"
-or
-import (              //import multiple packages
+go 1.24.0
+                        </code></pre></td>
+                    <td><pre><code class="language-css">
+// Create Package-1
+$ mkdir mathdir; cd mathdir
+$ vim math.go
+package mathdir
+func Add(a int, b int) int {
+    return a + b
+}
+
+// Create Package-2
+$ mkdir stringdir; cd stringdir
+$ vim string.go
+func Concat(a string, b string) string {
+    return a + b
+}
+
+// Main Application accessing Packages
+// main.go
+package main
+import (
     "fmt"
-    "math"
+    "github.com/username/mymodule/mathdir"
+    "github.com/username/mymodule/stringdir"
 )
+func main() {
+    sum := mathdir.Add(5, 10)
+    fmt.Println("Sum:", sum)
 
-// Use functions in package using dot statement
-fmt.Println("Hello, world!")
-            </code></pre>
+    concatenated := stringdir.Concat("Hello, ", "World!")
+    fmt.Println("Concatenated String:", concatenated)
+}
 
-            <h3 id="packages">Packages</h3>
-            <h4 id="error">error package</h4>
-            <dl>errors package is a standard package provided by go's standard library. 
-                It is used to create and manipulate errors in a consistent and idiomatic way</dl>
-            <pre><code>
+$ go run main.go
+                    </code></pre></td>
+                </tr>
+                <tr>
+                    <td>Examples</td>
+                    <td></td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>Error Package</td>
+                                <td>
+                                    Errors package is a standard package provided by go's standard library. 
+                                    It is used to create and manipulate errors in a consistent and idiomatic way
+                                    <pre><code class="language-css">
 package main
 import (
     "errors"
@@ -85,6 +131,26 @@ func main() {
     }
     fmt.Println("Result:", result)
 }
+                                        </code></pre>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <h3 id="import">import statement</h3>
+            <dl>import keyword is used to include external packages/modules in Go program.</dl>
+            <pre><code class="language-css">
+import "fmt"
+or
+import (              //import multiple packages
+    "fmt"
+    "math"
+)
+
+// Use functions in package using dot statement
+fmt.Println("Hello, world!")
             </code></pre>
 
             <h2 id="gomod">go.mod file</h2>

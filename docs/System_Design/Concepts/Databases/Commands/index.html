@@ -23,12 +23,143 @@
 </nav>
 
   <aside class="sidebar">
-    <a href="#ex1">JOIN Tables</a>
+    <a href="#crud">Create, Insert, Delete</a>
+    <a href="#join">JOIN Tables</a>
   </aside>
 
   <main>
     <article style="margin-left:200px;">
-      <h3 id="ex1">JOIN 2 tables</h3>
+      <h3 id="crud">Create, Read, Update, Delete data from tables</h3>
+      <table>
+        <tr>
+            <th>Description</th>
+            <th>Command</th>
+        </tr>
+        <tr>
+            <td>
+                Login to database as user=postgres
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td><pre><code class="language-css">
+//Linux
+# sudo -u postgres psql
+                  </code></pre></td>
+                  <td><pre><code class="language-css">
+//Windows
+C:\Users\user> psql -U postgres
+Password for user postgres:
+
+psql (17.3)
+WARNING: Console code page (437) differs from Windows code page (1252)
+          8-bit characters might not work correctly. See psql reference
+          page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=#
+                  </code></pre>
+                </tr>
+              </table>
+              </td>
+        </tr>
+        <tr>
+            <td>
+                Create database & connect to it
+            </td>
+            <td><pre><code class="language-css">
+postgres=# create database teachers;
+CREATE DATABASE
+postgres=# \c teachers;              //Connect to DB
+You are now connected to database "teachers" as user "postgres".
+teachers-#
+            </code></pre></td>
+        </tr>
+        <tr>
+            <td>
+                List Database<br> List Tables<br> Show Table schema
+            </td>
+            <td><pre><code class="language-css">
+********** Lists all available commands **********
+postgres=# \h
+
+********** Lists Databases **********
+postgres=# \l                       //It has 3 predefined builtin databases
+List of databases
+Name    |  Owner   | Encoding | Locale Provider | Collate |  Ctype  | ICU Locale | ICU Rules |   Access privileges   
+-----------+----------+----------+-----------------+---------+---------+------------+-----------+-----------------------
+postgres  | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+teachers  | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =Tc/postgres         +
+       |          |          |                 |         |         |            |           | postgres=CTc/postgres
+template0 | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres          +
+       |          |          |                 |         |         |            |           | postgres=CTc/postgres
+template1 | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres          +
+       |          |          |                 |         |         |            |           | postgres=CTc/postgres
+
+teachers=# \dt
+          List of relations
+Schema |      Name      | Type  |  Owner   
+--------+----------------+-------+----------
+public | teachers_login | table | postgres
+(1 row)
+
+********** Table Schema **********
+teachers=# \d teachers_login
+                                   Table "public.teachers_login"
+Column     |          Type          | Collation | Nullable |                  Default                   
+---------------+------------------------+-----------+----------+--------------------------------------------
+id            | integer                |           | not null | nextval('teachers_login_id_seq'::regclass)
+email         | character varying(255) |           | not null | 
+password_hash | text                   |           | not null | 
+password_salt | text                   |           | not null | 
+active        | boolean                |           | not null | false
+            </code></pre></td>
+        </tr>
+        <tr>
+            <td>
+                Create table & insert data, list
+            </td>
+            <td><pre><code class="language-css">
+********** Create Table **********
+teachers=# CREATE TABLE teachers_login (
+id serial PRIMARY KEY,
+email VARCHAR(255) NOT NULL UNIQUE,
+password_hash TEXT NOT NULL
+);
+CREATE TABLE
+
+********** List Table **********
+teachers=# \dt
+
+********** Insert into Table **********
+teachers=# INSERT INTO teachers_login (email, password_hash)
+VALUES ('teacher1@test.com', 12117530842303537118);
+INSERT 0 1
+
+********** Show contents of Table **********
+teachers=# SELECT * FROM teachers_login;
+id |       email       |    password_hash     
+----+-------------------+----------------------
+1 | teacher1@test.com | 12117530842303537118
+(1 row)
+            </code></pre></td>
+        </tr>
+        <tr>
+            <td>Delete</td>
+            <td><pre><code class="language-css">
+********** Delete database teachers **********
+postgres=# DROP DATABASE teachers;
+DROP DATABASE
+
+********** Delete table users **********
+postgres=# DROP table users;
+DROP TABLE
+            </pre></code>
+            </td>
+        </tr>
+    </table>
+
+      <h3 id="join">JOIN 2 tables</h3>
       <dl>
         1. Create 2 tables (Person, PersonFriend)<br>
         2. Find friends of Bob from PersonFriend table.<br>
