@@ -24,6 +24,11 @@
 
   <aside class="sidebar">
     <a href="#indexing">Indexing</a>
+    <a href="#types">Indexing Types</a>
+    <ul>
+      <li><a href="#hashindex">Hash Index</a></li>
+      <li><a href="#btreeindex">Btree Index</a></li>
+    </ul>
     <a href="#rindexing">Reverse Indexing</a>
   </aside>
 
@@ -31,26 +36,93 @@
     <article style="margin-left:200px;">
       <h2 id="indexing">What is Indexing?</h2>
       <dl>
-        Storing &lt;key="user's node address", value="user's node address"> into seperate database for faster reterival is indexing.<br>
+        Indexing is used for fast reterival/access/delete from database. Create a seperate datastructure from original
+        <br><br>
+
+        <b>Usage of Indexing</b><br>
+        1. if BTree index is created, search complexity will reduce from O(n) or O(nlogn).<br>
+        2. if Hash index is created, search complexity will reduce from O(n) or O(1).
+        <br><br>
+
         <b>Example:</b><br>
-        &ensp; consider 100M entries in facebook social Graph. if user wants to see his news feed, we cannot search all nodes
-        Rather start at node(for user), and this is achieved by storing node's address.
+        &ensp; 1. consider 100M entries in tenants table<br>
+        &ensp; 2. If we donot create index, and someone searches tenant_name then it will take O(n) time to search entry
       </dl>
+      <pre><code class="language-css">
+// 2. tenants table
+| id | tenant_name |
+| 1  | abc |
+| 2  | xyz |
+...
+
+// 2. Searching in tenants table
+> SELECT id FROM tenants WHERE tenant_name = 'abc';
+      </code></pre>
+
+      <dl>
+        <b>Creating Btree index on Tenants Table</b><br>
+      </dl>
+      <pre><code class="language-css">
+CREATE UNIQUE INDEX idx_tenant_name ON tenants(tenant_name);
+      </code></pre>
+
+      <dl>
+        <b>What is meaning of Creating index?</b><br>
+        When index is created a additional data structure is created typically a B-Tree (or a variant like a B+Tree),
+        that means original data remains in table, a new B-Tree is created from table data
+      </dl>
+
+      <h2 id="types">Types of Indexing</h2>
       <table>
         <tr>
+          <th>Type of Indexing</th>
+          <th>Description</th>
+          <th>Creation</th>
+        </tr>
+        <tr>
+          <td>Hash Index</td>
           <td>
+            <b>Pros</b>: <br>
+            &ensp;Search: O(1)<br>
+            <b>Cons</b>: <br>
+            &ensp; Does not support Range queries(e.g., WHERE tenant_name > 'tenant1'). <br>
+            &ensp; Does not support sorting or ordering
+          </td>
+          <td>
+            This creates a B-Tree Index by default in most relational databases (e.g., PostgreSQL, MySQL, Oracle, SQL Server).<br>
+            B-Tree is the default index type because it is versatile and supports a wide range of query types.
             <pre><code class="language-css">
-Hash Table: (Key: user_id, Value: user_address)
-
-key(userid)       Value=Address in Memory
-123456            0x40      //user1
-42                0x66      //user2
-              </code></pre>
+CREATE UNIQUE INDEX idx_tenant_name ON tenants(tenant_name);
+          </code></pre></td>
+        </tr>
+        <tr>
+          <td>Btree O(nlogn)</td>
+          <td>
+            <b>Pros:</b> Support exact match queries(WHERE tenant_name = 'tenant1'), range queries, and sorting.<br>
+            <b>Cons:</b> Slightly slower wrt Hash index but still very fast.
           </td>
           <td>
-            <img src="/images/databases/indexing.png" 
-            alt="Indexing" style="width:300px;height:200px;">
+            PostgreSQL's Hash Indexes are not crash-safe in older versions (pre-10.0), so they were discouraged. <br>
+            However, in modern versions, they are crash-safe and can be used.
+            <pre><code class="language-css">
+CREATE INDEX idx_tenant_name_hash ON tenants USING HASH (tenant_name);
+            </code></pre>
           </td>
+        </tr>
+        <tr>
+          <td>Bitmap Index</td>
+          <td>Used for columns with low cardinality (few distinct values, e.g., gender or status flags).</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>R-Tree</td>
+          <td>Used for spatial data (e.g., geographic coordinates).</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Full-Text Index</td>
+          <td>Used for searching text data (e.g., WHERE description LIKE '%keyword%').</td>
+          <td></td>
         </tr>
       </table>
 
