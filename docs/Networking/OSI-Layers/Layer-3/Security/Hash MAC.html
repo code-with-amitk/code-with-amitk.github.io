@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Hash MessageDigest MAC HMAC</title>
   <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
 </head>
 
 
@@ -13,7 +14,7 @@
       <li><a href="/">Home</a></li>
       <li><a href="#">Our team</a></li>
       <li><a href="#">Projects</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="/contact.html">Contact</a></li>
       <li>
         <form id="searchForm">
             <input type="search" id="searchInput" name="q" placeholder="Search site" />
@@ -35,13 +36,17 @@
   </aside>
 
   <article style="margin-left:200px;">
-    <h3 id="hash">Hash or Message Digest</h3>
-    <dd>
+    <h3 id="hash">Hashing or Message Digest</h3>
+    <dl>
+      Hashing is method to achieve <a href="/Networking/OSI-Layers/Layer-3/Security/Hash MAC.html" target="_blank">Integrity</a>
+      <br><br>
+    
+      <b>What is Hashing?</b>
       Transforming String into FIXED-LENGTH string Value. From Hash Message cannot be retrieved back. 
       Hash function should not generate same value for different input strings.<br>
       MD5 started producing that and hence considered broken.
-    </dd>
-    <pre><code>
+    </dl>
+    <pre><code class="language-css">
       Kumar >  | Hash Function |  > random_string
     </code></pre>
 
@@ -180,6 +185,7 @@
     </code></pre>
 
   </article>
-
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
 </body>
 </html>

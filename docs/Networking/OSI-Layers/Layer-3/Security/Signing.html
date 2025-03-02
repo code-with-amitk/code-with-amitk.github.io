@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Signing</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#signing">Signing</a>
+    <a href="#algo">Algos fr DS</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="signing">What is Signing / Digital Signatures</h2>
+    <dl>
+      This is Hash encrypted by PVT-KEY.
+      <br><br>
+
+      <b>Digital Signature Provides:</b><br>
+      - Integrity<br>
+      - Nonrepudiation(only sender has pvt key and no one else)<br>
+      - Authentication
+    </dl>
+    <pre><code class="language-css">
+      message > |Hash(MD5)| > |Encrypt| >    Digital-Signature    >     |Decrypt| > Hash
+                                /\                                         /\
+                              Pvt-key                                  Public-key
+    </code></pre>
+
+    <h2 id="algo">Algorithms for Generating DS</h2>
+    <dl>
+      <b>1. DSA(DIGITAL SIGNATURE ALGO):</b>
+      Based on the algebraic properties of the modular exponentiations, together with the discrete logarithm problem<br>
+
+      <b>2. ECDSA(ECLIPTIC CURVE DSA):</b>
+      Variant of DSA which uses ECC. Suppose Alice wants to sends signed message to Bob.
+    </dl>
+    <pre><code class="language-css">
+      Step-1: Both agree on Curve parameters.(CURVE,G,n)
+        CURVE: equation to be used. ECC(y2 = x3 + ax +b) Alice and bob chooses curve(y2 = x3 + 7)
+        G(Base point): (x0,y0) on chosen curve (y2 = x3 + 7)
+        n(Prime No): Multiplier of G. n X G = O. O is identity element.
+      Step-2-n: Alice calculates Key using ECC, encypts Hash of message using ECC and sends.
+    </code></pre>
+  </article>
+
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+</html>
