@@ -25,7 +25,12 @@
   <aside class="sidebar">
     <a href="#jwt">Json Web Token</a>
     <a href="#inside">Disecting token</a>
-    <a href="#authenticatetorestful">Authenticate to RESTFul APIs</a>
+    <ul>
+      <li><a href="#header">Header</a></li>
+      <li><a href="#payload">Payload</a></li>
+      <li><a href="#signature">Signature</a></li>
+    </ul>
+    <a href="#authenticatetorestful">JWT Authentication to RESTFul APIs</a>
   </aside>
 
   <main style="margin-left:200px;">
@@ -49,9 +54,96 @@
       {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTc0MDU1OTk2NX0.Dck0cV04Vv7G6ciMt2qvE5_fS2ZMpl5aFuXwKNnD3M0"}
     </code></pre>
 
+    <h3>How header, payload, Signature are calculated?</h3>
+    <dl>A JWT is assigned to user as a authentication token</dl>
 
-    <br>
-    <dl><strong>How JWTs are used for authentication</strong></dl>
+    <h4 id="header">Header = Base64encode(algo+type)</h4>
+    <pre><code class="language-css">
+    struct st = {
+        "alg": "HS256",
+        "typ": "JWT",
+      }
+      header = base64Encode(st)
+    </code></pre>
+
+    <h4 id="payload">Payload = Base64encode(email+timestamp)</h4>
+    <pre><code class="language-css">
+    struct st = {
+      "email": email,
+      "exp":   timestamp_to_expiry
+      }
+      payload = base64Encode(st)
+    </code></pre>
+
+    <h4 id="signature">Signature</h4>
+    <pre><code class="language-css">
+      HMAC_SHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
+    </code></pre>
+
+    <h4>Complete Code</h4>
+    <pre><code class="language-css">
+      package main
+
+      import (
+        "crypto/hmac"
+        "crypto/sha256"
+        "encoding/base64"
+        "encoding/json"
+        "fmt"
+        "strings"
+        "time"
+      )
+      
+      var jwtSecret = []byte("your-secret-key") // Use the same secret key
+      
+      // Function to base64 URL encode a string
+      func base64UrlEncode(data []byte) string {
+        return strings.TrimRight(base64.URLEncoding.EncodeToString(data), "=")
+      }
+      
+      // Function to create JWT header manually
+      func JWTHeader() string {
+        header := map[string]string{
+          "alg": "HS256",
+          "typ": "JWT",
+        }
+        headerJSON, _ := json.Marshal(header)
+        return base64UrlEncode(headerJSON)
+      }
+
+      // Function to create JWT payload manually
+      func JWTPayload(email string) string {
+        payload := map[string]interface{}{
+          "email": email,
+          "exp":   time.Now().Add(time.Hour * 24).Unix(), // 24-hour expiry
+        }
+        payloadJSON, _ := json.Marshal(payload)
+        return base64UrlEncode(payloadJSON)
+      }
+
+      // Function to create JWT signature manually
+      func JWTSignature(email string) string {
+        headerEncoded := JWTHeader()
+        payloadEncoded := JWTPayload(email)
+
+        signatureInput := headerEncoded + "." + payloadEncoded
+        h := hmac.New(sha256.New, jwtSecret)
+        h.Write([]byte(signatureInput))
+        return base64UrlEncode(h.Sum(nil))
+      }
+
+      func generateManualJWT(email string, owner bool) string {
+        return JWTHeader() + "." + JWTPayload(email) + "." + JWTSignature(email)
+      }
+      
+      func main() {
+        jwt := generateManualJWT("test@example.com")
+        fmt.Println("Generated JWT:", jwt)
+      }
+    </code></pre>
+
+
+    <h2 id="authenticatetorestful">How JWTs are used for authentication</h2>
     <pre class="mermaid">
         sequenceDiagram
             rect rgb(236, 232, 242)
@@ -87,35 +179,6 @@
             note over as: JWT expiry in 5 hours<br>Reissue JWT
         end
 
-    </pre>
-
-    <h2 id="authenticatetorestful">Authenticate to RESTFul APIs</h2>
-    <dl><strong><a href="#jwt">JWT(Json Web Token)</a></strong></dl>
-    <pre class="mermaid">
-        sequenceDiagram
-        rect rgb(221, 240, 221)
-            participant u as UserApp
-            participant cdn as CDN
-            box AWS
-            participant cog as Amazon-Cognito<br>User,Pass store
-            participant s3 as Amazon-S3
-            end
-
-            s3 ->> cdn: HTML, css, javascript etc
-            note over u: Open www.test.com
-            u ->> cdn: GET test.com
-            cdn ->> u: HTML, css, javascript etc
-
-            note over u: Enter email, username, password<br>Submit.
-            u ->> cog: user,password,email
-            cog ->> u: Send Confirmation Code to Inbox
-
-            note over u: User enter code on test.com<br>User signs in
-            note over u: Javascript function in browser <br>communicate with cognito
-            u ->> cog: Authenticate using <br>Secure Remote Password protocol (SRP)
-            cog ->> u: JWT(JSON Web Token)
-            note over u: JWT would be used by <br>to communicate with RESTful APIs
-        end
     </pre>
 
   </main>
