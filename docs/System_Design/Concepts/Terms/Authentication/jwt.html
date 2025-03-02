@@ -24,17 +24,31 @@
 
   <aside class="sidebar">
     <a href="#jwt">Json Web Token</a>
+    <a href="#inside">Disecting token</a>
     <a href="#authenticatetorestful">Authenticate to RESTFul APIs</a>
   </aside>
 
   <main style="margin-left:200px;">
     <h2 id="jwt">Json Web Token / oauth_token / auth_token</h2>
-    <dl><strong>Usage?</strong></dl>
-    <dt>For authentication on the web, ie authentication to RESTFul APIs
-        They are used to securely transmit information between parties as a JSON object.<br>
-        JWTs consist of three parts: [header + payload + signature].
-        These parts are concatenated together with dots to form the token
-    </dt>
+    <dl>
+      <b>What?</b>
+      This is open standard (RFC 7519) used for securely transmitting information between two parties as a JSON object.
+      Mostly used for authentication.
+      <br><br>
+
+      <b>Usage?</b>
+      For authentication on the web, ie authentication to RESTFul API
+    </dl>
+
+    <h2 id="inside">Disecting token</h2>
+    <dl>
+      JWTs consist of three parts: header + payload + signature, concatenated by dot .
+    </dl>
+    <pre><code class="language-css">
+      jwt-token = header.payload.signature
+      {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTc0MDU1OTk2NX0.Dck0cV04Vv7G6ciMt2qvE5_fS2ZMpl5aFuXwKNnD3M0"}
+    </code></pre>
+
 
     <br>
     <dl><strong>How JWTs are used for authentication</strong></dl>
@@ -109,5 +123,7 @@
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
   </script>	
+      <script src="/scripts/prism.js"></script>
+      <script src="/scripts/common.js"></script>
 </body>
 </html>
