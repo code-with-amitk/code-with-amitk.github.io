@@ -39,6 +39,7 @@
       <li><a href="#addcolomn">Add Col in table</a></li>
       <li><a href="#colomn">Change Col name in table</a></li>
       <li><a href="#delcol">Remove col from table</a></li>
+      <li><a href="#updatecol">Update entry in col in table</a></li>
     </ul>
     <a href="#delete">Delete</a>
     <a href="#join">JOIN Tables</a>
@@ -202,6 +203,17 @@ crm=# select * from employees;
 id | email | tenant_id | is_admin | created_at
 ----+-------+-----------+----------+------------
 (0 rows)
+      </code></pre>
+
+      <h4 id="updatecol">Update entry in col in table</h4>
+      <pre><code class="language-css">
+crm=# select * from employees;
+id | email | passwd_hash | tenant_id | is_admin | created_at
+----+-------+-------------+-----------+----------+------------
+(0 rows)
+
+
+crm=# update employees set is_admin=t where email='test@gmail.com'
       </code></pre>
 
       <h3 id="delete">Delete</h3>

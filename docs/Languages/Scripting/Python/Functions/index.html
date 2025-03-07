@@ -178,8 +178,7 @@ def sonu(fun_arg):
         print("After calling the function.")
     return wrapper
 
-# Decorator=sonu is called before fun & 
-# fun is passed as argument to sonu
+# Decorator=sonu is called before fun() & fun() is passed as argument to sonu
 @sonu       #This is Decocator
 def fun():
     print("Hello, World!")
