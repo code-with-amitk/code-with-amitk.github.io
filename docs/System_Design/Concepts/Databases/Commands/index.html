@@ -176,7 +176,7 @@ active        | boolean                |           | not null | false
       </code></pre>
 
       <h3 id="update">Update</h3>
-      <h4 id="addcolomn">Add Col in table</h4>
+      <h4 id="addcolomn">Add Col</h4>
       <pre><code class="language-css">
 // Adding tenant_id to leads Table.
 // tenant_id is FOREIGN key in tenants table
@@ -186,7 +186,7 @@ ADD CONSTRAINT fk_tenant FOREIGN KEY (tenant_id) REFERENCES tenants(id);
 ALTER TABLE
       </code></pre>
 
-      <h4 id="colomn">Change Col name in table</h4>
+      <h4 id="colomn">Change Col name</h4>
       <pre><code class="language-css">
 ALTER TABLE table_name RENAME COLUMN old_name to new_name;
 
