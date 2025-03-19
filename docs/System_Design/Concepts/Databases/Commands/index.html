@@ -178,7 +178,12 @@ active        | boolean                |           | not null | false
       <h3 id="update">Update</h3>
       <h4 id="addcolomn">Add Col in table</h4>
       <pre><code class="language-css">
-
+// Adding tenant_id to leads Table.
+// tenant_id is FOREIGN key in tenants table
+ALTER TABLE leads
+ADD COLUMN tenant_id INTEGER NOT NULL,
+ADD CONSTRAINT fk_tenant FOREIGN KEY (tenant_id) REFERENCES tenants(id);
+ALTER TABLE
       </code></pre>
 
       <h4 id="colomn">Change Col name in table</h4>
