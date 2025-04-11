@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network Peering Steering</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#vs">Peering vs Steering</a>
+        <a href="#peering">Network Peering</a>
+        <a href="#steering">Network Steering</a>
+        <a href="as">Peering as Steering</a>
+    </aside>
+
+    <div style="margin-left:200px;">
+        <h3 id="vs">Peering vs Steering</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>Network Peering</th>
+                <th>Network Steering</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Direct connection between separate and independently managed networks. Donot rely on transits</td>
+                <td>
+                    From user's device to Netskope Cloud.
+                    Steering Methods: <br>
+                    &ensp; Netskope Client<br>
+                    &ensp; IPSec/GRE<br>
+                    &ensp; Explicit Proxy<br>
+                    &ensp; Proxy Chaining
+                </td>
+            </tr>
+        </table>
+
+        <h3 id="steering">Network Steering</h3>
+        <dl>
+            From Customer to Netskope Cloud for inspection
+        </dl>
+
+        <h3 id="peering">Network Peering</h3>
+        <dl>
+            The direct exchange of traffic between 2 networks, allowing them to communicate without using a 3rd-party transit provider.
+        </dl>
+        <pre><code>
+Direct Peering
+Customer(Access gdrive) > Netskope(No Inspection) >>(Direct Connect)>> Google(gdrive)
+
+via Transit
+Customer(Access gdrive) > Netskope > Transit Peering > Google(gdrive)
+        </code></pre>
+
+        <h4>Netskope’s NewEdge network Peering</h4>
+        <dl>
+            <b>Types</b>
+            - Direct with major cloud service providers (like Microsoft and Google) in multiple regions. <br>
+            - Transit Peering (Eg: via Megaport)<br>
+            - Peering via exchange
+        </dl>
+
+        <h3 id="as">Peering as Steering</h3>
+        <dl>
+            After traffic inspection traffic goes to cloud providers
+        </dl>
+        <pre><code>
+Customer(Access gdrive) > Netskope(Inspection Done) >>(Direct Connect)>> Google(gdrive)
+        </code></pre>
+    </div>
+
+</body>
+</html>
