@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aggregate initialization</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Aggregate initialization</a>
+        <a href="#types">Types of initialization</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Aggregate initialization</h2>
+        <dl>
+            Aggregate is any of following type:<br>
+            - array type<br>
+            - class type (struct or union) that has NO<br>
+            - private, protected non-static data members<br>
+            - user-declared constructors (explicitly defaulted or deleted constructors are allowed)<br>
+            - virtual, private, or protected base classes<br>
+            - virtual member functions<br>
+            - default member initializers
+        </dl>
+
+        <h2 id="types">Type of initialization</h2>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>What</th>
+                <th>Code</th>
+            </tr>
+            <tr>
+                <td>Designated initializers</td>
+                <td>Each designator must name a direct non-static data member of T. Order of designator should be same as order of the data members of T</td>
+                <td><pre><code class="language-css">
+struct A { 
+    int x; 
+    int y; 
+    int z; 
+};
+A a{.y = 2, .x = 1}; // error; designator order does not match declaration order
+A b{.x = 1, .z = 2}; // ok, b.y initialized to 0
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>Character Arrays</td>
+                <td>If the size of the array is specified and it is larger than the number of characters in the string literal, 
+                    the remaining characters are zero-initialized</td>
+                <td><pre><code class="language-css">
+char a[] = "abc";                 // equivalent to char a[4] = {'a', 'b', 'c', '\0'};
+
+//unsigned char b[3] = "abc";     // Error: initializer string too long
+unsigned char b[5]{"abc"};        // equivalent to unsigned char b[5] = {'a', 'b', 'c', '\0', '\0'};
+    
+wchar_t c[] = {L"кошка"}; // optional braces
+//equivalent to wchar_t c[6] = {L'к', L'о', L'ш', L'к', L'а', L'\0'};
+                </code></pre></td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

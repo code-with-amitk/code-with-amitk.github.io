@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Abbreviated Function Template</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Abbreviated Function Template?</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Abbreviated Function Template</h2>
+        <dl>
+            When only auto or concept auto appears inside function parameter list then complier internally converts them to function template.<br>
+            Function parameter becomes template parameter
+        </dl>
+        <table>
+            <tr>
+                <th></th>
+                <th>Code</th>
+            </tr>
+            <tr>
+                <td>auto in parameter list</td>
+                <td><pre><code class="language-css">
+void f1(auto);
+
+//Above declaration is same as 
+template &lt;class T> 
+void f(T)
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>concept auto in parameter list</td>
+                <td><pre><code class="language-css">
+void f2(C1 auto);                           //C is a concept
+
+//Above declaration is same as 
+template &lt;C1 T> 
+void f2(T)
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>Variadic concept</td>
+                <td><pre><code class="language-css">
+void f3(C2 auto...);                        //C is a concept
+
+//Above declaration is same as
+template &lt;C2... Ts>
+void f3(Ts...)
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>Two concepts</td>
+                <td><pre><code class="language-css">
+void f4(const C3 auto*, C4 auto&); 
+
+//Above declaration is same as
+template &lt;C3 T, C4 U> 
+void f4(const T*, U&);
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>Template and concept</td>
+                <td><pre><code class="language-css">
+template &lt;class T, C U>
+void g(T x, U y, C auto z);
+
+//Above declaration is same as
+template &lt;class T, C U, C W> 
+void g(T x, U y, W z);
+                </code></pre></td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
