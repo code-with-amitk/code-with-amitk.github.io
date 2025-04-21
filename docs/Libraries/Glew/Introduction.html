@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glew Library</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Glew?</a>
+        <a href="#print">Print Glew Version</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Glew?</h2>
+        <dl>
+            Glew is OpenGL's Extension Wrangler Library that helps developers initialize OpenGL extensions and write more portable applications<br>
+            In simple sense, Glew combines lot of openGL APIs into 1 and provides same to developer (eg: context creation APIs etc)
+            <br><br>
+
+            <b>Advantages of Glew</b><br>
+            1. Thread safety: GLEW provides thread-safe support for multiple rendering contexts. <br>
+            2. Core and extension functionality: GLEW exposes both core OpenGL functionality and extensions in a single header file. <br>
+            3. Platform-specific extensions: GLEW provides separate header files for platform-specific extensions (WGL and GLX)
+        </dl>
+
+        <h2 id="print">Print Glew Version</h2>
+        <table>
+            <tr>
+                <td>
+                    1. Write this code in Visual Studio<br>
+                    2. Download library, include files from <a href="https://glew.sourceforge.net/">glew website</a><br>
+                    3. Provide path of headers in include directory 
+                    <pre>Project > Configurations(All Configurations) > C/C++ > General > Additional Include Directories</pre><br>
+                    4. Provide path of lib in Library directory
+                    <pre>Project > Linker > General > Additional Library Directories > glew32s.lib</pre>
+                    <br><br>
+                </td>
+                <td><pre><code class="language-css">
+#include &lt;GL/glew.h>
+#include &lt;iostream>
+using namespace std;
+int main(void)
+{
+    GLenum err = glewInit();
+    if (GLEW_OK != err) {
+        cout &lt;&lt; "glew error";
+    }
+
+    cout &lt;&lt; glGetString(GL_VERSION) &lt;&lt; "\n";
+}
+                </code></pre></td>
+            </tr>
+        </table>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
