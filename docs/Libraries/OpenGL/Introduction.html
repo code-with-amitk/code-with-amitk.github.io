@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenGL Introduction</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">OpenGL?</a>
+        <ul>
+            <li><a href="#vs">OpenGL vs DirectX</a></li>
+        </ul>
+        <a href="#hellowindow">Hello World Window</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is OpenGL</h2>
+        <dl>
+            This is a library for 2D and 3D graphics rendering. It provides API(Application Programming Interface) for drawing graphics on a computer screen.<br>
+            <b>GPU manufacturers(eg: AMD, Nvidia)</b> implement OpenGL functions, and we use them in our Application.
+        </dl>
+
+        <h4 id="vs">OpenGL vs DirectX</h4>
+        <table>
+            <tr>
+                <th></th>
+                <th>OpenGL</th>
+                <th>DirectX</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>API for rendering graphics</td>
+                <td>Same</td>
+            </tr>
+            <tr>
+                <td>Platform</td>
+                <td>Cross-platform, open-source(Windows, macOS, Linux, and other operating systems)</td>
+                <td>Windows, Xbox</td>
+            </tr>
+            <tr>
+                <td>Focus</td>
+                <td>Primarily graphics</td>
+                <td>Graphics, audio, input, multimedia</td>
+            </tr>
+            <tr>
+                <td>Supported By</td>
+                <td>Nvidia, AMD, Intel GPU manufacturers</td>
+                <td>Primarily Windows</td>
+            </tr>
+        </table>
+
+        <h2 id="hellowindow">Hello World Window</h2>
+        <table>
+            <tr>
+                <td>
+                    1. Write this code in Visual Studio<br>
+                    2. Download library, include files from <a href="https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip">glfw.org</a><br>
+                    3. Provide path of headers in include directory 
+                    <pre>Project > C/C++ > General > Additional Include Directories</pre><br>
+                    4. Provide path of lib in Library directory 
+                    <pre>Project > Linker > General > Additional Library Directories</pre>
+                    <br><br>
+                    5. Draw Triangle by providing vertices
+                    <pre><code class="language-css">
+glBegin(GL_TRIANGLES);
+glVertex2f(0, 1);   //Provide Vertices of Traingle
+glVertex2f(-1, 0);
+glVertex2f(1, 0);
+glEnd();
+                    </code></pre><br>
+                    6. See the rendered Widow as below<br>
+                    <img src="/images/opengl/HelloWorld_WithTriangle_Window.png" alt="OpenGL Window" style="width:350px;height:150px;">
+                </td>
+                <td><pre><code class="language-css">
+#include &lt;GLFW/glfw3.h>
+
+int main(void)
+{
+    GLFWwindow* window;
+
+    /* Initialize the library */
+    if (!glfwInit())
+        return -1;
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        return -1;
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+
+    /* Loop until the user closes the window */
+    while (!glfwWindowShouldClose(window))
+    {
+        /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Draw Triangle in between. Render happens between Begin and end. Provide 3 vertices
+        /*
+        *           (0,1)
+        *       (-1,0)  (1,0)
+        */
+        glBegin(GL_TRIANGLES);
+        glVertex2f(0, 1);   //Provide Vertices of Traingle
+        glVertex2f(-1, 0);
+        glVertex2f(1, 0);
+        glEnd();
+        // End Drawing Triangle
+
+        /* Swap front and back buffers */
+        glfwSwapBuffers(window);
+
+        /* Poll for and process events */
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
+    return 0;
+}
+                </code></pre></td>
+            </tr>
+        </table>
+
+        
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
