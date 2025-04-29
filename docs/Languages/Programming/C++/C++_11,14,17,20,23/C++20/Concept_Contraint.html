@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Concept</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Concept?</a>
+        <a href="#whatc">Constriant?</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Concept?</h2>
+        <dl>
+            If we have a Template class defining templated or non templated functions.<br>
+            When call to functions inside this class is made, template class can select most appropriate(Based on template arguments)
+            function from overloaded funtions or template specialization from specializations.<br>
+            Concepts allow to provide constraints on templates and have the compiler enforce them.
+            Named sets of such requirements are called concepts, Concepts is a Predicate means evaluated at compile time
+        </dl>
+
+        <h4>Example</h4>
+        <table>
+            <tr>
+                <td>
+                    1. Created a concept named 'TEST'. Any type of &lt;typename T> should satify these conditions: <br>
+                    &ensp; hash{}(a) compiles and its result is convertible to std::size_t<br><br>
+                    2. Create a function whose arguments should adhere to concept TEST.<br>
+                    &ensp; Hash of String "abc" can be calculated and be converted to size_t.<br>
+                    &ensp; Hash of structure cannot be calculated.
+                </td>
+                <td><pre><code class="language-css">
+template &lt;typename T>
+concept TEST = requires(T a) {                  //1
+    { std::hash &lt;T>{}(a) } -> std::convertible_to<std::size_t>;    //1
+};
+    
+template &lt;TEST K>                    //2
+void f(K){ std::cout &lt;&lt; "fun"; }
+    
+int main() {
+    f("abc"s);                        //2a
+    struct st{};
+    f(st);                            //2b  Error: st does not satisfy TEST
+}
+                </code></pre></td>
+            </tr>
+        </table>
+
+        <h2 id="whatc">Contraint</h2>
+        <dl>
+            Defines the requirement on template argument used in concept. This is a sequence of logical operations and operands.<br>
+            They can appear within requires-expressions (see below) and directly as bodies of concepts.
+        </dl>
+        <h4>Types of Contraints</h4>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Code</th>
+            </tr>
+            <tr>
+                <td>1. Conjunctions</td>
+                <td>The conjunction of two constraints is formed by using the && operator in the constraint expression</td>
+                <td><pre><code class="language-css">
+template &lt;class T>
+concept SignedIntegral = Integral<T> && std::is_signed<T>::value;
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>2. Disjunctions</td>
+                <td>The disjunction of two constraints is formed by using the || operator in the constraint expression.</td>
+                <td><pre><code class="language-css">
+template &lt;class T = void>
+    requires EqualityComparable<T> || Same<T, void>
+struct equal_to;
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>3. Atomic Constraints</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>
