@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPU Kubernets Cluster Config</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#node">Pacakges on GPU Node</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="node">1. Install Pacakges GPU Node Setup</h3>
+        <pre><code>
+# Install drivers
+sudo apt install nvidia-driver-470
+
+# Install container toolkit
+sudo apt install nvidia-container-toolkit
+sudo systemctl restart docker
+
+# Join cluster
+kubeadm join ...
+        </code></pre>
+
+        <h3>2. Kubernetes Cluster Configuration</h3>
+        <dl>
+        - Use kubeadm to create a cluster or a managed solution like EKS, GKE.<br>
+        - Ensure taints and labels are applied to GPU nodes:
+        </dl>
+        <pre><code>
+kubectl label node <gpu-node-name> hardware-type=gpu
+kubectl taint nodes <gpu-node-name> hardware-type=gpu:NoSchedule
+        </code></pre>
+        
+        <h3>3. Install NVIDIA Kubernetes Device Plugin</h3>
+        <pre><code>
+kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.13.0/nvidia-device-plugin.yml
+        </code></pre>
+
+        <h3>4. Create Pod using GPU</h3>
+        <pre><code>
+apiVersion: v1
+kind: Pod
+metadata:
+    name: gpu-job
+spec:
+    containers:
+    - name: ml-container
+    image: pytorch/pytorch:latest
+    resources:
+        limits:
+        nvidia.com/gpu: 1
+        </code></pre>
+
+        <h3>5. Helm Charts for ML and GPU Workloads</h3>
+        <dl>
+            Helm charts for:<br>
+            - ML frameworks (JupyterHub, TensorFlow Serving, PyTorch)<br>
+            - Storage (e.g., NFS, Ceph)<br>
+            - Monitoring (Prometheus + Grafana)<br>
+            - Ingress (NGINX or Istio)<br>
+            - Auth (Keycloak)<br>
+            - GPU jobs (custom charts per customer/job)
+        </dl>
+        <pre><code>
+gpu-job-chart/
+Chart.yaml
+values.yaml
+templates/
+    deployment.yaml
+    service.yaml
+    job.yaml
+        </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

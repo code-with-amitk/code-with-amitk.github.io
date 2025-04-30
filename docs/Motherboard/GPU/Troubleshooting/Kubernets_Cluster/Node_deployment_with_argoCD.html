@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPU Node deployment with argoCD</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="node">1. Install argoCD</h3>
+        <pre><code>
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+        </code></pre>
+
+        <h3>2. Git repo structure</h3>
+              <pre><code>
+ml-infra-gitops/
+gpu-jobs/
+    job1/
+    values.yaml
+    helm-chart/
+    job2/
+base-infra/
+    jupyterhub/
+    tf-serving/
+        </code></pre>
+        
+        <h3>3. Create Argo CD Applications</h3>
+        <pre><code>
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: gpu-job1
+spec:
+    project: default
+    source:
+    repoURL: 'https://github.com/my-org/ml-infra-gitops'
+    targetRevision: HEAD
+    path: gpu-jobs/job1
+    helm:
+        valueFiles:
+        - values.yaml
+    destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: gpu-jobs
+    syncPolicy:
+    automated:
+        prune: true
+        selfHeal: true
+        </code></pre>
+
+        <h3>4. Deploy</h3>
+        <pre><code>
+kubectl apply -f gpu-job1-application.yaml
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
