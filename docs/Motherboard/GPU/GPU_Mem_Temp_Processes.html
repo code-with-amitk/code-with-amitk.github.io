@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPU Memory, Temprature, Processes</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#memtemp">GPU Mem, Temp</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="memtemp">GPU Memory, Temperature, Processes</h3>
+        <table>
+            <tr>
+                <td>
+1. <a href="https://pypi.org/project/pynvml/">pynvml</a>
+                </td>
+                <td><pre><code class="language-css">
+import pynvml       #1
+import time
+import logging
+from collections import deque
+
+class GPUMonitor:
+    def __init__(self, gpu_ids):
+        pynvml.nvmlInit()
+        self.gpus = [pynvml.nvmlDeviceGetHandleByIndex(i) for i in gpu_ids]
+        self.history = {i: deque(maxlen=60) for i in gpu_ids}
+        
+    def collect_metrics(self):
+        metrics = []
+        for i, gpu in enumerate(self.gpus):
+            util = pynvml.nvmlDeviceGetUtilizationRates(gpu)
+            mem = pynvml.nvmlDeviceGetMemoryInfo(gpu)
+            temp = pynvml.nvmlDeviceGetTemperature(gpu, pynvml.NVML_TEMPERATURE_GPU)
+            
+            metric = {
+                'gpu_id': i,
+                'timestamp': time.time(),
+                'gpu_util': util.gpu,
+                'mem_util': util.memory,
+                'mem_used': mem.used,
+                'mem_total': mem.total,
+                'temperature': temp,
+                'processes': self._get_processes(gpu)
+            }
+            
+            self.history[i].append(metric)
+            metrics.append(metric)
+            
+            # Check for anomalies
+            self._check_anomalies(i, metric)
+            
+        return metrics
+    
+    def _get_processes(self, gpu):
+        processes = []
+        for p in pynvml.nvmlDeviceGetComputeRunningProcesses(gpu):
+            try:
+                proc = psutil.Process(p.pid)
+                processes.append({
+                    'pid': p.pid,
+                    'name': proc.name(),
+                    'gpu_mem': p.usedGpuMemory,
+                    'cpu_percent': proc.cpu_percent(),
+                    'cmdline': proc.cmdline()
+                })
+            except:
+                continue
+        return processes
+    
+    def _check_anomalies(self, gpu_id, metric):
+        # Check memory leak pattern
+        if len(self.history[gpu_id]) == 60:
+            mem_trend = [m['mem_used'] for m in self.history[gpu_id]]
+            if all(mem_trend[i] < mem_trend[i+1] for i in range(len(mem_trend)-1)):
+                logging.warning(f"GPU {gpu_id} shows continuous memory growth - possible memory leak")
+        
+        # Check temperature threshold
+        if metric['temperature'] > 85:
+            logging.warning(f"GPU {gpu_id} overheating: {metric['temperature']}C")
+            
+        # Check utilization anomalies
+        if metric['gpu_util'] < 5 and metric['mem_util'] > 80:
+            logging.warning(f"GPU {gpu_id} shows memory saturation with low compute utilization")
+                </code></pre></td>
+            </tr>
+        </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

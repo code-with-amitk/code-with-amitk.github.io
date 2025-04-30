@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPU Introduction</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">GPU?</a>
+        <ul>
+            <li><a href="#app">Applications of GPU</a></li>
+            <li><a href="#vs">CPU vs GPU</a></li>
+        </ul>
+        <a href="#gcard">Graphics Card</a>
+        <a href="#dgpu">DGPU/Dual GPU</a>
+    </aside>
+
+    <article style="margin-left:200px;">   <!-- It contains an article -->
+        <h2 id="what">GPU</h2>
+        <dl>
+            This is specialized electronic circuit created for manipulating images rapidly. ie Specialized in Graphics & Image processing.<br>
+            GPU has 1000's of cores making them great for small computations done in <b>parallel</b>.<br>
+            Not good for serial tasks.<br>
+            In 2018 AMD/ATI(33%) & Nvidia(66%) captured 100% of GPU market.
+            
+        </dl>
+
+        <h4 id="app">Applications</h4>
+        <dl>
+            Used game consoles, Create high resolution images, videos.<br>
+            In machine training, deep learning neural networks, GPUs can be 250 times faster than CPUs.<br>
+            Complex mathematical calculations, financial simulations and risk modeling<br>
+            Encryption, Decryption or processing of network traffic.
+        </dl>
+
+        <h4 id="vs">CPU vs GPU</h4>
+        <table>
+            <tr>
+                <th></th>
+                <th>CPU</th>
+                <th>GPU</th>
+            </tr>
+            <tr>
+                <td>Cores</td>
+                <td>4 or 8</td>
+                <td>Nvidia's GeForce:4000, AMD's Radeon: 2500, Intel's HD 500: 1100</td>
+            </tr>
+            <tr>
+                <td>Good For tasks</td>
+                <td>Serial</td>
+                <td>Parallel</td>
+            </tr>
+        </table>
+
+        <h2 id="gcard">Graphics Card</h2>
+        <dl>
+            GPU is fitted on Graphics Card, which fits on PICe Slot. Though GPU can be fitted on motherboard directly as well.<br>
+            Graphics Card / Graphics Adapter is used in gaming PC or a professional high-performance PC for graphic processing.
+        </dl>
+        <table>
+            <tr>
+                <td>
+                    <b>VRM(Voltage Regulator Module)/(PPM)Processor Power Module/Voltage Regulator:</b><br>
+                    This gives power to the GPU. It converts 12V to around 1V to 1.5V (approx) which is normally the voltage level at which GPU operates.
+                    No of VRMs on a graphics card varies from card to card. VRMs can get very hot & require good cooling.
+                    <br><br>
+
+                    <b>Cooler:</b><br>
+                    Every graphics card comes with Cooler to keep the temperature of GPU, VRAM, and VRM down to safer levels.
+                    Some of the high-end graphics cards also come with Liquid / Water Cooling or Hybrid Cooling Solution
+                    <br><br>
+
+                    <b>PCB(Printed Circuit Board)</b><br>
+                    Base or board where all the components including GPU, VRAM, VRM, Capacitors, Sensors are mounted.
+                    High-end graphics cards have more components so they require larger PCB compared to entry-level graphics cards.
+                    <br><br>
+
+                    <b>Connectors of Graphics Cards</b><br>
+                    PCI Express x16 Connector: The interface through which graphics cards communicate with the motherboard and processor.<br>
+                    6-Pin & 8-Pin PCI-E Connectors: Usage Needed when Graphics cards need higher power. This connector provides external power from the PSU.
+                </td>
+                <td>
+                    <img src="/images/Motherboard/graphics-card-components.jpg" 
+                    alt="Graphics Card" style="width:500px;height:200px;">
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="dgpu">DGPU (Dual GPU)</h2>
+        <dl>
+            Graphics card having 2 GPUs present on their PCBs. Dual graphics card as a combination of two similar graphics cards in SLI or Crossfire setup on a single PCB.<br>
+            limited to some games and applications but not all games are optimized for dual GPUs.<br>
+            <u>Examples:</u><br>
+                AMD (Radeon HD 6990, Radeon HD 7990, Radeon R9 295X2, Radeon Pro Duo, Radeon Pro Duo (Polaris)), 
+                Nvidia(GeForce GTX TITAN Z, GeForce GTX 590)
+        </dl>
+
+    </article>
+
+</body>
+</html>
