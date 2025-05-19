@@ -38,7 +38,7 @@
         </dl>
         <pre><code>
             User 
-            $ docker run -----&lt; [Docker Client] -----&lt; [Docker Daemon/dockerd]
+            $ docker run -----> [Docker Client] -----> [Docker Daemon/dockerd]
         </code></pre>
 
         <h2 id="vs">Docker vs Kubernets</h2>
@@ -61,7 +61,7 @@
             <tr>
                 <td>Commands</td>
                 <td>docker run</td>
-                <td>helm install</td>
+                <td>helm</td>
             </tr>
         </table>
 
@@ -129,15 +129,31 @@ services:
             <tr>
                 <td>Docker Volume(Storing Data in Docker)</td>
                 <td>
-                    By Default, all files created inside a container are accessed only by that container. 
+                    By Default, all files created inside a container are accessed only by that container.<br>
                     Data doesn’t persist when that container no longer exists.
                     volumes, bind mounts, tmpfs all are seen as mounted directories to container.
                     <table>
                         <tr>
-                            <td>Volumes</td>
-                            <td>
-
+                            <th></th>
+                            <th>Volumes</th>
+                            <th>Mounts</th>
+                            <th>tmpfs(in memory/RAM)</th>
+                        </tr>
+                        <tr>
+                            <td>Persists data across reboots</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td>What</td>
+                            <td>Volumes are stored on host filesystem which is 
+                                managed by Docker (/var/lib/docker/volumes/ on Linux).<br>
+                                Volumes are the best way to persist data in Docker.<br>
+                                Volumes stores the files on the host machine
+                                (so that the files are persisted even after the container stops)
                             </td>
+                            <td></td>
                         </tr>
                     </table>
                 </td>
@@ -147,28 +163,6 @@ services:
         <h2 id="networking">Docker Networking</h2>
         <dl>
             Connecting Docker Containers with each other and with outside world.
-            <table>
-                <tr>
-                    <th></th>
-                    <th>Volumes</th>
-                    <th>Mounts</th>
-                    <th>tmpfs(in memory/RAM)</th>
-                </tr>
-                <tr>
-                    <td>Persists data across reboots</td>
-                    <td>Yes</td>
-                    <td>No</td>
-                    <td>No</td>
-                </tr>
-                <tr>
-                    <td>What</td>
-                    <td>Volumes are stored on host filesystem which is 
-                        managed by Docker (/var/lib/docker/volumes/ on Linux). Volumes are the best way to persist data in Docker.<br>
-                        Volumes stores the files on the host machine(so that the files are persisted even after the container stops)
-                    </td>
-                    <td></td>
-                </tr>
-            </table>
         </dl>
         
         <h4>Types of Docker Networking</h4>
