@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Architecture</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#terms">Docker Terms</a>
+        <a href="#networking">Networking</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Docker</h2>
+        <dl>
+            Docker is one of container implementation. Others are Rocket, Drawbridge, LXC.<br>
+            Docker Inc. is the company that sells the commercial version of Docker. Docker is also available as open source.<br>
+            Docker Daemon / dockerd? Manages Docker objects(Eg: Images, containers, networks, and volumes). dockerd also communicate with other daemons to manage Docker services.<br>
+            Docker client / docker? Users interact with docker client.
+        </dl>
+        <pre><code>
+            User 
+            $ docker run -----&lt; [Docker Client] -----&lt; [Docker Daemon/dockerd]
+        </code></pre>
+
+        <h2 id="vs">Docker vs Kubernets</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Docker</th>
+                <th>Kubernetes(Container Orchestration system)</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Platform for building containers</td>
+                <td>Platform for managing multiple containers</td>
+            </tr>
+            <tr>
+                <td>Use case</td>
+                <td>Run containers on 1 host</td>
+                <td>Run containers on cluster of machines, providing scaling, self-healing, and rollback</td>
+            </tr>
+            <tr>
+                <td>Commands</td>
+                <td>docker run</td>
+                <td>helm install</td>
+            </tr>
+        </table>
+
+        <h2 id="terms">Docker Terms</h2>
+        <table>
+            <tr>
+                <th>Term</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Docker Host</td>
+                <td>
+                    Machine on which the Docker containers run. It can be a virtual machine or a physical machine
+                </td>
+            </tr>
+            <tr>
+                <td>Container Image/Docker Image</td>
+                <td>This is used to start the container.</td>
+            </tr>
+            <tr>
+                <td>Docker File</td>
+                <td>
+                    Shell script for creating Docker image/Container image.<br>
+                    <pre><code class="language-css">
+# vim application.Dockerfile 
+FROM ubuntu:20.04                             //FROM Command: Installation is based image this OS, Since docker is not full OS.
+RUN apt update \                              //RUN Command: Run some command
+    apt-get install -y --no-install-recommends openssl \
+    apt-get install -y --no-install-recommends iputils-ping \
+
+COPY ./application.out ./a.txt /app/
+
+CMD /app/application.out "--config" a.txt     //CMD Command: Start the application
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Docker Registry</td>
+                <td>
+                    Stores docker images. Same as github,gitlab are for source code.
+                    Eg: dockerhub, elastic container registry(ecr)
+                </td>
+            </tr>
+            <tr>
+                <td>Docker Compose</td>
+                <td>Microservices can contact other microservice using DC. DC uses yaml configuration file.
+                    <pre><code class="language-css">
+$ cat docker-compose.yml
+version: '3'
+services:
+ common:                                   // is a web application that is supposed to deliver common artifacts.
+   build: ../scs-demo-esi-common/
+ order:                                   //is a web application for processing orders.
+   build: ../scs-demo-esi-order
+ varnish:                                //is a web cache to coordinate the two web applications.
+   build: varnish
+   links:
+    - common
+    - order
+   ports:
+    - "8080:8080"
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Docker Volume(Storing Data in Docker)</td>
+                <td>
+                    By Default, all files created inside a container are accessed only by that container. 
+                    Data doesn’t persist when that container no longer exists.
+                    volumes, bind mounts, tmpfs all are seen as mounted directories to container.
+                    <table>
+                        <tr>
+                            <td>Volumes</td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="networking">Docker Networking</h2>
+        <dl>
+            Connecting Docker Containers with each other and with outside world.
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Volumes</th>
+                    <th>Mounts</th>
+                    <th>tmpfs(in memory/RAM)</th>
+                </tr>
+                <tr>
+                    <td>Persists data across reboots</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>What</td>
+                    <td>Volumes are stored on host filesystem which is 
+                        managed by Docker (/var/lib/docker/volumes/ on Linux). Volumes are the best way to persist data in Docker.<br>
+                        Volumes stores the files on the host machine(so that the files are persisted even after the container stops)
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </dl>
+        
+        <h4>Types of Docker Networking</h4>
+        <table>
+            <tr>
+                <th>Network</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Bridge Networking</td>
+                <td>
+                    Used when multiple containers want to communicate on the same Docker host.<br><br>
+                    
+                    <b>Types of Bridges:</b>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>User Defined Bridge</th>
+                            <th>Default Bridge</th>
+                        </tr>
+                        <tr>
+                            <td>Connect using</td>
+                            <td>IP Address or hostname</td>
+                            <td>Only IP Address</td>
+                        </tr>
+                    </table>
+                    <br>
+
+                    <b>Run 2 different Alpine containers on same docker host and commmunicate between them</b><br>
+                    <pre><code class="language-css">
+////Overall Pictutre
+    Container-1(172.17.0.2)
+    Container-2(172.17.0.3)
+                    Bridge(172.17.0.1)                    
+    Docker host
+
+
+1. Start Docker desktop. Start Windows Powershell and list the network.
+
+ps> docker network ls
+
+NETWORK ID      NAME       DRIVER     SCOPE
+17e324f45964    bridge     bridge     local   //Default bridge network
+6ed54d316334    host       host       local
+7092879f2cc8    none       null       local
+
+$ docker run -dit --name alpine1 alpine ash   //2. Start 2 alpine containers, running ash(This is default alpine shell rather than bash).
+$ docker run -dit --name alpine2 alpine ash
+
+$ docker container ls                        //3. Check containers have started or not?
+CONTAINER ID        IMAGE      COMMAND     CREATED          STATUS             PORTS        NAMES
+602dbf1edc81        alpine     "ash"       4 seconds ago    Up 3 seconds                   alpine2
+da33b7aa74b0        alpine     "ash"       17 seconds ago   Up 16 seconds                  alpine1
+
+$ docker network inspect bridge              //4. Check Brigde network to see to what containers are connected to?
+
+[
+    {
+        "Name": "bridge",
+        "Id": "17e324f459648a9baaea32b248d3884da102dde19396c25b30ec800068ce6b10",
+        "Created": "2017-06-22T20:27:43.826654485Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"         //Gateway between docker host and Bridge N/W
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Containers": {
+            "602dbf1edc81813304b6cf0a647e65333dc6fe6ee6ed572dc0f686a3307c6a2c": {
+                "Name": "alpine2",
+                "EndpointID": "03b6aafb7ca4d7e531e292901b43719c0e34cc7eef565b38a6bf84acf50f38cd",
+                "MacAddress": "02:42:ac:11:00:03",
+                "IPv4Address": "172.17.0.3/16",
+                "IPv6Address": ""
+            },
+            "da33b7aa74b0bf3bda3ebd502d404320ca112a268aafe05b4851d1e3312ed168": {
+                "Name": "alpine1",
+                "EndpointID": "46c044a645d6afc42ddd7857d19e9dcfb89ad790afb5c239a35ac0af5e8a5bc5",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {
+            "com.docker.network.bridge.default_bridge": "true",
+            "com.docker.network.bridge.enable_icc": "true",
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "1500"
+        },
+        "Labels": {}
+    }
+]
+
+$ docker attach alpine1                         //5. Since containers are running in background. Run attach command to connect to container.
+
+/ # ip addr show      //list IP Address
+# ping google.com     //Connected to internet
+PING google.com (172.217.3.174): 56 data bytes
+64 bytes from 172.217.3.174: seq=0 ttl=41 time=9.841 ms
+64 bytes from 172.217.3.174: seq=1 ttl=41 time=9.897 ms
+
+# ping 172.17.0.3     //Ping another container
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.086 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.094 ms
+
+//7. Detach from alpine1 without stopping it by using the detach sequence, CTRL + p CTRL + q (hold down CTRL and type p followed by q). 
+//8. Stop and remove both containers
+
+$ docker container stop alpine1 alpine2
+$ docker container rm alpine1 alpine2
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>None Networking</td>
+                <td>
+                    This completely disables the networking stack on the container. Within the container, only the loopback device is created
+                    <br><br>
+
+                    <b>Example:</b><br>
+                    <pre><code class="language-css">
+$ docker run --rm -dit  --network none  --name no-net-alpine   alpine:latest   ash
+
+//Check the container’s network stack... no eth0 created
+$ docker exec no-net-alpine ip link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN qlen 1
+    link/ipip 0.0.0.0 brd 0.0.0.0
+3: ip6tnl0@NONE: <NOARP> mtu 1452 qdisc noop state DOWN qlen 1
+    link/tunnel6 00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00 brd 00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
+    
+//Stop the container. It is removed automatically because it was created with the --rm flag
+$ docker stop no-net-alpine
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Host Networking</td>
+                <td>
+                    Container's network stack is same as host network stack. IP Address of container is same as host OS. 
+                    Useful in situtation where container needs to listen/read/write on large number of ports.<br>
+                    Advantages
+                    1. Expose 1 port and IP access the service. 
+                    Example: 50 Game servers are running in Docker containers on same host. 
+                    Requests are routed using kubernets to free game server.<br>
+                    Disadvantages: Host networking driver only work on linux not on Windows and MAC.
+                    <br><br>
+
+                    <b>Example: Nginx container binds directly to port 80 on the Docker host:</b><br>
+                    Start ngnix in container with host networking, ngnix listens on port 80 which is same as docker host.<br>
+                    <pre><code class="language-css">
+# docker run --rm -d --network host --name my_nginx nginx         //Create and start container as detached process
+# ip addr show 
+# sudo netstat -tulpn | grep :80                                  //Check which process is binded to port 80.
+# docker container stop my_nginx                                  //Stop the container, it will be removed automatically since start with -rm switch
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
