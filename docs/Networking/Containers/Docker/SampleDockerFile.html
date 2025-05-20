@@ -91,28 +91,36 @@
         </table>
 
         <h2 id="df">Dockerfile</h2>
-        <h4>What is Dockerfile?</h4>
         <dl>
-            From Dockerfile, docker image is created which runs inside container.
-        </dl>
-        <h4>Example</h4>
-        <dl>Let's create a docker image.<br>
+            docker image is created from docker file which runs inside container.<br><br>
             We will use the code from this repository https://github.com/meobilivang/newsreader-cli
         </dl>
 
-        <pre><code class="language-css">
-// Step-1: Clone the code
+        <table>
+            <tr>
+                <th>Step</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Step-1: Clone the code</td>
+                <td><pre><code class="language-css">
 cmd> git clone https://github.com/meobilivang/newsreader-cli
 cmd> cd newsreader-cli
-
-// Step-2: Create run_test.py file in root of cloned repo
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>Step-2: Create run_test.py file in root of cloned repo</td>
+                <td><pre><code class="language-css">
 #!/bin/bash
 
 set -euo pipefail
 cd /app
 pytest
-
-// Step-3. Dockerfile content. Create Dockerfile in root of cloned repo
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>Step-3. Dockerfile content. Create Dockerfile in root of cloned repo</td>
+                <td><pre><code class="language-css">
 # Download python-slim image from docker hub
 FROM python:3-slim
 
@@ -124,7 +132,7 @@ WORKDIR /app
 # We are inside /app. Copy requirements.txt from your local machine to the current working directory (/app)
 COPY requirements.txt ./
 
-# RUN executes a command in the Docker image at build time.
+# RUN executes a command in the Docker image at build time(inside app directory)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # copies the entire contents of your current directory (cloned repository on your host machine) into the /app/
@@ -159,7 +167,9 @@ RUN chmod +x /run_tests.sh
 # /bin/bash: Specifies that a Bash shell should be used.
 # -s: This tells Bash to read from standard input.
 ENTRYPOINT ["/bin/bash", "-s"]
-        </code></pre>
+                </code></pre></td>
+            </tr>
+        </table>
 
         <h2 id="image">Create Docker image</h2>
         <dl>
