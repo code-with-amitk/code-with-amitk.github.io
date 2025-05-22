@@ -31,7 +31,11 @@
 
     <article style="margin-left:200px;">
         <h3>Commands</h3>
-        <h4 id="createrun">Create Docker Image, Run inside Container</h4>
+        <h4 id="createrun">Create Docker Image</h4>
+        <dl>
+            <b>Windows:</b> Need docker desktop to be running. <a href="./Architecture.html" target="_blank">
+                Docker desktop provides dockerD(docker engine)</a> which builds the container image.
+        </dl>
         <pre><code class="language-css">
 /* 
 build: Build a Docker image from a Dockerfile, stores in a local registry on your system
@@ -45,7 +49,10 @@ $ docker image ls
 
 /* Save docker image in current working directory */
 $ docker save -o docker-image newsreader-cli-test
+            </code></pre>
 
+            <h4>Run inside Container</h4>
+            <pre><code class="language-css">
 $ docker image rmi docker-image
 
 /* 

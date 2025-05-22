@@ -22,8 +22,38 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#">Docker</a>
+        <a href="#arch">Docker</a>
     </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="arch">Docker Desktop(Windows) / Docker Linux Architecture</h2>
+        <table>
+            <tr>
+                <th>Process</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>DockerD / Docker Deamon / Docker Engine </td>
+                <td>Listens for Docker API requests and performs the actual work of building, running, and distributing container images</td>
+            </tr>
+            <tr>
+                <td>Docker Client (docker)</td>
+                <td>command-line tool you use to interact with Docker. When you run commands like docker run, the client sends those commands to the dockerD</td>
+            </tr>
+            <tr>
+                <td>Docker Compose</td>
+                <td>tool included in Docker Desktop that allows you to define and run multi-container applications using a YAML file</td>
+            </tr>
+            <tr>
+                <td>Credential Helper</td>
+                <td>Manages credentials for accessing private registries securely</td>
+            </tr>
+            <tr>
+                <td>Docker Desktop UI</td>
+                <td>GUI managing containers, images, volumes, and settings</td>
+            </tr>
+        </table>
+    </article>
 
 </body>
 </html>
