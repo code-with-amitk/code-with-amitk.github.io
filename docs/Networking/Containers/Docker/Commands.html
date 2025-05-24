@@ -23,38 +23,107 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#createrun">Create Docker Image. Run inside Container</a>
-        <a href="#enter">Enter inside Container</a>
+        <a href="#create">Create Docker Image</a>
+        <a href="#run">Run docker image inside Container</a>
         <a href="#x86onarm">Run arm binaries on x86</a>
         <a href="#load">Load Docker Image</a>
     </aside>
 
     <article style="margin-left:200px;">
         <h3>Commands</h3>
-        <h4 id="createrun">Create Docker Image</h4>
+        <h4 id="create">Create, List, Delete Docker Image</h4>
         <dl>
-            <b>Windows:</b> Need docker desktop to be running. <a href="./Architecture.html" target="_blank">
-                Docker desktop provides dockerD(docker engine)</a> which builds the container image.
+            <b>Windows:</b><br>
+            &ensp; Docker Desktop should be running.<br> 
+            &ensp; <a href="./Architecture.html" target="_blank">
+            Docker desktop provides dockerD(docker engine)</a> which builds the container image.
         </dl>
+        <pre><code>
+    [docker-cli]                                   [Docker Desktop]         [Docker Hub]
+docker build -f Dockerfile  -----Dockerfile------>  Pull ubuntu ----------->  
+                                                            &lt;------------------
+                                                    create docker image
+                &lt;---------- docker image --------------
+        </code></pre>
+
         <pre><code class="language-css">
-/* 
-build: Build a Docker image from a Dockerfile, stores in a local registry on your system
--t:     name and tag of docker file
---build-arg="BASE_IMAGE=arm64v8/ubuntu:18.04" Ubuntu 18.04 image for the ARM64 architecture.
-*/
+/* build: Build a Docker image from a Dockerfile, stores in a local registry on your system
+   -t:     name and tag of docker file */
 $ docker build . -f Dockerfile -t test_image
 
-/* View docker image stored in a local registry on your system */
-$ docker image ls
+/* View docker image stored in a local registry on your system
+   Windows: docker image stored inside docker desktop
+   linux: docker image stored on /var/lib/docker/ */
+> docker images
+REPOSITORY   TAG       IMAGE ID       CREATED             SIZE
+test_image   latest    50f13db48e16   About an hour ago   133MB
+
+/* See contents of docker image */
+$ docker image inspect image_id
 
 /* Save docker image in current working directory */
 $ docker save -o docker-image newsreader-cli-test
+
+/* Delete Docker image */
+> docker image rmi 50f13db48e16
+Untagged: test_image:latest
+Deleted: sha256:50f13db48e16c4701ea2b6bce36a6b3be6df914edbb7156d7dba98333965c47a
+> docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+>
             </code></pre>
 
-            <h4>Run inside Container</h4>
-            <pre><code class="language-css">
-$ docker image rmi docker-image
+            <h4 id="run">Run docker image inside Container</h4>
+            <table>
+                <tr>
+                    <td>
+                        <dl>
+                            - This will create a container and run image inside the container<br>
+                            - Check docker ps in another terminal
+                        </dl>
+                        <pre><code class="language-css">
+/* TERMINAL-1
+ -i: Interactive, -t: tty, 
+ --rm: Remove if already running container with this name. 
+       Delete the container when you exit container (exit)
+*/
+> docker run -it --rm test_image:latest bash
+root@4136a6a47eba:/app# ls
+certs  main
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+/* TERMINAL-2 */
+> docker ps
+CONTAINER ID   IMAGE               COMMAND   CREATED         STATUS         PORTS      NAMES
+1ea2e46290b0   test_image:latest   "bash"    6 seconds ago   Up 5 seconds   8080/tcp   distracted_merkle
+                    </code></pre></td>
+                </tr>
+                <tr>
+                    <td>
+                        <dl>- But when you exit from container, container is killed.</dl>
+                        <pre><code class="language-css">
+/* TERMINAL-1 */
+root@4136a6a47eba:/app# exit
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+/* TERMINAL-2 */
+> docker ps
+>
+                    </code></pre></td>
+                </tr>
+            </table>
 
+            <h4 id="run1">Run binary listening on port=8080 inside container</h4>
+            <pre><code class="language-css">
+> docker build . -f Dockerfile -t test_image
+> docker run -d -p 8080:8080 --name test_container test_image:latest
+> curl http://localhost:8080/login
+> docker stop test_container
+> docker rm test_container
+            </code></pre>
+
+            <h4 id="ways">Ways to run containers</h4>
+            <pre><code class="language-css">
 /* 
 Run Image Inside Container
     --volume <host-dir>:<container-dir>[:options]
@@ -73,7 +142,7 @@ $ docker run --volume /home/amit:/test --user &lt;uid of user> test-docker-image
 $ docker run --platform linux/amd64 -i newsreader-cli-test &lt; ~/test.sh
             </code></pre>
 
-            <h4 id="enter">Run Interactive session inside Container</h4>
+            <h4 id="run">Run Interactive session inside Container</h4>
             <pre><code class="language-css">            
 /* 
 Run session inside Container
