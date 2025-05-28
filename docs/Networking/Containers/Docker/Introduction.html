@@ -25,6 +25,11 @@
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#what">What</a>
         <a href="#terms">Docker Terms</a>
+        <ul>
+            <li><a href="#compose">docker-compose</a></li>
+            <li><a href="#volume">Volume</a></li>
+            <li><a href="#mount">Mounts, tmpfs</a></li>
+        </ul>
         <a href="#networking">Networking</a>
     </aside>
 
@@ -105,60 +110,71 @@ CMD /app/application.out "--config" a.txt     //CMD Command: Start the applicati
                     Eg: dockerhub, elastic container registry(ecr)
                 </td>
             </tr>
-            <tr>
-                <td>Docker Compose</td>
-                <td>Microservices can contact other microservice using DC. DC uses yaml configuration file.
-                    <pre><code class="language-css">
-$ cat docker-compose.yml
-version: '3'
-services:
- common:                                   // is a web application that is supposed to deliver common artifacts.
-   build: ../scs-demo-esi-common/
- order:                                   //is a web application for processing orders.
-   build: ../scs-demo-esi-order
- varnish:                                //is a web cache to coordinate the two web applications.
-   build: varnish
-   links:
-    - common
-    - order
-   ports:
-    - "8080:8080"
-                    </code></pre>
-                </td>
-            </tr>
-            <tr>
-                <td>Docker Volume(Storing Data in Docker)</td>
-                <td>
-                    By Default, all files created inside a container are accessed only by that container.<br>
-                    Data doesn’t persist when that container no longer exists.
-                    volumes, bind mounts, tmpfs all are seen as mounted directories to container.
-                    <table>
-                        <tr>
-                            <th></th>
-                            <th>Volumes</th>
-                            <th>Mounts</th>
-                            <th>tmpfs(in memory/RAM)</th>
-                        </tr>
-                        <tr>
-                            <td>Persists data across reboots</td>
-                            <td>Yes</td>
-                            <td>No</td>
-                            <td>No</td>
-                        </tr>
-                        <tr>
-                            <td>What</td>
-                            <td>Volumes are stored on host filesystem which is 
-                                managed by Docker (/var/lib/docker/volumes/ on Linux).<br>
-                                Volumes are the best way to persist data in Docker.<br>
-                                Volumes stores the files on the host machine
-                                (so that the files are persisted even after the container stops)
-                            </td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
         </table>
+
+        <h4 id="compose">Docker compose</h4>
+        <dl>
+            We can create multiple containers(eg: go, postgres) using docker compose. Each container have 1 entry inside this file 
+        </dl>
+        <pre><code class="language-css">
+$ cat docker-compose.yml
+services:
+  db:           # postgres container
+    image: postgres:16
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword # Create user with username(myuser), password(mypassword)
+      POSTGRES_DB: mydb     # Create database named mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql # For auto-creating tables
+
+  app:              # go container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+      DB_NAME: mydb
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+        </code></pre>
+
+        <h4 id="volumes">Docker Volumes</h4>
+        <dl>
+            This is a persistent storage location managed by Docker, outside the container’s filesystem.<br>
+            Helpful when you want to store data present in database across container reboots/deletion/recreation.<br>
+            Volumes are defined in docker-compose.yml and mapped to a path inside the container.<br>
+            volumes, bind mounts, tmpfs all are seen as mounted directories to container.
+            <br><br>
+
+            <b>Name of docker volume:</b><br>
+            &ensp; <a href="#compose">Docker Compose</a> auto-generates the volume name as project-name_volume
+        </dl>
+        <pre><code class="language-css">
+// Check volumes
+> docker volume ls
+go-server_db_data
+
+// Delete a volume
+> docker volume rm go-server_db_data
+go-server_db_data
+        </code></pre>
+
+        <h4 id="mount">Docker Mounts, tmpfs</h4>
+        <dl>
+            Does not persists data across reboots
+        </dl>
 
         <h2 id="networking">Docker Networking</h2>
         <dl>

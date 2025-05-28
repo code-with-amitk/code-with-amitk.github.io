@@ -28,14 +28,17 @@
 
     <article style="margin-left:200px;">
         <h3>Commands</h3>
-        <dl><b>Listing all available containers</b></dl>
+        <dl><b>List, Inspect, Delete containers</b></dl>
             <pre><code class="language-css">
-docker ps
+$ docker ps                     //List all running containers
+$ docker inspect 7d8b5d857e84   
+
+$ docker rm container-id
             </code></pre>
 
-        <dl><b>Going inside container</b></dl>
+        <dl><b>Go inside container</b></dl>
             <pre><code class="language-css">
-sudo docker exec -it <container-name> bash
+$ sudo docker exec -it <container-name> bash
             </code></pre>
 
         <dl><b>List process and ports</b></dl>
