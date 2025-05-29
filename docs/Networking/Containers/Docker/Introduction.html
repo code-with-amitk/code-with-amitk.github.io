@@ -26,7 +26,7 @@
         <a href="#what">What</a>
         <a href="#terms">Docker Terms</a>
         <ul>
-            <li><a href="#compose">docker-compose</a></li>
+            <li><a href="./docker-compose.html" target="_blank">docker-compose</a></li>
             <li><a href="#volume">Volume</a></li>
             <li><a href="#mount">Mounts, tmpfs</a></li>
         </ul>
@@ -111,44 +111,6 @@ CMD /app/application.out "--config" a.txt     //CMD Command: Start the applicati
                 </td>
             </tr>
         </table>
-
-        <h4 id="compose">Docker compose</h4>
-        <dl>
-            We can create multiple containers(eg: go, postgres) using docker compose. Each container have 1 entry inside this file 
-        </dl>
-        <pre><code class="language-css">
-$ cat docker-compose.yml
-services:
-  db:           # postgres container
-    image: postgres:16
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword # Create user with username(myuser), password(mypassword)
-      POSTGRES_DB: mydb     # Create database named mydb
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql # For auto-creating tables
-
-  app:              # go container
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_NAME: mydb
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-
-volumes:
-  db_data:
-        </code></pre>
 
         <h4 id="volumes">Docker Volumes</h4>
         <dl>
