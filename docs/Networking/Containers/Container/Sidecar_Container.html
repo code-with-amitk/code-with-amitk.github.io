@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sidecar Container</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is Sidecar Container</a>
+        <a href="#comp">Main Container vs Sidecar</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Sidecar Container</h2>
+        <dl>
+            A sidecar is a helper container that runs alongside your main application container in the same task/pod.
+            It extends or enhances the application's functionality without modifying the application itself.
+            <br><br>
+
+            <b>Some Usecases of Sidecar container</b><br>
+            1. Logging for main container<br>
+            2. SSL Encryption/Decryption for traffic to main container
+        </dl>
+
+        <h2 id="comp">Main vs Sidecar</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Main container</th>
+                <th>Sidecar</th>
+            </tr>
+            <tr>
+                <td>Role</td>
+                <td>Runs core application</td>
+                <td>Provides support functionality</td>
+            </tr>
+            <tr>
+                <td>Lifetime</td>
+                <td>Ties to main application</td>
+                <td>Ties to main application</td>
+            </tr>
+        </table>
+    </article>
+
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logging</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#how">Logging inside Container</a>
+        <a href="#sol1">Loki + Promtail + Grafana</a>
+        <ul>
+            <li><a href="#deployment1">Deployment on local docker using docker-compose</a></li>
+            <ul>
+                <li><a href="#dc">docker-compose.yml</a></li>
+                <li><a href="#pt">promtail-config.ymll</a></li>
+                <li><a href="#lc">loki-config.yml</a></li>
+                <li><a href="#gds">grafana-datasource.ymll</a></li>
+            </ul>
+            <li><a href="#deployment2">Deployment inside AWS</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="how">Logging inside Container</h2>
+        <dl>
+            <b>Problem?</b> I have a small go application, which dumps logs on console, But when this application runs inside container on AWS,
+            How logs can be seen?<br>
+            <b>Solution?</b> Loki + Promtail + Grafana
+        </dl>
+            
+        <h3 id="sol1">Solution = Loki + Promtail + Grafana</h3>
+        <dl>
+        For small applications, We can deploy this pipeline
+        </dl>
+        <pre><code>
+[Go Application] → (stdout/stderr) → [Docker Logs] → [Promtail] → [Loki] ← [Grafana]
+        </code></pre>
+        <dl>
+            <u>Go Application:</u> writes logs to stdout/stderr as it currently does<br>
+            <u>Docker/Container Runtime:</u> Captures these stdout/stderr streams<br>
+            <u>Promtail:</u><br>
+            &ensp; Runs as a sidecar container or daemonset<br>
+            &ensp; Scrapes the container logs from the Docker log files<br>
+            &ensp; Adds labels to identify the source (container name, pod name, etc.)<br>
+            &ensp; Sends logs to Loki
+            <br>
+            <u>Loki:</u> Receives, stores logs from Promtail. Indexes the logs<br>
+            <u>Grafana:</u> Connects to Loki & gets logs when user want to view the logs. Provides UI for querying and visualizing logs
+        </dl>
+
+        <h4 id="deployment1">Deployment on local docker using docker-compose</h4>
+        <dl id="dc"><b>docker-compose.yml</b></dl>
+        <pre><code class="language-css">
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword # Create user with username(myuser), password(mypassword)
+      POSTGRES_DB: mydb     # Create database named mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql # For auto-creating tables
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+      DB_NAME: mydb
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  loki:
+    image: grafana/loki:3.4.1
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/mnt/config/loki-config.yaml
+    command: -config.file=/mnt/config/loki-config.yaml
+    networks:
+      - app-network
+
+  promtail:
+    image: grafana/promtail:3.4.1
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yaml:/mnt/config/promtail-config.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/mnt/config/promtail-config.yaml
+    depends_on:
+      - loki
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    depends_on:
+      - loki
+    networks:
+      - app-network
+
+volumes:
+  # db_data volume is a named Docker volume used to persist PostgreSQL data outside the container
+  # When you first start the database, this volume is empty. PostgreSQL will initialize it with its data files
+  db_data:
+networks:
+  app-network:
+    driver: bridge
+        </code></pre>
+
+        <dl id="pt"><b>promtail-config.yml</b></dl>
+        <pre><code class="language-css">
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+positions:
+  filename: /tmp/positions.yaml
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: "unix:///var/run/docker.sock"
+        refresh_interval: 15s
+        filters:
+          - name: label
+            values: ["logging=promtail"]
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+    pipeline_stages:
+      - docker: {}
+        </code></pre>
+
+        <dl id="lc"><b>loki-config.yml</b></dl>
+        <pre><code class="language-css">
+auth_enabled: false
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 24h
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/index
+    cache_location: /loki/index_cache
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/chunks
+        </code></pre>
+
+        <dl id="gds">Grafanna will run on localhost:3000<br>
+            <b>grafana-datasource.yml</b>
+        </dl>
+        <pre><code class="language-css">
+apiVersion: 1
+datasources:
+  - name: Loki
+    type: loki
+    url: http://loki:3100
+    isDefault: true
+        </code></pre>
+
+        <h4 id="deployment2">Deployment inside AWS</h4>
+        <h5>ECS Instance 1</h5>
+        <dl>Promtail runs as <a href="../Container/Sidecar_Container.html" target="_blank">sidecar container</a></dl>
+        <pre><code>
+[ECS Cluster]
+├── App Task
+│   ├── Go App Container
+│   └── Promtail Sidecar Container
+└── Database Task (or better yet, AWS RDS)
+    └── PostgreSQL Container (with EFS volume for persistence)
+        </code></pre>
+
+        <h5>ECS Instance-2</h5>
+        <pre><code>
+[ECS Service]
+├── Loki Container (or separate service)
+└── Grafana Container (or separate service)
+        </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+
+</body>
+</html>
