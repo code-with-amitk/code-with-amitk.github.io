@@ -207,6 +207,55 @@ datasources:
     isDefault: true
         </code></pre>
 
+        <dl id="runc"><b>Run Containers</b></dl>
+        <pre><code class="language-css">
+// Start docker desktop (Since docker cli will connect with docker engine)
+
+> docker-compose up -d
+[+] Running 7/7
+ ✔ Network go-server_app-network  Created                                                                          0.1s 
+ ✔ Network go-server_default      Created                                                                          0.1s 
+ ✔ Container go-server-db-1       Started                                                                          3.6s 
+ ✔ Container loki                 Started                                                                          3.6s 
+ ✔ Container grafana              Started                                                                          4.1s 
+ ✔ Container promtail             Started                                                                          3.9s 
+ ✔ Container go-server-app-1      Started                                                                          3.6s
+
+// List all containers
+> docker ps                         
+CONTAINER ID   IMAGE                    COMMAND                  CREATED              STATUS              PORTS         
+           NAMES
+6725da48c337   go-server-app            "./main"                 About a minute ago   Up About a minute   0.0.0.0:8080->8080/tcp   go-server-app-1
+650e2ca190fd   grafana/promtail:3.4.1   "/usr/bin/promtail -…"   About a minute ago   Up About a minute                 
+           promtail
+78c2aaeda9f8   grafana/grafana:latest   "/run.sh"                About a minute ago   Up About a minute   0.0.0.0:3000->3000/tcp   grafana
+48cba656a368   postgres:16              "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp   go-server-db-1
+        
+// Go inside postgres container & list tables
+> docker exec -it 48cba656a368 bash
+root@48cba656a368:/# psql -U myuser mydb
+psql (16.9 (Debian 16.9-1.pgdg120+1))
+Type "help" for help.
+
+mydb=# \dt
+           List of relations
+ Schema |     Name     | Type  | Owner
+--------+--------------+-------+--------
+ public | employee     | table | myuser
+ public | followup     | table | myuser
+ public | leads        | table | myuser
+ public | password     | table | myuser
+ public | requirements | table | myuser
+ public | tenants      | table | myuser
+(6 rows)
+</code></pre>
+
+        <dl><b>Kibana dashboard</b></dl>
+        <pre><code class="language-css">
+http://localhost:3000   [admin/admin]
+
+        </code></pre>
+
         <h4 id="deployment2">Deployment inside AWS</h4>
         <h5>ECS Instance 1</h5>
         <dl>Promtail runs as <a href="../Container/Sidecar_Container.html" target="_blank">sidecar container</a></dl>
