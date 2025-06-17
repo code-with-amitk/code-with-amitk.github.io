@@ -50,8 +50,10 @@ $
 
     <h2 id="createuser">Create user, Login with User</h2>
     <dl>
-      When installing postgres on Windows/Linux, Installation scripts creates a local user=postgres, this user is used to login to postgres DB<br>
-      User postgres is default user (created on system which have access to db)
+      When installing postgres on Windows/Linux, Installation scripts creates a local user=postgres, but inside postgres there is a
+      seperate user called postgres.<br>
+      Purpose of Local postgres user is to login postgres DB, then change the password of DB(internal's postgres user). Since all
+      database operations are carried using DB's internal postgres user.
     </dl>
       <table>
         <tr>
@@ -68,25 +70,26 @@ $ sudo passwd postgres  //Change Unix password of postgres user
 new password:
 Retype new password:
 
-Method-1: Directly login to DB
+
+// Change authentication from peer to md5(to accept password to connect)
+$ sudo vim /etc/postgresql/14/main/pg_hba.conf 
+#local   all             postgres                                peer
+local   all             postgres                                md5
+$ sudo systemctl restart postgresql
+
+// Login to postgres using local postgres user
 $ sudo -u postgres psql
-
-Method-2: Login to user, then to DB
-$ su - postgres         //login to postgres user
-$ psql                  //login to db
-psql (16.6 (Ubuntu 16.6-0ubuntu0.24.04.1))
-Type "help" for help
-
-
-postgres=# \du
-                             List of roles
- Role name |                         Attributes                         
------------+------------------------------------------------------------
- postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS
-
-postgres=# ALTER USER postgres WITH PASSWORD 'new_password';    //Change password
-ALTER ROLE
 postgres=#
+
+// Change password of DB(internal user=postgres)
+postgres=# ALTER USER postgres WITH PASSWORD 'NEW PASSWORD';
+ALTER ROLE
+postgres=# \q
+
+// Check Login to postgres using DB's(Internal postgres user)
+$ psql -U postgres -W
+Password: &lt;NEW PASSWORD>
+
           </code></pre></td>
           <td>
             <pre><code class="language-css">
