@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CUDA</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is CUDA?</a>
+        <a href="#programming">CUDA Programming Model</a>
+        <ul>
+            <li><a href="#kernels">Kernels</a></li>
+            <li><a href="#memory">Memory Management</a></li>
+            <li><a href="#synchronization">Synchronization</a></li>
+            <li><a href="#error_handling">Error Handling</a></li>
+        </ul>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2 id="what">CUDA(Compute Unified Device Architecture)</h2>
+            <dl>
+                This is parallel computing platform and programming model created by NVIDIA.<br>
+                It leverages the parallel compute engine in NVIDIA GPUs to solve many complex computational problems<br>
+                CUDA comes with a software environment that allows developers to use C++ as a high-level programming language.
+            </dl>
+
+            <h2 id="programming"><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank">CUDA Programming Model</a></h2>
+            <h3 id="kernels">Kernels</h3>
+            <dl>
+                Kernels are the functions that run on the GPU. They are executed in parallel by multiple threads.<br>
+                A kernel is defined using the __global__ declaration specifier<br>
+                Number of CUDA threads that execute that kernel is given using &lt;&lt;&lt;blocks, threads&gt;&gt;&gt; syntax.<br>
+Each thread that executes the kernel is given a unique thread ID that is accessible within the kernel through built-in variables.
+            </dl>
+            <pre><code class="language-css">
+// Kernel definition
+__global__ void VecAdd(float* A, float* B, float* C)
+{
+    int i = threadIdx.x;
+    C[i] = A[i] + B[i];
+}
+
+int main()
+{
+    ...
+    // Kernel invocation with N threads
+    VecAdd<<<1, N>>>(A, B, C);
+    ...
+}
+            </code></pre>
+        </article>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>
