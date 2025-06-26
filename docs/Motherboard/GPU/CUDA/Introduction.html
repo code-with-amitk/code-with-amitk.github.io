@@ -27,10 +27,7 @@
         <a href="#what">What is CUDA?</a>
         <a href="#programming">CUDA Programming Model</a>
         <ul>
-            <li><a href="#kernels">Kernels</a></li>
-            <li><a href="#memory">Memory Management</a></li>
-            <li><a href="#synchronization">Synchronization</a></li>
-            <li><a href="#error_handling">Error Handling</a></li>
+            <li><a href="#gbk">Grid, Blocks, Kernel</a></li>
         </ul>
     </aside>
 
@@ -44,25 +41,96 @@
             </dl>
 
             <h2 id="programming"><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank">CUDA Programming Model</a></h2>
-            <h3 id="kernels">Kernels</h3>
+
+            <h3 id="gbk">Grid, Block, Threads</h3>
+            <table>
+                <tr>
+                    <th>Term</th>
+                    <th>Meaning</th>
+                </tr>
+                <tr>
+                    <td>Thread</td>
+                    <td>
+                        Smallest unit of execution in CUDA<br>
+                        Thread within same Block runs same code but with different data (data parallelism)<br>
+                        Each thread is identified using thread index (threadIdx.x, threadIdx.y, threadIdx.z).
+                    </td>
+                </tr>
+                <tr>
+                    <td>Block</td>
+                    <td>
+                        1 block can have 1024 threads at most<br>
+                        Threads in a block can communicate with each other through shared memory<br>
+                        A group of threads that execute on the same Streaming Multiprocessor (SM) on the GPU are on same block
+                    </td>
+                </tr>
+                <tr>
+                    <td>Grid</td>
+                    <td>
+                        Collection of blocks that execute a kernel
+                    </td>
+                    <table>
+                        <tr>
+                            <td><pre><code>
+Grid (3D: gridDim.x, gridDim.y, gridDim.z)
+├── Block (0,0,0) (3D: blockDim.x, blockDim.y, blockDim.z)
+│   ├── Thread (0,0,0)
+│   ├── Thread (1,0,0)
+│   ├── Thread (2,0,0)
+│   ├── ...
+│   ├── Thread (blockDim.x-1, blockDim.y-1, blockDim.z-1)
+├── Block (1,0,0)
+│   ├── Thread (0,0,0)
+│   ├── ...
+├── Block (0,1,0)
+├── ...
+└── Block (gridDim.x-1, gridDim.y-1, gridDim.z-1)
+                            </code></pre></td>
+                            <td>
+                                <img src="/images/Motherboard/GPU_grid_block_threads.jpg" alt="CUDA View of GPU" 
+                                class="zoomable-image" id="zoomableImage2" style="width:400px;height:300px;">
+                            </td>
+                        </tr>
+                    </table>
+
+                </tr>
+            </table>
+
+            <h3>Kernel</h3>
             <dl>
                 Kernels are the functions that run on the GPU. They are executed in parallel by multiple threads.<br>
+                These functions are called from the host (CPU) and executed in parallel on GPUs<br>
                 A kernel is defined using the __global__ declaration specifier<br>
                 Number of CUDA threads that execute that kernel is given using &lt;&lt;&lt;blocks, threads&gt;&gt;&gt; syntax.<br>
 Each thread that executes the kernel is given a unique thread ID that is accessible within the kernel through built-in variables.
             </dl>
             <pre><code class="language-css">
-// Kernel definition
+/* 
+__global__ : This is kernel function
+Parameters:
+    A,B,C: Pointers to floating point arrays stored on GPU global memory.
+           A,B: input arrays. C: OUtput array where sum of A & B is stored.
+*/
 __global__ void VecAdd(float* A, float* B, float* C)
 {
+    /*
+    threadIdx {x,y,z} This is a built-in CUDA variable that gives the unique ID of the thread within the block.
+    threadIdx.x: x position of the thread in the block.
+        Thread0, x=0. C[0] = A[0] + B[0]
+        Thread1, x=1. C[1] = A[1] + B[1]
+    */
     int i = threadIdx.x;
     C[i] = A[i] + B[i];
 }
 
 int main()
 {
-    ...
-    // Kernel invocation with N threads
+    /*
+        <<<number_of_blocks, threads_per_block>>>
+        <<<1, N>>> means there will be 1 block with N threads.
+        N: Set somewhere before in code
+           if the arrays have 1024 elements, we can set N = 1024 so that each thread processes one element of the arrays.
+    */
     VecAdd<<<1, N>>>(A, B, C);
     ...
 }
