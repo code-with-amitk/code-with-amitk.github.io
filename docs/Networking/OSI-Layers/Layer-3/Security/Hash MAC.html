@@ -28,8 +28,12 @@
     <a href="#hash">Hash_MessageDigest</a>
     <a href="#algos">Hashing Algorithms</a>
     <ul>
-      <li><a href="#md5">MD5</a></li>
-      <li><a href="#argon2">Argon2</a></li>
+      <li>MD4, MD5</li><br>
+      <li>SHA1=128</li><br>
+      <li>SHA2=256</li><br>
+      <li>SHA3=512(Keccak)</li><br>
+      <li>Argon2,Argon2i,Argon2id</li><br>
+      <li>bcrypt</li>
     </ul>
     <a href="#mac">MAC</a>
     <a href="#hmac">HMAC</a>
@@ -68,102 +72,177 @@
     <h3 id="algos">Hashing Algorithms</h3>
     <table>
       <tr>
-        <th>Algo</th>
-        <th>SHA1<br>SHA0(broken)</th>
-        <th>SHA256<br>(not broken)</th>
-        <th>SHA3_512<br>Keccak</th>
-        <th>MD4,MD5(broken)</th>
+        <th>Hash Algorithm</th>
+        <th>Detials</th>
       </tr>
       <tr>
-        <td>Published</td>
-        <td>1995</td>
-        <td>2012</td>
-        <td>2015</td>
-        <td>2015</td>
+        <td>SHA1, SHA0(broken)</td>
+        <td>Published: 1995. Input: 2128 bit. Output Hash(bits): 160</td>
       </tr>
       <tr>
-        <td>Input</td>
-        <td>2128 bit</td>
-        <td>2128 bit</td>
-        <td>264 bit</td>
-        <td>infinite</td>
+        <td>SHA256(not broken)</td>
+        <td>Published: 2012. Input: 2128 bit. Output Hash(bits): 256</td>
       </tr>
       <tr>
-        <td>Output Hash(bits)</td>
-        <td>160</td>
-        <td>256</td>
-        <td>512</td>
-        <td>128</td>
+        <td>SHA3_512(Keccak)</td>
+        <td>Published: 2015. Input: 264 bit. Output Hash(bits): 512</td>
       </tr>
-    </table>
+      <tr>
+        <td>MD4,MD5(broken)</td>
+        <td>Published: 2015. Input: Infinite. Output Hash(bits): 128
+            <br>
+            <b>MD4 Implementation</b><br>
+            <pre><code class="language-css">
+1. Take four 32-bit words, initialized to fixed constants.
+C1(01 23 45 67), C2:(89 ab cd ef), C3(fe dc ba 98), C4(76 54 32 10)
 
-    <h4 id="md5">MD5</h4>
-    <pre><code>
-      1. Take four 32-bit words, initialized to fixed constants.
+2. Take 4 Functions
+    f(x,y,z) = (x & y) | ((~x) & z)
+    g(x,y,z) = (x & z)| (y & (~z))
+    h(x,y,z) = x ^ y ^ z
+    i(x,y,z) = y ^ (x | (~z))
 
-      C1(01 23 45 67), C2:(89 ab cd ef), C3(fe dc ba 98), C4(76 54 32 10)
+3. Break input into 32-bit words
+                Input(512 bits)  ->  |Break into 16 pieces| ->     m1 .. m16
+if input is not 512 bit pad it
 
-      2. Take 4 Functions
-      
-          f(x,y,z) = (x & y) | ((~x) & z)
-          g(x,y,z) = (x & z)| (y & (~z))
-          h(x,y,z) = x ^ y ^ z
-          i(x,y,z) = y ^ (x | (~z))
-
-      3. Break input into 32-bit words
-      
-                      Input(512 bits)  ->  |Break into 16 pieces| ->     m1 .. m16
-      if input is not 512 bit pad it
-
-      4. Perform 4 or 16 round Operations.
-      
-      //AM: Addition Modulo
-        Round-1:    F(K2,K3,K4) ->  AM ->  AM -> |Rotate left bit by s places| ->  AM -> K2
-                                    /\     /\                                      /\
-                                    C1     m1                                      C2
-        Round-2: For m2 and so on..
-    </code></pre>
-
-    <h4 id="argon2">Argon2</h4>
-    <dl id="argon"><strong>How Argon2 is GPU resistant?</strong></dl>
+4. Perform 4 or 16 round Operations.
+//AM: Addition Modulo
+  Round-1:    F(K2,K3,K4) ->  AM ->  AM -> |Rotate left bit by s places| ->  AM -> K2
+                              /\     /\                                      /\
+                              C1     m1                                      C2
+  Round-2: For m2 and so on..
+            </code></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Argon2</td>
+        <td>
+  <b>How Argon2 is GPU resistant?</b><br>
     <dd>
-      <u>1. Memory Hardness:</u><br>
-      Argon2 is a memory-hard hashing algorithm, meaning that it requires a lot of memory to be computed.<br>
-      Since GPU typically have less memory available compared to CPUs. As a result, even though GPUs can perform computations quickly, 
-      they may struggle with the memory requirements of Argon2.
+    <u>1. Memory Hardness:</u><br>
+    Argon2 is a memory-hard hashing algorithm, meaning that it requires a lot of memory to be computed.<br>
+    Since GPU typically have less memory available compared to CPUs. As a result, even though GPUs can perform computations quickly, 
+    they may struggle with the memory requirements of Argon2.
     </dd>
     <dd>
-      <u>2. Parallelism resistance:</u><br>
-      While GPUs excel at parallel computations, Argon2 is designed to require significant serial computation as well. <br>
-      This means that even though GPUs can try many password guesses in parallel, they may still be limited by the sequential nature of certain parts of the Argon2 algorithm.
+    <u>2. Parallelism resistance:</u><br>
+    While GPUs excel at parallel computations, Argon2 is designed to require significant serial computation as well. <br>
+    This means that even though GPUs can try many password guesses in parallel, they may still be limited by the sequential nature of certain parts of the Argon2 algorithm.
     </dd>
     <dd>
-      <u>3. Configuration parameters</u><br>
-      Argon2 allows for the adjustment of parameters(such as the memory cost, time cost, and parallelism degree)<br>
-      By appropriately configuring these parameters, it's possible to tune Argon2 to be less susceptible to GPU-based attacks
+    <u>3. Configuration parameters</u><br>
+    Argon2 allows for the adjustment of parameters(such as the memory cost, time cost, and parallelism degree)<br>
+    By appropriately configuring these parameters, it's possible to tune Argon2 to be less susceptible to GPU-based attacks
     </dd>
 
-    <h4>Argon2, Argon2i, Argon2id</h4>
-    <table>
-      <tr>
-        <th></th>
-        <th>Usage/Feature</th>
-        <th>Resistant to</th>
+        <b>Argon2, Argon2i, Argon2id</b><br>
+          <table>
+            <tr>
+              <th></th>
+              <th>Usage/Feature</th>
+              <th>Resistant to</th>
+            </tr>
+            <tr>
+              <td>argon2</td>
+              <td>preferred for password hashing and key derivation</td>
+              <td>because it's resistant to side-channel attacks</td>
+            </tr>
+            <tr>
+              <td>argon2d</td>
+              <td></td>
+              <td>more resistant to GPU attacks</td>
+            </tr>
+            <tr>
+              <td>argon2id</td>
+              <td>hybrid of Argon2i and Argon2d</td>
+              <td></td>
+            </tr>
+          </table>
+        </td>
       </tr>
-      <tr>
-        <td>argon2</td>
-        <td>preferred for password hashing and key derivation</td>
-        <td>because it's resistant to side-channel attacks</td>
-      </tr>
-      <tr>
-        <td>argon2d</td>
-        <td></td>
-        <td>more resistant to GPU attacks</td>
-      </tr>
-      <tr>
-        <td>argon2id</td>
-        <td>hybrid of Argon2i and Argon2d</td>
-        <td></td>
+      <tr>  <!--bcrypt-->
+        <td>
+          bcrypt(based on Blowfish cipher)<br>
+          Output: Fixed 60 characters
+        </td>
+        <td>
+          <b>Go Code to produce bcrypt hash</b><br><br>
+          <i>See everytime different hash is produced even for same password</i><br>
+          <table>
+            <tr>
+              <td><pre><code class="language-css">
+package main
+import (
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
+)
+func main() {
+	password := []byte("password")
+	hashedPassword, err := bcrypt.GenerateFromPassword(password, 10)
+	if err == nil {
+		fmt.Println(string(hashedPassword))
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		fmt.Println("Password mismatch", err)
+	} else {
+		fmt.Println("Password mismatched successfully")
+	}
+}
+> go run main.go
+$2a$10$CaqDrA3GmB9LkbBuUxuohO1YekAW1h4HeWqhSOY0lYav3OZAragFC
+Password mismatched successfully
+> go run main.go
+$2a$10$Hy1V1itBzEe7c7eINFKADenbFWapCX8DKp6fgMlL9XbdL9Ky2vMx6
+Password mismatched successfully
+> go run main.go
+$2a$10$a89EOl.nq53g2AGA5kBAgertEqSyVZyrcocC..wMTNJnHcYYmjsN.
+Password mismatched successfully
+              </code></pre></td>
+              <td>
+                <b>Different parts of the hash:</b><br>
+                  $2a$10$CaqDrA3GmB9LkbBuUxuohO1YekAW1h4HeWqhSOY0lYav3OZAragFC<br>
+
+                  <pre><code class="language-css">
+$2a       $10   $Hy1V1itBzEe7c7eINFKADe  nbFWapCX8DKp6fgMlL9XbdL9Ky2vMx6
+│         │     │                        │
+Algorithm Cost  Salt (22 chars)          Hash (31 chars)
+                  </code></pre>
+                  <table>
+                    <tr>
+                      <td>2a</td>
+                      <td>Version of bcrypt</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>Cost factor. This means 2^10 = 1024 iterations. How computationally expensive the hash is</td>
+                    </tr>
+                    <tr>
+                      <td>Hy1V1itBzEe7c7eINFKADe<br>(22 Characters)</td>
+                      <td>Salt. Randomly generated for each hash</td>
+                    </tr>
+                    <tr>
+                      <td>nbFWapCX8DKp6fgMlL9XbdL9Ky2vMx6<br>(31 characters)</td>
+                      <td>Hash. The actual hash of the password</td>
+                    </tr>
+                  </table>
+                  <br><br>
+                <b>Why different hash is produced every time?</b><br>
+                &ensp; bcrypt automatically generates a new random salt each time you hash a password.<br>
+                &ensp; The salt is stored as part of the hash (the first 22 characters after the version/cost info)
+                <br><br>
+
+                <b>How Verification Works?</b><br>
+                &ensp; extracts the version,cost,salt from the stored hash<br>
+                &ensp; Hashes the input password using: same version,cost,salt<br>
+                &ensp; Compares the newly generated hash with the stored hash
+              </td>
+            </tr>
+          </table>
+
+          
+        </td>
       </tr>
     </table>
 
@@ -171,13 +250,13 @@
     <dd>
       Examples: CMAC, SHA1-HMAC, MD5-HMAC, UMAC
     </dd>
-    <pre><code>
+    <pre><code class="language-css">
     (Message + Pvt Key) > |Hash function| > MAC
     </code></pre>
 
     <h3 id="hmac">HMAC(Hashed MAC)</h3>
     <dd>More complex way of calculating MAC</dd>
-    <pre><code>
+    <pre><code class="language-css">
       secret Key ->(XOR) <- Inner Pad     Secret Key-> (XOR) <- Outer Pad
                     \/                                 \/
                     M1                                 M2
