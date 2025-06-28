@@ -28,6 +28,12 @@
         <a href="#programming">CUDA Programming Model</a>
         <ul>
             <li><a href="#gbk">Grid, Blocks, Kernel</a></li>
+            <li><a href="#communication">Inter Thread Communication</a></li>
+            <li><a href="numberofthreads">How many threads GPU can have?</a></li>
+        </ul>
+        <a href="#ex">Example</a>
+        <ul>   <!--This is a sub-menu-->
+            <li><a href="#vecadd">Vector Addition on GPU</a></li>
         </ul>
     </aside>
 
@@ -68,7 +74,7 @@
                     <td>Grid</td>
                     <td>
                         Collection of blocks that execute a kernel
-                    </td>
+                        <br>
                     <table>
                         <tr>
                             <td><pre><code>
@@ -92,6 +98,7 @@ Grid (3D: gridDim.x, gridDim.y, gridDim.z)
                             </td>
                         </tr>
                     </table>
+                    </td>
 
                 </tr>
             </table>
@@ -135,6 +142,122 @@ int main()
     ...
 }
             </code></pre>
+
+            <h3 id="communication">Inter Thread Communication</h3>
+            <h4>1. Threads within the Same Block</h4>
+            <dl>
+                Threads in the same block can communicate using shared memory<br>
+                Synchronization within a block is achieved using <b>__syncthreads()</b>
+            </dl>
+            <h4>2. Threads in Different Blocks</h4>
+            <dl>
+                There is no built-in synchronization mechanism across blocks within a kernel (like __syncthreads())<br>
+                <b>Workarounds for Inter-Block Communication:</b><br>
+                &ensp; Global Memory: Threads in different blocks can write to and read from global memory (e.g., the arrays A, B, C in the code).<br>
+                &ensp; Atomic Operations: Use atomic functions to ensure that updates to global memory are done safely.<br>
+                &ensp; Multiple Kernel Launches: If inter-block communication is needed, you can 
+                launch multiple kernels sequentially, where the output of one kernel serves as the input to the next
+            </dl>
+
+            <h3 id="numberofthreads">How many threads GPU can have?</h3>
+            <dl>
+                Maximum grid dimensions (2³¹ - 1 for x, 65,535 for y and z) <br>
+                Maximum threads per block (1024)<br>
+                65535 x 1024 = 67 Million threads per grid.<br>
+                Theoretically billions of threads per kernel launch
+            </dl>
+
+            <h2 id="ex">Example</h2>
+            <h3 id="vecadd">Vector Addition on GPU</h3>
+            <table>
+                <tr>
+                    <td>
+                        <dl>
+                        <b>Below is simple code for teaching example to demonstrate CUDA’s basic concepts:</b> <br>
+                        &ensp; Launching a kernel<br>
+                        &ensp; Managing GPU memory<br>
+                        &ensp; Parallelizing a simple computation
+                        <br><br>
+                        </dl>
+
+                        <pre><code class="language-css">
+#include &lt;cuda_runtime.h>
+#include &lt;stdio.h>
+#define N 512
+
+__global__ void VecAdd(float* A, float* B, float* C) {
+    int i = threadIdx.x;
+    C[i] = A[i] + B[i];
+}
+
+int main() {
+    // 1. Allocate memory on the host
+    float *h_A = (float*)malloc(N * sizeof(float));
+    float *h_B = (float*)malloc(N * sizeof(float));
+    float *h_C = (float*)malloc(N * sizeof(float));
+
+    // 2. Initialize host arrays
+    for (int i = 0; i < N; i++) {
+        h_A[i] = (float)i;
+        h_B[i] = (float)i * 2;
+    }
+
+    // 3. Allocate memory on the GPU device
+    float *d_A, *d_B, *d_C;
+    cudaMalloc(&d_A, N * sizeof(float));
+    cudaMalloc(&d_B, N * sizeof(float));
+    cudaMalloc(&d_C, N * sizeof(float));
+
+    // 4. Copy data from host to device
+    cudaMemcpy(d_A, h_A, N * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, N * sizeof(float), cudaMemcpyHostToDevice);
+
+    // 5. Launch kernel code. 
+    // <<1,N=512>> means this function would be executed on 1 block with 512 threads.
+    VecAdd<<<1, N>>>(d_A, d_B, d_C);
+
+    // 6. Once results are calculated copy result back
+    cudaMemcpy(h_C, d_C, N * sizeof(float), cudaMemcpyDeviceToHost);
+
+    // 7. Verify (optional)
+    for (int i = 0; i < N; i++) {
+        if (h_C[i] != h_A[i] + h_B[i]) {
+            printf("Error at index %d\n", i);
+            break;
+        }
+    }
+
+    // 8. Clean up GPU and host memory
+    cudaFree(d_A); cudaFree(d_B); cudaFree(d_C);
+    free(h_A); free(h_B); free(h_C);
+
+    return 0;
+}
+                    </code></pre></td>
+                    <td>
+                        <dl>
+                        <b>Real-World Scenarios for GPU Usage:</b><br>
+                        &ensp; Huge matrix operations for tranining neural networks<br>
+                        &ensp; Image processing<br>
+                        &ensp; Cryptography<br>
+                        &ensp; Bug data processing
+                        <br><br>
+
+                        <b>How to decide on Number of threads to use?</b><br>
+                        &ensp; In problem on left side, we used 512 threads.<br>
+                        &ensp; Common choices are 256, 512, or 1024 threads per block, 
+                        as they are multiples of the warp size (32 threads), which is the unit of execution on NVIDIA GPUs.<br>
+                        &ensp; Threads/block depends on problem size and the GPU architecture.
+                        <br><br>
+
+                        <b>How to decide on Number of blocks to use?</b><br>
+                        &ensp; Based on number of threads needed<br>
+                        &ensp; blocks = ceil(total_elements(=512 in problem on left) / threads_per_block)
+                        </dl>
+                    </td>
+                </tr>
+            </table>
+            
         </article>
     </main>
 
