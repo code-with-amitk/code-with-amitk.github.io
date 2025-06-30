@@ -2,51 +2,61 @@
 <html>
   <head>
     <title>System Design</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
+          </form>
         </li>
-    </ul>
-  </nav>
-  <aside class="sidebar">
+      </ul>
+    </nav>
+    <aside class="sidebar"></aside>
 
-  </aside>
+    <main style="margin-left: 200px">
+      <dl>
+        <a href="Cache/">Cache</a><br />
+        <a href="CDN">CDN</a><br />
+      </dl>
+      <dl><a href="./Containers/">Containers</a></dl>
+      <dd>&ensp; <a href="Containers/Kubernets">Kubernets</a></dd>
 
-  <main style="margin-left:200px;">
-    <dl>
-    <a href="Cache/">Cache</a><br>
-    <a href="CDN">CDN</a><br>
-    <a href="./Containers/">Containers</a><br>
-    &ensp; <a href="Containers/Kubernets">Kubernets</a><br>
-    <a href="./Databases/">Databases</a><br>
-    &ensp; SQL Commands<br>
-    &ensp; Columnar DB<br>
-    &ensp; <a href="Databases/DB_Scaling/">DB Scaling</a><br>
-    &ensp;&ensp; 1. Replication<br>
-    &ensp;&ensp; 2. Federation<br>
-    &ensp;&ensp; 3. Sharding<br>
-    &ensp; Graph DB<br>
-    &ensp; <a href="Databases/Indexing">DB Indexing</a><br>
-    &ensp; SQL vs NoSQL<br>
-    &ensp; SQL Database Issues<br>
-    <a href="./Microservices/">MicroServices</a><br>
-    &ensp; Microservices & Monolith<br>
-    <a href="./Terms/">Terms</a><br>
-    <a href="Load Balancer/">Load Balancer</a>
-    </dl>
-  </main>
-</body>
+      <dl>
+        <a href="./Databases/">Databases</a>
+      </dl>
+      <dd>
+        &ensp; SQL Commands<br />
+        &ensp; Columnar DB<br />
+        &ensp; <a href="Databases/DB_Scaling/">DB Scaling</a><br />
+        &ensp;&ensp; 1. Replication<br />
+        &ensp;&ensp; 2. Federation<br />
+        &ensp;&ensp; 3. Sharding<br />
+        &ensp; Graph DB<br />
+        &ensp; <a href="Databases/Indexing">DB Indexing</a><br />
+        &ensp; SQL vs NoSQL<br />
+        &ensp; SQL Database Issues<br />
+      </dd>
+      <dl>
+        <a href="./Microservices/">MicroServices</a><br />
+        <a href="./Terms/">Terms</a><br />
+        <a href="Load Balancer/">Load Balancer</a>
+      </dl>
+    </main>
+  </body>
 </html>

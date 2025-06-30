@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Kubernets Objects</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#objects">Kubernets Objects?</a>
+      <a href="#objects">Kubernets Objects Types</a>
+      <ul>
+        <li><a href="#clusterrole">ClusterRole</a></li>
+        <li><a href="#configmap">ConfigMap</a></li>
+        <li><a href="#deployment">Deployment</a></li>
+        <li><a href="#job">Job</a></li>
+        <li><a href="#rbac">RBAC</a></li>
+        <li><a href="#sa">ServiceAccount</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#secrets">Secrets</a></li>
+        <li><a href="#pod">POD</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="#objects">Kubernets Resources,Objects</h2>
+      <dl>
+        <b>Kubernets Resource = C++ Class Resource</b> is a blueprint for
+        creating objects.<br /><br />
+
+        <b>kubernets Object = C++ Object</b> is Instance created from
+        resource(using yaml,json file), having behaviour, state, metadata, and
+        configuration.
+      </dl>
+
+      <h2>Types of k8 Resources/Objects</h2>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td id="clusterrole">1. ClusterRole</td>
+          <td>
+            Defines set of permissions or access control rules for resources
+            across an entire Kubernetes cluster. it applies to all namespaces in
+            the cluster.
+            <pre><code class="language-css">
+$ test.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:                       //Metadata of clusterRole
+    name: my-cluster-role
+    annotations:                  //Annotations: any number of key-value pairs, and can be used to provide additional context
+    my-annotation: "example"
+    namespace:     "test"
+rules:
+- apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+              </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="configmap">2. ConfigMap. kind: configmap</td>
+          <td>
+            Object storing configuration of POD. Unlike most Kubernetes
+            objects(Eg: Deployment that have a spec), a ConfigMap has data and
+            binaryData fields. Both the data field and the binaryData are
+            optional
+            <pre><code class="language-css">
+//Creating a configmap
+# cat templates/configmap-tams.yaml
+apiVersion: v1
+king: ConfigMap
+metadata:           //Metadata store additional data about the ConfigMap and is typically defined as a key-value pair
+    name: tams-config
+    labels:
+    app: {{ .Values.image.app }}    //Pick from values.yaml
+data:
+    jams_config.yaml: |-
+    servicename: tamsc
+    kafka:
+        brokers: {{ .Values.kafka.brokers }}    //Pick from values.yaml
+        topics:
+        {{- toYaml .Values.kafka.topics | nindent 10 }}
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="deployment">3. Deployment</td>
+          <td>
+            "Deployment" object defines how an application should be deployed
+            and managed in a cluster.<br />
+            It defines declarative configuration for running a containerized
+            application and declares desired number of replicas of the
+            application is always running.
+            <pre><code class="language-css">
+$ cat templates/Deployment.yaml
+apiVersion: apps/v1       #(Required) Which version of the Kubernetes API you're using to create this object
+kind: Deployment          #(Required) What kind of object you want to create
+metadata:                 #(Required) Data that helps uniquely identify the object
+    name: {{ .Values.image.app }}   //Taken from values.yaml
+spec:                     #(Required) What state you desire for the object
+    replicas: {{ .Values.replicaCount }}
+    volumes:                //specifies the storage volumes that should be available to containers within the deployment
+    - name: tams-cfg-vol
+        configMap:
+        name: tamc-config
+    - name: tams-srx-cfg-vol
+
+$ kubectl apply -f test.yaml
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="job">4. Job</td>
+          <td>
+            This object runs a specific task to completion. will create 1 or
+            more pods and execute continously until job completes.
+            <pre><code class="language-css">
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: pi                #Name of Job
+spec:
+    template:
+    spec:
+        serviceAccountName: "Test"    // Name of ServiceAccount that should be used by the pod that is created to run the Job
+        containers:                   //Container configuration for job
+        - name: pi                    // Container name to be created by this Job
+        image: perl:5.34.0
+        env:                        //environment variables to set for the container.
+            - name: DATABASE_HOST     //this env variable is set using a SecretKeyRef
+            valueFrom:
+                secretKeyRef:
+                name: {{ .Release.Name }}-test-db
+                key: host
+        restartPolicy: Never
+    backoffLimit: 4
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="rbac">5. RBAC (Role-based Access Control)</td>
+          <td>
+            refers to the authorization mechanism that allows one Kubernetes
+            service or workload to access another service or resource within a
+            cluster based on predefined roles and permissions(eg: configmaps,
+            secrets etc). The RBAC API declares 4 kinds of Kubernetes object
+
+            <table>
+              <tr>
+                <td>a. Role & RoleBindings</td>
+                <td>
+                  Defines who (subjects) can perform actions/verbs(create, get,
+                  update etc) on which resources(eg: pods, deployments,
+                  services). Roles specify the permissions, and RoleBindings
+                  associate these roles with service accounts, users, or groups
+                  <pre><code class="language-css">
+apiVersion: rbac.authorization.k8s.io/v1    //API version of RBAC being defined
+kind: Role
+rules:
+    - apiGroups:                //Rule1: Grant Permission to create Tokenreviews is granted in group(authentication.k8s.io)
+        - authentication.k8s.io
+    verbs:
+        - create
+    resources:
+        - tokenreviews
+
+    - apiGroups:                //Rule2: Grant Permission to get jobs in group(batch)
+        - batch
+    verbs:
+        - get
+    resources:
+        - jobs
+
+    - apiGroups: ["coordination.k8s.io"]    //Rule3: Grant Permission to perform actions in group(coordination.k8s.io)
+    resources: ["leases"]
+    verbs: ["get", "watch", "list", "delete", "update", "create", "patch"]
+                        </code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td>b. RoleBinding</td>
+                <td>
+                  Grants the permissions defined in a role to Subjects. Subjects
+                  can be user or set of users. Example: user:jane can read pods
+                  in default namespace
+                  <pre><code class="language-css">
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+    name: read-pods
+    namespace: default
+subjects:
+- kind: User
+    name: jane            #can read pods in default namespace
+    apiGroup: rbac.authorization.k8s.io
+roleRef:                                  # "roleRef" specifies the binding to a Role / ClusterRole
+    kind: Role                              # this must be Role or ClusterRole
+    name: pod-reader                        # You need to already have a Role named "pod-reader" in that namespace.
+    apiGroup: rbac.authorization.k8s.io
+                        </code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td>c. CapabilityMapping</td>
+                <td>
+                  1. Give capabilities to a process running within linux
+                  container, Eg(process to modify n/w config, mouting file
+                  system, accessing h/w devices etc)<br />
+                  2. TAMS capability mapping When mapping-a is enabled, service
+                  can call method1,2. When mapping-b is enabled, service can
+                  call method3,4.
+                </td>
+              </tr>
+            </table>
+          </td>
+          <tr>
+            <td id="sa">6. ServiceAccount</td>
+            <td>This object allows pod to authenticate and access other parts of cluster using RBAC.</td>
+          </tr>
+          <tr>
+            <td>7. Services</td>
+            <td>This object allows pod to authenticate and access other parts of cluster using RBAC.<br>
+                In Kubernetes, Service(or microservice) is logical set of Pods. Service
+                exposes REST endpoints(eg: POST) & other services interact by calling
+                these endpoints.
+            </td>
+          </tr>
+          <tr>
+            <td id="secrets">7. Secrets</td>
+            <td>
+                Kubernets on AWS, Secrets is used to store sensitive information(Eg:
+                passwords, API keys, and other credentials), that should not be exposed
+                in plaintext within Kubernetes manifests or configuration files.<br>
+                In Kubernetes, Service(or microservice) is logical set of Pods. Service
+                exposes REST endpoints(eg: POST) & other services interact by calling
+                these endpoints.<br>
+                Why secrets object? Secrets can be created independently of the Pods
+                that use them, now there is no risk of the Secret data being exposed
+                during the creating, viewing, and editing Pods
+                <pre><code class="language-css">
+// This yaml file stores sensitive data(eg: passwords or API keys), in an encrypted format within a Kubernetes cluster
+
+kind: Secret
+metaData:
+    name: {{ $name }}           //will be replaced with a specific name at deployment time
+    annotations:                    //Annotations that indicate these secret should be created before the installation of helm chart, and deleted after chart is uninstalled.
+        "helm.sh/hook": pre-install
+        "helm.sh/hook-weight": "-2"
+        "helm.sh/hook-delete-policy": before-hook-creation
+type: opaque                    //type of secret. Opaque means the data stored in the secret is an arbitrary byte array and the Secret does not have a predefined structure.
+data:                           //key-value pairs of sensitive data that will be stored within the secret.
+    host: {{ .Values.test.host | b464enc }}       //key=host, value=take from values.yaml and encoded in base64 format using the b64enc function
+
+    {{ - $previous := {lookup = "v1" "Secret" .Release.Namespace $name }}   //key=password
+    {{ - if .Values.identityDB.password }}
+    password: {{ .Values.identityDB.password | b64enc }}           //if values is in values.yaml file store after encoding in base64 format using the b64enc function
+{{ - end - }}
+                </code></pre>
+            </td>
+          </tr>
+        </tr>
+        <tr>
+            <td id="pod">9. POD</td>
+            <td>A basic unit of deployment in Kubernetes that runs one or more containers.</td>
+        </tr>
+      </table>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

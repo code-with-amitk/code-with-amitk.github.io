@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Kubernets</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">Kubernets?</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h3 id="#what">Kubernets(Container Orchestrator)</h3>
+      <dl>
+        <dt>Orhestration?</dt>
+        <dd>
+          Managing the lifecycles of containers. These are GUI/tools to automate
+          following tasks: Deployment, Scaling up/down, Movement of containers
+          from one host to another, Load balancing, Health monitoring.
+        </dd>
+        <dd>
+          Examples of Container Orhestrators: Kubernets, Docker swarm, Nomad
+          Kubernets Cluster has different microservices inside it.
+        </dd>
+      </dl>
+      <code>
+        <pre>
+            <--------------------k8s cluster----------------------------------->
+                |----control-plane,master-------|   |---------Worker node-----|
+                | micro_service1                |   |micro_service2           |
+                |               micro_service4  |   |       micro_servicen    |
+                |-------------------------------|   |-------------------------|
+        </pre>
+      </code>
+    </main>
+  </body>
+</html>
