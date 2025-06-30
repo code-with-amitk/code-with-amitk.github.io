@@ -25,9 +25,10 @@
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#what">What is CUDA?</a>
-        <a href="#programming">CUDA Programming Model</a>
+        <a href="#concepts">Concepts</a>
         <ul>
-            <li><a href="#gbk">Grid, Blocks, Kernel</a></li>
+            <li><a href="#gbt">Grid, Blocks, Threads, Thread Block Cluster</a></li>
+            <li><a href="#kernel">Kernel</a></li>
             <li><a href="#communication">Inter Thread Communication</a></li>
             <li><a href="numberofthreads">How many threads GPU can have?</a></li>
         </ul>
@@ -35,6 +36,8 @@
         <ul>   <!--This is a sub-menu-->
             <li><a href="#vecadd">Vector Addition on GPU</a></li>
         </ul>
+        <a href="#sm">Streaming Multiprocessor</a>
+        <a href="#gpc">Graphics Processing Clusters (GPCs)</a>
     </aside>
 
     <main>  <!--Here is our page's main content-->
@@ -46,9 +49,10 @@
                 CUDA comes with a software environment that allows developers to use C++ as a high-level programming language.
             </dl>
 
-            <h2 id="programming"><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank">CUDA Programming Model</a></h2>
+            <h3 id="programming"><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank">CUDA Programming Model</a></h3>
 
-            <h3 id="gbk">Grid, Block, Threads</h3>
+            <h2 id="concepts">Concepts</h2>
+            <h3 id="gbt">Grid, Block, Threads</h3>
             <table>
                 <tr>
                     <th>Term</th>
@@ -67,7 +71,8 @@
                     <td>
                         1 block can have 1024 threads at most<br>
                         Threads in a block can communicate with each other through shared memory<br>
-                        A group of threads that execute on the same Streaming Multiprocessor (SM) on the GPU are on same block
+                        A group of threads that execute on the same <a href="#sm" target="_blank">Streaming Multiprocessor (SM)</a>
+                        on the GPU are on same block
                     </td>
                 </tr>
                 <tr>
@@ -99,11 +104,21 @@ Grid (3D: gridDim.x, gridDim.y, gridDim.z)
                         </tr>
                     </table>
                     </td>
-
+                </tr>
+                <tr>
+                    <td>Thread Block CLuster</td>
+                    <td>
+                        A Thread Block Cluster (or simply Cluster) is a feature introduced in NVIDIA’s Hopper architecture 
+                        (e.g., H100 GPU, Compute Capability 9.0) and later.<br>
+                        This is group of thread blocks which are scheduled to run together on a <a href="#gpc" target="_blank">
+                            GPU Processing Cluster (GPC)</a><br>
+                        <u>Advantage is:</u> Clusters allow blocks within the same cluster to share resources and synchronize,
+                        Remember that blocks in different clusters cannot communicate directly.<br>
+                    </td>
                 </tr>
             </table>
 
-            <h3>Kernel</h3>
+            <h3 id="kernel">Kernel</h3>
             <dl>
                 Kernels are the functions that run on the GPU. They are executed in parallel by multiple threads.<br>
                 These functions are called from the host (CPU) and executed in parallel on GPUs<br>
@@ -258,6 +273,60 @@ int main() {
                 </tr>
             </table>
             
+
+            <h3 id="sm">Streaming Multiprocessor (SM)</h3>
+            <dl>
+                SM is responsible for executing threads in parallel.<br>
+                Each SM contains multiple CUDA cores (for arithmetic operations), load/store units, special function units<br>
+                SMs execute thread blocks assigned to them by the CUDA runtime.<br>
+                Example: NVIDIA A100 GPU (Ampere architecture) has 108 SMs, each with 64 CUDA cores. Each SM can handle up to 2,048 threads concurrently.
+            </dl>
+            <dl>Does the GPU Have as Many SMs as Blocks?</dl>
+            <dt>
+                No. Blocks: A software construct defined by the programmer in the CUDA kernel launch (e.g., <<<num_blocks, threads_per_block>>>). 
+                    The number of blocks can be arbitrary, often much larger than the number of SMs.<br>
+                    SMs: A fixed hardware resource on the GPU (e.g., 108 SMs on an A100). <br><br>
+
+                <u>Relation b/w Blocks and SMs:</u><br>
+                &ensp; CUDA runtime schedules blocks to available SMs. Each SM can execute multiple blocks concurrently, up to resource limits<br>
+                &ensp; If there are more blocks than SMs, the GPU schedules blocks in waves.
+            </dt>
+
+            <h3 id="gpc">Graphics Processing Clusters (GPCs)</h3>
+            <dl>
+                GPC is primarily used in the GPU’s graphics pipeline (e.g., for rendering tasks in gaming or visualization)
+            </dl>
+            <pre><code>
+                1 GPC = Multiple SMs + raster engines + Texture processing clusters (TPCs)
+            </code></pre>
+            <dl>
+                NVIDIA A100 GPU has 8 GPCs, each with 13~14 SMs
+            </dl>
+            <pre><code>
+GPU
+├── GPC 0
+│   ├── SM 0
+│   │   ├── CUDA Cores (e.g., 64 cores)
+│   │   ├── Shared Memory
+│   │   ├── Registers
+│   │   ├── Warp Schedulers
+│   │   ├── Load/Store Units
+│   │   ├── Thread Blocks (e.g., Block 0, Block 1)
+│   │   │   ├── Threads (0,0,0), (1,0,0), ..., (threadIdx.x, y, z)
+│   ├── SM 1
+│   ├── ...
+│   ├── SM n (e.g., 12 SMs per GPC)
+│   ├── Texture Processing Cluster (TPC)
+│   ├── Raster Engine
+├── GPC 1
+│   ├── SMs, TPCs, etc.
+├── ...
+├── GPC m (e.g., 8 GPCs in A100)
+├── Global Memory (HBM/GDDR)
+├── L2 Cache
+├── Memory Controllers
+            </code></pre>
+
         </article>
     </main>
 
