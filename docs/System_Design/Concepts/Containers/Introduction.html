@@ -25,33 +25,62 @@
 
     <aside class="sidebar">   <!-- Sidebar -->
         <a href="#containers">Containers</a>
-        <a href="./Kubernets/">Kubernets</a>
     </aside>
 
     <main style="margin-left:200px;">
-        <h3 id="containers">Containers</h3>
-        <dl><strong>What is Container?</strong></dl>
-        <dt>Self contained package that contains everything that binary/application need to run.<br>
+        <h2 id="containers">Containers</h2>
+        <dl>
+            This Self contained package that contains everything that binary/application need to run.
             Only 1 Application can run inside container and all its dependent libraries. 
-            Each container has its own: Network interface, IP address, file system, All containers share the kernel of the host.
-        </dt>
-        <br>
-        <dl><strong>Issues without containers?</strong></dl>
-        <dt>1. App-1 have dependency on shared library(libcv1). App-1 have dependency on shared library(libcv2). 
-            Both cannot run on production.<br>
+            Each container has its own: Network interface, IP address, file system, All containers share the kernel of the host.<br>
+            All containers share the kernel of the host.<br />
+        Isolation(achieved using kernel namespace,
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Operating_Systems/Linux/Resource_Control/Kernel_Namespaces"
+          >cgroups</a
+        >) processes running on single host. Isolated from other processes
+            <br><br>
+
+        <b>Issues without containers?</b><br>
+            1. App-1 have dependency on shared library(libcv1). App-2 have dependency on shared library(libcv2). 
+            Both cannot run on 1 box.<br>
             2. All programs to share same versions of shared libraries which makes application tightly coupled.
-        </dt>
-        <br>
-        <dl><strong>Advantages of Containers</strong></dl>
-        <dt>
+            <br><br>
+
+        <b>Advantages of Containers</b>
             1. lightweight Use less memory: Simple web application running inside container takes 100MB space.<br>
             2. Secure: Reduces the chance that malicious code present in one container impacting other containers or invade the host system.<br>
             3. Portable: abstraction from the host operating system makes containerized applications portable ie able to run on any OS,VM.            
-        </dt>
+        </dl>
+        
         <img 
         src="//www.plantuml.com/plantuml/png/XP71QuCm5CRl_XLlsQKz35efwwdGp1xAO5hKmM0CIJNJi9X8J8Gn_D-dWSqMgXwKyF9xxyltlNsjYTAcvCwTBcX9eQIQSCUfIFf5SWeeLYHZcab1E09IGmm_3i2dv1bLW8worX14o1Q7CcVdj5abBYXJw-wmsKBrhGifcdNY_i6sGP5E4-6gWcVy4i4wsLnUjnFW8xnxsFU36C9N_mF1VKYpkTOeV8FX1VzS_--_ziBtAJXOlwShlvuKcZ11rGDU1D7Ed8tGPcb1RC5Rw1CimevZ9TtrUQJBGVyMxjdKe4zj0EV3klBSJim_sFbzWkxS_6socbPeHomV1ykvv4Jaov6jOwEBnDHKDIobutlPKv6Paly2" 
         style="width:100%;height:100%;"
         alt="Container Diagram">
+
+        <h2 id="comp">Container vs VM</h2>
+        <table>
+          <tr>
+            <th></th>
+            <th>Container</th>
+            <th>VM</th>
+          </tr>
+          <tr>
+            <td>size</td>
+            <td>smaller</td>
+            <td>Bigger wrt container</td>
+          </tr>
+          <tr>
+            <td>capability</td>
+            <td>smaller</td>
+            <td>Bigger wrt container</td>
+          </tr>
+          <tr>
+            <td>What</td>
+            <td>Pacakaged s/w</td>
+            <td>Copy of OS</td>
+          </tr>
+        </table>
 </body>
   
 </html>
