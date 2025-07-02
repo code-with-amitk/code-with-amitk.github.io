@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Kubernets Architecture</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">Architecture</a>
+      <ul>
+        <li><a href="#master">Master Node</a></li>
+        <li><a href="#worker">Worker Node</a></li>
+        <ul><li><a href="#pod">POD</li></ul>
+      </ul>
+      
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#namespace">namespace</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="#what">Kubernets Architecture</h2>
+      <img
+        src="//www.plantuml.com/plantuml/png/dPLRRzj648NVzrSSk41aFz2Az9G4YH0treERsXPaevSg0h7YZiIjbxF2Nj8QXVzxirIaa8qf2UM3U9cP8tvpPhdlVP0knCg8jImUv8fmSYrz88SRgwZ_mN9mrc1Y99_W7m7qUzcir4eHpxCHj4VqfB2q3eQM0S72wLKPOEIZZQ7N5y3igueXXsl9SaLkZftA2BExeYGL3RcvGFEkbKIXK7KyNRH35qhXbdsAxgxR2PCht97xNFz3-_P9V2F_zNRwSJpDRsulnzbmWplx61TaA22TYs3oYRD_F-PpDBjG9sNR2BPbsNEvcAN6mWSPeiSBN5EGcP91vdFH7MoBR2bxlYvQMgF8uIIrMMecXsbatEkADWm09zMJ6rcH_m9B-LUuRw79xMKk6q_JiNIoeePgDXoUAbiya3jh9pw9vZdzFgMs1hj6i5ZO46m5fHqLGLj-ljs3GzFLLjjELwT3dGPzvy-HzknpfyES_-VDu5bl3bbpckPP5_Jkfulhktmpt6UV-1CRMqXJMX_Ul1wyRcXlZzd5Ucrq8PCrsJ1L_2ahdwb5uKW6-W_QD7BG5MN3ULkc6MbNNDAQ576XoRUhdlRn38xZ6HxW6UnuVAsGRk-bMr6OM1VUlNhvwcK7uA0JSD0DsAXgBOllx5pij_Fqjz__E3k0niUpy1nTCBm7XkU7rxXW6wXUctQ9H2Rnmy_f-_-ZYIJUBaPVdWbnNseFxU4hQGpv04LhOn_bmX0Ywm3DU8WBSap1duknBCeaXb9wwE1X_s9SJV02l5qbvsBNB9-gKxOlfICuyZQwWZmaAu52CWfRLP5JumZHQrwXjvkYthaWLaWOtJ0JpGy9vcuy_UNgmrY80VncF6lzKducLD44lJQ4XabRbiQZki15XcQl5K5Y1o9EVHe3ww3qSacEEAItE6k-ORydPj7NMsCsshTLly7vewoCwFL5Sxj3Ph9HroUpdVasopeJZzRCZnLDcU-9LQpClm00"
+        style="width: 100%; height: 100%"
+        class="zoomable-image"
+        id="zoomableImage2"
+        alt="Kubernets Architecture"
+      />
+
+      <h3 id="master">Master Node/Control Plane</h3>
+      <dl>
+        User Intercts with Master node(using yaml file). Master node create/destroy worker nodes.<br>
+        <b>Daemon in master node</b>
+      </dl>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>1. API Server</td>
+          <td>Manages all communication with Worker nodes(using kubelet)</td>
+        </tr>
+        <tr>
+          <td>1. etcd <key,value> store</td>
+          <td>Stores state of kubernets cluster</td>
+        </tr>
+        <tr>
+          <td>3. Scheduler</td>
+          <td>Schedules pods to run on worker nodes</td>
+        </tr>
+        <tr>
+          <td>4. Controller Manager</td>
+          <td>Runs controllers that monitors state of cluster and maintains desired state</td>
+        </tr>
+        <tr>
+          <td>5. Add-ons</td>
+          <td>Provides additional functionality</td>
+        </tr>
+      </table>
+
+      <h3 id="worker">Worker Node</h3>
+      <dl>
+        Handles workload. Worker nodes hosts PODS. 1 Pod can contain 1 or more containers, Eg: docker.<br>
+        <b>Deamons in Worker Node</b>
+      </dl>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>1. Kubelets</td>
+          <td>Recieves instructions from master node to run/manage container.</td>
+        </tr>
+        <tr>
+          <td>2. Container Runtime</td>
+          <td>This actually runs the container. Several runtimes kubernets supports: Docker, containerd, CRI-O</td>
+        </tr>
+        <tr>
+          <td>3. Kube-proxy</td>
+          <td>For communication with other nodes in cluster</td>
+        </tr>
+        <tr>
+          <td>4. Add-Ons</td>
+          <td>Additional functionality.</td>
+          </tr>
+        <tr>
+          <td>5. Node status & Meta-data</td>
+          <td>
+            Each worker node maintains meta-data about itself. Example: IP Address, hostname, Current status (Ready, Not Ready, Out of Disk space etc)  
+          </td>
+        </tr>
+      </table>
+
+      <h4 id="pod">POD</h4>
+      <dl>
+        POD is smallest deployable unit in kubernets. 1 Pod can contain 1 or more containers<br>
+        Each POD has its own: IP & namespace. Containers in POD share resources and can communicate using 'localhost'.<br>
+        Memory is allocated to Pods using Volumes.
+      </dl>
+
+      <h2 id="terms">Terms</h2>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td id="namespace">Namespace</td>
+          <td>
+            Divides cluster into smaller units to isolate services, volumes and manage.
+            Namespace contains pods.<br />
+            3 predefined namespaces: Default, Kube-system(resources created by kubernets), Kube-public(reserved for future)
+          </td>
+        </tr>
+      </table>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

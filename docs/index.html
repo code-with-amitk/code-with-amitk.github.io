@@ -25,97 +25,130 @@
         This is used to group and organize other HTML elements together
 -->
 <!DOCTYPE html>
-<html lang="en"> 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Code Examples</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Rakkas&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rakkas&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        .hidden { display: none; }
+      .hidden {
+        display: none;
+      }
     </style>
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-           <ul id="searchResults"></ul>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+        <ul id="searchResults"></ul>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="/Async_Programming/">Async_Programming</a>
-        <a href="/BlockChain/">BlockChain</a>
-        <a href="/Companies/">Companies</a>
-        <a href="/DS_Questions/">DS Questions</a>
-        <a href="/Economics/">Economics</a>
-        <a href="/Frameworks/">Frameworks</a>
-        <a href="/Games/">Games, Sports</a>
-        <a href="/Languages/">Languages</a>
-        <a href="Libraries/">Libraries</a>
-        <a href="/Law/">Law</a>
-        <a href="/Machine Learning/">Machine Learning</a>
-        <a href="/Motherboard/">Motherboard</a>
-        <a href="/Networking/">Networking</a>
-        <a href="/Products/">Company Products</a>
-        <a href="/Projects/">Projects</a>
-        <a href="/System_Design/">System Design</a>
-        <a href="/Threads_Processes_IPC/">Threads Processes IPC</a>
-        <a href="/Operating System/">Operating System</a>
-        <a href="./MyResume.html">My Profile</a>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="/Async_Programming/">Async_Programming</a>
+      <a href="/BlockChain/">BlockChain</a>
+      <a href="/Companies/">Companies</a>
+      <a href="/DS_Questions/">DS Questions</a>
+      <a href="/Economics/">Economics</a>
+      <a href="/Frameworks/">Frameworks</a>
+      <a href="/Games/">Games, Sports</a>
+      <a href="/Languages/">Languages</a>
+      <a href="Libraries/">Libraries</a>
+      <a href="/Law/">Law</a>
+      <a href="/Machine Learning/">Machine Learning</a>
+      <a href="/Motherboard/">Motherboard</a>
+      <a href="/Networking/">Networking</a>
+      <a href="/Products/">Company Products</a>
+      <a href="/Projects/">Projects</a>
+      <a href="/System_Design/">System Design</a>
+      <a href="/Threads_Processes_IPC/">Threads Processes IPC</a>
+      <a href="/Operating System/">Operating System</a>
+      <a href="./MyResume.html">My Profile</a>
     </aside>
 
-    <main>  <!--Here is our page's main content-->
-        <article style="margin-left:200px;">   <!-- It contains an article -->
-            <h2>Hello World, How are you</h2>
+    <main>
+      <!--Here is our page's main content-->
+      <article style="margin-left: 200px">
+        <!-- It contains an article -->
+        <h2>Hello World, How are you</h2>
 
-            <h3>Heard AI is coming?</h3>
-            <p>
-                Landscape is changing, Now github copilot can write code for you. And that too efficiently.
-                Most of the time it is correct. But sometimes it is not.
-                Developers need to join hands with AI (use it = make it better).
-            </p>
+        <h3>Heard AI is coming?</h3>
+        <p>
+          Landscape is changing, Now github copilot can write code for you. And
+          that too efficiently. Most of the time it is correct. But sometimes it
+          is not. Developers need to join hands with AI (use it = make it
+          better).
+        </p>
 
-            <h3>What I meditate?</h3>
-            <p>
-                When I close my eyes and meditate, I think of working on C++20,23(advanced),Rust,Networking with AI.
-                Work that does something good for the world.
-            </p>
-        </article>
+        <h3>What I meditate?</h3>
+        <p>
+          When I close my eyes and meditate, I think of working on
+          C++20,23(advanced),Rust,Networking with AI. Work that does something
+          good for the world.
+        </p>
+      </article>
 
-        <aside style="margin-left:200px;">  <!--the aside content can also be nested within the main content-->
-            <h2>Never Mind, Have a look at <strong><a href="./MyResume.html">My Profile</a></strong></h2>
-            <h2>And Enjoy
-                <strong><a href="https://youtu.be/kPufn1grFCQ?si=CInGd_rpomCgsaaK" target="_blank">Kitni Hasin Zindagi hai ye</a></strong></h2>
-            <ul>
-              <li><a href="#">I like to be beside the seaside</a></li>
-              <li><a href="#">It never stops raining</a></li>
-            </ul>
-          </aside>
+      <aside style="margin-left: 200px">
+        <!--the aside content can also be nested within the main content-->
+        <h2>
+          Never Mind, Have a look at
+          <strong><a href="./MyResume.html">My Profile</a></strong>
+        </h2>
+        <h2>
+          And Enjoy
+          <strong
+            ><a
+              href="https://youtu.be/kPufn1grFCQ?si=CInGd_rpomCgsaaK"
+              target="_blank"
+              >Kitni Hasin Zindagi hai ye</a
+            ></strong
+          >
+        </h2>
+        <ul>
+          <li><a href="#">I like to be beside the seaside</a></li>
+          <li><a href="#">It never stops raining</a></li>
+        </ul>
+      </aside>
     </main>
 
     <div id="content">
-        <!-- Your content goes here -->
+      <!-- Your content goes here -->
     </div>
     <script src="/scripts/search.js"></script>
 
-        <!-- And here is our main footer that is used across all the pages of our website -->
-    <footer style="margin-left:200px;">
-        <p>©Copyright 2050 by nobody. All rights reversed</p>
+    <!-- And here is our main footer that is used across all the pages of our website -->
+    <footer style="margin-left: 200px">
+      <p>©Copyright 2050 by nobody. All rights reversed</p>
     </footer>
-
-</body>
+  </body>
 </html>

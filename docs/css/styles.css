@@ -1,124 +1,130 @@
 /* Reset default browser styles */
-body, h1, p, ul, li {
-    margin: 10;
-    padding: 10;
-  }
-  
-  /* Set default font and colors */
-  body {
-    font-family: Arial, sans-serif;
-    color: #333333;
-    /*background-color: #f5f5f5;*/
-  }
-  
-  /*Header styles Start*/
-  header {
-    background-color: #f2f2f2;
-    padding: 20px;
-  }
-  
-  h1 {
-    font-family: 'Rakkas';
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  h2 {
-    font-family: 'Rakkas';
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: brown;
-  }
-  h3 {
-    font-size: 15px;
-    margin-bottom: 10px;
-    color:royalblue;
-  }
-  h4 {
-    font-size: 13px;
-    margin-bottom: 10px;
-    color:darkmagenta;
-  }
-  h5 {
-    font-size: 11px;
-    margin-bottom: 10px;
-    color:chocolate;
-  }
-  /*Header styles End*/
-  
-  /* Navigation styles start */
-  .navbar {
-    margin-left: 180px;
-    margin-bottom: 20px;
-    background-color:honeydew;
-    font-size:small;
-  }
-  .navbar ul {
-    list-style-type: none;
-  }
-  .navbar ul li {
-    display: inline-block;
-    margin-right: 10px;
-  }
-  .navbar ul li a {
-    text-decoration: none;
-    color: #333;
-  }
-  .navbar a:hover {
-    color:blue;
-  }
-  /* Navigation styles end */
+body,
+h1,
+p,
+ul,
+li {
+  margin: 10;
+  padding: 10;
+}
 
-  /* Main content styles */
-  main {
-    padding: 20px;
-  }
-  
-  /* Footer styles */
-  footer {
-    background-color: lightgoldenrodyellow;
-    padding: 20px;
-    text-align: center;
-    font-size: 14px;
-  }
-  /* Footer styles end */
+/* Set default font and colors */
+body {
+  font-family: Arial, sans-serif;
+  color: #333333;
+  /*background-color: #f5f5f5;*/
+}
 
-  /* Table styles Start */
-  table {
-    font-family: Poppins;
-    border-collapse: collapse;
-    /*width: 100%;*/
-    border: 1px solid black;
-    font-size: 14px;
-  }
+/*Header styles Start*/
+header {
+  background-color: #f2f2f2;
+  padding: 20px;
+}
 
-  /*
+h1 {
+  font-family: "Rakkas";
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+h2 {
+  font-family: "Rakkas";
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: brown;
+}
+h3 {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: royalblue;
+}
+h4 {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: darkmagenta;
+}
+h5 {
+  font-size: 11px;
+  margin-bottom: 10px;
+  color: chocolate;
+}
+/*Header styles End*/
+
+/* Navigation styles start */
+.navbar {
+  margin-left: 180px;
+  margin-bottom: 20px;
+  background-color: honeydew;
+  font-size: small;
+}
+.navbar ul {
+  list-style-type: none;
+}
+.navbar ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+.navbar ul li a {
+  text-decoration: none;
+  color: #333;
+}
+.navbar a:hover {
+  color: blue;
+}
+/* Navigation styles end */
+
+/* Main content styles */
+main {
+  padding: 20px;
+}
+
+/* Footer styles */
+footer {
+  background-color: lightgoldenrodyellow;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+/* Footer styles end */
+
+/* Table styles Start */
+table {
+  font-family: Poppins;
+  border-collapse: collapse;
+  /*width: 100%;*/
+  border: 1px solid black;
+  font-size: 14px;
+}
+
+/*
   th and td are selectors
     th: It targets the table header cells (<th>) in html table
     td: It targets the table data cells (<td>) within an HTML table.
   */
-  th, td, tr {
-    border: 1px solid black;
-    padding: 5px;
-    text-align: left;
-    background-color: #f2f2f2;
-    font-size: 11px;
-  }
-  /* Table styles end */
+th,
+td,
+tr {
+  border: 1px solid black;
+  padding: 5px;
+  text-align: left;
+  background-color: #f2f2f2;
+  font-size: 14px;
+}
+/* Table styles end */
 
 .code-block {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 5px;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 13px;
-    line-height: 1.5;
-    white-space: pre-wrap;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
 }
 pre {
   /*background-color: lightgrey;*/
   /*padding: 10px;
   border-radius: 5px;*/
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   font-size: 12px;
   /*line-height: 1.5;
   white-space: pre-wrap;*/
@@ -140,18 +146,17 @@ Search: mdn sidebar*/
   /*z-index: 1;*/
   top: 0;
   left: 0;
-  background-color:honeydew;
+  background-color: honeydew;
   overflow-x: hidden;
   /*padding-top: 20px;*/
-  font-size:small;
+  font-size: small;
   overflow-y: auto;
 }
-
 
 /* Style the links inside the sidebar */
 .sidebar a {
   padding: 6px 8px 6px 16px;
-  text-decoration:burlywood;
+  text-decoration: burlywood;
   color: #818181;
   display: block;
   font-size: x-small;
@@ -162,7 +167,7 @@ Search: mdn sidebar*/
   color: #333333;
 }
 
-.sidebar ul{
+.sidebar ul {
   margin: -1px 0;
   font-size: x-small;
 }
@@ -174,26 +179,26 @@ summary {
 }
 /* sidebar end*/
 dl {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   margin-left: 16px;
   margin-top: 0;
-  font-size: 13px;
+  font-size: 14px;
 }
 dt {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   margin-left: 20px;
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 13px;
 }
 dd {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   margin-left: 24px;
   margin-bottom: 10px;
   font-size: 11px;
 }
 
 p {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   margin-left: 24px;
   margin-bottom: 10px;
   font-size: 12px;
@@ -207,12 +212,12 @@ li {
 
 /*a start*/
 a:link {
-  color:blue
+  color: blue;
 }
 /*a start*/
 
 aside {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-size: 10px;
 }
 
@@ -223,14 +228,37 @@ aside {
 }
 
 .zoomable-image {
-  width: 30%; /* Adjusts the image to fit the container */
+  /*width: 30%;  Adjusts the image to fit the container */
   height: auto;
   transition: transform 0.3s ease;
-  cursor: pointer;
+  cursor: zoom-in;
+  z-index: 1;
 }
 
 .zoomed {
-  transform: scale(2); /* Adjust scale as needed */
+  /*transform: scale(2); Adjust scale as needed */
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(-50%, -50%) scale(1.5) !important;
+  z-index: 10002 !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  background: white;
+  cursor: zoom-out;
+}
+
+.zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10001;
 }
 
 .image-table {
@@ -240,7 +268,7 @@ aside {
 
 .image-table td {
   padding: 0; /* Removes padding inside table cells */
-  margin: 0;  /* Removes margin inside table cells */
+  margin: 0; /* Removes margin inside table cells */
   text-align: center;
 }
 

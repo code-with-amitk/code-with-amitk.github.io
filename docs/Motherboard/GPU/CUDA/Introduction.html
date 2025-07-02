@@ -30,6 +30,7 @@
             <li><a href="#gbt">Grid, Blocks, Threads, Thread Block Cluster</a></li>
             <li><a href="#kernel">Kernel</a></li>
             <li><a href="#communication">Inter Thread Communication</a></li>
+            <li><a href="#tm">Thread Memory</a></li>
             <li><a href="numberofthreads">How many threads GPU can have?</a></li>
         </ul>
         <a href="#ex">Example</a>
@@ -106,7 +107,7 @@ Grid (3D: gridDim.x, gridDim.y, gridDim.z)
                     </td>
                 </tr>
                 <tr>
-                    <td>Thread Block CLuster</td>
+                    <td>Thread Block Cluster</td>
                     <td>
                         A Thread Block Cluster (or simply Cluster) is a feature introduced in NVIDIA’s Hopper architecture 
                         (e.g., H100 GPU, Compute Capability 9.0) and later.<br>
@@ -172,6 +173,14 @@ int main()
                 &ensp; Atomic Operations: Use atomic functions to ensure that updates to global memory are done safely.<br>
                 &ensp; Multiple Kernel Launches: If inter-block communication is needed, you can 
                 launch multiple kernels sequentially, where the output of one kernel serves as the input to the next
+            </dl>
+
+            <h3 id="mh">Memory Hierarchy</h3>
+            <dl>
+                Memory available with each thread:<br>
+                1. private local memory<br>
+                2. Shared memory in block(lifetime of block)<br>
+                3. 
             </dl>
 
             <h3 id="numberofthreads">How many threads GPU can have?</h3>
