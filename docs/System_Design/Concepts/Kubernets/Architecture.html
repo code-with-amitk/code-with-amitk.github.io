@@ -47,16 +47,16 @@
     <main style="margin-left: 200px">
       <h2 id="#what">Kubernets Architecture</h2>
       <img
-        src="//www.plantuml.com/plantuml/png/dPLRRzj648NVzrSSk41aFz2Az9G4YH0treERsXPaevSg0h7YZiIjbxF2Nj8QXVzxirIaa8qf2UM3U9cP8tvpPhdlVP0knCg8jImUv8fmSYrz88SRgwZ_mN9mrc1Y99_W7m7qUzcir4eHpxCHj4VqfB2q3eQM0S72wLKPOEIZZQ7N5y3igueXXsl9SaLkZftA2BExeYGL3RcvGFEkbKIXK7KyNRH35qhXbdsAxgxR2PCht97xNFz3-_P9V2F_zNRwSJpDRsulnzbmWplx61TaA22TYs3oYRD_F-PpDBjG9sNR2BPbsNEvcAN6mWSPeiSBN5EGcP91vdFH7MoBR2bxlYvQMgF8uIIrMMecXsbatEkADWm09zMJ6rcH_m9B-LUuRw79xMKk6q_JiNIoeePgDXoUAbiya3jh9pw9vZdzFgMs1hj6i5ZO46m5fHqLGLj-ljs3GzFLLjjELwT3dGPzvy-HzknpfyES_-VDu5bl3bbpckPP5_Jkfulhktmpt6UV-1CRMqXJMX_Ul1wyRcXlZzd5Ucrq8PCrsJ1L_2ahdwb5uKW6-W_QD7BG5MN3ULkc6MbNNDAQ576XoRUhdlRn38xZ6HxW6UnuVAsGRk-bMr6OM1VUlNhvwcK7uA0JSD0DsAXgBOllx5pij_Fqjz__E3k0niUpy1nTCBm7XkU7rxXW6wXUctQ9H2Rnmy_f-_-ZYIJUBaPVdWbnNseFxU4hQGpv04LhOn_bmX0Ywm3DU8WBSap1duknBCeaXb9wwE1X_s9SJV02l5qbvsBNB9-gKxOlfICuyZQwWZmaAu52CWfRLP5JumZHQrwXjvkYthaWLaWOtJ0JpGy9vcuy_UNgmrY80VncF6lzKducLD44lJQ4XabRbiQZki15XcQl5K5Y1o9EVHe3ww3qSacEEAItE6k-ORydPj7NMsCsshTLly7vewoCwFL5Sxj3Ph9HroUpdVasopeJZzRCZnLDcU-9LQpClm00"
+        src="//www.plantuml.com/plantuml/png/ZPLVRzis5CNV-IaECg1E7XJNVcgB9cZM-27haXX9i3zp3O4Mhoqk56dmJxTWo7SVgLIUj5YsXI0YUUyzqEyUqlpaFBS-L8gjUV78LuIZQ-uyMTmOGSFFHdjh5AQAQnhUa_tsFNA4VnWm76IpKWf1UfwTGpe4Hm9BOw5ewU4Dh5oL7ee_cU07GmRClaigihZccg_8ph5HESVilYX911MN6TgpJXBvGgHuFUY6BeJ0hNPrj1bt4wPNU269ETtfC_kl3R_UtdsPtEKtjvUJR3oyM97sBVBPbx0WHHxfNNYLJwtv-ocVezsGEYbh8cZAicsvc2LnECzzS7Y3Q_8y4zppVCxwWrsH1dZWwgAbKO8iZbB7kTHnU1Sq7cH5ECEbAHx9li00EiaVtV2AN6m0vUCcq8IcjvSvRwscPsbZVai-6u-FHIrxqaryPkrt-l-SMktD6jvWORmt5OIqL7Xfz7OBHbqBTcw-hd2p-NfTwpNjbMS7MhRBiHx3zlebTlerskhNFhkEqxwN1PtzT75zdxySWfEl-gjMfk2gDCv_U3zwtsYtdjd5UgramPDTsJXL_Cahbub5OObx-XzZfF0H8XlFkpBjIBVYajOKnuKarwrwtiKpEendl8TdjE5njKAQFd2x8Zyrrf-zU_lkRG_Wg1Tmr0yOOrkFoYix5xljFFxjzpzEzg3fmrdq77qmkXycnlQVUwQDf_gGcYKI6SSFFwTxuaSLY7rSdCSrnXvAwH3_NCML8kSXQAtC4ryeGj3IGseyXWLPJTwTiWaloYI6aiSoxs3-qhYQuWrqSqfEsQPPCKNNsQxabc39cM0BSk1QC1HSep1L5NHg724ugLSOR7RHu9IH5aWO_J1JgHyJpFtaxfUhpnF6Hd0lsxFMB_atGXMKbsj5Q9dKiBIMwW8RDAHsKX0uDY3is4Ky60iXbqkof7twYfFs5mu7R1PSVOLcvmVVxnzm-iGhnGP3rhuZaQaeqlD3sityc6MzYGThvWUBninF4JfKwby0"
         style="width: 100%; height: 100%"
         class="zoomable-image"
         id="zoomableImage2"
         alt="Kubernets Architecture"
       />
-
+      
       <script type="text/plain" class="puml" style="display:none;">
         @startuml
-        package "Master Node/Control Plan" {
+        package "Master Node/Control Plane/Server Node" {
           /'-[hidden]-> is used for left to right layout'/
           [Controller Manager] -[hidden]> [Scheduler]
           [Scheduler] -[hidden]> [etcd]
@@ -65,11 +65,11 @@
           [API Server]
         }
         
-        package "WORKER_NODE-2" {
+        package "WORKER_NODE-2/Agent Node" {
           [Kubelet Kubectl_Proxy_] -[hidden]-> [Kube-Proxy_]  
           [Kube-Proxy_] -[hidden]->  [Node status & Meta-data_]
           [Node status & Meta-data_] -[hidden]-> [Add On's_]
-          folder "Container Run Time" {
+          folder "Container Run Time = Docker" {
             node "Namespace_2" {
               node "POD_a2" {
                   frame "Container-22(docker)" {
@@ -80,12 +80,12 @@
         }
         
         top to bottom direction
-        package "WORKER_NODE-1" {
+        package "WORKER_NODE-1/Agent Node" {
           /'-[hidden]-> is used for top to bottom layout'/
-          [Kubelet Kub  ectl_Proxy] -[hidden]-> [Kube-Proxy]  
+          [Kubelet Kubectl_Proxy] -[hidden]-> [Kube-Proxy]  
           [Kube-Proxy] -[hidden]->  [Node status & Meta-data]
           [Node status & Meta-data] -[hidden]-> [Add On's]
-          folder "Container Run Time" {
+          folder "Container Run Time = docker" {
             node "Namespace_1" {
               node "POD_a" {
                   frame "Container-2(Service=JAMS_Server)\n\nlocalhost:9191" {
@@ -127,7 +127,7 @@
         end note
         
         /'
-        [user] --> "Master Node/Control Plan" : .yaml
+        [user] --> "Master Node/Control Plane/Server Node" : .yaml
         '/
         [API Server] -l-> [Kubelet Kubectl_Proxy]
         [API Server] <-- [Kubelet Kubectl_Proxy]

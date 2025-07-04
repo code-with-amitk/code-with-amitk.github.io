@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>K3s</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">What</a>
+      <a href="#arch">Architecture</a>
+      <ul>
+        <li><a href="#diff">k3s vs Kubernets</a></li>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="what">What</h2>
+      <dl>
+        K3s is a lightweight
+        <a href="../" target="_blank">Kubernetes</a> distribution designed for
+        resource-constrained environments, such as edge computing, IoT, or
+        single-node clusters.
+      </dl>
+
+      <h2 id="arch">K3s Architecture</h2>
+      <dl>
+        K3s retains the concept of master (also called server nodes) and worker
+        (also called agent nodes), similar to
+        <a href="../" target="_blank">Kubernetes</a>. <br />
+        However, it simplifies the architecture by removing some components and
+        using lightweight alternatives.<br><br>
+
+        <b>Read differences below and Check <a href="../" target="_blank">kubernets Architecture</a></b>
+        
+      </dl>
+
+      <h3 id="diff">Difference in k3s and Kubernets Architecture</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>kubernets</th>
+          <th>k3s</th>
+        </tr>
+        <tr>
+          <td>Server / Master Node</td>
+          <td>
+            Deamons in server node:<br />
+            &ensp; API server<br />
+            &ensp; Controller manager<br />
+            &ensp; Scheduler<br />
+            &ensp; etcd
+          </td>
+          <td>
+            Deamons in server node:<br />
+            &ensp; API server(same)<br />
+            &ensp; Controller manager(same)<br />
+            &ensp; Scheduler(same)<br />
+            &ensp; SQLite or etcd(<font color="blue"
+              >K3s replaces etcd with SQLite</font
+            >
+            by default for single-node clusters to reduce resource usage)<br />
+          </td>
+        </tr>
+        <tr>
+          <td>Agent Nodes / Worker Nodes</td>
+          <td>
+            Deamons in worker node:<br />
+            &ensp; Kubelet<br />
+            &ensp; Kube-proxy<br />
+            &ensp; Container runtime (<font color="blue">Docker</font>)
+          </td>
+          <td>
+            Deamons in worker node:<br />
+            &ensp; Kubelet<br />
+            &ensp; Kube-proxy<br />
+            &ensp; Container runtime (<font color="blue"
+              >containerd or CRI-O</font
+            >)
+          </td>
+        </tr>
+        <tr>
+          <td>Single-Node Clusters</td>
+          <td>
+            No<br />
+            Requires
+            <font color="blue"
+              >separate master and worker nodes installation</font
+            >
+            for high availability.
+          </td>
+          <td>
+            Yes<br />
+            K3s is often
+            <font color="blue">deployed as a single-node</font> cluster, where 1
+            node acts as both a server (control plane) and agent (worker)
+          </td>
+        </tr>
+        <tr>
+          <td>High Availability (HA)</td>
+          <td>multiple master and worker nodes</td>
+          <td>same</td>
+        </tr>
+      </table>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
