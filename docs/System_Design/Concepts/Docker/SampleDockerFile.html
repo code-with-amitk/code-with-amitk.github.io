@@ -1,126 +1,159 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Dockerfile</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#instructions">Dockerfile Instructions</a>
-        <a href="#df">Dockerfile</a>
-        <a href="#image">Create docker image</a>
-        <a href="#check">Check docker image</a>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is Dockerfile</a>
+      <a href="#instructions">Dockerfile Instructions</a>
+      <a href="#df">Dockerfile Example</a>
+      <a href="#image">Create docker image</a>
+      <a href="#check">Check docker image</a>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="instructions"> Dockerfile Instructions</h2>
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Meaning</th>
-            </tr>
-            <tr>
-                <td>FROM</td>
-                <td>
-                    This is the first instruction in every Dockerfile. It specifies the base Docker image
-                    <table>
-                        <tr>
-                            <td>FROM python:3-slim</td>
-                            <td>
-                                This is an official Python image from Docker Hub.<br>
-                                It includes Python 3 and is a smaller, slimmed-down version compared to the full Python image.<br>
-                                Slim images have fewer packages installed by default to keep the size small, but they still provide 
-                                the essential tools to run Python applications.
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>WORKDIR</td>
-                <td>
-                    sets the working directory inside the container
-                <table>
-                    <tr>
-                        <td>WORKDIR /app</td>
-                        <td>Means create /app inside container.<br>
-                            Any subsequent COPY, RUN, or other commands in the Dockerfile will operate relative to this directory
-                        </td>
-                    </tr>
-                </table>
-                </td>
-            </tr>
-            <tr>
-                <td>COPY src dst</td>
-                <td>Copy files or directories from your local file system (the host) to the Docker container's file system.
-                    <table>
-                        <tr>
-                            <td>COPY requirements.txt ./</td>
-                            <td>Copy requirements.txt from your local machine to the current working directory (/app, as set by WORKDIR)<br>
-                                ./ means the file is placed directly inside /app (the working directory).
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>RUN</td>
-                <td>Execute a command in the Docker image at build time.</td>
-            </tr>
-            <tr>
-                <td>ENTRYPOINT</td>
-                <td>This command specifies the default command that will run when the container starts.</td>
-            </tr>
-        </table>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Dockerfile</h2>
+      <dl>
+        docker image is created from docker file which runs inside container.
+      </dl>
 
-        <h2 id="df">Dockerfile</h2>
-        <dl>
-            docker image is created from docker file which runs inside container.<br><br>
-            We will use the code from this repository https://github.com/meobilivang/newsreader-cli
-        </dl>
+      <h2 id="instructions">Dockerfile Instructions</h2>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>FROM</td>
+          <td>
+            This is the first instruction in every Dockerfile. It specifies the
+            base Docker image
+            <table>
+              <tr>
+                <td>FROM python:3-slim</td>
+                <td>
+                  This is an official Python image from Docker Hub.<br />
+                  It includes Python 3 and is a smaller, slimmed-down version
+                  compared to the full Python image.<br />
+                  Slim images have fewer packages installed by default to keep
+                  the size small, but they still provide the essential tools to
+                  run Python applications.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>WORKDIR</td>
+          <td>
+            sets the working directory inside the container
+            <table>
+              <tr>
+                <td>WORKDIR /app</td>
+                <td>
+                  Means create /app inside container.<br />
+                  Any subsequent COPY, RUN, or other commands in the Dockerfile
+                  will operate relative to this directory
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>COPY src dst</td>
+          <td>
+            Copy files or directories from your local file system (the host) to
+            the Docker container's file system.
+            <table>
+              <tr>
+                <td>COPY requirements.txt ./</td>
+                <td>
+                  Copy requirements.txt from your local machine to the current
+                  working directory (/app, as set by WORKDIR)<br />
+                  ./ means the file is placed directly inside /app (the working
+                  directory).
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>RUN</td>
+          <td>Execute a command in the Docker image at build time.</td>
+        </tr>
+        <tr>
+          <td>ENTRYPOINT</td>
+          <td>
+            This command specifies the default command that will run when the
+            container starts.
+          </td>
+        </tr>
+      </table>
 
-        <table>
-            <tr>
-                <th>Step</th>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <td>Step-1: Clone the code</td>
-                <td><pre><code class="language-css">
+      <h2 id="df">Dockerfile Example</h2>
+      <dl>
+        We will use the code from this repository
+        https://github.com/meobilivang/newsreader-cli
+      </dl>
+
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>Step-1: Clone the code</td>
+          <td>
+            <pre><code class="language-css">
 cmd> git clone https://github.com/meobilivang/newsreader-cli
 cmd> cd newsreader-cli
-                </code></pre></td>
-            </tr>
-            <tr>
-                <td>Step-2: Create run_test.py file in root of cloned repo</td>
-                <td><pre><code class="language-css">
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Step-2: Create run_test.py file in root of cloned repo</td>
+          <td>
+            <pre><code class="language-css">
 #!/bin/bash
 
 set -euo pipefail
 cd /app
 pytest
-                </code></pre></td>
-            </tr>
-            <tr>
-                <td>Step-3. Dockerfile content. Create Dockerfile in root of cloned repo</td>
-                <td><pre><code class="language-css">
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Step-3. Dockerfile content. Create Dockerfile in root of cloned repo
+          </td>
+          <td>
+            <pre><code class="language-css">
 # Download python-slim image from docker hub
 FROM python:3-slim
 
@@ -167,15 +200,14 @@ RUN chmod +x /run_tests.sh
 # /bin/bash: Specifies that a Bash shell should be used.
 # -s: This tells Bash to read from standard input.
 ENTRYPOINT ["/bin/bash", "-s"]
-                </code></pre></td>
-            </tr>
-        </table>
+                </code></pre>
+          </td>
+        </tr>
+      </table>
 
-        <h2 id="image">Create Docker image</h2>
-        <dl>
-            Create docker image using docker file created in above step
-        </dl>
-        <pre><code class="language-css">
+      <h2 id="image">Create Docker image</h2>
+      <dl>Create docker image using docker file created in above step</dl>
+      <pre><code class="language-css">
 > docker build --platform linux/amd64 -t newsreader-cli-test .
 [+] Building 33.0s (15/15) FINISHED                                                                             docker:desktop-linux
  => [internal] load build definition from Dockerfile                                                                            0.2s
@@ -200,11 +232,12 @@ ENTRYPOINT ["/bin/bash", "-s"]
  => => writing image sha256:5f77f59a7ebf7e5c4357e0c1532cac0cd417e1f2a2700c7d8bf757a89a21f9cd
         </code></pre>
 
-        <h2 id="check">Check Docker Image</h2>
-        <dl>
-            Now we have created docker image, its time to go inside it and check the contents.
-        </dl>
-        <pre><code class="language-css">
+      <h2 id="check">Check Docker Image</h2>
+      <dl>
+        Now we have created docker image, its time to go inside it and check the
+        contents.
+      </dl>
+      <pre><code class="language-css">
 > docker images
 REPOSITORY            TAG       IMAGE ID       CREATED         SIZE
 newsreader-cli-test   latest    5f77f59a7ebf   7 minutes ago   734MB
@@ -253,7 +286,7 @@ root@0e8f62096f71:/#
 
         </code></pre>
     </article>
-    
+
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>
