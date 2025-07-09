@@ -93,10 +93,11 @@
                                 <img src="/images/Netskope/ssl-bypass.png" 
                                 alt="ssl bypass policies" style="width:400px;height:200px;" class="zoomable-image" id="zoomableImage2"><br>
                                 Whenever SSL traffic comes to Netskope, there can be 2 modes:<br>
-                                &ensp; - Donot decrypt(ByPass). Note <a href="#actionbypass">(RTP policy evaluation (action=bypass))</a>
-                                can still happen.
-                                <br>
-                                &ensp; - Decrypt
+                                1. <u>Donot decrypt(ByPass)</u><br>
+                                &ensp; <a href="#actionbypass">(RTP policy evaluation (action=bypass))</a>
+                                still happens but only with those attributes that can be derived without decrypting the traffic.
+                                <br><br>
+                                2. <u>Decrypt</u>
                             </td>
                         </tr>
                     </table>
