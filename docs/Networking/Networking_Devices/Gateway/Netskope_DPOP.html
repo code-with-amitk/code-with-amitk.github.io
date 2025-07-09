@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Netskope DPOP</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">DPOP?</a>
+      <ul>
+        <li><a href="#benefits">Benefits</a></li>
+        <li><a href="#reaching">How requests can reach DPOP?</a></li>
+      </ul>
+    </aside>
+
+    <main>
+      <article style="margin-left: 200px">
+        <h2 id="what">DPOP(Dataplane On-Premises) / Applaince?</h2>
+        <dl>
+          This is on-premises data plane. DPOP provides cloud security services
+          locally rather than routing all traffic to the Netskope cloud<br />
+          Usage: <br />
+          - Traffic inspection<br />
+          - Policy enforcement<br />
+          - SSL/TLS interception<br />
+        </dl>
+
+        <h3 id="benefits">Benefits of DPOP</h3>
+        <dl>
+          1. Traffic inspection within Organization: Since nothing is sent on
+          cloud, it Keeps sensitive or regulatory-compliant traffic within the
+          organization's infrastructure & does inspection and enforcement.<br />
+          2. Reduced Latency: DPOP reduces latency by processing traffic
+          locally, which is especially beneficial for applications that require
+          real-time responses.<br />
+          3. SSL Interception: DPoP can intercept and inspect encrypted traffic
+          using customizable PKI options<br />
+          4. Hybrid Deployment: DPoP can be deployed alongside Netskope's cloud
+          services, allowing organizations to choose where to process their
+          traffic based on their specific needs.<br />
+        </dl>
+
+        <h3 id="reaching">How requests can reach DPOP?</h3>
+        <dl>
+          - PAC file, proxy settings, or firewall rules to send traffic to the
+          DPoP appliance<br />
+          - Netskope client <font color="red">cannot send</font> traffic to
+          Appliance
+        </dl>
+      </article>
+    </main>
+  </body>
+</html>
