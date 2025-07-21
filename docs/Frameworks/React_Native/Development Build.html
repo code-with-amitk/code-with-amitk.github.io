@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EAS</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Development build</a>
+      <ul>
+        <li><a href="#vs">Expo go build vs Dev build</a></li>
+        <li><a href="#eas">EAS (Cloud)</a></li>
+        <li><a href="#local">expo-dev-client</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="dev">Development Build</h2>
+      <dl>
+        <b>What is development build?</b><br />
+        React native app consists of 2 parts: <br />
+        &ensp; 1. Native app bundle: Which is installed on physical device<br />
+        &ensp; 2. Javascript bundle: that runs inside it Expo Go app serves
+        itself as Native app bundle. <br />
+        In development build we will be creating native app bundle ourself
+        instead of relying on already published app(like expo Go) This provides
+        full control over native runtime allowing to install native libraries,
+        even write our own native code.
+        <br /><br />
+        <b>Ways to create development build:</b><br />
+        &ensp; 1. Build on Cloud:
+        <a href="#eas" target="_blank">EAS(Expo Application services)</a> build
+        app on cloud and install on real device <br />
+        &ensp;2. Build locally: Run on Andriod Studio or XCode(ios) locally on
+        laptop
+      </dl>
+
+      <h3 id="vs">Expo Go Build vs Development Build</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>Expo Go build</th>
+          <th>Development build</th>
+        </tr>
+        <tr>
+          <td>Install some 3rd party libraries(ie Community developed)</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Sandbox</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>production ready</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>
+            Support functionalities(Notification, Oauth authentication,
+            analytics)
+          </td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+      </table>
+
+      <h3 id="eas">
+        1. Create dev build on Cloud. Expo Application Services (EAS)
+      </h3>
+      <dl>
+        Cloud-based tools and services that helps building, deploying React
+        Native apps<br />
+        You can build app on cloud, then download and install directly on mobile
+        or distribute: apk/aab(Andriod), ipa(IOS)<br />
+        We can create local build using EAS<br />
+        EAS has hosted servers in cloud to build your app
+      </dl>
+
+      <h4>Steps of creating apk using EAS (cloud)</h4>
+      <pre><code class="language-css">
+$ npm install -g eas-cli    //Install eas cli
+$ eas login                 //Log in to Expo
+$ eas init                  //Initialize EAS in Your Project
+$ npx expo install expo-dev-client
+
+$ eas build -p android --profile development    // Andriod development build
+$ eas build -p ios --profile development        // ios development build
+This will upload project on cloud
+where its build an signed
+
+After the build completes, download the APK/IPA and install it on your device
+      </code></pre>
+
+      <h3 id="local">2. Create dev build locally. expo-dev-client</h3>
+      <pre><code class="language-css">
+Install Android Studio and/or Xcode.
+Ensure you have Node.js and npm installed.
+$ npx create-expo-app@latest        //Create project
+$ cd my-app
+$ npx expo install expo-dev-client
+
+// expo-cli is not required to be installed. This was used for classic expo workflow
+
+//This command creates the /android and /ios directories
+// converting your project to Expo's bare workflow.
+// Expo cannot generate the ios directory unless you are on macOS with Xcode installed.
+$ npx expo prebuild     //Generate Native Code (Prebuild)
+
+$ npx expo run:android
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

@@ -1,72 +1,82 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>React Native Introduction</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#what">React Native?</a>
-        <a href="#vs">React vs React Native</a>
-        <a href="#create">Create 1st app and see in Andriod</a>
-        <a href="#apk">Create apk file using expo</a>
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">React Native?</a>
+      <a href="#vs">React vs React Native</a>
+      <a href="#create">Create 1st app and see in Andriod</a>
+      <a href="#apk">Create apk file using expo</a>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="what">What is React Native?</h2>
-        <dl>
-            React Native is an open source framework for 
-            building Android and iOS applications using React and the app platform’s native capabilities
-        </dl>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is React Native?</h2>
+      <dl>
+        React Native is an open source, cross platform(Andriod, ios, web)
+        framework for building Mobile applications using React and the app
+        platform’s native capabilities
+      </dl>
 
-        <h2>React Native vs Web</h2>
-        <h3>Components</h3>
-        <img src="/images/react/component_comparison.png" alt="trie" style="width:110px;height:140px;">
+      <h2>React Native vs Web</h2>
+      <h3>Components</h3>
+      <img
+        src="/images/react/component_comparison.png"
+        alt="trie"
+        style="width: 110px; height: 140px"
+      />
 
-        <h2 id="vs">React vs React Native</h2>
-        <table>
-            <tr>
-                <th></th>
-                <th>React</th>
-                <th>React Native</th>
-            </tr>
-            <tr>
-                <td>Platform</td>
-                <td>Web browsers</td>
-                <td>iOS and Android devices</td>
-            </tr>
-            <tr>
-                <td>UI Components</td>
-                <td>HTML and CSS</td>
-                <td>Native mobile components (View, Text)</td>
-            </tr>
-            <tr>
-                <td>Rendering</td>
-                <td>Virtual DOM in browsers</td>
-                <td>Bridge to native mobile UI elements</td>
-            </tr>
-        </table>
+      <h2 id="vs">React vs React Native</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>React</th>
+          <th>React Native</th>
+        </tr>
+        <tr>
+          <td>Platform</td>
+          <td>Web browsers</td>
+          <td>iOS and Android devices</td>
+        </tr>
+        <tr>
+          <td>UI Components</td>
+          <td>HTML and CSS</td>
+          <td>Native mobile components (View, Text)</td>
+        </tr>
+        <tr>
+          <td>Rendering</td>
+          <td>Virtual DOM in browsers</td>
+          <td>Bridge to native mobile UI elements</td>
+        </tr>
+      </table>
 
-        <h2 id="create"><a href="https://docs.expo.dev/get-started/create-a-project/">
-            Create 1st app and see in Andriod</a></h2>
-        <pre><code class="language-css">
+      <h2 id="create">
+        <a href="https://docs.expo.dev/get-started/create-a-project/">
+          Create 1st app and see in Andriod</a
+        >
+      </h2>
+      <pre><code class="language-css">
 $ mkdir react; cd react
 
 // Node Package eXecute. NPM package runner. It allows developers to execute any Javascript Package available on the NPM registry
@@ -87,10 +97,15 @@ $ npx expo start
 $ npx expo start --tunnel
         </code></pre>
 
-        <h3>Open app on Andriod phone</h3>
+      <h3>Open app on Andriod phone</h3>
 
-        <dl><b>ByPass Traffic from Windows to WSL(if you are running backend on WSL)</b></dl>
-        <pre><code class="language-css">
+      <dl>
+        <b
+          >ByPass Traffic from Windows to WSL(if you are running backend on
+          WSL)</b
+        >
+      </dl>
+      <pre><code class="language-css">
 ipconfig    //get laptop Wifi IP
 ifconfig    //(Inside WSL), get WSL IP
 
@@ -105,13 +120,13 @@ Address         Port        Address         Port
 > netsh interface portproxy add v4tov4 listenaddress=&lt;laptop's Wi-Fi IP> listenport=9132 connectaddress=&lt;WSL_IP> connectport=9132
         </code></pre>
 
-        <dl><b>Run python server inside WSL (Testing)</b></dl>
-        <pre><code class="language-css">
+      <dl><b>Run python server inside WSL (Testing)</b></dl>
+      <pre><code class="language-css">
 python3 -m http.server 9132 --bind 172.33.133.170
         </code></pre>
 
-        <dl><b>Run server inside WSL</b></dl>
-        <pre><code class="language-css">
+      <dl><b>Run server inside WSL</b></dl>
+      <pre><code class="language-css">
 let app = move || {
     App::new()
         .app_data(web::Data::new(pool.clone()))
@@ -121,21 +136,23 @@ let app = move || {
 HttpServer::new(app).bind("0.0.0.0:9132")?.run().await
         </code></pre>
 
-        <dl><b>Enable developer option on your andriod phone</b></dl>
-        <pre>
+      <dl><b>Enable developer option on your andriod phone</b></dl>
+      <pre>
             Disconnect device, and ensure to turn off developer options on the android device (if was previously turned on).
             Connect the device via USB.
             Turn on developer options on the android device.    //Tap 5 times on settings>version number
             Enable check box for USB/Wireless debugging.
-        </pre>
+        </pre
+      >
 
-        <dl>
-            Install expo Go App on Phone, Scan QR code which appears on vscode screen after running npx expo start
-        </dl>
+      <dl>
+        Install expo Go App on Phone, Scan QR code which appears on vscode
+        screen after running npx expo start
+      </dl>
 
-        <h2 id="apk">Create apk file using expo</h2>
-        <dl>goto project containing react-native code</dl>
-        <pre><code class="language-css">
+      <h2 id="apk">Create apk file using expo</h2>
+      <dl>goto project containing react-native code</dl>
+      <pre><code class="language-css">
 $  npm install -g eas-cli
 $  eas login
 $  eas whoami
@@ -155,9 +172,8 @@ eas.json
 $ eas build -p android --profile preview
 - This will show scanner from which apk file will be downloaded from expo UI
         </code></pre>
-
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>
