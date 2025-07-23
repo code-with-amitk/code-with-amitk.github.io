@@ -41,6 +41,8 @@
       <a href="#terms">Terms</a>
       <ul>
         <li><a href="#namespace">namespace</a></li>
+        <li><a href="#service">service</a></li>
+        <li><a href="#pvc">PVC</a></li>
       </ul>
     </aside>
 
@@ -222,6 +224,52 @@
             Divides cluster into smaller units to isolate services, volumes and manage.
             Namespace contains pods.<br />
             3 predefined namespaces: Default, Kube-system(resources created by kubernets), Kube-public(reserved for future)
+          </td>
+        </tr>
+        <tr>
+          <td id="service">Service (kubernets Networking objects)</td>
+          <td>
+            Service is Networking abstraction which provides stable network access to pods.<br>
+            service does not run inside containers, these are k8s objects. Each service routes the traffic to 1 or more POD<br>
+            Service provides: Load balancing, service discovery, stable endpoints
+          </td>
+        </tr>
+        <tr>
+          <td id="pvc">PVC(Persistant Volume Claims)</td>
+          <td>
+            Types of PVC
+            <table>
+              <tr>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>Config PVC</td>
+                <td>
+                  Store configuration files for the container(json, yaml, config)<br>
+                  mounted at /etc/process-name inside container<br>
+                  Multiple pods can read
+                </td>
+              </tr>
+              <tr>
+                <td>Data PVC</td>
+                <td>
+                  Store application data,logs,database<br>
+                  Mounted at /var/lib/process-name inside container<br>
+                  Only 1 pod can write
+                </td>
+              </tr>
+              <tr>
+                <td>Shared-Data PVC</td>
+                <td>
+                  To transfer files between containers<br>
+                  Mounted at /shared/data inside container<br>
+                  All containers can read/write
+                </td>
+              </tr>
+            </table>
+            These are mounted at . Types<br>
+            &ensp; 1. Config PVC: 
           </td>
         </tr>
       </table>
