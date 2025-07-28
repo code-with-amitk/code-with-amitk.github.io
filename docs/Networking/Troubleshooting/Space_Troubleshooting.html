@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Space Troubleshooting</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rakkas&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="images/yda-logo-removebg-small.jpg"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#nospace">No Space Left on Device</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="nospace">No Space left on device</h2>
+      <pre><code class="language-css">
+# df -h        //Disk Free, Shows local and network file system
+Filesystem   Size     Used    Avail    Use%  Mounted on
+/dev/map/root 11G    3.8G     6.0G     39%    /          // root file system mounted on "/" has only 6.0G available
+devtmpfs     2.0G       0     2.0G      0%    /dev
+tmpfs        2.0G       0     2.0G      0%    /dev/shm
+tmpfs        2.0G    1.6M     2.0G      1%    /run
+tmpfs        2.0G       0     2.0G      0%    /tmp
+      </code></pre>
+      <table>
+        <tr>
+          <th>file system</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>/dev/sdd</td>
+          <td>
+            Real physical block device(Hard Disk). Mounted on root filesystem
+            (/)
+          </td>
+        </tr>
+        <tr>
+          <td>tmpfs</td>
+          <td>
+            temporary file system that resides on volatile memory(RAM). Data is
+            lost when system reboots. Includes /run etc
+          </td>
+        </tr>
+        <tr>
+          <td>tmpfs</td>
+          <td>
+            temporary file system that resides on volatile memory(RAM). Data is
+            lost when system reboots. Includes /run etc
+          </td>
+        </tr>
+        <tr>
+          <td>shm (shared memory)</td>
+          <td>tmpfs mounts for shared memory only.</td>
+        </tr>
+      </table>
+    </article>
+  </body>
+</html>

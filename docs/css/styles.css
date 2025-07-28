@@ -1,4 +1,421 @@
 /* Reset default browser styles */
+
+:root {
+  --primary-color: #333333;
+  --secondary-color: #818181;
+  --accent-color: royalblue;
+  --background-color: #f5f5f5;
+  --sidebar-width: 250px;
+  --sidebar-bg: honeydew;
+  --navbar-bg: honeydew;
+  --footer-bg: lightgoldenrodyellow;
+  --transition-speed: 0.3s;
+}
+/* * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+} */
+
+body {
+  font-family: "Poppins", Arial, sans-serif;
+  color: var(--primary-color);
+  background-color: var(--background-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Rakkas", serif;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+h1 {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  color: brown;
+}
+
+h2 {
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  color: brown;
+}
+
+h3 {
+  font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+  color: royalblue;
+}
+
+h4 {
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  color: darkmagenta;
+}
+
+h5 {
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  color: chocolate;
+}
+p {
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color var(--transition-speed) ease;
+}
+
+a:hover {
+  color: darken(var(--accent-color), 10%);
+}
+
+.page-container {
+  margin-left: var(--sidebar-width);
+  transition: margin-left var(--transition-speed) ease;
+  padding: 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--sidebar-bg);
+  overflow-y: auto;
+  transform: translateX(0);
+  transition: transform var(--transition-speed) ease;
+  z-index: 1000;
+  padding: 1rem 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  padding: 0.75rem 1.5rem;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+}
+
+.sidebar a:hover {
+  color: var(--primary-color);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-speed) ease,
+    visibility var(--transition-speed) ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.menu-toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  z-index: 1001;
+  display: none;
+  padding: 0.5rem;
+}
+
+.navbar {
+  background-color: var(--navbar-bg);
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list li {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.nav-list li a {
+  padding: 0.5rem;
+  white-space: nowrap;
+  display: block;
+}
+
+.search-item {
+  margin-left: auto;
+  flex-grow: 1;
+  max-width: 300px;
+  min-width: 150px;
+}
+
+#searchForm {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+#searchInput {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.search-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .search-item {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    order: 1;
+  }
+
+  .nav-list li:not(.search-item) {
+    width: 100%;
+  }
+
+  .nav-list li a {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+.search-results {
+  list-style: none;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+}
+
+.search-results li {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.search-results li:last-child {
+  border-bottom: none;
+}
+
+.search-results li:hover {
+  background-color: #f5f5f5;
+}
+.main-content {
+  flex: 1;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .search-item {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    order: 1;
+  }
+
+  .nav-list li:not(.search-item) {
+    width: 100%;
+  }
+
+  .nav-list li a {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+article {
+  margin-bottom: 2rem;
+}
+
+section {
+  margin-bottom: 1.5rem;
+}
+
+.link-list {
+  list-style: none;
+}
+
+.link-list li {
+  margin-bottom: 0.5rem;
+}
+.footer {
+  background-color: var(--footer-bg);
+  padding: 1rem;
+  text-align: center;
+  margin-top: auto;
+}
+.code-block {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  border-radius: 5px;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+}
+
+pre {
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  margin-bottom: 1rem;
+}
+.image-container {
+  max-width: 100%;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.zoomable-image {
+  max-width: 100%;
+  height: auto;
+  transition: transform var(--transition-speed) ease;
+  cursor: zoom-in;
+}
+
+.zoomed {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.5);
+  z-index: 1002;
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  background: white;
+  cursor: zoom-out;
+}
+
+.zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1001;
+  display: none;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-container {
+    margin-left: 0;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-item {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  #searchForm {
+    width: 100%;
+  }
+
+  #searchInput {
+    flex: 1;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
 body,
 h1,
 p,
@@ -8,14 +425,11 @@ li {
   padding: 10;
 }
 
-/* Set default font and colors */
 body {
   font-family: Arial, sans-serif;
   color: #333333;
-  /*background-color: #f5f5f5;*/
 }
 
-/*Header styles Start*/
 header {
   background-color: #f2f2f2;
   padding: 20px;
@@ -47,14 +461,13 @@ h5 {
   margin-bottom: 10px;
   color: chocolate;
 }
-/*Header styles End*/
 
-/* Navigation styles start */
 .navbar {
   margin-left: 180px;
   margin-bottom: 20px;
   background-color: honeydew;
   font-size: small;
+  position: sticky;
 }
 .navbar ul {
   list-style-type: none;
@@ -70,36 +483,23 @@ h5 {
 .navbar a:hover {
   color: blue;
 }
-/* Navigation styles end */
-
-/* Main content styles */
 main {
   padding: 20px;
 }
 
-/* Footer styles */
 footer {
   background-color: lightgoldenrodyellow;
   padding: 20px;
   text-align: center;
   font-size: 14px;
 }
-/* Footer styles end */
-
-/* Table styles Start */
 table {
   font-family: Poppins;
   border-collapse: collapse;
-  /*width: 100%;*/
   border: 1px solid black;
   font-size: 14px;
 }
 
-/*
-  th and td are selectors
-    th: It targets the table header cells (<th>) in html table
-    td: It targets the table data cells (<td>) within an HTML table.
-  */
 th,
 td,
 tr {
@@ -109,7 +509,6 @@ tr {
   background-color: #f2f2f2;
   font-size: 14px;
 }
-/* Table styles end */
 
 .code-block {
   background-color: #f1f1f1;
@@ -121,13 +520,8 @@ tr {
   white-space: pre-wrap;
 }
 pre {
-  /*background-color: lightgrey;*/
-  /*padding: 10px;
-  border-radius: 5px;*/
   font-family: "Times New Roman", Times, serif;
   font-size: 12px;
-  /*line-height: 1.5;
-  white-space: pre-wrap;*/
 }
 #search-bar {
   position: absolute;
@@ -137,23 +531,17 @@ pre {
   background-color: #f1f1f1;
 }
 
-/* sidebar start
-Search: mdn sidebar*/
 .sidebar {
   height: 100%;
   width: 200px;
   position: fixed;
-  /*z-index: 1;*/
   top: 0;
   left: 0;
   background-color: honeydew;
   overflow-x: hidden;
-  /*padding-top: 20px;*/
   font-size: small;
   overflow-y: auto;
 }
-
-/* Style the links inside the sidebar */
 .sidebar a {
   padding: 6px 8px 6px 16px;
   text-decoration: burlywood;
@@ -161,23 +549,19 @@ Search: mdn sidebar*/
   display: block;
   font-size: x-small;
 }
-
-/* Change the color of links on hover */
 .sidebar a:hover {
   color: #333333;
 }
-
 .sidebar ul {
   margin: -1px 0;
   font-size: x-small;
 }
-
 summary {
   margin-left: 10px;
   margin-bottom: 10px;
   font-size: 12px;
 }
-/* sidebar end*/
+
 dl {
   font-family: "Poppins";
   margin-left: 16px;
@@ -204,17 +588,13 @@ p {
   font-size: 12px;
 }
 
-/* li start*/
 li {
   list-style-type: none;
 }
-/* li start*/
 
-/*a start*/
 a:link {
   color: blue;
 }
-/*a start*/
 
 aside {
   font-family: "Poppins";
@@ -222,13 +602,12 @@ aside {
 }
 
 .image-container {
-  display: inline-block; /* Ensures the container shrinks to fit the image */
-  margin: 0; /* Removes margin around the container */
-  padding: 0; /* Removes padding around the container */
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 
 .zoomable-image {
-  /*width: 30%;  Adjusts the image to fit the container */
   height: auto;
   transition: transform 0.3s ease;
   cursor: zoom-in;
@@ -236,7 +615,6 @@ aside {
 }
 
 .zoomed {
-  /*transform: scale(2); Adjust scale as needed */
   position: fixed !important;
   top: 50% !important;
   left: 50% !important;
@@ -263,12 +641,12 @@ aside {
 
 .image-table {
   width: 100%;
-  border-collapse: collapse; /* Removes default spacing between table cells */
+  border-collapse: collapse;
 }
 
 .image-table td {
-  padding: 0; /* Removes padding inside table cells */
-  margin: 0; /* Removes margin inside table cells */
+  padding: 0;
+  margin: 0;
   text-align: center;
 }
 

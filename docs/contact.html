@@ -26,13 +26,15 @@
 -->
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Code Examples</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <div class="page-container">
+    <header class="header">
+      <nav class="navbar">
+        <!--See .navbar in styles.css-->
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="#">Our team</a></li>
@@ -40,24 +42,30 @@
           <li><a href="/contact.html">Contact</a></li>
           <li>
             <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
+              <input type="search" name="q" placeholder="Search site" />
+              <input type="submit" value="Go!" />
             </form>
-           </li>
+          </li>
         </ul>
-    </nav>
+      </nav>
+    </header>
 
-    <article style="margin-left:200px;">
+    <main class="main-content">
+      <article>
         <h3>Amit Kumar</h3>
-        <h4>amitkumar25nov1@gmail.com<br><br>
-            <a href="https://www.linkedin.com/in/ak25/">Linkedin</a><br><br>
-            <a href="https://www.youtube.com/channel/UC4nrHUDyI73y8zW6cMs_1yg">Youtube</a>
+        <h4>
+          amitkumar25nov1@gmail.com<br /><br />
+          <a href="https://www.linkedin.com/in/ak25/">Linkedin</a><br /><br />
+          <a href="https://www.youtube.com/channel/UC4nrHUDyI73y8zW6cMs_1yg"
+            >Youtube</a
+          >
         </h4>
-    </article>
+      </article>
+    </main>
 
-        <!-- And here is our main footer that is used across all the pages of our website -->
-    <footer style="margin-left:200px;">
-        <p>©Copyright 2050 by nobody. All rights reversed</p>
+    <!-- And here is our main footer that is used across all the pages of our website -->
+    <footer>
+      <p>©Copyright 2050 by nobody. All rights reversed</p>
     </footer>
-</body>
+  </div>
 </html>
