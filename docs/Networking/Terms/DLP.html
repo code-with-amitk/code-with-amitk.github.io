@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DLP</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#dlp">What</a>
+      <a href="#dlpaas">DLPaaS</a>
+    </aside>
+
+    <div style="margin-left: 200px">
+      <h2 id="what">DLP (Data Loss Prevention)</h2>
+      <dl>
+        if sensitive data is leaked(on cloud), then DLP protects the data by
+        inspecting the cloud services.<br />
+        When user voilates a DLP Policy(in netskope) a log is generated
+      </dl>
+      <h2 id="dlpaas">DLP As a Service (DLPaaS)</h2>
+      <dl>
+        Create async service on AWS cloud, listening on REST APIs, where
+        customer can send data for DLP inspection<br />
+        Service will inspect the data and return results.
+      </dl>
+      <pre><code></code></pre>
+    </div>
+  </body>
+</html>

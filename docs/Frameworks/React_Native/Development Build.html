@@ -86,7 +86,11 @@
       </table>
 
       <h3 id="eas">
-        1. Create dev build on Cloud. Expo Application Services (EAS)
+        <u
+          ><a href="https://docs.expo.dev/build/setup/"
+            >1. Create dev build on Cloud. Expo Application Services (EAS)</a
+          ></u
+        >
       </h3>
       <dl>
         Cloud-based tools and services that helps building, deploying React
@@ -99,12 +103,22 @@
 
       <h4>Steps of creating apk using EAS (cloud)</h4>
       <pre><code class="language-css">
-$ npm install -g eas-cli    //Install eas cli
-$ eas login                 //Log in to Expo
-$ eas init                  //Initialize EAS in Your Project
+//Install eas cli(EAS CLI is the command-line app that you will use to interact with EAS services from your terminal)
+$ npm install -g eas-cli    
+
+//Log in to Expo using your username, password
+$ eas login
+$ eas whoami
+
+//Initialize EAS in Your Project 
+$ eas init
+
+// Create a development build, which is a debug build of your app
 $ npx expo install expo-dev-client
 
+
 $ eas build -p android --profile development    // Andriod development build
+
 $ eas build -p ios --profile development        // ios development build
 This will upload project on cloud
 where its build an signed
