@@ -14,6 +14,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -51,26 +52,33 @@
       </dt>
       <br />
 
-      <dl><b>Containers</b></dl>
+      <dl>
+        <b><a href="Containers/Introduction.html">Container?</a></b>
+      </dl>
       <dt>
-        <a href="Containers/Introduction.html">What is Container?</a><br />
         <a href="Containers/Introduction.html"
           >Container vs VM, Advantages of Containers</a
-        ><br />
-        <a href="Containers/Commands.html">Commands</a><br />
+        >
       </dt>
       <br />
 
-      <dl><b>Kubernets</b></dl>
+      <dl>
+        <b><a href="Kubernets/Introduction.html">Kubernets?</a></b>
+      </dl>
       <dt>
-        <a href="Kubernets/Introduction.html">Kubernets?</a><br />
-        <a href="Kubernets/Architecture.html">Architecture:</a>
-        POD, Master node, Worker Node, Namespace<br />
         <a href="Kubernets/Kubernets_Objects.html">Kubernets Objects:</a>
         ClusterRole, ConfigMap, Deployment, Job, RBAC, ServiceAccount, Services,
         Secrets, POD<br />
         <a href="Kubernets/Terms.html">Terms:</a>
         Namespace, Service Tokens, Nodeport<br />
+        <a href="Kubernets/Commands.html">Commands</a><br />
+        <a href="Kubernets/Architecture.html">Architecture</a><br />
+        |- Worker node<br />
+        &ensp;&ensp;|- Docker runtime<br />
+        &ensp;&ensp;&ensp;&ensp;|- Namespace<br />
+        &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;|- POD<br />
+        &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;|-
+        Container(Application), Container(sidecar)
       </dt>
       <br />
 

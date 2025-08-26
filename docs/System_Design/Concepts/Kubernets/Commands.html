@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Container Commands</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"><!--See .sidebar in styles.css--></aside>
+
+    <article style="margin-left: 200px">
+      <h2>Commands</h2>
+      <pre><code>
+|- Worker node
+  |- Docker runtime
+    |- Namespace
+      |- POD
+        |- Container(Application), Container(sidecar)
+      </code></pre>
+      <h3>Check <a href="Architecture.html">Architecture</a></h3>
+
+      <h3>Namespace Commands</h3>
+      <pre><code class="language-css">
+$ systemctl status kubectl       //if kubernets is installed
+
+$ kubectl create namespace my-namespace                                 // Create namespace
+$ kubectl config  set-context --current --namespace=my-namespace        // Make namespace default
+
+// List namespaces
+$ kubectl get namespaces
+$ kubectl get pods -n my-namespace
+      </code></pre>
+
+      <h3>Pod Commands</h3>
+      <pre><code class="language-css">
+$ kubectl get pods                                    // List all pods in default namespace
+$ kubectl get pods -A
+
+$ kubectl delete deployment pod-name                                    // Delete pods
+$ kubectl delete deployment pod-name --all --grace-period=0 --force
+
+$ kubectl apply -f depolyment.yaml                                    // Create pod inside namespace(namespace name provided inside yml file)
+
+$ kubectl describe pod pod-name -n my-namespace             //List all containers in pod
+      </code></pre>
+
+      <h3>General Commands</h3>
+      <pre><code class="language-css">
+$ docker ps                                           //List all running containers
+$ docker inspect 7d8b5d857e84   
+
+$ docker rm container-id
+            </code></pre>
+
+      <h3>Container Commands</h3>
+      <pre><code class="language-css">
+$ sudo docker exec -it &lt;container-name&gt; bash      // Go into container
+$ sudo netstat -lpantu        //u=udp,t=tcp           //List process and ports<
+</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
