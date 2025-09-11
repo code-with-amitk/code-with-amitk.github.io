@@ -29,7 +29,11 @@
       </ul>
     </nav>
 
-    <aside class="sidebar"><!--See .sidebar in styles.css--></aside>
+    <aside class="sidebar">
+      <a href="#namespace">Namespace Commands</a>
+      <a href="#pod">POD Commands</a>
+      <a href="#container">Container Commands</a>
+    </aside>
 
     <article style="margin-left: 200px">
       <h2>Commands</h2>
@@ -42,7 +46,7 @@
       </code></pre>
       <h3>Check <a href="Architecture.html">Architecture</a></h3>
 
-      <h3>Namespace Commands</h3>
+      <h3 id="namespace">Namespace Commands</h3>
       <pre><code class="language-css">
 $ systemctl status kubectl       //if kubernets is installed
 
@@ -54,31 +58,43 @@ $ kubectl get namespaces
 $ kubectl get pods -n my-namespace
       </code></pre>
 
-      <h3>Pod Commands</h3>
+      <h3 id="pod">Pod Commands</h3>
+      <h4>Create POD</h4>
       <pre><code class="language-css">
-$ kubectl get pods                                    // List all pods in default namespace
-$ kubectl get pods -A
-
-$ kubectl delete deployment pod-name                                    // Delete pods
-$ kubectl delete deployment pod-name --all --grace-period=0 --force
-
-$ kubectl apply -f depolyment.yaml                                    // Create pod inside namespace(namespace name provided inside yml file)
-
-$ kubectl describe pod pod-name -n my-namespace             //List all containers in pod
+$ kubectl apply -f depolyment.yaml           // Create pod inside namespace(namespace name provided inside yml file)
       </code></pre>
 
-      <h3>General Commands</h3>
+      <h4>List Pods, Containers in Pod</h4>
       <pre><code class="language-css">
-$ docker ps                                           //List all running containers
+$ kubectl get pods -n namespace
+$ kubectl get pods -A
+
+//List all containers in pod
+$ kubectl describe pod pod-name -n my-namespace
+      </code></pre>
+
+      <h4>Delete Pods</h4>
+      <pre><code class="language-css">
+$ kubectl delete deployment pod-name
+$ kubectl delete deployment pod-name --all --grace-period=0 --force
+          </code></pre>
+
+      <h3 id="container">Container Commands</h3>
+      <h4>List Containers</h4>
+      <pre><code class="language-css">
+$ docker ps
 $ docker inspect 7d8b5d857e84   
+      </code></pre>
 
+      <h4>Remove Containers</h4>
+      <pre><code class="language-css">
 $ docker rm container-id
-            </code></pre>
+      </code></pre>
 
-      <h3>Container Commands</h3>
+      <h4>Enter into Container</h4>
       <pre><code class="language-css">
 $ sudo docker exec -it &lt;container-name&gt; bash      // Go into container
-$ sudo netstat -lpantu        //u=udp,t=tcp           //List process and ports<
+$ sudo netstat -lpantu        //u=udp,t=tcp           //List process and ports
 </code></pre>
     </article>
 
