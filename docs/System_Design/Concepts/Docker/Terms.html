@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Docker Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="./docker-compose.html" target="_blank">docker-compose</a>
+      <a href="#host">Docker Host</a>
+      <a href="#image">Container Image/Docker Image</a>
+      <a href="#file">Dockerfile</a>
+      <a href="#registry">Docker registry</a>
+      <a href="#volume">Docker Volume</a>
+      <ul>
+        <li><a href="#ex1">Example1</a></li>
+      </ul>
+      <a href="#mount">Mounts, tmpfs</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="host">Docker Host</h2>
+      <dl>
+        Machine on which the Docker containers run. It can be a virtual machine
+        or a physical machine
+      </dl>
+
+      <h2 id="image">Container Image/Docker Image</h2>
+      <dl>This is used to start the container</dl>
+
+      <h2 id="file">Dockerfile</h2>
+      <dl>Shell script for creating Docker image/Container image</dl>
+      <pre><code class="language-css">
+# vim application.Dockerfile 
+FROM ubuntu:20.04                             //FROM Command: Installation is based image this OS, Since docker is not full OS.
+RUN apt update \                              //RUN Command: Run some command
+    apt-get install -y --no-install-recommends openssl \
+    apt-get install -y --no-install-recommends iputils-ping \
+
+COPY ./application.out ./a.txt /app/
+
+CMD /app/application.out "--config" a.txt     //CMD Command: Start the application
+        </code></pre>
+
+      <h2 id="registry">Docker Registry</h2>
+      <dl>
+        Stores docker images. Same as github,gitlab are for source code. Eg:
+        dockerhub, elastic container registry(ecr)
+      </dl>
+
+      <h2 id="volume">Docker Volume</h2>
+      <dl>
+        This is a persistent storage location managed by Docker, outside the
+        container’s filesystem.<br />
+        Helpful when you want to store data present in database across container
+        reboots/deletion/recreation.<br />
+        Volumes are defined in docker-compose.yml and mapped to a path inside
+        the container.<br />
+        volumes, bind mounts, tmpfs all are seen as mounted directories to
+        container.
+        <br /><br />
+
+        <b>Name of docker volume:</b><br />
+        &ensp;
+        <a href="./docker-compose.html" target="_blank">Docker Compose</a>
+        auto-generates the volume name as project-name_volume
+      </dl>
+      <pre><code class="language-css">
+// Check volumes
+> docker volume ls
+go-server_db_data
+
+// Delete a volume
+> docker volume rm go-server_db_data
+go-server_db_data
+        </code></pre>
+
+      <h3>Example (Mounting logs from 1st to 2nd container)</h3>
+      <dl>
+        1. golang app running inside go_app container writes logs to
+        /logs/app.log<br />
+        2. container_logs folder is mounted inside go_app container. Hence logs
+        are copied to container_logs(on host)<br />
+        3. alloy_container mounts container_logs folder inside container & hence
+        logs written by gp_app container are read inside alloy container
+      </dl>
+      <pre><code class="language-css">
+// Mount Command Syntax
+# mount device(src) dst 
+mount /dev/sdb1 /mnt/mydrive
+
+# deployment.yaml
+services:
+  app:
+    container_name: go_app
+    volumes:
+      # mount src dst
+      # Mount /container_logs(host) to logs(container). Application will write logs to /logs/app.log
+      # Now logs would be present on host inside container_logs
+      - ./container_logs:/logs
+
+  alloy:
+    container_name: alloy_container
+    volumes:
+      # mount src dst
+      # Mount folder(container_logs on host) to (/tmp/app_logs) inside the alloy container
+      # Now alloy can access files written in ./container_logs on the host
+      - ./container_logs:/tmp/app_logs/
+        </code></pre>
+
+      <h2 id="mount">Mounts, tmpfs</h2>
+      <dl>Does not persists data across reboots</dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

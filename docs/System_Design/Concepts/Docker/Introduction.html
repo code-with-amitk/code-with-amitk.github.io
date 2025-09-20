@@ -23,13 +23,8 @@
     </nav>
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What</a>
-        <a href="#terms">Docker Terms</a>
-        <ul>
-            <li><a href="./docker-compose.html" target="_blank">docker-compose</a></li>
-            <li><a href="#volume">Volume</a></li>
-            <li><a href="#mount">Mounts, tmpfs</a></li>
-        </ul>
+        <a href="#what">What is Docker</a>
+        <a href="#vs">Docker vs Kubernets</a>
         <a href="#networking">Networking</a>
     </aside>
 
@@ -69,74 +64,6 @@
                 <td>helm</td>
             </tr>
         </table>
-
-        <h2 id="terms">Docker Terms</h2>
-        <table>
-            <tr>
-                <th>Term</th>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <td>Docker Host</td>
-                <td>
-                    Machine on which the Docker containers run. It can be a virtual machine or a physical machine
-                </td>
-            </tr>
-            <tr>
-                <td>Container Image/Docker Image</td>
-                <td>This is used to start the container.</td>
-            </tr>
-            <tr>
-                <td>Docker File</td>
-                <td>
-                    Shell script for creating Docker image/Container image.<br>
-                    <pre><code class="language-css">
-# vim application.Dockerfile 
-FROM ubuntu:20.04                             //FROM Command: Installation is based image this OS, Since docker is not full OS.
-RUN apt update \                              //RUN Command: Run some command
-    apt-get install -y --no-install-recommends openssl \
-    apt-get install -y --no-install-recommends iputils-ping \
-
-COPY ./application.out ./a.txt /app/
-
-CMD /app/application.out "--config" a.txt     //CMD Command: Start the application
-                    </code></pre>
-                </td>
-            </tr>
-            <tr>
-                <td>Docker Registry</td>
-                <td>
-                    Stores docker images. Same as github,gitlab are for source code.
-                    Eg: dockerhub, elastic container registry(ecr)
-                </td>
-            </tr>
-        </table>
-
-        <h4 id="volumes">Docker Volumes</h4>
-        <dl>
-            This is a persistent storage location managed by Docker, outside the container’s filesystem.<br>
-            Helpful when you want to store data present in database across container reboots/deletion/recreation.<br>
-            Volumes are defined in docker-compose.yml and mapped to a path inside the container.<br>
-            volumes, bind mounts, tmpfs all are seen as mounted directories to container.
-            <br><br>
-
-            <b>Name of docker volume:</b><br>
-            &ensp; <a href="#compose">Docker Compose</a> auto-generates the volume name as project-name_volume
-        </dl>
-        <pre><code class="language-css">
-// Check volumes
-> docker volume ls
-go-server_db_data
-
-// Delete a volume
-> docker volume rm go-server_db_data
-go-server_db_data
-        </code></pre>
-
-        <h4 id="mount">Docker Mounts, tmpfs</h4>
-        <dl>
-            Does not persists data across reboots
-        </dl>
 
         <h2 id="networking">Docker Networking</h2>
         <dl>

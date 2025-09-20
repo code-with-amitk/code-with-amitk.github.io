@@ -47,21 +47,28 @@
       <h3>Check <a href="Architecture.html">Architecture</a></h3>
 
       <h3 id="namespace">Namespace Commands</h3>
+      <h4>List Namespace</h4>
       <pre><code class="language-css">
 $ systemctl status kubectl       //if kubernets is installed
-
-$ kubectl create namespace my-namespace                                 // Create namespace
-$ kubectl config  set-context --current --namespace=my-namespace        // Make namespace default
-
-// List namespaces
 $ kubectl get namespaces
 $ kubectl get pods -n my-namespace
+        </code></pre>
+
+      <h4>Create namespace</h4>
+      <pre><code class="language-css">
+$ kubectl create namespace my-namespace                                 // Create namespace
+$ kubectl config  set-context --current --namespace=my-namespace        // Make namespace default
+      </code></pre>
+
+      <h4>Delete namespace</h4>
+      <pre><code class="language-css">
+$ kubectl delete namespace {namespace-name}
       </code></pre>
 
       <h3 id="pod">Pod Commands</h3>
-      <h4>Create POD</h4>
+      <h4>Create POD inside namespace</h4>
       <pre><code class="language-css">
-$ kubectl apply -f depolyment.yaml           // Create pod inside namespace(namespace name provided inside yml file)
+$ kubectl apply -f depolyment.yaml           // Namespace name provided inside yml file
       </code></pre>
 
       <h4>List Pods, Containers in Pod</h4>
