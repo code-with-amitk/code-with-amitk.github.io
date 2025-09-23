@@ -64,9 +64,16 @@
       </dl>
 
       <h3 id="sol1">Solution = Alloy → Loki → Grafana</h3>
-      <dl>For small applications, We can deploy this pipeline</dl>
+      <dl>For No so Large applications, We can deploy this pipeline</dl>
       <pre><code>
-[Go Application] → (stdout/stderr) → [Docker Logs] → [Alloy] → [Loki] → [Grafana]
+                                                     ------------ logs --------------
+                                                    |                                \/
+[Go Application] --logs-->  [ Alloy ]  --logs--> [ Loki ](3100) <--HTTP GET logs-- [Grafana]
+                          (Filter, Parse,        (Cut into Chunks,                (Dashboard)
+                          Label)                  Store in organized
+                                                  manner for
+                                                  Time-range and 
+                                                  label-based queries)
         </code></pre>
       <dl>
         <u>Go Application:</u> writes logs to stdout/stderr as it currently
@@ -184,6 +191,20 @@ networks:
 
       <dl id="config-alloy"><b>config.alloy</b></dl>
       <pre><code class="language-css">
+/*
+Why this file is needed? 
+- We saw in docker-compose.yml, app.log file is copied to alloy container. 
+- if logs are copied, Can't Alloy directly forward to Grafanna?
+
+go_app --logs--> Host -----logs--------> Alloy
+                  |                          |- /tmp/app_logs/
+                  |-container_logs
+
+Usage of this Alloy?
+- Filter, Parse, Label recieved application logs.
+- Decide endpoint to where application logs to be sent? To loki
+*/
+
 logging {
   level = "info"
   format = "logfmt"
@@ -191,8 +212,7 @@ logging {
 
 /* 
   Component-1(local.file_match) named "app_logs" 
-  - This is used to locate the log files in alloy container
-  - Check alloy: volume section inside docker-compose.yml
+  - Locate the log files in alloy container
   - Application logs are stored in /tmp/app_logs/app.log inside alloy container.
 */ 
 local.file_match "app_logs" {   // app_logs is name of component
@@ -220,14 +240,18 @@ loki.write "default" {
 
 /*
   Component 3(loki.source.file) named "local_files"
-  - This component is used to send logs to Loki
+  - Scrape content from File(source.file) and forward_to pipeline.
 */
 loki.source.file "local_files" {
-  targets    = local.file_match.app_logs.targets // This is list of targets to scrape
+  targets = local.file_match.app_logs.targets // This is list of targets to scrape
       // Read logs from app_logs component defined above and feed into a pipeline.
     forward_to = [loki.process.filter_logs.receiver] 
 }
 
+/*
+  Component 4(loki.process): Parse log fields, attach labels, set timestamp, 
+  then pushes output to the Loki server using loki.write
+*/
 loki.process "filter_logs" {
   // extracts level, time, caller, and msg from the JSON log line.
   stage.json {
