@@ -34,6 +34,8 @@
         <li><a href="#benefits">Benefits</a></li>
         <li><a href="#reaching">How requests can reach DPOP?</a></li>
       </ul>
+      <a href="#intf">DPOP Interfaces</a>
+      <a href="#certs">Custom Certs for SSL Inspection</a>
     </aside>
 
     <main>
@@ -42,11 +44,19 @@
         <dl>
           This is on-premises data plane. DPOP provides cloud security services
           locally rather than routing all traffic to the Netskope cloud<br />
-          Usage: <br />
-          - Traffic inspection<br />
-          - Policy enforcement<br />
-          - SSL/TLS interception<br />
+          Netskope placed a Box(Appliance) on customer premises for Packet
+          Inspection.<br />
+          Usage: Traffic inspection, Policy enforcement, SSL/TLS interception
         </dl>
+        <pre><code>
+---------Customer Env-------------------------------
+|                                                   |
+|   user1 -----\                                    |
+|                (dp1)DPOP(does packet inspection)(dp2)----Get REST API Token---> [Tenant UI]
+|   user2 -----/                 (mp)                <------- REST API token ----
+|                                admin              ---- upload Logs, Events---->
+|---------------------------------------------------
+        </code></pre>
 
         <h3 id="benefits">Benefits of DPOP</h3>
         <dl>
@@ -70,6 +80,57 @@
           - Netskope client <font color="red">cannot send</font> traffic to
           Appliance
         </dl>
+
+        <h2 id="intf">DPOP Interfaces</h2>
+        <pre><code>
+                          |-----------|
+                         inbound    outbound 
+explicit proxy   ---->   dp1  DPOP  dp2 ----> proxy, DNS, SSH
+SSH, AD Connector         |           |
+                          |----mp-----|
+                            Management
+inboud: 1 IP Address
+OUtbound: 1 IP Address
+        </code></pre>
+
+        <h2 id="certs">Custom Certs for SSL Inspection</h2>
+        <dl>
+          CSR is signed by internal CA, presently cannot be signed by External
+          CA
+        </dl>
+
+        <h2 id="modes">Modes of Operation</h2>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>nsclient needed</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>Inline (Transparent)</td>
+            <td>No</td>
+            <td>
+              Traffic forwarded using (PAC file, WCCP, or routing rules)<br />
+              Supports layer 4 (non-HTTP) traffic inspection.
+            </td>
+          </tr>
+          <tr>
+            <td>Explicit Proxy</td>
+            <td>Yes</td>
+            <td>
+              Netskope Client (NSC) or browser/OS proxy settings to send traffic
+              to DPoP.<br />
+              Best for remote users or branch offices.
+            </td>
+          </tr>
+          <tr>
+            <td>Hybrid Mode</td>
+            <td>-</td>
+            <td>
+              Combines inline and explicit proxy modes for flexible deployment.
+            </td>
+          </tr>
+        </table>
       </article>
     </main>
   </body>
