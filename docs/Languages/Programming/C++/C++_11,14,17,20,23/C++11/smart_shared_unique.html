@@ -46,8 +46,8 @@
 
         <h3 id="raw">Raw Pointers</strong></h3>
         <pre><code>
-            // As defined in C
-            int *p = new int();         //p is raw pointer.
+// As defined in C
+int *p = new int();         //p is raw pointer.
         </code></pre>
 
         <h3 id="smart">Smart pointers</h3>
@@ -116,8 +116,10 @@ Freed
 
         <h3 id="unique">Unique pointer (type of smart pointer)</h3>
         <h4 id="ucc">Copy Constructible(No)</h4>
+        <dl>
             There can be only one unique_ptr to any resource, any attempt to make a copy of a 
             unique_ptr will cause a compile-time error.
+        </dl>
             <pre><code class="language-css">
 unique_ptr&lt;int> p(new int(5))       // Okay
 unique_ptr&lt;T> c = p;              // Error: Can't copy unique_ptr

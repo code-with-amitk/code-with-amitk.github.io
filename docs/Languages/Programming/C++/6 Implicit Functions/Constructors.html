@@ -25,11 +25,16 @@
         <a href="#ctr">Constructor</a>
         <a href="#callinghierarchy">Ctr calling Hierarchy</a>
         <a href="#ctrinitializerlist">Ctr Initializer list</a>
+        <a href="#">Types of Ctr</a>
+        <ul>
+            <li><a href="#copy">Copy (lvalue ref)</a></li>
+            <li><a href="#move">Move (rvalue ref)</a></li>
+        </ul>
     </aside>
 
     <article style="margin-left:200px;">
 
-        <h3 id="ctr">Constructor</h3>
+        <h2 id="ctr">Constructor</h2>
         <dd>
             Same named function of class. Ctr is called when object of class is created. Used to provide values to data members.<br>
             Return type:               None<br> 
@@ -107,6 +112,78 @@ b = 10
 a = garbage value
 This is because, a is declared before b. Initialization of a will happen before b.
 Since a = b*2, and b does not have value hence a is initialized to garbage.
+        </code></pre>
+
+    <h2>Types of Constructors</h2>
+    <h3 id="copy">1. Copy Constructor(lvalue reference)</h3>
+      <dl>Creates copy of object</dl>
+      <pre><code class="language-css">
+using vi = vector &lt;int>;
+class A {
+    vi a;
+    void print() {
+        for (decltype(auto)i:a)
+            cout &lt;&lt; i;
+    }
+public:
+    A(vi& b):a(b) { // copy ctr (using lvalue ref). Created a copy
+        cout &lt;&lt; "\nCopy ctr\n";
+        print();
+    }
+};
+int main() {
+    vi a = {1,2,3};
+    A obj(a);           // Copy ctr called. Local copy remains present
+    cout &lt;&lt; "\nAfter copy ctr in main()\n";
+    for(decltype(auto)i:a)
+        cout &lt;&lt; i;
+}
+/*
+$ ./a.out
+Copy ctr
+1 2 3
+
+After copy ctr in main()
+1 2 3
+$ 
+*/
+        </code></pre>
+
+    <h3 id="move">2. Move Constructor(rvalue reference) (Introduced in c++11)</h3>
+      <dl>Moves the object</dl>
+      <pre><code class="language-css">
+using vi = vector &lt;int>;
+class A {
+    vi a;
+    void print() {
+        for (decltype(auto)i:a)
+            cout &lt;&lt; i;
+    }
+public:
+    //A(vi&& b):a(b)       ///////// This will make copy. Not correct move ctr ///////////
+    A(vi&& b):a(move(b)) {  // move ctr (using rvalue ref).
+        cout &lt;&lt; "\nmove ctr\n";
+        print();
+    }
+};
+int main() {
+    vi a = {1,2,3};
+    A obj(a);           // Copy ctr called. Local copy remains present
+
+    // move invokes a r value ref
+    A obj1(move(a));            // move(a) is equal to (int &&x = a)
+    cout &lt;&lt; "\nAfter move ctr in main()\n";
+    for(decltype(auto)i:a)
+        cout &lt;&lt; i;
+}
+/*
+$ ./a.out
+move ctr
+1 2 3
+
+After move ctr in main()    //Value moved not availble in main
+$
+*/
         </code></pre>
 
     </article>

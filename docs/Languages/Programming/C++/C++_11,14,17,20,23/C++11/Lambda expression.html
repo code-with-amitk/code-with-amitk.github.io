@@ -44,8 +44,12 @@
         function. <br />
         <b>Lambda usecases?</b><br />
         &ensp; 1. If some logic/function need to be called again and again, then
-        function call is not good(stack creation/destroy). Store in
-        variable(pointer).<br />
+        function call is not good(<a
+          href="/Motherboard/Memory/Processes.html"
+          target="_blank"
+          >stack</a
+        >
+        creation/destroy). Store in variable(pointer).<br />
         &ensp; 2. save stack creation/deletion, jump instruction time
       </dl>
 
@@ -194,10 +198,7 @@ int main() {
         </code></pre>
 
       <h2 id="genlambda">Generic Lambda (C++14)</h2>
-      <dl>
-        Now lambda can be made Generic, for example auto can be used inside
-        lambda. Earlier this use to give error.
-      </dl>
+      <dl>auto can be used inside lambda. Earlier this use to give error.</dl>
       <pre><code class="language-css">
 auto ptr = [](auto x, auto y){ return x+y; };
 string a = "Never", b = "GiveUp";
