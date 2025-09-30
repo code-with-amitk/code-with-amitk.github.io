@@ -7,6 +7,26 @@
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
   <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
     <!-- Sidebar -->
     <div class="sidebar">
       <a href="#BlockchainAddress">BlockchainAddress (Sender or Receiver)</a>
@@ -27,6 +47,8 @@
     <article style="margin-left: 200px">
       <h3 id="BlockchainAddress">BlockchainAddress (Sender or Receiver)</h3>
       <dl>
+        Public, Private key pair is calculated for user. Public key of user is
+        treated as User Address<br />
         Bitcoin address of node is calculated using Hash of Public key.
         Public/Pvt keys generated using secp256k1 ECC Algorithm.<br />
         Hash is generated using RIPEMD160 + SHA256.
