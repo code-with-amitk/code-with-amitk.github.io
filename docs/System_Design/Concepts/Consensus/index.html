@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Consensus</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">What</a>
+      <a href="#cat">Categories of consensus mechanisms</a>
+      <a href="#impl">Implementations</a>
+      <ul>
+        <li><a href="#paxos">1. Paxos</a></li>
+        <li><a href="#raft">2. RAFT</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Consensus Mechanism</h2>
+      <dl>
+        <b>What is Consensus?</b> set of steps that are taken by most or all
+        nodes in a blockchain to agree on a proposed state or value.<br />
+        <b>Properties of Consensus</b><br />
+        &ensp; 1. Fault tolerant: The consensus algorithm should be able to run
+        in the presence of faulty or malicious nodes (Byzantine nodes)<br />
+        &ensp; 2. Single vote: No node can make the decision more than once in a
+        single consensus cycle
+      </dl>
+
+      <h2 id="cat">Categories of consensus mechanisms</h2>
+      <h3 id="leader">1. Leader election / POW based</h3>
+      <dl>
+        Leader is elected at random(lottery based) and leader proposes final
+        value.<br />
+        Bitcoin uses it
+      </dl>
+      <h3 id="bft">2. BFT based</h3>
+      <dl>Based on rounds of votes.</dl>
+
+      <h2 id="impl">Implementations of consensus protocols</h2>
+      <h3 id="paxos">1. Paxos</h3>
+      <dl>
+        Introduced by Leslie Lamport in 1989<br />
+        Nodes are assigned various roles such as Proposer, Acceptor, and
+        Learner.
+      </dl>
+      <h3 id="raft">2. RAFT</h3>
+      <dl>
+        Node can be a follower, candidate, or leader. The leader commits the
+        proposed changes
+      </dl>
+    </article>
+  </body>
+</html>
