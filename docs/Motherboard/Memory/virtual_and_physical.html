@@ -67,8 +67,8 @@
             </tr>
             <tr>
                 <td>Contains</td>
-                <td><a href=#page">Pages</a></td>
-                <td><a href="#frame">Frames</a></td>
+                <td><a href="#page" target="_blank">Pages</a></td>
+                <td><a href="#frame" target="_blank">Frames</a></td>
             </tr>
             <tr>
                 <td>Memory Allocation</td>
@@ -299,7 +299,7 @@
 
         <h4 id="16bit">Conversion Example(16 bit system)</h4>
         <dl>
-            We have above <a href="#pagetable">page table</a>
+            We have above <a href="#pagetable" target="_blank">page table</a>
         </dl>
         <pre><code class="language-css">
             Virtual Memory/Hard Disk	Physical Memory/RAM
@@ -361,8 +361,8 @@
         <h4 id="3264bit">Conversion Example(32,64 bit system)</h4>
         <h5>Problem with Page Table</h5>
         <dt>
-            32 bit = 4 bytes. 2<sup>32</sup> = 4,294,967,296 (can access 4GB memory)<br>
-            4294967296/4096 = 10,48,576 = 1 Million Page entries in Virtual Page Table
+            32 bit OS = 4 bytes. 2<sup>32</sup> = 4,294,967,296 (4 GB addresses can be present. access 4GB memory)<br>
+            4GB/4KB(Page size): 10,48,576 = 1 Million Page entries in Virtual Page Table
         </dt>
 
         <h5>Solution-1: <a href="#tlb">TLB</a></h5>

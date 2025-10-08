@@ -1,121 +1,153 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Processes</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#process">Process</a>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#process">Process</a>
+      <ul>
+        <li><a href="./fork.html">Child Process=fork()</a></li>
+      </ul>
+      <a href="#layout">Memory Layout of a Process</a>
+      <ul>
+        <li><a href="#cs">Code Segment(.text)</a></li>
+        <li><a href="#ds">Data Segment(.data, .bss)</a></li>
+        <li><a href="#ss">Stack Segment</a></li>
         <ul>
-            <li><a href="./fork.html">Child Process=fork()</a></li>
+          <li><a href="#stackframe">Stack Frame</a></li>
+          <li><a href="#stackoverflow">Stack Overflow</a></li>
+          <li><a href="#stacksmashing">Stack Smashing</a></li>
+          <li><a href="#maxstack">MAX Stack Size</a></li>
+          <li><a href="#segfault">Segmentation Fault</a></li>
         </ul>
-        <a href="#layout">Memory Layout of a Process</a>
+        <li><a href="#heap">Heap</a></li>
         <ul>
-            <li><a href="#cs">Code Segment(.text)</a></li>
-            <li><a href="#ds">Data Segment(.data, .bss)</a></li>
-            <li><a href="#ss">Stack Segment</a></li>
-            <ul>
-                <li><a href="#stackframe">Stack Frame</a></li>
-                <li><a href="#stackoverflow">Stack Overflow</a></li>
-                <li><a href="#stacksmashing">Stack Smashing</a></li>
-                <li><a href="#maxstack">MAX Stack Size</a></li>
-                <li><a href="#segfault">Segmentation Fault</a></li>
-            </ul>
-            <li><a href="#heap">Heap</a></li>
-            <ul>
-                <li><a href="#memoryleak">Heap Overflow / Memory leak</a></li>
-            </ul>
+          <li><a href="#memoryleak">Heap Overflow / Memory leak</a></li>
         </ul>
-        <a href="#states">Process States</a>
-        <a href="#processtable">Process Table</a>
-        <ul>
-            <li><a href="#pcb">Process Control Block(PCB)</a></li>
-        </ul>
-        <a href="#ways">Ways of Process Creation, Terminaton</a>
+      </ul>
+      <a href="#states">Process States</a>
+      <a href="#processtable">Process Table</a>
+      <ul>
+        <li><a href="#pcb">Process Control Block(PCB)</a></li>
+      </ul>
+      <a href="#ways">Ways of Process Creation, Terminaton</a>
     </aside>
 
-    <main>  <!--Here is our page's main content-->
-        <article style="margin-left:200px;">   <!-- It contains an article -->
-            <h2 id="process">What is process?</h2>
-            <dl>
-                Running instance of program. All processes are decedents of swapper process(PID=0). 
-                Both(threads, processes) are independent sequence of operations
-            </dl>
-            <a href="./fork.html"><h4>fork() = Create child process</h4></a>
+    <main>
+      <!--Here is our page's main content-->
+      <article style="margin-left: 200px">
+        <!-- It contains an article -->
+        <h2 id="process">What is process?</h2>
+        <dl>
+          Running instance of program. All processes are decedents of swapper
+          process(PID=0). Both(threads, processes) are independent sequence of
+          operations
+        </dl>
+        <a href="./fork.html"><h4>fork() = Create child process</h4></a>
 
-            <h2 id="layout">Memory Layout of a Process</h2>
-            <dl>
-                After compilation obj file is created 
-                <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/C/Compile/Object_File">ELF(Executable and linking format) format</a>. 
-                This ELF file has (.text=CS, .data & .rodata = DS and others)
-                This file is loaded in memory which creates Memory layout of the process.
-            </dl>
-            <pre><code>
-                   |                                                                                               |
-                   |                          <------DATA SEGMENT (static, global) ----------->                    |
+        <h2 id="layout">Memory Layout of a Process</h2>
+        <dl>
+          After compilation obj file is created
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/C/Compile/Object_File"
+            >ELF(Executable and linking format) format</a
+          >. This ELF file has (.text=CS, .data & .rodata = DS and others) This
+          file is loaded in memory which creates Memory layout of the process.
+        </dl>
+        <pre><code>
+                                Heap [                   ]
+                                            /\
+                                             |
+                   |                         |<------DATA SEGMENT (static, global) ----------->                    |
 [Kernel] Process-2 |[STACK] shared_libraries {PTR-To-HEAP} {Uninitialized_BSS} {Initialized DS} [TEXT/CODE SEGMENT]|
                    | ----->                                BlockStartedBySymbol <-RW--><--RO-->              0x0000|
-                   |                                                                                               |
                 
 Object/ELF File ===> |ELF Header|.data Header|.rodata Header|.text Header |.data|.rodata|.text|
                                                                           /             /       \                         
                                                                         /              /         \
 Memory Layout ==>                                                      | Data Segment |Code Segment| Stack |
             </code></pre>
-            <img src="/images/Memory/memory-layout-of-process.png" 
-            alt="Memory layout of a process" style="width:500px;height:200px;">
+        <img
+          src="/images/Memory/memory-layout-of-process.png"
+          alt="Memory layout of a process"
+          style="width: 500px; height: 200px"
+        />
 
-            <table>
+        <table>
+          <tr>
+            <th>Segment</th>
+            <th>Details</th>
+          </tr>
+          <tr>
+            <td id="cs"><b>Code/Text Segment (Read Only) Size = 8k</b></td>
+            <td>
+              <dl>
+                (RO) Have Executable Instructions. Neither grows nor shrinks.<br />
+                When a process is run twice OS maintains 1 set of pages kept in
+                main memory. Both processes points to same memory (ie does not
+                have personal CS)
+              </dl>
+            </td>
+          </tr>
+          <tr>
+            <td id="ds"><b>Data Segment {Global, Static}</b></td>
+            <td>
+              <dl>Stores global, Static variables</dl>
+              <table>
                 <tr>
-                    <th>Segment</th>
-                    <th>Details</th>
+                  <th>Part</th>
+                  <th>desc</th>
                 </tr>
                 <tr>
-                    <td id="cs"><b>Code/Text Segment (Read Only) Size = 8k</b></td>
-                    <td>
-                        (RO) Have Executable Instructions. Neither grows nor shrinks.<br>
-                        When a process is run twice OS maintains 1 set of pages kept in main memory. Both processes points to same memory (ie does not have personal CS)
-                    </td>
-                </tr>
-                <tr>
-                    <td id="ds"><b>Data Segment {Global, Static}</b></td>
-                    <td>
-                        <table>
-                            <tr>
-                                <th>Part</th>
-                                <th>desc</th>
-                            </tr>
-                            <tr>
-                                <td>Initialized DS</td>
-                                <td>
-                                    Initialized by Coder. Again its divided into 2 parts
-                                    <table>
-                                        <tr>
-                                            <td>RO(READ ONLY)</td>
-                                            <td>Global constants are stored here. Eg: const char *a = "test"</td>
-                                        </tr>
-                                        <tr>
-                                            <td>RW(READ WRITE)</td>
-                                            <td>Stores Initialized globals, extern variables, local static
-                                                <pre><code>
+                  <td><dl>Initialized DS</dl></td>
+                  <td>
+                    <dl>
+                      Initialized by Coder. Again its divided into 2 parts
+                    </dl>
+                    <table>
+                      <tr>
+                        <td><dl>RO(READ ONLY)</dl></td>
+                        <td>
+                          <dl>
+                            Global constants are stored here. Eg: const char *a
+                            = "test"
+                          </dl>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><dl>RW(READ WRITE)</dl></td>
+                        <td>
+                          <dl>
+                            Stores Initialized globals, extern variables, local
+                            static
+                          </dl>
+                          <pre><code class="language-css">
 char s[] = "test";  //Initialized Globals
 int a = 1;        
 static int b = 1;
@@ -124,43 +156,58 @@ extern int a;     //Extern variable
 
 static int a;     //Local static
                                                 </code></pre>
-                                            </td>
-                                        </tr>
-                                    </table>                                  
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Unintialized DS / BSS(Block Started by Symbol)</td>
-                                <td>Stores uninitialized global and static. Data is Initialized to 0(by kernel) before code start executing.
-                                    <pre><code>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <dl>Unintialized DS / BSS(Block Started by Symbol)</dl>
+                  </td>
+                  <td>
+                    <dl>
+                      Stores uninitialized global and static. Data is
+                      Initialized to 0(by kernel) before code start executing.
+                    </dl>
+                    <pre><code class="language-css">
 int a;
 static int b;
-                                    </code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Pointer-to-Heap</td>
-                                <td>Data Segment also stored pointer to heap. As memory is allocated/deallocated on heap using malloc() DS grows/shrinks.
-                                    <pre><code>
+                    </code></pre>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pointer-to-Heap</td>
+                  <td>
+                    <dl>Data Segment also stored pointer to heap.</dl>
+                    <pre><code>
 malloc()->brk()
 realloc()->sbrk()
                                     </code></pre>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
+                  </td>
                 </tr>
-                <tr>
-                    <td id="ss"><b>Stack Segment</b></td>
-                    <td>
-                        Stores: Local variables, Registers, Stack Frame pointer, return address, stack-based parameters, stack frame as LL<br>
-                        <br>
-                        <h4 id="stackframe">Stack Frame: {Input_parameters} {Return_address} {Local_variables}</h4>
-                        &ensp; Return address: The address to which control should return after the function call completes.
-                        <pre><code>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td id="ss"><b>Stack Segment</b></td>
+            <td>
+              <dl>
+                Stores: Local variables, Registers, Stack Frame pointer, return
+                address, stack-based parameters, stack frame as LL
+              </dl>
+              <h4 id="stackframe">
+                Stack Frame: {Input_parameters} {Return_address}
+                {Local_variables}
+              </h4>
+              <dl>
+                address: The address to which control should return after the
+                function call completes.
+              </dl>
+              <pre><code class="language-css">
 add(int a, int b){          //0x33
     int c;               //Local
-    }
+}
 main(int argc, char *argv[]){   //0x22
     int a ,b;
     add(a,b);
@@ -174,95 +221,149 @@ From OS:Call to main()      //0x11
 |                                                         rsp Stack pointer(Points to the top of the stack)
 |
 rbp Base pointer(Points to the base of the current stack frame. Remains fixed)
-                        </code></pre>               
+                        </code></pre>
 
-                        <h5>Popping of Stack frame</h5>
-                        Function add() finishes, 
-                        <b><a href="/Motherboard/Memory/Memory_Types.html#ip">Instruction pointer(is set to prev address)=0x22+offset</a></b><br>
-                        Then add() stack is cleared, Similarly main() stack is cleared<br>
-                        rsp, rbp are set to old values
-                        
-                        <h4 id="stackoverflow">Stack Overflow</h4>
-                        When process uses all its stack. At end of process's stack there is a GUARD PAGE, when process goes into it.
-                        <pre><code>
+              <h5>Popping of Stack frame</h5>
+              <dl>
+                Function add() finishes,
+                <a href="/Motherboard/Memory/Memory_Types.html#ip"
+                  >Instruction pointer</a
+                >(is set to prev address)=0x22+offset
+                <br />
+                Then add() stack is cleared, Similarly main() stack is
+                cleared<br />
+                rsp, rbp are set to old values
+              </dl>
+
+              <h4 id="stackoverflow">Stack Overflow</h4>
+              <dl>
+                When process uses all its stack. At end of process's stack there
+                is a GUARD PAGE, when process goes into it.
+              </dl>
+              <pre><code class="language-css">
 fun() {
     fun();
 }
                         </code></pre>
 
-                        <h4 id="stacksmashing">Stack Samshing</h4>
-                        Stack overflow caused deliberately as part of an attack.
+              <h4 id="stacksmashing">Stack Samshing</h4>
+              <dl>Stack overflow caused deliberately as part of an attack.</dl>
 
-                        <h4 id="maxstack">MAX Stack Size / Maximum stack allocated to process at start</h4>
-                        <pre><code>
+              <h4 id="maxstack">
+                MAX Stack Size / Maximum stack allocated to process at start
+              </h4>
+              <pre><code>
 8 MB(Default)  #cat /proc/pid/limits     //Linux
 1 MB(Default)                            //Windows
 
 $ ulimit -u unlimited                    //Changing stack size
                         </code></pre>
-                        <u>Why 8MB of stack?</u> Atleast large and difficult to overflow<br>
-                        <u>Why Stack size != Virtual Memory size (As Heap size = Virtual Memory size)?</u><br>
-                        &ensp; Every thread has its own Stack.if thread-1 consumes all virtual memory and nothing left for thread-2.
+              <u>Why 8MB of stack?</u> Atleast large and difficult to
+              overflow<br />
+              <u
+                >Why Stack size != Virtual Memory size (As Heap size = Virtual
+                Memory size)?</u
+              ><br />
+              &ensp; Every thread has its own Stack.if thread-1 consumes all and
+              nothing left for thread-2.
 
-                        <h4 id="sefault">Segmentation Fault</h4>
-                        Program tries to access memory that it's not allowed to access (memory violation)<br>
-                        eg: null pointer (a pointer that doesn't point to any valid memory location), Accessing memory beyond bounds a[5]. access a[5]
-                    </td>
-                </tr>
-                <tr>
-                    <td id="heap">Heap</td>
-                    <td>
-                        Heap is not part of process Memory layout, but process stores pointer to its heap area<br>
-                        Heap is allocated on <a href="/Motherboard/Memory/virtual_and_physical.html">Virtual Memory/hard Disk</a> & is used for dynamic Memory allocation.<br>
-                        <b>Max Heap Size</b> = <a href="/Motherboard/Memory/virtual_and_physical.html">Virtual memory size</a>.
+              <h4 id="sefault">Segmentation Fault</h4>
+              <dl>
+                Program tries to access memory that it's not allowed to access
+                (memory violation)<br />
+                eg: null pointer (a pointer that doesn't point to any valid
+                memory location), Accessing memory beyond bounds a[5]. access
+                a[5]
+              </dl>
+            </td>
+          </tr>
+          <tr>
+            <td id="heap">Heap</td>
+            <td>
+              <dl>
+                Heap is not part of process Memory layout, but process stores
+                pointer to its heap area<br />
+                Heap is allocated on
+                <a
+                  href="/Motherboard/Memory/virtual_and_physical.html"
+                  target="_blank"
+                  >Virtual Memory/hard Disk</a
+                >
+                & is used for dynamic Memory allocation.<br />
+                <b>Max Heap Size</b> =
+                <a
+                  href="/Motherboard/Memory/virtual_and_physical.html"
+                  target="_blank"
+                  >Virtual memory size</a
+                >.
+              </dl>
 
-                        <h4 id="memoryleak">Heap Overflow / Memory leak</h4>
-                        When process keeps on allocating more and more memory without freeing it causes Heap overflow.<br>
-                        Aftermaths: System shutdown, Crash, System becoming dead-slow.
-                        <pre><code>
+              <h4 id="memoryleak">Heap Overflow / Memory leak</h4>
+              When process keeps on allocating more and more memory without
+              freeing it causes Heap overflow.<br />
+              Aftermaths: System shutdown, Crash, System becoming dead-slow.
+              <pre><code>
 while(1){ 
     char *p = (char *) malloc(12); 
 }                            
                         </code></pre>
-                    </td>
-                </tr>
-            </table>        
-            
-            <h2 id="states">Process States</h2>
-            <dl>
-                When a process executes, it passes through different states.<br>
-                <b>a. Start:</b> Initial state when a process is first started/created.<br>
-                <b>b. Ready:</b> The process is waiting to be assigned to a processor.<br>
-                <b>c. Running(Flag R):</b> Once the process has been assigned to a processor by the OS scheduler state changes to running.<br>
-                <b>d. Waiting/Sleeping(Flag S):</b> Process moves into the waiting state if it needs to wait for a resource, eg: waiting for user input or file.<br>
-                <b>e. Terminated or Exit:</b> Once the process finishes its execution, or it is terminated by the OS. Here it waits to be removed from main memory.                
-            </dl>
+            </td>
+          </tr>
+        </table>
 
-            <h2 id="processtable">Process Table</h2>
-            <dl>
-                <b>What is Process Table?</b><br>
-                Process Table is Array of structures (called Process Control Blocks), one entry per process.<br>
-                Entry contains important information about the process's state:<br>
-                &ensp; Its <a href="/Motherboard/Memory/Memory_Types.html#ip">Program counter</a>: Store address from where to start again<br>
-                &ensp; stack pointer<br>
-                &ensp; memory allocation<br>
-                &ensp; the status of its open files<br>
-                &ensp; Process's accounting and scheduling information<br>
-                &ensp; And everything else about the process that must be saved when the process is switched from running to ready or blocked state so that it can be restarted later
-            </dl>
-            <dl>
-                <b>Why Process Table?</b> <br>
-                The main objective of process table entry is to restart process from state where it left off, as it had never stopped.<br>
-                Process state which is interrupted using Interrupt is also saved on process table for later resumption.
-            </dl>
-            <table>
-                <tr>
-                    <td>
-                        <img src="/images/Memory/Process_table.png" alt="Process Table" style="width:500px;height:300px">
-                    </td>
-                    <td>
-                        <h3>Process Control Block</h3>
-                        <pre><code class="language-css">
+        <h2 id="states">Process States</h2>
+        <dl>
+          When a process executes, it passes through different states.<br />
+          <b>a. Start:</b> Initial state when a process is first
+          started/created.<br />
+          <b>b. Ready:</b> The process is waiting to be assigned to a
+          processor.<br />
+          <b>c. Running(Flag R):</b> Once the process has been assigned to a
+          processor by the OS scheduler state changes to running.<br />
+          <b>d. Waiting/Sleeping(Flag S):</b> Process moves into the waiting
+          state if it needs to wait for a resource, eg: waiting for user input
+          or file.<br />
+          <b>e. Terminated or Exit:</b> Once the process finishes its execution,
+          or it is terminated by the OS. Here it waits to be removed from main
+          memory.
+        </dl>
+
+        <h2 id="processtable">Process Table</h2>
+        <dl>
+          <b>What is Process Table?</b><br />
+          Process Table is Array of structures (called Process Control Blocks),
+          one entry per process.<br />
+          Entry contains important information about the process's state:<br />
+          &ensp; Its
+          <a href="/Motherboard/Memory/Memory_Types.html#ip">Program counter</a
+          >: Store address from where to start again<br />
+          &ensp; stack pointer<br />
+          &ensp; memory allocation<br />
+          &ensp; the status of its open files<br />
+          &ensp; Process's accounting and scheduling information<br />
+          &ensp; And everything else about the process that must be saved when
+          the process is switched from running to ready or blocked state so that
+          it can be restarted later
+        </dl>
+        <dl>
+          <b>Why Process Table?</b> <br />
+          The main objective of process table entry is to restart process from
+          state where it left off, as it had never stopped.<br />
+          Process state which is interrupted using Interrupt is also saved on
+          process table for later resumption.
+        </dl>
+        <table>
+          <tr>
+            <td>
+              <img
+                src="/images/Memory/Process_table.png"
+                alt="Process Table"
+                style="width: 500px; height: 300px"
+              />
+            </td>
+            <td>
+              <h3>Process Control Block</h3>
+              <pre><code class="language-css">
 struct task_struct {
     long                 priority;
     //DOUBLY LL
@@ -286,83 +387,98 @@ struct task_struct {
     //Register information.
 };
                         </code></pre>
-                    </td>
-                </tr>
-            </table>
+            </td>
+          </tr>
+        </table>
 
-            <h3 id="pcb">PCB / Process Control Block / Process Context</h3>
-            <dl>
-                PCB is a data structure(struct task_struct) for storing all information of a process inside process table
-            </dl>
-            <dl>
-                <b>Why needed?</b> When process changes state (ie switched from running to waiting/sleeping state(due to 
-                <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms#context-switch">context switch</a> or 
-                <a href="/Operating%20System/Linux/Kernel/Interrupts/">interrupt</a>)) kernel stores info in PCB,
-                so that process can resumed later from same point using this information.<br>
-                Information of child processes is stored in PCB of parent process etc.
-            </dl>
+        <h3 id="pcb">PCB / Process Control Block / Process Context</h3>
+        <dl>
+          PCB is a data structure(struct task_struct) for storing all
+          information of a process inside process table
+        </dl>
+        <dl>
+          <b>Why needed?</b> When process changes state (ie switched from
+          running to waiting/sleeping state(due to
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms#context-switch"
+            >context switch</a
+          >
+          or
+          <a href="/Operating%20System/Linux/Kernel/Interrupts/">interrupt</a>))
+          kernel stores info in PCB, so that process can resumed later from same
+          point using this information.<br />
+          Information of child processes is stored in PCB of parent process etc.
+        </dl>
 
-            <h4>Information stored in PCB</h4>
-            <dt>
-            <a href="/Motherboard/Memory/Memory_Types.html">Register values of present process, stack pointer (rbp) etc</a><br>
-            Process-state: Any of 5<br>
-            pid: process-id<br>
-            <a href="/Motherboard/Memory/Memory_Types.html">Program Counter/Instruction Pointer:</a> 
-            Address of next instruction to be executed on Code segment of this process.<br>
-            priority: This is a number. Process having higher priority execute 1st.<br>
-            <a href="/Motherboard/Memory/Memory_Types.html">General purpose registers:</a> Stores results of calculations done by process in Memory segment.<br>
-            List of open files, list of open devices. This all information is called PROCESS CONTEXT.
-            </dt>
+        <h4>Information stored in PCB</h4>
+        <dt>
+          <a href="/Motherboard/Memory/Memory_Types.html"
+            >Register values of present process, stack pointer (rbp) etc</a
+          ><br />
+          Process-state: Any of 5<br />
+          pid: process-id<br />
+          <a href="/Motherboard/Memory/Memory_Types.html"
+            >Program Counter/Instruction Pointer:</a
+          >
+          Address of next instruction to be executed on Code segment of this
+          process.<br />
+          priority: This is a number. Process having higher priority execute
+          1st.<br />
+          <a href="/Motherboard/Memory/Memory_Types.html"
+            >General purpose registers:</a
+          >
+          Stores results of calculations done by process in Memory segment.<br />
+          List of open files, list of open devices. This all information is
+          called PROCESS CONTEXT.
+        </dt>
 
-
-            <h2 id="ways">Ways of Process Creation, Terminaton</h2>
-            <h3>Process Creation Ways</h3>
-            <dl>
-                1. System initialization: At boot numerous processes are created.<br>
-                2. Execution of a process-creation system call by a running process. fork(), CreateProcess()=Windows<br>
-                3. A user request to create a new process.<br>
-                4. Initiation of a batch job.
-            </dl>
-            <h3>Process Termination ways</h3>
-            <table>
-                <tr>
-                    <th>way</th>
-                    <th>Description</th>
-                    <th>Example</th>
-                </tr>
-                <tr>
-                    <td>1. Normal exit (voluntary)</td>
-                    <td>Most processes terminate because they have done their work</td>
-                    <td>Scheduler terminates them</td>
-                </tr>
-                <tr>
-                    <td>2. Error exit (voluntary)</td>
-                    <td> process discovers a fatal error</td>
-                    <td>
-                        `gcc foo.c` is intended for reading file but does not exists. It may exit
-                    </td>
-                </tr>
-                <tr>
-                    <td>3. Fatal error (involuntary)</td>
-                    <td>Code bug</td>
-                    <td>
-                        divide by 0, but this may be handled by process itself using Interrupt(signals).
-                    </td>
-                </tr>
-                <tr>
-                    <td>4. Killed by another process (involuntary)</td>
-                    <td>1 process tells OS to kill other process</td>
-                    <td>
-                        `kill` system call. `TerminateProcess` on windows
-                    </td>
-                </tr>
-            </table>
-
-        </article>
+        <h2 id="ways">Ways of Process Creation, Terminaton</h2>
+        <h3>Process Creation Ways</h3>
+        <dl>
+          1. System initialization: At boot numerous processes are created.<br />
+          2. Execution of a process-creation system call by a running process.
+          fork(), CreateProcess()=Windows<br />
+          3. A user request to create a new process.<br />
+          4. Initiation of a batch job.
+        </dl>
+        <h3>Process Termination ways</h3>
+        <table>
+          <tr>
+            <th>way</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+          <tr>
+            <td>1. Normal exit (voluntary)</td>
+            <td>Most processes terminate because they have done their work</td>
+            <td>Scheduler terminates them</td>
+          </tr>
+          <tr>
+            <td>2. Error exit (voluntary)</td>
+            <td>process discovers a fatal error</td>
+            <td>
+              `gcc foo.c` is intended for reading file but does not exists. It
+              may exit
+            </td>
+          </tr>
+          <tr>
+            <td>3. Fatal error (involuntary)</td>
+            <td>Code bug</td>
+            <td>
+              divide by 0, but this may be handled by process itself using
+              Interrupt(signals).
+            </td>
+          </tr>
+          <tr>
+            <td>4. Killed by another process (involuntary)</td>
+            <td>1 process tells OS to kill other process</td>
+            <td>`kill` system call. `TerminateProcess` on windows</td>
+          </tr>
+        </table>
+      </article>
     </main>
 
     <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>
-
-</body>
+  </body>
 </html>

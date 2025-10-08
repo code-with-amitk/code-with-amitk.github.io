@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Threads Processes IPC</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#vs">Thread vs Process</a>
+      <a href="#whyprocess">Why Processes</a>
+    </aside>
+
+    <main>
+      <!--Here is our page's main content-->
+      <article style="margin-left: 200px">
+        <!-- It contains an article -->
+        <h3 id="vs">
+          Threads vs Processes (Mechanisms used for executing code concurrently)
+        </h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>Threads(User Space)</th>
+            <th>Processes</th>
+          </tr>
+          <tr>
+            <td>What</td>
+            <td>
+              Lightweight process within a process.(Since no duplication of
+              process space)
+            </td>
+            <td>
+              Heavy(Complete
+              <a
+                href="/Motherboard/Memory/Processes.html#layout"
+                target="_blank"
+                >process space(CS,DS,SS,HS)</a
+              >
+              duplicated) to child
+            </td>
+          </tr>
+          <tr>
+            <td>Compared</td>
+            <td>
+              <b>Fast:</b><br />
+              No
+              <a
+                href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/Terms/README.adoc#context-switch"
+                target="_blank"
+                >Context Switch</a
+              >(Switching from Thread-1 to Thread-2 does not need context)<br />
+              No memory cache flush, No Trap instruction, Everything is inside
+              process(No need to go in kernel space). Process can decide his own
+              scheduling algo
+            </td>
+            <td>
+              <b>Slow:</b><br />
+              Context Switch needed, Trap needed and to achieve these control
+              need to go into kernel space
+            </td>
+          </tr>
+          <tr>
+            <td>Disadv</td>
+            <td>If 1 thread blocks, whole process blocks.</td>
+          </tr>
+        </table>
+
+        <h3 id="whyprocess">Why Processes(if they are Heavy wrt Threds?)</h3>
+        <dt>
+          <b>1. Isolation:</b>
+          Processes provide a higher level of isolation compared to threads. If
+          one process crashes, it doesn't necessarily affect other processes.
+          This is crucial for building robust and fault-tolerant systems.<br />
+          <b>2. Security:</b>
+          Processes offer better security because they have separate memory
+          spaces. This helps prevent unintended access or modification of
+          data.<br />
+          <b>3. Compatibility and Portability:</b>
+          Processes are more portable across different operating systems
+          compared to threads
+        </dt>
+      </article>
+    </main>
+  </body>
+</html>
