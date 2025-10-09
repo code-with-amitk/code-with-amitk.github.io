@@ -2,53 +2,66 @@
 <html>
   <head>
     <title>Database Indexing</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
-       </li>
-    </ul>
-</nav>
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
-    <a href="#indexing">Indexing</a>
-    <a href="#types">Indexing Types</a>
-    <ul>
-      <li><a href="#hashindex">Hash Index</a></li>
-      <li><a href="#btreeindex">Btree Index</a></li>
-    </ul>
-    <a href="#rindexing">Reverse Indexing</a>
-  </aside>
+    <aside class="sidebar">
+      <a href="#indexing">Indexing</a>
+      <a href="#types">Indexing Types</a>
+      <ul>
+        <li><a href="#hashindex">Hash Index</a></li>
+        <li><a href="#btreeindex">Btree Index</a></li>
+      </ul>
+      <a href="#rindexing">Reverse Indexing</a>
+    </aside>
 
-  <main>
-    <article style="margin-left:200px;">
-      <h2 id="indexing">What is Indexing?</h2>
-      <dl>
-        Indexing is used for fast reterival/access/delete from database. Create a seperate datastructure from original
-        <br><br>
+    <main>
+      <article style="margin-left: 200px">
+        <h2 id="indexing">What is Indexing?</h2>
+        <dl>
+          Indexing is used for fast reterival/access/delete from database.
+          Original table is stored in heap(Balanced BTree). Index is a seperate
+          datastructure from original table<br />
+          Each index is stored in seperate file. indexing file contains (key,
+          value=pointer to data in table)
+          <br /><br />
 
-        <b>Usage of Indexing</b><br>
-        1. if BTree index is created, search complexity will reduce from O(n) or O(nlogn).<br>
-        2. if Hash index is created, search complexity will reduce from O(n) or O(1).
-        <br><br>
+          <b>Usage of Indexing</b><br />
+          1. if BTree index is created, search complexity will reduce from O(n)
+          or O(logn).<br />
+          2. if Hash index is created, search complexity will reduce from O(n)
+          or O(1).
+          <br /><br />
 
-        <b>Example:</b><br>
-        &ensp; 1. consider 100M entries in tenants table<br>
-        &ensp; 2. If we donot create index, and someone searches tenant_name then it will take O(n) time to search entry
-      </dl>
-      <pre><code class="language-css">
+          <b>Example:</b><br />
+          &ensp; 1. consider 100M entries in tenants table<br />
+          &ensp; 2. If we donot create index, and someone searches tenant_name
+          then it will take O(n) time to search entry
+        </dl>
+        <pre><code class="language-css">
 // 2. tenants table
 | id | tenant_name |
 | 1  | abc |
@@ -59,93 +72,110 @@
 > SELECT id FROM tenants WHERE tenant_name = 'abc';
       </code></pre>
 
-      <dl>
-        <b>Creating Btree index on Tenants Table</b><br>
-      </dl>
-      <pre><code class="language-css">
+        <dl>Creating Btree index on Tenants Table<br /></dl>
+        <pre><code class="language-css">
 CREATE UNIQUE INDEX idx_tenant_name ON tenants(tenant_name);
+
+index_file    //Seperate index file
+    Key(tenant_name)       Value(pointer_to_row)
+          xyz               0x8128129
       </code></pre>
 
-      <dl>
-        <b>What is meaning of Creating index?</b><br>
-        When index is created a additional data structure is created typically a B-Tree (or a variant like a B+Tree),
-        that means original data remains in table, a new B-Tree is created from table data
-      </dl>
+        <dl>Searching using index</dl>
+        <pre><code class="language-css">
+$ select from tenants where tenant_name=xyz;
 
-      <h2 id="types">Types of Indexing</h2>
-      <table>
-        <tr>
-          <th>Type of Indexing</th>
-          <th>Description</th>
-          <th>Creation</th>
-        </tr>
-        <tr>
-          <td>Hash Index</td>
-          <td>
-            <b>Pros</b>: <br>
-            &ensp;Search: O(1)<br>
-            <b>Cons</b>: <br>
-            &ensp; Does not support Range queries(e.g., WHERE tenant_name > 'tenant1'). <br>
-            &ensp; Does not support sorting or ordering
-          </td>
-          <td>
-            This creates a B-Tree Index by default in most relational databases (e.g., PostgreSQL, MySQL, Oracle, SQL Server).<br>
-            B-Tree is the default index type because it is versatile and supports a wide range of query types.
-            <pre><code class="language-css">
+Postgres finds idx_tenant_name matches on tenants and tenant_name.
+It goes index file, finds key and corresponding data.
+if you want efficient search on tenant_id, you have to create a seperate index
+      </code></pre>
+
+        <h2 id="types">Types of Indexing</h2>
+        <table>
+          <tr>
+            <th>Type of Indexing</th>
+            <th>Description</th>
+            <th>Creation</th>
+          </tr>
+          <tr>
+            <td>Hash Index</td>
+            <td>
+              <b>Pros</b>: <br />
+              &ensp;Search: O(1)<br />
+              <b>Cons</b>: <br />
+              &ensp; Does not support Range queries(e.g., WHERE tenant_name >
+              'tenant1'). <br />
+              &ensp; Does not support sorting or ordering
+            </td>
+            <td>
+              This creates a B-Tree Index by default in most relational
+              databases (e.g., PostgreSQL, MySQL, Oracle, SQL Server).<br />
+              B-Tree is the default index type because it is versatile and
+              supports a wide range of query types.
+              <pre><code class="language-css">
 CREATE UNIQUE INDEX idx_tenant_name ON tenants(tenant_name);
-          </code></pre></td>
-        </tr>
-        <tr>
-          <td>Btree O(nlogn)</td>
-          <td>
-            <b>Pros:</b> Support exact match queries(WHERE tenant_name = 'tenant1'), range queries, and sorting.<br>
-            <b>Cons:</b> Slightly slower wrt Hash index but still very fast.
-          </td>
-          <td>
-            PostgreSQL's Hash Indexes are not crash-safe in older versions (pre-10.0), so they were discouraged. <br>
-            However, in modern versions, they are crash-safe and can be used.
-            <pre><code class="language-css">
+          </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>Btree O(logn)</td>
+            <td>
+              <b>Pros:</b> Support exact match queries(WHERE tenant_name =
+              'tenant1'), range queries, and sorting.<br />
+              <b>Cons:</b> Slightly slower wrt Hash index but still very fast.
+            </td>
+            <td>
+              PostgreSQL's Hash Indexes are not crash-safe in older versions
+              (pre-10.0), so they were discouraged. <br />
+              However, in modern versions, they are crash-safe and can be used.
+              <pre><code class="language-css">
 CREATE INDEX idx_tenant_name_hash ON tenants USING HASH (tenant_name);
             </code></pre>
-          </td>
-        </tr>
-        <tr>
-          <td>Bitmap Index</td>
-          <td>Used for columns with low cardinality (few distinct values, e.g., gender or status flags).</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>R-Tree</td>
-          <td>Used for spatial data (e.g., geographic coordinates).</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Full-Text Index</td>
-          <td>Used for searching text data (e.g., WHERE description LIKE '%keyword%').</td>
-          <td></td>
-        </tr>
-      </table>
+            </td>
+          </tr>
+          <tr>
+            <td>Bitmap Index</td>
+            <td>
+              Used for columns with low cardinality (few distinct values, e.g.,
+              gender or status flags).
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>R-Tree</td>
+            <td>Used for spatial data (e.g., geographic coordinates).</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Full-Text Index</td>
+            <td>
+              Used for searching text data (e.g., WHERE description LIKE
+              '%keyword%').
+            </td>
+            <td></td>
+          </tr>
+        </table>
 
-      <h2 id="rindexing">Reverse Indexing</h2>
-      <dl>
-        Reverse indexing is used for efficient reverse lookups.<br>
-        See <a href="#indexing">Indexing</a>.<br>
-        Reverse Indexing is reverse mapping. &lt;key=user's node address, value=user_id's>, it will help to map all userId's 
-        associated with a particular address.<br>
-      </dl>
-      <pre><code class="language-css">
+        <h2 id="rindexing">Reverse Indexing</h2>
+        <dl>
+          Reverse indexing is used for efficient reverse lookups.<br />
+          See <a href="#indexing">Indexing</a>.<br />
+          Reverse Indexing is reverse mapping. &lt;key=user's node address,
+          value=user_id's>, it will help to map all userId's associated with a
+          particular address.<br />
+        </dl>
+        <pre><code class="language-css">
 Reverse Hash Table: 
 
 (Key: user_address, Value: List of user_ids associated with that address)
       </code></pre>
-      <h4>When Reverse Lookup is useful</h4>
-      <dl>
-        when we need to perform lookups based on attributes other than the primary key (user ID)
-      </dl>
-      
-    </article>
-  </main>
-  <script src="/scripts/prism.js"></script>
-
-</body>
+        <h4>When Reverse Lookup is useful</h4>
+        <dl>
+          when we need to perform lookups based on attributes other than the
+          primary key (user ID)
+        </dl>
+      </article>
+    </main>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
