@@ -43,10 +43,10 @@
         <h2 id="indexing">What is Indexing?</h2>
         <dl>
           Indexing is used for fast reterival/access/delete from database.
-          Original table is stored in heap(Balanced BTree). Index is a seperate
-          datastructure from original table<br />
+          Original table is stored in heap(Pages. not Balanced BTree). Index is
+          a seperate datastructure from original table<br />
           Each index is stored in seperate file. indexing file contains (key,
-          value=pointer to data in table)
+          value=pointer to data in table(called TID(Tuple ID)))
           <br /><br />
 
           <b>Usage of Indexing</b><br />

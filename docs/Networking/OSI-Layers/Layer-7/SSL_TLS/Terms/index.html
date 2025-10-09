@@ -28,24 +28,26 @@
       </ul>
     </nav>
 
-    <aside class="sidebar"><!--See .sidebar in styles.css--></aside>
+    <aside class="sidebar">
+      <a href="#sni">SNI</a>
+    </aside>
 
     <article style="margin-left: 200px">
+      <h2 id="sni">SNI (Server Name Indication)</h2>
       <dl>
-        <a href="Introduction.html">About SSL, TLS</a><br />
-        &ensp; What is TLS, SSL<br />
-        &ensp; TLS vs SSL<br />
-        &ensp; NSS(TLS Implementation) vs Openssl<br />
-
-        <a href="mkcert.html">mkcert</a><br />
-        &ensp; What is mkcert<br />
-        &ensp; Local CA, Server cert, Webbrowser connecting server<br />
-
-        <a href="Terms/">Terms</a><br />
-        &ensp; SNI(Server Name Indication)
+        This is addition to the TLS encryption protocol. SSL Client can specify
+        the domain name it is trying to reach in the first step of the TLS
+        handshake, preventing common name mismatch errors.
       </dl>
-
-      <article style="margin-left: 200px"></article>
+      <pre><code>
+SSL Client                          SSL Server
+        -- CLIENT HELLO -------------->
+        (SNI:I want to connect xyz.com)
+                                    Retrieve cert of xyz.com from store
+        <--- Server Cert(xyz.com)------
+Verified cert
+        <------ Key exchange begin ---->
+      </code></pre>
     </article>
   </body>
 </html>
