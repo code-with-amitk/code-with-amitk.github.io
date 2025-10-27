@@ -2,70 +2,78 @@
 <html>
   <head>
     <title>Databases</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
-       </li>
-    </ul>
-</nav>
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
+    <aside class="sidebar"></aside>
 
-  </aside>
+    <main>
+      <article style="margin-left: 200px">
+        <dl>
+          <a href="./SQL_vs_NoSQL.html" target="_blank">SQL vs NoSQL</a><br />
+          <b>SQL Databases</b><br />
+          &ensp;<u>DB Types:</u> PostgreSQL,
+          <a href="SQL/MariaDB/index.html" target="_blank">MariaDB</a>, MySQL,
+          Amazon RDS, Amazon Aurora<br />
+          &ensp;
+          <a href="install.html" target="_blank"
+            >Installing Postgres (Linux/Windows)</a
+          ><br />
+          &ensp; <a href="Commands" target="_blank">DB Commands</a><br />
+          &emsp; Create database & connect to it<br />
+          &emsp; List Database, List Tables, Show Table schema<br />
+          &emsp; Create table & insert data, list<br />
+          &emsp; Delete<br />
+          &ensp; <a href="./SQL/" target="_blank">SQL Database Issues</a><br />
 
-  <main>
-    <article style="margin-left:200px;">
-      <dl>
-        <b>SQL / PostgresSQL</b><br>
-        &ensp; <a href="install.html" target="_blank">Installing Postgres (Linux/Windows)</a><br>
-        &ensp; <a href="Commands" target="_blank">DB Commands</a><br>
-          &emsp; Create database & connect to it<br> 
-          &emsp; List Database, List Tables, Show Table schema<br>
-          &emsp; Create table & insert data, list<br>
-          &emsp; Delete<br>
-        &ensp; <a href="./SQL/" target="_blank">SQL Database Issues</a><br>
-        &ensp; <i>Stored procedures & Functions</i><br>
-          &emsp; <a href="Stored_Procedures_and_Functions/Stored_Procedures/Introduction.html" target="_blank">Stored procedures</a><br>
-          &emsp; &emsp; Stored Procedures vs Functions<br>
-          &emsp; &emsp; Writing Procedures in Postgres<br>
-          &emsp; <a href="Stored_Procedures_and_Functions/Functions/Introduction.html" target="_blank">Function</a><br>
-          &emsp; &emsp; Writing Functions in Postgres<br>
-          &emsp; &emsp; C++ Code calling function
-        <br><br>
+          &ensp;
+          <a
+            href="Stored_Procedures_and_Functions/Stored_Procedures/Introduction.html"
+            target="_blank"
+            >Stored procedures</a
+          >,
+          <a
+            href="Stored_Procedures_and_Functions/Functions/Introduction.html"
+            target="_blank"
+            >Function</a
+          ><br /><br />
 
-        <a href="Column Oriented DB/" target="_blank">Columnar DB</a><br>
-        <a href="./DB_Scaling/" target="_blank">DB Scaling</a><br>
-          &ensp; Replication, Federation, Sharding
-        <br><br>
+          <b>NoSQL Databases:</b><br />
+          &ensp; <u>DB Types:</u>
+          <a href="Column Oriented DB/" target="_blank">Columnar DB</a>,
+          <a href="Graph DB/" target="_blank">Graph DB(Cypher, GraphDB)</a>
+          <br /><br />
 
-        <a href="DB_Schema/" target="_blank">DB Schema</a><br>
-        <a href="Graph DB/" target="_blank">Graph DB</a><br>
-          &ensp; Cypher<br>
-          &ensp; GraphDB
-        <br><br>
-
-        <a href="Indexing/" target="_blank">Indexing: </a><br>
-          &ensp; Forward Index, Reverse Indexing
-        <br><br>
-
-        <a href="./SQL_vs_NoSQL.html" target="_blank">SQL vs NoSQL</a><br>
-        
-      </dl>
-    </article>
-  </main>
-
-</body>
+          <a href="./DB_Scaling/" target="_blank">DB Scaling: </a>Replication,
+          Federation, Sharding <br />
+          <a href="DB_Schema/" target="_blank">DB Schema</a><br />
+          <a href="Indexing/" target="_blank">Indexing: </a> Forward Index,
+          Reverse Indexing
+        </dl>
+      </article>
+    </main>
+  </body>
 </html>
