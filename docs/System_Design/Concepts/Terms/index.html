@@ -2,39 +2,52 @@
 <html>
   <head>
     <title>Terms</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
+          </form>
         </li>
-    </ul>
-  </nav>
-  <aside class="sidebar">
-  </aside>
+      </ul>
+    </nav>
+    <aside class="sidebar"></aside>
 
-  <main style="margin-left:200px;">
-    <dl><b>Authentication Methods</a></b><br>
-    <dt>
-      &ensp; 1. <a href="/System_Design/Concepts/Terms/Authentication/jwt.html">Json Web Token / JWT(Often Used)</a><br>
-      &ensp; 2. <a href="/System_Design/Concepts/Terms/Authentication/cookies.html">Cookies (Browser Based)</a>
-    </dt>
+    <main style="margin-left: 200px">
+      <dt>
+        Authentication Methods: 1.
+        <a href="/System_Design/Concepts/Terms/Authentication/jwt.html"
+          >Json Web Token / JWT(Often Used)</a
+        >
+        2.
+        <a href="/System_Design/Concepts/Terms/Authentication/cookies.html"
+          >Cookies (Browser Based)</a
+        >
+        <br />
 
-    <b>Application Server:</b> This handles the business logic of application.
-    </dl>
-  </main>
-
-
-</body>
+        Application Server: This handles the business logic of application.<br />
+        <a href="Consensus">Consensus</a><br />
+        &ensp; Algorithms:
+        <a href="Consensus/Algorithms/Raft.html" target="_blank">Raft</a>,
+        <a href="Consensus/Algorithms/Paxos.html" target="_blank">Paxos</a
+        ><br />
+      </dt>
+    </main>
+  </body>
 </html>

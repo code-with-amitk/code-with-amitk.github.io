@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Paxos Consensus Algorithm</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">Paxos?</a>
+      <a href="#work">How it works</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2>What is Paxos?</h2>
+      <dl>
+        Paxos works without a permanent leader<br />
+        Each node can have 1 of 3 roles:<br />
+        &ensp; Proposers: Suggest values to be agreed upon.<br />
+        &ensp; Acceptors: Vote to accept or reject proposed values.<br />
+        &ensp; Learners: Learn the decision after consensus.
+      </dl>
+
+      <h2 id="work">How it works</h2>
+      <dl>
+        Proposer sends a "prepare" message with a proposal number.<br />
+        Acceptors reply with a promise to ignore older proposals and their last
+        accepted proposal.<br />
+        If the proposer gets a majority, it sends an "accept" request with the
+        value.<br />
+        Majority acceptance results in consensus; learners are notified.
+      </dl>
+    </main>
+  </body>
+</html>
