@@ -30,21 +30,16 @@
       <a href="#top">top command</a>
       <a href="#htop">htop command</a>
       <a href="#df">df</a>
+      <a href="#atop">atop</a>
     </aside>
 
     <article style="margin-left: 200px">
       <h2 id="mem">Memory Issue</h2>
       <h3 id="top">top command</h3>
-      <table>
-        <tr>
-          <th>Command</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>
-            <pre><code class="language-css">
+
+      <pre><code class="language-css">
 # top
-up  1:09,      3 user,  load average: 0.36, 0.12, 0.11
+up  1:09, 3 user,  load average: 0.36, 0.12, 0.11
 Tasks:   228 total,   1 running, 227 sleeping,   0 stopped,   0 zombie
 Cpu(s):  3.7% us,  1.9 sy,  1.2 ni, 91.8 id,  1.3 wa,  0.0 hi,  0.1 si,  0.0 st
 Memory(MB):  32092 total,   321 free,   31483 used,   287 buff/cache
@@ -54,28 +49,23 @@ Swap(MB):   1024 total,  0.0 free,   1024 used.      200 avail Mem
 pid   user    pr(priority)  ni(nice) virt  res  shr(SharedMem) State  %cpu %mem   time    command
 7801  root    20               0    59.6g  26.5g   3224        R       15   84.2  4:36.47  sssd
           </code></pre>
-          </td>
-          <td>
-            <dd>
-              Show output Sorted by Processes that uses CPU most.<br />
-              up: System up time, Logged in users, CPU load Average(1/5/15
-              min)[SIMILAR to uptime command]<br />
-              CPU(s): us(CPU used by User processes), sy(System processes)
-              <br />
-              Memory(KB): Utilization Status. 2029876=Total system mem. [SIMILAR
-              to free command]<br />
-              <b>VIRT(Virtual Memory):</b> RAM(RES)+SWAP(Paged out to
-              disk)+Shared_libs<br />
-              High VIRT is not problem, process reserved lot of address space
-              for itself.
-              <br /><br />
-              <b>RES(Resident Memory):</b>
-              <font color="red">sssd using 84% of RAM.</font> Out of 32GB, sssd
-              is using 26.4GB
-            </dd>
-          </td>
-        </tr>
-      </table>
+
+      <dl>
+        Show output Sorted by Processes that uses CPU most.<br />
+        up: System up time, Logged in users, CPU load Average(1/5/15
+        min)[SIMILAR to uptime command]<br />
+        CPU(s): us(CPU used by User processes), sy(System processes)
+        <br />
+        Memory(KB): Utilization Status. 2029876=Total system mem. [SIMILAR to
+        free command]<br />
+        <b>VIRT(Virtual Memory):</b> RAM(RES)+SWAP(Paged out to
+        disk)+Shared_libs<br />
+        High VIRT is not problem, process reserved lot of address space for
+        itself.
+        <br />
+        <b>RES(Resident Memory):</b>
+        sssd using 26.5GB Out of 32GB of RAM
+      </dl>
 
       <h3 id="htop">htop command</h3>
       <pre><code class="language-css">
@@ -129,6 +119,39 @@ tmpfs        2.0G       0     2.0G      0%    /tmp
           <td>tmpfs mounts for shared memory only.</td>
         </tr>
       </table>
+
+      <h3 id="atop">atop output</h3>
+      <pre><code class="language-css">
+Open existing file using `atop -r file_name` Press M for memory view, C for CPU view
+
+atop
+MEM | tot 32G | free 860.4M 
+SWP | tot 1G | free 590M
+
+Press C
+PID       VGROW       RGROW       CPU       CMD
+xx         45.0G      17.8G       30%       npraxy
+
+Press M
+PID       VDATA       VSIZE       RSIZE    VGROW   RGROW     SWAPZ    MEM    CMD
+xx         44.3G      45.0G       17.8G    45.05G  17.8G     92.4M    57%   npraxy
+      </code></pre>
+      <dt>
+        VSIZE(Virtual Size): total amount of virtual memory currently reserved
+        by the process.<br />
+        VDATA: size of private process memory (heap and data sections) that is
+        not shared and is part of the virtual address space<br />
+        SWAPZ: size of the swap space currently used by a process<br />
+        VGROW (Virtual Memory Growth): amount by which a process’s virtual
+        memory size (VSIZE) has increased ("grown") during the monitoring
+        interval. <br />
+        RGROW: Increase ("growth") in the resident memory of process. How much
+        additional RAM process has used since last monitoring time<br />
+        RSIZE (Resident Size):Total resident memory used by a process, Resident
+        memory is the portion of a process's memory that is actually held in
+        physical RAM<br />
+        PSIZE(Physical Size): physical memory size occupied by the process
+      </dt>
     </article>
     <script src="/scripts/search.js"></script>
     <script src="/scripts/prism.js"></script>
