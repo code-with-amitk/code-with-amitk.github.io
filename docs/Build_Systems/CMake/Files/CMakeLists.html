@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Cmake Introduction</title>
+    <title>CMakeLists.txt</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -29,15 +29,30 @@
       </ul>
     </nav>
 
-    <aside class="sidebar"></aside>
+    <aside class="sidebar">
+      <a href="#lists">CMakeLists.txt</a>
+      <a href="#commands">Commands</a>
+    </aside>
 
     <article style="margin-left: 200px">
-      <dl>
-        <a
-          href="https://github.com/code-with-amitk/Code-examples/tree/master/Build-System/Cmake/Examples/Hello_World"
-          >Hello World</a
-        >
-      </dl>
+      <h2 id="lists">CMakeLists.txt / CML / lists file</h2>
+      <pre><code class="language-css">
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.23)             #1st 2 are Mandatory commands
+project(MyProjectName)
+
+add_executable(MyProgram main.cpp)              #(exe_name generate_from_main.cpp)
+      </code></pre>
+
+      <h2 id="commands">Commands in CMakeLists.txt</h2>
+      <table>
+        <tr>
+          <td>add_executable(MyProgram)</td>
+          <td>This command creates a target. Target is execitable name.</td>
+        </tr>
+      </table>
     </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
   </body>
 </html>
