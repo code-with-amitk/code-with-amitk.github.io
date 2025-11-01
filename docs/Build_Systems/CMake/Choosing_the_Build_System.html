@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Choosing the Build System</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#how">How CMake decides</a>
+      <a href="#which">Generate Makefile or vcproj</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="how">How CMake decides to generate Makefile of vcproj files</h2>
+      <pre><code class="language-css">
+Ubuntu
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.10) #CMake version
+project(MyProject)      #project-name
+add_executable(MyExecutable main.cpp)   #(exe_name generate_from_main.cpp)
+      </code></pre>
+      <dl>
+        CMake detects system environment. It detects compilers, libraries, and
+        dependencies, then writes the detected information to CMakeCache.txt and
+        generates Makefile(Ubuntu) or vcproj file(Windows) accordingly.
+      </dl>
+
+      <h2 id="which">Makefile or vcproj or Other</h2>
+      <dl>
+        We can generate vcproj, Makefile from using using Generator Preference
+      </dl>
+      <pre><code class="language-css">
+$ mkdir build
+$ cd build
+
+// Generate Makefile
+$ cmake ..
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+// Generate Visual Studio 2019 vcproj file (Run cmake on Windows)
+$ cmake .. -G "Visual Studio 16 2019"
+
+// Generate Ninja
+$ cmake .. -G "Ninja"
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
