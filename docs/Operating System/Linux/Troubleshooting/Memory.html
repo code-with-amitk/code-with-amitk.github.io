@@ -121,12 +121,18 @@ tmpfs        2.0G       0     2.0G      0%    /tmp
       </table>
 
       <h3 id="atop">atop output</h3>
+      <dl>
+        Commands:<br />
+        Open existing file using `atop -r file_name`<br />
+        &ensp; Press M for memory view, C for CPU view<br />
+        &ensp; s for scheduling activity<br />
+        &ensp; t for next sample taken after 10 min
+      </dl>
       <pre><code class="language-css">
-Open existing file using `atop -r file_name` Press M for memory view, C for CPU view
 
 atop
-MEM | tot 32G | free 860.4M 
-SWP | tot 1G | free 590M
+MEM | tot 32G | free 860.4M | cache 6.3G    // 6.3G still left to be used
+SWP | tot 1G | free 590M | swcac 16.3M
 
 Press C
 PID       VGROW       RGROW       CPU       CMD
@@ -150,7 +156,8 @@ xx         44.3G      45.0G       17.8G    45.05G  17.8G     92.4M    57%   npra
         RSIZE (Resident Size):Total resident memory used by a process, Resident
         memory is the portion of a process's memory that is actually held in
         physical RAM<br />
-        PSIZE(Physical Size): physical memory size occupied by the process
+        PSIZE(Physical Size): physical memory size occupied by the process<br />
+        swcac(Swap Cache): Cache which is holding the pages.
       </dt>
     </article>
     <script src="/scripts/search.js"></script>

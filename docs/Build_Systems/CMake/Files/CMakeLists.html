@@ -31,26 +31,87 @@
 
     <aside class="sidebar">
       <a href="#lists">CMakeLists.txt</a>
-      <a href="#commands">Commands</a>
+      <ul>
+        <li><a href="#exe">Create Executable</a></li>
+        <li><a href="#lib">Create Library</a></li>
+        <li><a href="#link">Link Lib to executable</a></li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
       <h2 id="lists">CMakeLists.txt / CML / lists file</h2>
+      <dl>
+        <b>Commands?</b> Commands are directives provided in CML to create
+        executable or library.
+      </dl>
+
+      <h3 id="exe">Creating executable</h3>
+      <dt><b>PRIVATE SECTION: </b> For source code</dt>
       <pre><code class="language-css">
 $ cat CMakeLists.txt
 cmake_minimum_required(VERSION 3.23)             #1st 2 are Mandatory commands
 project(MyProjectName)
 
-add_executable(MyProgram main.cpp)              #(exe_name generate_from_main.cpp)
+add_executable(MyProgram)                        #(exe_name)
+target_sources(MyProgram
+  PRIVATE                                        # Scope: Section to define source files
+    MyProgram/main.cpp                           # Source files
+)
+
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Executable
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  MyProjectName  cmake_install.cmake
       </code></pre>
 
-      <h2 id="commands">Commands in CMakeLists.txt</h2>
-      <table>
-        <tr>
-          <td>add_executable(MyProgram)</td>
-          <td>This command creates a target. Target is execitable name.</td>
-        </tr>
-      </table>
+      <h3 id="lib">Build Static Library *.a</h3>
+      <dt>
+        <a href="<a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Libraries/Static_Dynamic"
+          target="_blank"
+          >What is static Library *.a?</a
+        ><br />
+        <b>PRIVATE SECTION: </b> For source code<br />
+        <b>PUBLIC SECTION:</b> To define header files
+      </dt>
+      <pre><code class="language-css">
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.23)
+project(MyProjectName)
+
+add_library(MyLibrary)                            #(Library Name)
+target_sources(MyLibrary
+  PRIVATE                                         # Scope
+    main.cxx                                      #Source code
+
+  PUBLIC                                          #Scope: PUBLIC section defines header files
+    FILE_SET myHeaders                            #name of SET=myheaders (OPTIONAL)
+    TYPE HEADERS                                  #TYPE type: kind of files we are describing headers.
+    BASE_DIRS                                     #BASE_DIRS: Location of files
+      include
+    FILES                                         #FILES: is the list of files
+      include/library_header.h
+)
+
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Library
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  libMathFunctions.a  cmake_install.cmake
+      </code></pre>
+
+      <h3 id="link">Link Lib to executable</h3>
+      <pre><code>
+target_link_libraries(MyProgram
+  PRIVATE
+    MyLibrary
+)
+      </code></pre>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
