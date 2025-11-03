@@ -245,11 +245,48 @@ roleRef:                                  # "roleRef" specifies the binding to a
             <td>This object allows pod to authenticate and access other parts of cluster using RBAC.</td>
           </tr>
           <tr>
-            <td>7. Services</td>
-            <td>This object allows pod to authenticate and access other parts of cluster using RBAC.<br>
-                In Kubernetes, Service(or microservice) is logical set of Pods. Service
-                exposes REST endpoints(eg: POST) & other services interact by calling
-                these endpoints.
+            <td id="services">7. Service</td>
+            <td>
+              A Service is a stable networking abstraction that provides a fixed IP(ClusterIP) and DNS name to access Pods.<br>
+              It decouples clients from pod IPs.We have to create a seperate services.yaml file to define a service
+              <pre><code class="language-css">
+$ cat services.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: service1
+spec:
+  selector:
+    app: service1
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080         # Service port (inside cluster)
+      targetPort: 8080   # Container port inside Pod
+      nodePort: 30080    # Fixed external NodePort
+              </code></pre>
+              Every service is assigned a CLUSTER-IP, via which pod behind service can be reached.<br>
+              <b>CLUSTER-IP:</b> Kubernetes assigns an internal virtual IP (the ClusterIP). when any pod inside the cluster 
+              sends a packet to that ClusterIP, the packet gets NATed and load-balanced to one of the backend pods
+              <pre><code class="language-css">
+$ kubectl get services -o wide
+NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORTS(s)        AGE   SELECTOR
+pod1-service      NodePort    10.43.200.121   &lt;none>     8080:30102/TCP   4h5m  app=pod1
+              </code></pre>
+              <b><a href="./Terms.html#nodeport" target="_blank">NodePort</a> is build on Services</b>
+              Read about <a href="./Terms.html#nodeport" target="_blank">NodePort</a> 1st.
+              <br>
+              <pre><code class="language-css">
+A ClusterIP service is created (e.g., 10.96.1.20:80)
+kube-proxy adds iptables rules on each node:  &lt;NodeIP>:30080 → 10.96.1.20:80 → PodIP:8080
+Packet Flow: 
+
+External client → NodeIP:30080 → ClusterIP:80 → PodIP:8080
+
+That’s why kubectl get svc still shows a ClusterIP — it always exists; NodePort is built on top of it.
+              </code></pre>
+              
+              
             </td>
           </tr>
           <tr>
