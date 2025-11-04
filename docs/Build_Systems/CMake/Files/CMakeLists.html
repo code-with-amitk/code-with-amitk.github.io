@@ -36,6 +36,10 @@
         <li><a href="#lib">Create Library</a></li>
         <li><a href="#link">Link Lib to executable</a></li>
       </ul>
+      <a href="#keywords">Keywords</a>
+      <ul>
+        <li><a href="#scope">SCOPE</a></li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
@@ -46,16 +50,16 @@
       </dl>
 
       <h3 id="exe">Creating executable</h3>
-      <dt><b>PRIVATE SECTION: </b> For source code</dt>
+      <dt><a href="#scope">PRIVATE scope</a></dt>
       <pre><code class="language-css">
 $ cat CMakeLists.txt
-cmake_minimum_required(VERSION 3.23)             #1st 2 are Mandatory commands
-project(MyProjectName)
+cmake_minimum_required(VERSION 3.23)             #CMake version         #1st 2 are Mandatory commands
+project(MyProjectName)                           #project-name
 
 add_executable(MyProgram)                        #(exe_name)
 target_sources(MyProgram
-  PRIVATE                                        # Scope: Section to define source files
-    MyProgram/main.cpp                           # Source files
+  PRIVATE                                        # Scope: See below
+    MyProgram/main.cpp                           
 )
 
 $ cmake -B build
@@ -74,20 +78,20 @@ CMakeCache.txt  CMakeFiles  Makefile  MyProjectName  cmake_install.cmake
           target="_blank"
           >What is static Library *.a?</a
         ><br />
-        <b>PRIVATE SECTION: </b> For source code<br />
-        <b>PUBLIC SECTION:</b> To define header files
+        <a href="#scope">PUBLIC, PRIVATE scope</a>
       </dt>
+
       <pre><code class="language-css">
 $ cat CMakeLists.txt
-cmake_minimum_required(VERSION 3.23)
-project(MyProjectName)
+cmake_minimum_required(VERSION 3.23)              #CMake version         #1st 2 are Mandatory commands
+project(MyProjectName)                            #project-name
 
-add_library(MyLibrary)                            #(Library Name)
+add_library(MyLibrary)                            #Defines a library name to be created. Does not build library
 target_sources(MyLibrary
-  PRIVATE                                         # Scope
+  PRIVATE                                         #Scope: See below
     main.cxx                                      #Source code
 
-  PUBLIC                                          #Scope: PUBLIC section defines header files
+  PUBLIC                                          # Scope: See below
     FILE_SET myHeaders                            #name of SET=myheaders (OPTIONAL)
     TYPE HEADERS                                  #TYPE type: kind of files we are describing headers.
     BASE_DIRS                                     #BASE_DIRS: Location of files
@@ -106,10 +110,77 @@ CMakeCache.txt  CMakeFiles  Makefile  libMathFunctions.a  cmake_install.cmake
       </code></pre>
 
       <h3 id="link">Link Lib to executable</h3>
-      <pre><code>
-target_link_libraries(MyProgram
+      <pre><code class="language-css">
+cmake_minimum_required(VERSION 3.22.1)            #CMake version          #1st 2 are Mandatory commands
+project(Tutorial)                                 #project-name
+add_executable(Tutorial Tutorial/Tutorial.cxx)    #(exe_name generate_from_main.cpp)
+target_link_libraries(Tutorial                    #Link Library(MathFunctions) to executable(Tutorial)
+        PRIVATE
+                MathFunctions
+)
+
+add_library(MathFunctions)                        #Defines a library name to be created. Does not build library
+
+target_sources(MathFunctions                      #Create target(MathFunctions library) using source(MathFunctions.cxx)
   PRIVATE
-    MyLibrary
+    MathFunctions/MathFunctions.cxx
+
+  PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS
+      MathFunctions
+    FILES
+      MathFunctions/MathFunctions.h
+)
+
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Library
+$ ls build/
+CMakeCache.txt  CMakeFiles  Makefile  Tutorial  cmake_install.cmake  libMathFunctions.a
+$ ./build/Tutorial 34
+The square root of 34 is 5.83095
+      </code></pre>
+
+      <h2 id="keywords">Keywords</h2>
+      <h3 id="scope">scope (PUBLIC, PRIVATE, INTERFACE)</h3>
+      <h4>1. PRIVATE / non-interface property</h4>
+      <dl>
+        only available to the target which owns it for example PRIVATE headers
+        will only be visible to the target they're attached to.
+      </dl>
+      <h4 id="interface">INTERFACE</h4>
+      <dl>
+        Only available to targets which link the owning target. A header-only
+        library is an example of a collection of INTERFACE properties
+      </dl>
+      <h4 id="public">PUBLIC</h4>
+      <dl>
+        union of the PRIVATE and INTERFACE properties. PUBLIC are available to
+        both the owning target and consuming targets.
+      </dl>
+
+      <pre><code class="language-css">
+target_sources(MyLibrary
+  PRIVATE
+    FILE_SET internalOnlyHeaders
+    TYPE HEADERS
+    FILES
+      InternalOnlyHeader.h
+
+  INTERFACE
+    FILE_SET consumerOnlyHeaders
+    TYPE HEADERS
+    FILES
+      ConsumerOnlyHeader.h
+
+  PUBLIC
+    FILE_SET publicHeaders
+    TYPE HEADERS
+    FILES
+      PublicHeader.h
 )
       </code></pre>
     </article>
