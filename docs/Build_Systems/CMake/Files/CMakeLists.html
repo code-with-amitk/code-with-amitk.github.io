@@ -35,6 +35,7 @@
         <li><a href="#exe">Create Executable</a></li>
         <li><a href="#lib">Create Library</a></li>
         <li><a href="#link">Link Lib to executable</a></li>
+        <li><a href="#subdir">subdirectory</a></li>
       </ul>
       <a href="#keywords">Keywords</a>
       <ul>
@@ -143,6 +144,48 @@ CMakeCache.txt  CMakeFiles  Makefile  Tutorial  cmake_install.cmake  libMathFunc
 $ ./build/Tutorial 34
 The square root of 34 is 5.83095
       </code></pre>
+
+      <h3 id="subdir">Subdirectories(Multiple CMakeLists.txt files)</h3>
+      <table>
+        <tr>
+          <td>
+            Top level CMakeLists.txt<br />
+            Subdirectory(Tutorial) contains commands to build executable(earlier
+            it was in top level CML)
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.22.1)        #CMake version         #1st 2 are Mandatory commands
+project(Tutorial)                             #Project name
+add_subdirectory(Tutorial)
+
+$ cat Tutorial/CMakeLists.txt
+add_executable(Tutorial Tutorial.cxx)           #(exe_name generate_from_Tutorial.cxx)
+target_sources(Tutorial                         #Create target(Tutorial executable) using source(Tutorial.cxx)
+  PRIVATE
+    Tutorial.cxx
+)
+target_link_libraries(Tutorial                  #Link Library(MathFunctions) to executable(Tutorial)
+  PRIVATE
+    MathFunctions
+)
+
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Library
+$ ls build/
+CMakeCache.txt  CMakeFiles  Makefile  Tutorial  cmake_install.cmake  libMathFunctions.a
+$ ./build/Tutorial 34
+The square root of 34 is 5.83095
+            </code></pre>
+          </td>
+        </tr>
+      </table>
 
       <h2 id="keywords">Keywords</h2>
       <h3 id="scope">scope (PUBLIC, PRIVATE, INTERFACE)</h3>
