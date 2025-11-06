@@ -41,6 +41,8 @@
       <ul>
         <li><a href="#scope">SCOPE</a></li>
       </ul>
+      <a href="#types">Types/Variables</a>
+      <a href="#funcmacro">Function & Macro</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -182,6 +184,179 @@ $ ls build/
 CMakeCache.txt  CMakeFiles  Makefile  Tutorial  cmake_install.cmake  libMathFunctions.a
 $ ./build/Tutorial 34
 The square root of 34 is 5.83095
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="types">Types / Variables</h2>
+      <dl>CMake only has 2 types: strings and lists</dl>
+      <table>
+        <tr>
+          <th>CMake Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><b>Strings</b></td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (city "delhi")                            # Create a variable using set, provide initial value
+message ("${city}")                           # Print value of variable
+
+$ cmake -P CMakeLists.txt                     # -p is script mode. it informs CMake this file is not intended to have a project() command
+delhi
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Lists:</b><br />Strings with semicolons</td>
+          <td>
+            <table>
+              <tr>
+                <td>
+                  Append to list
+                  <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")                  # Create a variable using set, provide initial value
+list (APPEND cities "jaipur")         # append to List. 
+message ("Cities: ${cities}")
+
+$ cmake -P CMakeLists.txt
+Cities: delhi;jaipur
+            </code></pre>
+                </td>
+                <td>
+                  Iterating using foreach
+                  <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")              # Create a variable using set, provide initial value
+list (APPEND cities "jaipur")     # append to List. 
+
+foreach (city IN LISTS cities)    # Iterate over list
+        message("city: ${city}")
+endforeach()
+
+$ cmake -P CMakeLists.txt
+city: delhi
+city: jaipur
+            </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="funcmacro">Functions / Macros</h2>
+      <dl>
+        Similar to C/C++, functions & macros have statments/commands which can
+        be called later and would be repeated if not done in function
+      </dl>
+      <table>
+        <tr>
+          <th></th>
+          <th>Function</th>
+          <th>Macros</th>
+        </tr>
+        <tr>
+          <td>Difference</td>
+          <td>
+            1. Can see all the variables created in all the frames above them<br />
+            2. Functions create local copy of variable
+          </td>
+          <td>
+            1. Can see all the variables created in all the frames above them<br />
+            2. Macros donot create local copies, work on global variable
+            directly
+          </td>
+        </tr>
+        <tr>
+          <td>Creation & Calling</td>
+          <td>
+            <pre><code class="language-css">
+function(name [arg1 ...])
+  commands
+endfunction()
+name
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+macro(name [arg1 ...])
+  commands
+endmacro()
+name
+          </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            1. Can see all the variables created in all the frames above them
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+function(foo)               # Function
+        message ("cities: ${cities}") #Function can see vars declared above
+endfunction()
+foo()                       # Calling function
+
+$ cmake -P CMakeLists.txt
+cities: delhi;jaipur
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+macro(bar)               
+        message ("cities: ${cities}") #macro can see vars declared above
+bar()                       # Calling macro
+$ cmake -P CMakeLists.txt
+cities: delhi;jaipur
+          </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            2. Functions create local copy of variable<br />
+            Macro works on global variable only
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+function(foo)
+        list (APPEND cities "pune")
+        message ("Function cities: ${cities}")
+endfunction()
+foo()
+
+$ cmake -P CMakeLists.txt
+Function cities: delhi;jaipur;pune
+After fun call cities: delhi;jaipur
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+macro(foo)
+        list (APPEND cities "pune")
+        message ("macro cities: ${cities}")
+endmacro()
+foo()
+message ("After macro call cities: ${cities}")
+
+$ cmake -P CMakeLists.txt
+macro cities: delhi;jaipur;pune
+After macro call cities: delhi;jaipur;pune
             </code></pre>
           </td>
         </tr>
