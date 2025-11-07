@@ -32,6 +32,8 @@
     <aside class="sidebar">
       <!--See .sidebar in styles.css-->
       <a href="#what">what</a>
+      <a href="#tables">Tables in iptables</a>
+      <a href="#examples">Examples</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -79,11 +81,13 @@
         </tr>
       </table>
 
-      <h2 id="example">Example Rules</h2>
+      <h2 id="examples">Examples</h2>
+      <h3>Add / Delete a Rule</h3>
       <pre><code class="language-css">
 -t: table
 -A: append rule at end of chain
 -j(jump): What to do if packet matches
+-D: delete a rule
 
 // Redirect incoming traffic on port=8080 to port=30080
 $ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 30080
@@ -91,6 +95,20 @@ $ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 3
 // Redirect locally generated traffic on port=8080 to port=30080
 $ sudo iptables -t nat -A OUTPUT -p tcp --dport 8080 -j REDIRECT --to-port 30080
       </code></pre>
+
+      <h3>List rules</h3>
+      <pre><code class="language-css">
+-L: list all rules in chain
+-n: numeric output
+-v: verbose output
+$ sudo iptables -t nat -L -n | grep -E '(8080|30080)'
+
+// PREROUTING
+$ sudo iptables -t nat -L PREROUTNIG -n | grep -E '(8080|30080)'
+
+// OUTPUT
+$ sudo iptables -t nat -L OUTPUT -n | grep -E '(8080|30080)'
+        </code></pre>
     </article>
     <script src="/scripts/search.js"></script>
     <script src="/scripts/prism.js"></script>
