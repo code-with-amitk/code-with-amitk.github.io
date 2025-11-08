@@ -43,6 +43,10 @@
       </ul>
       <a href="#types">Types/Variables</a>
       <a href="#funcmacro">Function & Macro</a>
+      <ul>
+        <li><a href="#arg">Arguments</a></li>
+      </ul>
+      <a href="#cond">Conditionals & Loops</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -245,7 +249,7 @@ city: jaipur
         </tr>
       </table>
 
-      <h2 id="funcmacro">Functions / Macros</h2>
+      <h2 id="funcmacro">Functions, Macros</h2>
       <dl>
         Similar to C/C++, functions & macros have statments/commands which can
         be called later and would be repeated if not done in function
@@ -357,6 +361,30 @@ After macro call cities: delhi;jaipur;pune
             </code></pre>
           </td>
         </tr>
+        <tr>
+          <td id="arg">Arguments</td>
+          <td>
+            Arguments are passed in order.<br />
+            function(my_function ARG1 ARG2)<br />
+            &ensp; <u>ARGN(Unnamed Argument)</u>: any additional arguments
+            passed beyond ARG2.
+            <pre><code class="language-css">
+$ vim CMakeLists.txt
+function(fun ARG1 ARG2)               #fun us function name. ARG1, ARG2 are arguments
+    message("ARG1: ${ARG1}")
+    message("ARG2: ${ARG2}")
+    message("Remaining arguments (ARGN): ${ARGN}")
+endfunction()
+fun(value_for_arg1 value_for_arg2 extra_arg1 extra_arg2)    #Calling the function
+
+$ cmake -p CMakeLists.txt
+ARG1: value_for_arg1
+ARG2: value_for_arg2
+Remaining arguments (ARGN): extra_arg1 extra_arg2
+          </code></pre>
+          </td>
+          <td>same</td>
+        </tr>
       </table>
 
       <h2 id="keywords">Keywords</h2>
@@ -397,6 +425,21 @@ target_sources(MyLibrary
     FILES
       PublicHeader.h
 )
+      </code></pre>
+
+      <h2 id="cond">Conditionals & Loops</h2>
+      <h3>if ()</h3>
+      <pre><code class="language-css">
+$ cat test.cmake
+set(var True)
+if(var)
+  message("Defined Variable: True")
+else()
+  message("Defined Variable: False")
+endif()
+
+$ cmake -P test.cmake
+Defined Variable: True
       </code></pre>
     </article>
     <script src="/scripts/prism.js"></script>
