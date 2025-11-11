@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebGL</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="what">What is WebGL</a>
+      <a href="how">How it works</a>
+      <a href="app">Applications</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">WebGL</h2>
+      <dl>
+        WebGL (Web Graphics Library) is a browser-based JavaScript API that
+        enables rendering interactive 2D and 3D graphics directly inside
+        compatible web browsers without the need for plugins.<br />
+        Its built on top of <a href="../OpenGL/">OpenGL</a> ES, which accesses
+        User's GPU to display complex visual content.
+      </dl>
+
+      <h2 id="how">How it works</h2>
+      <dl>
+        WebGL exposes a graphics API(similar to OpenGL), developers can create
+        rich and dynamic graphics inside the HTML <b>canvas</b> element.<br />
+        WebGL is supported by almost all modern browsers including Chrome,
+        Firefox, Edge, and Safari, on both desktop and mobile platforms.<br /><br />
+        More Detials:
+        <a href="https://github.com/dmaivel/sharedgl/"
+          >Github Code for SharedGL</a
+        >
+      </dl>
+
+      <h2 id="app">Applications of WebGL</h2>
+      <dl>
+        Used in web-based 3D games, interactive data visualizations,
+        simulations, educational tools, virtual and augmented reality
+        experiences, and 3D modeling applications<br />
+        Frameworks like Three.js and Babylon.js have simplified working with
+        WebGL, helping developers create complex visual effects
+      </dl>
+    </article>
+  </body>
+</html>
