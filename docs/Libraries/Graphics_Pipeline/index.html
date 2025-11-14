@@ -33,6 +33,33 @@
       </h2>
       <table>
         <tr>
+          <td>
+            <img
+              src="/images/GPU/Graphics_pipeline_Guest_Host_GPU.jpg"
+              alt="Graphics Pipeline"
+              class="zoomable-image"
+              id="zoomableImage2"
+              style="width: 450px; height: 600px"
+            />
+          </td>
+          <td>
+            <b>UMD(User Mode Driver)</b><br />
+            &ensp; Developer writes the Application using openGL APIs(old
+            styled) or using modern apps(using Direct 3D/12) APIs<br />
+            &ensp; Zink(from Mesa) for openGL & DX12 Translator for Direct3D/12
+            are used for translation of commands to Vulkan<br />
+            &ensp; Vulkan ICD converts vulkan commands to serilization stream<br />
+            &ensp; Venus Client serialized the commands to venus protocol
+            stream<br /><br />
+
+            <b>KMD(Kernel Mode Driver)</b><br />
+            WDDM Miniport: Venus stream reaches kernel mode in Guest VM.<br />
+          </td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
           <th>From Guest VM to Host</th>
           <th>Host to Guest VM</th>
         </tr>

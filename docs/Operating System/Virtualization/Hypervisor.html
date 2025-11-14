@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Virtualization Terms</title>
+    <title>Hypervisor</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
@@ -34,7 +34,15 @@
       <dl>
         Creates multiple (virtual) machines on the same physical hardware.Each
         Guest VM directs the system calls to kernel using VMM. VMM traps into
-        kernel.
+        kernel.<br /><br />
+        <b>Major Hypervisors:</b><br />
+        &ensp; 1. XEN: Open source Linux based type-1.<br />
+        &ensp; 2. VMWARE ESXI:<br />
+        &ensp; 3. HYPER-V: Hypervisor by Microsoft.<br />
+        &ensp; &ensp; 3A. AZURE Runs on customized version of Hyper V. Its
+        hardened and stripped down.<br />
+        &ensp; 4. KVM: Open source Linux based. Used in RHEV(Redhat Enterprise
+        Virtualization).
       </dl>
 
       <h2 id="types">Types of Hypervisor</h2>
