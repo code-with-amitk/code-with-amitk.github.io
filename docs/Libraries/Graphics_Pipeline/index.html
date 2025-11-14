@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Graphics Pipeline</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="pipeline">Graphics Pipeline</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="pipeline">
+        Graphics pipeline from Windows VM(guest) to physical GPU on the host
+      </h2>
+      <table>
+        <tr>
+          <th>From Guest VM to Host</th>
+          <th>Host to Guest VM</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+Windows App (D3D/GL)
+   ↓ openGL API calls
+[UMD: vkd3d-proton / Zink]
+   ↓ (Vulkan commands)
+[Venus Client]
+   ↓ (Venus stream)
+[VioGPU KMD → VirtIO]
+   ↓ (VirtIO transport)
+[QEMU VirtIO-GPU]
+   ↓ (Venus stream)
+[Virglrenderer (Venus Server)]
+   ↓ (Vulkan commands)
+[Host Vulkan Driver → GPU]
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+[QEMU VirtIO-GPU device]
+   │ (transports → Venus stream)
+[Virglrenderer + Venus Server]
+   │ (de-serializes → Vulkan)
+[Host Vulkan Driver]
+   │ (executes → GPU)
+[Physical GPU Hardware]
+   │
+[Framebuffer → VirtIO-GPU]
+   │ (returns → Guest display)
+[Windows DWM → Desktop Output]
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h3>Pipeline Stages</h3>
+      <h4>
+        Terms:
+        <a href="/Motherboard/GPU/VirtIO-GPU.html">VirtIO</a>,
+        <a href="/Libraries/index.html">openGL</a>,
+        <a href="/Libraries/index.html">Vulkan</a>
+      </h4>
+      <table>
+        <tr>
+          <th>Stage</th>
+          <th>Process</th>
+          <th>Runs inside</th>
+        </tr>
+        <tr>
+          <td>
+            1. Convert Windows Direct3D/OpenGL commands into Vulkan commands
+          </td>
+          <td>
+            <pre><code class="language-css">
+        Windows VM(Windows Apps)
+               \/
+          calls openGL APIs
+                \/
+          UMD(User-Mode Driver) intercept API calls
+                \/                        \/
+                vkd3d-proton(for D3D)   Zink(for GL)
+                    | convert to vulkan APIs |
+                    |------|          |------|
+                           \/        \/
+                           vulkan command stream
+      </code></pre>
+          </td>
+          <td>guest Windows VM (user space)</td>
+        </tr>
+        <tr>
+          <td>2. Vulkan commands stream to binary stream for the hypervisor</td>
+          <td>
+            <pre><code class="language-css">
+                vulkan command stream
+                        \/
+                    Venus Client
+                        \/
+                    Venus Stream(binary format optimized for VirtIO transport)
+                       
+            </code></pre>
+          </td>
+          <td>guest Windows VM (user space)</td>
+        </tr>
+        <tr>
+          <td>3. Deliver stream to host</td>
+          <td>
+            <pre><code class="language-css">
+
+              |-------- Guest VM (Windows) -------------------------------------|
+              |      Venus Stream(binary format optimized for VirtIO transport) |
+              |         \/                                                      |
+              |     VirtIO buffer object                                        |
+              |----------|------------------------------------------------------|
+                        \/
+                  |-------------------|      
+                  |   VirtIO I/O ring |
+                  | shared memory     |
+                  |------|------------|
+                         \/stream
+              |---------------- Host OS (kernel)--------------------------------|
+              |                                                                 |
+              |-----------------------------------------------------------------|
+            </code></pre>
+          </td>
+          <td>Host OS</td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

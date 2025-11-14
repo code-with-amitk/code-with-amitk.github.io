@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#qemu">QEMU</a>
+      <a href="#virglrenderer">Virglrenderer</a>
+      <a href="#venuserver">Venus Server</a>
+      <a href="#vprotocol">Venus Protocol</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="qemu">QEMU</h2>
+      <dl>
+        Emulator and virtualizer, used as use space component of hypervisor.<br />
+        Role in GPU virtualization:<br />
+        - Emulates the VirtIO-GPU device for guest VMs. ie 1 GPU would be shared
+        among guest VMs<br />
+        - Provides shared memory rings (virtqueues) for command submission and
+        data transfer<br />
+        - Loads and integrates with Virglrenderer, which does the actual
+        rendering work
+      </dl>
+
+      <h2 id="virglrenderer">Virglrenderer</h2>
+      <dl>
+        virtual GPU rendering engine developed by RedHat and Mesa. Runs on the
+        host as part of the QEMU process<br />
+        Implements two main “rendering backends”:<br />
+        - Virgl (for OpenGL virtualization) <br />
+        - Venus (for Vulkan virtualization)
+      </dl>
+
+      <h2 id="venuserver">Venus Server</h2>
+      <dl>
+        A component inside Virglrenderer implementing the Venus protocol on the
+        host side. The Venus Server is the receiver of the serialized Vulkan
+        command stream (sent by the Venus Client). It de-serializes the Venus
+        stream and executes the equivalent Vulkan commands using the host’s
+        Vulkan driver.
+      </dl>
+
+      <h2 id="vprotocol">Venus Protocol</h2>
+      <dl>
+        A binary protocol for Vulkan command serialization which are sent
+        between Venus Server & Venus Client
+      </dl>
+    </article>
+  </body>
+</html>
