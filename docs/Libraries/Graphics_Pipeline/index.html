@@ -31,11 +31,12 @@
       <h2 id="pipeline">
         Graphics pipeline from Windows VM(guest) to physical GPU on the host
       </h2>
+      <dl>Render Graphics on Guest Windows VM from physical GPU on host.</dl>
       <table>
         <tr>
           <td>
             <img
-              src="/images/GPU/Graphics_pipeline_Guest_Host_GPU.jpg"
+              src="/images/GPU/Graphics_pipeline_Guest_Host_GPU.png"
               alt="Graphics Pipeline"
               class="zoomable-image"
               id="zoomableImage2"
@@ -44,20 +45,49 @@
           </td>
           <td>
             <b>UMD(User Mode Driver)</b><br />
-            &ensp; Developer writes the Application using openGL APIs(old
-            styled) or using modern apps(using Direct 3D/12) APIs<br />
+            &ensp; Developer writes the Application using
+            <a href="Libraries/">openGL</a> APIs(old styled) or using modern
+            apps(using Direct 3D/12) APIs<br />
             &ensp; Zink(from Mesa) for openGL & DX12 Translator for Direct3D/12
-            are used for translation of commands to Vulkan<br />
+            are used for translation of commands to
+            <a href="Libraries/">Vulkan</a><br />
             &ensp; Vulkan ICD converts vulkan commands to serilization stream<br />
             &ensp; Venus Client serialized the commands to venus protocol
             stream<br /><br />
 
             <b>KMD(Kernel Mode Driver)</b><br />
-            WDDM Miniport: Venus stream reaches kernel mode in Guest VM.<br />
+            &ensp; WDDM Miniport: Venus stream reaches kernel mode in Guest
+            VM.<br />
+            &ensp; Venus stream reaches VirtIO GPU via scheduler & resource
+            manager
+            <br /><br />
+
+            <b
+              ><a href="/Operating%20System/Virtualization/Hypervisor.html"
+                >Hypervisor:</a
+              ></b
+            ><br />
+            &ensp; <a href="/Operating%20System/index.html">QEMU</a> recieves
+            the venus stream. Provides shared memory rings(virtqueues) for
+            rendering <br /><br />
+
+            <b>Host OS:</b><br />
+            &ensp;
+            <a href="/Operating%20System/Virtualization/Terms/"
+              >Virglrenderer:</a
+            >
+            This is loaded by QEMU. Provides 2 main rendering backends(1.
+            Virgl(for OpenGL virtulization), 2. Venus (for Vulkan
+            virtualization))
+            <br /><br />
+
+            <a href="/Libraries/Vulkan">Vulkan:</a> This is graphics most recent
+            rendering library provided by Khronos Group
           </td>
         </tr>
       </table>
 
+      <h3>This flow can be refined</h3>
       <table>
         <tr>
           <th>From Guest VM to Host</th>
