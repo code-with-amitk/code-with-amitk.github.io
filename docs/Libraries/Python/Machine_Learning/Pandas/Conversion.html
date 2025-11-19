@@ -13,7 +13,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../../../">Back</a></li>
+        <li><a href="index.html">Back</a></li>
         <li>
           <form>
             <input type="search" name="q" placeholder="Search site" />
@@ -23,22 +23,17 @@
       </ul>
     </nav>
 
-    <aside class="sidebar"></aside>
+    <aside class="sidebar">
+      <a href="#conversion">Conversion</a>
+    </aside>
 
     <article style="margin-left: 200px">
+      <h2 id="conversion">Conversion</h2>
       <dl>
-        <a href="Introduction.html">Introduction</a><br />
-        &ensp; What is Pandas, Usage<br />
-        &ensp; Datastructures(Series, Dataframe)<br />
-        <a href="Conversion.html"
-          >Conversion from pandas dataframe to numpy array</a
-        ><br />
-        <a href="Plotting.html"
-          >Create Plots(Histograms, boxplot) and save in png file</a
-        ><br />
-        <a href="Read_Write_Data_from_file.html"
-          >Read/Write data from csv, excel file</a
-        ><br />
+        <b>Why conversion is needed?</b> most machine learning frameworks (e.g.
+        TensorFlow), work directly with NumPy data<br />
+        get_dummies(): Convert each categorical feature into indicator features
+        for each of its categories
       </dl>
     </article>
   </body>

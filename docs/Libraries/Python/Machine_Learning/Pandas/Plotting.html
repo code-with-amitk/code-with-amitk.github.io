@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Pandas</title>
+    <title>Plotting in Pandas</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
@@ -13,7 +13,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../../../">Back</a></li>
+        <li><a href="index.html">Back</a></li>
         <li>
           <form>
             <input type="search" name="q" placeholder="Search site" />
@@ -23,23 +23,25 @@
       </ul>
     </nav>
 
-    <aside class="sidebar"></aside>
+    <aside class="sidebar">
+      <a href="plotting">Plotting</a>
+    </aside>
 
     <article style="margin-left: 200px">
-      <dl>
-        <a href="Introduction.html">Introduction</a><br />
-        &ensp; What is Pandas, Usage<br />
-        &ensp; Datastructures(Series, Dataframe)<br />
-        <a href="Conversion.html"
-          >Conversion from pandas dataframe to numpy array</a
-        ><br />
-        <a href="Plotting.html"
-          >Create Plots(Histograms, boxplot) and save in png file</a
-        ><br />
-        <a href="Read_Write_Data_from_file.html"
-          >Read/Write data from csv, excel file</a
-        ><br />
-      </dl>
+      <h2 id="plotting">Plotting</h2>
+      <dl>This means drawing a 2-D plot from dataframes.</dl>
+      <pre><code class="language-css">
+# predefined df
+print('{}\n'.format(df))
+
+df.plot()                    # Produce plot visualizations
+plt.show()
+plt.savefig('df.png')        # save to PNG file
+
+df.plot(kind='hist')         # create other plots like histograms or boxplots
+df.plot(kind='box')
+plt.show()
+      </code></pre>
     </article>
   </body>
 </html>

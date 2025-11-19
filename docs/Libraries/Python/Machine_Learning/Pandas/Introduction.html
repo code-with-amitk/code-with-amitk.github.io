@@ -3,6 +3,7 @@
   <head>
     <title>Pandas</title>
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
   <body>
@@ -25,6 +26,7 @@
 
     <aside class="sidebar">
       <a href="what">What is Pandas</a>
+      <a href="what">Datastructures</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -34,10 +36,93 @@
         analysis. it can analyze csv data and perform operations as mean, min,
         max etc.<br />
         parsing multiple file formats converting input data table into a NumPy
-        matrix arrays.<br />
-        <b>Series:</b> 1-D array/data called <br />
-        <b>Dataframes:</b> 2-D array/tabular csv/excel/spreadsheets
+        matrix arrays.
       </dl>
+
+      <h2 id="datastructures">Datastructures in Pandas</h2>
+      <dl>
+        Pandas provides two types of classes for handling data: Series,
+        Dataframes
+      </dl>
+      <h3 id="series">1. Series</h3>
+      <dl>
+        a one-dimensional labeled array holding data of any type such as
+        integers, strings, Python objects etc.
+      </dl>
+      <pre><code class="language-css">
+s = pd.Series()          // Empty series
+print(series,'\n')          #Series([], dtype: float64) 
+
+series = pd.Series(5)          //Single value 5
+print(series,'\n')          #0    5
+                            #dtype: int64 
+
+series = pd.Series([1, 2, 3])   //Array [1,2,3]
+print(series,'\n')            #0    1
+                              #1    2
+                              #2    3
+                              #dtype: int64  
+
+s = pd.Series([1, 2, 3], index=['a', 'b', 'c'])
+print(s,'\n')                                     # a    1
+                                                  # b    2
+                                                  # c    3
+                                                  # dtype: int64
+
+# Setting index using Dictionary
+s = pd.Series({'a':1, 'b':2, 'c':3})
+print(s,'\n')                                     # a    1
+                                                  # b    2
+                                                  # c    3
+                                                  # dtype: int64
+      </code></pre>
+
+      <h3>2. Dataframes</h3>
+      <dl>
+        A 2-dimensional data structure that holds data like a two-dimension
+        array or a table with rows and columns.(Eg: csv file)
+      </dl>
+      <pre><code class="language-css">
+df = pd.DataFrame()
+print(df)                       #Empty DataFrame
+                                # Columns: []
+                                # Index: []
+
+df = pd.DataFrame([5, 6])       
+print(df)                       #0
+                                #0  5
+                                #1  6
+                                
+df = pd.DataFrame({'c1': [1, 2], 'c2': [3, 4]},               //taking dictionary as argument
+                  index=['r1', 'r2'])
+print(df)                                   #    c1  c2
+                                            #r1   1   3
+                                            #r2   2   4
+
+// Append additional rows
+df = pd.DataFrame([[5, 6], [1.2, 3]])
+print(df)                                     #     0  1
+                                              # 0  5.0  6
+                                              # 1  1.2  3 
+r = pd.Series([0, 0], name='r3')
+
+df = df.append(r)
+print('{}\n'.format(r))                       #      0  1
+                                              # 0   5.0  6
+                                              # 1   1.2  3
+                                              # r3  0.0  0
+
+// Dropping rows, coloumns
+df = pd.DataFrame({'c1': [1, 2], 'c2': [3, 4], 'c3': [5, 6]}, index=['r1', 'r2'])
+print(df)                                   #     c1  c2  c3
+                                            # r1   1   3   5
+                                            # r2   2   4   6
+df = df.drop(labels='r1')
+print(df)                                   #     c1  c2  c3
+                                            # r2   2   4   6
+      </code></pre>
     </article>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
   </body>
 </html>

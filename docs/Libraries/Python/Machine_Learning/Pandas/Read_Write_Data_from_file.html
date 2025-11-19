@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pandas RW from file</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#rw">Read write from file</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="rw">Read/Write Data from File</h2>
+      <h4>pd.read_csv()</h4>
+      <pre><code class="language-css">
+df = pd.read_csv('data.csv')                # Read from data.csv contains baseball data
+print(df)                                             #   HR       name     pos
+                                                          0  17  joe smith  2B
+                                                          1  28  alan west   C
+                                                          2  19   john doe   P
+
+df = pd.read_csv('data.csv', index_col=0)
+print(df)                                           # HR               
+                                                      17  joe smith  2B
+                                                      28  alan west   C
+                                                      19   john doe   P
+
+df = pd.read_csv('data.csv', index_col=1)
+print(df)
+        </code></pre>
+
+      <h4>pd.read_excel()</h4>
+      <dl>
+        DataFrame from pd.read_excel contains the first sheet of the Excel
+        workbook.<br />
+        When sheet_name keyword argument is specified, we can obtain a specific
+        spreadsheet.
+      </dl>
+    </article>
+  </body>
+</html>
