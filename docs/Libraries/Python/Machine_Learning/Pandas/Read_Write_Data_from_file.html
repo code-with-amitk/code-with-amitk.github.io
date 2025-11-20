@@ -29,6 +29,7 @@
       <ul>
         <li><a href="#read_csv">read_csv(), .columns</a></li>
         <li><a href="#describe">describe()</a></li>
+        <li><a href="#head">head()</a></li>
         <li><a href="#dropna">dropna()</a></li>
       </ul>
     </aside>
@@ -100,6 +101,9 @@ min        50.0  103.000000  130.000000  282.400000
 max        70.0  117.000000  175.000000  479.000000
       </code></pre>
 
+      <h4 id="head">head()</h4>
+      <dl>head returns 1st n rows from dataframe, default is 5</dl>
+
       <h4 id="dropna">dropna</h4>
       <dl>Drop the empty rows from dataframe</dl>
       <pre><code class="language-css">
@@ -121,6 +125,27 @@ After drop
 0      60.0    110       130     409.1
 1      60.0    117       145     479.0
 2      60.0    103       135     340.0
+      </code></pre>
+
+      <h4>Features</h4>
+      <dl>Selecting some columns from dataframe is called features.</dl>
+      <pre><code class="language-css">
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.to_string())
+features = ['Duration', 'Pulse']
+print(df[features])
+
+    Duration  Pulse  Maxpulse  Calories
+0      60.0    110       130     409.1
+1      60.0    117       145     479.0
+2      60.0    103       135     340.0
+3       NaN    109       175     282.4
+
+   Duration  Pulse
+0      60.0    110
+1      60.0    117
+2      60.0    103
       </code></pre>
     </article>
     <script src="/scripts/common.js"></script>
