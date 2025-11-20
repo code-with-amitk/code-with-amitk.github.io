@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Learning Types</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="index.html">Back</a></li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">What is ML?</a>
+        <a href="#types">Types of ML?</a>
+        <ul>
+            <li><a href="#">Supervised</a></li>
+            <li><a href="#">Unsupervised</a></li>
+            <li><a href="#">Semisupervised</a></li>
+            <li><a href="#">Reinforcement</a></li>
+            <li><a href="#">Generative AI</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Machine Learning?</h2>
+        <dl>
+            ML is the process of training a piece of software, called a model, to
+            make useful predictions or generate content (like text, images, audio,
+            or video) from data.
+        </dl>
+
+        <h2 id="types">Types of Machine Learning</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Supervised Learning</th>
+          <th>Unsupervised Learning</th>
+          <th>Semisupervised Learning</th>
+          <th>Reinforcement learning</th>
+          <th>Generative AI</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            Training data feed to the algorithm includes the desired
+            solutions(called labels). <br>
+            Example: This is like a student learning new material by studying old exams that contain both questions and answers
+          </td>
+          <td>
+            Dataset does not have labels. ML model tries to learn without
+            teacher. ML has to estimate whether it's correct/incorrect and create its own rules
+          </td>
+          <td>lot of unlabeled data and a little bit of labeled data.<br>
+            Examples: 1. FB Photos: When we load photos, 
+            we provide labels to few and leave others. AI identifies photos.</td>
+          <td>
+            Agent(AI Program) can observe the environment, select and
+            perform actions, and get rewards or penalties based on actions performed within an environment<br>
+            Example: used to train robots to perform tasks, like walking around a room
+          </td>
+          <td>
+            Models that creates content from user input. <br>
+            Eg: <br>Create unique images, music compositions, jokes, <br>
+                Text-to-text<br>
+                Text-to-image<br>
+                Text-to-video<br>
+                Text-to-code<br>
+                Text-to-speech<br>
+                Image and text-to-image
+          </td>
+        </tr>
+        <tr>
+          <td>Types</td>
+          <td>
+            <b>1. Classification (give yes/no):</b><br />
+            <u>Example</u><br>
+            &ensp; a. Spam Filterning: Algo is trained with many example emails along
+            with their class (spam or ham). Each email has a label.<br />
+            <u>Types of classification models:</u><br>
+            &ensp; &ensp; 1. Binary classification: Model output a value from a class that contains only two values, for example rain or no rain<br>
+            &ensp; &ensp; 2. Multiclass classification: Output a value from a class that contains more than 2 values. Eg: rain, hail, snow, or sleet<br><br>
+
+            <b>2. Regression: (give % or numeric value):</b><br />
+            Predict whether based on inputs, Predict price of car provided with
+            some inputs(mileage, age, brand, etc.)<br /><br>
+
+            <b>3. Logistic Regression (yes/no with %):</b><br />
+            Mix of classfication & Regression. Example: 20% of chances being a
+            spam.
+          </td>
+          <td>
+            <b>1. Clustering:</b><br />
+            The model finds data points that demarcate natural groupings.
+            <img src="/images/Machine_Learning/clustering-01.png" alt="Clustering" style="width:250px;height:150px;">
+            <br>Algorithms used:<br>
+            &ensp; k-Means<br>
+            &ensp; Hierarchical Cluster Analysis (HCA)<br>
+            &ensp; Expectation Maximization<br>
+            <b>2. Visualization and dimensionality reduction</b><br />
+            With unlabelled data this algorithm provides ouput which can be
+            plotted on 2-D, 3-D plane. Algorithms used:<br />
+            &ensp; Principal Component Analysis (PCA)<br>
+            &ensp; Kernel PCA<br>
+            &ensp; Locally-Linear Embedding (LLE)<br>
+            &ensp; t-distributed Stochastic Neighbor Embedding (t-SNE)<br>
+            <b>3. Association rule learning:</b><br />
+            This provides output as relations between attributes. Algorithms used:<br>
+            &ensp; Apriori <br>
+            &ensp; Eclat
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Algorithms</td>
+          <td>
+            k-Nearest Neighbors<br>
+            Linear Regression<br>
+            Logistic Regression<br>
+            Support Vector Machines (SVMs)<br>
+            Decision Trees & Random Forests<br>
+            Neural networks
+          </td>
+          <td>
+            Clustering: k-Means, Hierarchical Cluster Analysis (HCA),
+            Expectation Maximization<br />
+            Visualization and dimensionality reduction: Principal Component
+            Analysis (PCA), Kernel PCA, Locally-Linear Embedding (LLE),
+            t-distributed Stochastic Neighbor Embedding (t-SNE)<br />
+            Association rule learning: Apriori, Eclat
+          </td>
+          <td>Deep belief networks (DBNs)</td>
+          <td></td>
+        </tr>
+      </table>
+    </article>
+
+</body>
+</html>
