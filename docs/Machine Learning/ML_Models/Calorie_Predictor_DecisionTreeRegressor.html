@@ -57,7 +57,8 @@ Duration,Pulse,Maxpulse,Calories
                 <th>Description</th>
             </tr>
             <tr>
-                <td><pre><code class="language-css">
+                <td>
+                <pre><code>
 # data.csv
 Duration,Pulse,Maxpulse,Calories
    60,    110,   130,    409.1
@@ -67,24 +68,25 @@ Duration,Pulse,Maxpulse,Calories
    45,    117,     ,     406.0
    60,       ,   127,    300.5
      ,    110,   136,    374.0
-
+                </code></pre>
+                <pre><code class="language-css">
 import pandas as pd                            #1
 from sklearn.tree import DecisionTreeRegressor #2
 
 df = pd.read_csv("data.csv")                   #3
-print("Raw data:\n", df.to_string())
+print("Raw data:", df.to_string())
 
 # Clean the data, remove empty rows
 clean_df = df.dropna(axis=0)                   #4
-print("\nCleaned data:\n", clean_df.to_string())
+print("Cleaned data:", clean_df.to_string())
 
 print("\n########### Traning Begin ###########")
 X_df_training_data = clean_df.dropna(axis=0)[['Duration','Pulse','Maxpulse']] #5
-print("Traning Data(Removed Calories):\n", X_df_training_data.to_string())
+print("Traning Data(Removed Calories):", X_df_training_data.to_string())
 
 # Predict Calories, Remove calories from training data                  #6
 y_predict_calories = clean_df['Calories']
-print("(Label)Calories. For above data, these should be calories:\n", 
+print("(Label)Calories. For above data, these should be calories:", 
         y_predict_calories.to_string())
 
 model = DecisionTreeRegressor(random_state=1)                         #7
@@ -102,7 +104,7 @@ real_data = pd.DataFrame({
     'Pulse':[120, 125, 117],
     'Maxpulse':[150, 165, 145]
 })
-print("Real World Data:\n", real_data)
+print("Real World Data:", real_data)
 
 pred = model.predict(real_data)                                     #11
 print("Calories Predictions: ", pred)
@@ -150,22 +152,22 @@ Calories Predictions:  [479. 479. 479.]
                 </code></pre></td>
                 <td>
                     1. import pandas (We will convert data from csv to <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">dataframe using pandas</a>.)<br><br>
-                    2. Use <a href="../ML_and_Types_Algorithms.html#dtr">DecisionTreeRegressor</a> from <a href="/Libraries/Python/Machine_Learning/scikit-learn/index.html">Scikit Learn</a><br><br>
+                    2. Use <a href="../ML_and_Types_Algorithms.html#dtr">DecisionTreeRegressor</a> from <a href="/Libraries/Python/Machine_Learning/scikit-learn">Scikit Learn</a><br><br>
 
-                    3. <a href="">read_csv()</a>: Read csv data into dataframe using <br><br>
-                    4. <a href="">dropna()</a>: Clean the data by removing empty rows<br><br>
+                    3. <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">read_csv() (From Pandas)</a>: Read csv data into dataframe using <br><br>
+                    4. <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">dropna() (From Pandas)</a>: Clean the data by removing empty rows<br><br>
                     
                     We only have 1 set of data, from which we will seperate traning and prediction data<br>
                     5. Traning data: 'Duration','Pulse','Maxpulse'<br>
                     6. Prediction data: 'Calories'<br><br>
 
-                    7. Initialize the model <a href="">DecisionTreeRegressor</a><br>
-                    8. <a href="">fit():</a> Feed the training and prediction data to model. Supervised learning<br>
-                    9. <a href=""">predict()</a>" Output of model. Predict the calories based on traninig data. You will see model gives same 
+                    7. Initialize the model <a href="/Libraries/Python/Machine_Learning/scikit-learn">DecisionTreeRegressor</a><br>
+                    8. <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">fit() (From scikit-learn)</a> Feed the training and prediction data to model. Supervised learning<br>
+                    9. <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">predict() (From scikit-learn)</a> Output of model. Predict the calories based on traninig data. You will see model gives same 
                     values for calories as fed. This is <b>overfitting</b><br><br>
 
                     10. Now model is ready, feed with real world data<br>
-                    11. <a href="">predict():</a> Model predicts calories from real world data
+                    11. <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">predict() (From scikit-learn)</a> Model predicts calories from real world data
                 </td>
             </tr>
         </table>
