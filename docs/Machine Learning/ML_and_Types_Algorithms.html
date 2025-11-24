@@ -32,17 +32,22 @@
             <li><a href="#">Reinforcement</a></li>
             <li><a href="#">Generative AI</a></li>
         </ul>
+        <a href="#models">Models?</a>
+        <ul>
+          <li><a href="#dtr">DecisionTree Regressor</a></li>
+          <li><a href="#dtc">DecisionTree Classifier</a></li>
+        </ul>
     </aside>
 
     <article style="margin-left:200px;">
-        <h2 id="what">Machine Learning?</h2>
+        <h2 id="what">Machine Learning and ML Model?</h2>
         <dl>
-            ML is the process of training a piece of software, called a model, to
+            ML is the process of training a <a href="#models">Machine Learning model</a>, to
             make useful predictions or generate content (like text, images, audio,
             or video) from data.
         </dl>
 
-        <h2 id="types">Types of Machine Learning</h2>
+       <h2 id="types">Types of Machine Learning</h2>
       <table>
         <tr>
           <th></th>
@@ -147,6 +152,45 @@
           <td></td>
         </tr>
       </table>
+
+      <h2 id="models">ML Models</h2>
+      <dl>Machine Learning model is a Algorithm, which makes predictions after getting trained on data</dl>
+      <table>
+        <tr>
+          <th>Algorithm/Model</th>
+          <th>Learning Type</th>
+          <th>Description / Implementation</th>
+        </tr>
+        <tr>
+          <td id="dtr">Decision Tree Regressor</td>
+          <td>Supervised Learning(Regression)</td>
+          <td>
+            <b>What it is?</b><br>
+            &ensp; Binary Tree(not balanced) which works in flowchart-like manner where each internal node represents a "test" on an attribute, 
+            each branch represents the outcome of the test, and each leaf node represents numerical value (ie Prediction).<br><br>
+            <b>How it works?</b><br>
+            Predicting Whether a Customer Will Buy a Product Using Two Decision Trees<br>
+            <img src="/images/Machine_Learning/decision_tree_customer_demographics.png" alt="Decision Tree" style="width:500px;height:250px;"><br>
+            - If Tree 1 predicts "Purchase" and Tree 2 predicts "No Purchase", the final prediction might be "Purchase" or "No Purchase" 
+            depending on the weight or confidence assigned to each tree.<br>
+            <u>Information Gain in Decision Tree</u><br>
+            &ensp; Information Gain tells us how useful a question (or feature) is for splitting data into groups<br>
+            &ensp; It measures how much the uncertainty decreases after the split. <br>
+            &ensp; For example if we split a dataset of people into "Young" and "Old" based on age and all young people bought the product 
+            while all old people did not, the Information Gain would be high<br>
+            <u>Gini Index in Decision Tree</u><br>
+            &ensp; Metric to measure how often a randomly chosen element would be incorrectly identified. <br>
+            &ensp; Lower Gini index represents a better split
+          </td>
+        </tr>
+        <tr>
+          <td id="dtc">Decision Tree Classifier</td>
+          <td>Supervised Learning (Classification)</td>
+          <td></td>
+        </tr>
+      </table>
+      
+
     </article>
 
 </body>

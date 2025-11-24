@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Learning Models</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="../">Back</a></li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="cal">Calorie prediction (DecisionTreeRegressor)</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="cal">Calorie prediction using DecisionTreeRegressor Model</h2>
+        <dl>
+            <b>Scenario</b><br>
+            &ensp; You are running a company which need to predict calories needed by atheletes based on duration and intensity(pulse, maxpulse) rates of their workouts<br>
+            &ensp; You need to develop a ML model which takes (Duration,Pulse,Maxpulse,Calories) as input and predicts Calories burned during athlete workout.
+            <br><br>
+
+            <b>Inputs</b><br>
+            &ensp; You would be provided with data.csv file which contains historical data of atheletes workout sessions
+            <pre><code>
+# data.csv
+Duration,Pulse,Maxpulse,Calories
+    60,  110,   130,    409.1
+    60,  117,   145,    479.0
+    60,  103,   135,    340.0
+    45,  109,   175,    282.4
+            </code></pre>
+
+            <b>Requirement</b><br>
+            &ensp; You need to write <a href="../ML_and_Types_Algorithms.html#models">a Machine Learning model</a> which takes (Duration, Pulse, MaxPulse) as input and predict Calories burned by athelete.<br>
+            &ensp; This way they can take appropriate calorie intake during/before their workouts
+        </dl>
+
+        <h3>Code</h3>
+        <table>
+            <tr>
+                <th>Code</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><pre><code class="language-css">
+# data.csv
+Duration,Pulse,Maxpulse,Calories
+   60,    110,   130,    409.1
+   60,    117,   145,    479.0
+   60,    103,   135,    340.0
+   45,    109,   175,    282.4
+   45,    117,     ,     406.0
+   60,       ,   127,    300.5
+     ,    110,   136,    374.0
+
+import pandas as pd                            #1
+from sklearn.tree import DecisionTreeRegressor #2
+
+df = pd.read_csv("data.csv")                   #3
+print("Raw data:\n", df.to_string())
+
+# Clean the data, remove empty rows
+clean_df = df.dropna(axis=0)                   #4
+print("\nCleaned data:\n", clean_df.to_string())
+
+print("\n########### Traning Begin ###########")
+X_df_training_data = clean_df.dropna(axis=0)[['Duration','Pulse','Maxpulse']] #5
+print("Traning Data(Removed Calories):\n", X_df_training_data.to_string())
+
+# Predict Calories, Remove calories from training data                  #6
+y_predict_calories = clean_df['Calories']
+print("(Label)Calories. For above data, these should be calories:\n", 
+        y_predict_calories.to_string())
+
+model = DecisionTreeRegressor(random_state=1)                         #7
+model.fit(X_df_training_data, y_predict_calories)                     #8
+calories_prediction_on_traningD = model.predict(X_df_training_data)   #9
+
+# This is overfitting
+print("Model Predicted: Calories:", calories_prediction_on_traningD)
+print("########### Traning End ###########")
+
+print("\n########### Real World ###########")
+#Real-world data                                                     #10
+real_data = pd.DataFrame({
+    'Duration':[55, 45, 60],
+    'Pulse':[120, 125, 117],
+    'Maxpulse':[150, 165, 145]
+})
+print("Real World Data:\n", real_data)
+
+pred = model.predict(real_data)                                     #11
+print("Calories Predictions: ", pred)
+
+Output:
+Raw data:
+    Duration  Pulse  Maxpulse  Calories
+0      60.0  110.0     130.0     409.1
+1      60.0  117.0     145.0     479.0
+2      60.0  103.0     135.0     340.0
+3      45.0  109.0     175.0     282.4
+4      45.0  117.0       NaN     406.0
+5      60.0    NaN     127.0     300.5
+6       NaN  110.0     136.0     374.0
+
+Cleaned data:
+    Duration  Pulse  Maxpulse  Calories
+0      60.0  110.0     130.0     409.1
+1      60.0  117.0     145.0     479.0
+2      60.0  103.0     135.0     340.0
+3      45.0  109.0     175.0     282.4
+
+************* Traning Begin ****************
+Traning Data(Removed Calories):
+    Duration  Pulse  Maxpulse
+0      60.0  110.0     130.0
+1      60.0  117.0     145.0
+2      60.0  103.0     135.0
+3      45.0  109.0     175.0
+(Label)Calories. For above data, these should be calories:
+ 0    409.1
+1    479.0
+2    340.0
+3    282.4
+Model Predicted: Calories: [409.1 479.  340.  282.4]
+************* Traning End ****************
+
+########### Real World ###########
+Real World Data:
+    Duration  Pulse  Maxpulse
+0        55    120       150
+1        45    125       165
+2        60    117       145
+Calories Predictions:  [479. 479. 479.]
+                </code></pre></td>
+                <td>
+                    1. import pandas (We will convert data from csv to <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">dataframe using pandas</a>.)<br><br>
+                    2. Use <a href="../ML_and_Types_Algorithms.html#dtr">DecisionTreeRegressor</a> from <a href="/Libraries/Python/Machine_Learning/scikit-learn/index.html">Scikit Learn</a><br><br>
+
+                    3. <a href="">read_csv()</a>: Read csv data into dataframe using <br><br>
+                    4. <a href="">dropna()</a>: Clean the data by removing empty rows<br><br>
+                    
+                    We only have 1 set of data, from which we will seperate traning and prediction data<br>
+                    5. Traning data: 'Duration','Pulse','Maxpulse'<br>
+                    6. Prediction data: 'Calories'<br><br>
+
+                    7. Initialize the model <a href="">DecisionTreeRegressor</a><br>
+                    8. <a href="">fit():</a> Feed the training and prediction data to model. Supervised learning<br>
+                    9. <a href=""">predict()</a>" Output of model. Predict the calories based on traninig data. You will see model gives same 
+                    values for calories as fed. This is <b>overfitting</b><br><br>
+
+                    10. Now model is ready, feed with real world data<br>
+                    11. <a href="">predict():</a> Model predicts calories from real world data
+                </td>
+            </tr>
+        </table>
+    </article>
+
+  <script src="/scripts/search.js"></script>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>
