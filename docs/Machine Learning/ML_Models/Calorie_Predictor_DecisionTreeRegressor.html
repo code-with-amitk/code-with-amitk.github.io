@@ -24,6 +24,10 @@
 
     <aside class="sidebar">   <!-- Sidebar -->
         <a href="cal">Calorie prediction (DecisionTreeRegressor)</a>
+        <ul>
+            <li><a href="#model">Model doing prediction</a></li>
+            <li><a href="#validation">Model Validation</a></li>
+        </ul>
     </aside>
 
     <article style="margin-left:200px;">
@@ -50,7 +54,7 @@ Duration,Pulse,Maxpulse,Calories
             &ensp; This way they can take appropriate calorie intake during/before their workouts
         </dl>
 
-        <h3>Code</h3>
+        <h3 id="model">Model doing prediction</h3>
         <table>
             <tr>
                 <th>Code</th>
@@ -70,44 +74,42 @@ Duration,Pulse,Maxpulse,Calories
      ,    110,   136,    374.0
                 </code></pre>
                 <pre><code class="language-css">
-import pandas as pd                            #1
-from sklearn.tree import DecisionTreeRegressor #2
+import pandas as pd                            //1
+from sklearn.tree import DecisionTreeRegressor //2
 
-df = pd.read_csv("data.csv")                   #3
-print("Raw data:", df.to_string())
+df = pd.read_csv("data.csv")                   //3
+print("Raw data\n", df.to_string())
 
 # Clean the data, remove empty rows
-clean_df = df.dropna(axis=0)                   #4
-print("Cleaned data:", clean_df.to_string())
+clean_df = df.dropna(axis=0)                   //4
+print("Cleaned data:\n", clean_df.to_string())
 
-print("\n########### Traning Begin ###########")
-X_df_training_data = clean_df.dropna(axis=0)[['Duration','Pulse','Maxpulse']] #5
-print("Traning Data(Removed Calories):", X_df_training_data.to_string())
+print("\n------ Traning Begin ----------")
+X_df_training_data = clean_df.dropna(axis=0)[['Duration','Pulse','Maxpulse']] //5
+print("Traning Data(Removed Calories):\n", X_df_training_data.to_string())
 
-# Predict Calories, Remove calories from training data                  #6
-y_predict_calories = clean_df['Calories']
-print("(Label)Calories. For above data, these should be calories:", 
-        y_predict_calories.to_string())
+y_pred_calories_trainingdata = clean_df['Calories']                               //6
+print("(Label)Calories. For above data, these should be calories:\n", 
+        y_pred_calories_trainingdata.to_string())
 
-model = DecisionTreeRegressor(random_state=1)                         #7
-model.fit(X_df_training_data, y_predict_calories)                     #8
-calories_prediction_on_traningD = model.predict(X_df_training_data)   #9
+model = DecisionTreeRegressor(random_state=1)                         //7
+model.fit(X_df_training_data, y_pred_calories_trainingdata)                     //8
+calories_prediction_on_traningD = model.predict(X_df_training_data)   //9
 
-# This is overfitting
-print("Model Predicted: Calories:", calories_prediction_on_traningD)
-print("########### Traning End ###########")
+// This is overfitting
+print("Model Predicted: Calories:\n", calories_prediction_on_traningD)
+print("---------- Traning End ----------")
 
-print("\n########### Real World ###########")
-#Real-world data                                                     #10
-real_data = pd.DataFrame({
-    'Duration':[55, 45, 60],
-    'Pulse':[120, 125, 117],
-    'Maxpulse':[150, 165, 145]
-})
-print("Real World Data:", real_data)
+print("\n---------- Real World Data ----------")                      //10
+real_data = pd.DataFrame
+    'Duration':[55, 45, 60, 80],
+    'Pulse':[120, 125, 117, 150],
+    'Maxpulse':[150, 165, 145, 200]
 
-pred = model.predict(real_data)                                     #11
-print("Calories Predictions: ", pred)
+print("Real World Data:\n", real_data)
+
+pred_calories_realworld = model.predict(real_data)                                     //11
+print("Calories Predictions: ", pred_calories_realworld)
 
 Output:
 Raw data:
@@ -127,7 +129,7 @@ Cleaned data:
 2      60.0  103.0     135.0     340.0
 3      45.0  109.0     175.0     282.4
 
-************* Traning Begin ****************
+---------- Traning Begin ----------
 Traning Data(Removed Calories):
     Duration  Pulse  Maxpulse
 0      60.0  110.0     130.0
@@ -140,9 +142,9 @@ Traning Data(Removed Calories):
 2    340.0
 3    282.4
 Model Predicted: Calories: [409.1 479.  340.  282.4]
-************* Traning End ****************
+---------- Traning End ----------
 
-########### Real World ###########
+---------- Real World ----------
 Real World Data:
     Duration  Pulse  Maxpulse
 0        55    120       150
@@ -171,6 +173,50 @@ Calories Predictions:  [479. 479. 479.]
                 </td>
             </tr>
         </table>
+
+        <h3 id="validation">Model Validation</h3>
+        <dl>
+            <b>Predictive Accuracy?</b><br>
+            &ensp; What is quality of prediction that model made? How close are model's predictions to actual result?
+            <br><br>
+
+            <b>How to measure?</b><br>
+            &ensp; Compare predicted and actual calorie values. It will mix of good and bad predictions<br>
+            &ensp; Looking through a list of 10,000 predicted and actual values would be pointless. We need to summarize this into a single metric.<br>
+            &ensp; <b>Mean Absolute Error (MAE): </b> Average of abs value of (actual - predicted)<br>
+            <table>
+                <tr>
+                    <th>Actual Calories</th>
+                    <th>Predicted Calories</th>
+                </tr>
+                <tr>
+                    <td>200</td>
+                    <td>190</td>
+                </tr>
+                <tr>
+                    <td>300</td>
+                    <td>310</td>
+                </tr>
+            </table>
+            MEA = ((200-190) + abs(300-310))/2 = 10
+            <br><br>
+        </dl>
+
+        <h4>Extending above example to calculate MEA</h4>
+        
+        <pre><code class="language-css">
+// y_pred_calories_trainingdata : Calories prediction from training data
+// pred_calories_realworld      : Calories prediction from real world data
+
+from sklearn.metrics import mean_absolute_error
+...
+    all same
+...
+print("\nmean_absolute_error: ", mean_absolute_error(y_pred_calories_trainingdata, pred_calories_realworld))
+
+Output
+mean_absolute_error:  101.375       // Not good
+        </code></pre>
     </article>
 
   <script src="/scripts/search.js"></script>
