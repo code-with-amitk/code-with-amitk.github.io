@@ -39,9 +39,13 @@
       <a href="#ActivationFunction">Activation Function</a>
       <a href="#conda">Conda</a>
       <a href="#opt">Optimizer, stochastic gradient descent (SGD)</a>
-      <a href="#overfitting">Overfitting</a>
       <a href="#bias">Bias/Sampling Bias</a>
       <a href="#cntk">CNTK</a>
+      <a href="fitting">Fitting</a>
+      <ul>
+        <li><a href="#overfitting">Overfitting</a></li>
+        <li><a href="#underfitting">Underfitting</a></li>
+      </ul>
       <a href="#keras">Keras</a>
       <a href="#llm">Large language Model</a>
       <a href="#layer">Layer</a>
@@ -57,7 +61,6 @@
         <li><a href="#tensroreshape">Tensor Reshaping</a></li>
       </ul>
       <a href="#tensorflow">Tensorflow</a>
-      <a href="#underfitting">Underfitting</a>
       <a href="#variance">Variance</a>
     </aside>
 
@@ -190,17 +193,6 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         </tr>
       </table>
 
-      <h3 id="overfitting">Overfitting</h3>
-      <dl>
-        Means that the model performs well on the training data, but it does not
-        generalize well(ie produces good results on real world/unseen data),
-        because there is too of much uneccessary data(noise) in traning data.
-      </dl>
-      <dl>
-        <strong>Regularization:</strong> Constraining a model to make it simpler
-        and reduce the risk of overfitting.
-      </dl>
-
       <h3 id="bias">Bias/Sampling Bias</h3>
       <dl>
         We should use a training data set that is representative of the cases we
@@ -216,6 +208,27 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
       <h3 id="cntk">CNTK</h3>
       <dl>
         This is Microsoft Cognitive Toolkit (CNTK) backend, plugged with keras.
+      </dl>
+
+      <h3 id="fitting">Fitting</h3>
+      <h4 id="overfitting">Overfitting</h4>
+      <dl>
+        Means that the model performs well on the training data, but it does not
+        generalize well(ie produces good results on real world/unseen data),
+        This is because model memorizes the exact relationship in the sample
+        data including noise or minor details.<br />
+        <a href="ML_and_Types_Algorithms.html#fitting"
+          >Overfitting Example on DecisionTreeRegressor</a
+        >
+      </dl>
+
+      <h4 id="underfitting">Underfitting</h4>
+      <dl>
+        Does not produces good results on traning data and bad results on new
+        data as well<br />
+        <a href="ML_and_Types_Algorithms.html#fitting"
+          >Underfitting Example on DecisionTreeRegressor</a
+        >
       </dl>
 
       <h3 id="keras">Keras</h3>
@@ -740,9 +753,6 @@ Dimension/Axis   Array
             Downloading tensorflow-2.6.2-cp36-cp36m-win_amd64.whl (423.3 MB)
         </pre>
       </code>
-
-      <h3 id="underfitting">Underfitting</h3>
-      <dl>Does not produces good results on traning data.</dl>
 
       <h3 id="variance">Variance</h3>
       <dl>

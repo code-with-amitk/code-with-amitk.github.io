@@ -154,42 +154,54 @@
       </table>
 
       <h2 id="models">ML Models</h2>
-      <dl>Machine Learning model is a Algorithm, which makes predictions after getting trained on data</dl>
-      <table>
-        <tr>
-          <th>Algorithm/Model</th>
-          <th>Learning Type</th>
-          <th>Description / Implementation</th>
-        </tr>
-        <tr>
-          <td id="dtr">Decision Tree Regressor</td>
-          <td>Supervised Learning(Regression)</td>
-          <td>
-            <b>What it is?</b><br>
-            &ensp; Binary Tree(not balanced) which works in flowchart-like manner where each internal node represents a "test" on an attribute, 
-            each branch represents the outcome of the test, and each leaf node represents numerical value (ie Prediction).<br><br>
-            <b>How it works?</b><br>
-            Predicting Whether a Customer Will Buy a Product Using Two Decision Trees<br>
-            <img src="/images/Machine_Learning/decision_tree_customer_demographics.png" alt="Decision Tree" style="width:500px;height:250px;"><br>
-            - If Tree 1 predicts "Purchase" and Tree 2 predicts "No Purchase", the final prediction might be "Purchase" or "No Purchase" 
-            depending on the weight or confidence assigned to each tree.<br>
+      <dl>
+        Machine Learning model is a Algorithm, which makes predictions after getting trained on data<br>
+        <b>Supervised Learning:</b><br>
+        &ensp; <u>Regression:</u> Decision Tree Regressor<br>
+        &ensp; <u>Classification:</u> Decision Tree Classifier<br>
+      </dl>
+
+      <h3>Supervised Learning Models (Regression)</h3>
+      <h4 id="dtr">Decision Tree Regressor</h4>
+      <dl>
+            This is Binary Tree(not balanced) which works in flowchart-like manner where each internal node represents a "test" on an attribute, 
+            each branch represents the outcome of the test, and each leaf node represents numerical value (ie Prediction).<br>
+            <b>How it works?</b> Predicting Whether a Customer Will Buy a Product Using Two Decision Trees
+            <table>
+              <tr>
+                <td><img src="/images/Machine_Learning/decision_tree_customer_demographics.png" alt="Decision Tree" style="width:500px;height:250px;"></td>
+                <td>If Tree 1 predicts "Purchase" and Tree 2 predicts "No Purchase", the final prediction might be "Purchase" or "No Purchase" 
+            depending on the weight or confidence assigned to each tree.</td>
+              </tr>
+            </table>
             <u>Information Gain in Decision Tree</u><br>
             &ensp; Information Gain tells us how useful a question (or feature) is for splitting data into groups<br>
             &ensp; It measures how much the uncertainty decreases after the split. <br>
             &ensp; For example if we split a dataset of people into "Young" and "Old" based on age and all young people bought the product 
             while all old people did not, the Information Gain would be high<br>
-            <u>Gini Index in Decision Tree</u><br>
-            &ensp; Metric to measure how often a randomly chosen element would be incorrectly identified. <br>
-            &ensp; Lower Gini index represents a better split
-          </td>
-        </tr>
-        <tr>
-          <td id="dtc">Decision Tree Classifier</td>
-          <td>Supervised Learning (Classification)</td>
-          <td></td>
-        </tr>
-      </table>
-      
+            <u>Gini Index in Decision Tree:</u> Metric to measure how often a randomly chosen element would be incorrectly identified. 
+            Lower Gini index represents a better split<br><br>
+
+            <b id="fitting">Fitting</b><br>
+            <u id="overfitting">Overfitting in Decision Tree</u><br>
+            when tree has too many splits becomes too deep, and it makes <font color="red">very good predictions to training data</font>,
+            but does <font color="red">poor predictions on new data</font>.<br>
+            As the tree gets deeper, the dataset gets sliced up into leaves with fewer choices.
+            we'll have 2<sup>10</sup> groups by the time we get to the 10th level. That's 1024 leaves.<br>
+            When we divide the tree in too many leaves, we also have fewer data in each leaf.
+            Very few Leaves will make predictions that are quite close to actual values, 
+            but they may make very unreliable predictions for new data (because each prediction is based on only a few input samples).
+            <br>
+            <u id="underfitting">Underfitting in Decision Tree</u><br>
+            On otherside, if only few splits are performed(only 2 or 4), Resulting predictions may be far off for most input samples, 
+            even in the training data.<br>
+            When a model fails to capture important distinctions and patterns in the data, & perform 
+            <font color="red">poorly even in training data, poorly in new data</font> is underfitting<br>
+            <u>Overfitting or underfitting(What's preferred)?</u> We need to hit a sweet spot between 2
+      </dl>
+
+      <h3>Supervised Learning Models(Classifier)</h3>
+      <h4 id="dtc">Decision Tree Classifier</h4>
 
     </article>
 
