@@ -33,25 +33,91 @@
     <article style="margin-left:200px;">
         <h2 id="cal">Calorie prediction using DecisionTreeRegressor Model</h2>
         <dl>
-            <b>Scenario</b><br>
-            &ensp; You are running a company which need to predict calories needed by atheletes based on duration and intensity(pulse, maxpulse) rates of their workouts<br>
-            &ensp; You need to develop a ML model which takes (Duration,Pulse,Maxpulse,Calories) as input and predicts Calories burned during athlete workout.
+            <b>Requirement</b><br>
+            &ensp; We are running a company which need to predict calories needed by atheletes based on duration, 
+            pulse, maxpulse rates of their workouts<br>
+            &ensp; We need a ML model which takes (Duration,Pulse,Maxpulse,Calories) as input and predicts 
+            Calories burned during athlete workout.
             <br><br>
 
-            <b>Inputs</b><br>
-            &ensp; You would be provided with data.csv file which contains historical data of atheletes workout sessions
-            <pre><code>
+            <b>How it Works</b><br>
+            We will write <a href="../ML_and_Types_Algorithms.html#models">Decision Tree Regressor(Supervised Learning Machine Learning Model)</a>
+            which takes (Duration, Pulse, MaxPulse) as input and predict Calories burned by athelete.
+            Steps<br>
+            &ensp; 1. We are provided with Raw data(data.csv containing Duration,Pulse,Maxpulse,Calories). We will:<br>
+            &emsp; - Clean the raw data ie remove empty rows<br>
+            <table>
+                <td><pre><code class="language-css">
+data.csv(Raw data)
+    Duration  Pulse  Maxpulse  Calories
+0        60    110     130.0     409.1
+1        60    117     145.0     479.0
+2        60    103     135.0     340.0
+3        45    109     175.0     282.4
+4        45    117     148.0     406.0
+5        60    102     127.0     300.5
+6        60    110       NaN     374.0
+7        45    104     134.0       NaN
+                </code></pre></td>
+                <td><pre><code class="language-css">
+Cleaned data:
+    Duration  Pulse  Maxpulse  Calories
+0        60    110     130.0     409.1
+1        60    117     145.0     479.0
+2        60    103     135.0     340.0
+3        45    109     175.0     282.4
+4        45    117     148.0     406.0
+5        60    102     127.0     300.5
+                </code></pre></td>
+            </table>
+            &emsp; - Split the data ie seperate traning('Duration','Pulse','Maxpulse') and prediction data(Calories)
+            <table>
+                <tr>
+                    <td><pre><code class="language-css">
 # data.csv
-Duration,Pulse,Maxpulse,Calories
-    60,  110,   130,    409.1
-    60,  117,   145,    479.0
-    60,  103,   135,    340.0
-    45,  109,   175,    282.4
+    Duration  Pulse  Maxpulse  Calories
+0        60    110     130.0     409.1
+1        60    117     145.0     479.0
+2        60    103     135.0     340.0
+3        45    109     175.0     282.4
+4        45    117     148.0     406.0
+5        60    102     127.0     300.5
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+                    Data.csv
+             ----------|------------
+             |                     |
+        Traning Data            Prediction Data
+(Duration,Pulse,Maxpulse)        (Calories)
+            </code></pre></td>
+            <td><pre><code class="language-css">
+Traning Data(Removed Calories):
+    Duration  Pulse  Maxpulse
+0        60    110     130.0
+1        60    117     145.0
+2        60    103     135.0
+3        45    109     175.0
+4        45    117     148.0
+5        60    102     127.0
+            </code></pre></td>
+            <td><pre><code class="language-css">
+Prediction Data(Calories)
+409.1
+479.0
+340.0
+282.4
+406.0
+300.5
+            </code></pre></td>
+                </tr>
+            </table>
+            
+            &ensp; 2. Feed model with traning and prediction data<br>
+            &ensp; 3. Now model is ready for predictions, feed the model with real world data. get predictions<br>
+            &ensp; 4. Measure how far model deviated by comparing predictions from traning, Real world data 
+            using mean absolute error.
+            <pre><code>
             </code></pre>
-
-            <b>Requirement</b><br>
-            &ensp; You need to write <a href="../ML_and_Types_Algorithms.html#models">a Machine Learning model</a> which takes (Duration, Pulse, MaxPulse) as input and predict Calories burned by athelete.<br>
-            &ensp; This way they can take appropriate calorie intake during/before their workouts
         </dl>
 
         <h3 id="model">Model doing prediction</h3>
@@ -62,18 +128,6 @@ Duration,Pulse,Maxpulse,Calories
             </tr>
             <tr>
                 <td>
-                <pre><code>
-# data.csv
-Duration,Pulse,Maxpulse,Calories
-   60,    110,   130,   409.1
-   60,    117,   145,   479.0
-   60,    103,   135,   340.0
-   45,    109,   175,   282.4
-   45,    117,   148,   406.0
-   60,    102,   127,   300.5
-   60,    110,      ,   374.0
-   45,    104,   134,
-                </code></pre>
                 <pre><code class="language-css">
 import pandas as pd                                     //1
 from sklearn.tree import DecisionTreeRegressor          //2
@@ -182,7 +236,7 @@ Mean Absolute Error: 109.5
                 <td>
                     1. import pandas (We will convert data from csv to <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">dataframe using pandas</a>.)<br>
                     2. Use <a href="../ML_and_Types_Algorithms.html#dtr">DecisionTreeRegressor</a> from <a href="/Libraries/Python/Machine_Learning/scikit-learn">Scikit Learn</a><br>
-                    2. import mean_absolute_error for calculating <a href="#validation">MEA</a> later in code
+                    2. import mean_absolute_error for calculating <a href="#validation">MEA</a> later in code<br>
 
                     3. <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">read_csv() (From Pandas)</a>: Read csv data into dataframe using <br><br>
                     4. <a href="/Libraries/Python/Machine_Learning/Pandas/index.html">dropna() (From Pandas)</a>: Clean the data by removing empty rows<br><br>
@@ -204,7 +258,7 @@ Mean Absolute Error: 109.5
             </tr>
         </table>
 
-        <h3 id="validation">Model Validation (MEA)</h3>
+        <h3 id="validation">Model Validation (Mean Absolute Error = MEA)</h3>
         <dl>
             <b>Predictive Accuracy?</b> What is quality of prediction that model made? How close are model's predictions to actual result?
             <br>

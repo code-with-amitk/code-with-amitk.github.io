@@ -29,6 +29,7 @@
         <a href="#policy">Policy types in Netskope</a>
         <a href="#configurations">Configurations in Netskope</a>
         <a href="#proxychain">Proxy Chaining Netskope</a>
+        <a href="#xff">XFF</a>
         <a href="#events">Events</a>
     </aside>
 
@@ -277,6 +278,17 @@
             @enduml
         </pre>
 
+        <h2 id="xff">XFF</h2>
+        <dl>
+            <a href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP Headers.html#xff">What is XFF Header, why its used?</a><br>
+
+            <b>How to implement in Natskope</b><br>
+            1. Browser should be installed with XFF header extension<br>
+            2. While list Client's public IP on Natskope Tenant UI > Settings > Security Cloud Platform > 
+                Explicit Proxy > IP Address Allowlist & User Identity > Add IP Address<br>
+            3. When presented download root CA cert into browser cert store<br>
+            4. Set up Proxy in browser. Settings > proxy > 
+        </dl>
         <h2 id="events">Events</h2>
         <dl>
             Event is web traffic log which help organization for deeper inspection of packet.

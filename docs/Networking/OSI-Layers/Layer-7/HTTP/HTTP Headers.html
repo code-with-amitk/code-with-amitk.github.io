@@ -15,6 +15,7 @@
       <li><a href="#">Our team</a></li>
       <li><a href="#">Projects</a></li>
       <li><a href="/contact.html">Contact</a></li>
+      <li><a href="../">Back</a></li>
       <li>
         <form id="searchForm">
             <input type="search" id="searchInput" name="q" placeholder="Search site" />
@@ -33,7 +34,6 @@
   </aside>
 
   <article style="margin-left:200px;">
-
 
     <h2 id="headers">HTTP Headers</h2>
     <dl>
@@ -169,6 +169,29 @@ Sec-Fetch-Site: none
               </td>
             </tr>
           </table>
+        </td>
+      </tr>
+      <tr>
+        <td id="xff">XFF (X-Forwarded-For) <br>Non Mandatory</td>
+        <td>
+          This is used for sending original IP header of client when 
+          the connection goes through a proxy or load balancer.<br>
+          <u>Why seeing original IP is important?</u> logging, rate limiting<br>
+          <u>Example:</u> Request from client IP 1.1.1.1 goes through a CDN (2.2.2.2) 
+          and then a load balancer. The application server receives the request with the following header:
+          X-Forwarded-For: 1.1.1.1, 2.2.2.2<br>
+          The leftmost IP (1.1.1.1) is the original client IP
+        </td>
+      </tr>
+      <tr>
+        <td id="xau">XAU (X-Authenticated-User) <br>Non Mandatory</td>
+        <td>
+          Similar to XFF, this header contains authenticated username of the end user who made the request.<br>
+          This is used to pass the user identity after initial authentication, preventing the need for 
+          re-authentication at every hop. <br>
+          X-Authenticated-User: john.doe, 
+          The receiving service reads this header to know which user the request belongs to and applies 
+          appropriate access policies. 
         </td>
       </tr>
     </table>
