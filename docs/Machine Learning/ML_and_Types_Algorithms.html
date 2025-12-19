@@ -32,10 +32,23 @@
             <li><a href="#">Reinforcement</a></li>
             <li><a href="#">Generative AI</a></li>
         </ul>
-        <a href="#models">Models?</a>
+        <a href="#slmodels">Supervised Learning Model</a>
         <ul>
-          <li><a href="#dtr">DecisionTree Regressor</a></li>
-          <li><a href="#dtc">DecisionTree Classifier</a></li>
+          <li><a href="#reg">Regressions</a>
+            <ul>
+              <li><a href="#dtr">Decision Tree</a></li>
+              <li><a href="#ranforr">Random Forest</a></li>
+            </ul>
+          </li>
+          <li><a href="#classifiers">Classifiers</a>
+            <ul>
+              <li><a href="#dtc">Decision Tree</a></li>
+            </ul>
+          </li>
+        </ul>
+        <a href="#uslmodels">Unsupervised Learning Model</a>
+        <ul>
+          <li><a href="#">Model 1</a></li>
         </ul>
     </aside>
 
@@ -153,7 +166,7 @@
         </tr>
       </table>
 
-      <h2 id="models">ML Models</h2>
+      <h2 id="slmodels">Supervised Learning Models</h2>
       <dl>
         Machine Learning model is a Algorithm, which makes predictions after getting trained on data<br>
         <b>Supervised Learning:</b><br>
@@ -161,7 +174,7 @@
         &ensp; <u>Classification:</u> Decision Tree Classifier<br>
       </dl>
 
-      <h3>Supervised Learning Models (Regression)</h3>
+      <h3 id="reg">Regression</h3>
       <h4 id="dtr">Decision Tree Regressor</h4>
       <dl>
             This is Binary Tree(not balanced) which works in flowchart-like manner where each internal node represents a "test" on an attribute, 
@@ -200,7 +213,20 @@
             <u>Overfitting or underfitting(What's preferred)?</u> We need to hit a sweet spot between 2
       </dl>
 
-      <h3>Supervised Learning Models(Classifier)</h3>
+      <h4 id="ranforr">Random Forest Regressor</h4>
+      <dl>
+        <b>Problems with Decision Tree:</b>
+        &ensp; Overfitting(Deep tree with lot of leaves) or underfitting(very less depth)
+        &ensp; Random forest solves it
+        <br><br>
+
+        <b>What is Random Forest?</b><br>
+        &ensp; Random forest uses lot of decision trees & make prediction by averaging 
+        each of Component trees.<br>
+        &ensp; Has much better predictive accuracy than a single decision tree & works well with default params
+      </dl>
+
+      <h3 id="classifiers">Classifiers</h3>
       <h4 id="dtc">Decision Tree Classifier</h4>
 
     </article>
