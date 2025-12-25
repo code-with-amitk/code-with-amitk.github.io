@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">What is opencv</a>
+      <a href="#how">How opencv works</a>
+      <a href="#">Code</a>
+      <ul>
+        <li>
+          <a href="./Draw_Rectangle_around_faces.html"
+            >Draw Rectangle around faces</a
+          >
+        </li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is opencv</h2>
+      <dl>
+        opensource library(C++,python,java) for image processing, recognizance.
+        OpenCV uses ML algorithms to search for faces within a picture. It
+        matches thousands of small patterns and features.
+      </dl>
+      <pre><code>
+////Ubuntu Installation///
+# sudo apt update
+# sudo apt install python3-pip
+# sudo apt install python3-opencv
+      </code></pre>
+
+      <h2 id="how">How opencv works?</h2>
+      <dl>
+        <b> 1. Breaks task into smaller tasks=classifiers</b><br />
+        - Task of image recognization is broken into smaller tasks called
+        Classifiers. For a face, we can have 6000+ Classifiers.<br />
+        - The algorithm starts at the top left of a picture and moves down
+        across small blocks of data, looking at each block and matching,
+        constantly asking, “Is this a face?<br />
+        2. Breaking problem in Multiple Stages=Casades<br />
+        - Cascade dictionary meaning is waterfall. In ML Cascade is breaking the
+        problem of detecting faces into multiple stages. There canbe 30-50
+        cascades.<br />
+        - The cascades themselves are a bunch of XML files that contain OpenCV
+        data used to detect objects.<br /><br />
+
+        <b>Haar Cascade</b><br />
+        - Haar is a supervised learning where ascade function is trained from a
+        lot of positive and negative images. It is then used to detect objects
+        in other images. <br />
+        - Lets take face detection as an example.<br />
+        &ensp; Initially, the algorithm needs a lot of positive images of faces
+        and negative images without faces to train the classifier Cascade
+        classifier training requires a set of positive samples and a set of
+        negative images. <br />
+        &ensp; You must provide a set of positive images with regions of
+        interest specified to be used as positive samples.<br />
+        &ensp; How it works? The algorithm has four stages: Haar Feature
+        Selection Creating Integral Images Adaboost Training: selects the best
+        features and trains the classifiers that use them Cascading Classifiers
+      </dl>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

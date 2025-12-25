@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Draw Rectangle Around Faces</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"><!-- Sidebar --></aside>
+
+    <article style="margin-left: 200px">
+      <h2>Opencv draw Rectangle around faces</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+import cv2                                            //1
+import sys
+
+faceCascadeObject = 
+  cv2.CascadeClassifier("haarcascade_frontalface_default.xml") //2
+
+image = cv2.imread(sys.argv[1])                       //3 Image file
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)        //4
+
+faces = faceCascade.detectMultiScale(       //5
+    gray,                                   //grayscale image
+    scaleFactor=1.1,                        //some faces may be closer to camera
+                                            // they would appear bigger than faces at back. 
+                                            // scale factor compensates for this.
+    minNeighbors=5,                         //how many objects are detected near the 
+                                            // current one using moving Window
+    minSize=(30, 30),                       //gives the size of each window
+    flags = cv2.cv.CV_HAAR_SCALE_IMAGE
+)
+
+print("Found {0} faces!".format(len(faces)))
+
+# Draw a rectangle around the faces
+for (x, y, w, h) in faces:
+    cv2.rectangle(                    //6
+      image,                          //It is the image on which rectangle is to be drawn.
+      (x, y),                         //Starting coordinates of rectangle. 
+                                      // (X coordinate value, Y coordinate value).
+      (x+w, y+h),                     //Ending coordinates of rectangle. 
+                                      //(X coordinate value, Y coordinate value).
+      (0, 255, 0),                    //Color of border line of rectangle. 
+                                      //For BGR, we pass a tuple. eg: (255, 0, 0) 
+                                      //for blue color.
+      2)                              //Thickness of the rectangle border line in px.
+
+cv2.imshow("Faces found", image)
+cv2.waitKey(0)
+                </code></pre>
+          </td>
+          <td>
+            1. import opencv library<br />
+            2. Load a cascade classifier from xml file. Remember, the cascade is
+            just an XML file that contains the data to detect faces. it returns
+            Classifier object<br />
+            3. Load an image from the specified file. We will detect faces from
+            this image file. returns Image that is loaded from specified file<br />
+            4. Converts image from one color space to another.
+            COLOR_BGR2GRAY=convert from RGB/BGR to grayscale. Many operations in
+            OpenCV are done in grayscale<br />
+            5. Detects objects of different sizes in the input image. returns<br />
+            &ensp; List of rectangles, in which it believes it found a face<br />
+            &ensp; This function returns 4 values: x, y location of the
+            rectangle, rectangle’s width and height w , h<br />
+            6. draw a rectangle on any image
+          </td>
+        </tr>
+      </table>
+      <pre><code class="language-css">
+
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

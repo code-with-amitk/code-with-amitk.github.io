@@ -52,8 +52,10 @@
       <a href="#lossf">Loss function</a>
       <a href="#matplotlib">Matplotlib</a>
       <a href="#metrics">Metrics</a>
-      <a href="#neuron">Neuron</a>
       <a href="#neuralnetwork">Neural Network</a>
+      <ul>
+        <li><a href="#neuron">Neuron</a></li>
+      </ul>
       <a href="#tensor">Tensor</a>
       <ul>
         <li><a href="#add_vector_matrix">Add Vector & matrix</a></li>
@@ -418,18 +420,36 @@ array([[1., 0., 0.],                //represents 0
       <h2 id="metrics">Metrics</h2>
       <p>Metrics to monitor during training and testing</p>
 
-      <h2 id="neuron">Neuron / Node / Function or class</h2>
+      <h2 id="neuralnetwork">Neural Network</h2>
+      <dl>
+        This is brain-inspired AI model which uses interconnected nodes
+        (neurons) in layers to finds patterns in input data, then learn from
+        examples to make predictions<br />
+        It contains an input layer, one or more hidden layers, and an output
+        layer.
+      </dl>
+
+      <h3 id="neuron">Neuron / y=wx+b</h3>
       <dl>
         A neuron is the basic unit within a layer. It takes input, performs a
-        computation, and produces an output.
+        computation, and produces an output. Each neuron has weight, bias,
+        activation function
       </dl>
-      <dl>Each neuron has weight, bias, activation function</dl>
-      <dt>weight</dt>
-      <dd>
-        Neurons receive input signals, and each input is associated with a
-        weight. These weights represent the strength of the connection between
-        the input and the neuron.
-      </dd>
+      <table>
+        <tr>
+          <td>
+            <img
+              src="/images/Machine_Learning/neuron.png"
+              alt="neuron"
+              style="width: 200px; height: 80px"
+            />
+          </td>
+          <td>
+            input(x) is multipled with <b>weight(w)</b> and added to bais(b)
+          </td>
+        </tr>
+      </table>
+
       <pre><code class="language-css">
 class Neuron:
     def __init__(self, num_inputs):
@@ -446,14 +466,6 @@ class Neuron:
         
         return output        
         </code></pre>
-
-      <h2 id="neuralnetwork">Neural Network</h2>
-      <dd>
-        It try to emulate the human brain, combining computer science and
-        statistics to solve common problems in the field of AI<br />
-        It contains an input layer, one or more hidden layers, and an output
-        layer.
-      </dd>
 
       <h2 id="tensor">Tensor = n-D Matrix</h2>
       <dd>

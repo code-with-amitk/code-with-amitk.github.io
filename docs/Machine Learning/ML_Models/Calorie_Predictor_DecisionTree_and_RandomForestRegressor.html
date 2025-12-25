@@ -178,17 +178,17 @@ model_dtree = get_DecisionTreeRegressor_model(train_X, train_y) //7
 model_rforest = get_RandomForest_model(train_X, train_y)        //7
 
 print("---------- Predictions Start ----------")
-dtree_prediction = model_predict(model_dtree, val_X)          //11
-rforest_prediction = model_predict(model_rforest, val_X)      //11
+dtree_prediction = model_predict(model_dtree, val_X)         
+rforest_prediction = model_predict(model_rforest, val_X)     
 print("Decision Tree prediction:\n", dtree_prediction)
 print("Random Forest prediction:\n", rforest_prediction)
 print("---------- Predictions End ----------")
 
 print("---------- Mean Absolute Error ----------")
-print("decision Tree MAE:",                                     //12
+print("decision Tree MAE:",                                     //11
     get_mean_absolute_error(dtree_prediction, 
                             val_y))
-print("Random Forest MAE:",                                     //12
+print("Random Forest MAE:",                                     //11
     get_mean_absolute_error(rforest_prediction, 
                             val_y))
                 </code></pre>
@@ -240,19 +240,13 @@ print("Random Forest MAE:",                                     //12
             learning<br />
             9.
             <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
-              >predict() (From scikit-learn)</a
+              >predict(on Training data 2) (From scikit-learn)</a
             >
             Output of model. Predict the calories based on traninig data. You
             will see model gives same values for calories as fed. This is
             <b>overfitting</b><br /><br />
 
-            10. Now model is ready, feed with real world data<br />
-            11.
-            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
-              >predict() (From scikit-learn)</a
-            >
-            Model predicts calories from real world data<br /><br />
-            12. <a href="#validation">Validate the model</a> using mean absolute
+            11. <a href="#validation">Validate the model</a> using mean absolute
             error<br /><br />
 
             <b>Output:</b>
