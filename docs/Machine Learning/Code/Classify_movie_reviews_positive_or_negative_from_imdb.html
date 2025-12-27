@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Movie Review Classification(+ve or -ve)</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">Classify movie reviews</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">
+        50k reviews are in DB, Classify Review as +ve or -ve based on text of
+        review
+      </h2>
+      <h3>Task</h3>
+      <dl>
+        50k reviews are in IMDB(Internet Movie dataset
+        https://keras.io/datasets), Classify Review as +ve or -ve based on text
+        of review.<br />
+        Data is stored in NPZ file(imdb.npz) which is numpy array using gzip
+        compression. <br />
+        50k reviews would be split into 25k(training), 25k(testing)<br />
+        Reviews=(Sequence of words) is transformed to (Sequence of Integers).
+      </dl>
+
+      <table>
+        <td>
+          <pre><code class="language-css">
+import matplotlib.pyplot as plt
+from keras import models
+from keras import layers
+from keras.datasets import imdb
+import numpy as np
+
+(train_data, train_labels),(test_data, test_labels) = 
+    imdb.load_data(num_words=10000)             //1
+print(train_data)
+
+reverse_word_index = 
+dict([(value, key) for (key, value) in word_index.items()]) //2
+
+decoded_review = ' '.join([reverse_word_index.get(i - 3, '?') for i in train_data[0]])  //3
+print("--------------")
+print(decoded_review)
+print("--------------")
+
+#3 Break the data into training and testing data
+def vectorize_sequences(sequences, dimension=10000):
+    results = np.zeros((len(sequences), dimension))
+    for i, sequence in enumerate(sequences):       
+        results[i, sequence] = 1
+    return results
+x_train = vectorize_sequences(train_data)           #Convert traning data into array of 0 & 1 of size=10k
+x_test = vectorize_sequences(test_data)             #Convert test data into array of 0 & 1 of size=10k
+y_train = np.asarray(train_labels).astype('float32')
+y_test = np.asarray(test_labels).astype('float32')
+print('============')
+print(x_train)
+print('!!!!!!!!!!!!')
+print(x_test)
+print('!!!!!!!!!!!!')
+print(y_train)                                      #[0. 1. 1. ... 0. 0. 0.]
+print('!!!!!!!!!!!!')
+print(y_test)                                       #[0. 1. 1. ... 0. 0. 0.]
+print('============')
+
+# 4. Create Neural Network
+model = models.Sequential()
+model.add(layers.Dense(16, activation='relu', input_shape=(10000,)))
+model.add(layers.Dense(16, activation='relu'))
+model.add(layers.Dense(1, activation='sigmoid'))
+
+# 5. Loss function, Optimizer
+model.compile(optimizer='rmsprop',loss='binary_crossentropy',metrics=['accuracy'])
+
+# 6. Create Validation set(10k samples) from training data
+x_val = x_train[:10000]             #x_train[] is matrix to be inputted into NN
+partial_x_train = x_train[10000:]
+y_val = y_train[:10000]
+partial_y_train = y_train[10000:]
+
+# 7. Train the model
+history = model.fit(partial_x_train,partial_y_train,
+        epochs=20,batch_size=512,
+        validation_data=(x_val, y_val))
+print('Traning Complete')
+print(history.history.keys())       #dict_keys(['val_loss', 'val_accuracy', 'loss', 'accuracy'])
+
+# 8a. Plot training vs Validation loss
+history_dict = history.history
+acc = history_dict['accuracy']
+loss_values = history_dict['loss']
+val_loss_values = history_dict['val_loss']
+epochs = range(1, len(acc) + 1)
+plt.plot(epochs, loss_values, 'bo', label='Training loss')
+plt.plot(epochs, val_loss_values, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
+
+# 8b. PLOTTING TRANING vs VALIDATION_ACCURACY
+plt.clf()
+acc_values = history_dict['accuracy']
+val_acc_values = history_dict['val_accuracy']
+plt.plot(epochs, acc, 'bo', label='Training acc')
+plt.plot(epochs, val_acc_values, 'b', label='Validation acc')
+plt.title('Training and validation accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
+
+# 9. Predict the output
+print(model.evaluate(partial_x_train,partial_y_train))
+            </code></pre>
+        </td>
+        <td>
+          1. Load imdb dataset and get training, testing data seperated<br /><br />
+          2. Reverse the mapping. index:word<br /><br />
+          # reverse_word_index = {34701: 'fawn', 52006: 'tsukino', 52007:
+          'nunnery' ......}<br />
+          3. Break the data into testing and training sets<br /><br />
+          4. Input: data=vector, label=scalar(of 0&1s)<br />
+          Best N/W for such input: Connected-dense-layers with relu-activation
+          <pre><code class="language-css">
+    Layer   hidden-Units    Activation
+      1      16             relu(rectified linear unit)
+      2      16             relu
+      3      1              sigmoid
+          </code></pre>
+          Why relu? This function zeroes out negative values.<br />
+          Why sigmoid? “squashes” arbitrary values into [0, 1] interval giving
+          something that can be interpreted as a probability.<br />
+          <pre><code class="language-css">
+    input nD tensor
+            \/
+   -----------------------------------------
+  |Layer-1: Dense(units=512)(activation=relu)|
+   -----------------------------------------
+            \/ nD tensor
+   -----------------------------------------
+  |Layer-2: Dense(units=512)(activation=relu)|<------
+   -----------------------------------------        |
+            \/ nD tensor                            |
+   -----------------------------------------        |
+  |Layer-3 Dense(units=1)(activation=sigmoid)|      |
+   -----------------------------------------        |
+            \/                                      |
+        output(probability)                         |
+            \/                                      |
+    |loss function|                                 |
+            \/                                      |
+            loss score  ------|optimizer|-----------
+          </code></pre>
+          5. <b>Loss Function:</b> Measures how far output of model is from
+          expected output.<br />
+          binary_crossentropy: Since this is Binary classification problem &
+          output is probability, its best to use binary_crossentropy loss.<br />
+          - Computes the cross-entropy loss between true labels and predicted
+          labels.<br />
+          - Use this cross-entropy loss when there are only two label classes
+          (assumed to be 0 and 1) mse loss function<br />
+          <b>Optimizer:</b> rmsprop optimizer: divides the gradient by a running
+          average of its recent magnitude<br /><br />
+          6. Get validation data of 10k samples<br /><br />
+          7. Train the model:<br />
+          Data is fed into NN in set of 20 blocks. At the end of every block,
+          there is a slight pause as the model computes its loss and
+          accuracy.<br /><br />
+          8. Plot the graphs<br /><br />
+          9. Predict the reviews
+        </td>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

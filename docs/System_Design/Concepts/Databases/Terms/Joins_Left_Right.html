@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Indexing</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is Join</a>
+      <a href="#how">How join is internally implemented</a>
+      <a href="#kinds">Kinds of Joins</a>
+    </aside>
+
+    <main>
+      <article style="margin-left: 200px">
+        <h2 id="what">What is Join?</h2>
+        <dl>
+          A JOIN is a single optimized query handled by the DBMS, reducing
+          network roundtrips and leveraging indexes.<br />
+          It matches rows from different tables using a common column (like
+          CustomerID) that shares related data, as seen in Orders and Customers
+          tables. <br />
+          <b>Advantages:</b><br />
+          &ensp; 1. Reduces the need for multiple, separate queries to different
+          tables, improving performance and lowering server load.
+        </dl>
+
+        <h2 id="how">How join is internally implemented</h2>
+        <dl>
+          <b
+            >How join is different from I doing query to table-1 storing data
+            and then doing query to table-2?</b
+          ><br />
+          JOINs are implemented by the database engine (e.g., via nested loops,
+          hash joins, or merge joins). It scans indexes or tables, matches rows
+          on the join condition, and returns combined results.<br />
+          No separate handles are opened per table; the optimizer plans a single
+          execution path, often using memory or temp storage for efficiency.
+        </dl>
+
+        <h2 id="kinds">Kinds of Joins</h2>
+        <dl>Lets consider we have 2 tables(employee and sales)</dl>
+        <pre><code class="language-css">
+Employee-Table          Departments-Table
+ID      Name            emp-id      dept
+1       Alice           1           HR
+2       Bob             2           IT
+3       Charlie         4           Sale
+        </code></pre>
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+          <tr>
+            <td>INNER JOIN</td>
+            <td>Returns matching rows from both tables</td>
+            <td>
+              Inner join (on empid)<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+        </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>LEFT JOIN (or LEFT OUTER JOIN)</td>
+            <td>
+              Returns all rows from left table, matching from right; NULLs for
+              non-matches.
+            </td>
+            <td>
+              LEFT JOIN on ID=EmpID<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+3       Charlie            null
+            </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>RIGHT JOIN (or RIGHT OUTER JOIN)</td>
+            <td>
+              Returns all rows from right table, matching from left; NULLs for
+              non-matches.
+            </td>
+            <td>
+              Right JOIN on ID=EmpID<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+4       null               Sales
+            </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>FULL OUTER JOIN</td>
+            <td>Returns all rows from both tables; NULLs for non-matches.</td>
+            <td>
+              FULL OUTER JOIN on ID=EmpID<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+3       Charlie            null
+4       null               Sales
+            </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>CROSS JOIN</td>
+            <td>Cartesian product; all combinations without condition</td>
+            <td>
+              Returns 9 rows (3x3 combinations), e.g., Alice-HR, Alice-IT,
+              Alice-Sales, etc.
+            </td>
+          </tr>
+        </table>
+      </article>
+    </main>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
