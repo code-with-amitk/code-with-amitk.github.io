@@ -147,10 +147,10 @@ print(model.evaluate(partial_x_train,partial_y_train))
           4. Input: data=vector, label=scalar(of 0&1s)<br />
           Best N/W for such input: Connected-dense-layers with relu-activation
           <pre><code class="language-css">
-    Layer   hidden-Units    Activation
-      1      16             relu(rectified linear unit)
-      2      16             relu
-      3      1              sigmoid
+Layer   hidden-Units    Activation
+  1      16             relu(rectified linear unit)
+  2      16             relu
+  3      1              sigmoid
           </code></pre>
           Why relu? This function zeroes out negative values.<br />
           Why sigmoid? “squashes” arbitrary values into [0, 1] interval giving

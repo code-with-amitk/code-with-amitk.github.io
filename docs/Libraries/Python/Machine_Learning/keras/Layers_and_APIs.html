@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Keras Layers</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="api">APIs / Model / Container?</a>
+      <ul>
+        <li><a href="apitypes">API Types</a></li>
+      </ul>
+      <a href="#layers">keras Layers?</a>
+      <ul>
+        <li><a href="#types">Types of Layers</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="api">API / Model / Container?</h2>
+      <dl>
+        API/Container/Organizer/Model is way of arranging the layers to create
+        <a href="/Machine Learning/Terms/Neural_Network/">neural networks</a>.
+      </dl>
+      <h3 id="apitypes">API Types</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>1. Sequential (Simple, linear models)</th>
+          <th>2. Functional (Complex, production-ready models)</th>
+          <th>3. Model Subclassing (Research, highly custom architectures)</th>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td>
+            Layers are placed in linear fashion, to create neural network<br />
+            linear topology with exactly one input and one output
+          </td>
+          <td>
+            Non-linear data flow, complex layers, shared layers, and multiple
+            inputs/outputs<br />
+            Supports Multiple Inputs/Outputs
+          </td>
+          <td>
+            Provides highest level of flexibility, allowing to implement
+            everything from scratch by subclassing the tf.keras.Model<br />
+            For dynamic architectures, such as models that require custom loops
+            or conditional logic in the forward pass<br />
+            Supports Multiple Inputs/Outputs
+          </td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>
+            Multi-layer perceptrons (MLPs), Basic Convolutional Neural Networks
+            (CNNs), Recurrent Neural Networks (RNNs)
+          </td>
+          <td>
+            Multi-input/multi-output models (e.g., a model that takes image and
+            text inputs to produce a classification and a regression output)
+          </td>
+          <td>
+            Out-of-the-box research models or custom architectures like a
+            Tree-RNN
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <pre><code class="language-css">
+SEQUENTIAL API - STRAIGHT LINE FLOW
+┌─────────┐     ┌─────────┐     ┌─────────┐     ┌─────────┐
+│ INPUT   │────▶│ LAYER 1│────▶│ LAYER 2 │───▶│ OUTPUT  │
+│ (Shape) │     │         │     │         │     │         │
+└─────────┘     └─────────┘     └─────────┘     └─────────┘
+     │               │               │               │
+     └───────────────┴───────────────┴───────────────┘
+                 Data flows in ONE direction
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+FUNCTIONAL API - GRAPH STRUCTURE
+                          ┌─────────┐
+                     ┌───▶│ Dense 3 │───┐
+┌─────────┐     ┌────┴─┐  └─────────┘   ▼  ┌─────────┐
+│ INPUT 1 │────▶│      │             ┌─────▶│ OUTPUT 1│
+└─────────┘     │ Dense│             │      └─────────┘
+                 │   1  │             │
+┌─────────┐     │      │             │      ┌─────────┐
+│ INPUT 2 │────▶│      │───┐         └─────▶│ OUTPUT 2│
+└─────────┘     └──────┘   │                └─────────┘
+                 │         ▼
+                 │    ┌─────────┐
+                 └───▶│ Dense 2 │
+                      └─────────┘
+          </code></pre>
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Code Example</td>
+          <td>
+            <pre><code class="language-css">
+model = Sequential([
+    layers.Dense(64, activation='relu', 
+                input_shape=(10,)),  # Layer 1
+    layers.Dropout(0.2),             # Layer 2  
+    layers.Dense(32, activation='relu'),# Layer 3
+    layers.Dense(1)                     # Layer 4 (Output)
+])
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+from tensorflow.keras import Input, Model
+from tensorflow.keras import layers
+
+# Define two inputs
+text_input = Input(shape=(100,), name='text_input')
+image_input = Input(shape=(32, 32, 3), name='image_input')
+
+# Process text branch
+text_branch = layers.Dense(64, activation='relu')(text_input)
+text_branch = layers.Dense(32, activation='relu')(text_branch)
+
+# Process image branch  
+image_branch = layers.Conv2D(32, (3, 3))(image_input)
+image_branch = layers.Flatten()(image_branch)
+image_branch = layers.Dense(32)(image_branch)
+
+# Combine branches
+combined = layers.concatenate([text_branch, image_branch])
+output = layers.Dense(1, activation='sigmoid')(combined)
+
+# Create model
+model = Model(inputs=[text_input, image_input], outputs=output)
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="layers">Layers in Keras?</h2>
+      <dl>
+        Layer is component used to build a
+        <a href="/Machine Learning/Terms/Neural_Network/">neural network</a>.
+        Multiple layers are stacked together to create a neural network. Output
+        from 1 layer is fed to other.
+        <br />
+        Layers is composed of
+        <a href="/Machine Learning/Terms/Neural_Network/">Neurons</a>
+      </dl>
+
+      <img
+        src="/images/Machine_Learning/layers.png"
+        alt="Layers"
+        style="width: 500px; height: 300px"
+      />
+      <h3 id="types">Types of Layers in Keras</h3>
+      <table>
+        <tr>
+          <th>Layer</th>
+          <th>Description</th>
+          <th>How to create</th>
+        </tr>
+        <tr>
+          <td>1. Dense</td>
+          <td>Fully connected layer</td>
+          <td>layers.Dense(64, activation='relu')</td>
+        </tr>
+        <tr>
+          <td>2. Convolutional(Conv2D, Conv1D)</td>
+          <td>For image/sequence processing</td>
+          <td>layers.Conv2D(32, (3, 3), activation='relu')</td>
+        </tr>
+        <tr>
+          <td>3. Pooling (MaxPooling2D, AveragePooling2D)</td>
+          <td>For downsampling</td>
+          <td>layers.MaxPooling2D((2, 2))</td>
+        </tr>
+        <tr>
+          <td>4. Recurrent (LSTM, GRU)</td>
+          <td>For sequential/temporal data</td>
+          <td>layers.LSTM(64, return_sequences=True)</td>
+        </tr>
+        <tr>
+          <td>5. Dropout</td>
+          <td>For regularization</td>
+          <td>layers.Dropout(0.3)</td>
+        </tr>
+        <tr>
+          <td>6. Batch Normalization</td>
+          <td>For stabilizing training</td>
+          <td>layers.BatchNormalization()</td>
+        </tr>
+        <tr>
+          <td>7. Embedding</td>
+          <td>For text/word representations</td>
+          <td>layers.Embedding(10000, 128)</td>
+        </tr>
+        <tr>
+          <td>8. Flatten</td>
+          <td>reshaping tensor to 1D</td>
+          <td>layers.Flatten()</td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

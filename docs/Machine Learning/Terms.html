@@ -46,16 +46,17 @@
         <li><a href="#overfitting">Overfitting</a></li>
         <li><a href="#underfitting">Underfitting</a></li>
       </ul>
-      <a href="#keras">Keras</a>
+      <a href="#libs">Libraries for ML</a>
+      <ul>
+        <li>Keras</li>
+        <li>scikit-learn</li>
+      </ul>
       <a href="#llm">Large language Model</a>
       <a href="#layer">Layer</a>
       <a href="#lossf">Loss function</a>
       <a href="#matplotlib">Matplotlib</a>
       <a href="#metrics">Metrics</a>
       <a href="#neuralnetwork">Neural Network</a>
-      <ul>
-        <li><a href="#neuron">Neuron</a></li>
-      </ul>
       <a href="#tensor">Tensor</a>
       <ul>
         <li><a href="#add_vector_matrix">Add Vector & matrix</a></li>
@@ -233,19 +234,14 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         >
       </dl>
 
-      <h3 id="keras">Keras</h3>
+      <h3 id="libs">Libraries for Machine Learning</h3>
       <dl>
-        Library(in Python) which provides functions/APIs to build deep-learning
-        models. Different backends can be plugged with keras
+        1. <a href="/Libraries/Python/Machine_Learning/keras/">Keras</a><br />
+        2.
+        <a href="/Libraries/Python/Machine_Learning/scikit-learn/"
+          >scikit-learn</a
+        >
       </dl>
-      <code>
-        <pre>
-            Keras
-            Tensorflow / Theano / CNTK
-             CUDA           BLAS,Eigen
-             GPU            CPU
-        </pre>
-      </code>
 
       <h3 id="llm">Large language model</h3>
       <dd>
@@ -420,52 +416,10 @@ array([[1., 0., 0.],                //represents 0
       <h2 id="metrics">Metrics</h2>
       <p>Metrics to monitor during training and testing</p>
 
-      <h2 id="neuralnetwork">Neural Network</h2>
-      <dl>
-        This is brain-inspired AI model which uses interconnected nodes
-        (neurons) in layers to finds patterns in input data, then learn from
-        examples to make predictions<br />
-        It contains an input layer, one or more hidden layers, and an output
-        layer.
-      </dl>
-
-      <h3 id="neuron">Neuron / y=wx+b</h3>
-      <dl>
-        A neuron is the basic unit within a layer. It takes input, performs a
-        computation, and produces an output. Each neuron has weight, bias,
-        activation function
-      </dl>
-      <table>
-        <tr>
-          <td>
-            <img
-              src="/images/Machine_Learning/neuron.png"
-              alt="neuron"
-              style="width: 200px; height: 80px"
-            />
-          </td>
-          <td>
-            input(x) is multipled with <b>weight(w)</b> and added to bais(b)
-          </td>
-        </tr>
-      </table>
-
-      <pre><code class="language-css">
-class Neuron:
-    def __init__(self, num_inputs):
-        self.weights = initialize_weights(num_inputs)
-        self.bias = initialize_bias()
-        self.activation_function = relu
-
-    def forward(self, input_data):
-        # Compute the weighted sum of inputs
-        weighted_sum = sum(weight * input_value for weight, input_value in zip(self.weights, input_data)) + self.bias
-        
-        # Apply the activation function
-        output = self.activation_function(weighted_sum)
-        
-        return output        
-        </code></pre>
+      <h2 id="neuralnetwork">
+        <a href="/Machine Learning/Terms/Neural_Network/">Neural Network</a>
+      </h2>
+      <dl>Neuron?</dl>
 
       <h2 id="tensor">Tensor = n-D Matrix</h2>
       <dd>
