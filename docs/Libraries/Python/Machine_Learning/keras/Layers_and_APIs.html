@@ -183,8 +183,29 @@ model = Model(inputs=[text_input, image_input], outputs=output)
         </tr>
         <tr>
           <td>1. Dense</td>
-          <td>Fully connected layer</td>
-          <td>layers.Dense(64, activation='relu')</td>
+          <td>
+            Fully connected layer. Every neuron in this layer is connected to
+            every neuron from the previous layer
+          </td>
+          <td>
+            <pre><code class="language-css">
+layers.Dense(output_neurons=1, input_FeaturesOrDimensions=[11])
+
+INPUT LAYER          DENSE LAYER (Output)
+   ↓                        ↓
+┌─────────┐            ┌─────────┐
+│ x₁      │───────────→│         │
+├─────────┤            │         │
+│ x₂      │───────────→│ Neuron  │──→ Output
+├─────────┤            │         │
+│ x₃      │───────────→│         │
+├─────────┤            └─────────┘
+│ ...     │                ↑
+├─────────┤           (weights & bias)
+│ x₁₁     │───────────→ w₁₁x₁₁ + w₁₀x₁₀ + ... + w₁x₁ + b
+└─────────┘
+            </code></pre>
+          </td>
         </tr>
         <tr>
           <td>2. Convolutional(Conv2D, Conv1D)</td>

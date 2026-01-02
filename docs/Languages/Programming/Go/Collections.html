@@ -1,168 +1,134 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>collections</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css"/>
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>collections</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#arrays">Arrays</a>
-            <a href="#channels">Channels</a>
-            <a href="#slices">Slice (vector)</a>
-            <a href="#queue">Queue(using slice)</a>
-            <a href="#stack">Stack(using slice)</a>
-            <a href="#struct">struct = class</a>
-            <a href="#linkedlist">Linked List</a>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#arrays">Arrays</a>
+      <a href="#slices">Slice (vector)</a>
+      <a href="#channels">Channels</a>
+      <a href="#queue">Queue(using slice)</a>
+      <a href="#stack">Stack(using slice)</a>
+      <a href="#struct">struct = class</a>
+      <a href="#linkedlist">Linked List</a>
+    </aside>
 
-        <article style="margin-left:200px;">
-        <h3>Collections in Go</h3>
-        <dt>go library provides built-in collection types to handle different data structures.</dt>
-        
-        <h4 id="arrays">Arrays</h4>
-        <dt>An array in Go is a fixed-size collection of elements of the same type. 
-            Once you define the size of an array, it cannot be changed</dt>
-        <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <h2>Collections in Go</h2>
+      <dt>
+        go library provides built-in collection types to handle different data
+        structures.
+      </dt>
+
+      <table>
+        <tr>
+          <th>Collection</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td id="arrays">Array [n]T</td>
+          <td>
+            fixed-size collection of elements of the same type. Array cannot be
+            resized
+            <pre><code class="language-css">
+var a [10]int
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="slices">
+            <b
+              >Slices [] (Dynamic Array) = <br />C++(vector&lt;int>) =
+              Rust(vec&lt;i32>)</b
+            >
+          </td>
+          <td>
+            <b>What is slice?</b> Slice is part of an array.Changing the
+            elements of a slice modifies underlying array.<br />
+            <b>Slice has 3 components?</b> <br />
+            &ensp; 1. Pointer(to underlying array)<br />
+            &ensp; 2. Length(number of elements in slice). len(slice)<br />
+            &ensp; 3. Capacity(maximum number of elements it can hold).
+            cap(slice): length of undelying array - 1<br />
+            <b>nil slice:</b> slice which does not point to any array(at
+            present), but can in future.<br />
+            <b>Creating slice using make():</b> Preallocate memory for slice and
+            assign later
+            <pre><code class="language-css">
 func main() {
-    arr := [6]int{1,2,3,4,5,6}    //[n values] type {}
-    var len = len(arr);
+  names := [4]string{"John", "Paul", "George", "Ringo"}
+
+  // Slice
+  a := names[1:3]   // [Paul George]
+  a[0] = "XXX"      // a=[XXX, George], names=[John Paul XXX George]
+  fmt.Printf("%d %d\n", len(a), cap(a))   //len=2, cap=3(underlying array size - 1)
+
+  // nil Slice
+  var b[]string
+  len(b), cap(b)      // 0, 0
+  b = names[1:3]      // b=["XXX", "George"]
+
+  // create Slice using make()
+  // c := make([]T, len, cap)  OR c := make([]T, len)
+  d := make([]string, 3)  //len=3
+  c := make([]string, 0, 2) //len=0,cap=2. Allocates memory of size=2 & points c to it.
+  c = names[2:4]            // c=["George", "Ringo"]
+
+  // append slice
+  append(c, "Ram")
+
+  /***************** 2D Slice ******************/
+  // Method-1
+  var test [][]int
+  for i := 0; i < rows; i++ {
+      test = append(test, make([]int, cols))
+  }
+
+  // Method-2
+  test := make([][]int, rows)
+  for i := range vector {
+      test[i] = make([]int, cols)
+  }
+  /*******************************************/
+
+  // Create hashmap using make()
+  m := make(map[int]int)
 }
-        </code></pre>
+            </code></pre>
+          </td>
+        </tr>
+      </table>
 
-        <h4 id="channels">Channels</h4>
-        <dt>Communication and synchronization between goroutines=Tasks in Rust (concurrently executing functions). 
-            They provide a way to send and receive data safely between goroutines</dt>
+      <h4 id="channels">Channels</h4>
+      <dt>
+        Communication and synchronization between goroutines=Tasks in Rust
+        (concurrently executing functions). They provide a way to send and
+        receive data safely between goroutines
+      </dt>
 
-        <h4 id="slices">Slices [] (Dynamic Array) = C++(vector&lt;int>) = Rust(vec&lt;i32>)</h4>
-        <dt>A slice represents a view of contiguous sequence of elements in memory<br>
-            Slice contains 3 components:<br>
-            1. Pointer to underlying array: A slice holds a reference to the underlying array that stores the elements.<br>
-            2. Length: number of elements in slice.<br>
-            3. Capacity: maximum number of elements it can hold
-        </dt>
-
-        <h5>Declaration</h5>
-        <pre><code class="language-css">
-var arr []int                       //Empty vector
-slice := make([]int, 5)             //Slice size=5
-        </code></pre>
-
-        <h5>Initilization</h5>
-        <pre><code class="language-css">
-arr := []int {1,2,3,4,5,6}        //Length=6. number of elements provided
-for i:=0; i&lt;5; i++ {
-    slice[i] = 0;
-}
-        </code></pre>
-            
-        <h5>Modification</h5>
-        <dt>Changing elements of a slice modifies the corresponding elements of its underlying array</dt>
-        <pre><code class="language-css">        
-slc[0] = 899
-fmt.Println(arr[1])             //899
-        </code></pre>
-            
-        <h5>Length, Capacity</h5>
-        <pre><code class="language-css">         
-// length: no of elements slice contains
-// capacity: no of elements in underlying array
-    fmt.Println(len(slc),cap(slc))  //3 5
-        </code></pre>    
-
-        <h5>Nil Slice</h5>
-        <pre><code class="language-css">
-var nilSlc[]int
-fmt.Println(len(nilSlc), cap(nilSlc))   //0 0
-        </code></pre>
-            
-        <h5>ReSlice</h5>
-        <pre><code class="language-css">        
-//Slice the Slice's length to new length
-slc1 := []int{10,20,30,40,50}
-slc1 = slc1[:0]
-fmt.Println(slc1)                       //[]
-slc1 = slc1[:4]
-fmt.Println(slc1)                       //[10,20,30,40]
-slc1 = slc1[2:]
-fmt.Println(slc1)                       //[30,40]
-        </code></pre>
-            
-        <h5>Make Slice</h5>
-        <pre><code class="language-css">          
-// make() allocates a zeroed array and returns a slice that refers to that array
-slc2 :=make([]int, 5)                   //[0 0 0 0 0]
-fmt.Println(slc2)
-        </code></pre>
-            
-        <h5>Append</h5>
-        <pre><code class="language-css"> 
-//append(slice, element). Append new element to slice
-slc3 := []int{10,20,30,40,50}           //[10 20 30 40 50 60]
-slc3 = append(slc3,60)
-fmt.Println(slc3)    
-        </code></pre>
-
-        <h5>Sort</h5>
-        <pre><code class="language-css"> 
-v := []int
-sort.Ints(v)
-
-// sort [][]
-v = :[][]
-sort.Slice(v, func(i, j int) bool {
-    return v[i][0] < v[j][0]
-})
-        </code></pre>
-
-        <h5>2D vector</h5>
-        <pre><code class="language-css">
-// Method-1: Declare a 2D vector
-var test [][]int     
-
-// Method-2: Declare an empty 2D vector
-test := make([][]int, rows)
-// Initialize each row with specific length
-for i := range vector {
-    test[i] = make([]int, cols)
-}
-
-// Method-3: Declare an empty 2D vector
-var test [][]int
-// Initialize each row with specific length
-for i := 0; i &lt; rows; i++ {
-    test = append(test, make([]int, cols))
-}
-
-
-// Initialize the 2D vector with values
-test = [][]int {
-    1,2,3
-    4,5,6
-}
-
-// Accessing elements in the 2D vector
-fmt.Println(vector[0][0]) // Output: 1
-        </code></pre>
-
-        <h4 id="queue">Queue(Implemented using slice)</h4>
-        <pre><code class="language-css">
+      <h4 id="queue">Queue(Implemented using slice)</h4>
+      <pre><code class="language-css">
 package main
 import "fmt"
 type test struct {		//Declare a struct having slice which will act as queue
@@ -188,15 +154,21 @@ func (this *MyStack) Empty() bool {	//Size()
 }
         </code></pre>
 
-        <h4 id="stack">
-            <a href="/Languages/Programming/C++/STL/Containers/Container_Adoptors/stack.html">Stack using slice</a> </h4>
+      <h4 id="stack">
+        <a
+          href="/Languages/Programming/C++/STL/Containers/Container_Adoptors/stack.html"
+          >Stack using slice</a
+        >
+      </h4>
 
-        <h4 id="struct">(struct = class)</h4>
-        <dl>
-            Class is defined as struct type. Example: Person is defined of type struct.<br>
-            The struct type can be considered similar to a class, as it allows you to define fields and associated methods.
-        </dl>
-        <pre><code class="language-css">
+      <h4 id="struct">(struct = class)</h4>
+      <dl>
+        Class is defined as struct type. Example: Person is defined of type
+        struct.<br />
+        The struct type can be considered similar to a class, as it allows you
+        to define fields and associated methods.
+      </dl>
+      <pre><code class="language-css">
 package main
 import "fmt"
 
@@ -222,9 +194,13 @@ func main() {
 }
         </code></pre>
 
-        <h4 id="linkedlist"><a href="/DS_Questions/Data_Structures/Linked_List/Compared_c++_rust_python_go.html">Linked List</a></h4>
-
-        </article>
-        <script src="/scripts/prism.js"></script>
-    </body>
+      <h4 id="linkedlist">
+        <a
+          href="/DS_Questions/Data_Structures/Linked_List/Compared_c++_rust_python_go.html"
+          >Linked List</a
+        >
+      </h4>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

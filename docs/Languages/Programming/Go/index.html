@@ -1,73 +1,67 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Go</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css"/>
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Go</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <aside class="sidebar"><!--See .sidebar in styles.css--></aside>
 
-        </aside>
+    <article style="margin-left: 200px">
+      <dl>
+        <a href="Code Examples/" target="_blank">Code Examples</a>
+        <ul>
+          Hello World<br />
+          GPU, CPU % Usage using Daemon
+        </ul>
+        <a href="Command line arguments.html">Command line Arguments</a><br />
+        <a href="./Collections.html">Collections</a><br />
+        <ul>
+          Arrays, Slices = vector&lt;int>, Channels<br />
+          Queue(using slice), Stack(using slice), struct = class, Linked List
+        </ul>
+        <a href="./Functions.html">Functions</a>
+        <ul>
+          Multiple Returns, Naked Return<br />
+          Function as values<br />
+          Closure = Lambda Function<br />
+          range()
+        </ul>
+        <a href="./Install_Go.html">Install Go</a><br />
+        <a href="./Loops.html">Loops:</a> for, while<br />
+        <a href="Modules/">Modules</a><br />
+        <a href="Pointers.html">Pointers</a><br />
+        <a href="Processes/">Processes</a><br />
+        <a href="Statements.html">Statements</a><br />
+        <a href="Types.html">Types:</a><br />
+        &ensp; Basic: int, float64, bool, string<br />
+        &ensp; Aggregate: Arrays, struct<br />
+        &ensp; Reference: Pointers, slices, maps, channels, functions<br />
+        &ensp; Interface<br />
+        <a href="Variables.html">Variables</a><br />
+        <a href="Web_Server.html">Web Server</a><br />
+        <a href="Why_go_over_other_lang.html">Why Go Over Other Lang</a>
+      </dl>
+    </article>
 
-        <article style="margin-left:200px;">
-            <dl>
-            <a href="Code Examples/" target="_blank">Code Examples</a>
-            <ul>
-                Hello World<br> GPU, CPU % Usage using Daemon
-            </ul>
-            <a href="Command line arguments.html">Command line Arguments</a><br>
-            <a href="./Collections.html">Collections</a><br>
-            <ul>
-                Arrays<br>
-                Channels<br>
-                Slices = vector&lt;int><br>
-                Queue(using slice)<br>
-                Stack(using slice)<br>
-                struct = class<br>
-                Linked List
-            </ul>
-            <a href="./Functions.html">Functions</a>
-            <ul>
-                Multiple Returns, Naked Return<br>
-                Function as values<br>
-                Closure = Lambda Function<br>
-                range()
-            </ul>
-            <a href="./Install_Go.html">Install Go</a><br>
-
-            <a href="./Loops.html">Loops</a>
-            <ul>
-                for<br>
-                while
-            </ul>
-            <a href="Modules/">Modules</a><br>
-            <a href="Pointers.html">Pointers</a><br>
-            <a href="Processes/">Processes</a><br>
-            <a href="Statements.html">Statements</a><br>
-            <a href="Variables.html">Variables</a><br>
-            <a href="Web_Server.html">Web Server</a><br>
-            <a href="Why_go_over_other_lang.html">Why Go Over Other Lang</a>
-            </dl>
-
-        </article>
-
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
