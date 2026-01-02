@@ -26,7 +26,7 @@
         <a href="#what">What</a>
         <a href="#how">How it works</a>
         <a href="#terms">Terms</a>
-        <a href="#policy">Policy types in Netskope</a>
+        <a href="#types">Policy types in Netskope</a>
         <a href="#configurations">Configurations in Netskope</a>
         <a href="#proxychain">Proxy Chaining Netskope</a>
         <a href="#xff">XFF</a>
@@ -43,9 +43,10 @@
         <h2 id="how">How SWG works</h2>
         <dl>
             1. Admin creates policies in UI (Eg: browser=Chrome, action=drop) which is passed to Policy Enginer module<br>
-            2. When packet hits SWG, data is extracted from header (eg: user-agent, browser etc) and a event message is created with <key,value> fields<br>
+            2. When packet hits SWG, data is extracted from header (eg: user-agent, browser etc) and a event message is created with &lt;key,value> fields<br>
             3. Event message is passed to policy module, which takes action based on fields from event message
         </dl>
+        
         <div class="image-container">
             <img src="https://netskope-techdocs.github.io/doc-stage/en/image/uuid-dc0f6d7a-3b0f-3cf2-e56e-62a71e3ecab8.png" 
             alt="netskope policies" style="width:250px;height:230px;" class="zoomable-image" id="zoomableImage2">
@@ -168,6 +169,29 @@
                                 By default all traffic from tenant is steered to netskope<br><br>
                                 <b>Steering Exception:</b> We can define exception for particular traffic, this will be bypassed entirely from Netskope at the device level and is sent direct to the destination. 
                                 It will never reach the Netskope Cloud.
+
+                                <table>
+                                    <tr>
+                                        <th></th>
+                                        <th><a href="#types">SSL DND</a></th>
+                                        <th>Steering Exception</th>
+                                    </tr>
+                                    <tr>
+                                        <td>What</td>
+                                        <td>Traffic is sent to netskope cloud, (Header info:IP,users) are logged.<br>
+                                            Then traffic sent to origin server without decryption</td>
+                                        <td>Traffic never hits netskope cloud</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Use Cases</td>
+                                        <td>Customer is using other VPN client with netskope client(eg: AnyConnect).
+                                            nsclient tries to steer traffic to netskope cloud, but customer donot want it
+                                        </td>
+                                        <td>Company allows employees to check their bank account information
+                                            and company donot want to decrypt banking(username, passwords) info
+                                        </td>
+                                    </tr>
+                                </table>
                             </td>
                         </tr>
                     </table>
@@ -201,6 +225,7 @@
             <img src="//www.plantuml.com/plantuml/png/TL9DRnen4BtxLuoIIo8rRQ4zSOX2btnGHUgg8MeFkPZri5XuFPRj3Q2g_xqUBGkuWjDwdz_7czcz2r7ws3P6p6a3HHiYDUYXzDZeW07WijXAArmYwKexQIEy1lJVFAtJ0sI0TfxTJcXj3KdLNQhixkA7PUFaJflju889RY3GAaZXGYmjHGHwHy_ms0I2GXg3Ih1fY1xbJlj9t6-SIRQnUsSFO7LkCinCpafuykcaXAnh0hYVLkvGa8aMOrYHGwWCjTbudUymgJWv4qqmH6rbr9IliYQg3RAYFhC6WCjdNIzZgUrAJ6s8QPP3Xs8C5VeeNgTm2oyOKqWTqh58O7gA5rtR12NUkGr15f3x23vNhTTn2mLF2wMHSK6-IJSyR8ANKdD20iPATU00fgM81AafhS7e48_2spdSt88QmQD-HsWGod413zgWK7pHpaUC77LCa62EqXwh64JqSh7G5QG0iivZ8_hFcKUumGYUPhCI7kzdkpr_hAWHGfe8ierBj55N_4aiB5BH__--0mD56z0V1RX1LtKNyFNp5_Y9NJ_-RNO5j7A71YAzzQ9dghMzOiyFJePmVSpVexs0n-0kC26B36RH-rZ7EtYptt_DO4Ohj2UMy6QVK2hqLtlIDS_KZ-E69_VLgyBepv7zc_rzyq1-BRr2nQURZlLNk26RrQTtN_VbvwIsGjob-BOn_m00"
              alt="Proxy Chaining Netskope" class="zoomable-image" id="zoomableImage2">
           </div>
+
         <pre class="puml" visibility: hidden>
             @startuml
             box Customer Premises  #Cyan
@@ -289,6 +314,7 @@
             3. When presented download root CA cert into browser cert store<br>
             4. Set up Proxy in browser. Settings > proxy > 
         </dl>
+
         <h2 id="events">Events</h2>
         <dl>
             Event is web traffic log which help organization for deeper inspection of packet.
@@ -324,8 +350,7 @@
                     - Transaction events are stored in Google PubSubLite by Netskope ingestion services.<br>
                     - Once configured, these can be queried at endpoint token/transaction_events.<br>
                     - subscription/backlog_message_count: Number of messages that have been sent to a PubSubLite subscription<br>
-                    - 
-                /td>
+                </td>
             </tr>
         </table>
 

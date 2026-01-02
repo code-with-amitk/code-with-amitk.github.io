@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Thread Code</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#cpp">CPP</a>
+      <ul>
+        <li><a href="#threadclass">1. Thread class</a></li>
+        <li><a href="#functor">2. Functor</a></li>
+      </ul>
+      <a href="#rust">Rust</a>
+      <ul>
+        <li><a href="#spawn">1. std::thread::spawn</a></li>
+        <li><a href="#builder">2. std::thread::Builder</a></li>
+        <li><a href="#async">3. Asynchronous Frameworks (e.g., Tokio)</a></li>
+      </ul>
+      <a href="#golang">Go routine</a>
+      <ul>
+        <li><a href="#hellogo">1 thread</a></li>
+        <li><a href="#10threads">10 Threads</a></li>
+      </ul>
+      <a href="#python">Python</a>
+      <a href="#posix">POSIX</a>
+      <a href="#java">Java</a>
+      <a href="#windows">Windows</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="code">Thread Creation Code</h2>
+      <h3 id="cpp">CPP</h3>
+      <h4 id="threadclass">1. Thread class</h4>
+      <pre><code class="language-css">
+#include &lt;thread>
+#include &lt;iostream>
+void fun(int a){
+    std::cout &lt;&lt; "Hello";
+}
+int main() { 
+    int a = 10;
+    //Creates Thread Object, 
+    //which is entity that can start 
+    //execution immediately after creation
+    std::thread t1(fun, a);
+    t1.join();
+    
+    /* Not copy construtible */
+    //error: use of deleted function 
+    ‘std::thread::thread(std::thread&)’
+    //std::thread t2 = t1
+    
+    /* Not copy assignable */
+    //error: use of deleted function 
+    //‘std::thread& std::thread::operator
+    //=(const std::thread&)’
+    //std::thread t2(fun,3);
+    //t1 = t2;
+}
+                </code></pre>
+
+      <dl>Thread calling method of class</dl>
+      <pre><code class="language-css">
+#include&lt;thread>
+class A {
+    void test(int a) {
+        cout &lt;&lt; a;
+    }
+public:
+    void fun(int a) {
+        //if we start thread on static function, 
+        //then this will not be passed
+        thread t1(&A::test, this, a);
+        t1.join();
+    }
+};
+int main() {
+    A obj;
+    obj.fun(1);
+}
+            </code></pre>
+
+      <h4 id="functor">2. Using Functor</h4>
+      <pre><code class="language-css">
+#include &lt;thread>
+#include &lt;iostream>
+#include &lt;mutex>
+#include &lt;vector>
+std::mutex m;
+
+void fun(int tid) {
+    int a;
+    m.lock();
+    a += 5;
+    std::cout &lt;&lt; 
+    "Thread: " &lt;&lt; 
+    tid &lt;&lt; ", a:
+    " &lt;&lt; a &lt;&lt; std::endl;
+    m.unlock();
+}
+
+int main() {
+    std::vector &lt;std::thread> vecThreads;
+    for (int i = 0; i&lt; 5; ++i) {
+        //Functor to create Threads
+        vecThreads.emplace_back(
+            [&]() {
+                fun(i);
+            }
+        );
+    }
+    for (auto& t : vecThreads)
+        t.join();
+    return 0;
+}
+        </code></pre>
+
+      <h3 id="rust">Rust</h3>
+      <h4 id="spawn">1. std::thread::spawn</h4>
+      <dl>
+        thread::spawn() takes a
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/Rust/Functions#closure"
+          >closure</a
+        >
+        as an argument, which contains the code to be executed in the new
+        thread<br />
+        3 ways to create threads using thread::spawn
+      </dl>
+      <table>
+        <tr>
+          <th>Methods</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>1. Normal Closure</td>
+          <td>
+            <pre><code class="language-css">
+$ cat main.rs
+use std::thread;
+fn fun1() {
+    println!("Thread-1");
+}
+fn main() {
+    let handle1 = thread::spawn(fun1);      //Thread-1
+
+    let handle2 = thread::spawn(||{         //Thread-2
+            println! ("Thread-2");
+        });
+
+    // Thread1, Thread2 are joinable.
+    // main will not exit without t1,t2
+    // spawn() returns Struct std::thread::JoinHandle 
+    // which has method join() 
+    handle1.join().unwrap();
+    handle2.join().unwrap();
+}
+$ cargo run
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>2. Scoped Threads(Borrow from env)</td>
+          <td>
+            Normal Threads cannot borrow from their environment, but scoped
+            threads can.<br />
+            Scoped threads are not required to joined: - Reason being, when
+            scoped thread completes, its required to return the borrowed data
+            <pre><code class="language-css">
+fn main() {
+    let a = 1;
+
+    thread::scope(|scope| {
+        scope.spawn(|| {
+            println!("{}", a);
+        });
+    });
+}
+</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>3. Move Closure</td>
+          <td>
+            The move keyword indicates that the closure will take ownership of
+            any variables it captures from its environment.
+            <pre><code class="language-css">
+use std::thread;
+
+fn main() {
+    let a = 10;
+    let handle = thread::spawn(move || {
+        println!("Thread {}", a);
+    });
+
+    handle.join().unwrap(); // Wait for the thread to finish
+}
+                    </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h4 id="builder">2. std::thread::Builder</h4>
+      <dl>
+        Allows for more control over thread creation, such as setting stack size
+        or naming the thread
+      </dl>
+      <pre><code class="language-css">
+use std::thread;
+
+let builder = thread::Builder::new().name("my_thread".into()).stack_size(32 * 1024);
+let handle = builder.spawn(|| {
+    println!("Hello from a custom thread!");
+}).unwrap();
+handle.join().unwrap();
+        </code></pre>
+
+      <h4 id="async">3. Asynchronous Frameworks (e.g., Tokio)</h4>
+      <dl>
+        For asynchronous programming, you can use libraries like Tokio, which
+        allows you to spawn tasks on a runtime.
+      </dl>
+      <pre><code class="language-css">
+#[tokio::main]
+async fn main() {
+    tokio::spawn(async {
+        println!("Hello from an async task!");
+    });
+    // Other async code...
+}
+        </code></pre>
+
+      <h3 id="golang">Go routine(Thread)</h3>
+      <dl>
+        A goroutine is a lightweight thread of execution managed by the Go
+        runtime.
+      </dl>
+
+      <h4 id="hellogo">Hello World using 1 thread</h4>
+      <pre><code class="language-css">
+package main
+import (
+    "fmt"
+    "time"
+)
+func sayHello() {
+    fmt.Println("Hello from goroutine!")
+}
+func main() {
+    go sayHello()       // Start a goroutine
+    fmt.Println("Hello from main!") // Print from the main goroutine
+    // Sleep for a while to allow the goroutine to execute
+    time.Sleep(time.Second)
+}
+$ go run main.go
+Hello from main!
+Hello from goroutine!
+      </code></pre>
+
+      <h4 id="10threads">10 Threads executing 1 function</h4>
+      <table>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+package main
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+func worker(id int, wg *sync.WaitGroup) {
+    // defer: keyword in Go schedules a function call to be 
+    executed just before the surrounding function returns.
+    // ie wg.Done() would be called when surrounding function finishes
+    defer wg.Done()
+    fmt.Printf("Worker %d started\n", id)
+    time.Sleep(time.Second) // Simulate work
+    fmt.Printf("Worker %d finished\n", id)
+}
+
+func main() {
+    var wg sync.WaitGroup               // Create WaitGroup object
+    numWorkers := 10                    // Number of goroutines to create
+    wg.Add(numWorkers)                  // Create these goroutines
+
+    for i := 1; i &lt;= numWorkers; i++ {
+        go worker(i, &wg)
+    }
+    wg.Wait()                               // Wait for all goroutines to finish
+    fmt.Println("All workers finished")
+}
+
+$ go run test.go
+Worker 10 started
+Worker 8 started
+Worker 9 started
+Worker 2 started
+Worker 1 started
+Worker 6 started
+Worker 3 started
+Worker 4 started
+Worker 5 started
+Worker 7 started
+Worker 10 finished
+Worker 8 finished
+Worker 1 finished
+Worker 9 finished
+Worker 2 finished
+Worker 3 finished
+Worker 6 finished
+Worker 4 finished
+Worker 7 finished
+Worker 5 finished
+All workers finished
+      </code></pre>
+          </td>
+          <td>
+            <b>sync.waitgroup:</b><br />
+            - Synchronization primitive provided by the Go to synchronize the
+            execution of a group of goroutines.<br />
+            - <u>How it works?</u><br />
+            &emsp; A WaitGroup maintains shared counter internally(which is
+            initially set to 0). counter is thread-safe.<br />
+            &emsp; At start of goroutine wg.Add(numberOfWorkers) is called. This
+            makes counter=10<br />
+            &emsp; goroutine finishes (defer make wg.Done() to called after
+            function finishes), and counter is decremented<br />
+            &emsp; wg.Wait() method in main waits until counter=0
+            <br /><br />
+
+            <b>defer</b><br />
+            - keyword in Go schedules a function call to be executed just before
+            the surrounding function returns.<br />
+            - ie wg.Done() would be called when surrounding function finishes<br />
+            - defer wg.Done() is called reliably, even in case of errors or
+            unexpected goroutine termination.
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="python">Python</h3>
+      <pre><code class="language-css">
+import threading, zipfile
+
+class AsyncZip(threading.Thread):
+    def __init__(self, infile, outfile):              # Constructor
+        threading.Thread.__init__(self)
+        self.infile = infile
+        self.outfile = outfile
+
+    def run(self):
+        f = zipfile.ZipFile(self.outfile, 'w', zipfile.ZIP_DEFLATED)
+        f.write(self.infile)
+        f.close()
+        print('Finished background zip of:', self.infile)
+
+background = AsyncZip('mydata.txt', 'myarchive.zip')
+background.start()
+print('The main program continues to run in foreground.')
+
+background.join()    # Wait for the background task to finish
+print('Main program waited until background was done.')
+    </code></pre>
+
+      <h3 id="posix">POSIX</h3>
+      <pre><code class="language-css">
+#include &lt;pthread.h>
+#include &lt;iostream>
+using namespace std;
+#define NUM_OF_THREADS 5
+
+void* worker (void* arg) {
+    
+    cout &lt;&lt; "Thread: " &lt;&lt; *((int*)arg) &lt;&lt; " Created";
+}
+
+int main() {
+    pthread_t thread_id[NUM_OF_THREADS];
+    int thread_args[NUM_OF_THREADS], ret;
+    for (int i=0;i&lt;NUM_OF_THREADS;++i) {
+        thread_args[i] = i;
+        ret = pthread_create(&thread_id[i], 0, worker, (void*)&thread_args[i]);
+    }
+    for (int i=0; i &lt; NUM_OF_THREADS;++i)
+        pthread_join (thread_id[i], 0);
+    return 0;
+}
+    </code></pre>
+
+      <h3 id="java">Java</h3>
+      <pre><code class="language-css">
+//Class should implement Runnable Interface to create Thread
+class test implements Runnable {		
+    test() {
+        Thread cur = Thread.currentThread();
+
+        //1. Created child thread
+        Thread t = new Thread (this, "New thread");
+
+        //2. Started child thread. 
+        //if start() is not called, Child Thread will not start
+        t.start();                                  
+        try {
+            for (int i = 0; i &lt; 6; ++i) {
+                //Parent process waits 1sec
+                System.out.println ("Parent Thread");
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            System.out.println ("Interrupted");
+        }
+        System.out.println ("exiting main thread");
+    }
+    public void run () {
+        try {
+            for (int i = 0; i &lt; 3; ++i) {
+                //Child Thread waits 2sec
+                System.out.println ("Child Thread");
+                Thread.sleep(2000);
+            }
+        }
+        catch (InterruptedException e) {
+            System.out.println ("child interrupted");
+        }
+        System.out.println ("exiting child thread");
+    }
+    public static void main (String args[]) {
+        new test();					//1. Calls constructor
+    }
+}
+$ javac test.java
+$ java test
+$ java test
+Parent Thread
+Child Thread
+Parent Thread
+Child Thread
+Parent Thread
+Parent Thread
+Child Thread
+Parent Thread
+Parent Thread
+exiting child thread
+exiting main thread
+    </code></pre>
+
+      <h3 id="windows">Windows</h3>
+      <pre><code class="language-css">
+#include &lt;windows.h>
+#include &lt;tchar.h>
+#include &lt;strsafe.h>
+using namespace std;
+DWORD WINAPI worker(LPVOID param) {
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    int* data = (int*)param;
+    TCHAR buf[60];
+    DWORD dwChar;
+    StringCchPrintf(buf, 60, TEXT("val=%d"), *data);
+    WriteConsole(hStdout, buf, 10, &dwChar, nullptr);
+    return 0;
+}
+
+int _tmain() {
+    DWORD thread_id[5];
+    for (int i = 0; i &lt; 5; ++i) {
+        CreateThread(
+            NULL,               //Default security attributes
+            0,                  //Use default stack size
+            worker,             //thread function
+            (void*)i,           //argument to thread function
+            0,                  //Default creation flag
+            &thread_id[i]);     //Thread identifier returned
+    }
+}
+    </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
