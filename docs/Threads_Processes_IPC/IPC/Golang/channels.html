@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Golang IPC Channels</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Channel?</a>
+      <ul>
+        <li><a href="#close">close(channel)</a></li>
+        <li><a href="#select">select (wait on many channels)</a></li>
+      </ul>
+      <a href="#types">Types of Channels</a>
+      <ul>
+        <li><a href="#buffered">Buffered / Bounded</a></li>
+        <li><a href="#unbuffered">Unbounded / Unbuffered</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Go Channel(for IPC)</h2>
+      <dl>
+        we can send/recv data values via channel with operator, &lt;-. The data
+        flows in the direction of the arrow.
+        <pre><code class="language-css">
+ch &lt;- v    // Send v to channel ch.
+v := &lt;-ch  // Receive from ch, and
+           // assign value to v.
+        </code></pre>
+        <b>Creating a channel</b><br />
+        <pre><code class="language-css">
+ch := make(chan int)
+        </code></pre>
+      </dl>
+
+      <h4 id="close">close(channel)</h4>
+      <dl>
+        Only sender can close a channel to indicate that no more values will be
+        sent.
+        <pre><code class="language-css">
+// Reciever can check if channel is closed?
+v, ok := &lt;-ch
+if ok == false {
+  // channel is closed
+}
+
+// Reading all values from channel until it is closed
+for v := range ch {
+  fmt.Println(v)
+}
+        </code></pre>
+      </dl>
+
+      <h3 id="select">select(wait on multiple channels)</h3>
+      <dl>
+        Channels need not to be closed because channels are not files; you don't
+        need to close them
+      </dl>
+      <h4>Code</h4>
+      <dl>
+        <b>1. Write/Read data on channels</b>
+      </dl>
+      <pre><code class="language-css">
+package main
+import (
+	"fmt"
+)
+func main() {
+  // 1. Declare ch1,ch2,done unbuffered channels
+	ch1 := make(chan int)
+	ch2 := make(chan int)
+	done := make(chan int)
+
+  // 2. go routine. Send data on channels
+	go func() {
+		ch1 &lt;- 1
+		ch2 &lt;- 2
+		close(done)
+	}()
+
+  // 3. Keep waiting on channels 
+	for {
+		select {
+		case v1, ok := &lt;-ch1:
+      // Check channel is not closed
+			if ok {
+				fmt.Println("ch1:", v1)
+			}
+		case v2, ok := &lt;-ch2:
+			if ok {
+				fmt.Println("ch2:", v2)
+			}
+		case &lt;-done:
+      fmt.Println("Bye!")
+			return
+		default:
+      // Print this, when no channel is ready
+			fmt.Println("No case ready")
+		}
+	}
+}
+$ go run main.go
+ch1: 1
+ch2: 2
+Bye!
+      </code></pre>
+
+      <h2 id="types">Types of Channels</h2>
+      <h3 id="buffered">1. Buffered / Bounded</h3>
+      <dl>
+        When buffer length is provided a buffered channel is created. Sends to a
+        buffered channel block only when the buffer is full. Receives block when
+        the buffer is empty.
+        <pre><code class="language-css">
+ch := make(chan int, 100)
+        </code></pre>
+      </dl>
+      <h3 id="unbuffered">2. Unbuffered / Unbounded</h3>
+      <dl>
+        Channel created without any size
+        <pre><code class="language-css">
+ch := make(chan int)
+        </code></pre>
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

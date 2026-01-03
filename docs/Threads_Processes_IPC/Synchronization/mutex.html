@@ -1,100 +1,119 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Mutex</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <main>  <!--Here is our page's main content-->
-        <article style="margin-left:200px;">   <!-- It contains an article -->
-            <h2 id="what">1. Mutex / Mutual Exculsion / Locking mechanism / Block / Sleep</h2>
-            <dt>
-                if 1 thread is in CS other cannot enter, Return value: None, Parameters: None<br>
-            </dt>
-            <br>
-            <dl><strong>How Mutex is internally implemented?</strong></dl>
-            <dd>
-                Mutex is kernel maintained lock(a data structure) that we set before using a shared resource and release after using it. 
-                Mutex keeps track of who currently has exclusive access to the data.<br>
-                When the lock is set, no other thread can access the locked region of code. 
-                Mutex lock will only be released by the thread who locked it.
-            </dd>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Mutex?</a>
+      <a href="#prob">Problems in mutex?</a>
+      <a href="#create">Creating Mutex</a>
+      <ul>
+        <li><a href="#createcpp">C++11</a></li>
+        <li><a href="#createposix">POSIX</a></li>
+        <li><a href="#createrust">Rust</a></li>
+      </ul>
+      <a href="#wrappers">Wrappers around Mutex</a>
+      <ul>
+        <li><a href="#lg">lock_guard</a></li>
+        <li><a href="#ul">unique_lock</a></li>
+      </ul>
+    </aside>
 
-            <dl><strong>Wake up?</strong></dl>
-            <dd>
-                When call to mutex.unlock() comes, signal is sent to scheduler. Scheduler checks all threads waiting on mutex.<br>
-                if 1000 threads are waiting, wakeup call to activate 1000 comes(also called thundering herd), but scheduler wakes up 1 thread(at its discretion) & 999 falls to sleep.
-            </dd>
+    <article style="margin-left: 200px">
+      <h2 id="what">
+        Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep
+      </h2>
+      <dl>
+        if 1 thread is in CS other cannot enter, Return value: None, Parameters:
+        None
+        <br />
+        <b>How Mutex is internally implemented?</b><br />
+        &ensp; Mutex is kernel maintained lock(a data structure) that we set
+        before using a shared resource and release after using it.<br />
+        &ensp; Mutex keeps track of who currently has exclusive access to the
+        data.<br />
+        &ensp; When the lock is set, no other thread can access the locked
+        region of code. <br />
+        &ensp; Mutex lock will only be released by the thread who locked it.
+        <br />
 
-            <br>
+        <b>Wake up?</b><br />
+        &ensp; When call to mutex.unlock() comes, signal is sent to scheduler.
+        Scheduler checks all threads waiting on mutex.<br />
+        if 1000 threads are waiting, wakeup call to activate 1000 comes(also
+        called thundering herd), but scheduler wakes up 1 thread(at its
+        discretion) & 999 falls to sleep.
+      </dl>
 
-            <div class="tab">
-                <button class="tablinks" onclick="opencode(event, 'cpp')">CPP</button>
-                <button class="tablinks" onclick="opencode(event, 'posix')">POSIX</button>
-                <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
-            </div>
-        
-            <div id="cpp" class="tabcontent">
-                <h2>CPP</h2>
-                <aside class="sidebar">
-                    <a href="#what">What is Mutex</a>
-                    <a href="#problems">Problems with Mutex</a>
-                    <a href="#create">Code Creating Mutex</a>
-                    <a href="#">Wrappers over Mutex</a>
-                    <ul>
-                        <li><a href="#lg">Lock Guard</a></li>
-                        <li><a href="#ul">unique_lock</a></li>
-                    </ul>
-                </aside>
-
-                <h3 id="problems">Problems with Mutex</h3>
-                <table>
-                    <tr>
-                        <th>Problem</th>
-                        <th>Description</th>
-                    </tr>
-                    <tr>
-                        <td>Priority Inversion</td>
-                        <td>
-                            Lower priority process is executing in Critical section, suddenly High-Priority process is scheduled, 
-                            lower-priority process is preempted & thrown out of CS & higher priority process excecutes in CS. 
-                            Also if Higher priority thread/process is Busy Waiting then lower priority process will never get CPU(ie never scheduled).<br>
-                            <i>Can PI happen on user-level threads?</i> No, there is no preemption in user level threads.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Easy Deadlock</td>
-                        <td>if order of mutex locking/unlocking is not correct, that can led to easy dead-lock situation. See Dead-lock example.</td>
-                    </tr>
-                    <tr>
-                        <td>Thread holding mutex paniced</td>
-                        <td>if thread-1 which holding the lock panics, whole process would panic.</td>
-                    </tr>
-                    <tr>
-                        <td>Mutex and data are seperate Entities</td>
-                        <td>
-                            Thread-1,2 are accessing data using mutex, But thread-3 changed the data without mutex, this should not Happen.<br>
-                            Solutions:<br>
-                            1. Making mutex and data as single entity as done in Rust<br>
-                            2. All times keeping in mind that data should not handled outside mutex guards
-<pre><code class="language-css">
+      <h2 id="prob">Problems with Mutex</h2>
+      <table>
+        <tr>
+          <th>Problem</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>Priority Inversion</td>
+          <td>
+            Lower priority process is executing in Critical section, suddenly
+            High-Priority process is scheduled, lower-priority process is
+            preempted & thrown out of CS & higher priority process excecutes in
+            CS. Also if Higher priority thread/process is Busy Waiting then
+            lower priority process will never get CPU(ie never scheduled).<br />
+            <i>Can PI happen on user-level threads?</i> No, there is no
+            preemption in user level threads.
+          </td>
+        </tr>
+        <tr>
+          <td>Easy Deadlock</td>
+          <td>
+            if order of mutex locking/unlocking is not correct, that can led to
+            easy dead-lock situation. See Dead-lock example.
+          </td>
+        </tr>
+        <tr>
+          <td>Thread holding mutex paniced</td>
+          <td>
+            if thread-1 which holding the lock panics, whole process would
+            panic.
+          </td>
+        </tr>
+        <tr>
+          <td>Mutex and data are seperate Entities</td>
+          <td>
+            Thread-1,2 are accessing data using mutex, But thread-3 changed the
+            data without mutex, this should not Happen.<br />
+            Solutions:<br />
+            1. Making mutex and data as single entity as done in Rust<br />
+            2. All times keeping in mind that data should not handled outside
+            mutex guards
+            <pre><code class="language-css">
 #include &lt;iostream>
 #include &lt;thread>
 #include &lt;mutex>
@@ -117,147 +136,61 @@ int main() {
 }
 $ ./a.out
 Thread-1: 5
-Thread-2: Random value                
+Thread-2: Random value
 </code></pre>
-                        </td>
-                    </tr>
-                </table>
-    
-                <h3 id="create">Creating Mutex</h3>
-                <pre><code class="language-css">
-    // Note asynchronous nature of threads
-    // Thread-2 starts earlier than thread-1.
-    #include &lt;iostream>
-    #include &lt;thread>
-    #include &lt;vector>
-    #include &lt;mutex>
-    std::mutex m;
-    int a = 5;
-    void test(int tid) {
-        m.lock();
-        a++;
-        std::cout &lt;&lt; "Thread: " &lt;&lt; tid;
-        std::cout &lt;&lt; "a:" &lt;&lt; a &lt;&lt; endl;
-        m.unlock();
-    }
-    
-    int main() {
-        std::thread t1(test,1);    
-        std::thread t2(test,2);
-    
-        t1.join();    
-        t2.join();
-        
-        return 0;
-    }
-    
-    ///Output without m.lock(), m.unlock()///
-    //Because Global variables are not thread safe.
-    Thread: Thread: 1, a:7                 
-    2, a:6
-    
-    ///Output with m.lock(), m.unlock()///
-    Thread: 2, a:6                        
-    Thread: 1, a:7
-                </code></pre>
-    
-                <h3>Wrappers Around Mutex</h3>
-                <dl>
-                Wrapper means, these classes owns the mutex. To create object of any of these classes mutex has to be passed.<br>
-                </dl>
-                <h4 id="lg">1. lock_guard</h4>
-                <dd>
-                    We do mutex.lock() before going into CS and mutex.unlock() at exit.<br>
-                    lock_guard owns the mutex, then this mutex is handled with lock_guard.
-                </dd>
-                <pre><code class="language-css">
-    mutex mtx;
-    lock_guard &lt;mutex> lgLock(mtx);           //Mutex(mtx) is owned by lock_guard
-                </code></pre>
-    
-                <dl><strong>Templated class lock_guard</strong></dl>
-                <dd>
-                This is Wrapper over Mutex that provides a RAII, ie lock the mutex (mutex.lock()) no need to worry about unlocking (mutex.unlock()), 
-                when lock_guard object goes out of scope, mutex is automatically unlocked(destructor gets called).<br>
-                lock_guard provides mutex for duration of scoped block.<br>
-                We cannot copy lock_guard, because operator = is deleted. Hence its not copy or move assignable.<br>
-                Why? If someone locks the mutex and forgets to unlock, then whole process will block.
-                </dd>
-                <pre><code class="language-css">
-    template &lt;typename T>
-    class lock_guard {
-    public:
-        lock_guard(T a):mutex(a){
-        a.lock();
-        }
-        ~lock_guard(){
-        a.unlock();
-        }
-        operator=[deleted]           //Cannot copy lock_guard
-    };                
-                </code></pre>
-                <dt><strong>Code Example</strong></dt>
-                <pre><code class="language-css">
-    #include<iostream>
-    #include<thread>
-    #include<mutex>
-    using namespace std;
-    
-    mutex m;
-    
-    void fun(const char* name, int loop){
-        //1. Create object of lock_guard and mutex is locked. Same as m.lock()
-        lock_guard<mutex> lgLock(m);                
-        for (int i=0;i&lt;loop; ++i){
-            cout &lt;&lt; name &lt;&lt; ": " &lt;&lt; i &lt;&lt; endl;
-        }
-        //2. No need to do m.unlock(). This will done in destructor of lock_guard object
-    }                                               
-    
-    int main(){
-        thread t1(fun, "T1", 3);
-        thread t2(fun, "T2", 3);
-        t1.join();
-        t2.join();
-        return 0;
-    }
-    $ g++ test.cpp -lpthread
-    $ ./a.out
-    T1: 0
-    T1: 1
-    T1: 2
-    T2: 0
-    T2: 1
-    T2: 2                
-                </code></pre>
-    
-                <h4 id="ul">2. unique_lock</h4>
-                <dd>
-                    This also owns the mutex, then this mutex is handled with unique_lock. 
-                    This is similar to lock_guard, but supports additional locking strategies(or types of unique_locks)                
-                </dd>
-                <pre>
-    unique_lock<mutex> ulock(mtx);                    //Lock immdiately
-    
-    unique_lock<mutex> ulock(mtx, defer_lock);        //deferred locking: Acquire the mutex but donot lock immediately.  
-    
-    unique_lock<mutex> ulock(mtx);                   //time-constrained attempts at locking: try_lock_for(), try_lock_until()
-    mtx.try_lock_for(5 millisec);
-    
-    //recursive locking
-    //unique_lock can be moved ie it is (MoveConstructible and MoveAssignable) but cannot be copied (not of CopyConstructible or CopyAssignable).                
-                </pre>
-            </div>
+          </td>
+        </tr>
+      </table>
 
-            <div id="posix" class="tabcontent">
-                <aside class="sidebar">
-                    <a href="#what">What is Mutex</a>
-                    <a href="#posixmutex">POSIX Mutex</a>
-                </aside>
+      <h2 id="create">Creating Mutex</h2>
+      <h3>Plain mutex</h3>
+      <table>
+        <tr>
+          <th>Langugage</th>
+          <th>Code</th>
+        </tr>
+        <tr>
+          <td id="createcpp">C++11</td>
+          <td>
+            <pre><code class="language-css">
+// Note asynchronous nature of threads. Thread-2 starts earlier than thread-1.
+#include &lt;iostream>
+#include &lt;thread>
+#include &lt;vector>
+#include &lt;mutex>
+std::mutex m;
+int a = 5;
+void test(int tid) {
+    m.lock();
+    a++;
+    std::cout &lt;&lt; "Thread: " &lt;&lt; tid;
+    std::cout &lt;&lt; "a:" &lt;&lt; a &lt;&lt; endl;
+    m.unlock();
+}
 
-                <h2>POSIX</h2>
-                <h3 id="posixmutex">Creating mutex</h3>
-                <pre><code class="language-css">       <!--posix-->
+int main() {
+    std::thread t1(test,1);
+    std::thread t2(test,2);
+    t1.join();
+    t2.join();
+    return 0;
+}
+
+///Output without m.lock(), m.unlock()///
+//Because Global variables are not thread safe.
+Thread: 1, a:7
+Thread: 2, a:6
+
+///Output with m.lock(), m.unlock()///
+Thread: 2, a:6
+Thread: 1, a:7
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="createposix">POSIX</td>
+          <td>
+            <pre><code class="language-css">       <!--posix-->
 #include &lt;pthread.h>
 #include &lt;stdio.h>
 
@@ -280,27 +213,15 @@ int main(){
     pthread_join(tid2, NULL);
 } 
                 </code></pre>
-            </div>
-
-            <div id="rust" class="tabcontent">
-                <h2>Rust</h2>
-                <aside class="sidebar">
-                    <a href="#what">What is Mutex</a>
-                    <a href="#create">Creating Mutex</a>
-                    <a href="#">Mutex in threads</a>
-                    <ul>
-                        <li><a href="#mutexthreads">Mutex in threads(without Arc)</a></li>
-                        <li><a href="#arcmutex">Arc &lt;Mutex></a></li>
-                    </ul>
-                </aside>
-                
-
-                <h3 id="create">Creating Mutex</h3>
-                <dl>
-                    In Rust, data and mutex are not seperate. ie data can be accessed inside mutex only.<br>
-                    This solves the problem which we is present in CPP
-                </dl>
-                <pre><code class="language-css">       <!--Rust-->
+          </td>
+        </tr>
+        <tr>
+          <td id="createrust">Rust</td>
+          <td>
+            In Rust, data and mutex are not seperate. ie data can be accessed
+            inside mutex only.<br />
+            This solves the problem which we is present in CPP
+            <pre><code class="language-css">
 use std::sync::Mutex;
 fn main() {
     // Create mutex and associate a i32 data with it(whose initial value=5).
@@ -317,87 +238,112 @@ fn main() {
     }    
 }
                     </code></pre>
+          </td>
+        </tr>
+      </table>
 
-                    <h3>Mutex in threads</h3>
-                    <h4 id="mutexthreads">Mutex without Arc used inside threads(Code not compile)</h4>
-                    <dl>
-                        <b>Problem:</b> 
-                        &ensp; std::sync::Mutex does not implement the 
-                        <a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#copyclone">Copy trait</a>, 
-                        hence it cannot be moved between multiple threads.<br>
-                        &ensp; That means if we want to use mutex between threads, shared reference 
-                        (ie <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a>) need to be used
-                    </dl>
-                    <pre><code class="language-css">
-use std::sync::Mutex;
-use std::thread;
-fn main() {
-    let mtx = Mutex::new(0);                //Initialize a Mutex protecting an integer
-    let mut handles = vec![];
-
-    for i in 0..2 {
-        let h = thread::spawn(move || {     //Spawn threads
-
-            let mut n = mtx.lock().unwrap();
-            *n += 1;                        // Modify the protected data
-        });
-        handles.push(h);
-    }
-
-    for h in handles {                      // Wait for all threads to finish
-        h.join().unwrap(); 
-    }
-}
-$ cargo run
-`mutex` has type `Mutex<i32>`, which does not implement the `Copy` trait
-10 |         let h = thread::spawn(move || {
-    |                               ------- value moved into closure here, in previous iteration of loop
-                            </code></pre>
-
-                    <h4 id="arcmutex">Arc &lt;Mutex></h4>
-                    <dl>
-                    <b>How Using Mutex inside Arc solves the problem?</b><br>
-                    &ensp; <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc</a> is Shared 
-                    reference counting. <br>
-                    &ensp; That means Mutex is not copied between threads, but only reference is incremented.
-                    </dl>
-                    <pre><code class="language-css">
-use std::sync::{Mutex, Arc};
-use std::thread;
-
-fn main() {
-    let mtx = Arc::new(Mutex::new(0));      // Initialize a Mutex protecting an integer
-    let mut handles = vec![];
-
-    for i in 0..2 {
-        let c = Arc::clone(&mtx);           // Every thread will have new Reference. Arc is reference counted
-        
-        let h = thread::spawn(move || {     // Spawn threads
-            let mut n = c.lock().unwrap();
-            *n += 1;                        // Modify the protected data
-        });
-        handles.push(h);
-    }
-
-    for h in handles {
-        h.join().unwrap();                  // Wait for all threads to finish
-    }
-
-    // Final value after all increments
-    let c1 = Arc::clone(&mtx);
-    let n = c1.lock().unwrap();
-    println!("Final value: {}", *n);        // 2
-}
-$ cargo run
-Thread 0 incremented value to 1
-Thread 1 incremented value to 2
-Final value: 2
+      <h2 id="wrappers">Wrappers around mutex</h2>
+      <dl>
+        Wrapper means, these classes owns the mutex. To create object of any of
+        these classes mutex has to be passed.
+      </dl>
+      <h3 id="lg">lock_guard</h3>
+      <table>
+        <tr>
+          <th>Description</th>
+          <th>Code</th>
+        </tr>
+        <tr>
+          <td>
+            We do mutex.lock() before going into CS and mutex.unlock() at
+            exit.<br />
+            lock_guard owns the mutex, then this mutex is handled with
+            lock_guard.
+            <pre><code class="language-css">
+mutex mtx;
+lock_guard &lt;mutex> lgLock(mtx);   //Mutex(mtx) is owned by lock_guard
                 </code></pre>
-            </div>
+            <b>Templated class lock_guard</b><br />
+            This is Wrapper over Mutex that provides a RAII, ie lock the mutex
+            (mutex.lock()) no need to worry about unlocking (mutex.unlock()),
+            when lock_guard object goes out of scope, mutex is automatically
+            unlocked(destructor gets called).<br />
+            lock_guard provides mutex for duration of scoped block.<br />
+            We cannot copy lock_guard, because operator = is deleted. Hence its
+            not copy or move assignable.<br />
+            Why? If someone locks the mutex and forgets to unlock, then whole
+            process will block.
+            <pre><code class="language-css">
+template &lt;typename T>
+class lock_guard {
+public:
+    lock_guard(T a):mutex(a){
+    a.lock();
+    }
+    ~lock_guard(){
+    a.unlock();
+    }
+    operator=[deleted]           //Cannot copy lock_guard
+};                
+                </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+    #include &lt;iostream>
+    #include &lt;thread>
+    #include &lt;mutex>
+    using namespace std;
+    
+    mutex m;
+    
+    void fun(const char* name, int loop){
+        //1. Create object of lock_guard and mutex is locked. Same as m.lock()
+        lock_guard &lt;mutex> lgLock(m);                
+        for (int i=0;i&lt;loop; ++i){
+            cout &lt;&lt; name &lt;&lt; ": " &lt;&lt; i &lt;&lt; endl;
+        }
+        //2. No need to do m.unlock(). This will done in destructor of lock_guard object
+    }                                               
+    
+    int main(){
+        thread t1(fun, "T1", 3);
+        thread t2(fun, "T2", 3);
+        t1.join();
+        t2.join();
+        return 0;
+    }
+    $ g++ test.cpp -lpthread
+    $ ./a.out
+    T1: 0
+    T1: 1
+    T1: 2
+    T2: 0
+    T2: 1
+    T2: 2                
+                </code></pre>
+          </td>
+        </tr>
+      </table>
 
-        </article>
-    </main>
+      <h3 id="ul">2. unique_lock</h3>
+      <dl>
+        This also owns the mutex, then this mutex is handled with unique_lock.
+        This is similar to lock_guard, but supports additional locking
+        strategies(or types of unique_locks)
+      </dl>
+      <pre><code class="language-css">
+unique_lock &lt;mutex> ulock(mtx);                    //Lock immdiately
+
+unique_lock &lt;mutex> ulock(mtx, defer_lock);        //deferred locking: Acquire the mutex but donot lock immediately.  
+
+unique_lock &lt;mutex> ulock(mtx);                   //time-constrained attempts at locking: try_lock_for(), try_lock_until()
+mtx.try_lock_for(5 millisec);
+
+//recursive locking
+//unique_lock can be moved ie it is (MoveConstructible and MoveAssignable) but cannot be copied (not of CopyConstructible or CopyAssignable).                
+                </code></pre>
+    </article>
     <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>

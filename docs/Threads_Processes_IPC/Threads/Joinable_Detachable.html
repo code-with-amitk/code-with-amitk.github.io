@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Joinable Detachable Threads</title>
     <!--<link rel="stylesheet" href="/css/styles.css"/>-->
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/styles.css" />
-</head>
+  </head>
 
   <body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../index.html">Back</a></li>
         <li>
           <form id="searchForm">
-              <input type="search" id="searchInput" name="q" placeholder="Search site" />
-              <input type="submit" value="Go!" />
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
           </form>
-         </li>
+        </li>
       </ul>
-  </nav>
+    </nav>
 
-  <article style="margin-left:200px;">
-    <div class="tab">
-        <button class="tablinks" onclick="opencode(event, 'cpp')">CPP</button>
-        <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
-    </div>
+    <aside class="sidebar">
+      <a href="#joinable">Joinable?</a>
+      <ul>
+        <li><a href="#joinablecpp">CPP</a></li>
+      </ul>
+      <a href="#detachable">Detachable?</a>
+      <ul>
+        <li><a href="#detachablecpp">CPP</a></li>
+      </ul>
+    </aside>
 
-    <!-- Tab content -->
-
-    <div id="cpp" class="tabcontent">
-        <h3>Joinable, Detachable Threads</h3>
-        <h4>Joinable Threads</h4>
-        <dl>
-        Thread1(Main Process) waits for thread2 before it terminates itself. Thread1(Main process) cannot terminate before
-         thread2 terminates.
-        </dl>
-        <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <h2 id="joinable">Joinable Thread</h2>
+      <dl>
+        Thread1(Main Process) waits for thread2 before it terminates itself.
+        Thread1(Main process) cannot terminate before thread2 terminates.
+      </dl>
+      <h4 id="joinablecpp">CPP</h4>
+      <pre><code class="language-css">
 #include &lt;pthread.h>
 void *thread2() {
   sleep(4);	//Even on sleep Main thread does not terminate
@@ -61,11 +71,13 @@ void main() {			//THREAD1 = MAIN PROCESS
   Thread-1/Main terminate2 after Thread-2
         </code></pre>
 
-        <h4>Detachable Threads</h4>
-        <dl>
-          Thread-1/Main does not wait for Thread-2 to finish. Thread-1/Main is free to terminate.
-        </dl>
-        <pre><code class="language-css">
+      <h2 id="detachable">Detachable Threads</h2>
+      <dl>
+        Thread-1/Main does not wait for Thread-2 to finish. Thread-1/Main is
+        free to terminate.
+      </dl>
+      <h4 id="detachablecpp">CPP</h4>
+      <pre><code class="language-css">
 #include &lt;pthread.h>
 void *thread1 (){
   printf("\nThread1 created Detachable");
@@ -86,12 +98,8 @@ void main() {
 # ./a.out
   Inside main thread
         </code></pre>
-    </div>
-
-      <script src="/scripts/prism.js"></script>
-      <script src="/scripts/common.js"></script>
-
     </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
   </body>
-  
 </html>

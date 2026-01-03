@@ -1,46 +1,60 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Problems on Synchronization</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#dining">Dining Philosphers Problem</a>
-        <a href="#procon">n Producer n Consumer</a>
-        
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#dining">Dining Philosphers Problem</a>
+      <a href="#procon">n Producer n Consumer</a>
     </aside>
 
-    <main>  <!--Here is our page's main content-->
-        <article style="margin-left:200px;">   <!-- It contains an article -->
-            <h3 id="dining">Dining Philosphers Problem (Concurrency Problem)</h3>
-            <dl>
-                4 philosophers dine together at the same table. Each philosopher has their own place at the table. 
-                There is a fork between each plate. The dish served is a kind of spaghetti which has to be eaten with two forks. 
-                Each philosopher can only alternately think and eat. Moreover, a philosopher can only eat their spaghetti when 
-                they have both a left and right fork. Thus 2 forks will only be available when their 2 nearest neighbors are 
-                thinking, not eating. After an individual philosopher finishes eating, they will put down both forks.
-            </dl>
-            <table>
-                <tr>
-                    <td><pre>
+    <main>
+      <!--Here is our page's main content-->
+      <article style="margin-left: 200px">
+        <!-- It contains an article -->
+        <h3 id="dining">Dining Philosphers Problem (Concurrency Problem)</h3>
+        <dl>
+          4 philosophers dine together at the same table. Each philosopher has
+          their own place at the table. There is a fork between each plate. The
+          dish served is a kind of spaghetti which has to be eaten with two
+          forks. Each philosopher can only alternately think and eat. Moreover,
+          a philosopher can only eat their spaghetti when they have both a left
+          and right fork. Thus 2 forks will only be available when their 2
+          nearest neighbors are thinking, not eating. After an individual
+          philosopher finishes eating, they will put down both forks.
+        </dl>
+
+        <table>
+          <tr>
+            <td>
+              <pre><code>
               P0           // P=Philospher
 
           f0       f1      // f=fork
@@ -55,10 +69,11 @@
 1. Create 4 forks. vec[Arc&lt;Mutex>]<br>
 2. Create 4 Philosophers (ie 4 Philospher structs in for loop)<br>
 3. Philopsher[i] gets fork[i], fork[i+1]<br>
-4. Write eat() function, which uses Arc<Mutex>
-                    </pre></td>
-                    <td>
-<pre><code class="language-css">
+4. Write eat() function, which uses Arc&lt;Mutex>
+                    </code></pre>
+            </td>
+            <td>
+              <pre><code class="language-css">
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -67,8 +82,8 @@ struct Fork;
 
 struct Philosopher {
     name: String,
-    left_fork: Arc<Mutex<Fork>>,
-    right_fork: Arc<Mutex<Fork>>,
+    left_fork: Arc&lt;Mutex &lt;Fork>>,
+    right_fork: Arc &lt;Mutex &lt;Fork>>,
 }
 
 impl Philosopher {
@@ -121,18 +136,14 @@ fn main() {
         handle.join().unwrap();
     }
 }
-</code></pre>
-                    </td>
-                </tr>
-            </table>
-            
-        <h2 id="procon">n Producer n Consumer</h2>
-        <dl>
-            
-        </dl>
+                </code></pre>
+            </td>
+          </tr>
+        </table>
 
-        </article>
+        <h2 id="procon">n Producer n Consumer</h2>
+      </article>
     </main>
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>

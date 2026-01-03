@@ -1,55 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>condition_variable</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-    <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What?</a>
-        <a href="#code">Code(Thread1 signalling Thread2</a>
-        <a>Ping pong game</a>
-        <ul>
-            <li><a href="#pppthread">Using pthread</a></li>
-            <li><a href="#ppcv">std::condition_variable, unique_lock&lt;mutex></a></li>
-        </ul>
-        
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What?</a>
+      <a href="#code">Code</a>
+      <ul>
+        <li><a href="#eg1">Thr1 signalling Thr2</a></li>
+      </ul>
+      <a href="#">Ping pong game</a>
+      <ul>
+        <li><a href="#pthread">Using pthread</a></li>
+        <li>
+          <a href="#ppcv">std::condition_variable, unique_lock &lt;mutex></a>
+        </li>
+      </ul>
     </aside>
 
-    <main>  <!--Here is our page's main content-->
-        <article style="margin-left:200px;">   <!-- It contains an article -->
-            <h3 id="what">condition_variable / shared variable</h3>
-            <dd>
-                This blocks 1/multiple thread(s) until another thread modifies a shared variable (the condition), and notifies the condition_variable.
-            </dd>
-            <dl><strong>Advantages?</strong></dl>
-            <dd>
-            1. Avoids busy waiting, which spinlock does. For instance, if you have a thread (or multiple threads) that 
-            can't continue onward until a queue is empty, the busy waiting approach would be to just doing something.<br>
-            2. Similar to [Semaphores]: 
-                CV and semaphores are similar, both signals the sleeping threads, but counting semaphore 
-                is used for n available things.                
-            </dd>
+    <article style="margin-left: 200px">
+      <h2 id="what">condition_variable / shared variable</h2>
+      <dl>
+        This blocks 1/multiple thread(s) until another thread modifies a shared
+        variable (the condition), and notifies the condition_variable.<br />
 
-            <h3 id="code">Code (Thread1 signalling Thread2)</h3>
-            <pre><code class="language-css">
+        <b>Advantages?</b><br />
+        1. Avoids busy waiting, which spinlock does. For instance, if you have a
+        thread (or multiple threads) that can't continue onward until a queue is
+        empty, the busy waiting approach would be to just doing something.<br />
+        2. Similar to [Semaphores]: CV and semaphores are similar, both signals
+        the sleeping threads, but counting semaphore is used for n available
+        things.
+      </dl>
+
+      <h2 id="code">Code</h2>
+      <h3 id="eg1">Thread1 signalling Thread2</h3>
+      <pre><code class="language-css">
 #include &lt;stdio.h>
 #include &lt;pthread.h>
 #include &lt;stdio.h>
@@ -61,18 +72,18 @@ pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *fun1(void* arg) {
-        //pthread_mutex_lock(&mutex);
+    //pthread_mutex_lock(&mutex);
     cout &lt;&lt; "Thread1 waiting on condition\n";
 
-        //pthread_cond_wait() might provide unexepected result without mutex
-        pthread_cond_wait(&cond, &mutex);               
+    //pthread_cond_wait() might provide unexepected result without mutex
+    pthread_cond_wait(&cond, &mutex);
     cout &lt;&lt; "Condition satisfied\n";
-        //pthread_mutex_unlock(&mutex);
+    //pthread_mutex_unlock(&mutex);
 }
 void *fun2(void* arg) {
-        sleep(1);
+    sleep(1);
     cout &lt;&lt; "Thread2 signalled the condition\n";
-        pthread_cond_signal(&cond);
+    pthread_cond_signal(&cond);
 }
 int main(){
     pthread_t tid1,tid2;
@@ -85,12 +96,12 @@ int main(){
 $ ./a.out
 Thread1 waiting on condition
 Thread2 signalled the condition
-Condition satisfied                
+Condition satisfied
             </code></pre>
 
-            <h3 id="pppthread">Ping Pong Game (using pthread)</h3>
-            <h4 id="pppthread">1. Using pthread</h4>
-            <pre><code class="language-css">
+      <h3 id="pingpong">Ping Pong Game</h3>
+      <h4 id="pthread">1. Using pthread</h4>
+      <pre><code class="language-css">
 #include &lt;stdio.h>
 #include &lt;pthread.h>
 #include &lt;stdio.h>
@@ -143,35 +154,21 @@ Ping,j:7
 Pong,j:8
 Ping,j:9
 Pong,j:10
-                </code></pre>
+        </code></pre>
 
-                    
-                    <h4 id="ppcv">2. Ping Pong Game (Using std::condition_variable, unique_lock &lt;mutex>)</h4>
-                    <dl>
-                        <b>condition_variable:</b> Block the thread until certain condition is met <br>
-                        std::condition_variable only works with unique_lock<br>
-                        <i>Seqeunce:</i> 
-                        Thread-1 waiting on condition variable, thread-2 changes cond variable then thread-1 starts in critical section.
-                    </dl>
-                    <dl>
-                        <b>Thread-2 publishing on condition_variable:</b><br>
-                        - a. acquire a std::mutex (typically via std::lock_guard)<br>
-                        - b. perform the modification while the lock is held<br>
-                        - c. execute notify_one() or notify_all()<br><br>
-
-                        <b>Thread-1 waiting on condition_variable:</b><br>
-                        - a. acquire a std::unique_lock<std::mutex>, same mutex as used to protect the shared variable<br>
-                        - b. execute wait, wait_for, or wait_until.                        
-                    </dl>
-
-                    <table>
-                        <tr>
-                            <th>Using 2 threads</th>
-                            <th>Using 4 threads</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <pre><code class="language-css">
+      <h4 id="condvar">
+        2. Ping Pong Game (Using std::condition_variable, unique_lock
+        &lt;mutex>)
+      </h4>
+      <table>
+        <tr>
+          <th>2 Threads</th>
+          <th>4 Threads</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
 #include &lt;iostream>
 #include &lt;thread>
 #include &lt;mutex>
@@ -184,7 +181,7 @@ bool start = false;
 int k = 0;
 
 //5. Control reaches ping()
-void ping() {								
+void ping() {
     while(1) {
         //5a. mtx is owned by unique_lock
         unique_lock &lt;mutex> ulock(mtx);
@@ -209,7 +206,8 @@ void ping() {
         //5c. unlock unique_lock.
         ulock.unlock();         
 
-        //5d. notify_one() one of threads waiting on condition variable (start).                          
+        //5d. notify_one() one of threads 
+        //waiting on condition variable (start).
         cv.notify_one();		
     }
 }
@@ -250,12 +248,11 @@ int main() {
     t1.join();
     t2.join();
     return 0;
-}                                
-                            </code></pre></td>
-
-                            <td>
-                                <pre><code class="language-css">
-// Condition_Variable_PingPong.cpp : Defines the entry point for the application.
+}
+                </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
 #include &lt;iostream>
 #include &lt;thread>
 #include &lt;mutex>
@@ -324,15 +321,32 @@ Pong
 Ping
 Pong
 Ping
-Pong                                
-                            </code></pre>
-                        </td>
-                        </tr>
-                    </table>
+Pong
+                </code></pre>
+          </td>
+          <td>
+            <b>condition_variable:</b> Block the thread until certain condition
+            is met <br />
+            std::condition_variable only works with unique_lock<br />
+            <i>Seqeunce:</i>
+            Thread-1 waiting on condition variable, thread-2 changes cond
+            variable then thread-1 starts in critical section.
+            <br /><br />
 
+            <b>Thread-2 publishing on condition_variable:</b><br />
+            - a. acquire a std::mutex (typically via std::lock_guard)<br />
+            - b. perform the modification while the lock is held<br />
+            - c. execute notify_one() or notify_all()
+            <br /><br />
 
-        </article>
-    </main>
+            <b>Thread-1 waiting on condition_variable:</b><br />
+            - a. acquire a std::unique_lock&lt;std::mutex>, same mutex as used
+            to protect the shared variable<br />
+            - b. execute wait, wait_for, or wait_until.
+          </td>
+        </tr>
+      </table>
+    </article>
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>
