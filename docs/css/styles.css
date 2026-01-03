@@ -652,9 +652,48 @@ aside {
 
 #searchResults {
   margin-top: 20px;
+  list-style: none;
+  padding: 0;
 }
 
-#searchResults div {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+#searchResults li {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  background: white;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+#searchResults li:hover {
+  background: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-result-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-result-title {
+  color: royalblue;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 4px;
+  font-size: 1.1rem;
+}
+
+.search-result-title:hover {
+  text-decoration: underline;
+}
+
+.search-result-url {
+  color: #006621;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.search-result-excerpt {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }

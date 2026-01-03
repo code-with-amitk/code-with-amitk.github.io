@@ -3,8 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("searchInput");
     const searchResults = document.getElementById("searchResults");
 
+    let searchIndex = [];
+
+    // Load search index on page load
+    loadSearchIndex();
+
     searchForm.addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault();
         const query = searchInput.value.trim().toLowerCase();
 
         if (!query) {
@@ -12,50 +17,74 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        try {
-            const links = await getSiteLinks();
-            const results = links.filter((page) =>
-                page.text.toLowerCase().includes(query) || page.url.toLowerCase().includes(query)
-            );
-
-            displayResults(results);
-        } catch (error) {
-            console.error("Error during search:", error);
-            searchResults.innerHTML = "<li>Search failed. Try again later.</li>";
+        if (searchIndex.length === 0) {
+            searchResults.innerHTML = "<li>Search index not loaded. Try again.</li>";
+            return;
         }
+
+        // Filter results - search in title, url, and excerpt
+        const results = searchIndex.filter((page) => {
+            const searchableText = (
+                page.title.toLowerCase() +
+                " " +
+                page.url.toLowerCase() +
+                " " +
+                (page.excerpt || "").toLowerCase()
+            );
+            return searchableText.includes(query);
+        });
+
+        displayResults(results, query);
     });
 
-    async function getSiteLinks() {
-        const response = await fetch(window.location.origin);
-        const html = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-
-        const links = Array.from(doc.querySelectorAll("a"))
-            .filter((a) => a.href.startsWith(window.location.origin))
-            .map((a) => ({
-                text: a.innerText || "No Title",
-                url: a.href,
-            }));
-
-        return links;
+    async function loadSearchIndex() {
+        try {
+            const response = await fetch("/search-index.json");
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            searchIndex = await response.json();
+            console.log(`✅ Loaded ${searchIndex.length} pages into search index`);
+        } catch (error) {
+            console.error("Error loading search index:", error);
+            searchResults.innerHTML = "<li>Search service unavailable.</li>";
+        }
     }
 
-    function displayResults(results) {
-        searchResults.innerHTML = ""; // Clear previous results
+    function displayResults(results, query) {
+        searchResults.innerHTML = "";
 
         if (results.length === 0) {
-            searchResults.innerHTML = "<li>No results found.</li>";
+            searchResults.innerHTML = "<li>No results found for '<strong>" + query + "</strong>'</li>";
             return;
         }
 
         results.forEach((result) => {
             const listItem = document.createElement("li");
+            listItem.className = "search-result-item";
+
             const link = document.createElement("a");
             link.href = result.url;
-            link.textContent = result.text;
+            link.className = "search-result-title";
+            link.textContent = result.title;
+
+            const urlDiv = document.createElement("div");
+            urlDiv.className = "search-result-url";
+            urlDiv.textContent = result.url;
+
+            let excerptDiv = null;
+            if (result.excerpt) {
+                excerptDiv = document.createElement("div");
+                excerptDiv.className = "search-result-excerpt";
+                excerptDiv.textContent = result.excerpt;
+            }
 
             listItem.appendChild(link);
+            listItem.appendChild(urlDiv);
+            if (excerptDiv) {
+                listItem.appendChild(excerptDiv);
+            }
+
             searchResults.appendChild(listItem);
         });
     }
