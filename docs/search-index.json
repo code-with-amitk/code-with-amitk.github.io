@@ -716,8 +716,8 @@
   },
   {
     "title": "gRPC",
-    "url": "/Networking/OSI-Layers/Layer-7/gRPC/",
-    "excerpt": "gRPC Home Our team Projects Contact Back What is gRPC What is gRPC? Google Remote Procedure Calls open-source framework for building APIs(similar to R..."
+    "url": "/Networking/OSI-Layers/Layer-7/gRPC/Introduction.html",
+    "excerpt": "gRPC Home Our team Projects Contact Back What is gRPC RPC Protobuf .proto file gRPC Hello server gRPC server gRPC client What is gRPC? Google Remote P..."
   },
   {
     "title": "Hash MessageDigest MAC HMAC",
@@ -1022,7 +1022,7 @@
   {
     "title": "Layers, Design Issues",
     "url": "/Networking/OSI-Layers/",
-    "excerpt": "Layers, Design Issues Home Our team Projects Contact Back Duties, Protocols of Each Layer Layer-2 &ensp; hub router switch bridge, Ping from Host-1 to..."
+    "excerpt": "Layers, Design Issues Home Our team Projects Contact Back Duties, Protocols of Each Layer Layer-2: hub router switch bridge, Ping from Host-1 to Host-..."
   },
   {
     "title": "Leadership Principals",
