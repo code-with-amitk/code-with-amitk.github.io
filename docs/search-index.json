@@ -716,7 +716,7 @@
   },
   {
     "title": "gRPC",
-    "url": "/Networking/OSI-Layers/Layer-7/HTTP/gRPC.html",
+    "url": "/Networking/OSI-Layers/Layer-7/gRPC/",
     "excerpt": "gRPC Home Our team Projects Contact Back What is gRPC What is gRPC? Google Remote Procedure Calls open-source framework for building APIs(similar to R..."
   },
   {
