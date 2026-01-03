@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>gRPC</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is gRPC</a>
+      <ul>
+        <li><a href="#rpc">RPC</a></li>
+        <li><a href="#protobuf">Protobuf</a></li>
+        <li><a href="#proto">.proto file</a></li>
+      </ul>
+      <a href="#code">gRPC Hello server</a>
+      <ul>
+        <li><a href="#server">gRPC server</a></li>
+        <li><a href="#client">gRPC client</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is gRPC?</h2>
+      <dl>
+        Google Remote Procedure Calls open-source framework for building
+        APIs(similar to REST API).<br />
+        It uses HTTP/2 for transport and Protocol Buffers (Protobuf) for
+        efficient data serialization
+      </dl>
+      <h4 id="rpc">Remote Procedure Call (RPC)</h4>
+      <dl>
+        A communication model where a client requests a function to run on a
+        remote server as if it were local.
+      </dl>
+      <h4 id="protobuf">Protocol Buffers (Protobuf)</h4>
+      <dl>Defines data structures and service interfaces in .proto files</dl>
+      <h4 id="proto">.proto file (contract/interface definition)</h4>
+      <dl>
+        .proto file is a IDL(Interface definition language) or schema definition
+        file. It defines:<br />
+        1. Services: For example I want to create a service which responds with
+        "hello" message. <br />
+        2. Messages: What messages this service can send and recieve<br />
+      </dl>
+
+      <h3><a href="../REST API/index.html#restvsgrpc">REST API vs gRPC</a></h3>
+      <pre><code class="language-css">
+             REST        gRPC
+Speed        slow        faster
+encoding     text/json   binary(via protobuf)
+Transport    HTTP/1.1     HTTP/2
+      </code></pre>
+
+      <h2 id="code">gRPC hello Server</h2>
+      <h3 id="server">gRPC Server</h3>
+      <dl>
+        Implement a gRPC server which responds with "hi", when it recieves
+        "hello".<br />
+        Complete Project Structure:
+      </dl>
+      <pre><code class="language-css">
+project/
+├── hello.proto
+├── pb/
+│   ├── hello.pb.go          # Generated messages
+│   └── hello_grpc.pb.go     # Generated gRPC interfaces
+├── server.go                # Your server implementation
+└── client.go               # (Optional) Client example
+      </code></pre>
+
+      <h4 id="steps">Steps of creating server</h4>
+      <dl id="helloproto">
+        <b>1. hello.proto:</b><br />
+        &ensp; Define service and messages in this file<br />
+        &ensp; Suppose server recieves <i>message HelloRequest</i> and responds
+        with
+        <i>message HelloResponse</i>
+      </dl>
+      <pre><code class="language-css">
+// 1. Define service and messages in .proto file
+$ cat hello.proto
+syntax = "proto3";
+package hello;
+option go_package = "./pb";
+
+service HelloService {
+  rpc hello(HelloRequest) returns (HelloResponse);
+}
+
+message HelloRequest {
+  string request = 1;
+}
+message HelloResponse {
+  string response = 1;
+}
+    </code></pre>
+
+      <dl>2. Generate .pb.go (ie protobuf code) using protoc compiler</dl>
+      <pre><code class="language-css">
+// 2. Generate .pb.go (ie protobuf code) using protoc compiler
+$ protoc --go_out=. --go-grpc_out=. hello.proto
+$ ls pb
+hello.pb.go  hello_grpc.pb.go
+      </code></pre>
+
+      <dl>
+        3. <b>hello.pb.go</b><br />
+        &ensp; For every message (from
+        <a herf="#helloproto">hello.proto</a> file) 2 things are generated:<br />
+        &emsp; 1. type struct<br />
+        &emsp; 2. Methods for Serialization/Deserialization
+      </dl>
+      <pre><code class="language-css">
+$  cat hello.pb.go
+// 1. type struct
+type HelloRequest struct {
+  state         protoimpl.MessageState `protogen:"open.v1"` // Internal state management
+  Request       string `protobuf:"bytes,1,opt,name=request,proto3" json:"request,omitempty"` //Actual feild
+  unknownFields protoimpl.UnknownFields    // For forward compatibility
+  sizeCache     protoimpl.SizeCache        // Performance optimization
+}
+
+// 2. Methods for Serialization/Deserialization
+func (x *HelloRequest) Reset() {..}   //Clears all fields to zero values
+func (x *HelloRequest) String() string {..}  //Implements Stringer interface for pretty printing
+func (*HelloRequest) ProtoMessage() {..}  // identifies this as a protobuf message
+func (x *HelloRequest) ProtoReflect() protoreflect.Message {..}  // enables reflection capabilities
+func (*HelloRequest) Descriptor() ([]byte, []int) {..} // Legacy. v1 API compatibility
+func (x *HelloRequest) GetRequest() string {..}
+
+type HelloResponse struct {
+  state         protoimpl.MessageState `protogen:"open.v1"`
+  Response      string  `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
+  unknownFields protoimpl.UnknownFields
+  sizeCache     protoimpl.SizeCache
+}
+func (x *HelloResponse) Reset() {..}
+func (x *HelloResponse) String() string {..}
+func (*HelloResponse) ProtoMessage() {}
+func (x *HelloResponse) ProtoReflect() protoreflect.Message {..}
+func (*HelloResponse) Descriptor() ([]byte, []int) {..}
+func (x *HelloResponse) GetResponse() string {..}
+      </code></pre>
+
+      <dl>
+        <b>4. server.go</b><br />
+        &ensp; 1. Define a server struct that will implement generated
+        interface.<br />
+        &ensp; 2. Implement the exact method signature from the generated
+        interface<br />
+        &emsp; Provide business logic inside the function<br />
+        &ensp; 3. Create TCP listener<br />
+        &ensp; 4. Create gRPC server<br />
+        &ensp; 5. Register implementation with the gRPC server<br />
+        &ensp; 6. Start listening
+      </dl>
+      <pre><code class="language-css">
+package main
+import (
+    "context"
+    "log"
+    "net"
+
+    pb "your-project/pb"  // Adjust import path
+    "google.golang.org/grpc"
+)
+
+// 1. Server struct that implements the generated interface
+type server struct {
+    pb.UnimplementedHelloServiceServer  // Embed for forward compatibility
+}
+
+// 2. Implement the exact method signature from the generated interface
+func (s *server) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
+    // Simple implementation - echo back with "Hello"
+    return &pb.HelloResponse{
+        Response: "Hello " + req.GetRequest(),
+    }, nil
+}
+
+func main() {
+    // 3. Create TCP listener
+    lis, err := net.Listen("tcp", ":50051")
+    if err != nil {
+        log.Fatalf("failed to listen: %v", err)
+    }
+
+    // 4. Create gRPC server
+    s := grpc.NewServer()
+    
+    // 5. Register our implementation with the gRPC server
+    pb.RegisterHelloServiceServer(s, &server{})
+
+    log.Println("gRPC server listening on port 50051")
+    
+    // 6. Start serving
+    if err := s.Serve(lis); err != nil {
+        log.Fatalf("failed to serve: %v", err)
+    }
+}
+      </code></pre>
+
+      <h3 id="client">gRPC Client</h3>
+      <dl><b>1. client.go</b></dl>
+      <pre><code class="language-css">
+package main
+
+import (
+    "context"
+    "log"
+    "time"
+
+    pb "your-project/pb"
+    "google.golang.org/grpc"
+    "google.golang.org/grpc/credentials/insecure"
+)
+
+func main() {
+    // 1. Establish connection
+    conn, err := grpc.NewClient(
+        "localhost:50051",
+        grpc.WithTransportCredentials(insecure.NewCredentials()), // For local testing
+        grpc.WithBlock(), // Wait for connection
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer conn.Close()
+
+    // 2. Create client from generated code
+    client := pb.NewHelloServiceClient(conn)
+
+    // 3. Prepare request using generated type
+    req := &pb.HelloRequest{
+        Request: "World",
+    }
+
+    // 4. Set timeout
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+    defer cancel()
+
+    // 5. Make RPC call
+    resp, err := client.Hello(ctx, req)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // 6. Use response
+    log.Printf("Response: %s", resp.GetResponse())
+}
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
