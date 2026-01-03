@@ -715,6 +715,11 @@
     "excerpt": "Graphics Pipeline Home Our team Projects Contact Back Graphics Pipeline Graphics pipeline from Windows VM(guest) to physical GPU on the host Render Gr..."
   },
   {
+    "title": "gRPC",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/gRPC.html",
+    "excerpt": "gRPC Home Our team Projects Contact Back What is gRPC What is gRPC? Google Remote Procedure Calls open-source framework for building APIs(similar to R..."
+  },
+  {
     "title": "Hash MessageDigest MAC HMAC",
     "url": "/Networking/OSI-Layers/Layer-3/Security/Hash MAC.html",
     "excerpt": "Hash MessageDigest MAC HMAC Home Our team Projects Contact Hash_MessageDigest Hashing Algorithms MD4, MD5 SHA1=128 SHA2=256 SHA3=512(Keccak) Argon2,Ar..."
@@ -737,7 +742,7 @@
   {
     "title": "HTTP",
     "url": "/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html",
-    "excerpt": "HTTP Home Our team Projects Contact What is HTTP Features of HTTP Advatanges, Disadvatanges HTTP Methods What is HTTP Client-server/Request-Response p..."
+    "excerpt": "HTTP Home Our team Projects Contact Back What is HTTP Features of HTTP Advatanges, Disadvatanges HTTP Methods What is HTTP Client-server/Request-Respo..."
   },
   {
     "title": "HTTP",
@@ -745,14 +750,9 @@
     "excerpt": "HTTP Home Our team Projects Contact Back Headers Request Header Response Header HTTP Headers HTTP header is a field(key:value) in an HTTP request or r..."
   },
   {
-    "title": "HTTP",
-    "url": "/Networking/OSI-Layers/Layer-7/HTTP/",
-    "excerpt": "HTTP Home Our team Projects Contact Overview What is HTTP HTTP Advantages, Disadvatanges HTTP Methods(GET,POST,DELETE,UPDATE) HTTP Headers HTTP Cookie..."
-  },
-  {
     "title": "HTTP Cookie",
     "url": "/Networking/OSI-Layers/Layer-7/HTTP/HTTP Cookie.html",
-    "excerpt": "HTTP Cookie Home Our team Projects Contact What is HTTP Cookie Why Cookie Terms Stolen Cookie Cookie Surrogate HTTP Cookie / Web cookie / Internet coo..."
+    "excerpt": "HTTP Cookie Home Our team Projects Contact Back What is HTTP Cookie Why Cookie Terms Stolen Cookie Cookie Surrogate HTTP Cookie / Web cookie / Interne..."
   },
   {
     "title": "Hypervisor",
@@ -1012,7 +1012,7 @@
   {
     "title": "Layer-7",
     "url": "/Networking/OSI-Layers/Layer-7/",
-    "excerpt": "Layer-7 Home Our team Projects Contact HTTP Kerberos Load Testing Tools OAuth Remote Browser Isolation REST API SSL TLS Web Servers (Ngnix, Apache)"
+    "excerpt": "Layer-7 Home Our team Projects Contact Back HTTP Kerberos Load Testing Tools OAuth Remote Browser Isolation REST API SSL TLS Web Servers (Ngnix, Apach..."
   },
   {
     "title": "Layers, Design Issues",
@@ -1022,7 +1022,7 @@
   {
     "title": "Layers, Design Issues",
     "url": "/Networking/OSI-Layers/",
-    "excerpt": "Layers, Design Issues Home Our team Projects Contact Duties, Protocols of Each Layer Layer-2 &ensp; hub router switch bridge, Ping from Host-1 to Host..."
+    "excerpt": "Layers, Design Issues Home Our team Projects Contact Back Duties, Protocols of Each Layer Layer-2 &ensp; hub router switch bridge, Ping from Host-1 to..."
   },
   {
     "title": "Leadership Principals",
@@ -1227,7 +1227,7 @@
   {
     "title": "Networking",
     "url": "/Networking/",
-    "excerpt": "Networking Home Our team Projects Contact Why Cloud Data, Control Plane OSI Layers Networking Devices &ensp; Firewalls &ensp;&ensp; Fortinet &ensp;&en..."
+    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Networking Devices &ensp; Firewalls &ensp;&ensp; Fortinet &ens..."
   },
   {
     "title": "Networking Devices",
@@ -1562,7 +1562,7 @@
   {
     "title": "REST API",
     "url": "/Networking/OSI-Layers/Layer-7/REST API/",
-    "excerpt": "REST API Home Our team Projects Contact What is REST API? How REST Works? Why RESTful? Comparison REST vs HTTP REST vs SOAP REST vs gRPC Versioning Ho..."
+    "excerpt": "REST API Home Our team Projects Contact Back What is REST API? How REST Works? Why RESTful? Comparison REST vs HTTP REST vs SOAP REST vs gRPC Versioni..."
   },
   {
     "title": "Runtimes",
