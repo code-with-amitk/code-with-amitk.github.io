@@ -387,7 +387,7 @@
   {
     "title": "Database Indexing",
     "url": "/System_Design/Concepts/Databases/Terms/Joins_Left_Right.html",
-    "excerpt": "Database Indexing Home Our team Projects Contact Back What is Join How join is internally implemented Kinds of Joins What is Join? A JOIN is a single ..."
+    "excerpt": "Database Indexing Home Our team Projects Contact Back SQL Execution Order What is Join How join is internally implemented Types of Joins Complex Joins..."
   },
   {
     "title": "Database Scaling",
