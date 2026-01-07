@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mobile Billing System</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What</a>
+      <a href="#req">Requirements</a>
+      <a href="#hld">HLD</a>
+      <a href="#boe">BOE</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Mobile Billing System</h2>
+      <dl>
+        In telecom platforms, large subscription businesses (like Rakuten),
+        systems are usually split into:<br />
+        1. OSS (Operational Support Systems) → network operations, provisioning,
+        monitoring<br />
+        2. Mobile Billing System/BSS (Business Support Systems) → customers,
+        products, billing, payments, revenue.
+      </dl>
+
+      <h2>Requirements</h2>
+      <h3>Functional</h3>
+      <dl>
+        <b>1. Monthly data pack subscriptions:</b> Support states(Active,
+        Expired, Suspended, Cancelled)<br />
+        <b>2. Pack Expiry Handling:</b> When a pack reaches its expiry: Service
+        usage must be blocked, Customer is notified (SMS / Email / App), Account
+        state updated.<br />
+        &ensp; Billing system does NOT directly stop network service → It
+        notifies OSS / Network Control<br />
+        <b>3. Accept Payments & Renew:</b> System shall accept customer payments
+        & renew<br />
+        <b>4. Failed Payments:</b> Do not renew pack, Retry payment based on
+        policy, Notify customer<br />
+        <b>5. Refund & Adjustment:</b> Full, Partial, Manual(policy based)<br />
+        <b>6. Overlimit Usage:</b> Prevent usage beyond allowed quota. Soft
+        limit (throttle), Hard limit (block)<br />
+        <b>7. Billing history:</b> Store to show to customer
+      </dl>
+
+      <h3>
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Scalable"
+          >Non Functional Requirements</a
+        >
+      </h3>
+      <dl>
+        <b>1. Scalable:</b> if new customer come in, system should scale<br />
+        <b>2. High Availability:</b> 99.9%+ availability. Multi AZ deployment<br />
+        <b>3. Consistency:</b> No duplicate billing<br />
+        <b>4. Reliable: </b> if billed once, it should not tell not billed
+        recharge<br />
+        <b>5. Latency:</b> Low, pack activation instant
+      </dl>
+
+      <h2 id="hld">HLD</h2>
+      <img
+        src="/images/System_Design/GSM_Network.png"
+        alt="GSM Network"
+        style="width: 600px; height: 400px"
+      />
+
+      <h2 id="boe">BOE</h2>
+      <dl>
+        OSS will send CDR(Call Detial Records) in Batch to BSS.<br />
+        CDRs are send in <font color="red">BATCHES</font> using
+        <font color="red">Kafka</font> from OSS to BSS
+      </dl>
+      <pre><code class="language-css">
+CDR ~= 300-500 bytes
+
+| Field           | Reason              |
+| --------------- | ------------------- |
+| IMSI            | Subscriber identity |
+| MSISDN          | Caller number       |
+| Called number   | Receiver            |
+| Call start time |                     |
+| Call end time   |                     |
+| Call duration   |                     |
+| Cell ID         | Location            |
+| MSC ID          | Network element     |
+| Call type       | MO/MT               |
+| Service type    | Voice/SMS/Data      |
+| Cause code      | Call drop, reject   |
+| Charging ID     | Correlation         |
+| Roaming info    | Tariff impact       |
+| Bearer type     | LTE/VoLTE           |
+| Sequence number | Dedup               |
+      </code></pre>
+
+      <h3 id="storage">Storage estimates</h3>
+      <dl>
+        Total users = 1M<br />
+        Total calls/day/user = 30.<br />
+        Outgoing calls = 15<br />
+        1M users × 30 calls = 30M CDRs/day<br />
+        30M x 300 = 9GB/day<br />
+        9 GB × 365 ≈ 3.2 TB/year<br />
+        3.2 x 5 ≈ 16 TB / 5 years
+      </dl>
+
+      <h3 id="traffic">Traffic Estimates (Incoming bytes/sec)</h3>
+      <dl>
+        5 calls/user/hour<br />
+        1M × 5 / 3600 ≈ 1389 calls/sec<br />
+        Incoming data = 1389 × 300 bytes ≈ 416,700 bytes/sec ≈ 407 KB/sec
+        <br /><br />
+        <b>Peak factor (3x or 5x)</b><br />
+        - Telecom traffic is bursty<br />
+        - Peak ≈ 407KB x 5 = 2 MB/sec<br />
+        But we will design ingestion for ≥5 MB/sec to be safe.
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
