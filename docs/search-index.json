@@ -345,6 +345,11 @@
     "excerpt": "Cookies for Domain based Authentication Home Our team Projects Contact Per browser Cookie based Auth Cookie based Authentication for seperate Browser ..."
   },
   {
+    "title": "Couchbase",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Couchbase/Introduction.html",
+    "excerpt": "Couchbase Home Our team Projects Contact Couchbase? Couchbase This is NoSQL database(storing data in json structure) which offers SQL-compatible query..."
+  },
+  {
     "title": "Criminology & Penology",
     "url": "/Law/Criminology_and_Penology/",
     "excerpt": "Criminology & Penology Home Our team Projects Contact Criminology? Schools of Criminology Juvenile delinquency Juvenile Court Indeterminate sentence R..."
@@ -356,7 +361,7 @@
   },
   {
     "title": "Cypher",
-    "url": "/System_Design/Concepts/Databases/Graph DB/Cypher.html",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Graph DB/Cypher.html",
     "excerpt": "Cypher Home Our team Projects Contact What Syntax What Declarative graph query language that allows efficient querying, updating and administering of ..."
   },
   {
@@ -406,7 +411,7 @@
   },
   {
     "title": "Databases",
-    "url": "/System_Design/Concepts/Databases/Column Oriented DB/",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
     "excerpt": "Databases Home Our team Projects Contact Column DB faster than row Difference OLAP Column DB faster than row Row oriented Coloumn oriented Consider em..."
   },
   {
@@ -701,12 +706,12 @@
   },
   {
     "title": "Graph Databases",
-    "url": "/System_Design/Concepts/Databases/Graph DB/GraphDB.html",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Graph DB/GraphDB.html",
     "excerpt": "Graph Databases Home Our team Projects Contact What is Graph DB? Represent Entities & Relations Comments on Photo How particular node is searched in g..."
   },
   {
     "title": "Graph Databases",
-    "url": "/System_Design/Concepts/Databases/Graph DB/",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Graph DB/",
     "excerpt": "Graph Databases Home Our team Projects Contact Graph DB & its Advatanges Cypher (Graph query Language)"
   },
   {
@@ -1155,6 +1160,11 @@
     "excerpt": "mkcert Home Our team Projects Contact What Using mkcert Ubuntu Windows What is mkcert For anything in production, you’ll be purchasing your SSL certif..."
   },
   {
+    "title": "Mobile Billing System",
+    "url": "/System_Design/Scalable/Mobile_Billing_System/",
+    "excerpt": "Mobile Billing System Home Our team Projects Contact Back What Requirements HLD BOE What is Mobile Billing System In telecom platforms, large subscrip..."
+  },
+  {
     "title": "Modules Rust",
     "url": "/Languages/Programming/Rust/Modules.html",
     "excerpt": "Modules Rust Home Our team Projects Contact What Creating a Module super keyword struct inside module enum inside module use keyword use as pub use / ..."
@@ -1193,6 +1203,11 @@
     "title": "Mutex",
     "url": "/Threads_Processes_IPC/Synchronization/mutex.html",
     "excerpt": "Mutex Home Our team Projects Contact Back Mutex? Problems in mutex? Creating Mutex C++11 POSIX Rust Wrappers around Mutex lock_guard unique_lock Mutex..."
+  },
+  {
+    "title": "N1QL",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Couchbase/N1QL.html",
+    "excerpt": "N1QL Home Our team Projects Contact N1QL? Operators Queries N1QL This is Couchbase’s query language. With N1QL you can execute SQL queries(SELECT, FRO..."
   },
   {
     "title": "Near by Recommendation System",
