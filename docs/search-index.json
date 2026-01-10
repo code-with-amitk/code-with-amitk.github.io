@@ -890,6 +890,11 @@
     "excerpt": "K3s Home Our team Projects Contact What Architecture k3s vs Kubernets What K3s is a lightweight Kubernetes distribution designed for resource-constrai..."
   },
   {
+    "title": "Kafka",
+    "url": "/System_Design/Concepts/Kafka/Introduction.html",
+    "excerpt": "Kafka Home Our team Projects Contact Back Kafka? Message delivery methods Architecuture Terms Cluster Partition Broker Topics & Messages Consumers Con..."
+  },
+  {
     "title": "Keras",
     "url": "/Libraries/Python/Machine_Learning/keras/Introduction.html",
     "excerpt": "Keras Home Our team Projects Contact Back keras? Neural Networks(keras) vs. Traditional ML Models(scikit-learn) What is Keras? This is a high-level AP..."
@@ -1162,7 +1167,7 @@
   {
     "title": "Mobile Billing System",
     "url": "/System_Design/Scalable/Mobile_Billing_System/",
-    "excerpt": "Mobile Billing System Home Our team Projects Contact Back What Requirements HLD BOE What is Mobile Billing System In telecom platforms, large subscrip..."
+    "excerpt": "Mobile Billing System Home Our team Projects Contact Back What Requirements BOE Storage estimates Traffic estimates HLD Database Tables Flows New Rech..."
   },
   {
     "title": "Modules Rust",
