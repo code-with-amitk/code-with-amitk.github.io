@@ -32,8 +32,30 @@
     <aside class="sidebar">
       <a href="#what">What</a>
       <a href="#req">Requirements</a>
-      <a href="#hld">HLD</a>
       <a href="#boe">BOE</a>
+      <ul>
+        <li><a href="#storage">Storage estimates</a></li>
+        <li><a href="#traffic">Traffic estimates</a></li>
+      </ul>
+      <a href="#hld">HLD</a>
+      <ul>
+        <li><a href="#tables">Database Tables</a></li>
+        <li>
+          <a href="#flows">Flows</a>
+          <ul>
+            <li>
+              <a href="#newsubscriber">New Recharge</a>
+            </li>
+            <li><a href="#update">Update Plan</a></li>
+          </ul>
+          <a href="#kafka">Kafka OSS to BSS</a>
+        </li>
+      </ul>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#imsi">IMSI</a></li>
+        <li><a href="#msisdn">MSISDN</a></li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
@@ -82,16 +104,10 @@
         <b>5. Latency:</b> Low, pack activation instant
       </dl>
 
-      <h2 id="hld">HLD</h2>
-      <img
-        src="/images/System_Design/GSM_Network.png"
-        alt="GSM Network"
-        style="width: 600px; height: 400px"
-      />
-
       <h2 id="boe">BOE</h2>
       <dl>
-        OSS will send CDR(Call Detial Records) in Batch to BSS.<br />
+        OSS(See HLD Diagram) will send CDR(Call Detial Records) in Batch to
+        BSS.<br />
         CDRs are send in <font color="red">BATCHES</font> using
         <font color="red">Kafka</font> from OSS to BSS
       </dl>
@@ -139,6 +155,144 @@ CDR ~= 300-500 bytes
         - Peak ≈ 407KB x 5 = 2 MB/sec<br />
         But we will design ingestion for ≥5 MB/sec to be safe.
       </dl>
+
+      <h2 id="hld">HLD</h2>
+      <img
+        src="/images/System_Design/GSM_Network.png"
+        alt="GSM Network"
+        style="width: 600px; height: 400px"
+      />
+      <h3 id="tables">Database Tables</h3>
+      <table>
+        <tr>
+          <td>
+            <b>Subscriber table</b><br />
+            <dd>
+              subscriber_id (primary Key)<br />
+              name<br />
+              dob<br />
+              <a href="#imsi">IMSI</a> (UNIQUE)<br />
+              MSISDN<br />
+              status (ACTIVE/SUSPENDED)<br />
+              activation_date<br />
+              deactivation_date<br />
+              created_at<br /><br />
+
+              5 | ram | 25/2 | xxx | yy | active | 9jan | -
+            </dd>
+          </td>
+          <td>
+            <b>Plans table:</b> Rs 299, Rs 179, Rs 999<br />
+            <dd>
+              plan_id (PK)<br />
+              plan_code<br />
+              plan_name<br />
+              validity_days<br />
+              price<br />
+              currency<br />
+              is_prepaid<br />
+              status<br /><br />
+
+              10 | 279_PLAN | 279 Combo Plan | 30 days | ₹279 | INR | y<br />
+              15 | 999_PLAN | 999 Combo Plan | 90 days | ₹999 | INR | y
+            </dd>
+          </td>
+          <td>
+            <b>Products Table: </b>
+            OTT(Netflix, Amazon, Zee) , data, voice, SMS
+            <dd>
+              product_id (PK) <br />
+              product_code <br />
+              product_name <br />
+              product_type (DATA / OTT / VOICE / SMS) <br />
+              description<br /><br />
+
+              1 | Netflix | OTT | Unlimited ad-free movies, TV shows<br />
+              2 | Amazon | OTT | Unlimited ad-free movies, TV shows<br />
+              3 | Zee5 | OTT | Unlimited ad-free movies, TV shows<br />
+              4 | 1GBD| 1 GB data | DATA | 1GB Data Pack
+            </dd>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>Plan_to_Product table</b>
+            <dd>
+              id<br />
+              plan_id (FK)<br />
+              product_id (FK)<br />
+              quantity<br />
+              unit<br /><br />
+
+              id|plan_id|product_id<br />
+              1 | 10 | 1 //279_PLAN has Netflix<br />
+              1 | 10 | 2 //279_PLAN has Amazon<br />
+              1 | 10 | 3 //279_PLAN has Zee5
+            </dd>
+          </td>
+          <td>
+            <b>Subscription table</b>
+            <dd>
+              id<br />
+              subscriber_id (FK)<br />
+              plan_id (FK)<br />
+              start_date<br />
+              end_date<br />
+              renew_date<br /><br />
+
+              5 | 10 | ...
+            </dd>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="flows">Flows</h3>
+      <h4 id="newsubscriber">New Recharge / Subscriber Purchases a SIM card</h4>
+      <dl>
+        Person goes to shop and purchases SIM card, makes 1st recharge. This
+        message flows to BSS
+      </dl>
+      <pre><code class="language-css">
+OSS                                  BSS
+  -- subscriber_register -->      REST_EndPoint
+      json {                          --------INSERT INTO ------> Subscriber Table
+        name = "ram",
+        dob = "23/11",
+        IMSI = "xxx",
+        MSISDN = "yyy",
+      }
+    <------- Registered ---------------
+  Connect Plan
+  -------- subscriber_assign ----> REST_EndPoint
+                                        ----- INSERT INTO ------> Subscription table
+      json {
+        IMSI,
+        279_PLAN 
+      }
+      </code></pre>
+
+      <h4 id="update">Update Plan from 299_PLAN to 999_PLAN</h4>
+      <dl>Only subscription table need to be changed</dl>
+      <pre><code class="language-css">
+OSS                      BSS
+  -- update_plan -->  REST_EndPoint
+                         ----- UPDATE ROW ------> Subscription table
+      </code></pre>
+
+      <h3 id="kafka">Kafka Communication from OSS to BSS</h3>
+
+      <h2 id="terms">Terms</h2>
+      <h3 id="imsi">IMSI(International Mobile Subscriber Identity)</h3>
+      <dl>
+        An IMSI number is a unique, 15-digit code that identifies a specific
+        mobile phone subscriber in a cellular network, stored on the SIM card
+        and used for network authentication, distinct from your public phone
+        number.<br />
+        IMSI = {Mobile Country Code (MCC) + Mobile Network Code (MNC) + and
+        Mobile Subscription Identification Number (MSIN)}
+      </dl>
+
+      <h3 id="msisdn">MSISDN</h3>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
