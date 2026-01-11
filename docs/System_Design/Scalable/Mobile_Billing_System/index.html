@@ -44,7 +44,10 @@
           <a href="#flows">Flows</a>
           <ul>
             <li>
-              <a href="#newsubscriber">New Recharge</a>
+              <a href="#newsubscriber">New Subscriber</a>
+            </li>
+            <li>
+              <a href="#payment">Verify Payment Status</a>
             </li>
             <li><a href="#update">Update Plan</a></li>
           </ul>
@@ -173,7 +176,7 @@ CDR ~= 300-500 bytes
               dob<br />
               <a href="#imsi">IMSI</a> (UNIQUE)<br />
               MSISDN<br />
-              status (ACTIVE/SUSPENDED)<br />
+              status (active/inactive/suspended)<br />
               activation_date<br />
               deactivation_date<br />
               created_at<br /><br />
@@ -247,29 +250,57 @@ CDR ~= 300-500 bytes
       </table>
 
       <h3 id="flows">Flows</h3>
-      <h4 id="newsubscriber">New Recharge / Subscriber Purchases a SIM card</h4>
+      <h4 id="newsubscriber">
+        New Subscriber / Subscriber Purchases a SIM card
+      </h4>
       <dl>
         Person goes to shop and purchases SIM card, makes 1st recharge. This
         message flows to BSS
       </dl>
       <pre><code class="language-css">
 OSS                                  BSS
-  -- subscriber_register -->      REST_EndPoint
+  -- POST subscriber/register -->  REST_EndPoint
       json {                          --------INSERT INTO ------> Subscriber Table
-        name = "ram",
-        dob = "23/11",
-        IMSI = "xxx",
-        MSISDN = "yyy",
+        "imsi": "xxx",                     status=inactive     5 | ram | 25/2 | xxx | yy | inactive | 9jan | 
+        "msisdn": "yyy",
+        "name": "ram",
+        "dob": "1995-11-23",
+        "kyc_status": "VERIFIED"
       }
     <------- Registered ---------------
   Connect Plan
-  -------- subscriber_assign ----> REST_EndPoint
-                                        ----- INSERT INTO ------> Subscription table
+  ---- POST /subscription/activate -> BSS(REST_EndPoint)
       json {
-        IMSI,
-        279_PLAN 
+        "imsi": "xxx",
+        "plan_code": "279_PLAN",
+        "payment_ref": "txn_123"
       }
+                                      BSS(REST_EndPoint)
+                                      // Verify req is not duplicate? (idempotency key)
+                                      
+                                        -----------payment_ref: "txn_123" ---------> Payment_GW
+                                        &lt;------------Pending------------------------
+                                        retry for 5 times
+                                        &lt;------------ success ----------------------
+
+                                        BSS
+                                        -- INSERT INTO ------> Subscription table
       </code></pre>
+
+      <h4 id="payment">Verify Payment Status</h4>
+      <dl>
+        <b>Why Payment status need to be verified?</b>
+        <pre><code class="language-css">
+User → Payment Gateway / Wallet
+            ↓
+        Payment System
+            ↓
+          BSS
+        </code></pre>
+        User will send money to payment gateway and this information will not
+        come to OSS. When recharge is successful Payment Gateway will send this
+        information to OSS asynchronously.
+      </dl>
 
       <h4 id="update">Update Plan from 299_PLAN to 999_PLAN</h4>
       <dl>Only subscription table need to be changed</dl>
