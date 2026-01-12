@@ -82,12 +82,12 @@
   {
     "title": "Async Programming",
     "url": "/Async_Programming/Introduction.html",
-    "excerpt": "Async Programming Home Our team Projects Contact What is async Async vs Threading What is Asynchronous? This is concurrency model where multiple tasks..."
+    "excerpt": "Async Programming Home Our team Projects Contact Back What is async Async vs Threading What is Asynchronous? This is concurrency model where multiple ..."
   },
   {
     "title": "Async Programming",
     "url": "/Async_Programming/",
-    "excerpt": "Async Programming Home Our team Projects Contact What is async async, await, block_on() Future Async vs Threading notify-rs(Watch changes in file) Run..."
+    "excerpt": "Async Programming Home Our team Projects Contact Introduction: What is async, async, await, block_on(), Future, Async vs Threading notify-rs(Watch cha..."
   },
   {
     "title": "attributes",
@@ -297,7 +297,7 @@
   {
     "title": "condition_variable",
     "url": "/Threads_Processes_IPC/Synchronization/condition_variable.html",
-    "excerpt": "condition_variable Home Our team Projects Contact What? Code Thr1 signalling Thr2 Ping pong game Using pthread std::condition_variable, unique_lock &l..."
+    "excerpt": "condition_variable Home Our team Projects Contact Back What? Code Thr1 signalling Thr2 Ping pong game Using pthread std::condition_variable, unique_lo..."
   },
   {
     "title": "Consensus",
@@ -790,11 +790,6 @@
     "excerpt": "Interrupts Home Our team Projects Contact What is interrupt Interrupt Flow Interrupt Vector Table Probing What is Interrupt Interrupt is event/signals..."
   },
   {
-    "title": "Intertask Communication",
-    "url": "/Async_Programming/InterTask_Communication/",
-    "excerpt": "Intertask Communication Synchronous, Asynchronous Channels(channel(), async_channel())"
-  },
-  {
     "title": "Intervals",
     "url": "/DS_Questions/Questions/vectors_arrays/Intervals/",
     "excerpt": "Intervals Non-overlapping Intervals"
@@ -1272,7 +1267,7 @@
   {
     "title": "notify-rs",
     "url": "/Async_Programming/notify-rs.html",
-    "excerpt": "notify-rs notify-rs What is notify-rs RecommendedWatcher vs PollWatcher Code(RecommendedWatcher, PollWatcher) What is notify-rs notify-rs is a Rust cr..."
+    "excerpt": "notify-rs Home Our team Projects Contact Back notify-rs? RecommendedWatcher vs PollWatcher RecommendedWatcher code PollWatcher Code What is notify-rs ..."
   },
   {
     "title": "NVML",
@@ -1757,7 +1752,7 @@
   {
     "title": "Synchronous Asynchronous Channels",
     "url": "/Async_Programming/InterTask_Communication/Synchronous_Asynchronous_Channels.html",
-    "excerpt": "Synchronous Asynchronous Channels Synchronous Asynchronous Channels Synchronous vs Asynchronous Channel Code Synchronous vs Asynchronous Channel Synch..."
+    "excerpt": "Synchronous Asynchronous Channels Home Our team Projects Contact Back Synchronous vs Asynchronous Channels Code Synchronous(1 Producer 1 Consumer) Syn..."
   },
   {
     "title": "System Design",
