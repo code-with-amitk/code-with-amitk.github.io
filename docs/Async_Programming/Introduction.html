@@ -1,97 +1,129 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Async Programming</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
     <aside class="sidebar">
-        <a href="#what">What is async</a>
-        <a href="#vs">Async vs Threading</a>
+      <a href="#what">What is async</a>
+      <a href="#vs">Async vs Threading</a>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="what">What is Asynchronous?</h2>
-        <dt>
-            This is concurrency model where multiple tasks are executed 
-            <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms">concurrently</a> 
-            by executing each task until it would block, then switching to another task that is ready to make progress.<br>
-            Model runs larger number of tasks on a limited number of threads, because the per-task overhead is typically very low.<br>
-            Eg: I/O-bound tasks(Network or file I/O)
-        </dt>
-        
-        <h2 id="vs">Async vs Threading</h2>
-        <table>
-            <tr>
-                <th></th>
-                <th>Async</th>
-                <th>Threading</th>
-            </tr>
-            <tr>
-                <td>Concurrency</td>
-                <td>Done inside single thread. Uses event loops or similar mechanisms to efficiently handle tasks</td>
-                <td>Executing multiple threads of execution concurrently.</td>
-            </tr>
-            <tr>
-                <td>Resource Overhead</td>
-                <td>lower resource overhead compared to multithreading. Since reduces context-switching and memory overhead</td>
-                <td>High resource overhead. Since each thread has its own stack and context</td>
-            </tr>
-            <tr>
-                <td>Complexity</td>
-                <td>Simpler for certains cases like I/O-bound operations bcoz avoids deadlocks, race conditions</td>
-                <td>More complex since it involves race conditions, deadlocks, and other concurrency issues</td>
-            </tr>
-            <tr>
-                <td>Performance</td>
-                <td>Better performance for I/O-bound applications. Not suited for CPU-bound tasks.</td>
-                <td>Better performance for CPU-bound tasks</td>
-            </tr>
-        </table>
-        <br>
-        
-        <div>
-            <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
-            <button class="tablinks" onclick="opencode(event, 'cpp')">C++</button>
-        </div>
-        
-        <div id="rust" class="tabcontent">
-            <aside class="sidebar">
-                <a href="#what">What is async</a>
-                <a href="#vs">Async vs Threading</a>
-                <a href="#async">async, await, block_on()</a>
-                <a href="#future">Future</a>
-                <a href="#awaitvsblockon">await vs block_on()</a>
-            </aside>
-            <h2>Rust</h2>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Asynchronous?</h2>
+      <dt>
+        This is concurrency model where multiple tasks are executed
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms"
+          >concurrently</a
+        >
+        by executing each task until it would block, then switching to another
+        task that is ready to make progress.<br />
+        Model runs larger number of tasks on a limited number of threads,
+        because the per-task overhead is typically very low.<br />
+        Eg: I/O-bound tasks(Network or file I/O)
+      </dt>
 
-            <h3 id="async">async, await, block_on()</h3>
-            <dl>
-                <b>async:</b> keyword is syntactic sugar. The compiler replaces the return type with a future<br>
-                <b><a href="#await">await</a></b><br>
-                <b>async main(): </b> You cannot make main async, without additional instructions to the compiler
-                You need an executor to run async code<br>
-                <b>block_on(): </b> blocks the current thread until the provided future has run to completion
-            </dl>
-                <pre><code class="language-css">
+      <h2 id="vs">Async vs Threading</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Async</th>
+          <th>Threading</th>
+        </tr>
+        <tr>
+          <td>Concurrency</td>
+          <td>
+            Done inside single thread. Uses event loops or similar mechanisms to
+            efficiently handle tasks
+          </td>
+          <td>Executing multiple threads of execution concurrently.</td>
+        </tr>
+        <tr>
+          <td>Resource Overhead</td>
+          <td>
+            lower resource overhead compared to multithreading. Since reduces
+            context-switching and memory overhead
+          </td>
+          <td>
+            High resource overhead. Since each thread has its own stack and
+            context
+          </td>
+        </tr>
+        <tr>
+          <td>Complexity</td>
+          <td>
+            Simpler for certains cases like I/O-bound operations bcoz avoids
+            deadlocks, race conditions
+          </td>
+          <td>
+            More complex since it involves race conditions, deadlocks, and other
+            concurrency issues
+          </td>
+        </tr>
+        <tr>
+          <td>Performance</td>
+          <td>
+            Better performance for I/O-bound applications. Not suited for
+            CPU-bound tasks.
+          </td>
+          <td>Better performance for CPU-bound tasks</td>
+        </tr>
+      </table>
+      <br />
+
+      <div>
+        <button class="tablinks" onclick="opencode(event, 'rust')">Rust</button>
+        <button class="tablinks" onclick="opencode(event, 'cpp')">C++</button>
+      </div>
+
+      <div id="rust" class="tabcontent">
+        <aside class="sidebar">
+          <a href="#what">What is async</a>
+          <a href="#vs">Async vs Threading</a>
+          <a href="#async">async, await, block_on()</a>
+          <a href="#future">Future</a>
+          <a href="#awaitvsblockon">await vs block_on()</a>
+        </aside>
+        <h2>Rust</h2>
+
+        <h3 id="async">async, await, block_on()</h3>
+        <dl>
+          <b>async:</b> keyword is syntactic sugar. The compiler replaces the
+          return type with a future<br />
+          <b><a href="#await">await</a></b
+          ><br />
+          <b>async main(): </b> You cannot make main async, without additional
+          instructions to the compiler You need an executor to run async code<br />
+          <b>block_on(): </b> blocks the current thread until the provided
+          future has run to completion
+        </dl>
+        <pre><code class="language-css">
 use futures::executor::block_on;
 
 async fn count_to(count: i32) {
@@ -114,54 +146,59 @@ Count is: 2
 Count is: 3
                 </code></pre>
 
-            <h3 id="future">Future</h3>
-            <dl>
-                Asynchronous operation is based on "futures", which represent work that may be completed in the future. 
-                Futures are "polled" until they signal that they are complete<br>
-                <a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#future">future is trait</a>.
-            </dl>
-            <h3 id="await">await</h3>
-            <dl>
-                The .await keyword, applied to a Future, causes the current async function to pause until that Future is ready, 
-                and then evaluates to its output.<br>
-                await is used to wait for another async function.
-            </dl>
+        <h3 id="future">Future</h3>
+        <dl>
+          Asynchronous operation is based on "futures", which represent work
+          that may be completed in the future. Futures are "polled" until they
+          signal that they are complete<br />
+          <a
+            href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#future"
+            >future is trait</a
+          >.
+        </dl>
+        <h3 id="await">await</h3>
+        <dl>
+          The .await keyword, applied to a Future, causes the current async
+          function to pause until that Future is ready, and then evaluates to
+          its output.<br />
+          await is used to wait for another async function.
+        </dl>
 
-            <h3 id="awaitvsblockon">await vs block_on()</h3>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>await</th>
-                    <th>block_on()</th>
-                </tr>
-                <tr>
-                    <td>Blocks current thread</td>
-                    <td>no</td>
-                    <td>yes</td>
-                </tr>
-                <tr>
-                    <td>wait for future to complete</td>
-                    <td>yes</td>
-                    <td>yes</td>
-                </tr>
-                <tr>
-                    <td>Other tasks in async function can run?</td>
-                    <td>yes</td>
-                    <td>no</td>
-                </tr>
-            </table>
-          </div>
+        <h3 id="awaitvsblockon">await vs block_on()</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>await</th>
+            <th>block_on()</th>
+          </tr>
+          <tr>
+            <td>Blocks current thread</td>
+            <td>no</td>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <td>wait for future to complete</td>
+            <td>yes</td>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <td>Other tasks in async function can run?</td>
+            <td>yes</td>
+            <td>no</td>
+          </tr>
+        </table>
+      </div>
 
-          <div id="cpp" class="tabcontent">
-            <h2>C++</h2>
-            <dl>
-                Future object is returned by the async function.<br>
-                Promise is returned by async.
-            </dl>
-            <table>
-                <tr>
-                    <td>
-                        <pre><code class="language-css">
+      <div id="cpp" class="tabcontent">
+        <h2>C++</h2>
+        <dl>
+          Future object is returned by the async function.<br />
+          Promise is returned by async.
+        </dl>
+        <table>
+          <tr>
+            <td>
+              <pre><code class="language-css">
 include &lt;iostream>
 #include &lt;future>
 #include &lt;thread>
@@ -178,9 +215,9 @@ $ g++ test.cpp -lpthread
 $ ./a.out
 Done 8
                         </code></pre>
-                    </td>
-                    <td>
-                        <pre><code class="language-css">
+            </td>
+            <td>
+              <pre><code class="language-css">
 #include &lt;iostream>
 #include &lt;thread>
 #include &lt;iostream>
@@ -194,14 +231,13 @@ int main() {
 }
 $ ./a.out
 Hello
-                        </code></pre>    
-                    </td>
-                </tr>
-            </table>
-          </div>
-
+                        </code></pre>
+            </td>
+          </tr>
+        </table>
+      </div>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>

@@ -56,7 +56,10 @@
       <h2 id="code">Thread Creation Code</h2>
       <h3 id="cpp">CPP</h3>
       <h4 id="threadclass">1. Thread class</h4>
-      <pre><code class="language-css">
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
 #include &lt;thread>
 #include &lt;iostream>
 void fun(int a){
@@ -64,25 +67,24 @@ void fun(int a){
 }
 int main() { 
     int a = 10;
-    //Creates Thread Object, 
-    //which is entity that can start 
-    //execution immediately after creation
-    std::thread t1(fun, a);
+    std::thread t1(fun, a);   //1
     t1.join();
     
-    /* Not copy construtible */
-    //error: use of deleted function 
-    ‘std::thread::thread(std::thread&)’
-    //std::thread t2 = t1
+    //std::thread t2 = t1     //2a
     
-    /* Not copy assignable */
-    //error: use of deleted function 
-    //‘std::thread& std::thread::operator
-    //=(const std::thread&)’
-    //std::thread t2(fun,3);
-    //t1 = t2;
+    // std::thread t2(fun,3); //2b
 }
                 </code></pre>
+          </td>
+          <td>
+            1. Create Thread Object, which is entity that can start execution
+            immediately after creation<br />
+            2. Thread object created using thread class is<br />
+            2a. Not copy construtible. //error: use of deleted function<br />
+            2b. Not copy assignable. //error: use of deleted function
+          </td>
+        </tr>
+      </table>
 
       <dl>Thread calling method of class</dl>
       <pre><code class="language-css">
