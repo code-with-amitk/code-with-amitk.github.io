@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Transactions</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#atomicity">Atomicity</a>
+      <a href="#consistency">Consistency</a>
+      <a href="#durability">Durability</a>
+      <a href="Isolation.html">Isolation</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="atomicity">Atomicity (Better term would be abortability)</h3>
+      <dl>
+        Atomic means something that cannot be broken down into smaller parts.
+        Atomic means When Application is writing to DB and some fault
+        occurs(process crash, LAN cable loose, Disk full) then user will not see
+        DB in inconsistent state.<br /><br />
+        <b
+          >How atomicity is achieved in DB using
+          <a href="Transactions.html">Transactions</a></b
+        ><br />
+        ie If the writes are grouped together into an atomic transaction, and
+        the transaction cannot be completed (committed) due to a fault, then the
+        transaction is aborted and the database must discard or undo any writes
+        it has made so far in that transaction
+      </dl>
+
+      <h3 id="consistency">Consistency</h3>
+      <dl>
+        <pre><code class="language-css">
+node-1  ------\
+            client
+node-2  -----/
+</code></pre>
+        Client will get(same, latest data) to whatever node they connect to in
+        system. OR Every read operation will recieve most recent Write (or
+        error). <br />
+        Consistency Problem? With mutiple databases doing sync(master slave
+        etc), client should be returned accurate and most recent information.
+        Solution: Consensus Algorithm
+      </dl>
+
+      <h3 id="durability">Durability</h3>
+      <dl>
+        Once <a href="Transactions.html">Transaction</a> has been committed
+        successfully(ie data is written to DB), then that data will not be
+        forgotten, even in case of hardware fault/ database crashes<br />
+        How to achieve Durability? <br />
+        &ensp; On Single node system: Using SSD or Hard-disks.<br />
+        &ensp; On multinode: Using Replication, data is copied to other nodes
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

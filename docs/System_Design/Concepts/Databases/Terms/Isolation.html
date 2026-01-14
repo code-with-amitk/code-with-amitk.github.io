@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Isolation</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Isolation</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Isolation</h2>
+      <dl>
+        In terms of DB, Isolation means concurrently executing
+        <a href="Transactions.html">transactions</a> are isolated from each
+        other<br />
+        <b>Example:</b><br />
+        Two clients simultaneously incrementing a counter that is stored in a
+        database. Each client needs to read the current value, add 1, and write
+        the new value back (assuming there is no increment operation built into
+        the database). The counter should have increased from 42 to 44, because
+        two increments happened, but it actually only went to 43 because of the
+        race condition.
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

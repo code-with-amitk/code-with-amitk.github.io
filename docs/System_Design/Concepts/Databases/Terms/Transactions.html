@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Transactions</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Transaction</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Transaction</h2>
+      <dl>
+        A transaction is a way for an application to group several reads and
+        writes together into a logical unit. Conceptually, all the reads and
+        writes in a transaction are executed as one operation: either the entire
+        transaction succeeds (commit) or it fails (abort, rollback).<br />
+        If it fails, the application can safely retry.
+        <pre><code class="language-css">
+                                            |----|
+Application ---data pkt----> |DB Manager|   | DB |
+                                            |----|
+      </code></pre>
+        <b>Why Transaction is needed?</b><br />
+        1. Atomicity: if Application is writing 20KB json document to DB. After
+        10KB node crashes, User will see partially updated values which is
+        Wrong. if write is done as part of transaction into Atomic DB, partial
+        write is discarded and db moves to prev state<br />
+        2. Safety Gurantees
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

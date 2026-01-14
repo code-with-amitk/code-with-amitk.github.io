@@ -122,16 +122,12 @@
 
       <h3 id="cb">Circuit Breaker Design Pattern</h3>
       <dl>
-        Services sometimes collaborate when handling requests, ie service1
-        depends on service2. When service1 synchronously/asynchronously invokes
-        service2 there is always the possibility that the other service2 is
-        unavailable/dead.<br />
-        Precious resources such as threads might be consumed in the service1
-        while waiting for the service2 to respond. This might lead to resource
-        exhaustion, which would make the calling service1 unable to handle other
-        requests<br />
-        The failure of service1 can potentially cascade to other services
-        throughout the application, if other services depends on service1.
+        Suppose service1 gets some data from service2. But there is always the
+        possibility that the other service2 is unavailable/dead.<br />
+        When service2 is dead, service1's thread might be pooling service2 to
+        respond. This is resource wastage for service1<br />
+        Failure to get data can potentially cascade to other services throughout
+        the application, if other services depends on service1.
       </dl>
 
       <h4>Problem:</h4>
@@ -144,17 +140,179 @@
       <dl>
         <b>Traditional, Preconfigured thresholds and timeouts</b><br />
         &ensp; When the number of consecutive failures crosses a threshold stop
-        sending requests for x timeout.<br />
-        &ensp; After x timeout expires allows a limited number of test requests
-        to pass through. If those requests succeed the circuit resumes normal
-        operation. Otherwise, if there is a failure the timeout period begins
-        again.<br /><br />
+        sending requests for x=10 timeout.<br />
+        &ensp; After 10s send only 5 test requests(ie limited number of test
+        requests). If those requests succeed resumes to normal operation.
+        Otherwise, if there is a failure the timeout period begins again.<br /><br />
 
         <b>Modern Adaptive techniques</b><br />
         &ensp; Using AI and ML dynamically adjust thresholds based on real-time
         traffic patterns, anomalies, and historical failure rates. This approach
         improves resiliency and efficiency.
       </dl>
+      <table>
+        <tr>
+          <td>
+            <b>HTTP CLIENT</b>
+            <pre><code class="language-css">
+// g++ service1.cpp -lpthread -o service1
+// ./service1
+
+// Configuration
+constexpr int restTimeOut = 10;     // Don't send anything for 10 sec
+constexpr int failureThreshold = 5; // Consecutive 5 failures, endpoint dead
+constexpr const char* endpoint = "ip:8081/service2_health";
+
+// State variables
+std::time_t lastFailureTime = 0;
+std::atomic &lt;int> successCount(0);
+std::atomic &lt;int> failureCount(0);
+std::atomic &lt;bool> atomicIsAlive(false);
+
+enum CircuitState {
+    CLOSED,      // Normal operation - requests pass through
+    OPEN,        // Service unavailable - requests fail fast
+    HALF_OPEN    // Testing if service is back
+};
+
+std::atomic &lt;CircuitState> State(CLOSED);
+
+// Mock HTTP GET function
+bool httpGet(const char* url) {
+    // Implementation would make actual HTTP request
+    // Returns true if service responds successfully
+    return false; // Placeholder
+}
+
+// Service check thread function
+void pingService2() {
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        
+        if (State == OPEN) {
+            std::time_t currentTime = std::time(nullptr);
+            std::time_t elapsedTimeSinceFailure = currentTime - lastFailureTime;
+            
+            if (elapsedTimeSinceFailure > restTimeOut) {
+                State = HALF_OPEN;  // Move to testing state
+                successCount = 0;
+                failureCount = 0;
+            }
+        }
+        
+        if (State == HALF_OPEN || State == CLOSED) {
+            // Try to contact the service
+            bool resp = httpGet(endpoint);
+            
+            if (resp) {  // Success
+                successCount++;
+                failureCount = 0;
+                atomicIsAlive = true;
+                
+                if (State == HALF_OPEN && successCount >= 1) {
+                    State = CLOSED;  // Service recovered
+                }
+            } else {    // Failure
+                failureCount++;
+                successCount = 0;
+                
+                if (failureCount >= failureThreshold) {
+                    atomicIsAlive = false;
+                    lastFailureTime = std::time(nullptr);
+                    State = OPEN;  // Circuit breaker opens
+                }
+            }
+        }
+    }
+}
+
+// Mock service 1 function
+bool threadService1() {
+    return atomicIsAlive.load();
+}
+
+// Circuit breaker protected request function
+bool makeRequest() {
+    if (State == OPEN) {
+        std::time_t currentTime = std::time(nullptr);
+        std::time_t elapsedTimeSinceFailure = currentTime - lastFailureTime;
+        
+        if (elapsedTimeSinceFailure > restTimeOut) {
+            State = HALF_OPEN;  // Allow a test request
+        } else {
+            return false;  // Fail fast
+        }
+    }
+    
+    // In CLOSED or HALF_OPEN state, attempt the request
+    bool result = httpGet(endpoint);
+    
+    if (!result) {
+        failureCount++;
+        if (failureCount >= failureThreshold) {
+            lastFailureTime = std::time(nullptr);
+            State = OPEN;
+        }
+    } else {
+        successCount++;
+        if (State == HALF_OPEN) {
+            State = CLOSED;  // Service is back
+        }
+        failureCount = 0;
+    }
+    
+    return result;
+}
+
+int main() {
+    std::thread healthCheckThread(pingService2);
+    healthCheckThread.detach();  // Run in background
+    
+    // Main application loop
+    while (true) {
+        if (threadService1()) {
+            std::cout &lt;&lt; "Server2 up, sending packet...";
+            bool success = makeRequest();
+            if (!success) {
+                std::cout &lt;&lt; "Request failed through circuit breaker" ;
+            }
+        } else {
+            std::cout &lt;&lt; "Server2 down, circuit breaker open";
+        }
+        
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
+    
+    return 0;
+}
+          </code></pre>
+          </td>
+          <td>
+            1. Start healthcheck service in thread<br />
+            2. Check HTTP Server is up and running<br />
+            &ensp; if state=open, &ensp; and time elapsed since last failure is
+            greater than our configured restTimeOut. ie we donot want to send
+            ping probes before restIntervalBetweenFailedAttempts<br />
+            &ensp; Send HTTP GET to endpoint<br />
+            &ensp; if response was Success, increment success count, make
+            failure count=0<br />
+            &ensp; if response was failure, increament failure count and if
+            count > threshold declare failed.<br /><br />
+
+            <b>HTTP SERVER</b>
+            <pre><code class="language-css">
+// g++ service2.cpp -lpthread -o service2
+// ./service2
+int main() {
+	// HTTP Server. RESTEndpoint: service2_health
+	// HTTP GET ip:8081/service2_health [1=healthy]
+}
+          </code></pre>
+          </td>
+        </tr>
+      </table>
     </main>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
   </body>
 </html>
