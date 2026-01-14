@@ -410,6 +410,16 @@
     "excerpt": "Database Schema Home Our team Projects Contact What is Schema? What is DB Schema? Its blueprint for a database. It defines the structure of the databa..."
   },
   {
+    "title": "Database Transactions",
+    "url": "/System_Design/Concepts/Databases/Terms/All_Terms.html",
+    "excerpt": "Database Transactions Home Our team Projects Contact Back Atomicity Consistency Durability Isolation Atomicity (Better term would be abortability) Ato..."
+  },
+  {
+    "title": "Database Transactions",
+    "url": "/System_Design/Concepts/Databases/Terms/Transactions.html",
+    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction What is Transaction A transaction is a way for an application to group several r..."
+  },
+  {
     "title": "Databases",
     "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
     "excerpt": "Databases Home Our team Projects Contact Column DB faster than row Difference OLAP Column DB faster than row Row oriented Coloumn oriented Consider em..."
@@ -845,6 +855,11 @@
     "excerpt": "iptables Home Our team Projects Contact what Tables in iptables Examples What is iptables? iptables is a user-space application that configures Linux ..."
   },
   {
+    "title": "Isolation",
+    "url": "/System_Design/Concepts/Databases/Terms/Isolation.html",
+    "excerpt": "Isolation Home Our team Projects Contact Back Isolation What is Isolation In terms of DB, Isolation means concurrently executing transactions are isol..."
+  },
+  {
     "title": "JavaScript",
     "url": "/Languages/Scripting/Javascript/",
     "excerpt": "JavaScript Home Our team Projects Contact Introduction Functions &ensp; Arrow Function"
@@ -1247,7 +1262,7 @@
   {
     "title": "Networking",
     "url": "/Networking/",
-    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Networking Devices &ensp; Firewalls &ensp;&ensp; Fortinet &ens..."
+    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Networking Devices &ensp; Firewalls: Fortinet , SRX &ensp; Gat..."
   },
   {
     "title": "Networking Devices",
