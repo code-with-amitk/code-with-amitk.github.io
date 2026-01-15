@@ -857,7 +857,7 @@
   {
     "title": "Isolation",
     "url": "/System_Design/Concepts/Databases/Terms/Isolation.html",
-    "excerpt": "Isolation Home Our team Projects Contact Back Isolation What is Isolation In terms of DB, Isolation means concurrently executing transactions are isol..."
+    "excerpt": "Isolation Home Our team Projects Contact Back Isolation Isolation Levels 1. Read Committed 2. Snapshot Isolation Terms Dirty Read Read Skew Dirty Writ..."
   },
   {
     "title": "JavaScript",
