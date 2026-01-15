@@ -31,6 +31,17 @@
 
     <aside class="sidebar">
       <a href="#what">Isolation</a>
+      <a href="#levels">Isolation Levels</a>
+      <ul>
+        <li><a href="#readcommitted">1. Read Committed</a></li>
+        <li><a href="#snapshotiso">2. Snapshot Isolation</a></li>
+      </ul>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#dirtyread">Dirty Read</a></li>
+        <li><a href="#readskew">Read Skew</a></li>
+        <li><a href="#dirtywrite">Dirty Write</a></li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
@@ -47,6 +58,106 @@
         two increments happened, but it actually only went to 43 because of the
         race condition.
       </dl>
+
+      <h2 id="levels">Isolation Levels</h2>
+      <dl>
+        Defines how much 1 transaction must be isolated from other on concurrent
+        transactions
+      </dl>
+      <h3 id="readcommitted">1. Read Committed</h3>
+      <dl>
+        Transactions running at the read committed isolation level prevents
+        <a href="#dirtyread">dirty reads</a>. Only those transaction are visible
+        those are commited<br />
+        Transactions running at the read committed isolation level prevents
+        <a href="#dirtywrite">dirty Writes</a> by delaying the second write
+        until the first writes transaction has committed
+      </dl>
+      <h3 id="snapshotiso">
+        2. Snapshot Isolation (also called multi version concurrency control
+        (MVCC))
+      </h3>
+      <dl>
+        Snapshot isolation is a solution to
+        <a href="#readskew">Read Skew</a> problem. Read
+        <a href="#readskew">Read Skew</a> first. Now how database can ensure
+        Alice to see correct account balances?<br />
+        &ensp; - Database must keep committed version of object(snapshot) and
+        display this version until new data is not committed. Once commit
+        succeeds ie 400$ in Account-1 & 600$ in Account-2, then DB should show
+        most recent commit.<br />
+        &ensp; - <b>MVCC:</b> Instead of keeping 2 copies(as in Snapshot
+        isolation), MVCC keeps multiple copies
+      </dl>
+
+      <table>
+        <tr>
+          <th></th>
+          <th><a href="#dirtyread">Dirty Read</a></th>
+          <th><a href="#dirtywrite">Dirty Write</a></th>
+        </tr>
+        <tr>
+          <td>1. Read Committed</td>
+          <td>No</td>
+          <td>No</td>
+        </tr>
+      </table>
+
+      <h2>Terms</h2>
+      <h3>Read Related</h3>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td id="dirtyread">Dirty Read</td>
+          <td>
+            A <a href="Transactions.html">transaction</a> is writing some row to
+            the database, but the transaction got aborted inbetween, ie data is
+            not committed.<br />
+            if another transaction can see that uncommitted data, it is a dirty
+            read<br />
+            <b>To Prevent Dirty Read?</b> Database remembers both the old
+            committed value and the new value set by the transaction. Currently
+            ongoing write transaction holds the write lock. While the
+            transaction is ongoing, any other transactions that read the object
+            are simply given the old value. Only when the new value is committed
+            do transactions switch over to reading the new value.
+          </td>
+        </tr>
+        <tr>
+          <td id="readskew">Non repeatable read / Read Skew</td>
+          <td>
+            Say Alice has $1,000 of savings at a bank, split across two accounts
+            with $500 each. Now a transaction transfers $100 from one of her
+            accounts to the other. If she looks at balance at same moment she
+            might find 500$ in one, 400$ in another<br />
+            Solution: <a href="#snapshotiso">Snapshot Isolation</a>
+          </td>
+        </tr>
+      </table>
+
+      <h3>Write Related</h3>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Decription</th>
+        </tr>
+        <tr>
+          <td id="dirtywrite">Dirty Write</td>
+          <td>
+            Two <a href="Transactions.html">transactions</a> concurrently try to
+            update the same row in a database. 1st write transaction was
+            uncommitted, data in DB is in inconsistent state<br />
+            On top of this incorrect data, 2nd transaction writes, this is Dirty
+            write.<br />
+            <b>To prevent dirty write?</b> Take lock over row then write a
+            transaction, if transaction fails revert the change and then release
+            the lock
+          </td>
+        </tr>
+      </table>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>
