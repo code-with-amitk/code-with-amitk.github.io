@@ -95,6 +95,16 @@
     "excerpt": "attributes Home Our team Projects Contact Attributes? Attribute Types Attributes? Preprocessor macros introduced after c++11. These allows user to pas..."
   },
   {
+    "title": "AWS vs GCP",
+    "url": "/System_Design/Concepts/GCP/AWS_vs_GCP.html",
+    "excerpt": "AWS vs GCP Home Our team Projects Contact Back Compute Docker, Kubernets Identity Management Load Balancer Machine Learning Networking Storage Object ..."
+  },
+  {
+    "title": "AWS vs GCP",
+    "url": "/System_Design/Concepts/GCP/Introduction.html",
+    "excerpt": "AWS vs GCP Home Our team Projects Contact Back 5 key Components GCE(Compute Engine=VM) App Engine Big Query GKE(Kubernets Engine) Cloud Ecosystem AWS ..."
+  },
+  {
     "title": "Backtracking",
     "url": "/DS_Questions/Algorithms/Backtracking/",
     "excerpt": "Backtracking All Combinations"
@@ -412,7 +422,7 @@
   {
     "title": "Database Transactions",
     "url": "/System_Design/Concepts/Databases/Terms/All_Terms.html",
-    "excerpt": "Database Transactions Home Our team Projects Contact Back Atomicity Consistency Durability Isolation Atomicity (Better term would be abortability) Ato..."
+    "excerpt": "Database Transactions Home Our team Projects Contact Back ACID Atomicity Consistency Durability Isolation ACID Atomicity , Consistency , Isolation , D..."
   },
   {
     "title": "Database Transactions",
@@ -623,6 +633,11 @@
     "title": "Gateway",
     "url": "/Networking/Networking_Devices/SRX_Firewall.html",
     "excerpt": "Gateway Home Our team Projects Contact SRX Authentication Table Commands SRX Security Poilcy Set of rules(Rules: Permit, deny or tunnel) that determin..."
+  },
+  {
+    "title": "GCP",
+    "url": "/System_Design/Concepts/GCP/Deploy_Docker_Image.html",
+    "excerpt": "GCP Home Our team Projects Contact Back Deploy on GCP Deploy Docker Image on GCP 1. Create a docker image 2. Create Compute Engine instance on GCP htt..."
   },
   {
     "title": "Glew Library",
@@ -932,7 +947,7 @@
   {
     "title": "Kubernets",
     "url": "/System_Design/Concepts/Kubernets/Introduction.html",
-    "excerpt": "Kubernets Home Our team Projects Contact Kubernets? Kubernets(Container Orchestrator) Orhestration means managing the lifecycles of containers. These ..."
+    "excerpt": "Kubernets Home Our team Projects Contact Back Kubernets? Kubernets Kubernetes is Container Orchestrator Orhestration means managing the lifecycles of ..."
   },
   {
     "title": "Kubernets Architecture",
@@ -1166,7 +1181,7 @@
   },
   {
     "title": "microservices design patterns",
-    "url": "/System_Design/Concepts/Microservices/Microservices_design_patterns.html",
+    "url": "/System_Design/Concepts/Microservices/Design_Patterns/Microservices_design_patterns.html",
     "excerpt": "microservices design patterns Home Our team Projects Contact Back Microservice DP? Circuit Breaker DP Microservices Design Patterns These are software..."
   },
   {
@@ -1635,6 +1650,16 @@
     "excerpt": "Rust Smart Pointers Home Our team Projects Contact Smart Pointers? Examples Rc &lt;T> Features What is Smart Pointer? Same as C++ Smart,shared pointer..."
   },
   {
+    "title": "Saga microservices design pattern",
+    "url": "/System_Design/Concepts/Microservices/Design_Patterns/Circuit_Breaker.html",
+    "excerpt": "Saga microservices design pattern Home Our team Projects Contact Back Circuit Breaker DP Circuit Breaker Design Pattern Suppose service1 gets some dat..."
+  },
+  {
+    "title": "Saga microservices design pattern",
+    "url": "/System_Design/Concepts/Microservices/Design_Patterns/Saga.html",
+    "excerpt": "Saga microservices design pattern Home Our team Projects Contact Back Saga DP Saga Design Pattern Problem: How to implement transaction that span mult..."
+  },
+  {
     "title": "SAML",
     "url": "/Languages/Markup/SAML/",
     "excerpt": "SAML Home Our team Projects Contact What is SAML How SAML works SAML Assertion What is SAML Security based XML protocol for user authentication, limit..."
@@ -1767,7 +1792,7 @@
   {
     "title": "System Design",
     "url": "/System_Design/Concepts/",
-    "excerpt": "System Design Home Our team Projects Contact Back AWS Cache CDN Consensus Mechanism: Raft, Paxos Databases Docker &ensp; Introduction: Docker, Docker ..."
+    "excerpt": "System Design Home Our team Projects Contact Back AWS : Terraforms , VPC GCP: Introduction (Components(Compute Engine, App Engine, BigQuery, Kubernete..."
   },
   {
     "title": "System Design",
