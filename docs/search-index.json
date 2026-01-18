@@ -906,17 +906,12 @@
   },
   {
     "title": "Keras",
-    "url": "/Libraries/Python/Machine_Learning/keras/Introduction.html",
+    "url": "/Machine Learning/Libraries/keras/Introduction.html",
     "excerpt": "Keras Home Our team Projects Contact Back keras? Neural Networks(keras) vs. Traditional ML Models(scikit-learn) What is Keras? This is a high-level AP..."
   },
   {
-    "title": "Keras",
-    "url": "/Libraries/Python/Machine_Learning/keras/",
-    "excerpt": "Keras Home Our team Projects Contact Back What is keras? Comparison: Neural Networks vs. Traditional ML Models(scikit-learn) Layers & APIs in keras"
-  },
-  {
     "title": "Keras Layers",
-    "url": "/Libraries/Python/Machine_Learning/keras/Layers_and_APIs.html",
+    "url": "/Machine Learning/Libraries/keras/Layers_and_APIs.html",
     "excerpt": "Keras Layers Home Our team Projects Contact Back APIs / Model / Container? API Types keras Layers? Types of Layers API / Model / Container? API/Contai..."
   },
   {
@@ -1316,22 +1311,17 @@
   },
   {
     "title": "Pandas",
-    "url": "/Libraries/Python/Machine_Learning/Pandas/Conversion.html",
+    "url": "/Machine Learning/Libraries/Pandas/Conversion.html",
     "excerpt": "Pandas Home Our team Projects Contact Back Conversion Conversion Why conversion is needed? most machine learning frameworks (e.g. TensorFlow), work di..."
   },
   {
     "title": "Pandas",
-    "url": "/Libraries/Python/Machine_Learning/Pandas/Introduction.html",
+    "url": "/Machine Learning/Libraries/Pandas/Introduction.html",
     "excerpt": "Pandas Home Our team Projects Contact Back What is Pandas Datastructures What is Pandas Is is an open-source Python library used for data manipulation..."
   },
   {
-    "title": "Pandas",
-    "url": "/Libraries/Python/Machine_Learning/Pandas/",
-    "excerpt": "Pandas Home Our team Projects Contact Back Introduction &ensp; What is Pandas, Usage &ensp; Datastructures(Series, Dataframe) Conversion from pandas d..."
-  },
-  {
     "title": "Pandas RW from file",
-    "url": "/Libraries/Python/Machine_Learning/Pandas/Read_Write_Data_from_file.html",
+    "url": "/Machine Learning/Libraries/Pandas/Read_Write_Data_from_file.html",
     "excerpt": "Pandas RW from file Home Our team Projects Contact Back Functions for RW from file read_csv(), .columns describe() head() dropna() Functions for RW fr..."
   },
   {
@@ -1341,7 +1331,7 @@
   },
   {
     "title": "Plotting in Pandas",
-    "url": "/Libraries/Python/Machine_Learning/Pandas/Plotting.html",
+    "url": "/Machine Learning/Libraries/Pandas/Plotting.html",
     "excerpt": "Plotting in Pandas Home Our team Projects Contact Back Plotting Plotting This means drawing a 2-D plot from dataframes. # predefined df print('{}\\n'.f..."
   },
   {
@@ -1651,7 +1641,7 @@
   },
   {
     "title": "scikit-learn",
-    "url": "/Libraries/Python/Machine_Learning/scikit-learn/",
+    "url": "/Machine Learning/Libraries/scikit-learn/",
     "excerpt": "scikit-learn Home Our team Projects Contact Back What What is scikit-learn Used for create Machine Learning models , which can be fed using Pandas dat..."
   },
   {
@@ -1806,7 +1796,7 @@
   },
   {
     "title": "Tensorflow",
-    "url": "/Libraries/Python/Machine_Learning/Tensorflow/",
+    "url": "/Machine Learning/Libraries/Tensorflow/",
     "excerpt": "Tensorflow Home Our team Projects Contact Back What What is tensorflow This is ML Open source library(EXPOSING APIs) for numerical computation and lar..."
   },
   {
