@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Saga microservices design pattern</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <li><a href="#cb">Saga DP</a></li>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="cb">Saga Design Pattern</h2>
+      <h4>Problem:</h4>
+      <dl>
+        How to implement
+        <a href="/System_Design/Concepts/Databases/Terms/Transactions.html"
+          >transaction</a
+        >
+        that span multiple microservices? ie Distributed Transaction.
+        <pre><code class="language-css">
+Microservice1 --txn1_1---\
+                          \
+Microservice3 --txn1_2--- DB
+        </code></pre>
+        <b
+          >Distributed
+          <a href="/System_Design/Concepts/Databases/Terms/Transactions.html"
+            >Transactions</a
+          >
+          would not be <a href="/System_Design/Concepts/Databases/">ACID</a>
+          but only
+          <a href="/System_Design/Concepts/Databases/">ACD</a></b
+        ><br />
+        &ensp; Microservice1 writes to DB using txn1_1 and microservice2 writes
+        to DB using txn1_2. These are 2 seperate transactions carried
+        independently<br />
+        &ensp; But they are part of only 1 transaction, ie the distributed
+        transaction<br />
+        &ensp; Since txn1_2 might change something in txn1_1, to create 1
+        transaction. These cannot be isolated
+      </dl>
+    </main>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>microservices design patterns</title>
+    <title>Saga microservices design pattern</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -14,7 +14,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../index.html">Back</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -29,97 +29,10 @@
       </ul>
     </nav>
     <aside class="sidebar">
-      <a href="#microservicesdp">Microservice DP?</a>
-      <ul>
-        <li><a href="#cb">Circuit Breaker DP</a></li>
-      </ul>
+      <a href="#cb">Circuit Breaker DP</a>
     </aside>
 
     <main style="margin-left: 200px">
-      <h2 id="microservicesdp">Microservices Design Patterns</h2>
-      <dl>
-        These are software patterns that create reusable, autonomous services
-      </dl>
-
-      <table>
-        <tr>
-          <th>Pattern Name</th>
-          <th>Description</th>
-          <th>Example</th>
-        </tr>
-        <tr>
-          <td>1. API Gateway</td>
-          <td>
-            Single entry point for clients to access multiple microservices.
-            Client will hit APIs and rest of services sit behind API gateway.<br />
-            Useful for routing, authentication, rate limiting, and other
-            cross-cutting concerns.
-          </td>
-          <td>Netflix</td>
-        </tr>
-        <tr>
-          <td>2. Service Discovery Pattern</td>
-          <td>
-            Enables a service client(such as an API gateway), to determine the
-            network location of a service instance so that it can invoke it.
-          </td>
-          <td>zookeeper</td>
-        </tr>
-        <tr>
-          <td>3. Circuit Breaker Pattern</td>
-          <td>
-            Service1 makes call to Service2. And Service2 is in failure state,
-            instead of keep on trying again and again, Calls to Service2 are
-            stopped after x attempts for n number of seconds.
-          </td>
-          <td>SRX Config pushed to ConfigPusher and waiting for ACK</td>
-        </tr>
-        <tr>
-          <td>4. Externalized Configuration</td>
-          <td>
-            Configuration settings should be externalized from the codebase,
-            allowing services to be more configurable without requiring
-            redeployment.
-          </td>
-          <td>ArgoCD manifests, Spring Cloud Config</td>
-        </tr>
-        <tr>
-          <td>5. Event-Driven Architecture</td>
-          <td>Microservices can communicate asynchronously using events</td>
-          <td>Kafka producer consumer</td>
-        </tr>
-        <tr>
-          <td>6. Saga Pattern</td>
-          <td>
-            A DB transaction is broken into smaller transactions & each
-            transaction is handled by seperate service.
-          </td>
-          <td>
-            e-commerce order.<br />
-            Reserve the product.<br />
-            Charge the customer’s card.<br />
-            Reduce the stock<br />
-            Ship the product
-          </td>
-        </tr>
-        <tr>
-          <td>7. CQRS (Command Query Responsibility Segregation)</td>
-          <td>
-            Responsibility of quering data and handling/processing data is
-            handled by different components<br />
-            This pattern splits the responsibility of handling commands from
-            retrieving data.
-          </td>
-          <td>e-commerce platforms</td>
-        </tr>
-      </table>
-
-      <img
-        src="/images/microservices_design_patterns.PNG"
-        alt="microservices_design_patterns"
-        style="width: 500px; height: 400px"
-      />
-
       <h3 id="cb">Circuit Breaker Design Pattern</h3>
       <dl>
         Suppose service1 gets some data from service2. But there is always the

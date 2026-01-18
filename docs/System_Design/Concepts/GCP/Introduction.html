@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AWS vs GCP</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#com">5 key Components</a>
+      <ul>
+        <li><a href="#ce">GCE(Compute Engine=VM)</a></li>
+        <li><a href="#ae">App Engine</a></li>
+        <li><a href="#bq">Big Query</a></li>
+        <li><a href="#ke">GKE(Kubernets Engine)</a></li>
+        <li><a href="#ces">Cloud Ecosystem</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2><a href="/System_Design/Concepts/">AWS vs GCP</a></h2>
+
+      <h2 id="com">5 key Component of GCP</h2>
+      <h3 id="ce">GCE = Compute Engine (IaaS)</h3>
+      <dl>
+        AWS Equivalent: EC2<br />
+        - IaaS(Infrasture as a Service) Provide VM.<br />
+        - Cloud provider will give access to OS of server/VM, user can
+        install/remove/do anything on Server. Highest control
+      </dl>
+
+      <h3 id="ae">App Engine (PaaS)</h3>
+      <dl>
+        - AWS Equivalent: Elastic Bean stak<br />
+        - PaaS(Platform as a Service) for deploying Web Applications<br />
+        - upload button is provided you can upload your website. Write your
+        code, Cloud provider will take care of autoscaling<br />
+        <u>Offers following Enviornments:</u><br />
+      </dl>
+      <table>
+        <tr>
+          <th></th>
+          <th>Standard</th>
+          <th>Flexible</th>
+        </tr>
+        <tr>
+          <td>Free Tier</td>
+          <td>yes</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td>Suitable for</td>
+          <td>Small Applications</td>
+          <td>Big</td>
+        </tr>
+        <tr>
+          <td>Control</td>
+          <td>less</td>
+          <td>More(using docker containers), provides ssh access</td>
+        </tr>
+      </table>
+
+      <h3 id="bq">Big Query(Realtime Streaming data Analytics)</h3>
+      <dl>
+        AWS Equivalent:Redshift<br />
+        - Fully managed serverless data warehouse for analyzing massive datasets
+        with SQL queries<br />
+        - Operates at Petabytes scale to analyze the data, built in ML<br /><br />
+
+        <b>GCP Bigquery Components</b><br />
+        1. <a href="/System_Design/Concepts/Databases">Columnar DB:</a>
+        <br />
+        &ensp; Optimized of anlytical queries rather than SQL queries<br />
+        &ensp; Uses compressed data format, that reduces the cost<br />
+        2. Dremel Engine:<br />
+        &ensp; Distributed execution engine<br />
+        &ensp; Parallel processing across 1000's of machine simultenously
+      </dl>
+
+      <h3 id="ke">
+        GKE = <a href="/System_Design/Concepts/">Kubernetes</a> Engine
+      </h3>
+      <dl>
+        AWS Equivalent: EKS(Elastic Kubernetes Service)<br />
+        - Managed kubernetes service for deploying, scaling, managing
+        containerized services<br />
+        - This is Container
+        <a href="/System_Design/Concepts/Kubernets/Introduction.html"
+          >Orchestrator</a
+        ><br /><br />
+
+        <b>GCP Kubernets Engine Components:</b>
+        Same as
+        <a href="/System_Design/Concepts/Kubernets/Architecture.html"
+          >Kubernets Master, Worker architecture</a
+        >
+      </dl>
+      <img
+        src="/images/GCP/gke.jpg"
+        alt="trie"
+        style="width: 900px; height: 500px"
+      />
+
+      <h3 id="ces">Cloud EcoSystem</h3>
+      <dl>
+        Ecosystem approach means services which integrate seemleesly. This is
+        collection/suite of following services:<br />
+        - Cloud Storage: For Object Storage<br />
+        - Cloud Run: For autoscaling containerized applications<br />
+        - Cloud Function: For serverless functioning & event driven
+        programming<br />
+        - Cloud SQL: Managed relational databases<br />
+        - Pub/Sub: Event and messaging<br />
+        - Identity & Access: For IAM, permissions
+      </dl>
+
+      <h2 id="other">Other Components</h2>
+      <h3></h3>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

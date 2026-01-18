@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AWS vs GCP</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#compute">Compute</a>
+      <a href="#containers">Docker, Kubernets</a>
+      <a href="#im">Identity Management</a>
+      <a href="#lb">Load Balancer</a>
+      <a href="#ml">Machine Learning</a>
+      <a href="#net">Networking</a>
+      <a href="#storage">Storage</a>
+      <ul>
+        <li>Object</li>
+        <li>Analytics</li>
+        <li>SQL</li>
+        <li>noSQL</li>
+      </ul>
+      <a href="#spark">Spark & Hadoop</a>
+      <a href="#vm">Virtual Machines</a>
+      <a href="#wa">Web Applications</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h3 id="compute">Compute Function</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>Lambda Function</td>
+          <td>Cloud Function</td>
+          <td>Block storage for VMs</td>
+        </tr>
+      </table>
+
+      <h3 id="docker">Docker, Kubernets</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>ECR(Elastic Container Registry)</td>
+          <td>Artifact Registry</td>
+          <td>Docker image storage, retrieval, management</td>
+        </tr>
+        <tr>
+          <td>EKS(Elastic Kubernetes Service)</td>
+          <td>Kubernetes Engine</td>
+          <td>
+            kubernetes service for deploying, scaling, managing containerized
+            services
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="im">Identity Management</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>IAM</td>
+          <td>IAM</td>
+          <td></td>
+        </tr>
+      </table>
+
+      <h3 id="lb">Load Balancer</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>ELB(Elastic Load Balancer)</td>
+          <td>Cloud Load Balancing</td>
+          <td>Traffic distribution across instances</td>
+        </tr>
+      </table>
+
+      <h3 id="ml">Machine Learning</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>
+            AWS SageMaker: For Orchestrating ML workflows ie creating CI/CD
+            service for machine learning. It allows you to build, deploy, and
+            scale ML workflows directly within SageMaker
+          </td>
+          <td>Vertex AI(Cloud ML Engine): same</td>
+          <td>Build, deploy, and manage machine learning models</td>
+        </tr>
+        <tr>
+          <td>AWS Lex</td>
+          <td>Dialogflow</td>
+          <td>
+            cloud-based Conversational AI for build chatbots and virtual agents
+          </td>
+        </tr>
+        <tr>
+          <td>Pre-trained AI/ML APIs</td>
+          <td>Pre-trained AI/ML APIs</td>
+          <td>cloud speech, cloud vision, natural language, translation</td>
+        </tr>
+      </table>
+
+      <h3 id="net">Networking</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>VPC</td>
+          <td>VPC</td>
+          <td>Virtual private cloud networking</td>
+        </tr>
+      </table>
+
+      <h3 id="storage">Storage</h3>
+      <h4 id="object">Object</h4>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>EBS(Elastic Block Storage)</td>
+          <td>Persistent Disk</td>
+          <td>Block storage for VMs</td>
+        </tr>
+        <tr>
+          <td>S3(Simple Storage Service)</td>
+          <td>Cloud Storage</td>
+          <td>Object Storage</td>
+        </tr>
+      </table>
+
+      <h4 id="analytics">Analytics</h4>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>Redshift</td>
+          <td>Big Query</td>
+          <td>
+            data warehouse for analyzing massive datasets(Peta byte scale)
+          </td>
+        </tr>
+      </table>
+
+      <h4>SQL DB</h4>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>Aurora, RDS (no autoscale)</td>
+          <td>GCS (Google Cloud Spanner)</td>
+          <td>distributed, strongly consistent relational database</td>
+        </tr>
+      </table>
+
+      <h4>NoSQL DB</h4>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>DynamoDB (autoscale)</td>
+          <td>Cloud Firestore</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>DynamoDB (autoscale)</td>
+          <td>Google Cloud Bigtable</td>
+          <td>analytical and operational workloads</td>
+        </tr>
+      </table>
+
+      <h3 id="vm">Virtual Machines</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>EC2</td>
+          <td>Compute Engine</td>
+          <td>Virtual machines for running apps</td>
+        </tr>
+      </table>
+
+      <h3 id="spark">Spark & Hadoop</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>EMR (Elastic MapReduce)</td>
+          <td>Dataproc</td>
+          <td>
+            For managing Spark and Hadoop service. Hadoop, Spark are big data
+            tools for running batch processing jobs
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="wa">Web Applications</h3>
+      <table>
+        <tr>
+          <th>AWS</th>
+          <th>GCP</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td>EBS(Elastic Bean stak)</td>
+          <td>App Engine</td>
+          <td>Deploying Web Applications</td>
+        </tr>
+      </table>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

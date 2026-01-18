@@ -41,6 +41,7 @@
         <li><a href="#dirtyread">Dirty Read</a></li>
         <li><a href="#readskew">Read Skew</a></li>
         <li><a href="#dirtywrite">Dirty Write</a></li>
+        <li><a href="#writeskew">Write Skew</a></li>
       </ul>
     </aside>
 
@@ -127,7 +128,7 @@
           </td>
         </tr>
         <tr>
-          <td id="readskew">Non repeatable read / Read Skew</td>
+          <td id="readskew">Read Skew / Non repeatable read</td>
           <td>
             Say Alice has $1,000 of savings at a bank, split across two accounts
             with $500 each. Now a transaction transfers $100 from one of her
@@ -155,6 +156,53 @@
             <b>To prevent dirty write?</b> Take lock over row then write a
             transaction, if transaction fails revert the change and then release
             the lock
+          </td>
+        </tr>
+        <tr>
+          <td id="writeskew">Write Skew / Phantom</td>
+          <td>
+            Race condition caused when 2 transactions update different rows in
+            same table after reading common data from table<br />
+            Example:<br />
+            &ensp; There is a hospital where atleast 1 doctor is required to be
+            on shift(always) in hospital.<br />
+            &ensp; Doctors can giveup their shifts if they are Sick, provided
+            atleast 1 of their collegue stays in hospital.<br />
+            &ensp; Alice & Bob are 2 doctors(on particular shift) feeling unwell
+            and decide to request leave.<br />
+            &ensp; Both click "Apply leave" button at same time.
+            <pre><code class="language-css">
+Table doctors
+name    on_call
+Alice   true
+Bob     true
+Carol   false
+
+    Alice                 doctors
+  select * from doctors
+  where on_call = true                Bob
+                &lt;---------         select * from doctors
+                            --------> where on_call = true
+   if(on_call>2)
+   update doctors
+   set on_call=false
+   where name=Alice --txn1-->
+                                    if(on_call>2)
+                        commit txn1   update doctors
+                                      set on_call=false
+                           &lt-txn2--  where name=Alice
+                        commit txn2
+Table doctors
+name    on_call
+Alice   false
+Bob     false
+Carol   false
+            </code></pre>
+            Lock cannot solve the issue, Since both transactions are updating
+            DIFFERENT ROWS in DB.<br />
+            <b>Solution:</b>
+            - if both transactions should have run one after other, txn2 will
+            get (on_call&lt;2) and write would have been prevented.
           </td>
         </tr>
       </table>

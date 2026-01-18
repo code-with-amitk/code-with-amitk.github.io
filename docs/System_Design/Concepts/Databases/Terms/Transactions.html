@@ -37,9 +37,13 @@
       <h2 id="what">What is Transaction</h2>
       <dl>
         A transaction is a way for an application to group several reads and
-        writes together into a logical unit. Conceptually, all the reads and
-        writes in a transaction are executed as one operation: either the entire
-        transaction succeeds (commit) or it fails (abort, rollback).<br />
+        writes together into a logical unit.<br />
+        Application sends data packet to DbMgr. DB Manager will not write every
+        packet to database but it groups several reads/writes together into a
+        logical unit called transaction.<br />
+        Conceptually, all the reads and writes in a transaction are executed as
+        one operation: either the entire transaction succeeds (commit) or it
+        fails (abort, rollback).<br />
         If it fails, the application can safely retry.
         <pre><code class="language-css">
                                             |----|
@@ -47,10 +51,11 @@ Application ---data pkt----> |DB Manager|   | DB |
                                             |----|
       </code></pre>
         <b>Why Transaction is needed?</b><br />
-        1. Atomicity: if Application is writing 20KB json document to DB. After
-        10KB node crashes, User will see partially updated values which is
-        Wrong. if write is done as part of transaction into Atomic DB, partial
-        write is discarded and db moves to prev state<br />
+        1. <a href="/System_Design/Concepts/Databases/">Atomicity</a>: if
+        Application is writing 20KB json document to DB. After 10KB node
+        crashes, User will see partially updated values which is Wrong. if write
+        is done as part of transaction into Atomic DB, partial write is
+        discarded and db moves to prev state<br />
         2. Safety Gurantees
       </dl>
     </article>

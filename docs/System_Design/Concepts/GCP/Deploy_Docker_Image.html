@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>VPC</title>
+    <title>GCP</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -29,19 +29,33 @@
       </ul>
     </nav>
     <aside class="sidebar">
-      <a href="#what">What is VPC</a>
+      <a href="#deploy">Deploy on GCP</a>
     </aside>
 
     <main style="margin-left: 200px">
-      <h2 id="what">VPC (Virtual Pvt Cloud)</h2>
+      <h2 id="deploy">Deploy Docker Image on GCP</h2>
+      <h3>1. Create a docker image</h3>
+
+      <h3>2. Create Compute Engine instance on GCP</h3>
       <dl>
-        This is a private, isolated virtual network environment where you can
-        launch AWS resources(eg EC2) into subnets that you define<br />
-        It allows you to provision a logically isolated section of the AWS
-        Cloud<br />
-        Within your VPC, you can define your own IP address range subnets, route
-        tables, and network gateways as you see fit
+        <pre><code>
+https://console.cloud.google.com/ > VM instances in the left sidebar >
+Create Instance > Name(ubuntu) > region/zone(us-central1-a) >
+machine type (e2-medium. 1 core 4GB RAM) > 
+Compute Optimized(C2) >
+Memory Optimized(M2) >
+Storage Optimized(Z3) >
+GPU (Nvidia T4) (Series N1)
+VM Provisioning(Standard) > Create
+        </code></pre>
       </dl>
+
+      <h3>3. Instance on Dashboard</h3>
+      <img
+        src="/images/GCP/dashboard.jpg"
+        alt="trie"
+        style="width: 900px; height: 500px"
+      />
     </main>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
