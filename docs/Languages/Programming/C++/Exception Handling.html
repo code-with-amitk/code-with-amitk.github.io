@@ -1,65 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Exception Handling</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What is Exception</a>
-        <a href="#ttc">try, throw, catch</a>
-        <a href="#ex">Examples</a>
-        <ul>
-            <li><a href="#divide">Divide by 0</a></li>
-            <li><a href="#numeric_limits">numeric_limits</a></li>
-            <li><a href="#constructor">Exception in constructor</a></li>
-        </ul>
-        <a href="#class">Exception class</a>
-        <ul>
-            <li><a href="#empty">Empty Exception class</a></li>
-            <li><a href="#whatmethod">Exception class having what() method</a></li>
-            <li><a href="#null">NULLException class</a></li>
-        </ul>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is Exception</a>
+      <a href="#ttc">try, throw, catch</a>
+      <a href="#ex">Examples</a>
+      <ul>
+        <li><a href="#divide">Divide by 0</a></li>
+        <li><a href="#numeric_limits">numeric_limits</a></li>
+        <li><a href="#constructor">Exception in constructor</a></li>
+      </ul>
+      <a href="#class">Exception class</a>
+      <ul>
+        <li><a href="#empty">Empty Exception class</a></li>
+        <li><a href="#whatmethod">Exception class having what() method</a></li>
+        <li><a href="#null">NULLException class</a></li>
+      </ul>
     </aside>
 
-    <article style="margin-left:200px;">
-    <h2 id="what">What is Exception</h2>
-    <dl>
-        Exception is the problem state into which program enters that's not normal. 
-        Now exception floats into callstack until handler is found for it.<br>
-        if Handler is found (ie appropriate catch then ok) else <b>std::terminate</b> is invoked and the program exits.<br>
-        <u>Examples of exception:</u><br>
-        - Divide by Zero.<br>
-        - Accessing out of bound array index. //Segmentation Fault and abort.<br>
-        But we can place the same code inside try, catch and do something so that program does no coredumps.
-    </dl>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Exception</h2>
+      <dl>
+        Exception is the problem state into which program enters that's not
+        normal. Now exception floats into callstack until handler is found for
+        it.<br />
+        if Handler is found (ie appropriate catch then ok) else
+        <b>std::terminate</b> is invoked and the program exits.<br />
+        <u>Examples of exception:</u><br />
+        - Divide by Zero.<br />
+        - Accessing out of bound array index. //Segmentation Fault and abort.<br />
+        But we can place the same code inside try, catch and do something so
+        that program does no coredumps.
+      </dl>
 
-    <h2 id="ttc">try, throw, catch</h2>
-    <dl>
-        In case of problem instead of simply dying(std::terminate, coredump), transfer control from one part of a program to another. This is build on 3 keywords:<br>
-        1. try block: This need to be protected<br>
-        2. throw keyword: Instead of dying, throw exception that should be handled in some other part of code<br>
-        3. catch: This catches the thrown exception. This is piece of code that executes on thrown Exception.
-    </dl>
-    <h2 id="ex">Examples</h2>
-    <h3 id="divide">Divide by 0</h3>
-    <pre><code class="language-css">
+      <h2 id="ttc">try, throw, catch</h2>
+      <dl>
+        In case of problem instead of simply dying(std::terminate, coredump),
+        transfer control from one part of a program to another. This is build on
+        3 keywords:<br />
+        1. try block: This need to be protected<br />
+        2. throw keyword: Instead of dying, throw exception that should be
+        handled in some other part of code<br />
+        3. catch: This catches the thrown exception. This is piece of code that
+        executes on thrown Exception.
+      </dl>
+      <h2 id="ex">Examples</h2>
+      <h3 id="divide">Divide by 0</h3>
+      <pre><code class="language-css">
 int main() {
     int a = 0;
     try {                             //Protected Code
@@ -74,8 +84,8 @@ int main() {
     }
 }
     </code></pre>
-    <h3 id="numeric_limits">numeric_limits</h3>
-        <pre><code class="language-css">
+      <h3 id="numeric_limits">numeric_limits</h3>
+      <pre><code class="language-css">
 void MyFunc(int c) {
     if (c > numeric_limits&lt;char>::max()) {
         throw invalid_argument("MyFunc argument too large.");
@@ -94,8 +104,8 @@ int main() {
 }
         </code></pre>
 
-        <h3 id="constructor">Exception in Constructor</h3>
-        <pre><code class="language-css">
+      <h3 id="constructor">Exception in Constructor</h3>
+      <pre><code class="language-css">
 class base {
     char* ptr;
 public:
@@ -122,22 +132,22 @@ int main() {
 }
         </code></pre>
 
-        <h2 id="class">Exception class</h2>
-        <dl>
-        Exception class is used to create our own exception types.
-        </dl>
-        <dl>
-        <b>Why own exception types are needed?</b><br>
-        1. We want to display custom message to user at time of exception.<br>
-        2. Perform some logging on Log server. Block security sensitive information from being dumped. An exception might contain sensitive information, we donot want to show this to user.
-        </dl>
+      <h2 id="class">Exception class</h2>
+      <dl>Exception class is used to create our own exception types.</dl>
+      <dl>
+        <b>Why own exception types are needed?</b><br />
+        1. We want to display custom message to user at time of exception.<br />
+        2. Perform some logging on Log server. Block security sensitive
+        information from being dumped. An exception might contain sensitive
+        information, we donot want to show this to user.
+      </dl>
 
-        <h3 id="empty">Empty Exception class</h3>
-        <dl>
-            a. In try block we throw OBJECT of class type<br>
-            b. catch, catches the object and displays it
-        </dl>
-        <pre><code class="language-css">
+      <h3 id="empty">Empty Exception class</h3>
+      <dl>
+        a. In try block we throw OBJECT of class type<br />
+        b. catch, catches the object and displays it
+      </dl>
+      <pre><code class="language-css">
 class demo {};
 int main() {
     try {
@@ -148,8 +158,8 @@ int main() {
     }
 }
         </code></pre>
-        <h3 id="whatmethod">Exception class having what() method</h3>
-        <pre><code class="language-css">
+      <h3 id="whatmethod">Exception class having what() method</h3>
+      <pre><code class="language-css">
 class BadLength {
     int a;
 public:
@@ -171,13 +181,14 @@ int main() {
     }
 }
         </code></pre>
-        <h3 id="null">NULLException class</h3>
-        <dl>
-            1. Create a class called NULLException. This class will: Log message to Log server, print custom information with Exception message<br>
-            2. Throw the custom class.<br>
-            3. Catch the custom class.
-        </dl>
-        <pre><code class="language-css">
+      <h3 id="null">NULLException class</h3>
+      <dl>
+        1. Create a class called NULLException. This class will: Log message to
+        Log server, print custom information with Exception message<br />
+        2. Throw the custom class.<br />
+        3. Catch the custom class.
+      </dl>
+      <pre><code class="language-css">
 ////////////Example//////////////////
 class NULLException { ... }
 main ()
@@ -257,5 +268,5 @@ Amit Null Exception                           //3
     </article>
 
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>

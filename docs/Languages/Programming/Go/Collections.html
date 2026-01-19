@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>collections</title>
@@ -24,58 +24,85 @@
     </nav>
 
     <aside class="sidebar">
-      <!--See .sidebar in styles.css-->
-      <a href="#arrays">Arrays</a>
-      <a href="#slices">Slice (vector)</a>
-      <a href="#channels">Channels</a>
-      <a href="#queue">Queue(using slice)</a>
-      <a href="#stack">Stack(using slice)</a>
-      <a href="#struct">struct = class</a>
-      <a href="#linkedlist">Linked List</a>
+      <dl>Built-in</dl>
+      <ul>
+        <a href="#arrays">1. Arrays</a>
+        <a href="#slices">2. Slice (vector)</a>
+        <a href="#channels">3. Channels</a>
+        <a href="#maps">4. Maps</a>
+      </ul>
+      <br />
+      <dl>Standard Library Provided</dl>
+      <ul>
+        <a href="#queue">1. Queue(using slice)</a>
+        <a href="#stack">2. Stack(using slice)</a>
+        <a href="#struct">3. struct = class</a>
+        <a href="#linkedlist">4. Linked List</a>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2>Collections in Go</h2>
-      <dt>
-        go library provides built-in collection types to handle different data
-        structures.
-      </dt>
-
-      <table>
-        <tr>
-          <th>Collection</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td id="arrays">Array [n]T</td>
-          <td>
-            fixed-size collection of elements of the same type. Array cannot be
-            resized
-            <pre><code class="language-css">
+      <h2>Built in Collections in Go</h2>
+      <dl>
+        Built in means those collections which are part of the go language
+        syntax.
+      </dl>
+      <h3 id="arrays">1. Array [n]T</h3>
+      <dl>
+        fixed-size collection of elements of the same type. Array cannot be
+        resized
+        <pre><code class="language-css">
 var a [10]int
                 </code></pre>
-          </td>
-        </tr>
-        <tr>
-          <td id="slices">
-            <b
-              >Slices [] (Dynamic Array) = <br />C++(vector&lt;int>) =
-              Rust(vec&lt;i32>)</b
-            >
-          </td>
-          <td>
-            <b>What is slice?</b> Slice is part of an array.Changing the
-            elements of a slice modifies underlying array.<br />
-            <b>Slice has 3 components?</b> <br />
-            &ensp; 1. Pointer(to underlying array)<br />
-            &ensp; 2. Length(number of elements in slice). len(slice)<br />
-            &ensp; 3. Capacity(maximum number of elements it can hold).
-            cap(slice): length of undelying array - 1<br />
-            <b>nil slice:</b> slice which does not point to any array(at
-            present), but can in future.<br />
-            <b>Creating slice using make():</b> Preallocate memory for slice and
-            assign later
-            <pre><code class="language-css">
+      </dl>
+
+      <h3 id="slices">
+        2. Slices [] (Dynamic Array) = C++(vector&lt;int>) = Rust(vec&lt;i32>)
+      </h3>
+      <dl>
+        Slice is part of an array.Changing the elements of a slice modifies
+        underlying array.<br />
+        <b>Slice has 3 components?</b> <br />
+        &ensp; 1. Pointer(to underlying array)<br />
+        &ensp; 2. Length(number of elements in slice). len(slice)<br />
+        &ensp; 3. Capacity(maximum number of elements it can hold). cap(slice):
+        length of undelying array - 1<br />
+        <b>nil slice:</b> slice which does not point to any array(at present),
+        but can in future.<br />
+        <b>Creating slice using make():</b> Preallocate memory for slice and
+        assign later
+        <h4>Slice Examples</h4>
+        <table>
+          <tr>
+            <td>
+              <b>Create slice and append()</b><br />
+              - append() will append the value to slice<br />
+              - append only modifies the original underlying array if the
+              slice's len is less than its cap. If len == cap, a new array is
+              allocated.
+              <pre><code class="language-css">
+package main
+import "fmt"
+func fun(b *[]int) {
+  // Trying adding beyond capacity
+  *b = append(*b, 5)        //2,3,4,5
+}
+
+func main() {
+    a := [4]int{1, 2, 3, 4}
+    fmt.Println("Before a:", a)   //1,2,3,4
+    b := a[1:4]                   //2,3,4
+    fun(&b)
+    fmt.Println("After a:", a)    //1,2,3,4. a remains same
+    fmt.Println("b:", b)          //2,3,4,5
+}
+
+// Solution: Take array of size [5]
+            </code></pre>
+            </td>
+          </tr>
+        </table>
+        <pre><code class="language-css">
 func main() {
   names := [4]string{"John", "Paul", "George", "Ringo"}
 
@@ -116,18 +143,20 @@ func main() {
   m := make(map[int]int)
 }
             </code></pre>
-          </td>
-        </tr>
-      </table>
+      </dl>
 
-      <h4 id="channels">Channels</h4>
-      <dt>
+      <h3 id="channels">3. Channels</h3>
+      <dl>
         Communication and synchronization between goroutines=Tasks in Rust
         (concurrently executing functions). They provide a way to send and
         receive data safely between goroutines
-      </dt>
+      </dl>
 
-      <h4 id="queue">Queue(Implemented using slice)</h4>
+      <h3 id="maps">4. Maps</h3>
+
+      <h2 id="standardlib">Standard Library Provided Collections</h2>
+
+      <h3 id="queue">1. Queue(Implemented using slice)</h3>
       <pre><code class="language-css">
 package main
 import "fmt"
@@ -154,14 +183,14 @@ func (this *MyStack) Empty() bool {	//Size()
 }
         </code></pre>
 
-      <h4 id="stack">
+      <h3 id="stack">
         <a
           href="/Languages/Programming/C++/STL/Containers/Container_Adoptors/stack.html"
-          >Stack using slice</a
+          >2. Stack using slice</a
         >
-      </h4>
+      </h3>
 
-      <h4 id="struct">(struct = class)</h4>
+      <h3 id="struct">3. (struct = class)</h3>
       <dl>
         Class is defined as struct type. Example: Person is defined of type
         struct.<br />
@@ -194,12 +223,12 @@ func main() {
 }
         </code></pre>
 
-      <h4 id="linkedlist">
+      <h3 id="linkedlist">
         <a
           href="/DS_Questions/Data_Structures/Linked_List/Compared_c++_rust_python_go.html"
-          >Linked List</a
+          >4. Linked List</a
         >
-      </h4>
+      </h3>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>
