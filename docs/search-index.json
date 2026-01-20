@@ -427,7 +427,7 @@
   {
     "title": "Database Transactions",
     "url": "/System_Design/Concepts/Databases/Terms/Transactions.html",
-    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction What is Transaction A transaction is a way for an application to group several r..."
+    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction Terms Dirty Read Read Skew Dirty Write Write Skew 2 Phase Commit What is Transac..."
   },
   {
     "title": "Databases",
@@ -872,7 +872,7 @@
   {
     "title": "Isolation",
     "url": "/System_Design/Concepts/Databases/Terms/Isolation.html",
-    "excerpt": "Isolation Home Our team Projects Contact Back Isolation Isolation Levels 1. Read Committed 2. Snapshot Isolation Terms Dirty Read Read Skew Dirty Writ..."
+    "excerpt": "Isolation Home Our team Projects Contact Back Isolation Isolation Levels 1. Read Committed 2. Snapshot Isolation What is Isolation In terms of DB, Iso..."
   },
   {
     "title": "JavaScript",
