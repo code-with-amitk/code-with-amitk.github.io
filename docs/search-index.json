@@ -182,7 +182,7 @@
   {
     "title": "C++",
     "url": "/Languages/Programming/C++/",
-    "excerpt": "C++ Home Our team Projects Contact 6 Implicit Functions &ensp; Constructor (1. Default ctr, 2. copy, 3. move) &ensp; Assignment Operator(4. Copy, 5. m..."
+    "excerpt": "C++ Home Our team Projects Contact Back 6 Implicit Functions &ensp; Constructor (1. Default ctr, 2. copy, 3. move) &ensp; Assignment Operator(4. Copy,..."
   },
   {
     "title": "C++ 11,4,17,20,23",
@@ -277,7 +277,7 @@
   {
     "title": "collections",
     "url": "/Languages/Programming/Go/Collections.html",
-    "excerpt": "collections Home Our team Projects Contact Back Arrays Slice (vector) Channels Queue(using slice) Stack(using slice) struct = class Linked List Collec..."
+    "excerpt": "collections Home Our team Projects Contact Back Built-in 1. Arrays 2. Slice (vector) 3. Channels 4. Maps Standard Library Provided 1. Queue(using slic..."
   },
   {
     "title": "Collections",
@@ -537,7 +537,7 @@
   {
     "title": "Exception Handling",
     "url": "/Languages/Programming/C++/Exception Handling.html",
-    "excerpt": "Exception Handling Home Our team Projects Contact What is Exception try, throw, catch Examples Divide by 0 numeric_limits Exception in constructor Exc..."
+    "excerpt": "Exception Handling Home Our team Projects Contact Back What is Exception try, throw, catch Examples Divide by 0 numeric_limits Exception in constructo..."
   },
   {
     "title": "Facebook News Feed",
@@ -657,7 +657,7 @@
   {
     "title": "Go",
     "url": "/Languages/Programming/Go/",
-    "excerpt": "Go Home Our team Projects Contact Back Code Examples Hello World GPU, CPU % Usage using Daemon Command line Arguments Collections Arrays, Slices = vec..."
+    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World, GPU, CPU % Usage using Daemon Command line Arguments Collections Arrays, Slices = v..."
   },
   {
     "title": "Go Code Examples",
@@ -1397,7 +1397,7 @@
   {
     "title": "Programming",
     "url": "/Languages/Programming/",
-    "excerpt": "Programming Home Our team Projects Contact Back C C++ Go Kotlin Rust"
+    "excerpt": "Programming Home Our team Projects Contact Back C C++ Go Kotlin Rust Rust &ensp; Rust vs CPP Go &ensp; Go vs CPP"
   },
   {
     "title": "Progression",
@@ -1617,12 +1617,12 @@
   {
     "title": "Rust",
     "url": "/Languages/Programming/Rust/Why_rust_over_cpp.html",
-    "excerpt": "Rust Home Our team Projects Contact Rust No Crash 1. Ownership 2. References = Borrowing 3. No Manual Memory management Faster wrt C++ 4. Aggressive C..."
+    "excerpt": "Rust Home Our team Projects Contact Back Rust No Crash 1. Ownership 2. References = Borrowing 3. No Manual Memory management Faster wrt C++ 4. Aggress..."
   },
   {
     "title": "Rust",
     "url": "/Languages/Programming/Rust/",
-    "excerpt": "Rust Home Our team Projects Contact Why Rust Over C++(Ownership, Borrowing) Automated Tests Cargo Collections Database Interaction Diesel ORM enum Fra..."
+    "excerpt": "Rust Home Our team Projects Contact Back Why Rust Over C++(Ownership, Borrowing) Automated Tests Cargo Collections Database Interaction Diesel ORM enu..."
   },
   {
     "title": "Rust enum",
@@ -2012,6 +2012,6 @@
   {
     "title": "Why Go over other Languages",
     "url": "/Languages/Programming/Go/Why_go_over_other_lang.html",
-    "excerpt": "Why Go over other Languages Home Our team Projects Contact Why Go Over Other Languages Go vs Other Languages Memory Go CPP Memory Management Go has Au..."
+    "excerpt": "Why Go over other Languages Home Our team Projects Contact Back Why Go vs CPP Go vs Other Languages CPP Go CPP Memory Management Go has Automatic Garb..."
   }
 ]
