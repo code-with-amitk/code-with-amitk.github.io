@@ -37,7 +37,10 @@
         <a href="#readskew">Read Skew</a>
         <a href="#dirtywrite">Dirty Write</a>
         <a href="#writeskew">Write Skew</a>
-        <a href="#2pc">2 Phase Commit</a>
+      </ul>
+      <a href="#dt">Distributed Transactions</a>
+      <ul>
+        <li><a href="#2pc">2 Phase Commit</a></li>
       </ul>
     </aside>
 
@@ -183,44 +186,59 @@ Carol   false
         </tr>
       </table>
 
-      <h3 id="2pc">2 Phase Commit / 2PC</h3>
+      <h2 id="dt">Distributed Transaction</h2>
       <dl>
         Example(Customer ordering Pizza)<br />
         &ensp; To create an order different microservices need to enter related
         data into THEIR respective databases.<br />
-        &ensp; txn1a,txn1b,txn1c are all part of 1 transaction only. if any of
-        transaction(txn1a or txn1b or txn1c) fail other transaction should be
-        reverted.
-
+        &ensp; txn1a,txn1b,txn1c are all part of 1 transaction only. All
+        transactions should be committed together ie part of 1 transaction, if
+        any of transaction(txn1a or txn1b or txn1c) fail other transaction
+        should be reverted.<br />
+        Committing different transactions into different DBs and all
+        transactions are part of 1 transaction is called
+        <b>DISTRIBUTED TRANSACTION</b>
         <pre><code class="language-css">
 Customer
    - Pizza 240/-> createOrder()
                     |-
-                    |-customer-service --read cust id--> DB1
+                    |-customer-service --read cust id------>         DB1
                                     &lt;-----------------
-                    |-Order-service2 --trxn1a(Write order)--> DB2
-                    |-Kitchen-service3 --trxn1b(Enter item)--> DB3
+                    |-Order-service2 --trxn1a(Write order)----->     DB2
+                    |-Kitchen-service3 --trxn1b(Enter item)--->      DB3
                     |-Accounting-service4 --trxn1c(Create Record)--> DB4
         </code></pre>
+        <b>Features of Distributed Transaction</b><br />
+        1. Either all nodes commit or all nodes abort.<br />
+        2. A transaction commit is IRREVOCABLE: ie once node decides to commit,
+        then there is no turning back. Reason: Once data has been committed, it
+        becomes visible to other transactions, and thus other clients may start
+        relying on that data. Suppose 1 microservice dies & fails to commit,
+        then this service should commit again once it comes back, ie never go
+        back.<br /><br />
+
+        <b>Problems with Distributed Transaction</b><br />
+        1. Not supported by modern technologies Eg: NoSQL DB does not support.
+        Apache Kafka, Cassandra, RabbitMQ does not support.<br />
+        2. Synchronous IPC: DT is form of synchronous IPC, which reduces
+        availability(ie if any DB dies). And In today's world Architect's prefer
+        system should be available (even not consistent) out of CAP Theorem
       </dl>
-      <h4>What is 2PC?</h4>
+
+      <h3 id="2pc">
+        2 Phase Commit / 2PC (Way to acheive Distributed Transaction)
+      </h3>
       <dl>
-        - Way of Committing distributed Transaction<br />
-        - In distributed transaction, ensure that either all nodes commit or all
-        nodes abort.<br />
-        - A transaction commit must be IRREVOCABLE: ie once node decides to
-        commit, then there is no turning back. Reason: Once data has been
-        committed, it becomes visible to other transactions, and thus other
-        clients may start relying on that data. Suppose 1 microservice dies &
-        fails to commit, then this service should commit again once it comes
-        back, ie never go back.
+        2 Phase Commit is method to achieve
+        <a href="#dt">Distributed Transaction</a> or way of committing
+        distributed transaction.
       </dl>
 
       <h4>XA Transaction / Open XA (eXtended Architecture)</h4>
       <dl>
-        This is standard for implementing two phase commit, supported by many
-        traditional relational databases (including PostgreSQL, MySQL, DB2, SQL
-        Server, and Oracle)<br />
+        This is standard for implementing <a href="#2pc">two phase commit</a>,
+        supported by many traditional relational databases (including
+        PostgreSQL, MySQL, DB2, SQL Server, and Oracle)<br />
         It talks about interfacing with a transaction coordinator(Broker) using
         C APIs.<br />
         XA asks microservice should talk to DB using network driver or client
@@ -231,7 +249,7 @@ Customer
       <dl>
         <b>Coordinator(Zookeeper)/Transaction Manager</b> This is a new
         component comes in that does not normally appear in single-node
-        transactions. Eg: Narayana, JOTM, BTM, or MSDTC<br />
+        transactions. Eg: Narayana, JOTM, BTM, or MSDTC
       </dl>
       <table>
         <tr>
