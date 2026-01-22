@@ -40,7 +40,8 @@
       </ul>
       <a href="#dt">Distributed Transactions</a>
       <ul>
-        <li><a href="#2pc">2 Phase Commit</a></li>
+        <li><a href="#features">Features of DT</a></li>
+        <li><a href="#problems">Problems with DT</a></li>
       </ul>
     </aside>
 
@@ -195,8 +196,9 @@ Carol   false
         transactions should be committed together ie part of 1 transaction, if
         any of transaction(txn1a or txn1b or txn1c) fail other transaction
         should be reverted.<br />
-        Committing different transactions into different DBs and all
-        transactions are part of 1 transaction is called
+        Committing different transactions(txn1a, txn1b, txn1c) into different
+        DBs and all transactions(txn1a + txn1b + txn1c = t1) are part of 1
+        transaction is called
         <b>DISTRIBUTED TRANSACTION</b>
         <pre><code class="language-css">
 Customer
@@ -208,31 +210,12 @@ Customer
                     |-Kitchen-service3 --trxn1b(Enter item)--->      DB3
                     |-Accounting-service4 --trxn1c(Create Record)--> DB4
         </code></pre>
-        <b>Features of Distributed Transaction</b><br />
-        1. Either all nodes commit or all nodes abort.<br />
-        2. A transaction commit is IRREVOCABLE: ie once node decides to commit,
-        then there is no turning back. Reason: Once data has been committed, it
-        becomes visible to other transactions, and thus other clients may start
-        relying on that data. Suppose 1 microservice dies & fails to commit,
-        then this service should commit again once it comes back, ie never go
-        back.<br /><br />
-
-        <b>Problems with Distributed Transaction</b><br />
-        1. Not supported by modern technologies Eg: NoSQL DB does not support.
-        Apache Kafka, Cassandra, RabbitMQ does not support.<br />
-        2. Synchronous IPC: DT is form of synchronous IPC, which reduces
-        availability(ie if any DB dies). And In today's world Architect's prefer
-        system should be available (even not consistent) out of CAP Theorem
       </dl>
 
       <h3 id="2pc">
-        2 Phase Commit / 2PC (Way to acheive Distributed Transaction)
+        2 Phase Commit / 2PC (Way to acheive
+        <a href="#dt">Distributed Transaction</a>)
       </h3>
-      <dl>
-        2 Phase Commit is method to achieve
-        <a href="#dt">Distributed Transaction</a> or way of committing
-        distributed transaction.
-      </dl>
 
       <h4>XA Transaction / Open XA (eXtended Architecture)</h4>
       <dl>
@@ -240,77 +223,109 @@ Customer
         supported by many traditional relational databases (including
         PostgreSQL, MySQL, DB2, SQL Server, and Oracle)<br />
         It talks about interfacing with a transaction coordinator(Broker) using
-        C APIs.<br />
-        XA asks microservice should talk to DB using network driver or client
+        C APIs. Microservice should talk to DB using network driver or client
         library.
       </dl>
 
-      <h4>Working of 2PC (A Definite Promise)</h4>
+      <h4 id="working">Working of 2PC (A Definite Promise)</h4>
       <dl>
-        <b>Coordinator(Zookeeper)/Transaction Manager</b> This is a new
-        component comes in that does not normally appear in single-node
-        transactions. Eg: Narayana, JOTM, BTM, or MSDTC
+        <b>Coordinator</b>
+        - Can be external(Zookeeper) or internal(any microservice)
       </dl>
       <table>
         <tr>
           <td>
             <pre><code class="language-css">
-                                                        &lt;---------- Distributed DB ------------------>
-service1    service2      service3        Coordinator     DB1(for service1)     DB2             DB3
-    |----------|-------------|----connect--->
-    &lt;-------|-------------|----trxnid=12-
+                                                                |-------------- Distributed DB -------------|
+                                                                |                                           |
+              orderSvc(Coordinator)            KitchenSvc     KitchenDB           TransactionSvc       TransactionDB
+  --Pizza 249----->
+                  *********** PHASE-1(Prepare) of 2PC Start ************
+                  ------------Prepare(trxnid=1)-->
+                                                --Check ingredients->
+                                                &lt;----available----
+                                                ---Lock DB--------->
+                                                /// Thread Waiting ///
+                  &lt;-----------Ready--------------
 
-                                ************ PHASE-1 of 2PC Start ************
-                                              --Prepare(trxnid=12)->
-                                              &lt;-------Yes-------
+                  -------------------------------------Prepare(trxnid=1)------------------>
+                                                                                        --Validate payment method->
+                                                                                        &lt;----available----
+                                                                                        ---Lock DB--------->
+                                                                                        /// Thread Waiting ///
+                  &lt;-----------------------------------------Ready-------------------------
+                  *********** PHASE-1 of 2PC End ************
 
-                                              --------------Prepare(trxnid=12)-->
-                                              &lt;---------------No--------------
+                  *********** PHASE-2(Commit) of 2PC Start ************
+                  ------------Commit(trxnid=1)-->
+                                                --Write into DB->
+                                                // Lock Released
+                  &lt;-----------Done--------------
 
-                                              ----------------Prepare(trxnid=12)---------------->
-                                              &lt;------------------------Yes---------------------
-                                ************ PHASE-1 of 2PC End ************
-
-                                ************ PHASE-2 of 2PC Start ************
-                                              ----abort-->
-                                              --------------abort--------------->
-                                              ----------------------abort------------------------->
-                                ************ PHASE-2 of 2PC End ************
+                  -------------------------------------Prepare(trxnid=1)------------------>
+                                                                                        --Write into DB->
+                                                                                        // Lock Released
+                  &lt;-----------------------------------------Done-------------------------
+                  *********** PHASE-2 of 2PC End ************
           </code></pre>
           </td>
           <td>
             <b>Steps</b><br />
-            1. MicroServices sends connect message to coordinator<br />
-            2. Coordinator generates globally unique transactionId and sends to
-            Application. Now-on-wards application will use same id for
+            1. Coordinator generates globally unique transactionId and sends to
+            microservices. Now-on-wards microservices will use same id for
             communication.<br />
-            3. Coordinator sends Prepare message(with transactionId) asking
-            nodes whether they can commit or not?<br />
-            4. When Node recieves prepare, it makes sure that it can commit to
-            Disk at any cost.<br />
-            - Even if Node crashes After sending Yes. Then after recovery it has
-            to commit the transaction. <br />
+            2. Coordinator sends Prepare message(with transactionId) asking
+            microservices whether they can commit or not?<br />
+            3. When microservices recieves prepare, it makes sure that it can
+            commit to DB at any cost.<br />
+            - Even if microservices crashes After sending Yes. Then after
+            recovery it has to commit the transaction. <br />
             - There is no turning Back. <br />
             5. Coordinator recieves response from all nodes. This is called
-            COMMIT POINT<br />
-            6. Coordinator writes its decision to Transaction log. if (all
-            respond yes)<br />
-            7. Phase-2: Sends Message. Nodes Commit else //if any one says no
-            Phase-2: Send Abort Message to all nodes
+            <font color="red">COMMIT POINT</font><br />
+            6. Coordinator writes its decision to Transaction log. so that if
+            any microervice responds with No, whole commit can be moved to prev
+            state.<br />
+            7. Phase-2: Coordinator Send Message to commit. microervice Commit
+            ie write to DB else //if any one says no Phase-2: Send Abort Message
+            to all microervice via coordinator
 
             <br /><br />
-            <u>DOUBT/UNCETAIN STATE:</u><br />
-            - Coordinator sends prepare, Node voted Yes, and Coordinator
+            <u><font color="red">DOUBT/UNCETAIN STATE</font>:</u><br />
+            - Coordinator sends prepare, microervice voted Yes, and Coordinator
             crashes.<br />
-            Now Node is in Doubt state. Node will wait forever for Coordinator
-            to send Phase-2 message(Commit or Abort).<br /><br />
+            Now microervices are in Doubt state. microervices will wait forever
+            for Coordinator to send Phase-2 message(Commit or Abort).<br /><br />
 
-            <u>HEURISTICS DECISIONS:</u><br />
-            Nodes can communicate & decide amongst themseleves once did not hear
-            from Coordinator for particular time.<br />
+            <u><font color="red">HEURISTICS DECISIONS</font>:</u><br />
+            Microervices can communicate & decide amongst themseleves once did
+            not hear from Coordinator for particular time.<br />
           </td>
         </tr>
       </table>
+
+      <h3 id="features">Features of Distributed Transaction</h3>
+      <dl>
+        <b>1. All Commit or All Abort:</b> Either all nodes commit or all nodes
+        abort.<br />
+        <b>2. A transaction commit is IRREVOCABLE:</b> ie once node decides to
+        commit, then there is no turning back. Reason: Once data has been
+        committed, it becomes visible to other transactions, and thus other
+        clients may start relying on that data. Suppose 1 microservice dies &
+        fails to commit, then this service should commit again once it comes
+        back, ie never go back.
+      </dl>
+
+      <h3 id="problems">Problems with Distributed Transaction</h3>
+      <dl>
+        <b>1. Not supported by modern technologies</b> Eg: NoSQL DB does not
+        support. Apache Kafka, Cassandra, RabbitMQ does not support.<br />
+        <b>2. DT is form of Synchronous RPC:</b>
+        Look at <a href="#working">Working on 2PC</a> Kitchen microservice is
+        waiting, holding locks If coordinator crashes → Kitchen blocks
+        indefinitely and even cannot write other transactions<br />
+        &ensp; Solution: Saga Design Pattern
+      </dl>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>

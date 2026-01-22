@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Linux Commands</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Operating System/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#atop">atop</a>
+      <a href="#curl">curl</a>
+      <a href="#df">df</a>
+      <a href="#htop">htop</a>
+      <a href="#lsof">lsof</a>
+      <a href="#proc">proc</a>
+      <a href="#top">top</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="atop">atop</h3>
+      <dl>
+        Commands:<br />
+        Open existing file using `atop -r file_name`<br />
+        &ensp; Press M for memory view, C for CPU view<br />
+        &ensp; s for scheduling activity<br />
+        &ensp; t for next sample taken after 10 min
+      </dl>
+      <pre><code class="language-css">
+
+atop
+MEM | tot 32G | free 860.4M | cache 6.3G    // 6.3G still left to be used
+SWP | tot 1G | free 590M | swcac 16.3M
+
+Press C
+PID       VGROW       RGROW       CPU       CMD
+xx         45.0G      17.8G       30%       npraxy
+
+Press M
+PID       VDATA       VSIZE       RSIZE    VGROW   RGROW     SWAPZ    MEM    CMD
+xx         44.3G      45.0G       17.8G    45.05G  17.8G     92.4M    57%   npraxy
+      </code></pre>
+      <dt>
+        VSIZE(Virtual Size): total amount of virtual memory currently reserved
+        by the process.<br />
+        VDATA: size of private process memory (heap and data sections) that is
+        not shared and is part of the virtual address space<br />
+        SWAPZ: size of the swap space currently used by a process<br />
+        VGROW (Virtual Memory Growth): amount by which a process’s virtual
+        memory size (VSIZE) has increased ("grown") during the monitoring
+        interval. <br />
+        RGROW: Increase ("growth") in the resident memory of process. How much
+        additional RAM process has used since last monitoring time<br />
+        RSIZE (Resident Size):Total resident memory used by a process, Resident
+        memory is the portion of a process's memory that is actually held in
+        physical RAM<br />
+        PSIZE(Physical Size): physical memory size occupied by the process<br />
+        swcac(Swap Cache): Cache which is holding the pages.
+      </dt>
+
+      <h3 id="curl">curl</h3>
+      <table>
+        <tr>
+          <td>
+            Options
+            <pre><code class="language-css">
+-H: Header
+-x: serverIP:Port
+-k: Insecure, ignore server cert errors
+            </code></pre>
+          </td>
+          <td>
+            Send file to server using 10 clients, 50 times
+            <pre><code class="language-css">
+URL="https://dlptest.com/10MB-Test.docx"
+CONCURRENCY=10    #Simultaneous requests
+ITER=10           #How many time entire batch will repeat
+
+for j in $(seq 1 "$ITER"); do
+  echo "Iteration: $j"
+  for i in $(seq 1 "$CONCURRENCY"); do
+    # Send request to server:port
+    # & means run in background without waiting for 1st to finish
+    curl -H "Connection: close" -x serverIp:port "$URL" -k &
+
+  done
+  sleep 10
+done
+wait      # Do not ext script until all processes finish
+echo "Done"
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+      <dl></dl>
+
+      <h3 id="df">df</h3>
+      <pre><code class="language-css">
+# df -h        //Disk Free, Shows local and network file system
+Filesystem   Size     Used    Avail    Use%  Mounted on
+/dev/map/root 11G    3.8G     6.0G     39%    /          // root file system mounted on "/" has only 6.0G available
+devtmpfs     2.0G       0     2.0G      0%    /dev
+tmpfs        2.0G       0     2.0G      0%    /dev/shm
+tmpfs        2.0G    1.6M     2.0G      1%    /run
+tmpfs        2.0G       0     2.0G      0%    /tmp
+      </code></pre>
+      <table>
+        <tr>
+          <th>file system</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>/dev/sdd</td>
+          <td>
+            Real physical block device(Hard Disk). Mounted on root filesystem
+            (/)
+          </td>
+        </tr>
+        <tr>
+          <td>tmpfs</td>
+          <td>
+            temporary file system that resides on volatile memory(RAM). Data is
+            lost when system reboots. Includes /run etc
+          </td>
+        </tr>
+        <tr>
+          <td>tmpfs</td>
+          <td>
+            temporary file system that resides on volatile memory(RAM). Data is
+            lost when system reboots. Includes /run etc
+          </td>
+        </tr>
+        <tr>
+          <td>shm (shared memory)</td>
+          <td>tmpfs mounts for shared memory only.</td>
+        </tr>
+      </table>
+
+      <h3 id="htop">htop</h3>
+      <pre><code class="language-css">
+# htop //Similar to top with more colourful, more graphic interface which gives you more control of display scrolling
+# ps    //Reports snapshot of current processes.        //ps -aux    a:Displays all processes on a terminal.  u: Show user-name,  x; Lists all process(Including background processes)
+    user  pid  %cpu %mem  vsz     rss  tty  state   start-time      command
+    root    1    0.0       0.1    19404  832  ?     Ss   Mar02 0:01   /sbin/init
+    root    2    78.0       0.0       0         0    ?     S    Mar02 0:00   [abc]
+    root    3    0.0       0.0       0         0    ?     S    Mar02 0:00   [migration/0]
+    States of process:  D(uninterruptible sleep),  R(Running), S(Interruptible sleep),  T(stopped by job control signal),  t(stopped by debugger during the tracing), X(dead), Z(defunct/Zombie process, terminated but not reaped by its parent)
+      </code></pre>
+
+      <h3 id="lsof">lsof (list open files)</h3>
+      <dl>
+        This command reports list of all open files(pipes, sockets, devices, and
+        directories) and the processes that opened them.
+      </dl>
+      <pre><code class="language-css">
+$ lsof
+COMMAND PID TID USER FD TYPE DEVICE SIZE/OFF NODE NAME
+...
+
+$ sudo lsof -p 1234   // List files opened by process ID (PID) 1234.
+
+// Sort in decending order of opened descriptors
+$ sudo lsof | awk '{print $1}' | sort | uniq -c | sort -rn | head -n 10
+ 20500 process_name1
+  7500 process_name2
+  5000 process_name3
+ ..
+
+// Print type of Object opened by process in decending order
+$ sudo lsof -p pid_process_name1 | awk '{print $5}' | sort | uniq -c
+          </code></pre>
+
+      <h3 id="proc">proc</h3>
+      <pre><code class="language-css">
+// Open file descriptors
+$ ls /proc/$pid/fd/ | wc -l
+288
+      </code></pre>
+
+      <h3 id="top">top</h3>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+# top
+up  1:09, 3 user,  load average: 0.36, 0.12, 0.11
+Tasks:   228 total,   1 running, 227 sleeping,   0 stopped,   0 zombie
+Cpu(s):  3.7% us,  1.9 sy,  1.2 ni, 91.8 id,  1.3 wa,  0.0 hi,  0.1 si,  0.0 st
+Memory(MB):  32092 total,   321 free,   31483 used,   287 buff/cache
+Swap(MB):   1024 total,  0.0 free,   1024 used.      200 avail Mem
+
+//All processes Running on System
+pid   user    pr(priority)  ni(nice) virt  res  shr(SharedMem) State  %cpu %mem   time    command
+7801  root    20               0    59.6g  26.5g   3224        R       15   84.2  4:36.47  sssd
+          </code></pre>
+          </td>
+          <td>
+            Show output Sorted by Processes that uses CPU most.<br />
+            up: System up time, Logged in users, CPU load Average(1/5/15
+            min)[SIMILAR to uptime command]<br />
+            CPU(s): us(CPU used by User processes), sy(System processes)
+            <br />
+            Memory(KB): Utilization Status. 2029876=Total system mem. [SIMILAR
+            to free command]<br />
+            <b>VIRT(Virtual Memory):</b> RAM(RES)+SWAP(Paged out to
+            disk)+Shared_libs<br />
+            High VIRT is not problem, process reserved lot of address space for
+            itself.
+            <br />
+            <b>RES(Resident Memory):</b>
+            sssd using 26.5GB Out of 32GB of RAM
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
