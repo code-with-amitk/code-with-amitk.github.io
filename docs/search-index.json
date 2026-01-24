@@ -82,7 +82,7 @@
   {
     "title": "Async Programming",
     "url": "/Async_Programming/Introduction.html",
-    "excerpt": "Async Programming Home Our team Projects Contact Back What is async Async vs Threading What is Asynchronous? This is concurrency model where multiple ..."
+    "excerpt": "Async Programming What is async Async vs Threading Home Our team Projects Contact Back --> What is Asynchronous? This is concurrency model where multi..."
   },
   {
     "title": "Async Programming",
@@ -198,11 +198,6 @@
     "title": "C++, Rust, Python(Strings), Go",
     "url": "/Languages/Programming/C++/String.html",
     "excerpt": "C++, Rust, Python(Strings), Go Home Our team Projects Contact Strings String (C++ vs Python vs Rust vs Go) String (C++ vs Python vs Rust) C++ Rust Pyt..."
-  },
-  {
-    "title": "C++(unordered_map), Rust(HashMap), Python(Dictionary {}), Go",
-    "url": "/Languages/Programming/C++/STL/Containers/unordered_map.html",
-    "excerpt": "C++(unordered_map), Rust(HashMap), Python(Dictionary {}), Go Home Our team Projects Contact unordered_map C++, Rust, Python, Go C++, Rust, Python, Go ..."
   },
   {
     "title": "C++(unordered_set), Python, Rust(HashSet)",
@@ -390,6 +385,16 @@
     "excerpt": "Data Structures Home Our team Projects Contact Linked List Trees"
   },
   {
+    "title": "Data Structures",
+    "url": "/Data_Structures/Hash_Tables/Introduction.html",
+    "excerpt": "Data Structures DAT? Hash Table? Internal Impl? Hash Collision 1. Open Addressing 2. Seperate Chaining Rehashing Implementations 2-left Hashing --> Ho..."
+  },
+  {
+    "title": "Data Structures",
+    "url": "/Data_Structures/",
+    "excerpt": "Data Structures --> Home Our team Projects Contact Back Go! Hash Tables &ensp; HT?, DAT(Direct Access Tables), Internal Implementation of HT &ensp; Ha..."
+  },
+  {
     "title": "Database Commands",
     "url": "/System_Design/Concepts/Databases/Commands/",
     "excerpt": "Database Commands Home Our team Projects Contact Login Create Create DB & Connect to it Create table & insert data Table Index Read List Database, Lis..."
@@ -427,7 +432,7 @@
   {
     "title": "Database Transactions",
     "url": "/System_Design/Concepts/Databases/Terms/Transactions.html",
-    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction Terms Dirty Read Read Skew Dirty Write Write Skew Distributed Transactions Featu..."
+    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction Terms Dirty Read Read Skew Dirty Write Write Skew Distributed Transactions 2Phas..."
   },
   {
     "title": "Databases",
@@ -1667,7 +1672,7 @@
   {
     "title": "Saga microservices design pattern",
     "url": "/System_Design/Concepts/Microservices/Design_Patterns/Saga.html",
-    "excerpt": "Saga microservices design pattern Home Our team Projects Contact Back Saga DP Saga Design Pattern Problem: How to implement transaction that span mult..."
+    "excerpt": "Saga microservices design pattern Home Our team Projects Contact Back Saga DP Working of Saga Saga Design Pattern Saga is a method to do Asynchronous ..."
   },
   {
     "title": "SAML",
@@ -1933,6 +1938,11 @@
     "title": "Unittest or Pyunit",
     "url": "/Frameworks/Python/Unittest/",
     "excerpt": "Unittest or Pyunit Home Our team Projects Contact Unittest Examples Simple Test Writing Mock object Pyunit or Unitest Used to test a unit of source co..."
+  },
+  {
+    "title": "unordered_map",
+    "url": "/Languages/Programming/C++/STL/Containers/unordered_map.html",
+    "excerpt": "unordered_map ☰ --> --> Home Our team Projects Contact Go! C++ Rust (use std::collections::HashMap) Python ({} Dictionary) Go Create unordered_map&lt;..."
   },
   {
     "title": "Unsafe Rust",
