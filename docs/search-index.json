@@ -387,7 +387,7 @@
   {
     "title": "Data Structures",
     "url": "/Data_Structures/Hash_Tables/Introduction.html",
-    "excerpt": "Data Structures DAT? Hash Table? Internal Impl? Hash Collision 1. Open Addressing 2. Seperate Chaining Rehashing Implementations 2-left Hashing --> Ho..."
+    "excerpt": "Data Structures DAT? Hash Table? Internal Impl? Hash Collision 1. Open Addressing 2. Seperate Chaining Rehashing Implementations 2-left Hashing(Cuckoo..."
   },
   {
     "title": "Data Structures",
