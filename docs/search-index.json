@@ -427,7 +427,7 @@
   {
     "title": "Database Transactions",
     "url": "/System_Design/Concepts/Databases/Terms/Transactions.html",
-    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction Terms Dirty Read Read Skew Dirty Write Write Skew Distributed Transactions 2 Pha..."
+    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction Terms Dirty Read Read Skew Dirty Write Write Skew Distributed Transactions Featu..."
   },
   {
     "title": "Databases",
@@ -638,6 +638,11 @@
     "title": "GCP",
     "url": "/System_Design/Concepts/GCP/Deploy_Docker_Image.html",
     "excerpt": "GCP Home Our team Projects Contact Back Deploy on GCP Deploy Docker Image on GCP 1. Create a docker image 2. Create Compute Engine instance on GCP htt..."
+  },
+  {
+    "title": "git commands",
+    "url": "/System_Design/Concepts/git/",
+    "excerpt": "git commands Home Our team Projects Contact Back log // Commits between branches $ git clone .. $ git branch -r //All branches branch3 branch2 branch1..."
   },
   {
     "title": "Glew Library",
@@ -1085,6 +1090,11 @@
     "excerpt": "Linked Lists LRU Cache Compared LinkedList C,C++,Rust,Python,Go"
   },
   {
+    "title": "Linux Commands",
+    "url": "/Operating System/Linux/Commands.html",
+    "excerpt": "Linux Commands Home Our team Projects Contact Back atop curl df htop lsof proc top atop Commands: Open existing file using `atop -r file_name` &ensp; ..."
+  },
+  {
     "title": "Load Balancer",
     "url": "/System_Design/Concepts/Load Balancer/",
     "excerpt": "Load Balancer Home Our team Projects Contact what Advatanges of LB 1. Failover Types of LB Places where LB can be kept Scheduling Algorithms for LB Wh..."
@@ -1166,8 +1176,8 @@
   },
   {
     "title": "Memory Troubleshooting",
-    "url": "/Operating System/Linux/Troubleshooting/Memory.html",
-    "excerpt": "Memory Troubleshooting Home Our team Projects Contact top command htop command df atop Memory Issue top command # top up 1:09, 3 user, load average: 0..."
+    "url": "/Operating System/Linux/Troubleshooting.html",
+    "excerpt": "Memory Troubleshooting Home Our team Projects Contact Back Memory Issues Test Server Too Many Open Files Test Server curl : Send HTTP req using curl M..."
   },
   {
     "title": "Memory Types",
@@ -1322,7 +1332,7 @@
   {
     "title": "Operating System",
     "url": "/Operating System/",
-    "excerpt": "Operating System Home Our team Projects Contact Daemon Service Linux Linux &ensp; Troubleshooting &ensp; Kernel Virtualization &ensp; Virtualization: ..."
+    "excerpt": "Operating System Home Our team Projects Contact Back Daemon Service Linux &ensp; Troubleshooting: (Memory) &ensp; Kernel: ( Interrupts ) &ensp; Comman..."
   },
   {
     "title": "Pandas",
