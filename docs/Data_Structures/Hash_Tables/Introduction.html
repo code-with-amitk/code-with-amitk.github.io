@@ -28,7 +28,8 @@
       </ul>
       <a href="">Implementations</a>
       <ul>
-        <a href="#2left">2-left Hashing</a>
+        <a href="#2left">2-left Hashing(Cuckoo)</a>
+        <a href="#dleft">d-left Hashing</a>
       </ul>
     </nav>
   </aside>
@@ -247,7 +248,7 @@ index 3: []
       <dl>
         2 equal sized hash tables having 2 seperate hash functions are used.
         Seperate chanining is used in both. Table1(hash1), Table2(hash2).<br />
-        Cuckoo Hashing is a type of 2-left hashing<br />
+        <font color="red">Cuckoo Hashing</font> is a type of 2-left hashing<br />
         <b>Inserting key into table:</b>
         Always keep Table1 loaded, key is inserted into Table2 only when too
         many collisions happen on Table1.<br />
