@@ -392,7 +392,12 @@
   {
     "title": "Data Structures",
     "url": "/Data_Structures/",
-    "excerpt": "Data Structures --> Home Our team Projects Contact Back Go! Hash Tables &ensp; HT?, DAT(Direct Access Tables), Internal Implementation of HT &ensp; Ha..."
+    "excerpt": "Data Structures --> Home Our team Projects Contact Back Go! Comparison &ensp; Hash Table vs Self-Balancing Binary Trees Hash Tables &ensp; HT?, DAT(Di..."
+  },
+  {
+    "title": "Data Structures Compared",
+    "url": "/Data_Structures/Comparison.html",
+    "excerpt": "Data Structures Compared Hashtable vs SB-BT? --> Home Our team Projects Contact Back Go! Hash Table vs Self-Balancing BT Hash table BST(Binary Search ..."
   },
   {
     "title": "Database Commands",
