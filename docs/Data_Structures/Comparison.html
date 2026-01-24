@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Data Structures</title>
+    <title>Data Structures Compared</title>
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
   <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
@@ -13,7 +14,9 @@
 
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
-    <nav class="sidebar-nav"></nav>
+    <nav class="sidebar-nav">
+      <a href="#hashvsbst">Hashtable vs SB-BT?</a>
+    </nav>
   </aside>
 
   <!-- Sidebar overlay for mobile -->
@@ -27,7 +30,7 @@
           <a href="#">Our team</a>
           <a href="#">Projects</a>
           <a href="/contact.html">Contact</a>
-          <a href="/">Back</a>
+          <a href="index.html">Back</a>
           <li class="search-item">
             <form id="searchForm">
               <input
@@ -46,22 +49,42 @@
     </header>
 
     <main class="main-content">
-      <dl>
-        <b><a href="Comparison.html">Comparison</a></b
-        ><br />
-        &ensp; Hash Table vs Self-Balancing Binary Trees<br />
-        <b><a href="Hash_Tables/Introduction.html">Hash Tables</a></b
-        ><br />
-        &ensp; HT?, DAT(Direct Access Tables), Internal Implementation of HT<br />
-        &ensp; Hash Collision(Solutions: Open Addressing, Seperate Chaining),
-        Rehashing<br />
-        &ensp; Implementations(2-left hashing, d-left hashing)<br />
-        &ensp; Code
-      </dl>
+      <h2 id="hashvsbst">Hash Table vs Self-Balancing BT</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Hash table</th>
+          <th>BST(Binary Search Tree)</th>
+        </tr>
+        <tr>
+          <td>Complexity(Insert/Delete/Search)</td>
+          <td>O(1)[Average Time], O(n) during table resize</td>
+          <td>O(log n)[guaranteed all times].</td>
+        </tr>
+        <tr>
+          <td>Collision</td>
+          <td>Yes</td>
+          <td>Never</td>
+        </tr>
+        <tr>
+          <td>Implementation</td>
+          <td>Tough, We depend on libraries</td>
+          <td>Easy, we can implement our own customized BST</td>
+        </tr>
+        <tr>
+          <td>Advantages of Tree over HT</td>
+          <td></td>
+          <td>
+            1. Data can be retrieved in sorted order. inorder-traversal: O(n)<br />
+            2. lowest, biggest element finding: easy<br />
+            3. No need to guess size of input data
+          </td>
+        </tr>
+      </table>
     </main>
   </div>
 
   <script src="/scripts/search.js"></script>
   <script src="/scripts/mobile.js"></script>
-  <!-- </body> -->
+  <script src="/scripts/prism.js"></script>
 </html>
