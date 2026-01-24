@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Structures</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#dat">DAT?</a>
+      <a href="#what">Hash Table?</a>
+      <ul>
+        <a href="#impl">Internal Impl?</a>
+        <a href="#collision">Hash Collision</a>
+        <ul>
+          <a href="#opena">1. Open Addressing</a>
+          <a href="#sepchaining">2. Seperate Chaining</a>
+        </ul>
+        <a href="#rehashing">Rehashing</a>
+      </ul>
+      <a href="">Implementations</a>
+      <ul>
+        <a href="#2left">2-left Hashing</a>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Sidebar overlay for mobile -->
+  <!-- <div class="sidebar-overlay" id="sidebarOverlay"></div> -->
+
+  <div class="page-container">
+    <header class="header">
+      <nav class="navbar">
+        <ul class="nav-list">
+          <a href="/">Home</a>
+          <a href="#">Our team</a>
+          <a href="#">Projects</a>
+          <a href="/contact.html">Contact</a>
+          <a href="/Data_Structures/">Back</a>
+          <li class="search-item">
+            <form id="searchForm">
+              <input
+                type="search"
+                id="searchInput"
+                name="q"
+                placeholder="Search site"
+                aria-label="Search site"
+              />
+              <button type="submit" class="search-button">Go!</button>
+            </form>
+          </li>
+        </ul>
+        <ul class="search-results" id="searchResults"></ul>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <h2 id="dat">Direct Access Table</h2>
+      <dl>
+        Hash Table is improvement over DAT<br />
+        <b>Direct Access Table DAT?</b> Take huge array and use phone numbers as
+        index in the array. if phone number is not present entry is empty, else
+        the array entry stores pointer to records corresponding to phone
+        number.<br />
+        Searching in DA: O(1) but HUGE Extra Space required.
+      </dl>
+
+      <h2 id="what">What is Hash Table</h2>
+      <dl>
+        Data structure that associates keys with values. &lt;key, value><br />
+        Supports constant time lookups. Average Case: O(1), Worst case: O(n)<br />
+        <b>Hash Function?</b> Hash function maps a big number or string to a
+        small integer that can be used as index in hash table.<br />
+        <pre><code class="language-css">
+key -> |Hash Function| -> index of array/table
+        </code></pre>
+        <br />
+
+        <b>Advantages of Hash Table:</b> Search, Delete, Insert: O(1)=Average.
+        O(n)=During resize<br />
+        <b>Disadvantages:</b><br />
+        &ensp; 1. Elements are not sorted<br />
+        &ensp; 2. Rehashing: Once all HT entries are filled it needs
+        resized/rehashing which is a time-consuming operation. Let HT size =
+        100, we want to insert 101st element. Not only the size of hash table is
+        enlarged to 150, all element in hash table have to be rehashed. This
+        insertion operation takes O(n).
+      </dl>
+
+      <h3 id="impl">Internal Implementation of Hash Table</h3>
+      <dl>
+        Let use consider simple example to insert following key,value pairs:
+        {"abc",1}, {"bac",2}, {"cab",3}<br />
+        Keys("abc", "bac", "cab") are passed to hashfunction and indexes are
+        returned in bucket which acts as hash table<br />
+        <b>Collision:</b> if same index is returned, chaining is done, ie
+        element is inserted into next position in vector
+        <table>
+          <tr>
+            <td>
+              Hash table<br />
+              <pre><code class="language-css">
+key value
+abc   1
+bac   2
+zac   3
+        </code></pre>
+            </td>
+            <td>
+              <pre><code class="language-css">
+struct Entry {
+    std::string key;
+    int value;
+};
+class HashTable {
+    static const int CAP = 4;
+    std::vector&lt;Entry> buckets[CAP];
+    int hashFunction (const std::string &s) {
+        // Very simple hash
+        unsigned long h = 0;
+        for (char c : s) {
+            h = h * 31 + (unsigned char)c;
+        }
+        return (int)(h % CAP);      //index into bucket
+    }
+public:
+    void insertIntoHashTable(const std::string &key, int value) {
+        int idx = hashFunction (key);
+        auto &bucket = buckets[idx];
+
+        // update if key exists
+        for (auto &e : bucket) {
+            if (e.key == key) {
+                e.value = value;
+                return;
+            }
+        }
+        // otherwise insert
+        bucket.push_back(Entry{key, value});
+    }
+};
+            </code></pre>
+            </td>
+            <td>
+              <b>How hashFunction() works</b>
+              <pre><code>
+    s = parameter = "abc"
+i   value           h 
+0   a=97        0x31 + 97 = 97
+1   b=98        97x31 + 98 = 3105
+2   c=99        3105x31 + 99 = 96354
+return 96354 % 4 = 2  //index
+
+Hash Table
+| , | , |"abc",1| , |
+  0   1     2     3  index
+            </code></pre>
+              <b>How insertIntoHashTable() works</b>
+              <pre><code>
+key     value  index(generated by hashFunction())
+"abc"     1     2
+"bac"     2     0
+"cab"     3     0
+
+Hash Table
+index 0: [("bac",2), ("cab",3)]   //Chaining on Collision
+index 1: []
+index 2: [("abc",1)]
+index 3: []
+            </code></pre>
+            </td>
+          </tr>
+        </table>
+      </dl>
+
+      <h3 id="collision">Hash Collision</h3>
+      <dl>
+        This means hash function provides same index for 2 different keys. See
+        example provided above in
+        <a href="#impl">Internal Implementation of Hash Table</a><br />
+        2 methods to solve Hash Collission problem:
+      </dl>
+      <h4 id="opena">1. Open Addressing</h4>
+      <dl>
+        All elements are stored in HT itself. Once same hash is derived, insert
+        element in hash table itself no seperate chains. Types of Open
+        addressing<br />
+        <b>1a. Linear/Sequential probing:</b> Once same hash is derived, inserts
+        the new item in the next open spot in the table ie next to already
+        existent element with same hash.<br />
+        &ensp; Deletion: is tricky here removing one element might break a chain
+        of insertions, making some elements inaccessible. We need to reinsert
+        all the items into new holes.<br />
+        <b>1b. Quadratic Probing:</b> look for i<sup>2</sup>th slot in i’th
+        iteration. New hash function = (xmod7 +
+        i<sup>2</sup>)%hash_table_size<br />
+        <b>1c. Double Hashing:</b> use double hash function to re-calculate the
+        hash if collision occurs. In case of collision: hash1(x) = (hash1(x) +
+        i*hash2(x))%hash_table_size
+      </dl>
+
+      <h4 id="sepchaining">2. Seperate Chaining</h4>
+      <dl>
+        Each cell of HT point to a DOUBLY LINKED LIST of records that have same
+        hash function value. This requires additional memory outside the
+        table.<br />
+        Insert(x): O(1). Insert at head of LL<br />
+        Search(x): O(n). Need to search complete list<br />
+        Delete(x): O(1). Assumed we are at element in chain, we delete x. copy
+        prev to next pointer. In singly LL we need O(n) time to search prev
+        node.<br />
+        <u>Advantages:</u> Simple implementation, Space will never exhaust, Less
+        sensitive to hash function<br />
+        <u>Disadvantages:</u> Once LL/chain grows long, performance will degrade
+        search Time=O(n) Space wastage, some parts of hash table may never be
+        used
+      </dl>
+
+      <h3 id="rehashing">Rehashing</h3>
+      <dl>
+        Let us consider unordered_map&lt;int,string> storing unique keys. At
+        start of program sizeof hash table=3<br />
+        <pre><code>
+  Key | Value
+  ----------
+  01  | amit
+  02  | never
+  03  | give
+        </code></pre>
+        Now, (4, up) need to be stored, but hash table has no space so size of
+        hash table is increased to 6. (old Hash function = %3) we can only goto
+        index number=2. <br />
+        But we want to reach 5. Hence Hash function is changed (new Hash
+        function = %6). So hash is again calculated for existing values.
+      </dl>
+
+      <h2 id="implementations">Implementations</h2>
+      <h3 id="2left">2-left hashing</h3>
+      <dl>
+        2 equal sized hash tables having 2 seperate hash functions are used.
+        Seperate chanining is used in both. Table1(hash1), Table2(hash2).<br />
+        Cuckoo Hashing is a type of 2-left hashing<br />
+        <b>Inserting key into table:</b>
+        Always keep Table1 loaded, key is inserted into Table2 only when too
+        many collisions happen on Table1.<br />
+        <b>Advantages?</b> 1. On parallel systems. 2 cores can query 2 hash
+        tables, ie Thread-1 can query Table1 and Thread2 Table2.
+      </dl>
+
+      <h3 id="dleft">d-left Hashing</h3>
+      <dl>
+        Split 1 hash table into d blocks. Similar to 2-left hashing, left most
+        hashtable should be loaded.<br />
+        d buckets, n entries. Each bucket has n/d entries<br />
+      </dl>
+
+      <h2 id="code">Code</h2>
+      <dl>
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/DS_Questions/Data_Structures/Hash_Tables/hashtableExample.c"
+          >1. Student Hash table</a
+        ><br />
+        <pre><code>
+Hash table stores Student data (Key:Value)
+(1,20)  (2,70)  (42,80)  (4,25)  (12,44)  (13,78)  (14,32) (17,11)  (37,97)
+        </code></pre>
+
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/DS_Questions/Data_Structures/Hash_Tables/Design_HT.adoc"
+          >2. Leetcode Solved. Design a HashMap without using any built-in hash
+          table libraries.</a
+        >
+      </dl>
+    </main>
+  </div>
+
+  <script src="/scripts/search.js"></script>
+  <script src="/scripts/mobile.js"></script>
+  <script src="/scripts/prism.js"></script>
+</html>

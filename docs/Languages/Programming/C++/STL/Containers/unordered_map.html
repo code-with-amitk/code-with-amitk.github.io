@@ -1,34 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>C++(unordered_map), Rust(HashMap), Python(Dictionary {}), Go </title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unordered_map</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add Google Fonts if needed -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Rakkas&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
+  <body>
+    <!-- Menu Toggle for Mobile -->
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <!-- <div class="sidebar-overlay" id="sidebarOverlay"></div> -->
+<!-- 
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav">
+      </nav>
+    </aside> -->
+
+    <div class="page-container">
+      <nav class="navbar">
+        <ul class="nav-list">
           <li><a href="/">Home</a></li>
           <li><a href="#">Our team</a></li>
           <li><a href="#">Projects</a></li>
           <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
+          <li class="search-item">
+            <form id="searchForm">
+              <input
+                type="search"
+                id="searchInput"
+                name="q"
+                placeholder="Search site"
+              />
+              <button type="submit" class="search-button">Go!</button>
             </form>
-           </li>
+          </li>
         </ul>
-    </nav>
-    <h1>unordered_map</h1>
-    <ul>
-      <li>
-          <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
-      </li>
-    </ul>
+      </nav>
 
-    <h3 id="comp">C++, Rust, Python, Go</h3>
+      <!-- Main Content -->
+        <article>
+
+          <!-- Example table -->
+          <div class="table-container">
     <table>
         <tr>
             <th></th>
@@ -69,7 +91,7 @@ cloned(): method is used to clone each
             to store in the HashMap.
 collect(): method consumes the iterator and collects
             the cloned tuples into a HashMap&lt;char, &str>
-let hm: HashMap<i32, &str> = [
+let hm: HashMap&lt;i32, &str> = [
     (2, "abc"),
     (3, "def"),
     (4, "ghi"),
@@ -84,7 +106,7 @@ let hm: HashMap<i32, &str> = [
 .collect();
                         </code></pre></td>
                     </tr>
-                </table>                
+                </table>
             </td>
 
             <td><pre><code class="language-css">                               <!--Python-->
@@ -289,7 +311,10 @@ for key, value := range hm {
 
     </table>
 
-    <script src="/scripts/prism.js"></script>
-</body>
+        </article>
 
+    </div>
+        <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
 </html>

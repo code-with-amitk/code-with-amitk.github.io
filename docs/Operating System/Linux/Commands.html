@@ -191,11 +191,36 @@ $ sudo lsof -p pid_process_name1 | awk '{print $5}' | sort | uniq -c
           </code></pre>
 
       <h3 id="proc">proc</h3>
-      <pre><code class="language-css">
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
 // Open file descriptors
 $ ls /proc/$pid/fd/ | wc -l
 288
-      </code></pre>
+
+// Max fds a process can Open
+$ sudo cat /proc/$(pidof process1)/limits
+limits          soft limit    Hard limit    Units
+Max open files  1024          1024213       
+
+// total number of open files across the entire OS
+$ sudo cat /proc/sys/fs/file-max
+Very huge number (More than 9 billion)
+          </code></pre>
+          </td>
+          <td>
+            <b>Description</b><br /><br />
+            <b>cat /proc/$(pidof process1)/limits</b><br />
+            - <u>Soft limit:</u> value the OS actually enforces, If a process
+            tries to open, more files than this, it gets a "Too many open files"
+            error.<br />
+            - <u>Hard Limit:</u> is the absolute ceiling for the soft limit.
+            Only the root user (or a process with CAP_SYS_RESOURCE) can increase
+            the hard limit
+          </td>
+        </tr>
+      </table>
 
       <h3 id="top">top</h3>
       <table>
