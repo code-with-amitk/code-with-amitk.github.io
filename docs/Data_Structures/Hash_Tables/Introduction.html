@@ -8,13 +8,25 @@
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-    <i class="fas fa-bars"></i>
-  </button>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <nav class="sidebar-nav">
+    <!-- Sidebar -->
+    <aside class="sidebar">
       <a href="#dat">DAT?</a>
       <a href="#what">Hash Table?</a>
       <ul>
@@ -31,39 +43,9 @@
         <a href="#2left">2-left Hashing(Cuckoo)</a>
         <a href="#dleft">d-left Hashing</a>
       </ul>
-    </nav>
-  </aside>
+    </aside>
 
-  <!-- Sidebar overlay for mobile -->
-  <!-- <div class="sidebar-overlay" id="sidebarOverlay"></div> -->
-
-  <div class="page-container">
-    <header class="header">
-      <nav class="navbar">
-        <ul class="nav-list">
-          <a href="/">Home</a>
-          <a href="#">Our team</a>
-          <a href="#">Projects</a>
-          <a href="/contact.html">Contact</a>
-          <a href="/Data_Structures/">Back</a>
-          <li class="search-item">
-            <form id="searchForm">
-              <input
-                type="search"
-                id="searchInput"
-                name="q"
-                placeholder="Search site"
-                aria-label="Search site"
-              />
-              <button type="submit" class="search-button">Go!</button>
-            </form>
-          </li>
-        </ul>
-        <ul class="search-results" id="searchResults"></ul>
-      </nav>
-    </header>
-
-    <main class="main-content">
+    <article style="margin-left: 200px">
       <h2 id="dat">Direct Access Table</h2>
       <dl>
         Hash Table is improvement over DAT<br />
@@ -280,10 +262,9 @@ Hash table stores Student data (Key:Value)
           table libraries.</a
         >
       </dl>
-    </main>
-  </div>
+    </article>
+  </body>
 
   <script src="/scripts/search.js"></script>
-  <script src="/scripts/mobile.js"></script>
   <script src="/scripts/prism.js"></script>
 </html>
