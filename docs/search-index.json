@@ -727,7 +727,7 @@
   {
     "title": "Golang IPC Channels",
     "url": "/Threads_Processes_IPC/IPC/Golang/channels.html",
-    "excerpt": "Golang IPC Channels Home Our team Projects Contact Back Channel? close(channel) select (wait on many channels) Types of Channels Buffered / Bounded Un..."
+    "excerpt": "Golang IPC Channels Home Our team Projects Contact Back Channel? select (wait on many channels) Types of Channels Buffered / Bounded Unbounded / Unbuf..."
   },
   {
     "title": "GPU HealthCheck",
@@ -1027,7 +1027,7 @@
   {
     "title": "Languages",
     "url": "/Languages/",
-    "excerpt": "Languages Home Our team Projects Contact Programming Markup Scripting"
+    "excerpt": "Languages Home Our team Projects Contact Back Programming Markup Scripting"
   },
   {
     "title": "Law",
@@ -1432,7 +1432,7 @@
   {
     "title": "Programming",
     "url": "/Languages/Programming/",
-    "excerpt": "Programming Home Our team Projects Contact Back C C++ Go Kotlin Rust Rust &ensp; Rust vs CPP Go &ensp; Go vs CPP"
+    "excerpt": "Programming Home Our team Projects Contact Back C C++ Go &ensp; Go vs CPP Kotlin Rust &ensp; Rust vs CPP"
   },
   {
     "title": "Progression",
@@ -1902,7 +1902,7 @@
   {
     "title": "Threads Processes IPC",
     "url": "/Threads_Processes_IPC/",
-    "excerpt": "Threads Processes IPC Home Our team Projects Contact Introduction &ensp; Thread vs Process, Why processes Threads &ensp; Thread Creation: CPP(Threadcl..."
+    "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Introduction &ensp; Thread vs Process, Why processes Threads &ensp; Thread Creation: CPP(Thr..."
   },
   {
     "title": "Tilt by Amo",
@@ -2047,6 +2047,6 @@
   {
     "title": "Why Go over other Languages",
     "url": "/Languages/Programming/Go/Why_go_over_other_lang.html",
-    "excerpt": "Why Go over other Languages Home Our team Projects Contact Back Why Go vs CPP Go vs Other Languages CPP Go CPP Memory Management Go has Automatic Garb..."
+    "excerpt": "Why Go over other Languages Home Our team Projects Contact Back Go vs CPP Go vs CPP Go CPP Memory Management Go has Automatic Garbage Collection, whic..."
   }
 ]
