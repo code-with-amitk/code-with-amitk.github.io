@@ -30,6 +30,11 @@
     "excerpt": "Abbreviated Function Template Home Our team Projects Contact Abbreviated Function Template? Abbreviated Function Template When only auto or concept au..."
   },
   {
+    "title": "Abstraction",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Abstraction/Introduction.html",
+    "excerpt": "Abstraction Home Our team Projects Contact Back Abstraction? What is Abstraction Concept of hiding the complex internal details of a system and showin..."
+  },
+  {
     "title": "Administrative Law",
     "url": "/Law/Administrative Law/",
     "excerpt": "Administrative Law Home Our team Projects Contact What is Administrative law Conseil d'État Doctrines Separation of Powers Post decisional hearing Exc..."
@@ -43,6 +48,11 @@
     "title": "Aggregate initialization",
     "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++20/Aggregate initialization.html",
     "excerpt": "Aggregate initialization Home Our team Projects Contact Aggregate initialization Types of initialization Aggregate initialization Aggregate is any of ..."
+  },
+  {
+    "title": "Aggregation",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Association/Aggregation/Introduction.html",
+    "excerpt": "Aggregation Home Our team Projects Contact Back Aggregation? What is Aggregation Relation between contained and container object, Contained Object can..."
   },
   {
     "title": "Algorithms",
@@ -78,6 +88,11 @@
     "title": "Architecture",
     "url": "/System_Design/Concepts/Docker/Architecture.html",
     "excerpt": "Architecture Home Our team Projects Contact Docker Docker Desktop(Windows) / Docker Linux Architecture |---------- Docker Desktop ----------| | docker..."
+  },
+  {
+    "title": "Association",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Association/Introduction.html",
+    "excerpt": "Association Home Our team Projects Contact Back Association? What is Association Means any kind of relationship between 2 objects. There are 2 kinds o..."
   },
   {
     "title": "Async Programming",
@@ -182,7 +197,7 @@
   {
     "title": "C++",
     "url": "/Languages/Programming/C++/",
-    "excerpt": "C++ Home Our team Projects Contact Back 6 Implicit Functions &ensp; Constructor (1. Default ctr, 2. copy, 3. move) &ensp; Assignment Operator(4. Copy,..."
+    "excerpt": "C++ Home Our team Projects Contact Back 6 Implicit Functions &ensp; Constructor (1. Default, 2. copy, 3. move) &ensp; Assignment Operator(4. Copy, 5. ..."
   },
   {
     "title": "C++ 11,4,17,20,23",
@@ -225,11 +240,6 @@
     "excerpt": "CDN (Content Delivery Network) Home Our team Projects Contact What is CDN CDN serving web page to Browser What is CDN(Content delivery network) / Virt..."
   },
   {
-    "title": "Characteristics of OOPS",
-    "url": "/Languages/Programming/C++/Characteristics of OOPS/",
-    "excerpt": "Characteristics of OOPS Home Our team Projects Contact Polymorphism"
-  },
-  {
     "title": "Choosing the Build System",
     "url": "/Build_Systems/CMake/Choosing_the_Build_System.html",
     "excerpt": "Choosing the Build System Home Our team Projects Contact Back How CMake decides Generate Makefile or vcproj How CMake decides to generate Makefile of ..."
@@ -242,7 +252,7 @@
   {
     "title": "Class Templates",
     "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Class Templates.html",
-    "excerpt": "Class Templates Home Our team Projects Contact Class Template How Internally works? 0 templated argument Class Templates Generic class which having(Ge..."
+    "excerpt": "Class Templates Home Our team Projects Contact Back Class Template How Internally works? 0 templated argument Class Templates Generic class which havi..."
   },
   {
     "title": "Cmake Introduction",
@@ -293,6 +303,11 @@
     "title": "Compile",
     "url": "/Languages/Programming/C/Compile.html",
     "excerpt": "Compile Home Our team Projects Contact Compilation Steps Pre Processing Compiler (cc) Linker (ld) Compilation Steps test.c [Pre-processor] test.i [Com..."
+  },
+  {
+    "title": "Composition",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Association/Composition/Introduction.html",
+    "excerpt": "Composition Home Our team Projects Contact Back Composition? What is Composition Relation between contained and container object, If container Object ..."
   },
   {
     "title": "Concept",
@@ -617,7 +632,7 @@
   {
     "title": "Function Templates",
     "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Function Templates.html",
-    "excerpt": "Function Templates Home Our team Projects Contact Function Templates Not Allowed Double, objects Assembly (Function Templates) Function Templates Gene..."
+    "excerpt": "Function Templates Home Our team Projects Contact Back Function Templates Not Allowed Double, objects Assembly (Function Templates) Function Templates..."
   },
   {
     "title": "Functions",
@@ -672,7 +687,7 @@
   {
     "title": "Go",
     "url": "/Languages/Programming/Go/",
-    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World, GPU, CPU % Usage using Daemon Command line Arguments Collections Arrays, Slices = v..."
+    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World, GPU, CPU % Usage using Daemon Command line Arguments Collections &ensp; Arrays, Sli..."
   },
   {
     "title": "Go Code Examples",
@@ -1381,8 +1396,8 @@
   },
   {
     "title": "Polymorphism",
-    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/",
-    "excerpt": "Polymorphism Home Our team Projects Contact Dynamic Static CompileTime"
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Introduction.html",
+    "excerpt": "Polymorphism Home Our team Projects Contact Back Polymorphism? What is Polymorphism Poly(many), morphs(forms). Allows allowing a 1 function, operator,..."
   },
   {
     "title": "Pooling, Websockets, Webhooks",
@@ -1765,11 +1780,6 @@
     "excerpt": "Stack Home Our team Projects Contact Stack C++ vs Python vs Rust C++ vs Python vs Rust C++ Rust Python Go Declaration stack&lt;int> st; let mut stack:..."
   },
   {
-    "title": "Static Polymorphism",
-    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/",
-    "excerpt": "Static Polymorphism Home Our team Projects Contact Operator Overloading Templates"
-  },
-  {
     "title": "STL",
     "url": "/Languages/Programming/C++/STL/",
     "excerpt": "STL Home Our team Projects Contact Containers Associative Containers Unsorted Unordered Associative Example How elements are stored Access Advantages ..."
@@ -1788,6 +1798,11 @@
     "title": "string_view",
     "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++17/string_view.html",
     "excerpt": "string_view Home Our team Projects Contact What is string_view Characteristics Comparison string_view vs const string& What is string_view This is lig..."
+  },
+  {
+    "title": "Struct Embedding",
+    "url": "/Languages/Programming/Go/Features/Struct_Embedding.html",
+    "excerpt": "Struct Embedding Home Our team Projects Contact Back Struct Embedding Struct Embedding Struct embedding (also called \"anonymous fields\") is Go’s way o..."
   },
   {
     "title": "SubSequences",
@@ -1832,12 +1847,7 @@
   {
     "title": "Template Parameter Pack",
     "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Template Parameter Pack.html",
-    "excerpt": "Template Parameter Pack Home Our team Projects Contact Parameter Pack? Parameter Pack with left fold What is Parameter Pack A template parameter pack ..."
-  },
-  {
-    "title": "Templates",
-    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/",
-    "excerpt": "Templates Home Our team Projects Contact Templates Types Function Class Variadic Template Parameter Pack"
+    "excerpt": "Template Parameter Pack Home Our team Projects Contact Back Parameter Pack? Parameter Pack with left fold What is Parameter Pack A template parameter ..."
   },
   {
     "title": "Tensorflow",
@@ -1962,7 +1972,7 @@
   {
     "title": "Variadic Templates",
     "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Variadic Templates.html",
-    "excerpt": "Variadic Templates Home Our team Projects Contact What is Variadic? Variadic Class Template Variadic Function Template What is Variadic Templates A te..."
+    "excerpt": "Variadic Templates Home Our team Projects Contact Back What is Variadic? Variadic Class Template Variadic Function Template What is Variadic Templates..."
   },
   {
     "title": "VGPU Terms",
