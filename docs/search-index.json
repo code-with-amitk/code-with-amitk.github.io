@@ -1947,7 +1947,7 @@
   {
     "title": "unordered_map",
     "url": "/Languages/Programming/C++/STL/Containers/unordered_map.html",
-    "excerpt": "unordered_map ☰ --> --> Home Our team Projects Contact Go! C++ Rust (use std::collections::HashMap) Python ({} Dictionary) Go Create unordered_map&lt;..."
+    "excerpt": "unordered_map Home Our team Projects Contact C++ Rust (use std::collections::HashMap) Python ({} Dictionary) Go Create unordered_map&lt;string, int> u..."
   },
   {
     "title": "Unsafe Rust",
