@@ -25,13 +25,11 @@
 
     <aside class="sidebar">
       <!--See .sidebar in styles.css-->
-      <a href="#why">Why Go</a>
-      <a href="#cpp">vs CPP</a>
+      <a href="#cpp">Go vs CPP</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="why">Go vs Other Languages</h2>
-      <h3 id="cpp">CPP</h3>
+      <h2 id="cpp">Go vs CPP</h2>
       <table>
         <tr>
           <th></th>
@@ -49,7 +47,7 @@
         <tr>
           <td>Structural Differences</td>
           <td>
-            No hidden function as compared to c++
+            No hidden function as compared to c++<br />
             <pre><code class="language-css">
 type ListNode struct {
     Val int
@@ -58,7 +56,7 @@ type ListNode struct {
                         </code></pre>
           </td>
           <td>
-            CPP have hidden functions, which can add overhead
+            CPP have hidden functions, which can add overhead<br />
             <pre><code class="language-css">
 class ListNode {
     int val;
@@ -75,23 +73,55 @@ public:
           <td>Less</td>
           <td>
             More due to
-            <a href="/Languages/Programming/C++/Exception Handling.html"
-              >Exception handling</a
-            >,
-            <a
-              href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime"
+            <a href="/Languages/Programming/C++/">Exception handling</a>,
+            <a href="/Languages/Programming_Languages/"
               >virtual function calls</a
             >, and dynamic dispatch
           </td>
         </tr>
         <tr>
-          <td>Threading</td>
+          <td id="goroutinevsosthreads">Goroutine vs OS Threads</td>
           <td>
+            <a href="/Threads_Processes_IPC">Goroutines</a>
+            are faster wrt OS threads as implemented as
             <a
-              href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/Threads/README.md#usks"
-              >Goroutines</a
+              href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Threads#usks"
+              >Green threads</a
             >
-            are faster wrt threads as implemented as Green threads by go runtime
+            by go runtime<br />
+            <table>
+              <tr>
+                <th></th>
+                <th>Goroutine</th>
+                <th>OS Thread</th>
+              </tr>
+              <tr>
+                <td>Memory</td>
+                <td>very small (~2 KB) and grows/shrinks dynamically</td>
+                <td>Fixed size, usually 1–2 MB (expensive)</td>
+              </tr>
+              <tr>
+                <td>Creation/Teardown</td>
+                <td>Extremely fast; handled by the Go runtime.</td>
+                <td>slow, call needed into kernel</td>
+              </tr>
+              <tr>
+                <td>Context Switching</td>
+                <td>Fast. happens in user space (no kernel involvement)</td>
+                <td>
+                  Slow. requires saving/restoring registers and entering kernel
+                  mode.
+                </td>
+              </tr>
+              <tr>
+                <td>Scheduling</td>
+                <td>
+                  M:N Scheduling: Thousands of goroutines(N) are multiplexed
+                  onto few OS threads(M).
+                </td>
+                <td>Managed by the OS kernel scheduler.</td>
+              </tr>
+            </table>
           </td>
           <td>slower</td>
         </tr>
