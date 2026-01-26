@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Types in golang</title>
@@ -50,7 +50,7 @@
         <tr>
           <td id="basic">1. Basic Type</td>
           <td>
-            <b>int, float64, bool, string</b>
+            <b>int, float64, bool, string</b><br />
             <pre><code class="language-css">
 var a int = 42
 str := "Go is awesome" // Type inference
@@ -67,6 +67,7 @@ var f float64 = float64(a)      //Type Conversion
             <pre><code class="language-css">
 colors := [3]string{"red", "green", "blue"}
             </code></pre>
+            <br />
             <b>2. struct</b><br />
             <pre><code class="language-css">
 type Person struct {
@@ -92,33 +93,84 @@ func (p Person) fun() string {  //Define function for struct
             <b><a href="Collections.html">channels</a></b>
           </td>
         </tr>
-        <tr>
-          <td id="interface">4. Interface Types</td>
-          <td>
-            <b>What?</b>
-            Interface can hold any type (int, string, struct, etc.) without
-            specifying type. <br />
-            This is similar to
-            <a
-              href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime#pv"
-              >Pure Virtual Functions in C++98</a
-            >,
-            <a href="/Languages/Programming/C++/C++_11,14,17,20,23/index.html"
-              >Concepts in C++20</a
-            ><br />
-            Example: Create hashmap of key=string, value=interface{} to hold
-            different types of values
-            <pre><code class="language-css">
-{
-	message := map[string]interface{}{
-		"timestamp": time.Now().Unix(),
-		"sound": "default",
-		"title": "title",
-		"body":  json{},
-	}
-	return MakeHTTPPOSTCall(message)
+      </table>
+
+      <h3 id="interface">4. Interface</h3>
+      <dl>
+        Interface only declares the functions those should be implemented by
+        concrete types<br />
+        This is similar to
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime#pv"
+          >Abstract Class C++98</a
+        >,
+        <a href="/Languages/Programming/C++/C++_11,14,17,20,23/index.html"
+          >Concepts in C++20</a
+        ><br />
+        In C++, we design our class hierarchy first. In Go, you often design
+        your interfaces. These are Binded at Dynamic(ie runtime).<br />
+        In Go, the philosophy is to "accept interfaces, return structs."
+      </dl>
+      <pre><code class="language-css">
+// Interface declares functions to be implemented by concrete types
+type Speaker interface {
+    Speak() string
+}
+
+// Concrete Struct A
+type Human struct{}
+func (h Human) Speak() string { return "Hello!" }
+
+// Concrete Struct B
+type Dog struct{}
+func (d Dog) Speak() string { return "Woof!" }
+
+// This function doesn't care if it gets a Human or a Dog
+// accept interfaces, return structs
+func MakeItTalk(s Speaker) {
+    fmt.Println(s.Speak())
 }
             </code></pre>
+      <h4>Interface Pollution Problem</h4>
+      <dl>
+        Creating interfaces where they aren't actually needed. ie creating
+        interface for every class<br />
+        <b>Symptoms of Interface Pollution</b><br />
+        1. One-to-One Mapping: Every single struct has a corresponding
+        interface<br />
+        2.Harder Navigation: In an IDE, clicking "Go to Definition" on a method
+        takes you to the interface definition rather than the actual code doing
+        the work.
+      </dl>
+      <table>
+        <tr>
+          <th>Polluted Interface</th>
+          <th>Good Interface</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+// Defined in the same package as the logic, 
+// just for the sake of it.
+type Worker interface {
+    DoWork()
+}
+
+type MyWorker struct{}
+func (m MyWorker) DoWork() { ... }
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+// Defined by the CONSUMER who needs the work done.
+type Performer interface {
+    DoWork()
+}
+
+func Execute(p Performer) {
+    p.DoWork()
+}
+          </code></pre>
           </td>
         </tr>
       </table>

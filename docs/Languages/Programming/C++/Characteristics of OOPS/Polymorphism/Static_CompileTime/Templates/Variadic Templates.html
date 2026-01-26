@@ -1,63 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Variadic Templates</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/C++/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What is Variadic?</a>
-        <ul>
-            <li><a href="#class">Variadic Class Template</a></li>
-            <li><a href="#fun">Variadic Function Template</a></li>
-        </ul>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is Variadic?</a>
+      <ul>
+        <li><a href="#class">Variadic Class Template</a></li>
+        <li><a href="#fun">Variadic Function Template</a></li>
+      </ul>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="what">What is Variadic Templates</h2>
-        <dl>
-            A template with at least one 
-            <a href="/Languages/Programming/C++/Characteristics%20of%20OOPS/Polymorphism/Static_CompileTime/Templates/Template%20Parameter%20Pack.html">parameter pack</a> 
-            is called a variadic template.
-        </dl>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Variadic Templates</h2>
+      <dl>
+        A template with at least one
+        <a
+          href="/Languages/Programming/C++/Characteristics%20of%20OOPS/Polymorphism/Static_CompileTime/Templates/Template%20Parameter%20Pack.html"
+          >parameter pack</a
+        >
+        is called a variadic template.
+      </dl>
 
-        <h2>Types of Variadic Templates</h2>
-        <h3 id="class">Variadic Class Template</h3>
-        <h4>1 Argument</h4>
-        <h4>2 or more arguments</h4>
-        <dl>
-            Template parameter pack must be the final parameter in the template parameter list.
-        </dl>
-        <pre><code class="language-css">
+      <h2>Types of Variadic Templates</h2>
+      <h3 id="class">Variadic Class Template</h3>
+      <h4>1 Argument</h4>
+      <h4>2 or more arguments</h4>
+      <dl>
+        Template parameter pack must be the final parameter in the template
+        parameter list.
+      </dl>
+      <pre><code class="language-css">
 template &lt;typename U, typename... Ts>    // OK: can deduce U
 class A {};
 
 // template &lt;typename... Ts, typename U> // Error: Ts... not at the end
 // class A {};
         </code></pre>
-        
-        <h3 id="fun">Variadic Function Template</h3>
-        <dl>
-            Variadic function template means function taking <a href="/Languages/Programming/C++/Characteristics%20of%20OOPS/Polymorphism/Static_CompileTime/Templates/Template%20Parameter%20Pack.html">a parameter pack</a><br>
-            ... is <a href="/Languages/Programming/C++/C++_11,14,17,20,23/C++17/Fold%20Expression.html">Left Fold Expression?</a>
-        </dl>
-        <pre><code class="language-css">
+
+      <h3 id="fun">Variadic Function Template</h3>
+      <dl>
+        Variadic function template means function taking
+        <a
+          href="/Languages/Programming/C++/Characteristics%20of%20OOPS/Polymorphism/Static_CompileTime/Templates/Template%20Parameter%20Pack.html"
+          >a parameter pack</a
+        ><br />
+        ... is
+        <a
+          href="/Languages/Programming/C++/C++_11,14,17,20,23/C++17/Fold%20Expression.html"
+          >Left Fold Expression?</a
+        >
+      </dl>
+      <pre><code class="language-css">
 template &lt;class ... T>
 void f1(T ... val) {
     (cout &lt;&lt; ... &lt;&lt; val);   //Expanded to cout &lt;&lt; arg1 &lt;&lt; arg2 ..
@@ -68,9 +83,8 @@ int main(){
     f1(2," cd ");   //f1 &lt;char, int, char const*> ()//output = 2 cd
 }
         </code></pre>
-
     </article>
 
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>
