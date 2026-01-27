@@ -40,7 +40,8 @@
           <td>Memory Management</td>
           <td>
             Go has Automatic Garbage Collection, which means memory <br />
-            allocation and deallocation are handled by the runtime
+            allocation and deallocation are handled by the runtime<br />
+            - goroutines are garbage collected.
           </td>
           <td>CPP programmer has to do memory management using new, delete.</td>
         </tr>
@@ -97,7 +98,11 @@ public:
               </tr>
               <tr>
                 <td>Memory</td>
-                <td>very small (~2 KB) and grows/shrinks dynamically</td>
+                <td>
+                  Stack: Very small (~2 KB) and grows/shrinks dynamically<br />
+                  Heap: Descriptors tracked by the scheduler (~few hundred bytes
+                  each).
+                </td>
                 <td>Fixed size, usually 1–2 MB (expensive)</td>
               </tr>
               <tr>

@@ -260,6 +260,7 @@ async fn main() {
       <h3 id="golang">Go routine(Thread)</h3>
       <dl>
         A goroutine is a lightweight thread managed by the Go runtime.<br />
+        Memory allocation on stack, heap is very less wrt OS Threads.
         <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
           >Goroutine vs OS Threads</a
         >
@@ -370,6 +371,42 @@ All workers finished
           </td>
         </tr>
       </table>
+
+      <h4 id="leak">Memory Leak in goroutine</h4>
+      <dl>
+        <u>Memory allocated to goroutine:</u> Around
+        <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
+          >2k bytes of Stack</a
+        >
+        is allocated to goroutines by Go runtime at time of creation and this
+        memory grows/shrinks dynamically.<br />
+        When goroutine dies then this memory is taken back by go runtime(ie no
+        leak).<br />
+        <u>How leak happens in goroutine?</u> Memory leak in goroutine means go
+        runtime fails to cleanup the goroutine and hence fails to claim back
+        this allocated memory(2k bytes or more).<br />
+        <b>Leak Condition:</b><br />
+        - When no reciever is present on
+        <a href="/Languages/Programming/Go/">unbuffered channel</a>, then that
+        goroutine which is sending data on channel and
+        <a href="/Languages/Programming/Go/">channel</a> are not
+        <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
+          >Garbage collected</a
+        >
+        by Go runtime.<br />
+        - Memory allocated to goroutine + memory allocated to go channel is
+        leaked.
+      </dl>
+      <pre><code class="language-css">
+              ---Unbufferd channel---
+                                    /\
+                                     |
+                              goroutine sends data
+        </code></pre>
+      <dl>
+        <b>How to avoid Memory leak?</b> Use
+        <a href="/Languages/Programming/Go/">buffered channel</a>
+      </dl>
 
       <h3 id="python">Python</h3>
       <pre><code class="language-css">

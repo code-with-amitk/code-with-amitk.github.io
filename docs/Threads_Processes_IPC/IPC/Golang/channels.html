@@ -50,15 +50,16 @@
         Go channels are used for synchronizing IPC between
         <a href="/Threads_Processes_IPC/Threads/Threads_Creation.html"
           >goroutines</a
-        >.<br />
-        Goroutines are user-space constructs managed by the Go runtime and is
-        same as
+        >. goroutines =
         <a
           href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Threads#usks"
           >Rust Tasks = Green Threads</a
-        >. <br />
-        we can send/recv data values via channel with operator, &lt;-. The data
-        flows in the direction of the arrow.<br />
+        >
+        which are managed by Go runtime.<br />
+        we can send/recv data via channel with operator, &lt;- between
+        goroutines. The data flows in the direction of the arrow.<br />
+        channels are datastructures allocated on heap that reference both sender
+        and receiver goroutines<br />
         <b>close():</b> Only sender can close a channel to indicate that no more
         values will be sent.
       </dl>
@@ -137,23 +138,43 @@ Bye!
       </code></pre>
 
       <h2 id="types">Types of Channels</h2>
-      <h3 id="buffered">1. Buffered / Bounded</h3>
-      <dl>
-        When buffer length is provided a buffered channel is created. Send to a
-        buffered channel block only when the buffer is full. Receives block when
-        the buffer is empty.
-      </dl>
-      <pre><code class="language-css">
+      <table>
+        <tr>
+          <th></th>
+          <th id="buffered">Buffered / Bounded</th>
+          <th id="unbuffered">Unbuffered / Unbounded</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            When buffer length is provided a buffered channel is created<br />
+            <pre><code class="language-css">
 ch := make(chan int, 100)
         </code></pre>
-
-      <h3 id="unbuffered">2. Unbuffered / Unbounded</h3>
-      <dl>Channel created without any size</dl>
-      <pre><code class="language-css">
+          </td>
+          <td>
+            Channel created without any size<br />
+            <pre><code class="language-css">
 ch := make(chan int)
         </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>No reciever</td>
+          <td>No issue</td>
+          <td>
+            Memory Leak in <a href="/Languages/Programming/Go/">goroutine</a>
+          </td>
+        </tr>
+      </table>
 
-      <h3 id="directional">3. Bidirectional / Directional</h3>
+      <h3 id="buffered">1.</h3>
+      <dl>
+        . Send to a buffered channel block only when the buffer is full.
+        Receives block when the buffer is empty.
+      </dl>
+
+      <h3 id="directional">Bidirectional / Directional</h3>
       <dl>
         In Go, all channels start as bidirectional, but you can use directional
         types to enforce API safety and prevent bugs.
@@ -196,12 +217,19 @@ func main() {
 	ch1 := make(chan int)
 }
 
-// Internally
-struct hchan {
-  buf string  // A circular buffer (ring buffer) that stores the data
-  l   lock    // mutex that protects all fields in the hchan
-  sendq Linkedlist  //Linked lists of "waiting" goroutines (represented as sudog structures)
-  recvq Linkedlist
+// Channel struct 
+// (heap, hchan with buffer + sendq/recvq queues)
+type hchan struct {
+    qcount   uint           // bytes queued
+    dataqsiz uint           // buffer size
+    buf      unsafe.Pointer // ring buffer (heap)
+    elemsize uint16  // elem size
+    closed   uint32
+    elemtype *_type
+    sendx    uint          // send index
+    recvx    uint          // recv index
+    recvq    waitq         // blocked RECEIVERS  
+    sendq    waitq         // blocked SENDERS ← your goroutine lives here
 }
       </code></pre>
 
