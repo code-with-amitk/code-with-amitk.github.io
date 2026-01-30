@@ -715,6 +715,11 @@
     "excerpt": "Go modules and Packages Home Our team Projects Contact Package, Module import statement go.mod file go.sum file How to add external module to code Pac..."
   },
   {
+    "title": "Go Routine",
+    "url": "/Threads_Processes_IPC/Threads/Creation/GoRoutines.html",
+    "excerpt": "Go Routine Home Our team Projects Contact Back What is Go routine Code Hello World 10 Threads executing 1 function Memory Leak in goroutine Bounded go..."
+  },
+  {
     "title": "Go Statements",
     "url": "/Languages/Programming/Go/Statements.html",
     "excerpt": "Go Statements Home Our team Projects Contact Defer if switch Defer defer statement defers execution of a function until the surrounding function retur..."
@@ -992,7 +997,7 @@
   {
     "title": "Kubernets Terms",
     "url": "/System_Design/Concepts/Kubernets/Terms.html",
-    "excerpt": "Kubernets Terms Home Our team Projects Contact Ambassador API Gateway Namespace? Ports ContainerPort HostPort Nodeport Authorization in kubernets 1. s..."
+    "excerpt": "Kubernets Terms Home Our team Projects Contact Back Ambassador API Gateway Namespace? Ports ContainerPort HostPort Nodeport Authorization in kubernets..."
   },
   {
     "title": "Labour and Industrial Law",
@@ -1886,18 +1891,13 @@
   },
   {
     "title": "Thread Code",
-    "url": "/Threads_Processes_IPC/Threads/Threads_Creation.html",
+    "url": "/Threads_Processes_IPC/Threads/Creation/Threads_Creation.html",
     "excerpt": "Thread Code Home Our team Projects Contact Back CPP 1. Thread class 2. Functor Rust 1. std::thread::spawn 2. std::thread::Builder 3. Asynchronous Fram..."
   },
   {
     "title": "Threads Processes IPC",
     "url": "/Threads_Processes_IPC/Introduction.html",
     "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Thread vs Process Why Processes Threads vs Processes (Mechanisms used for executing code con..."
-  },
-  {
-    "title": "Threads Processes IPC",
-    "url": "/Threads_Processes_IPC/Threads/",
-    "excerpt": "Threads Processes IPC Home Our team Projects Contact Thread Creation &ensp; CPP: 1. Thread class OR 2. Using Functor &ensp; Rust: 1. Normal OR 2. Scop..."
   },
   {
     "title": "Threads Processes IPC",
