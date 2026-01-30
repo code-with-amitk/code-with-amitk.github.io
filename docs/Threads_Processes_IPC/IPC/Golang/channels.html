@@ -14,7 +14,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../../index.html">Back</a></li>
+        <li><a href="/Threads_Processes_IPC/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -47,15 +47,11 @@
     <article style="margin-left: 200px">
       <h2 id="what">Go Channel(for IPC)</h2>
       <dl>
-        Go channels are used for synchronizing IPC between
-        <a href="/Threads_Processes_IPC/Threads/Threads_Creation.html"
-          >goroutines</a
-        >. goroutines =
+        Go channels are used for synchronizing IPC between goroutines(Same as
         <a
           href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Threads#usks"
           >Rust Tasks = Green Threads</a
-        >
-        which are managed by Go runtime.<br />
+        >). Go routines are managed by Go runtime.<br />
         we can send/recv data via channel with operator, &lt;- between
         goroutines. The data flows in the direction of the arrow.<br />
         channels are datastructures allocated on heap that reference both sender
@@ -63,7 +59,9 @@
         <b>close():</b> Only sender can close a channel to indicate that no more
         values will be sent.
       </dl>
-      <pre><code class="language-css">
+      <table>
+        <td>
+          <pre><code class="language-css">
 // Create a channel
 ch := make(chan int)
 
@@ -83,6 +81,16 @@ for v := range ch {
   fmt.Println(v)
 }
         </code></pre>
+        </td>
+        <td>
+          <pre><code class="language-css">
+//        (channel, capacity)
+ch := make(chan int, 100)
+// Creates 1 channel that can hold up to 100 items
+// ie ints without blocking the sender
+        </code></pre>
+        </td>
+      </table>
 
       <h3 id="select">select(wait on multiple channels)</h3>
       <dl>

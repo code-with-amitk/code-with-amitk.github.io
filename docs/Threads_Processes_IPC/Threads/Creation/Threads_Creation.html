@@ -14,7 +14,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../index.html">Back</a></li>
+        <li><a href="/Threads_Processes_IPC/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -41,11 +41,7 @@
         <li><a href="#builder">2. std::thread::Builder</a></li>
         <li><a href="#async">3. Asynchronous Frameworks (e.g., Tokio)</a></li>
       </ul>
-      <a href="#golang">Go routine</a>
-      <ul>
-        <li><a href="#hellogo">1 thread</a></li>
-        <li><a href="#10threads">10 Threads</a></li>
-      </ul>
+      <a href="GoRoutines.html">Go routine</a>
       <a href="#python">Python</a>
       <a href="#posix">POSIX</a>
       <a href="#java">Java</a>
@@ -256,157 +252,6 @@ async fn main() {
     // Other async code...
 }
         </code></pre>
-
-      <h3 id="golang">Go routine(Thread)</h3>
-      <dl>
-        A goroutine is a lightweight thread managed by the Go runtime.<br />
-        Memory allocation on stack, heap is very less wrt OS Threads.
-        <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
-          >Goroutine vs OS Threads</a
-        >
-      </dl>
-
-      <h4 id="hellogo">Hello World using 1 thread</h4>
-      <pre><code class="language-css">
-package main
-import (
-    "fmt"
-    "time"
-)
-func sayHello() {
-    fmt.Println("Hello from goroutine!")
-}
-func main() {
-    go sayHello()       // Start a goroutine
-    fmt.Println("Hello from main!") // Print from the main goroutine
-    // Sleep for a while to allow the goroutine to execute
-    time.Sleep(time.Second)
-}
-$ go run main.go
-Hello from main!
-Hello from goroutine!
-      </code></pre>
-
-      <h4 id="10threads">10 Threads executing 1 function</h4>
-      <table>
-        <tr>
-          <th>Code</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>
-            <pre><code class="language-css">
-package main
-import (
-    "fmt"
-    "sync"
-    "time"
-)
-func worker(id int, wg *sync.WaitGroup) {
-    // defer: keyword in Go schedules a function call to be 
-    executed just before the surrounding function returns.
-    // ie wg.Done() would be called when surrounding function finishes
-    defer wg.Done()
-    fmt.Printf("Worker %d started\n", id)
-    time.Sleep(time.Second) // Simulate work
-    fmt.Printf("Worker %d finished\n", id)
-}
-
-func main() {
-    var wg sync.WaitGroup               // Create WaitGroup object
-    numWorkers := 10                    // Number of goroutines to create
-    wg.Add(numWorkers)                  // Create these goroutines
-
-    for i := 1; i &lt;= numWorkers; i++ {
-        go worker(i, &wg)
-    }
-    wg.Wait()                               // Wait for all goroutines to finish
-    fmt.Println("All workers finished")
-}
-
-$ go run test.go
-Worker 10 started
-Worker 8 started
-Worker 9 started
-Worker 2 started
-Worker 1 started
-Worker 6 started
-Worker 3 started
-Worker 4 started
-Worker 5 started
-Worker 7 started
-Worker 10 finished
-Worker 8 finished
-Worker 1 finished
-Worker 9 finished
-Worker 2 finished
-Worker 3 finished
-Worker 6 finished
-Worker 4 finished
-Worker 7 finished
-Worker 5 finished
-All workers finished
-      </code></pre>
-          </td>
-          <td>
-            <b>sync.waitgroup:</b><br />
-            - Synchronization primitive provided by the Go to synchronize the
-            execution of a group of goroutines.<br />
-            - <u>How it works?</u><br />
-            &emsp; A WaitGroup maintains shared counter internally(which is
-            initially set to 0). counter is thread-safe.<br />
-            &emsp; At start of goroutine wg.Add(numberOfWorkers) is called. This
-            makes counter=10<br />
-            &emsp; goroutine finishes (defer make wg.Done() to called after
-            function finishes), and counter is decremented<br />
-            &emsp; wg.Wait() method in main waits until counter=0
-            <br /><br />
-
-            <b>defer</b><br />
-            - keyword in Go schedules a function call to be executed just before
-            the surrounding function returns.<br />
-            - ie wg.Done() would be called when surrounding function finishes<br />
-            - defer wg.Done() is called reliably, even in case of errors or
-            unexpected goroutine termination.
-          </td>
-        </tr>
-      </table>
-
-      <h4 id="leak">Memory Leak in goroutine</h4>
-      <dl>
-        <u>Memory allocated to goroutine:</u> Around
-        <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
-          >2k bytes of Stack</a
-        >
-        is allocated to goroutines by Go runtime at time of creation and this
-        memory grows/shrinks dynamically.<br />
-        When goroutine dies then this memory is taken back by go runtime(ie no
-        leak).<br />
-        <u>How leak happens in goroutine?</u> Memory leak in goroutine means go
-        runtime fails to cleanup the goroutine and hence fails to claim back
-        this allocated memory(2k bytes or more).<br />
-        <b>Leak Condition:</b><br />
-        - When no reciever is present on
-        <a href="/Languages/Programming/Go/">unbuffered channel</a>, then that
-        goroutine which is sending data on channel and
-        <a href="/Languages/Programming/Go/">channel</a> are not
-        <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
-          >Garbage collected</a
-        >
-        by Go runtime.<br />
-        - Memory allocated to goroutine + memory allocated to go channel is
-        leaked.
-      </dl>
-      <pre><code class="language-css">
-              ---Unbufferd channel---
-                                    /\
-                                     |
-                              goroutine sends data
-        </code></pre>
-      <dl>
-        <b>How to avoid Memory leak?</b> Use
-        <a href="/Languages/Programming/Go/">buffered channel</a>
-      </dl>
 
       <h3 id="python">Python</h3>
       <pre><code class="language-css">
