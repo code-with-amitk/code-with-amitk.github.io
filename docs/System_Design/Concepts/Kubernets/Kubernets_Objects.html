@@ -248,7 +248,7 @@ roleRef:                                  # "roleRef" specifies the binding to a
             <td id="services">7. Service</td>
             <td>
               A Service is a stable networking abstraction that provides a fixed IP(ClusterIP) and DNS name to access Pods.<br>
-              It decouples clients from pod IPs.We have to create a seperate services.yaml file to define a service
+              It decouples clients from pod IPs.We have to create a seperate services.yaml file to define a service<br>
               <pre><code class="language-css">
 $ cat services.yaml
 apiVersion: v1
@@ -264,15 +264,15 @@ spec:
       port: 8080         # Service port (inside cluster)
       targetPort: 8080   # Container port inside Pod
       nodePort: 30080    # Fixed external NodePort
-              </code></pre>
+              </code></pre><br>
               Every service is assigned a CLUSTER-IP, via which pod behind service can be reached.<br>
               <b>CLUSTER-IP:</b> Kubernetes assigns an internal virtual IP (the ClusterIP). when any pod inside the cluster 
-              sends a packet to that ClusterIP, the packet gets NATed and load-balanced to one of the backend pods
+              sends a packet to that ClusterIP, the packet gets NATed and load-balanced to one of the backend pods<br>
               <pre><code class="language-css">
 $ kubectl get services -o wide
 NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORTS(s)        AGE   SELECTOR
 pod1-service      NodePort    10.43.200.121   &lt;none>     8080:30102/TCP   4h5m  app=pod1
-              </code></pre>
+              </code></pre><br>
               <b><a href="./Terms.html#nodeport" target="_blank">NodePort</a> is build on Services</b>
               Read about <a href="./Terms.html#nodeport" target="_blank">NodePort</a> 1st.
               <br>
