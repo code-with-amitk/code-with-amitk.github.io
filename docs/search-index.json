@@ -505,6 +505,16 @@
     "excerpt": "DLP Home Our team Projects Contact What DLP (Data Loss Prevention) if sensitive data is leaked(on cloud), then DLP protects the data by inspecting the..."
   },
   {
+    "title": "DNS",
+    "url": "/Networking/OSI-Layers/Layer-7/DNS/Introduction.html",
+    "excerpt": "DNS Home Our team Projects Contact Back DNS? Name resolution Forward Lookup Reverse Lookup Terms CyberSquatting DNS Zone File DNS Queries Types Name s..."
+  },
+  {
+    "title": "DNS Records",
+    "url": "/Networking/OSI-Layers/Layer-7/DNS/DNS_Records.html",
+    "excerpt": "DNS Records Home Our team Projects Contact Back DNS Records A record AAAA Alias CAA CNAME MX NS PTR RR SOA SPF TXT DNS Records Record created on DNS s..."
+  },
+  {
     "title": "Docker Commands",
     "url": "/System_Design/Concepts/Docker/Commands.html",
     "excerpt": "Docker Commands Home Our team Projects Contact Create Docker Image Run docker image inside Container Run arm binaries on x86 Load Docker Image Command..."
