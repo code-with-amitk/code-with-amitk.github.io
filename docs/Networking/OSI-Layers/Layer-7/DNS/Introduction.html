@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>DNS</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">DNS?</a>
+      <a href="#name">Name resolution</a>
+      <ul>
+        <li><a href="#forward">Forward Lookup</a></li>
+        <li><a href="#reverse">Reverse Lookup</a></li>
+      </ul>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#cybersquatting">CyberSquatting</a></li>
+        <li><a href="#zonefile">DNS Zone File</a></li>
+        <li><a href="#querytypes">DNS Queries Types</a></li>
+        <li><a href="#ns">Name server / Nameserver</a></li>
+        <li><a href="#recursive">Recursive, Authoritative DNS Server</a></li>
+      </ul>
+      <a href="DNS_Records.html">DNS Records</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Domain Name Service / Port 53</h2>
+      <dl>
+        Protocol for converting hostname to IP address and viceversa. DNS uses
+        UDP by default, fall back to TCP if on udp cannot communicate.<br />
+        <b>Advantages of DNS</b><br />
+        1. To send packet across network we need IP Address and only DNS can
+        provide.<br />
+        2. No need for memorizing IP addresses<br />
+        <b>Disadv of DNS:</b><br />
+        1. Registry only controlled by [ICANN](Terms) which can become bais to
+        some country/organization.<br />
+        2. DNS Messages does not have information of client asking the
+        information, hacker can bisect the message and send his own message.<br />
+        3. [TLD’s](Terms) can be bottleneck.
+      </dl>
+
+      <h2 id="namer">Name resolution</h2>
+      <dl>
+        The process of looking up a hostname and finding corresponding IP
+        address.
+      </dl>
+      <h3 id="forward">Forward Lookup</h3>
+      <dl>hostname/URL to IP conversion</dl>
+      <pre class="mermaid">
+sequenceDiagram
+  participant u as User
+  participant o as Office DNS Server<br>ISP<br>DNS Server<br>Recursive DNS Server
+  participant r as Root Nameserver
+  participant tld as .com TLD Server
+  participant auth as Authoritative<br>DNS server
+
+  Note over u: open yahoo.com<br>domain to IP mapping not found<br>Create |MAC|IP|udp dstport=53|<br>|DNS Query{hdr question=1}<br>{body qname:yahoo.com,Type=A,class=IN}|
+  u ->> o: DNS Query(yahoo.com)
+  Note over o: Cannot find domain to IP<br>Find Rootname server IP from<br> zone file
+  o ->> r: DNS QUery(yahoo.com)
+  Note over r: Find TLD server<br> for .com
+  r ->> tld: DNS Query(yahoo.com)
+  tld -->> r: IP of Authoritative<br>DNS server
+  r -->> o: IP of Authoritative<br>DNS server
+  o ->> auth: DNS Query(yahoo.com)
+  auth -->> o: DNS Response<br>|Type=A,TTL:23,Address:x.x.x.x|
+  o -->> u: DNS Response<br>|{hdr question=1}<br>{body ans:1,ans:x.x.x.x}|
+</pre>
+
+      <h3 id="reverse">Reverse Lookup</h3>
+      <dl>
+        IP to URL/hostname conversion<br />
+        Case-1: Spam received in mailbox, From-IP header is parsed. Now Email
+        client wants to know from where this Email arrived? Is this IP Address
+        authentic or spam. So Machine enquires ISP for reverse query, giving IP
+        address and asking for URL(if exists)).
+      </dl>
+      <pre class="mermaid">
+sequenceDiagram
+  participant u as User/Desktop
+  participant o as Office DNS Server<br>ISP<br>DNS Server<br>Recursive DNS Server
+
+  Note over u: Got mail from 1.2.3.4<br>Create reverse DNS<br>4.3.2.1.in-addr.arpa.
+  u ->> o: 4.3.2.1.in-addr.arpa. Find URL
+  o ->> u: yahoo.com
+      </pre>
+
+      <h2 id="terms">Terms</h2>
+      <h3 id="cyberSquatting">CyberSquatting</h3>
+      <dl>Selling a domain to interested party at much higher price.</dl>
+
+      <h3 id="zonefile">DNS Zone File</h3>
+      <dl>
+        Plain text file which stores resource records of particular domain. Zone
+        file always start with a Start of Authority (SOA) record.
+      </dl>
+      <pre><code class="language-css">
+; Authoritative data for test.com
+    test.com.     86400    IN    SOA        star boss (9527,7200,7200,241920,86400)
+    star                   IN    A          130.37.56.201       //IP Address of star.test.com is <>
+    flits         86400    IN    A          130.37.16.112       //flits.test.com has IP address <>
+    test.com.     86400    IN    MX         1 rambo                //Email should be 1st sent to rambo@test.com
+    test.com.     86400    IN    MX         2 sambo                //if rambo@test.com fails sambo should be tried as 2nd choice
+    test.com.     86400    IN    NS         star
+    www           86400    IN    CNAME      star.cs.vu.nl        //www is aliased to star.cs.vu.nl
+10.30.20.10.in-addr.arpa.  IN    PTR        host.domain.com
+      </code></pre>
+
+      <h3 id="querytypes">DNS Queries Types</h3>
+      <dl>
+        <b>1. Recursive:</b> Recursive NS perform recursive queries to other
+        nameservers and returns complete result to DNS client. Done by Local DNS
+        server.<br />
+        <b>2. Iterative/Non-Recursive:</b> Root nameservers does not collects
+        all information rather they return partial information and continue to
+        next query. This is called iterative.
+      </dl>
+
+      <h3 id="ns">Name server / Nameserver</h3>
+      <dl>
+        Computer responsible for a particular domain, ie responding to that
+        domain queries. One zone can have 1 or more name servers.
+      </dl>
+      <h4>Types of Nameservers</h4>
+      <dl>
+        <b>1. Primary NS?</b> Zone have 1 primary name server which gets its
+        information from DNS zone file on its disk.<br />
+        <b>2. Secondary NS?</b> Get their information from the primary name
+        server, maybe internet facing.<br />
+        <b>3. Root NS?</b> Server which have IP-Addresses of nameservers
+        handling
+        [TLDs](/Networking/OSI-Layers/Layer5/Protocols/DNS/Terms/Domain_Name).
+        eg: .com, .org<br />
+        <b>4. Authoritative NS?</b> Server authoritative for particular domain.
+        Eg: nandini.com is handled by 4.4.4.4<br />
+        <b>5. Recursive NS?</b> NS which takes query from client and returns
+        complete result, does not return partial results.<br />
+        <b>6.Caching NS?</b> Server sitting at front of Clients, doing DNS
+        queries on behalf of clients, storing results locally in cache. As Cache
+        grows its efficiency improves as it can answer lot from cache.<br />
+        &ensp; Problem2: Cache Poisoning: Hackers fills in cache of caching
+        nameserver from stale/wrong/bad entries. Solution: DNSSEC(DNS Security
+        Extension) validation: Doing authentication, integration check of
+        resource records before placing on cache.
+      </dl>
+
+      <h3 id="recursive">Recursive, Authoritative DNS Server</h3>
+      <dl>
+        <b>RECURSIVE DNS SERVER?</b> Recursive means referring to itself. This
+        DNS server caches the DNS records and sends DNS query further if record
+        is not found.<br />
+        <b>AUTHORITATIVE DNS SERVER?</b> This server holds information about
+        domain(eg: google.com) and delivers it to internet.
+      </dl>
+    </article>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    </script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
