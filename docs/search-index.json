@@ -1097,7 +1097,7 @@
   {
     "title": "Layers, Design Issues",
     "url": "/Networking/OSI-Layers/Duties_of_Layers.html",
-    "excerpt": "Layers, Design Issues Home Our team Projects Contact Hub,Switch,Bridge,Router Layers, Design Issues Layer Design Issues Duties Protocols Application s..."
+    "excerpt": "Layers, Design Issues Home Our team Projects Contact Back Hub,Switch,Bridge,Router Layers, Design Issues Layer Design Issues Duties Protocols Applicat..."
   },
   {
     "title": "Layers, Design Issues",
@@ -1113,6 +1113,11 @@
     "title": "Legal History",
     "url": "/Law/Legal History/",
     "excerpt": "Legal History Home Our team Projects Contact East India Company 1639-1726, British Settlements 1775, Raja Nand Kumar Acts 1773 Regulating Act 1781 Set..."
+  },
+  {
+    "title": "Let's Encrypt",
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/lets_encrypt.html",
+    "excerpt": "Let's Encrypt Home Our team Projects Contact Back Let's Encrypt Why Let's Encrypt Ways to get cert Get cert signed by Let's Encrypt DNS CNAME What is ..."
   },
   {
     "title": "Libraries",
@@ -1148,6 +1153,11 @@
     "title": "Load Testing Tools",
     "url": "/Networking/OSI-Layers/Layer-7/LoadTestingTools.html",
     "excerpt": "Load Testing Tools Home Our team Projects Contact Bombardier Bombardier (HTTP Load Generation Tool) Install $ go install github.com/codesenberg/bombar..."
+  },
+  {
+    "title": "Log Storage",
+    "url": "/System_Design/Scalable/Log_Management_Service/",
+    "excerpt": "Log Storage Home Our team Projects Contact Requirements HLD Log management Service Design a service that collects Logs from network devices(firewalls,..."
   },
   {
     "title": "Logging",
@@ -1241,8 +1251,8 @@
   },
   {
     "title": "mkcert",
-    "url": "/Networking/OSI-Layers/Layer-7/SSL_TLS/mkcert.html",
-    "excerpt": "mkcert Home Our team Projects Contact What Using mkcert Ubuntu Windows What is mkcert For anything in production, you’ll be purchasing your SSL certif..."
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/mkcert.html",
+    "excerpt": "mkcert Home Our team Projects Contact Back What Using mkcert Ubuntu Windows What is mkcert For anything in production, you’ll be purchasing your SSL c..."
   },
   {
     "title": "Mobile Billing System",
@@ -1931,18 +1941,13 @@
   },
   {
     "title": "TLS SSL",
-    "url": "/Networking/OSI-Layers/Layer-7/SSL_TLS/Introduction.html",
-    "excerpt": "TLS SSL Home Our team Projects Contact What SSL vs TLS NSS vs Openssl What is TLS/SSL SSL/TLS are Layer7 protocol for Authentication+Encryption. Layer..."
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/Introduction.html",
+    "excerpt": "TLS SSL Home Our team Projects Contact Back What SSL vs TLS NSS vs Openssl What is TLS/SSL SSL/TLS are Layer6 protocol for Authentication+Encryption. ..."
   },
   {
     "title": "TLS SSL",
-    "url": "/Networking/OSI-Layers/Layer-7/SSL_TLS/Terms/",
-    "excerpt": "TLS SSL Home Our team Projects Contact SNI SNI (Server Name Indication) This is addition to the TLS encryption protocol. SSL Client can specify the do..."
-  },
-  {
-    "title": "TLS SSL",
-    "url": "/Networking/OSI-Layers/Layer-7/SSL_TLS/",
-    "excerpt": "TLS SSL Home Our team Projects Contact About SSL, TLS &ensp; What is TLS, SSL &ensp; TLS vs SSL &ensp; NSS(TLS Implementation) vs Openssl mkcert &ensp..."
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/",
+    "excerpt": "TLS SSL Home Our team Projects Contact Back SNI SNI (Server Name Indication) This is addition to the TLS encryption protocol. SSL Client can specify t..."
   },
   {
     "title": "Trait Rust",
