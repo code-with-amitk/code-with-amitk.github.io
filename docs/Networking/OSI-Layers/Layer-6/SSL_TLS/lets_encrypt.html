@@ -94,13 +94,13 @@ python3
 Certbot execution, then we will place CNAME record in hostinger DNS records.
 My --preferred-challenges = dns
 $  sudo certbot certonly --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py \
-   --preferred-challenges dns --debug-challenges -d api.ydadigitals.com
+   --preferred-challenges dns --debug-challenges -d api.example.com
 [sudo] password for amit: 
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
-Requesting a certificate for api.ydadigitals.com
-Hook '--manual-auth-hook' for api.ydadigitals.com ran with output:
+Requesting a certificate for api.example.com
+Hook '--manual-auth-hook' for api.example.com ran with output:
  Please add the following CNAME record to your main DNS zone:
- _acme-challenge.api.ydadigitals.com CNAME e9543057-1bcf-49ca-9e25-a321af98d599.auth.acme-dns.io.
+ _acme-challenge.api.example.com CNAME e9543057-1bcf-49ca-9e25-a321af98d599.auth.acme-dns.io.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Challenges loaded. Press continue to submit to CA. Pass "-v" for more info about
@@ -110,18 +110,21 @@ Press Enter to Continue
 
 6. Now it waits for you enter CNAME into DNS records. hostinger. Create a CNAME record
 Type=CNAME
-name=_acme-challenge.api.ydadigitals.com
+name=_acme-challenge.api.example.com
 value=e9543057-1bcf-49ca-9e25-a321af98d599.auth.acme-dns.io.  //This is challenge string
 TTL=300
 
 7. After adding CNAME record, press enter on certbot terminal.
 
 Successfully received certificate.
-Certificate is saved at: /etc/letsencrypt/live/api.ydadigitals.com/fullchain.pem
-Key is saved at:         /etc/letsencrypt/live/api.ydadigitals.com/privkey.pem
+Certificate is saved at: /etc/letsencrypt/live/api.example.com/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/api.example.com/privkey.pem
 This certificate expires on 2026-05-09.
 These files will be updated when the certificate renews.
 Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+8. Check the cert detials:
+openssl x509 -noout -in /etc/letsencrypt/live/api.example.com/cert.perm -text
         </code></pre>
     </article>
     <script src="/scripts/prism.js"></script>
