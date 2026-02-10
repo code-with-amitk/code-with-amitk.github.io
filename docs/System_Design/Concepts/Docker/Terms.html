@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Docker Terms</title>
@@ -14,6 +14,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -33,7 +34,7 @@
       <a href="./docker-compose.html" target="_blank">docker-compose</a>
       <a href="#host">Docker Host</a>
       <a href="#image">Container Image/Docker Image</a>
-      <a href="#file">Dockerfile</a>
+      <a href="SampleDockerFile.html">Dockerfile</a>
       <a href="#registry">Docker registry</a>
       <a href="#volume">Docker Volume</a>
       <ul>
@@ -51,20 +52,6 @@
 
       <h2 id="image">Container Image/Docker Image</h2>
       <dl>This is used to start the container</dl>
-
-      <h2 id="file">Dockerfile</h2>
-      <dl>Shell script for creating Docker image/Container image</dl>
-      <pre><code class="language-css">
-# vim application.Dockerfile 
-FROM ubuntu:20.04                             //FROM Command: Installation is based image this OS, Since docker is not full OS.
-RUN apt update \                              //RUN Command: Run some command
-    apt-get install -y --no-install-recommends openssl \
-    apt-get install -y --no-install-recommends iputils-ping \
-
-COPY ./application.out ./a.txt /app/
-
-CMD /app/application.out "--config" a.txt     //CMD Command: Start the application
-        </code></pre>
 
       <h2 id="registry">Docker Registry</h2>
       <dl>
