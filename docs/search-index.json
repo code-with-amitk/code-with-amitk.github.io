@@ -555,11 +555,6 @@
     "excerpt": "DS Questions Home Our team Projects Contact Questions Data Structures Algorithms"
   },
   {
-    "title": "EAS",
-    "url": "/Frameworks/React_Native/Development Build.html",
-    "excerpt": "EAS Home Our team Projects Contact Development build Expo go build vs Dev build EAS (Cloud) expo-dev-client Development Build What is development buil..."
-  },
-  {
     "title": "Economics",
     "url": "/Economics/",
     "excerpt": "Economics Home Our team Projects Contact GST Example-1: Table Manufacturing Example-2: Exporting IT Services outside India GST GST(Goods and Services ..."
@@ -1601,7 +1596,7 @@
   },
   {
     "title": "React Native Components",
-    "url": "/Frameworks/React_Native/components/text_view_props_state.html",
+    "url": "/Frameworks/React_Native/Terms/text_view_props_state.html",
     "excerpt": "React Native Components Home Our team Projects Contact Terms Component text view Props State Terms Components Functions in React and JSX are called Co..."
   },
   {
@@ -1893,6 +1888,11 @@
     "title": "Tensorflow",
     "url": "/Machine Learning/Libraries/Tensorflow/",
     "excerpt": "Tensorflow Home Our team Projects Contact Back What What is tensorflow This is ML Open source library(EXPOSING APIs) for numerical computation and lar..."
+  },
+  {
+    "title": "Terms",
+    "url": "/Frameworks/React_Native/Terms/Development_build.html",
+    "excerpt": "Terms Home Our team Projects Contact Back Development build Ways to create dev build 1. Using EAS 2. Local Development Build React native app consists..."
   },
   {
     "title": "Terms",
