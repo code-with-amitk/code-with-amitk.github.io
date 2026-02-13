@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Dockerfile</title>
@@ -14,6 +14,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -108,10 +109,74 @@
           <td>Execute a command in the Docker image at build time.</td>
         </tr>
         <tr>
+          <td>CMD</td>
+          <td>
+            Command which is run at startup with DEFAULT arguments<br />
+            <pre><code class="language-css">
+$ Dockerfile
+CMD ["echo", "Hello World"]
+
+$ docker run my_image
+Hello World
+            </code></pre>
+            <br />
+            CMD can be easily overridden by adding arguments at the end of
+            docker run<br />
+            <pre><code class="language-css">
+$ Dockerfile
+CMD ["echo", "Hello World"]
+
+$ docker run my_image ls    //Hello World is not printed
+-list of files-
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
           <td>ENTRYPOINT</td>
           <td>
             This command specifies the default command that will run when the
-            container starts.
+            container starts. Mainly used to set the main executable for the
+            container. Can be overridden using --entrypoint flag<br />
+            <pre><code class="language-css">
+// Run entrypoint.sh script on startup
+ENTRYPOINT ["/entrypoint.sh"] 
+            </code></pre>
+            <br /><br />
+
+            <b>Most Often Use case:</b> Using ENTRYPOINT, CMD together<br />
+            <pre><code class="language-css">
+$ Dockerfile
+FROM python:3.9
+ENTRYPOINT ["python", "app.py"]
+CMD ["--port", "8080"]
+
+// Standard run
+$ docker run my_image runs
+python app.py --port 8080
+
+// Custom run
+$ docker run my-app --port 9000 runs 
+python app.py --port 9000
+
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>EXPOSE (only Documentation)</td>
+          <td>
+            The EXPOSE command is used as documentation to inform users and
+            other tools that the container will listen on specific network ports
+            at runtime. <br />
+            It DOES NOT actually publish or open the port to the host machine or
+            the outside world.<br /><br />
+
+            <font color="red"><b>PUBLISH (-p):</b></font> There is not publish
+            command in Dockerfile, but if you want to open a port then you can
+            specify using -p after docker run<br />
+            <pre><code class="language-css">
+// command maps port 80 on the host to the exposed port 8080 in the container. 
+docker run -p 80:8080 my_image_name
+            </code></pre>
           </td>
         </tr>
       </table>
