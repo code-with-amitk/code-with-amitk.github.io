@@ -537,7 +537,7 @@
   {
     "title": "Dockerfile",
     "url": "/System_Design/Concepts/Docker/SampleDockerFile.html",
-    "excerpt": "Dockerfile Home Our team Projects Contact What is Dockerfile Dockerfile Instructions Dockerfile Example Create docker image Check docker image What is..."
+    "excerpt": "Dockerfile Home Our team Projects Contact Back What is Dockerfile Dockerfile Instructions Dockerfile Example Create docker image Check docker image Wh..."
   },
   {
     "title": "Drafting Pleading & Conveyancing",
@@ -615,6 +615,11 @@
     "excerpt": "Find Search Count Home Our team Projects Contact Find Search Count Intervals Progressions SubSequence SubArray"
   },
   {
+    "title": "First Time Clone",
+    "url": "/System_Design/Concepts/git/First_Time_Clone.html",
+    "excerpt": "First Time Clone Home Our team Projects Contact Back 1. Setup ssh keys 2. Map ssh keys 3. Fork upstream repo Why git is needed Today you cannot surviv..."
+  },
+  {
     "title": "Fold Expression",
     "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++17/Fold Expression.html",
     "excerpt": "Fold Expression Home Our team Projects Contact Fold Expression Types of folds Fold Expression It simplifies operations over template parameter packs T..."
@@ -681,7 +686,7 @@
   },
   {
     "title": "git commands",
-    "url": "/System_Design/Concepts/git/",
+    "url": "/System_Design/Concepts/git/Commands.html",
     "excerpt": "git commands Home Our team Projects Contact Back log // Commits between branches $ git clone .. $ git branch -r //All branches branch3 branch2 branch1..."
   },
   {
@@ -1322,7 +1327,7 @@
   {
     "title": "Netskope SWG",
     "url": "/Networking/SWG/",
-    "excerpt": "Netskope SWG Home Our team Projects Contact What How it works Terms Policy types in Netskope Configurations in Netskope Proxy Chaining Netskope XFF Ev..."
+    "excerpt": "Netskope SWG Home Our team Projects Contact Back What How it works Terms Policy types in Netskope Configurations in Netskope Proxy Chaining Netskope X..."
   },
   {
     "title": "Network Peering Steering",
