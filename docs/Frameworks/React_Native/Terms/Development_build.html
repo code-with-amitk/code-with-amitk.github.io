@@ -27,7 +27,7 @@
     <aside class="sidebar">
       <a href="#dev">Development build</a>
       <ul>
-        <a href="#ways">Ways to create dev build</a>
+        <a href="#ways">Create dev build</a>
         <ul>
           <li><a href="#cloud">1. Using EAS</a></li>
           <li><a href="#local">2. Local</a></li>
@@ -80,7 +80,7 @@
         </tr>
       </table>
 
-      <h3 id="ways">Ways to create development build</h3>
+      <h3 id="ways">Create development build</h3>
       <h4 id="cloud">1. Using EAS (Cloud)</h4>
       <dl>
         <a href="https://docs.expo.dev/eas/">EAS(Expo Application services)</a>
@@ -88,7 +88,12 @@
         distribute apk/aab(Andriod), ipa(IOS)
       </dl>
 
-      <dl><b>Steps of creating apk using EAS (cloud)</b></dl>
+      <dl>
+        <b>Steps of creating apk using EAS (cloud)</b><br />
+        - Pre-requisite: You have created my-app project as mentioned in
+        <a href="../Examples.html">this</a>
+        document.
+      </dl>
       <pre><code class="language-css">
 //Install eas cli(EAS CLI is the command-line app that you will use to interact with EAS services from your terminal)
 C:\react\my-app>npm install -g eas-cli
@@ -112,14 +117,32 @@ $ npx expo install expo-dev-client
 
 // Andriod development build
 $ eas build -p android --profile development
+√ What would you like your Android application id to be? ... com.reachtotushar.myapp  //Press Enter
+√ Initialized versionCode with 1
+√ Using remote Android credentials (Expo server)
+√ Generate a new Android Keystore? ... yes
+√ Created keystore
+See logs: https://expo.dev/accounts/reachtotushar/projects/my-app/builds/693d25d7-c79d-4ff5-b563-033312a8fc79
+Waiting for build to complete. You can press Ctrl+C to exit.
+- Build in progress...
 
 // ios development build
 $ eas build -p ios --profile development
 This will upload project on cloud
 where its build an signed
 
-After the build completes, download the APK/IPA and install it on your device
       </code></pre>
+
+      <dl>
+        2. Open expo.dev link provided in logs and check status<br />
+        Scan the QR Code, It will download apk file on your Phone<br />
+        Click on apk file, app would be installed on your phone
+      </dl>
+      <img
+        src="/images/react/install_expo_app.png"
+        alt="Build Status"
+        style="width: 500px; height: 400px"
+      />
 
       <h4 id="local">2. Create locally. expo-dev-client</h4>
       <pre><code class="language-css">
