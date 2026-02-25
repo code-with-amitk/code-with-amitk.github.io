@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Drone Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Drones/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#firmware">Firmware</a>
+      <dl>
+        <a href="#ardupilot">ArduPilot</a>
+        <a href="#arducopter">ArduCopter</a>
+      </dl>
+      <a href="#boards">Hardware Boards</a>
+      <dl>
+        <a href="#apm">APM(ArduPilotMega)</a>
+        <a href="#pixhawk">Pixhawk</a>
+      </dl>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="firmware">Firmware</h2>
+      <dl>
+        <b>Firmware:</b> is low-level code embedded directly into hardware
+        (ROM/Flash) to control functionality, rarely updated, and essential for
+        booting (e.g., BIOS, router OS).<br />
+        <b>Software:</b> is high-level, user-facing applications (e.g., Windows,
+        apps) stored on disk, designed for user interaction and updated
+        frequently.
+      </dl>
+
+      <table>
+        <tr>
+          <th></th>
+          <th>What</th>
+          <th>Runs on/Used for</th>
+          <th>Opensource</th>
+          <th>License</th>
+          <th>When to consider</th>
+        </tr>
+        <tr>
+          <td id="ardupilot">ArduPilot</td>
+          <td>Firmware/Software having very large hobbyist community</td>
+          <td>planes, copters, rovers, subs</td>
+          <td>Yes</td>
+          <td>GPL</td>
+          <td>Long Range</td>
+        </tr>
+        <tr>
+          <td id="arducopter">ArduCopter</td>
+          <td>Ardupilot version.</td>
+          <td>multirotors and helicopters</td>
+          <td>Yes</td>
+          <td>GPL</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td id="px4">PX4</td>
+          <td>Modern Firmware/Software runs NuttX OS</td>
+          <td>commercial, academic, or research applications</td>
+          <td>Yes</td>
+          <td>BSD</td>
+          <td>High Precision</td>
+        </tr>
+      </table>
+
+      <h2 id="boards">Hardware Board</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>What</th>
+          <th>Bit</th>
+        </tr>
+        <tr>
+          <td id="apm">APM(ArduPilotMega)</td>
+          <td>Older, obsolete flight controller board designed around 2011.</td>
+          <td>8 bit</td>
+        </tr>
+        <tr>
+          <td id="pixhawk">Pixhawk</td>
+          <td>Advanced</td>
+          <td>32 bit</td>
+        </tr>
+      </table>
+    </article>
+  </body>
+</html>
