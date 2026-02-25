@@ -502,7 +502,7 @@
   {
     "title": "DLP",
     "url": "/Networking/Terms/DLP.html",
-    "excerpt": "DLP Home Our team Projects Contact What DLP (Data Loss Prevention) if sensitive data is leaked(on cloud), then DLP protects the data by inspecting the..."
+    "excerpt": "DLP Home Our team Projects Contact Back What DLP (Data Loss Prevention) if sensitive data is leaked(on cloud), then DLP protects the data by inspectin..."
   },
   {
     "title": "DNS",
@@ -548,6 +548,16 @@
     "title": "Draw Rectangle Around Faces",
     "url": "/Machine Learning/Code/opencv/Draw_Rectangle_around_faces.html",
     "excerpt": "Draw Rectangle Around Faces Home Our team Projects Contact Back Opencv draw Rectangle around faces import cv2 //1 import sys faceCascadeObject = cv2.C..."
+  },
+  {
+    "title": "Drone Terms",
+    "url": "/Drones/Terms/Terms.html",
+    "excerpt": "Drone Terms Home Our team Projects Contact Back Firmware ArduPilot ArduCopter Hardware Boards APM(ArduPilotMega) Pixhawk Firmware Firmware: is low-lev..."
+  },
+  {
+    "title": "Drones",
+    "url": "/Drones/",
+    "excerpt": "Drones Home Our team Projects Contact Back Terms"
   },
   {
     "title": "DS Questions",
