@@ -40,25 +40,30 @@
     <article style="margin-left: 200px">
       <h3 id="atop">atop</h3>
       <dl>
-        Commands:<br />
-        Open existing file using `atop -r file_name`<br />
-        &ensp; Press M for memory view, C for CPU view<br />
-        &ensp; s for scheduling activity<br />
-        &ensp; t for next sample taken after 10 min
+        Usage:CPU, Memory usage of process, Network Throughput, Disk
+        Throughput<br />
+        Commands: <br />
+        &ensp; t(For next sample taken after 10 min), Shift+t(prev 10 min)
       </dl>
       <pre><code class="language-css">
+$ atop -r /var/log/atop/atop_20260302
+$ atop
 
-atop
 MEM | tot 32G | free 860.4M | cache 6.3G    // 6.3G still left to be used
 SWP | tot 1G | free 590M | swcac 16.3M
 
-Press C
+Press C   // CPU View
 PID       VGROW       RGROW       CPU       CMD
 xx         45.0G      17.8G       30%       npraxy
 
-Press M
+Press M   // Memory View
 PID       VDATA       VSIZE       RSIZE    VGROW   RGROW     SWAPZ    MEM    CMD
 xx         44.3G      45.0G       17.8G    45.05G  17.8G     92.4M    57%   npraxy
+
+Network Throughput
+NET | eth0 -- | pcki 460986 | pcko 308929 | sp 0Mbps | si 20Mbps | so 36 Mbps | erri 0 | erro 0| drpi 20 | drpo 0 |
+si = incoming
+so = outgoing
       </code></pre>
       <dt>
         VSIZE(Virtual Size): total amount of virtual memory currently reserved
@@ -69,8 +74,13 @@ xx         44.3G      45.0G       17.8G    45.05G  17.8G     92.4M    57%   npra
         VGROW (Virtual Memory Growth): amount by which a process’s virtual
         memory size (VSIZE) has increased ("grown") during the monitoring
         interval. <br />
-        RGROW: Increase ("growth") in the resident memory of process. How much
-        additional RAM process has used since last monitoring time<br />
+        RGROW(Resident Memory Growth): It shows how much a process’s physical
+        (resident) memory has increased or decreased since the previous
+        interval. <br />
+        &ensp; Positive value (e.g., +8.2M): the process allocated more real RAM
+        (growing).<br />
+        &ensp; Negative value (e.g., -19.6M or -14.4M): the process released
+        about 19.6 MiB or 14.4 MiB of resident memory in that interval<br />
         RSIZE (Resident Size):Total resident memory used by a process, Resident
         memory is the portion of a process's memory that is actually held in
         physical RAM<br />
