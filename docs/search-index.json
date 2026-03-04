@@ -112,7 +112,7 @@
   {
     "title": "AWS vs GCP",
     "url": "/System_Design/Concepts/GCP/AWS_vs_GCP.html",
-    "excerpt": "AWS vs GCP Home Our team Projects Contact Back Compute Docker, Kubernets Identity Management Load Balancer Machine Learning Networking Storage Object ..."
+    "excerpt": "AWS vs GCP Home Our team Projects Contact Back Compute Docker, Kubernets Identity Management Load Balancer Machine Learning Networking Security Sheild..."
   },
   {
     "title": "AWS vs GCP",
@@ -1780,6 +1780,11 @@
     "excerpt": "Sharding Home Our team Projects Contact What When to use Sharding How App Server interacts with shards Issues in Sharding Sharding=Scalabilty? Shardin..."
   },
   {
+    "title": "Sheild",
+    "url": "/System_Design/Concepts/AWS/Sheild.html",
+    "excerpt": "Sheild Home Our team Projects Contact Back What is VPC Sheild (DDOS Protection) What is DDOS WAF vs Sheild Levels of Protection Level Explanation Stan..."
+  },
+  {
     "title": "Sidecar Container",
     "url": "/System_Design/Concepts/Containers/Sidecar_Container.html",
     "excerpt": "Sidecar Container Home Our team Projects Contact What is Sidecar Container Main Container vs Sidecar Sidecar Container A sidecar is a helper container..."
@@ -1872,7 +1877,7 @@
   {
     "title": "System Design",
     "url": "/System_Design/Concepts/",
-    "excerpt": "System Design Home Our team Projects Contact Back AWS : Terraforms , VPC GCP: Introduction (Components(Compute Engine, App Engine, BigQuery, Kubernete..."
+    "excerpt": "System Design Home Our team Projects Contact Back ⇉ AWS vs GCP AWS : Terraforms , Sheild , VPC GCP: Introduction (Components(Compute Engine, App Engin..."
   },
   {
     "title": "System Design",
