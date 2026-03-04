@@ -3,43 +3,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("searchInput");
     const searchResults = document.getElementById("searchResults");
 
+    if (!searchForm || !searchResults) return;
+
     let searchIndex = [];
 
-    // Load search index on page load
-    loadSearchIndex();
-
-    searchForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const query = searchInput.value.trim().toLowerCase();
-
-        if (!query) {
-            searchResults.innerHTML = "<li>Please enter a keyword to search.</li>";
-            return;
+    // Resolve site base URL from the script src so fetch works on GitHub Pages (any base path)
+    function getSearchIndexUrl() {
+        const script = document.querySelector('script[src*="search.js"]');
+        if (script && script.src) {
+            const url = new URL(script.src);
+            const basePath = url.pathname.replace(/\/scripts\/search\.js.*$/i, "/");
+            return url.origin + basePath + "search-index.json";
         }
-
-        if (searchIndex.length === 0) {
-            searchResults.innerHTML = "<li>Search index not loaded. Try again.</li>";
-            return;
-        }
-
-        // Filter results - search in title, url, and excerpt
-        const results = searchIndex.filter((page) => {
-            const searchableText = (
-                page.title.toLowerCase() +
-                " " +
-                page.url.toLowerCase() +
-                " " +
-                (page.excerpt || "").toLowerCase()
-            );
-            return searchableText.includes(query);
-        });
-
-        displayResults(results, query);
-    });
+        return "/search-index.json";
+    }
 
     async function loadSearchIndex() {
         try {
-            const response = await fetch("/search-index.json");
+            const url = getSearchIndexUrl();
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -51,11 +33,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    (async function init() {
+        await loadSearchIndex();
+
+        searchForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const query = (searchInput && searchInput.value.trim()) ? searchInput.value.trim().toLowerCase() : "";
+
+            if (!query) {
+                searchResults.innerHTML = "<li>Please enter a keyword to search.</li>";
+                return;
+            }
+
+            if (searchIndex.length === 0) {
+                searchResults.innerHTML = "<li>Search index not loaded. Try again.</li>";
+                return;
+            }
+
+            // Match whole query as phrase, or any word in title, url, excerpt
+            const words = query.split(/\s+/).filter(Boolean);
+            const results = searchIndex.filter((page) => {
+                const searchableText = (
+                    (page.title || "") + " " +
+                    (page.url || "") + " " +
+                    (page.excerpt || "")
+                ).toLowerCase();
+                return words.every((word) => searchableText.includes(word));
+            });
+
+            displayResults(results, query);
+        });
+    })();
+
     function displayResults(results, query) {
         searchResults.innerHTML = "";
 
         if (results.length === 0) {
-            searchResults.innerHTML = "<li>No results found for '<strong>" + query + "</strong>'</li>";
+            const escaped = query.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+            searchResults.innerHTML = "<li>No results found for '<strong>" + escaped + "</strong>'</li>";
             return;
         }
 
