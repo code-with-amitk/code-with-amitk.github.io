@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Sheild</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">What is VPC</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="what">Sheild (DDOS Protection)</h2>
+      <dl>
+        What is
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Networking/OSI-Layers/Layer-3/Security/Security_Vulnerabilities/DOS"
+          >DDOS</a
+        >
+      </dl>
+
+      <h3>
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/System-Design/Concepts/AWS/Security/WAF/README.md#vs"
+          >WAF vs Sheild</a
+        >
+      </h3>
+      <h3 id="levels">Levels of Protection</h3>
+      <table>
+        <tr>
+          <th>Level</th>
+          <th>Explanation</th>
+        </tr>
+        <tr>
+          <td>Standard</td>
+          <td>
+            It automatically protects all AWS customers at no cost.<br />
+            This uses variety of analysis techniques to detect malicious traffic
+            in real time and automatically mitigates it.
+          </td>
+        </tr>
+        <tr>
+          <td>Advanced (Paid Service)</td>
+          <td>
+            Provides detailed attack diagnostics, detects and mitigate
+            sophisticated DDoS attacks<br />
+            It integrates with other services eg(Amazon CloudFront, Route 53,
+            Elastic Load Balancing).<br />
+            We can integrate AWS Shield with AWS WAF by writing custom rules to
+            mitigate complex DDoS attacks.
+          </td>
+        </tr>
+      </table>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
