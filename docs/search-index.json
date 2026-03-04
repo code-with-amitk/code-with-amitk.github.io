@@ -1157,7 +1157,7 @@
   {
     "title": "Linux Commands",
     "url": "/Operating System/Linux/Commands.html",
-    "excerpt": "Linux Commands Home Our team Projects Contact Back atop curl df htop lsof proc top atop Commands: Open existing file using `atop -r file_name` &ensp; ..."
+    "excerpt": "Linux Commands Home Our team Projects Contact Back atop curl df htop lsof proc top atop Usage:CPU, Memory usage of process, Network Throughput, Disk T..."
   },
   {
     "title": "Load Balancer",
