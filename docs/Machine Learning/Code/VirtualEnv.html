@@ -1,37 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Virtual environment in Python</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
+  </head>
 
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#windows">Windows</a>
-        <a href="#mini">Miniconda</a>
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#windows">Windows</a>
+      <a href="#mini">Miniconda</a>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2>Create Virtual Environment</h2>
-        <h3 id="windows">Windows</h3>
-        <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <h2>Create Virtual Environment</h2>
+      <h3 id="windows">Windows</h3>
+      <pre><code class="language-css">
 //Install python from Microsoft Store
 > python
 Python 3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)] on win32
@@ -48,8 +51,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 (python_venv) path\python_venv>
         </code></pre>
 
-        <h3 id="mini">Using Miniconda(windows)</h3>
-        <pre><code class="language-css">
+      <h3 id="mini">Using Miniconda(windows)</h3>
+      <pre><code class="language-css">
 // Create a new environment named virtual_avatar, install Python 3.11.5
 cmd> C:\Users\amit\miniconda3\Scripts\conda create --name pvenv python=3.11.5
 
@@ -60,5 +63,5 @@ c:\Users\amit\miniconda3\envs> c:\Users\amit\miniconda3\Scripts\activate pvenv
 
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>

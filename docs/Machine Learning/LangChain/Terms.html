@@ -1,41 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Langchain Terms</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
+  </head>
 
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#messages">Messages</a>
-        <a href="#lcmessages">LangChain Messages</a>
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#messages">Messages</a>
+      <a href="#lcmessages">LangChain Messages</a>
     </aside>
 
-    <div style="margin-left:200px;">
-        <h2 id="messages"><a href="https://python.langchain.com/docs/concepts/messages/" target="_blank">
-            Messages</a></h2>
-        <dl>
-            Messages are the unit of communication in chat models. They are used to represent the input and output of a chat model<br>
-            Message contains (Role, Content, Metadata).
-        </dl>
-        <pre><code>
+    <div style="margin-left: 200px">
+      <h2 id="messages">
+        <a
+          href="https://python.langchain.com/docs/concepts/messages/"
+          target="_blank"
+        >
+          Messages</a
+        >
+      </h2>
+      <dl>
+        Messages are the unit of communication in chat models. They are used to
+        represent the input and output of a chat model<br />
+        Message contains (Role, Content, Metadata).
+      </dl>
+      <pre><code>
 message: {
     Role,
     Content,
@@ -60,110 +70,154 @@ Metadata: {     //Depending on the chat model provider
 }
         </code></pre>
 
-        <h2 id="lcmessages"><a href="https://python.langchain.com/docs/concepts/messages/" target="_blank">
-            LangChain Messages</a></h2>
-        <dl>
-            See <a href="#messages">Messages</a> first<br>
-            LangChain provides unified message format that can be used across all chat models.<br>
-            LangChain messages are Python objects that subclass from a BaseMessage<br>
-            These are 5 message types
-        </dl>
-        <table>
-            <tr>
-                <th>Role</th>
-                <th>Message</th>
-                <th>Example</th>
-            </tr>
-            <tr>
-                <td>Assistant</td>
-                <td>AIMessage. This is response from Model. It will have following attributes:
-                    <table>
-                        <tr>
-                            <th>Attribute</th>
-                            <th>Description</th>
-                        </tr>
-                        <tr>
-                            <td>content</td>
-                            <td>String or list(See content in <a href="#messsages">messages</a>)</td>
-                        </tr>
-                        <tr>
-                            <td><a href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank">
-                                tool_calls</a></td>
-                            <td>Tool calls associated with the message</td>
-                        </tr>
-                        <tr>
-                            <td><a href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank">
-                                invalid_tool_calls</a></td>
-                            <td>Tool calls with parsing errors associated with the message</td>
-                        </tr>
-                        <tr>
-                            <td><a href="https://python.langchain.com/api_reference/core/messages/langchain_core.messages.ai.UsageMetadata.html" target="_blank">
-                                usage_metadata</a></td>
-                            <td>Usage metadata for a message, such as token counts.</td>
-                        </tr>
-                        <tr>
-                            <td>id</td>
-                            <td>Optional Unique identifier</td>
-                        </tr>
-                        <tr>
-                            <td>response_metadata</td>
-                            <td>Response metadata, e.g., response headers, logprobs, token counts</td>
-                        </tr>
-                    </table>
+      <h2 id="lcmessages">
+        <a
+          href="https://python.langchain.com/docs/concepts/messages/"
+          target="_blank"
+        >
+          LangChain Messages</a
+        >
+      </h2>
+      <dl>
+        See <a href="#messages">Messages</a> first<br />
+        LangChain provides unified message format that can be used across all
+        chat models.<br />
+        LangChain messages are Python objects that subclass from a
+        BaseMessage<br />
+        These are 5 message types
+      </dl>
+      <table>
+        <tr>
+          <th>Role</th>
+          <th>Message</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td>Assistant</td>
+          <td>
+            AIMessage. This is response from Model. It will have following
+            attributes:
+            <table>
+              <tr>
+                <th>Attribute</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>content</td>
+                <td>
+                  String or list(See content in
+                  <a href="#messsages">messages</a>)
                 </td>
-                <td><pre><code class="language-css">
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://python.langchain.com/docs/concepts/tool_calling/"
+                    target="_blank"
+                  >
+                    tool_calls</a
+                  >
+                </td>
+                <td>Tool calls associated with the message</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://python.langchain.com/docs/concepts/tool_calling/"
+                    target="_blank"
+                  >
+                    invalid_tool_calls</a
+                  >
+                </td>
+                <td>
+                  Tool calls with parsing errors associated with the message
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://python.langchain.com/api_reference/core/messages/langchain_core.messages.ai.UsageMetadata.html"
+                    target="_blank"
+                  >
+                    usage_metadata</a
+                  >
+                </td>
+                <td>Usage metadata for a message, such as token counts.</td>
+              </tr>
+              <tr>
+                <td>id</td>
+                <td>Optional Unique identifier</td>
+              </tr>
+              <tr>
+                <td>response_metadata</td>
+                <td>
+                  Response metadata, e.g., response headers, logprobs, token
+                  counts
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <pre><code class="language-css">
 from langchain_core.messages import HumanMessage
 ai_message = model.invoke([HumanMessage("Tell me a joke")])
 ai_message # &lt;-- AIMessage
-                </code></pre></td>
-            </tr>
-            <tr>
-                <td>Assistant role</td>
-                <td>AIMessageChunk(Used for streaming responses)</td>
-                <td><pre><code class="language-css">
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Assistant role</td>
+          <td>AIMessageChunk(Used for streaming responses)</td>
+          <td>
+            <pre><code class="language-css">
 for chunk in model.stream([HumanMessage("what color is the sky?")]):
 print(chunk)
 ai_message = chunk1 + chunk2 + chunk3 + ...
-                </code></pre></td>
-            </tr>
-            <tr>
-                <td>Tool</td>
-                <td>ToolMessage(contains the result of calling a tool)</td>
-                <td><pre><code>
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Tool</td>
+          <td>ToolMessage(contains the result of calling a tool)</td>
+          <td>
+            <pre><code>
 {
     Role,
     Content,
     tool_call_id,   //id of the call to the tool
     artifact
 }
-                </code></pre></td>
-            </tr>
-            <tr>
-                <td>System</td>
-                <td>SystemMessage</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>User</td>
-                <td>HumanMessage</td>
-                <td><pre><code class="language-css">
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>System</td>
+          <td>SystemMessage</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>User</td>
+          <td>HumanMessage</td>
+          <td>
+            <pre><code class="language-css">
 from langchain_core.messages import HumanMessage
 model.invoke([HumanMessage(content="Hello, how are you?")])
-                </code></pre></td>
-            </tr>
-            <tr>
-                <td>No associated Role,Used to manage chat history</td>
-                <td>RemoveMessage</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Legacy</td>
-                <td>FunctionMessage</td>
-                <td></td>
-            </tr>
-        </table>
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>No associated Role,Used to manage chat history</td>
+          <td>RemoveMessage</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Legacy</td>
+          <td>FunctionMessage</td>
+          <td></td>
+        </tr>
+      </table>
     </div>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>

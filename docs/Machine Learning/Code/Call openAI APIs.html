@@ -1,40 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Voice Recognition System</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
+  </head>
 
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#sendtexttochatbottorespond">Call openAI APIs using code</a>
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#sendtexttochatbottorespond">Call openAI APIs using code</a>
     </aside>
 
-    <article style="margin-left:200px;">
-            <h3 id="sendtexttochatbottorespond">
-                <a href="https://platform.openai.com/docs/api-reference/authentication" target="_blank">
-                    Call openai APIs from code(get response from chatbot)</a></h3>
-                <dl><strong><a href="https://platform.openai.com/api-keys" target="_blank">a. Get openaAI API Key</a></strong></dl>
-                <dl><strong>b. Call/Check openai APIs using <a href="https://web.postman.co/workspace/openai" target="_blank"
-                    >Postman</a></strong></dl>
-                <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <h3 id="sendtexttochatbottorespond">
+        <a
+          href="https://platform.openai.com/docs/api-reference/authentication"
+          target="_blank"
+        >
+          Call openai APIs from code(get response from chatbot)</a
+        >
+      </h3>
+      <dl>
+        <strong
+          ><a href="https://platform.openai.com/api-keys" target="_blank"
+            >a. Get openaAI API Key</a
+          ></strong
+        >
+      </dl>
+      <dl>
+        <strong
+          >b. Call/Check openai APIs using
+          <a href="https://web.postman.co/workspace/openai" target="_blank"
+            >Postman</a
+          ></strong
+        >
+      </dl>
+      <pre><code class="language-css">
 GET https://api.openai.com/v1/models
 Header
     Authorization: Bearer API_KEY
@@ -50,11 +70,13 @@ Body
     }    
                 </code></pre>
 
-            <dl><strong>c. Calling APIs using code</strong></dl>
-            <dt>
-                <a href="/Machine Learning/Code/VirtualEnv.html" target="_blank">Create Virtual Env</a>
-            </dt>
-            <pre><code class="language-css">
+      <dl><strong>c. Calling APIs using code</strong></dl>
+      <dt>
+        <a href="/Machine Learning/Code/VirtualEnv.html" target="_blank"
+          >Create Virtual Env</a
+        >
+      </dt>
+      <pre><code class="language-css">
 // Install openai
 (virtual_avatar) c:\go-here\Code\python\virtual_avatar>pip install openai
 
@@ -62,8 +84,8 @@ Body
 OPENAI_API_KEY = value
             </code></pre>
 
-            <dt><strong>Call APIs from code</strong></dt>
-            <pre><code class="language-css">
+      <dt><strong>Call APIs from code</strong></dt>
+      <pre><code class="language-css">
 from openai import OpenAI
 
 def get_chatgpt_response():
@@ -95,10 +117,9 @@ def get_chatgpt_response():
 
 get_chatgpt_response()
         </code></pre>
-
     </article>
 
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>

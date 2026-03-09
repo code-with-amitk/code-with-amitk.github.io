@@ -31,7 +31,7 @@
       <a href="#">Types of Ctr</a>
       <ul>
         <li><a href="#copy">Copy (lvalue ref)</a></li>
-        <li><a href="#move">Move (rvalue ref)</a></li>
+        <li><a href="#move">Move (rvalue ref) / Move Semantics</a></li>
       </ul>
     </aside>
 
@@ -222,7 +222,21 @@ int main() {
       <h3 id="move">
         2. Move Constructor(rvalue reference) (Introduced in c++11)
       </h3>
-      <dl>Moves the object</dl>
+      <h4>Move Semantics?</h4>
+      <dl>
+        Helps transfer of ownership of resources from one object to another
+        without performing an deep copy. <br />
+        Move constructor implements move semantics
+      </dl>
+
+      <h4>Move Constructor</h4>
+      <dl>
+        Moves the object. <br />
+        Useful for temporary objects (<a href="../C++_11,14,17,20,23/"
+          >rvalues</a
+        >) which are about to be destroyed anyway, instead of creating new deep
+        copied object, Just transfer the ownership
+      </dl>
       <pre><code class="language-css">
 using vi = vector &lt;int>;
 class A {
