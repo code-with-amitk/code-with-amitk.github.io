@@ -67,7 +67,7 @@
   {
     "title": "Anomaly Detection using Scikit Learn",
     "url": "/Machine Learning/Code/anomaly_detection_using_scikit_learn.html",
-    "excerpt": "Anomaly Detection using Scikit Learn Home Our team Projects Contact Inlier, outlier Inlier, outlier, Novelty Inlier: A Data point that falls within th..."
+    "excerpt": "Anomaly Detection using Scikit Learn Home Our team Projects Contact Back Inlier, outlier Inlier, outlier, Novelty Inlier: A Data point that falls with..."
   },
   {
     "title": "Apache Web Servers",
@@ -326,7 +326,12 @@
   },
   {
     "title": "Consensus",
-    "url": "/System_Design/Concepts/Terms/Consensus/",
+    "url": "/System_Design/Concepts/Terms/CAP_Theorem.html",
+    "excerpt": "Consensus Home Our team Projects Contact Back CAP CAP Theorem CAP = Consistency , Availability Partition-Tolerance CAP theorem says: Only 2 out 3 can ..."
+  },
+  {
+    "title": "Consensus",
+    "url": "/System_Design/Concepts/Terms/Consensus/Introduction.html",
     "excerpt": "Consensus Home Our team Projects Contact What is Consensus? Raft vs Paxos What is Consensus Consensus is a process of agreement between distrusting no..."
   },
   {
@@ -857,7 +862,7 @@
   {
     "title": "Image Classification",
     "url": "/Machine Learning/Code/Image Classification.html",
-    "excerpt": "Image Classification Home Our team Projects Contact 1. Classify grayscale images into(0 to 9) 1. Classify grayscale images(28 × 28 pixels) into their ..."
+    "excerpt": "Image Classification Home Our team Projects Contact Back 1. Classify grayscale images into(0 to 9) 1. Classify grayscale images(28 × 28 pixels) into t..."
   },
   {
     "title": "Install Database",
@@ -1045,19 +1050,14 @@
     "excerpt": "Land Laws UP Revenue Code Home Our team Projects Contact Back People Bhumidhar Asami Thekedar Zamindar Allottee Land Sir Land khudkasht Land Terms Aba..."
   },
   {
-    "title": "Langchain",
-    "url": "/Machine Learning/LangChain/",
-    "excerpt": "Langchain Home Our team Projects Contact Introduction &ensp; What is LangChain? Terms &ensp; Message Types &ensp; LangChainMessage Types"
-  },
-  {
     "title": "Langchain Introduction",
     "url": "/Machine Learning/LangChain/Introduction.html",
-    "excerpt": "Langchain Introduction Home Our team Projects Contact Langchain? What is Langchain This is a framework for developing applications powered by large la..."
+    "excerpt": "Langchain Introduction Home Our team Projects Contact Back Langchain? What is Langchain This is a framework for developing applications powered by lar..."
   },
   {
     "title": "Langchain Terms",
     "url": "/Machine Learning/LangChain/Terms.html",
-    "excerpt": "Langchain Terms Home Our team Projects Contact Messages LangChain Messages Messages Messages are the unit of communication in chat models. They are us..."
+    "excerpt": "Langchain Terms Home Our team Projects Contact Back Messages LangChain Messages Messages Messages are the unit of communication in chat models. They a..."
   },
   {
     "title": "Languages",
@@ -1162,7 +1162,7 @@
   {
     "title": "Load Balancer",
     "url": "/System_Design/Concepts/Load Balancer/",
-    "excerpt": "Load Balancer Home Our team Projects Contact what Advatanges of LB 1. Failover Types of LB Places where LB can be kept Scheduling Algorithms for LB Wh..."
+    "excerpt": "Load Balancer Home Our team Projects Contact Back what Advatanges of LB 1. Failover Types of LB Places where LB can be kept Scheduling Algorithms for ..."
   },
   {
     "title": "Load Testing Tools",
@@ -1925,11 +1925,6 @@
     "excerpt": "Terms Home Our team Projects Contact Json Web Token Disecting token Header Payload Signature JWT Authentication to RESTFul APIs Json Web Token / oauth..."
   },
   {
-    "title": "Terms",
-    "url": "/System_Design/Concepts/Terms/",
-    "excerpt": "Terms Home Our team Projects Contact Authentication Methods: 1. Json Web Token / JWT(Often Used) 2. Cookies (Browser Based) Application Server: This h..."
-  },
-  {
     "title": "Terrform",
     "url": "/System_Design/Concepts/AWS/Terraforms.html",
     "excerpt": "Terrform Home Our team Projects Contact Back What is Terraform Terraform (Infrastructure as code. IaC) This is tool/script for building, changing the ..."
@@ -2032,7 +2027,7 @@
   {
     "title": "Virtual environment in Python",
     "url": "/Machine Learning/Code/VirtualEnv.html",
-    "excerpt": "Virtual environment in Python Home Our team Projects Contact Windows Miniconda Create Virtual Environment Windows //Install python from Microsoft Stor..."
+    "excerpt": "Virtual environment in Python Home Our team Projects Contact Back Windows Miniconda Create Virtual Environment Windows //Install python from Microsoft..."
   },
   {
     "title": "Virtualization",
@@ -2042,12 +2037,12 @@
   {
     "title": "Voice Recognition System",
     "url": "/Machine Learning/Code/Call openAI APIs.html",
-    "excerpt": "Voice Recognition System Home Our team Projects Contact Call openAI APIs using code Call openai APIs from code(get response from chatbot) a. Get opena..."
+    "excerpt": "Voice Recognition System Home Our team Projects Contact Back Call openAI APIs using code Call openai APIs from code(get response from chatbot) a. Get ..."
   },
   {
     "title": "Voice Recognition System",
     "url": "/Machine Learning/Code/Voice to text.html",
-    "excerpt": "Voice Recognition System Home Our team Projects Contact Voice to Text(using python) Voice to Text. Speak in Mic and print in text 1. Create & Start th..."
+    "excerpt": "Voice Recognition System Home Our team Projects Contact Back Voice to Text(using python) Voice to Text. Speak in Mic and print in text 1. Create & Sta..."
   },
   {
     "title": "VPC",
