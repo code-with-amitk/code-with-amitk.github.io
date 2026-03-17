@@ -1,37 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>Go Statements</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css"/>
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Go Statements</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#defer">Defer</a>
-            <a href="#if">if</a>
-            <a href="#switch">switch</a>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#defer">Defer</a>
+      <a href="#if">if</a>
+      <a href="#switch">switch</a>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h2 id="defer">Defer</h2>
-            <dl>defer statement defers execution of a function until the surrounding function returns.</dl>
-            <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <h2 id="defer">Defer</h2>
+      <dl>
+        defer statement defers execution of a function until the surrounding
+        function returns.
+      </dl>
+      <pre><code class="language-css">
 package main
 import "fmt"
 func main() {
@@ -43,14 +48,21 @@ func main() {
 hello
 world
             </code></pre>
+      <dl>
+        <a href="/Threads_Processes_IPC/Threads/Creation/GoRoutines.html"
+          >defer in goroutines example</a
+        >
+      </dl>
 
-            <h2 id="if">if statement</h2>
-            <dl>
-                a. Expression not surrounded by parentheses ( ) but the braces { } are required.<br>
-                b. if statement can start with Short statement to execute before condition.<br>
-                c. Variables declared in if statement are also avaiable in else block.
-            </dl>
-            <pre><code class="language-css">
+      <h2 id="if">if statement</h2>
+      <dl>
+        a. Expression not surrounded by parentheses ( ) but the braces { } are
+        required.<br />
+        b. if statement can start with Short statement to execute before
+        condition.<br />
+        c. Variables declared in if statement are also avaiable in else block.
+      </dl>
+      <pre><code class="language-css">
 package main
 import (
         "fmt"
@@ -75,13 +87,15 @@ Hi
 There
             </code></pre>
 
-            <h2 id="switch">switch</h2>
-            <dl>
-                a. breaks statement is provided automatically in go<br>
-                b. Unlike C,C++ swtich only runs the selected case, not all cases that follow<br>
-                c. Switch cases, Need Not to be constants. values involved need not to be integers.
-            </dl>
-            <pre><code class="language-css">
+      <h2 id="switch">switch</h2>
+      <dl>
+        a. breaks statement is provided automatically in go<br />
+        b. Unlike C,C++ swtich only runs the selected case, not all cases that
+        follow<br />
+        c. Switch cases, Need Not to be constants. values involved need not to
+        be integers.
+      </dl>
+      <pre><code class="language-css">
 package main
 import (
         "fmt"
@@ -103,8 +117,8 @@ func main() {
 # ./switch
 Linux
             </code></pre>
-        </article>
+    </article>
 
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
