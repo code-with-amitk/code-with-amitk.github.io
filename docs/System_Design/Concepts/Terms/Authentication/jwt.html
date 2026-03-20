@@ -1,87 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Terms</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
+          </form>
         </li>
-    </ul>
-  </nav>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
-    <a href="#jwt">Json Web Token</a>
-    <a href="#inside">Disecting token</a>
-    <ul>
-      <li><a href="#header">Header</a></li>
-      <li><a href="#payload">Payload</a></li>
-      <li><a href="#signature">Signature</a></li>
-    </ul>
-    <a href="#authenticatetorestful">JWT Authentication to RESTFul APIs</a>
-  </aside>
+    <aside class="sidebar">
+      <a href="#jwt">Json Web Token</a>
+      <a href="#inside">Disecting token</a>
+      <a href="#authenticatetorestful">JWT Authentication to RESTFul APIs</a>
+    </aside>
 
-  <main style="margin-left:200px;">
-    <h2 id="jwt">Json Web Token / oauth_token / auth_token</h2>
-    <dl>
-      <b>What?</b>
-      This is open standard (RFC 7519) used for securely transmitting information between two parties as a JSON object.
-      Mostly used for authentication.
-      <br><br>
+    <main style="margin-left: 200px">
+      <h2 id="jwt">Json Web Token / oauth_token / auth_token</h2>
+      <dl>
+        <b>What?</b>
+        This is open standard (RFC 7519) used for securely transmitting
+        information between two parties as a JSON object. Mostly used for
+        authentication.
+        <br />
 
-      <b>Usage?</b>
-      For authentication on the web, ie authentication to RESTFul API
-    </dl>
+        <b>Usage?</b>
+        For authentication on the web, ie authentication to RESTFul API
+      </dl>
 
-    <h3 id="inside">Disecting token</h3>
-    <dl>
-      JWTs consist of three parts: header + payload + signature, concatenated by dot .
-    </dl>
-    <pre><code class="language-css">
-      jwt-token = header.payload.signature
-      {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTc0MDU1OTk2NX0.Dck0cV04Vv7G6ciMt2qvE5_fS2ZMpl5aFuXwKNnD3M0"}
+      <h2 id="inside">Disecting token</h2>
+      <dl>
+        JWTs consist of three parts: header + payload + signature, concatenated
+        by dot .
+      </dl>
+      <pre><code class="language-css">
+jwt-token = header.payload.signature
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTc0MDU1OTk2NX0.Dck0cV04Vv7G6ciMt2qvE5_fS2ZMpl5aFuXwKNnD3M0"}
+
+// A JWT is assigned to user as a authentication token
+
+struct st = {
+  "alg": "HS256",
+  "typ": "JWT",
+}
+header = base64Encode(st)     //Header = Base64encode(algo+type)
+
+struct st = {
+  "email": email,
+  "exp":   timestamp_to_expiry
+}
+payload = base64Encode(st)    //Payload = Base64encode(email+timestamp)
+
+
+Signature = HMAC_SHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
     </code></pre>
 
-    <h3>How header, payload, Signature are calculated?</h3>
-    <dl>A JWT is assigned to user as a authentication token</dl>
-
-    <h4 id="header">Header = Base64encode(algo+type)</h4>
-    <pre><code class="language-css">
-    struct st = {
-        "alg": "HS256",
-        "typ": "JWT",
-      }
-      header = base64Encode(st)
-    </code></pre>
-
-    <h4 id="payload">Payload = Base64encode(email+timestamp)</h4>
-    <pre><code class="language-css">
-    struct st = {
-      "email": email,
-      "exp":   timestamp_to_expiry
-      }
-      payload = base64Encode(st)
-    </code></pre>
-
-    <h4 id="signature">Signature</h4>
-    <pre><code class="language-css">
-      HMAC_SHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
-    </code></pre>
-
-    <h4>Complete Code</h4>
-    <pre><code class="language-css">
+      <h3>Complete Code</h3>
+      <pre><code class="language-css">
       package main
 
       import (
@@ -142,9 +137,8 @@
       }
     </code></pre>
 
-
-    <h2 id="authenticatetorestful">How JWTs are used for authentication</h2>
-    <pre class="mermaid">
+      <h2 id="authenticatetorestful">How JWTs are used for authentication</h2>
+      <pre class="mermaid">
         sequenceDiagram
             rect rgb(236, 232, 242)
             participant dns as DNS
@@ -180,13 +174,12 @@
         end
 
     </pre>
+    </main>
 
-  </main>
-
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs';
-  </script>	
-      <script src="/scripts/prism.js"></script>
-      <script src="/scripts/common.js"></script>
-</body>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
+    </script>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
 </html>

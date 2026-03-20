@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Refresh Token</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#jwt">Why JWT Token</a>
+      <a href="#issue">Issue with 1 Token System</a>
+      <a href="#refresh">Refresh Token</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="refresh">Why JWT Token</h2>
+      <dl>
+        <b><a href="./jwt.html">JWT Token</a>?</b><br />
+        &ensp; JWT token is assigned to a user when user Authenticates and then
+        token is used as Bearer token in every request to access the REST
+        endpoint.
+      </dl>
+
+      <h2 id="issue">Issue with 1 Token System(ie only JWT Token)?</h2>
+      <dl>
+        JWT Token is often associated with Password, ie whenever user entered
+        correct password a new JWT token is provided to the user.<br />
+        <u>Long JWT Token expiry(3 months):</u><br />
+        &ensp; if JWT token expiry is kept for longer period and token is
+        compromised. Malicious user can attack system for longer duration of
+        time.<br />
+        <u>Short JWT Token expiry(24 hours):</u><br />
+        &ensp; if JWT token expiry is smaller (ie 1 day), then after every 1 day
+        user has to enter his password again. <br />
+
+        <u>Solution:</u> Maintain 2 JWT tokens.<br />
+        &ensp; Short lived(24 hours): access token<br />
+        &ensp; Long lived(90 days): Refresh token
+      </dl>
+
+      <h2 id="refresh">Refresh Token</h2>
+      <dl>
+        <b>What?</b> refresh Token is not a JWT Token, its a unique
+        string(uuid)<br />
+        <b>Advantages?</b><br />
+        &ensp; 1. It prevents long lived token from floating around on
+        internet<br />
+        &ensp; 2. Only short lived token(15 min or 1 hour life) token floats on
+        wire, it they are compromised then even, attack duration is reduced.<br />
+        &ensp; 3. User need not to enter password again and again in case JWT
+        token has expired and needs renewal. &ensp; 4. Long lived JWT tokens are
+        hard to revoke and permanent key to system for entire duration(eg: 90
+        days)
+      </dl>
+
+      <h3>Flow</h3>
+      <dl>
+        Now Server returns 2 tokens on login to frontend.<br />
+        &ensp; 1. access_token: short‑lived JWT (for example, 15–60 minutes).<br />
+        &ensp; 2. refresh_token: long‑lived random string stored server‑side
+        (e.g., 7–90 days)
+      </dl>
+      <pre><code class="language-css">
+  CLIENT/FRONTEND                                     SERVER/BACKEND
+          ------------------ login (user,pass) -------------->
+                                                    Correct user,pass
+                                                    Generate JWT, refresh token
+                                                            ---------- refresh_token -----> DB
+                                                                                        Store in DB
+          <------ access_token(JWT) + refresh_token(string) --
+
+    Access REST endpoint
+          -------- GET USERS (Bearer: &lt;access_token>) ------>/users
+                                                        Validate JWT
+          &lt;--------------- 401 Unauthorized -------- Token expired
+
+    Call Refresh endpoint
+          -------- GET token (Refresh: "refresh_token") -----> /auth/refresh
+                                                              validate refresh_token from DB
+                                                              Issue new (access, refresh) token
+      </code></pre>
+    </main>
+
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
+    </script>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
