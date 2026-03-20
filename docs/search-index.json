@@ -391,8 +391,8 @@
   },
   {
     "title": "Daemon Process",
-    "url": "/Languages/Programming/Go/Processes/daemon_process.html",
-    "excerpt": "Daemon Process Home Our team Projects Contact Detached Daemon Process Child Process Log CPU usage into file Detached Daemon Process We will create a d..."
+    "url": "/Languages/Programming/Go/Code Examples/get_cpu_usage.html",
+    "excerpt": "Daemon Process Home Our team Projects Contact Back Detached Daemon Process Child Process Log CPU usage into file Detached Daemon Process We will creat..."
   },
   {
     "title": "Daemon Service",
@@ -722,12 +722,7 @@
   {
     "title": "Go",
     "url": "/Languages/Programming/Go/",
-    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World, GPU, CPU % Usage using Daemon Command line Arguments Collections &ensp; Arrays, Sli..."
-  },
-  {
-    "title": "Go Code Examples",
-    "url": "/Languages/Programming/Go/Code Examples/",
-    "excerpt": "Go Code Examples Home Our team Projects Contact Hello World GPU, CPU % Usage using Daemon"
+    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command line Arguments Collections &ensp; Arrays..."
   },
   {
     "title": "Go Command line Arguments",
@@ -737,7 +732,7 @@
   {
     "title": "Go Hello World",
     "url": "/Languages/Programming/Go/Code Examples/Hello World.html",
-    "excerpt": "Go Hello World Home Our team Projects Contact Hello World Hello World Program go mod init test will create go module = test $ mkdir test $ cd test $ g..."
+    "excerpt": "Go Hello World Home Our team Projects Contact Back Hello World Hello World Program go mod init test will create go module = test $ mkdir test $ cd tes..."
   },
   {
     "title": "Go Loops",
@@ -757,7 +752,7 @@
   {
     "title": "Go Statements",
     "url": "/Languages/Programming/Go/Statements.html",
-    "excerpt": "Go Statements Home Our team Projects Contact Defer if switch Defer defer statement defers execution of a function until the surrounding function retur..."
+    "excerpt": "Go Statements Home Our team Projects Contact Back Defer if switch Defer defer statement defers execution of a function until the surrounding function ..."
   },
   {
     "title": "Go Variables",
@@ -1453,11 +1448,6 @@
     "title": "Problems on Synchronization",
     "url": "/Threads_Processes_IPC/Synchronization/Problems on synchronization.html",
     "excerpt": "Problems on Synchronization Home Our team Projects Contact Back Dining Philosphers Problem n Producer n Consumer Dining Philosphers Problem (Concurren..."
-  },
-  {
-    "title": "Processes",
-    "url": "/Languages/Programming/Go/Processes/",
-    "excerpt": "Processes Home Our team Projects Contact Creating a Daemon Process"
   },
   {
     "title": "Processes",
