@@ -367,7 +367,7 @@
   {
     "title": "Cookies for Domain based Authentication",
     "url": "/System_Design/Concepts/Terms/Authentication/cookies.html",
-    "excerpt": "Cookies for Domain based Authentication Home Our team Projects Contact Per browser Cookie based Auth Cookie based Authentication for seperate Browser ..."
+    "excerpt": "Cookies for Domain based Authentication Home Our team Projects Contact Back Per browser Cookie based Auth Cookie based Authentication for seperate Bro..."
   },
   {
     "title": "Couchbase",
@@ -557,7 +557,7 @@
   {
     "title": "Drone Terms",
     "url": "/Drones/Terms/Terms.html",
-    "excerpt": "Drone Terms Home Our team Projects Contact Back Firmware ArduPilot ArduCopter Hardware Boards APM(ArduPilotMega) Pixhawk Firmware Firmware: is low-lev..."
+    "excerpt": "Drone Terms Home Our team Projects Contact Back Firmware ArduPilot ArduCopter Hardware Boards APM(ArduPilotMega) Pixhawk SITL (Software-in-the-Loop) F..."
   },
   {
     "title": "Drones",
@@ -1660,6 +1660,11 @@
     "excerpt": "React Projects Home Our team Projects Contact Tic Tac Toe Game Tic Tac Toe Game Without State Storage github link"
   },
   {
+    "title": "Refresh Token",
+    "url": "/System_Design/Concepts/Terms/Authentication/refresh_token.html",
+    "excerpt": "Refresh Token Home Our team Projects Contact Back Why JWT Token Issue with 1 Token System Refresh Token Why JWT Token JWT Token ? &ensp; JWT token is ..."
+  },
+  {
     "title": "Remote Browser Isolation",
     "url": "/Networking/OSI-Layers/Layer-7/RBI Remote Browser Isolation.html",
     "excerpt": "Remote Browser Isolation Home Our team Projects Contact What RBI modes RBI Types Remote Browser Isolation / Web Isolation This is a cybersecurity appr..."
@@ -1912,7 +1917,7 @@
   {
     "title": "Terms",
     "url": "/System_Design/Concepts/Terms/Authentication/jwt.html",
-    "excerpt": "Terms Home Our team Projects Contact Json Web Token Disecting token Header Payload Signature JWT Authentication to RESTFul APIs Json Web Token / oauth..."
+    "excerpt": "Terms Home Our team Projects Contact Back Json Web Token Disecting token JWT Authentication to RESTFul APIs Json Web Token / oauth_token / auth_token ..."
   },
   {
     "title": "Terrform",
