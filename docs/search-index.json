@@ -40,6 +40,11 @@
     "excerpt": "Administrative Law Home Our team Projects Contact What is Administrative law Conseil d'État Doctrines Separation of Powers Post decisional hearing Exc..."
   },
   {
+    "title": "Administrative Law",
+    "url": "/Law/Interpretation_of_Statutes/",
+    "excerpt": "Administrative Law Home Our team Projects Contact Back Statutes Interpretation of Statutes Statutes? Means a written law passed by a legislative body...."
+  },
+  {
     "title": "AdvancedContainerTypes",
     "url": "/Languages/Scripting/Python/Containers/AdvancedContainerTypes.html",
     "excerpt": ""
@@ -1203,6 +1208,11 @@
     "title": "Machine Learning Models",
     "url": "/Machine Learning/ML_Models/Calorie_Predictor_DecisionTree_and_RandomForestRegressor.html",
     "excerpt": "Machine Learning Models Home Our team Projects Contact Back Calorie prediction (DecisionTreeRegressor, Random Forest) Models Model doing prediction Mo..."
+  },
+  {
+    "title": "Machine Learning Models",
+    "url": "/Machine Learning/ML_Models/Claude_Code/",
+    "excerpt": "Machine Learning Models Home Our team Projects Contact Back Things Calude can do Things to do with Claude Code Automate the work Enter the project fol..."
   },
   {
     "title": "Machine Learning Terms",
