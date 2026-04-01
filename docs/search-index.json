@@ -560,6 +560,11 @@
     "excerpt": "Draw Rectangle Around Faces Home Our team Projects Contact Back Opencv draw Rectangle around faces import cv2 //1 import sys faceCascadeObject = cv2.C..."
   },
   {
+    "title": "Drone Architecture",
+    "url": "/Drones/Architecture.html",
+    "excerpt": "Drone Architecture Home Our team Projects Contact Back Architecture"
+  },
+  {
     "title": "Drone Terms",
     "url": "/Drones/Terms/Terms.html",
     "excerpt": "Drone Terms Home Our team Projects Contact Back Start Here Firmware ArduPilot ArduCopter Hardware Boards APM(ArduPilotMega) Pixhawk SITL (Software-in-..."
@@ -567,7 +572,7 @@
   {
     "title": "Drones",
     "url": "/Drones/",
-    "excerpt": "Drones Home Our team Projects Contact Back Terms"
+    "excerpt": "Drones Home Our team Projects Contact Back Architecture Terms"
   },
   {
     "title": "DS Questions",
