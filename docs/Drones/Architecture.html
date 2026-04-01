@@ -23,15 +23,74 @@
       </ul>
     </nav>
 
-    <aside class="sidebar"></aside>
+    <aside class="sidebar">
+      <a href="#gcs">GCS</a>
+    </aside>
 
     <article style="margin-left: 200px">
       <h2>Architecture</h2>
-      <img
-        src="/images/Drones/Drone_Diagram.png"
-        alt="Drone Architecture Diagram"
-        style="width: 900px; height: 500px"
-      />
+      <table>
+        <tr>
+          <th>Architecture</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>
+            <img
+              src="/images/Drones/Drone_Diagram.png"
+              alt="Drone Architecture Diagram"
+              style="width: 900px; height: 500px"
+            />
+          </td>
+          <td><a href="#gcs">Ground Control Stations</a></td>
+        </tr>
+      </table>
+
+      <h2 id="gcs">Ground Control Stations (GCS)</h2>
+      <dl>
+        - Ground Station is a software application, running on a ground-based
+        computer,phone,or transmitter, that communicates with your UAV via
+        wireless telemetry or USB cable<br />
+        - Ground Stations which can communicate with ArduPilot: Mission Planner,
+        APM Planner 2, MAVProxy, QGroundControl, UgCS, and LOGOS. For
+        Tablet/Smartphone there are QGroundControl, Tower (DroidPlanner 3),
+        MAVPilot, AndroPilot and SidePilot<br />
+        -
+        <a
+          href="https://ardupilot.org/copter/docs/common-choosing-a-ground-station.html#common-choosing-a-ground-station"
+          >Choosing a Ground Station</a
+        >
+      </dl>
+
+      <h3>1. Desktop GCS</h3>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Supported On</th>
+          <th>License</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>Mission Planner</td>
+          <td>Windows, MAC OS X</td>
+          <td>Open source (GPLv3)</td>
+          <td>Fully featured</td>
+        </tr>
+        <tr>
+          <td>APM Planner 2.0</td>
+          <td>Windows, MAC OS X, Linux</td>
+          <td>Open source (GPLv3)</td>
+          <td>
+            reduced feature set when compared with others. Smaller user base
+          </td>
+        </tr>
+        <tr>
+          <td>MAVProxy</td>
+          <td>Linux</td>
+          <td>Open source (GPLv3)</td>
+          <td>Written in Python, and extensible via python modules</td>
+        </tr>
+      </table>
     </article>
   </body>
 </html>
