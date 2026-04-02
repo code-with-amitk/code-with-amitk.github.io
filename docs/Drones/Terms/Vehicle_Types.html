@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Vehicle Types</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Drones/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#planes">Planes</a>
+      <a href="#copters">Copters</a>
+      <a href="#rovers">Rovers</a>
+      <a href="#boat">Boats</a>
+      <a href="#sub">Sub</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="vehicletypes">Vehicle Types</h2>
+      <h3 id="planes">Planes (Fixed-Wing Aircraft)</h3>
+      <dl>
+        Fast, and have long ranges but require runways for takeoff and landing
+      </dl>
+
+      <h3 id="copters">Copters/Rotorcraft (Rotary Wings)</h3>
+      <dl>
+        <a href="https://ardupilot.org/copter/docs/common-rtf.html#common-rtf"
+          >Purchase Here</a
+        >
+      </dl>
+      <h4>1. Single Rotor</h4>
+      <dl>
+        1 large main rotor for lift and a smaller tail rotor to counteract
+        torque
+      </dl>
+
+      <h4>2. Multicopter</h4>
+      <dl>4, 6, or 8 small rotors/wings</dl>
+
+      <h4>3. Drone/UAV(Unmanned Aerial Vehicle)</h4>
+      <dl>
+        - Multicopter becomes a UAV or Drone when it is capable of autonomous
+        flight.<br />
+        - Using <a href="#accelerometer">Accelerometer</a>,
+        <a href="#gyro">gyrometer</a>, <a href="#barometer">barometer</a> and
+        GPS data to fly without human control.
+      </dl>
+
+      <h4>4. Helicopter</h4>
+      <dl>1 Large rotor, 2 or more tandem rotors, coaxial rotors</dl>
+
+      <h3 id="rovers">Rovers</h3>
+      <dl>ground vehicles (cars, boats on land)</dl>
+
+      <h3 id="boat">Boat</h3>
+      <dl>surface vessels</dl>
+
+      <h3 id="sub">Sub</h3>
+      <dl>underwater ROVs</dl>
+    </article>
+  </body>
+</html>

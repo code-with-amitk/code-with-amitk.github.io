@@ -25,16 +25,8 @@
 
     <aside class="sidebar">
       <a href="#start">Start Here</a>
-      <a href="#firmware">Firmware</a>
-      <ul>
-        <a href="#ardupilot">ArduPilot</a>
-        <a href="#arducopter">ArduCopter</a>
-      </ul>
+      <a href="#firmware">Firmware(Ardupilot)</a>
       <a href="#boards">Hardware Boards</a>
-      <ul>
-        <a href="#apm">APM(ArduPilotMega)</a>
-        <a href="#pixhawk">Pixhawk</a>
-      </ul>
       <a href="#sitl">SITL (Software-in-the-Loop)</a>
     </aside>
 
@@ -42,6 +34,10 @@
       <h2>
         <a href="https://ardupilot.org/copter/docs/introduction.html"
           >Start Reading Here</a
+        ><br />
+        <a
+          href="https://ardupilot.org/copter/docs/initial-setup.html#initial-setup"
+          >First Time Setup</a
         >
       </h2>
       <h2 id="firmware">Firmware</h2>
@@ -108,23 +104,6 @@
         </tr>
       </table>
 
-      <h2 id="vehicletypes">Vehicle Types</h2>
-      <dl>
-        <b>Planes (Fixed-Wing Aircraft):</b> Fast, and have long ranges but
-        require runways for takeoff and landing.<br />
-        <b>Copters</b>
-        <a href="https://ardupilot.org/copter/docs/common-rtf.html#common-rtf"
-          >Purchase Here</a
-        ><br />
-        &ensp; <u>Helicopter:</u> Rotary-Wing. Use one or two large, main rotors
-        to generate lift, allowing vertical takeoff, landing, and hovering.
-        slower than planes.<br />
-        &ensp; <u>Multicopters/Multirotors (Drones)</u> are aerial vehicles.<br />
-        <b>Rovers</b> ground vehicles (cars, boats on land)<br />
-        <b>Boat</b> surface vessels<br />
-        <b>Sub</b> underwater ROVs.
-      </dl>
-
       <h2 id="sitl">SITL (Software-in-the-Loop)</h2>
       <dl>
         SITL (Software-in-the-Loop) is a simulation technology allowing
@@ -134,24 +113,33 @@
         drones.
       </dl>
 
-      <h2>Scopes</h2>
+      <h2 id="measuring">Measuring Devices</h2>
       <table>
         <tr>
           <th>Device</th>
           <th>Meaning</th>
         </tr>
         <tr>
-          <td>Gyroscope</td>
+          <td id="gyro">Gyroscope</td>
           <td>
             Gyro(meaning circle, ring), Scope(means to look at).<br />
             This is a device used for measuring angular velocity of a device
           </td>
         </tr>
         <tr>
-          <td>Accelerometer</td>
+          <td id="accelerometer">Accelerometer</td>
           <td>
             An accelerometer is a device that measures the proper acceleration
             of an object
+          </td>
+        </tr>
+        <tr>
+          <td id="barometer">Barometer</td>
+          <td>
+            A device that measures atmospheric pressure. It calculate the
+            drone's altitude relative to a takeoff point. Because air pressure
+            drops with altitude, barometer can determine how high drone is
+            flying.
           </td>
         </tr>
       </table>
