@@ -567,12 +567,12 @@
   {
     "title": "Drone Terms",
     "url": "/Drones/Terms/Terms.html",
-    "excerpt": "Drone Terms Home Our team Projects Contact Back Start Here Firmware ArduPilot ArduCopter Hardware Boards APM(ArduPilotMega) Pixhawk SITL (Software-in-..."
+    "excerpt": "Drone Terms Home Our team Projects Contact Back Start Here Firmware(Ardupilot) Hardware Boards SITL (Software-in-the-Loop) Start Reading Here First Ti..."
   },
   {
     "title": "Drones",
     "url": "/Drones/",
-    "excerpt": "Drones Home Our team Projects Contact Back Architecture Terms"
+    "excerpt": "Drones Home Our team Projects Contact Back Architecture Terms &ensp; Terms : Firmware(Ardupilot, Arducopter, PX4), Hardware Boards(APM, PixHawk), SITL..."
   },
   {
     "title": "DS Questions",
@@ -2028,6 +2028,11 @@
     "title": "Variadic Templates",
     "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Variadic Templates.html",
     "excerpt": "Variadic Templates Home Our team Projects Contact Back What is Variadic? Variadic Class Template Variadic Function Template What is Variadic Templates..."
+  },
+  {
+    "title": "Vehicle Types",
+    "url": "/Drones/Terms/Vehicle_Types.html",
+    "excerpt": "Vehicle Types Home Our team Projects Contact Back Planes Copters Rovers Boats Sub Vehicle Types Planes (Fixed-Wing Aircraft) Fast, and have long range..."
   },
   {
     "title": "VGPU Terms",
