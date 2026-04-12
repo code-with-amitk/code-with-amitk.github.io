@@ -41,8 +41,34 @@
               alt="Drone Architecture Diagram"
               style="width: 900px; height: 500px"
             />
+            <pre><code>
+                                                                        |-------------- Drone -----------------|
+                                                                        |
+                                                                        |                                               FAN
+                                                                        |             [Circuit Board] ------UART-----[Esc Board]
+                                                                        |           [ArduPilot / PX4  ]              Brushless motor
+                                                                        |                                            With Propeller
+                                                                        |--|----------|------|--------------------|
+                                                                          UART      UART    UART
+                                                                            |         |       |
+                                                                      Wifi Radio    GPS     Gyroscope/Accerlerometer
+
+                                                GPS  Telemetry
+                                                |    Radio
+                                                |     |
+                                                UART  UART
+|------- Laptop ---------|                      |     |
+| GCS (Mission Planner)  |                  |---|-----|---------------------|
+|                       USB ==UART Cable== Serial Flight Controller        |
+|------------------------|                  |      (STM32 / Cortex-M MCU)  |
+                                            |------------------------------|
+            </code></pre>
           </td>
-          <td><a href="#gcs">Ground Control Stations</a></td>
+          <td>
+            Actual communication between Drone and GCS is done usng Flight
+            Controller.
+            <a href="#gcs">Ground Control Stations</a> only shows the data.
+          </td>
         </tr>
       </table>
 
