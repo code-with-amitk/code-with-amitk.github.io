@@ -562,7 +562,7 @@
   {
     "title": "Drone Architecture",
     "url": "/Drones/Architecture.html",
-    "excerpt": "Drone Architecture Home Our team Projects Contact Back GCS Architecture Architecture Description Ground Control Stations Ground Control Stations (GCS)..."
+    "excerpt": "Drone Architecture Home Our team Projects Contact Back GCS Architecture Architecture Description |-------------- Drone -----------------| | | FAN | [C..."
   },
   {
     "title": "Drone Terms",
@@ -708,6 +708,11 @@
     "title": "GCP",
     "url": "/System_Design/Concepts/GCP/Deploy_Docker_Image.html",
     "excerpt": "GCP Home Our team Projects Contact Back Deploy on GCP Deploy Docker Image on GCP 1. Create a docker image 2. Create Compute Engine instance on GCP htt..."
+  },
+  {
+    "title": "Getting Started",
+    "url": "/Drones/Getting_Started.html",
+    "excerpt": "Getting Started Home Our team Projects Contact Back Getting Started Once you have the basic understanding of Drone Architecture and its compoenents/Te..."
   },
   {
     "title": "git commands",
@@ -883,6 +888,11 @@
     "title": "Integrity",
     "url": "/Networking/OSI-Layers/Layer-3/Security/Integrity.html",
     "excerpt": "Integrity Home Our team Projects Contact Integrity? Methods to achieve Integrity What is Integrity Ensuring that data or systems remain accurate, cons..."
+  },
+  {
+    "title": "Intellectual Property Law",
+    "url": "/Law/Intellectual_Property_Law/",
+    "excerpt": "Intellectual Property Law Home Our team Projects Contact Back Statutes Interpretation of Statutes Intrinsic aids Extrinsic aids Intellectual Property ..."
   },
   {
     "title": "Interrupts",
@@ -1270,6 +1280,11 @@
     "excerpt": "Memory Types Home Our team Projects Contact CPU Registers 1. General Purpose Registers RSP(stack pointer) RBP(base pointer) 2. Segment Registers(16 bi..."
   },
   {
+    "title": "Meta Integration",
+    "url": "/Networking/Integrations/Meta/",
+    "excerpt": "Meta Integration Home Our team Projects Contact Back Create an App with Meta Steps: 1. Register as Meta developer, Login to developer account(https://..."
+  },
+  {
     "title": "Microservices",
     "url": "/System_Design/Concepts/Microservices/Introduction.html",
     "excerpt": "Microservices Home Our team Projects Contact Back Microservice? Advantages? Disadvantages? Deployment Monolith Advantages? Disadvantages? Situations w..."
@@ -1303,6 +1318,11 @@
     "title": "Moodboard App",
     "url": "/System_Design/Scalable/Moodboard App/",
     "excerpt": "Moodboard App Home Our team Projects Contact What is Moodboard? Requirements BOE System APIs DB HLD What is Moodboard (Digital pinboard) = ID App by A..."
+  },
+  {
+    "title": "Motherboard",
+    "url": "/Motherboard/Terms/",
+    "excerpt": "This is a document type declaration (DTD), which indicate the version of HTML. It is the required initial tag for HTML5 documents. Browser follows app..."
   },
   {
     "title": "Motherboard",
@@ -1367,7 +1387,7 @@
   {
     "title": "Networking",
     "url": "/Networking/",
-    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Networking Devices &ensp; Firewalls: Fortinet , SRX &ensp; Gat..."
+    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Integrations: Meta Networking Devices &ensp; Firewalls: Fortin..."
   },
   {
     "title": "Networking Devices",
