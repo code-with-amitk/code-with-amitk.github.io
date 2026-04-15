@@ -35,13 +35,35 @@
         components.
       </dl>
 
+      <h2>Simulating the Drone System</h2>
+      <dl>
+        Ardupilot: Simulate Flying drone<br />
+        MissionPlanner: Ground Station Communicating with drone
+      </dl>
       <pre><code>
-        |--- WSL(Ubuntu) -----|       |----- Windows -----|
-        |                     |       |                   |
-        | Ardupilot(Simulate  |       | MissionPlanner    |
-        |   Drone)            |       | (Ground Station)  |
-        |---------------------|       |-------------------|
+|--- WSL(Ubuntu) ---------|                            |----- Windows -----|
+|                         |                            |                   |
+|     Ardupilot           |                            | MissionPlanner    |
+|(Simulate Flying Drone)  |                            | (Ground Station)  |
+| Barometer, GPS,         | &lt;--- Mavlink(UDP) --->     |                   |
+| gyro/accelerometer      |                            |                   |
+|-------------------------|                            |-------------------|
       </code></pre>
+
+      <h3>
+        1. Launch Simulated Drone(<a href="/Drones/">Ardupilot</a> on WSL)
+      </h3>
+      <dl>
+        <b>This is SITL = sim_vehicle.py</b><br />
+        As we know, Ardupilot is the software running on circuit board of
+        drone<br />
+        <a href="/Drones/Terms/Terms.html#ardupilot"
+          >Install and start ardupilot</a
+        >
+      </dl>
+
+      <h3>2. <a href="/Drones/">GCS(MissionPlanner)</a></h3>
+      <dl></dl>
       <h3>Steps</h3>
       <dl>
         1. Install

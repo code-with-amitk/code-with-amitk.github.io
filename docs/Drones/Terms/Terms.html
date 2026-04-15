@@ -3,7 +3,7 @@
   <head>
     <title>Drone Terms</title>
     <link rel="stylesheet" href="/css/styles.css" />
-    <!-- Add any necessary CSS and JavaScript files -->
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
   <body>
     <nav class="navbar">
@@ -60,8 +60,8 @@
           <th>When to consider</th>
         </tr>
         <tr>
-          <td id="ardupilot">ArduPilot</td>
-          <td>Firmware/Software having very large hobbyist community</td>
+          <td>ArduPilot</td>
+          <td>See Below</td>
           <td>planes, copters, rovers, subs</td>
           <td>Yes</td>
           <td>GPL</td>
@@ -82,6 +82,48 @@
           <td>Yes</td>
           <td>BSD</td>
           <td>High Precision</td>
+        </tr>
+      </table>
+
+      <h3 id="ardupilot">Ardupilot</h3>
+      <dl>
+        - Firmware/Software having very large hobbyist community<br />
+        - Flying drone has a Circuit board(Central Zero H7) on which Ardupilot
+        or PX4 runs<br />
+        - Ardupilot/PX4 communicates with Radiolink, rotors, camera etc
+      </dl>
+
+      <h4>Install & Start ardupilot on WSL</h4>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+$ git clone https://github.com/ArduPilot/ardupilot
+$ cd ardupilot
+$ Tools/environment_install/install-prereqs-ubuntu.sh -y
+$ sim_vehicle.py -v ArduCopter --console --map
+..
+BUILD SUMMARY
+Build directory: /home/amit/ardupilot/build/sitl
+Target          Text (B)  Data (B)  BSS (B)  Total Flash Used (B)  Free Flash (B)  External Flash Used (B)
+----------------------------------------------------------------------------------------------------------
+bin/arducopter   4344092    206421   223808               4550513  Not Applicable  Not Applicable
+..
+SIM_VEHICLE: Run MavProxy
+SIM_VEHICLE: "mavproxy.py" "--retries" "5" "--out" "172.22.128.1:14550" "--master" "tcp:127.0.0.1:5760" "--sitl" "127.0.0.1:5501" "--map" "--console"
+
+// out: ArduPilot SITL → sending MAVLink to Windows host IP (172.22.128.1),Port = 14550 (UDP)
+    |- This is exactly what Mission Planner listens to.
+      </code></pre>
+          </td>
+          <td>
+            It will pop up UI<br />
+            <img
+              src="/images/Drones/Ardupilot/Start_on_WSL.png"
+              alt="trie"
+              style="width: 500px; height: 300px"
+            />
+          </td>
         </tr>
       </table>
 
@@ -144,5 +186,6 @@
         </tr>
       </table>
     </article>
+    <script src="/scripts/prism.js"></script>
   </body>
 </html>
