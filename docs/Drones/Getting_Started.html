@@ -30,9 +30,18 @@
       <dl>
         Once you have the basic understanding of
         <a href="/Drones/">Drone Architecture</a> and its
-        <a href="/Drones/">compoenents/Terms</a>. You can start with Simulators,
-        Instead of buying all physical components.
+        <a href="/Drones/">compoenents/Terms</a>. <br />
+        You can start with Simulators, Instead of buying all physical
+        components.
       </dl>
+
+      <pre><code>
+        |--- WSL(Ubuntu) -----|       |----- Windows -----|
+        |                     |       |                   |
+        | Ardupilot(Simulate  |       | MissionPlanner    |
+        |   Drone)            |       | (Ground Station)  |
+        |---------------------|       |-------------------|
+      </code></pre>
       <h3>Steps</h3>
       <dl>
         1. Install
@@ -41,8 +50,37 @@
           >Mission Planner</a
         >
         GCS(Ground Control Station) on Windows, it will ask to install several
-        Drivers on your Laptop.
+        Drivers on your Laptop.<br />
+        These drivers are NOT for simulation (SITL). They are for real hardware
+        communication when you connect a flight controller via USB.<br />
+        Main Drivers:
       </dl>
+
+      <table>
+        <tr>
+          <th>Driver</th>
+          <th>Usage</th>
+          <th>Example Boards</th>
+        </tr>
+        <tr>
+          <td>1. UART(USB-to-Serial Drivers)</td>
+          <td>Convert USB → serial communication (UART)</td>
+          <td>CP210x, FTDI, CH340</td>
+        </tr>
+        <tr>
+          <td>2. Bootloader Driver</td>
+          <td>
+            Flashing firmware. On flight controllers, when firmware needs
+            updation this driver is used
+          </td>
+          <td>STM32, DFU Driver</td>
+        </tr>
+        <tr>
+          <td>3. Direct MAVLink USB</td>
+          <td>Some boards expose, MAVLink directly over USB</td>
+          <td>PX4/APM USB</td>
+        </tr>
+      </table>
     </article>
   </body>
 </html>
