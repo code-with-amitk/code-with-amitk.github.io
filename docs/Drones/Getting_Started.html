@@ -51,7 +51,8 @@
       </code></pre>
 
       <h3>
-        1. Launch Simulated Drone(<a href="/Drones/">Ardupilot</a> on WSL)
+        1. Launch <a href="/Drones/">Ardupilot</a> on WSL(This is Simulated
+        Drone)
       </h3>
       <dl>
         <b>This is SITL = sim_vehicle.py</b><br />
@@ -62,47 +63,16 @@
         >
       </dl>
 
-      <h3>2. <a href="/Drones/">GCS(MissionPlanner)</a></h3>
-      <dl></dl>
-      <h3>Steps</h3>
+      <h3>2. Connect Mission Planner(GCS)</h3>
       <dl>
-        1. Install
-        <a
-          href="https://ardupilot.org/planner/docs/mission-planner-installation.html"
-          >Mission Planner</a
-        >
-        GCS(Ground Control Station) on Windows, it will ask to install several
-        Drivers on your Laptop.<br />
-        These drivers are NOT for simulation (SITL). They are for real hardware
-        communication when you connect a flight controller via USB.<br />
-        Main Drivers:
+        a. Install & start <a href="Terms/GCS.html">GCS</a><br />
+        b. Connect to SITL(ie ardupilot started in step-1):<br />
+        &ensp; Top-right dropdown > Select UDP > Click CONNECT (it will connect
+        to ardupilot)<br />
       </dl>
 
-      <table>
-        <tr>
-          <th>Driver</th>
-          <th>Usage</th>
-          <th>Example Boards</th>
-        </tr>
-        <tr>
-          <td>1. UART(USB-to-Serial Drivers)</td>
-          <td>Convert USB → serial communication (UART)</td>
-          <td>CP210x, FTDI, CH340</td>
-        </tr>
-        <tr>
-          <td>2. Bootloader Driver</td>
-          <td>
-            Flashing firmware. On flight controllers, when firmware needs
-            updation this driver is used
-          </td>
-          <td>STM32, DFU Driver</td>
-        </tr>
-        <tr>
-          <td>3. Direct MAVLink USB</td>
-          <td>Some boards expose, MAVLink directly over USB</td>
-          <td>PX4/APM USB</td>
-        </tr>
-      </table>
+      <h3>3. Start Simulated Flight</h3>
+      <dl></dl>
     </article>
   </body>
 </html>

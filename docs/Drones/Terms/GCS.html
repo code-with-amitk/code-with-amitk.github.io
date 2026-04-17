@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Ground Control Station</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Drones/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"></aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="gcs">Ground Control Stations (GCS)</h2>
+      <dl>
+        - Ground Station is a software application, running on a ground-based
+        computer.<br />
+        - if you are running GCS on PC, then you need a seperate box for
+        connecting to UAV<br />
+        - There are speciallized GCS which contains embedded transmitter(which
+        communicates with your UAV via wireless telemetry)<br />
+        - Ground Stations which can communicate with ArduPilot: Mission Planner,
+        APM Planner 2, MAVProxy, QGroundControl, UgCS, and LOGOS. For
+        Tablet/Smartphone there are QGroundControl, Tower (DroidPlanner 3),
+        MAVPilot, AndroPilot and SidePilot<br />
+        -
+        <a
+          href="https://ardupilot.org/copter/docs/common-choosing-a-ground-station.html#common-choosing-a-ground-station"
+          >Choosing a Ground Station</a
+        >
+      </dl>
+      <img
+        src="/images/Drones/GCS.png"
+        alt="GCS"
+        style="width: 400px; height: 200px"
+      />
+
+      <h2>GCS Types</h2>
+      <h3>1. Desktop GCS</h3>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Supported On</th>
+          <th>License</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>Mission Planner</td>
+          <td>Windows, MAC OS X</td>
+          <td>Open source (GPLv3)</td>
+          <td>Fully featured</td>
+        </tr>
+        <tr>
+          <td>APM Planner 2.0</td>
+          <td>Windows, MAC OS X, Linux</td>
+          <td>Open source (GPLv3)</td>
+          <td>
+            reduced feature set when compared with others. Smaller user base
+          </td>
+        </tr>
+        <tr>
+          <td>MAVProxy</td>
+          <td>Linux</td>
+          <td>Open source (GPLv3)</td>
+          <td>Written in Python, and extensible via python modules</td>
+        </tr>
+      </table>
+
+      <h2>Installing GCS</h2>
+      <dl>
+        Install
+        <a
+          href="https://ardupilot.org/planner/docs/mission-planner-installation.html"
+          >Mission Planner</a
+        >
+        GCS(Ground Control Station) on Windows, it will ask to install several
+        Drivers on your Laptop.<br />
+        These drivers are NOT for simulation (SITL). They are for real hardware
+        communication when you connect a flight controller via USB.<br />
+        Main Drivers:
+      </dl>
+      <table>
+        <tr>
+          <th>Driver</th>
+          <th>Usage</th>
+          <th>Example Boards</th>
+        </tr>
+        <tr>
+          <td>1. UART(USB-to-Serial Drivers)</td>
+          <td>Convert USB → serial communication (UART)</td>
+          <td>CP210x, FTDI, CH340</td>
+        </tr>
+        <tr>
+          <td>2. Bootloader Driver</td>
+          <td>
+            Flashing firmware. On flight controllers, when firmware needs
+            updation this driver is used
+          </td>
+          <td>STM32, DFU Driver</td>
+        </tr>
+        <tr>
+          <td>3. Direct MAVLink USB</td>
+          <td>Some boards expose, MAVLink directly over USB</td>
+          <td>PX4/APM USB</td>
+        </tr>
+      </table>
+    </article>
+  </body>
+</html>
