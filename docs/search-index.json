@@ -172,7 +172,7 @@
   {
     "title": "Blockchain Terms",
     "url": "/BlockChain/Terms.html",
-    "excerpt": "Blockchain Terms Home Our team Projects Contact BlockchainAddress (Sender or Receiver) Block Genesis Block Transaction POW(Proof of Work) POS(Proof of..."
+    "excerpt": "Blockchain Terms Home Our team Projects Contact Back BlockchainAddress (Sender or Receiver) Block Genesis Block Transaction POW(Proof of Work) POS(Pro..."
   },
   {
     "title": "Build Security Libraries",
@@ -562,7 +562,7 @@
   {
     "title": "Drone Architecture",
     "url": "/Drones/Architecture.html",
-    "excerpt": "Drone Architecture Home Our team Projects Contact Back GCS Architecture Architecture Description |-------------- Drone -----------------| | | FAN | [C..."
+    "excerpt": "Drone Architecture Home Our team Projects Contact Back Architecture Architecture Description |-------------- Drone -----------------| | | FAN | [Circu..."
   },
   {
     "title": "Drone Terms",
@@ -572,7 +572,7 @@
   {
     "title": "Drones",
     "url": "/Drones/",
-    "excerpt": "Drones Home Our team Projects Contact Back Architecture Getting Started Terms &ensp; Terms : Firmware(Ardupilot, Arducopter, PX4), Hardware Boards(APM..."
+    "excerpt": "Drones Home Our team Projects Contact Back Architecture Getting Started Terms &ensp; Firmware: Ardupilot, Arducopter, PX4 &ensp; Hardware Boards: APM,..."
   },
   {
     "title": "DS Questions",
@@ -823,6 +823,11 @@
     "title": "Graphics Pipeline",
     "url": "/Libraries/Graphics_Pipeline/",
     "excerpt": "Graphics Pipeline Home Our team Projects Contact Back Graphics Pipeline Graphics pipeline from Windows VM(guest) to physical GPU on the host Render Gr..."
+  },
+  {
+    "title": "Ground Control Station",
+    "url": "/Drones/Terms/GCS.html",
+    "excerpt": "Ground Control Station Home Our team Projects Contact Back Ground Control Stations (GCS) - Ground Station is a software application, running on a grou..."
   },
   {
     "title": "gRPC",
@@ -1282,7 +1287,7 @@
   {
     "title": "Meta Integration",
     "url": "/Networking/Integrations/Meta/",
-    "excerpt": "Meta Integration Home Our team Projects Contact Back Create an App with Meta Steps: 1. Login to Facebook 1st. 2. Open MyApps > Get Started > Complete ..."
+    "excerpt": "Meta Integration Home Our team Projects Contact Back Send Lead Info from Meta to Backend 1. Login to Facebook 1st. 2. Create FB Page(this is advertise..."
   },
   {
     "title": "Microservices",
