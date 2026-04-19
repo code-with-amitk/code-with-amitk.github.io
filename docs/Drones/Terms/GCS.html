@@ -3,7 +3,7 @@
   <head>
     <title>Ground Control Station</title>
     <link rel="stylesheet" href="/css/styles.css" />
-    <!-- Add any necessary CSS and JavaScript files -->
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
   <body>
     <nav class="navbar">
@@ -23,7 +23,15 @@
       </ul>
     </nav>
 
-    <aside class="sidebar"></aside>
+    <aside class="sidebar">
+      <a href="#gcs">GCS</a>
+      <a href="#mp">Mission Planner</a>
+      <ul>
+        <li><a href="#mpdrivers">Drivers</a></li>
+        <li><a href="#mpdocs">Documentation</a></li>
+        <li><a href="#mpui">User Interface</a></li>
+      </ul>
+    </aside>
 
     <article style="margin-left: 200px">
       <h2 id="gcs">Ground Control Stations (GCS)</h2>
@@ -50,8 +58,7 @@
         style="width: 400px; height: 200px"
       />
 
-      <h2>GCS Types</h2>
-      <h3>1. Desktop GCS</h3>
+      <b>GCS Types</b>
       <table>
         <tr>
           <th>Name</th>
@@ -81,7 +88,7 @@
         </tr>
       </table>
 
-      <h2>Installing GCS</h2>
+      <h2 id="mp">Mission Planner (Desktop GCS)</h2>
       <dl>
         Install
         <a
@@ -92,8 +99,9 @@
         Drivers on your Laptop.<br />
         These drivers are NOT for simulation (SITL). They are for real hardware
         communication when you connect a flight controller via USB.<br />
-        Main Drivers:
       </dl>
+
+      <h3 id="mpdrivers">Drivers Installed by Mission Planner</h3>
       <table>
         <tr>
           <th>Driver</th>
@@ -119,6 +127,68 @@
           <td>PX4/APM USB</td>
         </tr>
       </table>
+
+      <h3 id="mpdocs">Documents</h3>
+      <dl>https://ardupilot.org/planner/docs/</dl>
+
+      <h3 id="mpui">UI (User Interface)</h3>
+      <h4>
+        <a
+          href="https://ardupilot.org/planner/docs/mission-planner-ground-control-station.html"
+          >Flight Data Screen</a
+        >
+      </h4>
+
+      <table>
+        <tr>
+          <td>
+            <b>Heads-Up display(HUD)</b><br />
+            <img
+              src="https://ardupilot.org/planner/_images/mp_hud_full.jpg"
+              alt="HUD Display"
+              class="zoomable-image"
+              id="zoomableImage2"
+              style="width: 300px; height: 200px"
+            />
+          </td>
+          <td>
+            <b>Detailed View</b><br />
+            <img
+              src="https://ardupilot.org/planner/_images/mp_hud_detail.jpg"
+              alt="HUD Detailed View"
+              style="width: 300px; height: 200px"
+            /><br />
+            1. Airspeed (Groundspeed if no airspeed sensor is fitted)<br />
+            2. Crosstrack error and turn rate (T)<br />
+            3. Heading direction<br />
+            4. Bank angle<br />
+            5. Telemetry connection link quality (averaged percentage of good
+            packets)<br />
+            6. GPS time<br />
+            7. Altitude (Blue bar is the rate of climb)<br />
+            8. Airspeed<br />
+            9. Groundspeed<br />
+            10. Battery status<br />
+            11. Artificial Horizon<br />
+            12. Aircraft Attitude<br />
+            13. GPS Status<br />
+            14. Distance to Waypoint > Current Waypoint Number<br />
+            15. Current Flight Mode
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>Guided Mode</b><br />
+            <img
+              src="https://ardupilot.org/planner/_images/mp_menu_fly_to_here.jpg"
+              alt="Guided Mode"
+              style="width: 300px; height: 200px"
+            /><br />
+          </td>
+        </tr>
+      </table>
     </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
   </body>
 </html>
