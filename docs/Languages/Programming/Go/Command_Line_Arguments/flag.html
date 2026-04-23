@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <title>flag Command line Arguments</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#comp">os.args vs flag</a>
+      <a href="#cla">Parse Command line arguments</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="flag">flag pacakge</h2>
+      <dl>
+        The flag package is a built-in library designed to parse those strings
+        into actual variables with specific types. It handles the heavy lifting
+        of validation and formatting.<br />
+        While in <a href="os_args.html">os.args</a>, user has to validate and
+        format the args by himself.
+      </dl>
+
+      <h3>Features</h3>
+      <dl>
+        Type Safety: Automatically converts inputs to int, bool, string, etc.<br />
+        Default values: We can provide default values if the user doesn't
+        provide the flag.<br />
+        Help Menus: It automatically generates a -help screen based on your
+        code.<br />
+        Flexibility: It accepts various formats like -name=bob, -name bob, or
+        --name bob.
+      </dl>
+
+      <h2 id="cla">Parse Command line arguments</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+package main
+import (
+        "flag"
+        "fmt"
+)
+func main() {
+        // Step-1: Define flags
+        //              name,   default_val, "help text"
+        port := flag.Int("port", 8080, "Port to listen on")
+        debug := flag.Bool("debug", false, "Enable debug mode")
+
+        // Step-2: Parse the command line into the defined flags
+        flag.Parse()
+
+        // go run main.go --help
+        fmt.Printf("Running on port: %d, debug: %v\n", *port, *debug)
+}
+        </code></pre>
+          </td>
+          <td>
+            <b>Example Runs:</b><br />
+            <pre><code class="language-css">
+$ go run main.go --help
+Usage of /tmp/go-build2487568536/b001/exe/main:
+  -debug
+        Enable debug mode
+  -port int
+        Port to listen on (default 8080)
+
+$ go run main.go -debug=false -port=90
+Running on port: 90, debug: false
+
+$ go run main.go --debug=false --port=90
+Running on port: 90, debug: false
+
+$ go run main.go --debug=false
+Running on port: 8080, debug: false
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

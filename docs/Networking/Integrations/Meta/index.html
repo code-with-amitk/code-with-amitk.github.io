@@ -32,11 +32,63 @@
       <h2>Send Lead Info from Meta to Backend</h2>
 
       <dl>
-        1. Login to <a href="https://www.facebook.com/">Facebook</a> 1st.<br />
+        <a href="https://developers.facebook.com/docs/development"
+          >How to register as a developer, how to use the app dashboard to
+          configure your app, and how to build, test, and release your app</a
+        >
+        <br /><br />
+        1. <b>Register as meta developer</b><br />
+        &ensp; Login to <a href="https://www.facebook.com/">Facebook</a> and
+        open <a href="https://developers.facebook.com/">fb developers page</a
+        ><br /><br />
 
-        2. <b>Create FB Page(this is advertisement)</b><br />
-        &ensp; Create a FB Page on your profile. Name(Olive County 5BHK),
-        Category(Real Estate)<br />
+        2.
+        <b
+          ><a
+            href="https://developers.facebook.com/docs/development/create-an-app"
+            >Create App with Meta</a
+          ></b
+        ><br />
+        &ensp; The App provides your backend with the credentials needed to
+        authenticate with Meta's API<br />
+        &emsp; https://developers.facebook.com/apps/ > Get Started > Complete
+        Registration <br />
+        &emsp; app name(crm) > <br />
+        &emsp;&emsp; Use case(Create & Manage app ads with Meta Ads Manager) >
+        Next > Which business portfolio do you want to connect to this app? (I
+        don’t want to connect a business portfolio yet.)<br />
+        &emsp;&emsp; Use Case(Authenticate and request data from users with
+        Facebook Login) &emsp; You will reach
+        <a
+          href="https://developers.facebook.com/apps/1669618027799828/dashboard/"
+          >App Dashboard Page</a
+        ><br /><br />
+
+        3. Dashboard > App Settings(Left bottom) > Basic. This is required for
+        Access Token Generation<br />
+        &ensp; Display Name(CRM)<br />
+        &ensp; Namespace(ydadigitals)<br />
+        &ensp; App domains(ydadigitals.com)<br />
+        &ensp; Contact Email(abc@gmail.com)<br />
+        &ensp; Privacy Policy
+        URL(https://ydadigitals.com/privacy-policy.html)<br />
+        &ensp; Terms of Service
+        URL(https://ydadigitals.com/terms-of-service.html)<br />
+        &ensp; User data deletion(https://ydadigitals.com/data-deletion.html)<br />
+        &ensp; Email(abc@gmail.com)<br />
+        &ensp; App Icon(Create Exactly 1024x1024 pixel image using paint) &
+        upload<br />
+
+        4. <b>Business Portfolio:</b><br />
+        &ensp; Create a business portfolio. Add your information in the
+        pop-up.<br />
+        &ensp; A connected business to app is required
+        <br /><br />
+
+        5. <b>Publish the App</b><br />
+
+        6. <b>Access Token</b><br />
+        &ensp; Dashboard > Docs > Graph API Explorer > Generate Access Token<br />
 
         3. <b>Create Instant Form</b><br />
         &ensp; What is Instant Form? lead collection form. It lives on your Page
@@ -44,21 +96,6 @@
         out.<br />
         &ensp; https://business.facebook.com/ > Select your Page > All
         Tools(From Menu) > Search(Instant Forms) > Create Form.<br />
-
-        4. <b>Create Facebook App</b><br />
-        &ensp; The App provides your backend with the credentials needed to
-        authenticate with Meta's API<br />
-        https://developers.facebook.com/apps/ > Get Started > Complete
-        Registration <br />
-        &emsp; app name(crm) > Use case(Option-2: Create & Manage app ads with
-        Meta Ads Manager) > Next > Which business portfolio do you want to
-        connect to this app? (I don’t want to connect a business portfolio
-        yet.)<br />
-        &ensp; You will reach
-        <a
-          href="https://developers.facebook.com/apps/1669618027799828/dashboard/"
-          >App Dashboard Page</a
-        ><br />
 
         5. <b>Graph API Explorer(Webhooks)</b><br />
         &ensp;
@@ -75,6 +112,10 @@
         &ensp; <u>Create Webhooks</u><br />
         &emsp; App Dashboard > Tools > Graph API Explorer > DropDown on
         Right(App selected CRM) > Generate Access Token (User or Page)
+        <br />
+
+        6. Create sample App on Heroku.
+        https://developers.facebook.com/docs/graph-api/webhooks/sample-apps
       </dl>
     </article>
   </body>
