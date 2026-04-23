@@ -645,6 +645,11 @@
     "excerpt": "First Time Clone Home Our team Projects Contact Back 1. Setup ssh keys 2. Map ssh keys 3. Fork upstream repo Why git is needed Today you cannot surviv..."
   },
   {
+    "title": "flag Command line Arguments",
+    "url": "/Languages/Programming/Go/Command_Line_Arguments/flag.html",
+    "excerpt": "flag Command line Arguments Home Our team Projects Contact Back os.args vs flag Parse Command line arguments flag pacakge The flag package is a built-..."
+  },
+  {
     "title": "Fold Expression",
     "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++17/Fold Expression.html",
     "excerpt": "Fold Expression Home Our team Projects Contact Fold Expression Types of folds Fold Expression It simplifies operations over template parameter packs T..."
@@ -737,12 +742,7 @@
   {
     "title": "Go",
     "url": "/Languages/Programming/Go/",
-    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command line Arguments Collections &ensp; Arrays..."
-  },
-  {
-    "title": "Go Command line Arguments",
-    "url": "/Languages/Programming/Go/Comman line arguments.html",
-    "excerpt": "Go Command line Arguments Home Our team Projects Contact Parse Command line arguments Parse Command line arguments package main import ( \"fmt\" \"os\" ) ..."
+    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command line Arguments: os.args , flag package C..."
   },
   {
     "title": "Go Hello World",
@@ -1287,7 +1287,7 @@
   {
     "title": "Meta Integration",
     "url": "/Networking/Integrations/Meta/",
-    "excerpt": "Meta Integration Home Our team Projects Contact Back Send Lead Info from Meta to Backend 1. Login to Facebook 1st. 2. Create FB Page(this is advertise..."
+    "excerpt": "Meta Integration Home Our team Projects Contact Back Send Lead Info from Meta to Backend How to register as a developer, how to use the app dashboard ..."
   },
   {
     "title": "Microservices",
@@ -1443,6 +1443,11 @@
     "title": "Operating System",
     "url": "/Operating System/",
     "excerpt": "Operating System Home Our team Projects Contact Back Daemon Service Linux &ensp; Troubleshooting: (Memory) &ensp; Kernel: ( Interrupts ) &ensp; Comman..."
+  },
+  {
+    "title": "os Command line Arguments",
+    "url": "/Languages/Programming/Go/Command_Line_Arguments/os_args.html",
+    "excerpt": "os Command line Arguments Home Our team Projects Contact Back os.arg os.arg The os.Args variable (found in the os package) is a simple slice of string..."
   },
   {
     "title": "Pandas",
