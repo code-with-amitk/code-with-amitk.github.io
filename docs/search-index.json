@@ -672,7 +672,7 @@
   {
     "title": "Function in Go",
     "url": "/Languages/Programming/Go/Functions.html",
-    "excerpt": "Function in Go Home Our team Projects Contact Multiple Returns Naked Return Function as values Closure range() Functions package main import( //import..."
+    "excerpt": "Function in Go Home Our team Projects Contact Back make Multiple Returns Naked Return Function as values Closure range() Function Format package main ..."
   },
   {
     "title": "Function Pointer",
@@ -1323,6 +1323,11 @@
     "title": "Moodboard App",
     "url": "/System_Design/Scalable/Moodboard App/",
     "excerpt": "Moodboard App Home Our team Projects Contact What is Moodboard? Requirements BOE System APIs DB HLD What is Moodboard (Digital pinboard) = ID App by A..."
+  },
+  {
+    "title": "Moot Court",
+    "url": "/Law/Moot Court/",
+    "excerpt": "Moot Court Home Our team Projects Contact Back Moot Court What? A moot court is a simulated, non-binding court proceeding used in legal education wher..."
   },
   {
     "title": "Motherboard",
