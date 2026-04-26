@@ -37,6 +37,10 @@
         <a href="#queue">1. Queue(using slice)</a>
         <a href="#stack">2. Stack(using slice)</a>
         <a href="#struct">3. struct = class</a>
+        <ul>
+          <li><a href="#structclass">struct as class</a></li>
+          <li><a href="#structtagging">struct tagging</a></li>
+        </ul>
         <a href="#linkedlist">4. Linked List</a>
       </ul>
     </aside>
@@ -57,52 +61,56 @@ var a [10]int
       </dl>
 
       <h3 id="slices">
-        2. Slices [] (Dynamic Array) = C++(vector&lt;int>) = Rust(vec&lt;i32>)
+        2. Slices [] (Dynamic Array) = C++(vector&lt;int>) = Rust(vec&lt;i32 > )
       </h3>
       <dl>
-        Slice is part of an array.Changing the elements of a slice modifies
-        underlying array.<br />
-        <b>Slice has 3 components?</b> <br />
-        &ensp; 1. Pointer(to underlying array)<br />
-        &ensp; 2. Length(number of elements in slice). len(slice)<br />
-        &ensp; 3. Capacity(maximum number of elements it can hold). cap(slice):
-        length of undelying array - 1<br />
+        Slice is part of an array. Changing the elements of a slice modifies
+        underlying array.
+      </dl>
+      <h4>Slice has 3 components</h4>
+      <dl>
+        1. Pointer(to underlying array)<br />
+        2. Length(number of elements in slice). len(slice)<br />
+        3. Capacity(maximum number of elements it can hold). cap(slice): length
+        of undelying array - 1<br />
+        <br />
+
         <b>nil slice:</b> slice which does not point to any array(at present),
-        but can in future.<br />
-        <b>Creating slice using make():</b> Preallocate memory for slice and
-        assign later
-        <h4>Slice Examples</h4>
-        <table>
-          <tr>
-            <td>
-              <b>Create slice and append()</b><br />
-              - append() will append the value to slice<br />
-              - append only modifies the original underlying array if the
-              slice's len is less than its cap. If len == cap, a new array is
-              allocated.<br />
-              <pre><code class="language-css">
+        but can in future.
+      </dl>
+
+      <h4>Slice Functions</h4>
+      <dl>
+        <b>append()</b><br />
+        - append() will append the value to slice<br />
+        - append only modifies the original underlying array if the slice's len
+        is less than its cap. If len == cap, a new array is allocated.
+      </dl>
+      <pre><code class="language-css">
 package main
 import "fmt"
 func fun(b *[]int) {
   // Trying adding beyond capacity
   *b = append(*b, 5)        //2,3,4,5
 }
-
 func main() {
+
+    // Create Slice
     a := [4]int{1, 2, 3, 4}
     fmt.Println("Before a:", a)   //1,2,3,4
+
+    // Copy Slice
     b := a[1:4]                   //2,3,4
+
     fun(&b)
     fmt.Println("After a:", a)    //1,2,3,4. a remains same
     fmt.Println("b:", b)          //2,3,4,5
 }
-
 // Solution: Take array of size [5]
             </code></pre>
-            </td>
-          </tr>
-        </table>
-        <pre><code class="language-css">
+
+      <dl><b>nil slice, Create slice using make(), 2D Slice</b></dl>
+      <pre><code class="language-css">
 func main() {
   names := [4]string{"John", "Paul", "George", "Ringo"}
 
@@ -128,7 +136,7 @@ func main() {
   /***************** 2D Slice ******************/
   // Method-1
   var test [][]int
-  for i := 0; i < rows; i++ {
+  for i := 0; i &lt; rows; i++ {
       test = append(test, make([]int, cols))
   }
 
@@ -143,15 +151,24 @@ func main() {
   m := make(map[int]int)
 }
             </code></pre>
-      </dl>
 
       <h3 id="channels"><a href="/Threads_Processes_IPC/">3. Channels</a></h3>
 
       <h3 id="maps">4. Maps</h3>
+      <dl>
+        A map is a hash table.
+        <a href="/Languages/Programming/C++/index.html">Maps in C++</a><br />
+      </dl>
+      <pre><code class="language-css">
+Syntax: make(map[KeyType]ValueType, initialCapacity)
 
-      <h2 id="standardlib">Standard Library Provided Collections</h2>
+m := make(map[string]int)   //map[key]value
+m["gold"] = 100
+      </code></pre>
 
-      <h3 id="queue">1. Queue(Implemented using slice)</h3>
+      <h1 id="standardlib">Standard Library Provided Collections</h1>
+
+      <h2 id="queue">1. Queue(Implemented using slice)</h2>
       <pre><code class="language-css">
 package main
 import "fmt"
@@ -178,14 +195,16 @@ func (this *MyStack) Empty() bool {	//Size()
 }
         </code></pre>
 
-      <h3 id="stack">
+      <h2 id="stack">
         <a
           href="/Languages/Programming/C++/STL/Containers/Container_Adoptors/stack.html"
           >2. Stack using slice</a
         >
-      </h3>
+      </h2>
 
-      <h3 id="struct">3. (struct = class)</h3>
+      <h2 id="struct">3. struct</h2>
+
+      <h3 id="structclass">struct as class</h3>
       <dl>
         Class is defined as struct type. Example: Person is defined of type
         struct.<br />
@@ -218,12 +237,37 @@ func main() {
 }
         </code></pre>
 
-      <h3 id="linkedlist">
+      <h3 id="structtagging">struct tagging</h3>
+      <dl>
+        Defines variable name, type and field name which will map in yaml/json
+        file
+      </dl>
+      <pre><code class="language-css">
+test.yaml
+default_action: allow
+rules:
+  - user: "anonymous"
+    domain: "*.internal.example.com"
+    action: block
+
+type Config struct {
+//Field Name    DataType  StructTag: metadata. Look into yaml file when you find
+                          default_action put into DefaultAction
+	DefaultAction string    `yaml:"default_action"`
+	Rules         []Rule `yaml:"rules"`
+}
+
+var cfg Config
+bytes := os.ReadFile("test.yaml")   //Read test.yaml content as bytes
+yaml.Unmarshal(bytes, &cfg)         //Stored bytes into Config struct
+      </code></pre>
+
+      <h2 id="linkedlist">
         <a
           href="/DS_Questions/Data_Structures/Linked_List/Compared_c++_rust_python_go.html"
           >4. Linked List</a
         >
-      </h3>
+      </h2>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>

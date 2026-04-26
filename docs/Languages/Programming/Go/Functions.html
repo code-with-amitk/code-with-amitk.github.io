@@ -1,38 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>Function in Go</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css"/>
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Function in Go</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#multiple">Multiple Returns</a>
-            <a href="#naked">Naked Return</a>
-            <a href="#values">Function as values</a>
-            <a href="#closure">Closure</a>
-            <a href="#range">range()</a>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#make">make</a>
+      <a href="#multiple">Multiple Returns</a>
+      <a href="#naked">Naked Return</a>
+      <a href="#values">Function as values</a>
+      <a href="#closure">Closure</a>
+      <a href="#range">range()</a>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h2>Functions</h2>
-            <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <h2>Function Format</h2>
+      <pre><code class="language-css">
 package main
 
 import(              //import: Include Package/Header-File. Grouping imports
@@ -49,8 +52,20 @@ func add(x, y int) int {	//valid
 }
             </code></pre>
 
-            <h4 id ="multiple">Multiple Returns</h4>
-            <pre><code class="language-css">
+      <h3 id="make">make()</h3>
+      <dl>
+        make() is used exclusively to initialize three specific built-in types:
+        <br />
+        &ensp; - <a href="index.html">Slices</a><br />
+        &ensp; - Maps<br />
+        &ensp; - <a href="index.html">Channels</a><br />
+
+        <b>Syntax</b><br />
+        make([]Type, length, capacity)
+      </dl>
+
+      <h3 id="multiple">Multiple Returns</h3>
+      <pre><code class="language-css">
 package main
 import "fmt"
 
@@ -67,8 +82,8 @@ func main() {
 }
             </code></pre>
 
-            <h4 id="naked">Naked Return</h4>
-            <pre><code class="language-css">
+      <h4 id="naked">Naked Return</h4>
+      <pre><code class="language-css">
 //NAKED RETURNS: return statement without arguments
 func split(sum int) (x, y int) {
     x = sum * 4 / 9
@@ -95,18 +110,21 @@ world hello
 7 10
             </code></pre>
 
-            <h4 id="values">Function as values</h4>
-            <dl>Functions are values too. They can be passed around just like other values</dl>
-            <pre><code class="language-css">
+      <h4 id="values">Function as values</h4>
+      <dl>
+        Functions are values too. They can be passed around just like other
+        values
+      </dl>
+      <pre><code class="language-css">
 test := func(x, y float64) float64 {
     return (x + y)
 }
 fmt.Println(test(5, 12))		//17
             </code></pre>
 
-            <h4 id="closure">Closure Function = Lambda C++</h4>
-            <dl>A function that references variables from outside its body.</dl>
-            <pre><code class="language-css">
+      <h4 id="closure">Closure Function = Lambda C++</h4>
+      <dl>A function that references variables from outside its body.</dl>
+      <pre><code class="language-css">
 func add() func(int) int {
     sum := 10
     return func(x int) int {
@@ -120,13 +138,14 @@ func main() {
 }
             </code></pre>
 
-            <h4 id="range">range()</h4>
-            <dl>
-                for iterating over slice or map.<br>
-                Returns: Iterate over slice(index, element), Iterate over map(key, value)<br>
-                index or value anything can be skipped using "_"
-            </dl>
-            <pre><code class="language-css">
+      <h4 id="range">range()</h4>
+      <dl>
+        for iterating over slice or map.<br />
+        Returns: Iterate over slice(index, element), Iterate over map(key,
+        value)<br />
+        index or value anything can be skipped using "_"
+      </dl>
+      <pre><code class="language-css">
 for key, value := range hm {        //Map
     out += value
 }
@@ -134,8 +153,8 @@ for _, val := range(a) {        //Vector
     fmt.Println (val)
 }
             </code></pre>
-        </article>
+    </article>
 
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
