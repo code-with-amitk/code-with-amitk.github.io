@@ -1966,6 +1966,11 @@
   },
   {
     "title": "Terms",
+    "url": "/Networking/Terms/Terms.html",
+    "excerpt": "Terms Home Our team Projects Contact Back User Agent User Agent This is a self-identification string that a software application sends to a web server..."
+  },
+  {
+    "title": "Terms",
     "url": "/Operating System/Virtualization/Terms/",
     "excerpt": "Terms Home Our team Projects Contact Back QEMU Virglrenderer Venus Server Venus Protocol QEMU Emulator and virtualizer, used as use space component of..."
   },
@@ -2017,7 +2022,7 @@
   {
     "title": "TLS SSL",
     "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/",
-    "excerpt": "TLS SSL Home Our team Projects Contact Back SNI SNI (Server Name Indication) This is addition to the TLS encryption protocol. SSL Client can specify t..."
+    "excerpt": "TLS SSL Home Our team Projects Contact Back SNI SNI (Server Name Indication) SSL Client can specify the domain name it is trying to reach, this is pur..."
   },
   {
     "title": "Trait Rust",
