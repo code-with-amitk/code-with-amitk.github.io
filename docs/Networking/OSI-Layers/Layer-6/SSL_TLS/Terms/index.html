@@ -37,10 +37,12 @@
     <article style="margin-left: 200px">
       <h2 id="sni">SNI (Server Name Indication)</h2>
       <dl>
-        This is addition to the TLS encryption protocol. SSL Client can specify
-        the domain name it is trying to reach in the first step of the TLS
-        handshake, preventing common name mismatch errors.<br />
-        SSL Server can host multiple domains on 1 IP address.
+        SSL Client can specify the domain name it is trying to reach, this is
+        purely for server information<br />
+        Server uses it to pick correct certificate when 1 server IP hosts
+        multiple TLS sites<br />
+        SSL Server can host multiple domains on 1 IP address. SNI is TLS
+        extension(defined in RFC 6066) and carried in unencrypted ClientHello.
       </dl>
       <pre><code class="language-css">
 SSL Client                          SSL Server
