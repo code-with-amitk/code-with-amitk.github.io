@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Mobile Billing System</title>
@@ -37,9 +37,10 @@
         <li><a href="#storage">Storage estimates</a></li>
         <li><a href="#traffic">Traffic estimates</a></li>
       </ul>
+      <a href="#architecture">Network Architecture</a>
+      <a href="#tables">DB Schema/Tables</a>
       <a href="#hld">HLD</a>
       <ul>
-        <li><a href="#tables">Database Tables</a></li>
         <li>
           <a href="#flows">Flows</a>
           <ul>
@@ -50,6 +51,7 @@
               <a href="#payment">Verify Payment Status</a>
             </li>
             <li><a href="#update">Update Plan</a></li>
+            <li><a href="#overall">Overall Flow</a></li>
           </ul>
           <a href="#kafka">Kafka OSS to BSS</a>
         </li>
@@ -159,96 +161,106 @@ CDR ~= 300-500 bytes
         But we will design ingestion for ≥5 MB/sec to be safe.
       </dl>
 
-      <h2 id="hld">HLD</h2>
+      <h2 id="architecture">Network Architecture</h2>
       <img
         src="/images/System_Design/GSM_Network.png"
         alt="GSM Network"
         style="width: 600px; height: 400px"
       />
-      <h3 id="tables">Database Tables</h3>
+
+      <h2 id="tables">Database Schema/Tables</h2>
       <table>
         <tr>
           <td>
-            <b>Subscriber table</b><br />
-            <dd>
-              subscriber_id (primary Key)<br />
-              name<br />
-              dob<br />
-              <a href="#imsi">IMSI</a> (UNIQUE)<br />
-              MSISDN<br />
-              status (active/inactive/suspended)<br />
-              activation_date<br />
-              deactivation_date<br />
-              created_at<br /><br />
+            <b>Subscriber table</b>
+            <pre><code>
+subscriber_id (primary Key)
+name
+dob
+IMSI(UNIQUE)
+MSISDN
+status (active/inactive/suspended)
+activation_date
+deactivation_date
+created_at
 
-              5 | ram | 25/2 | xxx | yy | active | 9jan | -
-            </dd>
+5 | ram | 25/2 | xxx | yy | active | 9jan | -
+            </code></pre>
+            <font color="green">Updated by Onboarding service</font>
           </td>
+
           <td>
-            <b>Plans table:</b> Rs 299, Rs 179, Rs 999<br />
-            <dd>
-              plan_id (PK)<br />
-              plan_code<br />
-              plan_name<br />
-              validity_days<br />
-              price<br />
-              currency<br />
-              is_prepaid<br />
-              status<br /><br />
+            <b>Plans table:</b> Rs 299, Rs 179, Rs 999
+            <pre><code>
+plan_id (PK)
+plan_code
+plan_name
+validity_days
+price
+currency
+is_prepaid
+status
 
-              10 | 279_PLAN | 279 Combo Plan | 30 days | ₹279 | INR | y<br />
-              15 | 999_PLAN | 999 Combo Plan | 90 days | ₹999 | INR | y
-            </dd>
+10 | 279_PLAN | 279 Combo Plan | 30 days | ₹279 | INR | y
+15 | 999_PLAN | 999 Combo Plan | 90 days | ₹999 | INR | y
+            </code></pre>
+            <font color="red">Filled by Admin</font>
           </td>
+
           <td>
             <b>Products Table: </b>
             OTT(Netflix, Amazon, Zee) , data, voice, SMS
-            <dd>
-              product_id (PK) <br />
-              product_code <br />
-              product_name <br />
-              product_type (DATA / OTT / VOICE / SMS) <br />
-              description<br /><br />
+            <pre><code>
+product_id (PK)
+product_code
+product_name
+product_type (DATA / OTT / VOICE / SMS)
+description
 
-              1 | Netflix | OTT | Unlimited ad-free movies, TV shows<br />
-              2 | Amazon | OTT | Unlimited ad-free movies, TV shows<br />
-              3 | Zee5 | OTT | Unlimited ad-free movies, TV shows<br />
-              4 | 1GBD| 1 GB data | DATA | 1GB Data Pack
-            </dd>
+1 | Netflix | OTT | Unlimited ad-free movies, TV shows
+2 | Amazon | OTT | Unlimited ad-free movies, TV shows
+3 | Zee5 | OTT | Unlimited ad-free movies, TV shows
+4 | 1GBD| 1 GB data | DATA | 1GB Data Pack
+            </code></pre>
+            <font color="red">Filled by Admin</font>
           </td>
         </tr>
+
         <tr>
           <td>
             <b>Plan_to_Product table</b>
-            <dd>
-              id<br />
-              plan_id (FK)<br />
-              product_id (FK)<br />
-              quantity<br />
-              unit<br /><br />
+            <pre><code>
+id
+plan_id (FK)
+product_id (FK)
+quantity
+unit
 
-              id|plan_id|product_id<br />
-              1 | 10 | 1 //279_PLAN has Netflix<br />
-              1 | 10 | 2 //279_PLAN has Amazon<br />
-              1 | 10 | 3 //279_PLAN has Zee5
-            </dd>
+id|plan_id|product_id
+1 | 10 | 1 //279_PLAN has Netflix
+1 | 10 | 2 //279_PLAN has Amazon
+1 | 10 | 3 //279_PLAN has Zee5
+            </code></pre>
+            <font color="red">Filled by Admin</font>
           </td>
+
           <td>
             <b>Subscription table</b>
-            <dd>
-              id<br />
-              subscriber_id (FK)<br />
-              plan_id (FK)<br />
-              start_date<br />
-              end_date<br />
-              renew_date<br /><br />
+            <pre><code>
+id
+subscriber_id (FK)
+plan_id (FK)
+start_date
+end_date
+renew_date
 
-              5 | 10 | ...
-            </dd>
+5 | 10 | ...
+            </code></pre>
           </td>
         </tr>
       </table>
 
+      <h2 id="hld">HLD</h2>
       <h3 id="flows">Flows</h3>
       <h4 id="newsubscriber">
         New Subscriber / Subscriber Purchases a SIM card
@@ -258,8 +270,8 @@ CDR ~= 300-500 bytes
         message flows to BSS
       </dl>
       <pre><code class="language-css">
-OSS                                  BSS
-  -- POST subscriber/register -->  REST_EndPoint
+OSS                        telcoBSS(Onboarding service)
+  -- POST /v1/customers -->  REST_EndPoint
       json {                          --------INSERT INTO ------> Subscriber Table
         "imsi": "xxx",                     status=inactive     5 | ram | 25/2 | xxx | yy | inactive | 9jan | 
         "msisdn": "yyy",
@@ -267,15 +279,17 @@ OSS                                  BSS
         "dob": "1995-11-23",
         "kyc_status": "VERIFIED"
       }
+
     <------- Registered ---------------
-  Connect Plan
-  ---- POST /subscription/activate -> BSS(REST_EndPoint)
+
+  Connect Plan                  telcoBSS(Order Service)
+  ---- POST /subscription/activate -->
       json {
         "imsi": "xxx",
         "plan_code": "279_PLAN",
         "payment_ref": "txn_123"
       }
-                                      BSS(REST_EndPoint)
+                                      telcoBSS(Order Service)
                                       // Verify req is not duplicate? (idempotency key)
                                       
                                         -----------payment_ref: "txn_123" ---------> Payment_GW
@@ -289,7 +303,7 @@ OSS                                  BSS
 
       <h4 id="payment">Verify Payment Status</h4>
       <dl>
-        <b>Why Payment status need to be verified?</b>
+        <b>Why Payment status need to be verified?</b><br />
         <pre><code class="language-css">
 User → Payment Gateway / Wallet
             ↓
@@ -297,6 +311,7 @@ User → Payment Gateway / Wallet
             ↓
           BSS
         </code></pre>
+        <br />
         User will send money to payment gateway and this information will not
         come to OSS. When recharge is successful Payment Gateway will send this
         information to OSS asynchronously.
@@ -306,11 +321,101 @@ User → Payment Gateway / Wallet
       <dl>Only subscription table need to be changed</dl>
       <pre><code class="language-css">
 OSS                      BSS
-  -- update_plan -->  REST_EndPoint
-                         ----- UPDATE ROW ------> Subscription table
+  -- update_plan --&lt;  REST_EndPoint
+                         ----- UPDATE ROW ------&lt; Subscription table
       </code></pre>
 
       <h3 id="kafka">Kafka Communication from OSS to BSS</h3>
+
+      <h3 id="overall">Overall Flow</h3>
+      <img 
+      src="//www.plantuml.com/plantuml/png/XLLDR-Cs4BtpLmnoAAokjujU2wHOVqEm7Jjst5E0WA8cCLk9L4dAZVlhow6eoX8CxCMYDU_DnviPwhjrtBYwB1ZZmca33xFQEbsYWRqsZXUlQfANKi4fVG1k_OEnJ7_2LWgZBPgB56XPvNr88Ikk73miFXqQ5PZxr0QMF_GnEvLfRdAfFbvLz39QwII0Tq_JFbYR7CqTt67UnsMoAEvwdAQRJHzwu2uWKNr8XQFPboyDyZ1vMVIHeVgUow-xoadj2snAcs_J9uOg1oyBOt_NM2CyhFdxNnnUT2L5ey1wibnF6kdctF6CMxGiZoSlkgx5cOu1F9lUcBRNu_CclFRFBX1vscKXBL-tTDT-sdkZItHdh9lm-yDksmUi37_dYWVhQjcthMNMcjRJBcI_omMtpbU7t8XpW2usQyOU7w7hBImB_GyyFZ9sIk7hxzHP-0tsk-CBVBly-at4IRElQcJhp0eZCpH0fIVCOuao8yRHQODmx20ty3UPZq7n4iUGwsmCwVQOZi7_7ETFOx2EkzgE0PtufVNPz88ICJgl1K8xyJ5np67KflQ65rJE9YnmY4opvBaphMnTtk4o0X3m-4ouL4adUI7_HPWsumaJ8NIj78nYGM6QmF6imAGHaEPze1rD-wrscZ0MHlHi9LFQ8UWB6WApBQyg2gVVWTsewpIh2gv2Lud0c0Tt-VxXS_NU47xggnwI797M0-d9MJWGooRahT-tMCuS7PT5cx45eOi21NcDd65V8d5VS85veDrh1oriruvR2Wkc3dAKPLrmX-J-8gqFxDK9UeSLR_GUjRkTTD8tA-uzRBdY7-WVrg49Q-m7rmTJTXnpTdGYGPn-YsyI5kYTmai_1Z1alQe1hPa7I_c5I72o5Fl0NM-l_CLwgrog_aJX8dOHjF8frlJtHzBrI4Fj9bLLNDlW6_qXXNURNHrQ-1aCTvYqZ64JYOHvbmk1ynzjLOyqMAYPGM_yTgh2bARgegL0yYpZSGpnz2OTbZQ9_Dv8HXfiqN7QdVz5CYYqoIFfNZbnYRk2uaUdBIaqh0KzrsYkxI1rLQuMpGx7F8SLBj69SvjYQ7u4UCGfzO03kjge5a4HuvU0Dry2YjZUTNJnKzceSghMI65ftUwROYRtRR73zstqZcoh9TqXqjRDbJVdzXpkHSlyro7eEGrZckCdpP5bxBjtKvV5Vm00"
+      alt="telcoBSS overall flow" style="width:1000px;height:1200px;">
+      <pre class="puml" visibility: hidden>
+@startuml
+
+actor "Customer Portal\nAdmin UI" as UI
+
+box Microservices
+participant "External\nAPIs" as API
+participant "Onboarding\nservice(Go)" as ONB
+participant "order\nservice(Go)" as ORD
+participant "billing\nservice(Go)" as BILL
+participant "Rating\nengine(C++)" as RATE
+participant "Admin\nservice(Go)-Optional" as ADMIN
+end box
+
+queue "Kafka Topics" as KAFKA
+
+box Databases
+database "Couchbase" as CB
+database "MySQL" as SQL
+end box
+
+box Observibility
+participant "Prometheus" as PROM
+participant "Grafana" as GF
+participant "Kibana" as KB
+end box
+
+participant "Elasticsearch" as ELK
+
+== Onboarding Flow ==
+
+UI -> ONB : POST /v1/customers\n(subscriber data)
+ONB -> CB : Store Subscriber (subscriber_id, name, dob, IMSI, MSISDN, status, etc.)
+ONB -> KAFKA : Produce CustomerOnboarded (customer_events)
+KAFKA -> BILL : Consume CustomerOnboarded
+BILL -> SQL : Initialize Billing Account (Subscription table)
+
+== Order Flow ==
+
+UI -> ORD : POST /v1/orders (order data)
+note over ORD
+Mapping of 
+subscriber to
+plan
+end note
+
+ORD -> SQL : Validate & Store Subscription(id, subscriber_id, plan_id, dates)
+ORD -> CB : Store Order Details (orders collection)
+ORD -> KAFKA : Produce OrderPlaced (order_events)
+KAFKA -> RATE : Consume OrderPlaced
+RATE -> RATE : Simulate Provisioning
+
+== Admin Flow (Optional) ==
+
+UI -> ADMIN : Manage Master Data\n(Plans, Products, Plan_to_Product)
+ADMIN -> SQL : Fill Plans, Products,\nPlan_to_Product tables
+
+== Data Usage Rating Flow ==
+
+API -> KAFKA : Inject Usage Events\n(usage_events)
+KAFKA -> RATE : Consume Usage Events
+RATE -> RATE : Apply Rating Logic\n(bytes * rate)
+RATE -> KAFKA : Produce Rated Events\n(rated_events)
+KAFKA -> BILL : Consume Rated Events
+BILL -> SQL : Create/Update Invoices\n(invoices, invoice_items)
+BILL -> CB : Store Invoice Metadata\n(usage_records)
+BILL -> KAFKA : Produce Billing Events\n(billing_events)
+
+== Billing Query ==
+
+UI -> BILL : GET /v1/invoices
+BILL -> SQL : Fetch Invoice Data
+BILL --> UI : Return Invoice
+
+== Observability ==
+
+ONB -> PROM : Send Metrics
+ORD -> PROM : Send Metrics
+BILL -> PROM : Send Metrics
+RATE -> PROM : Send Metrics
+PROM -> GF : Visualize Dashboards
+ELK -> KB : Index Logs
+
+@enduml
+      </pre>
 
       <h2 id="terms">Terms</h2>
       <h3 id="imsi">IMSI(International Mobile Subscriber Identity)</h3>
