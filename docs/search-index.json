@@ -1985,6 +1985,11 @@
     "excerpt": "Terms Home Our team Projects Contact Back Json Web Token Disecting token JWT Authentication to RESTFul APIs Json Web Token / oauth_token / auth_token ..."
   },
   {
+    "title": "Terms",
+    "url": "/System_Design/Concepts/Terms/Terms.html",
+    "excerpt": "Terms Home Our team Projects Contact Back Reliable Scalable Maintainable Reliable / Reliability System to continue to work correctly, even when things..."
+  },
+  {
     "title": "Terrform",
     "url": "/System_Design/Concepts/AWS/Terraforms.html",
     "excerpt": "Terrform Home Our team Projects Contact Back What is Terraform Terraform (Infrastructure as code. IaC) This is tool/script for building, changing the ..."
