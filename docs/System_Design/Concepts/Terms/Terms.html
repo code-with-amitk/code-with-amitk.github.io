@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#reliable">Reliable</a>
+      <a href="#scalable">Scalable</a>
+      <a href="#maintainable">Maintainable</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="reliable">Reliable / Reliability</h2>
+      <dl>
+        System to continue to work correctly, even when things fail. When one
+        component dies, the redundant component can take its place while. <br />
+        What things can go wrong?
+      </dl>
+      <table>
+        <tr>
+          <td>1. Hardware Failures</td>
+          <td>
+            a. Hard Disk Failures: Add redundancy Disk, RAID configuration<br />
+            b. Power Failures: Use Generators or Dual power supply
+          </td>
+        </tr>
+        <tr>
+          <td>2. Software Failures</td>
+          <td>
+            a. High CPU, Memory, n/w BW: OOM killer, Autoscaling<br />
+            b. Outdated Software: Rolling updates<br />
+            c. Leaks, Ransomeware attacks<br />
+            <u>How to void software failures?</u><br />
+            &ensp; Good design patterns, use tested libraries, Monitoring,
+            logging, alerting.
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="scalable">Scalable / Scalability</h2>
+      <dl>
+        Means System behaves normally under increased load<br />
+        <b>How to make system Scalable?</b><br />
+        1. HPA (Horizontal Pod Autoscaling)<br />
+        2. DB Scaling: Sharding/Partitioning DB
+      </dl>
+
+      <h2 id="maintainable">Maintainable / Maintainability</h2>
+      <dl>
+        Over time, many different people will work on the system (engineering
+        and operations, both maintaining current behavior and adapting the
+        system to new use cases), and they should all be able to work on it
+        productively.
+      </dl>
+    </main>
+  </body>
+</html>
