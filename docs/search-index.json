@@ -1130,11 +1130,6 @@
     "excerpt": "Layer-2.5 Home Our team Projects Contact MPLS"
   },
   {
-    "title": "Layer-7",
-    "url": "/Networking/OSI-Layers/Layer-7/",
-    "excerpt": "Layer-7 Home Our team Projects Contact Back HTTP Kerberos Load Testing Tools OAuth Remote Browser Isolation REST API SSL TLS Web Servers (Ngnix, Apach..."
-  },
-  {
     "title": "Layers, Design Issues",
     "url": "/Networking/OSI-Layers/Duties_of_Layers.html",
     "excerpt": "Layers, Design Issues Home Our team Projects Contact Back Hub,Switch,Bridge,Router Layers, Design Issues Layer Design Issues Duties Protocols Applicat..."
@@ -1273,6 +1268,11 @@
     "title": "Markup Languages",
     "url": "/Languages/Markup/",
     "excerpt": "Markup Languages Home Our team Projects Contact SAML"
+  },
+  {
+    "title": "MCP",
+    "url": "/Networking/OSI-Layers/Layer-7/MCP/",
+    "excerpt": "MCP Home Our team Projects Contact Back MCP Netskope Change MCP(Model Context Protocol) What? It is the opensource standard way how AI agents(like cla..."
   },
   {
     "title": "Memory",
