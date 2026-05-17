@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -111,7 +111,20 @@
         <tr>
           <td>Create (POST)</td>
           <td>
-            Send data to server, Server will create entry. Eg: Form submittion.
+            send data to a server to create or update a resource, data will be
+            in request body.<br />
+            <pre><code>
+POST /api/users HTTP/1.1      &lt;&lt; POST REST_ENDPOINT
+Host: example.com
+Content-Type: application/json
+Content-Length: 45
+
+{
+  "name": "John Doe",
+  "job": "Software Engineer"
+}
+
+             </code></pre>
           </td>
         </tr>
         <tr>

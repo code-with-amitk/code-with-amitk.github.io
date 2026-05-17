@@ -34,6 +34,8 @@
       <a href="#mcp">MCP</a>
       <a href="#vs">MCP vs HTTP</a>
       <a href="#parsing">MCP parsing in SWG</a>
+      <a href="#requestex">Common MCP Request Examples</a>
+      <a href="#present">What would surely present in MCP Request</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -55,7 +57,7 @@
         params, id etc)<br />
         <pre><code class="language-css">
 POST /mcp/v1/tools/call HTTP/1.1
-Host: api.external-mcp-provider.com
+Host: mcpserver.com
 Content-Type: application/json
 Authorization: Bearer &lt;AI_Platform_JWT>
 User-Agent: AI-Assistant-Client/1.0
@@ -139,8 +141,8 @@ name=alice&message=hello
           </td>
           <td>
             <pre><code>
-POST /mcp/v1/tools/call HTTP/1.1        &lt; &lt; Method(POST)
-Host: api.external-mcp-provider.com     &lt;&lt; Endpoint(https://my-internal-mcp-server.local/)
+POST /mcp/v1/tools/call HTTP/1.1        &lt; &lt; POST method to send data. /mcp/v1/tools/call(This is REST endpoint of MCP Server)
+Host: mcpserver.com     &lt;&lt; MCP Server(https://mcpserver.com)
 Content-Type: application/json
 Authorization: Bearer AI_Platform_JWT
 User-Agent: AI-Assistant-Client/1.0
@@ -156,6 +158,41 @@ User-Agent: AI-Assistant-Client/1.0
   "id": 42
 }
           </code></pre>
+            <b>Headers:</b><br />
+            - Are HTTP headers or WebSocket upgrade headers, SSE headers<br />
+            <table>
+              <tr>
+                <td>Host</td>
+                <td>HTTP Host header, often present</td>
+              </tr>
+              <tr>
+                <td>Content-Type</td>
+                <td>
+                  Content-Type: application/json [Often]<br />
+                  Content-Type: text/event-stream [Used for Streaming]
+                </td>
+              </tr>
+              <tr>
+                <td>Authorization</td>
+                <td>
+                  Authorization: Bearer_token OR <br />
+                  Authorization: X-API-Key: abc123 [API Keys] OR <br />
+                  Authorization: Cookie: sessionid=xyz [Cookies] OR <br />
+                  Authorization: mTLS OR <br />
+                  Authorization: local
+                </td>
+              </tr>
+              <tr>
+                <td>User Agent</td>
+                <td>
+                  Claude OpenAI SDK<br />
+                  LangChain<br />
+                  Cursor<br />
+                  custom agent<br />
+                  absent entirely
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
         <tr>
@@ -192,6 +229,84 @@ User-Agent: AI-Assistant-Client/1.0
         Netskope must look past the HTTP headers and parses the JSON body.<br />
         Earlier blocking policy was created by finding destination URL in HTTP
         header eg(https://google.com) but in MCP Json body has to be parsed.
+      </dl>
+
+      <h2 id="requestex">Common MCP Request Examples</h2>
+      <table>
+        <tr>
+          <td>
+            HTTP GET (same for SSE,)
+            <pre><code>
+POST /rpc HTTP/1.1
+Host: mcp_server.com
+Content-Type: application/json
+Authorization: Bearer token
+{
+  "method": "tools/call",
+  "params": {
+    "name": "Access Page",
+    "arguments": {
+      "url": "https://example.com"
+    }
+  }
+}
+            </code></pre>
+          </td>
+          <td>
+            DB Access
+            <pre><code>
+{
+  "method": "tools/call",
+  "params": {
+    "name": "postgres.query",
+    "arguments": {
+      "sql": "SELECT * FROM users"
+    }
+  }
+}
+            </code></pre>
+          </td>
+          <td>
+            Filesystem Access
+            <pre><code>
+{
+  "method": "tools/call",
+  "params": {
+    "name": "filesystem.read",
+    "arguments": {
+      "path": "/etc/passwd"
+    }
+  }
+}
+          </code></pre>
+          </td>
+          <td>
+            github access
+            <pre><code>
+{
+  "method": "tools/call",
+  "params": {
+    "name": "github.get_file",
+    "arguments": {
+      "repo": "org/private-repo",
+      "path": "secrets.txt"
+    }
+  }
+}
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="present">What would surely present in MCP Request</h2>
+      <dl>
+        This is high probability that these fields would be present in MCP
+        request:<br />
+        &ensp; 1. Method / Operation type: tools/call, action:invoke, op:call<br />
+        &ensp; 2. Structured Json: <br />
+        &emsp; Capability Identifier(name in params)<br />
+        &emsp; Sensitive Payload Data(URLs, SQL, file paths, prompts, shell
+        commands, repo names)
       </dl>
     </article>
     <script src="/scripts/prism.js"></script>
