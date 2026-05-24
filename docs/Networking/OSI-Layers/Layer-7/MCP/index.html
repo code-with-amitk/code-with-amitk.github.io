@@ -53,6 +53,16 @@
         WebSockets over HTTP and uses HTTPS (SSL/TLS) to encrypt the JSON-RPC
         messages.<br />
 
+        <b>MCP is Opensource/Vendor Agnostic:</b> That means any agent can use
+        MCP to interact with MCP server and access tools/services
+        <br />
+        <pre><code>
+Claude-MCP-Client ---------|
+                          MCP-Server &lt;--> postgres-DB-reader
+Cursor-MCP-Client ---------|
+        </code></pre>
+        <br />
+
         <b>Message Format:</b> JSON-RPC with specific feilds (eg: methodm
         params, id etc)<br />
         <pre><code class="language-css">
@@ -120,8 +130,160 @@ Client(claude cli)          (Auth Server)             (Resource Server)
 Client(claude cli)                    Server(Postgres Connector)
       </code></pre>
 
-      <h2 id="vs">MCP vs HTTP</h2>
+      <h2>Message Exchange</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+MCP Client                                                  MCP Server
+      -------------- HTTP 3 Way Handshake --------------- 
+        ---------- TLS Tunnel establihsed ----------------
 
+        ============= Initialize Handshake Start (id=1)============
+        {
+          "jsonrpc": "2.0:",
+          "id": 1,
+          "method": "initialize",
+          "params": {
+            "protocolVersion": "2024-11-05",         &lt;&lt; Client Protocol Version
+            "capabilities": {
+              "roots": {"listChanged": false}        &lt;&lt; Client Advertises its Capabilities
+            },
+            "clientInfo": { "name": "Test", "version": "0.1.0"}
+          }
+        }
+        <-------------- Response --------------------------
+        {
+          "jsonrpc": "2.0:",
+          "id": 1,
+          "result": {
+            "protocolVersion": "2024-11-05",
+            "capabilities": {           &lt;&lt; Server advertises its capabilities
+              "tools": {"listChanged": false,},
+              "resources": {"listChanged": false,},
+              "prompts": {"listChanged": false,}
+            },
+            "serverInfo": { "name": "Srv", "version": "0.1.0"}
+          }
+        }
+        -----------------Initialized------------------->
+        {
+          "jsonrpc": "2.0:",
+          "method": "notifications/initialized"
+        }
+        ======== Initialize Handshake End ================
+
+
+        ======= Tools & Resouce Discovery Start (id=2)==========
+        -----------------tools/list------------------->
+        {
+          "jsonrpc": "2.0:",
+          "id": 2,
+          "method": "tools/list"
+        }
+        <-----------------result-------------------
+        {
+          "jsonrpc": "2.0:",
+          "id": 2,
+          "result": {
+            "tools": [
+              {
+                "name": add,
+                "inputSchema": {"type": "object", "properties": {"a", "b"}}
+              },
+              {
+                "name": "echo",
+                "inputSchema": {"type": "object", "properties": {"type": "string"}}
+              }
+            ]
+          }
+        }
+        ======= Tools & Resouce Discovery End ==========
+
+
+        ======= Tools Invocation (id=3)==========
+        -----------------tools/list------------------->
+        {
+          "jsonrpc": "2.0:",
+          "id": 3,
+          "method": "tools/call"
+          "params": {
+            "name": "add",
+            "arguments": {"a": 2, "b": 3}
+          }
+        }
+        <-----------------result-------------------
+        {
+          "jsonrpc": "2.0:",
+          "id": 3,
+          "result": {
+            "content": [
+              "type": "text", 
+              "text": "2+3 = 5"
+            ]
+          }
+        }
+        ======= Tools Invocation End ==========
+      </code></pre>
+          </td>
+          <td>
+            <dt>
+              --- Initialize Handshake <br />
+              (Both sides exchange protocolVersion, advertise Capabilities)
+              ---<br />
+              C->S initialize (id=1) Request<br />
+              S->C result for id=1 (protocolVersion, capabilities, serverInfo)
+              Response<br />
+              C->S Initialized. notification<br /><br />
+
+              --------- Tools & Resouce Discovery ------------<br />
+              C->S tools/list (id=2) Reqeuest<br />
+              S->C result for id=2 (tools list for inputs) Response<br /><br />
+
+              ------- Tools Invocation -------------<br />
+              C->S tools/call add(2,3) (id=3) Reqeust<br />
+              S->C result for id=3 Response<br />
+              C->S resources/list (id=5) Request<br />
+              S->C result for id=5 Response<br />
+              C->S resouces/read (id=6) Request<br />
+              S->C result for id=6 Response
+            </dt>
+          </td>
+        </tr>
+      </table>
+
+      <h2>Modes of Operation</h2>
+      <dl>There can be 2 modes of operation: Local, Remote</dl>
+      <table>
+        <tr>
+          <th></th>
+          <th>Local / STDIO</th>
+          <th>Remote (HTTPS/SSE)</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            Claude CLI runs on a machine and for all operations it need not to
+            leave the machine
+          </td>
+          <td>
+            Claude CLI need to connect to MCP server over the netwrok or within
+            company network and client need to auth via OAuth
+          </td>
+        </tr>
+        <tr>
+          <td>Example</td>
+          <td>
+            1. git clone repo; Ans ask questions about repo<br />
+            2. Shell commands<br />
+            3. Spawning subagent<br />
+            4. Searching Company's Jira, Google docs, confluence(if skill is
+            imported to claude cli agent)
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="vs">MCP vs HTTP</h2>
       <table>
         <tr>
           <th></th>
@@ -249,6 +411,16 @@ Authorization: Bearer token
       "url": "https://example.com"
     }
   }
+}
+
+// Response
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "content of webpage https://example.com"
+    }
+  ]
 }
             </code></pre>
           </td>
