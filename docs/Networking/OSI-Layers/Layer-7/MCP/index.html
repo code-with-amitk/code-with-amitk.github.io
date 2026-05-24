@@ -33,6 +33,7 @@
     <aside class="sidebar">
       <a href="#mcp">MCP</a>
       <a href="#vs">MCP vs HTTP</a>
+      <a href="#me">Message Exchange</a>
       <a href="#parsing">MCP parsing in SWG</a>
       <a href="#requestex">Common MCP Request Examples</a>
       <a href="#present">What would surely present in MCP Request</a>
@@ -130,101 +131,43 @@ Client(claude cli)          (Auth Server)             (Resource Server)
 Client(claude cli)                    Server(Postgres Connector)
       </code></pre>
 
-      <h2>Message Exchange</h2>
+      <h2 id="me">Message Exchange</h2>
       <table>
         <tr>
           <td>
-            <pre><code class="language-css">
-MCP Client                                                  MCP Server
-      -------------- HTTP 3 Way Handshake --------------- 
-        ---------- TLS Tunnel establihsed ----------------
+      <pre class="puml" visibility: hidden>
+@startuml
+title MCP Client-Server Sequence Diagram
 
-        ============= Initialize Handshake Start (id=1)============
-        {
-          "jsonrpc": "2.0:",
-          "id": 1,
-          "method": "initialize",
-          "params": {
-            "protocolVersion": "2024-11-05",         &lt;&lt; Client Protocol Version
-            "capabilities": {
-              "roots": {"listChanged": false}        &lt;&lt; Client Advertises its Capabilities
-            },
-            "clientInfo": { "name": "Test", "version": "0.1.0"}
-          }
-        }
-        <-------------- Response --------------------------
-        {
-          "jsonrpc": "2.0:",
-          "id": 1,
-          "result": {
-            "protocolVersion": "2024-11-05",
-            "capabilities": {           &lt;&lt; Server advertises its capabilities
-              "tools": {"listChanged": false,},
-              "resources": {"listChanged": false,},
-              "prompts": {"listChanged": false,}
-            },
-            "serverInfo": { "name": "Srv", "version": "0.1.0"}
-          }
-        }
-        -----------------Initialized------------------->
-        {
-          "jsonrpc": "2.0:",
-          "method": "notifications/initialized"
-        }
-        ======== Initialize Handshake End ================
+participant "MCP Client" as Client
+participant "MCP Server" as Server
 
+== Connection Setup ==
+Client -> Server: HTTP 3 Way Handshake
+Server --> Client: TLS Tunnel established
 
-        ======= Tools & Resouce Discovery Start (id=2)==========
-        -----------------tools/list------------------->
-        {
-          "jsonrpc": "2.0:",
-          "id": 2,
-          "method": "tools/list"
-        }
-        <-----------------result-------------------
-        {
-          "jsonrpc": "2.0:",
-          "id": 2,
-          "result": {
-            "tools": [
-              {
-                "name": add,
-                "inputSchema": {"type": "object", "properties": {"a", "b"}}
-              },
-              {
-                "name": "echo",
-                "inputSchema": {"type": "object", "properties": {"type": "string"}}
-              }
-            ]
-          }
-        }
-        ======= Tools & Resouce Discovery End ==========
+== Initialize Handshake (id=1) ==
+note over Client: Client Protocol Version\nClient Advertises its Capabilities
+Client -> Server: initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
+Server --> Client: Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
+note over Server: Server advertises its capabilities
+Client -> Server: notifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
 
+== Tools & Resource Discovery (id=2) ==
+Client -> Server: tools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
+Server --> Client: result (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
 
-        ======= Tools Invocation (id=3)==========
-        -----------------tools/list------------------->
-        {
-          "jsonrpc": "2.0:",
-          "id": 3,
-          "method": "tools/call"
-          "params": {
-            "name": "add",
-            "arguments": {"a": 2, "b": 3}
-          }
-        }
-        <-----------------result-------------------
-        {
-          "jsonrpc": "2.0:",
-          "id": 3,
-          "result": {
-            "content": [
-              "type": "text", 
-              "text": "2+3 = 5"
-            ]
-          }
-        }
-        ======= Tools Invocation End ==========
-      </code></pre>
+== Tools Invocation (id=3) ==
+Client -> Server: tools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
+Server --> Client: result (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
+
+@enduml
+      </pre>
+            <img
+              src="//www.plantuml.com/plantuml/png/hLHDRnCn4BtlhnZvWAXesdpGIwMWelJGIY1LJGG7oi7nJXCNxtYnPoCAodzdxJKr9H-bY4jsCtxpPlQzjtlcMJfkAbEmPeFmVd854wEHk3T5jq87K_pQ82c4SoqNJbP5KRSTMkbQ4eF83GAaJxURa8uiGD9jKOp7CB54g5XRQglSr30U5nq3zDuau2bSp6PNC8AFyXuk99L-ARzWaRRhjRYkunHcxwOmQuZG07gMSwFz4iiuw98qQsdqTymKy5ANuy51c4cM4MpWIrpf2bVEibNMm0TqNbkweNJmjcpHh3rwqEnX8civrqQpHh_b2NGUtmszeHyt123kl2LNAt4AOdZK5uUngCls_w2xhv2NjWpdcIF1MerbvTkZI1KAQTcqQoJj3r_t1eDU_oGs1PJAg-RcSE2ivLWHHdkUB2KjC4o-bSRZkeEj7rZYCrxIhOqT92iCysReMHo2MEKL-aU3zibYV_kptcRSDVhQad-sE0vzO_Z_AS3McjqAfFPkhcsSmgUmQQMg_djTVLHdGzUfM-sNDKVu8NH9QFaugMf_KicoljLAXdVI7-VCbNjDoIdTsI_2ak5Ld0MHuGLS9n7XN7iL5h-FzWyFjdy4eZV7GS44Upebmp-NonnYHnAxH3rhmcOESv0-_Of1TbAMPN1IKztmL2snaj5elg_ZiPtVeUA0g9sjWt4fPJBKvcAzpjdAfAYMzXzOCy2pqxG8x1tvvuTSPSikQMKxOwC-exr6AMbCWZqjusYxKO5ZnxVkiPof9jsYgP0u2HRy2Pg50VazsMFwixRTD5rPOYJ-tVOiCEEte7zt3PolHZ264x6fznbIsLJc9m00"
+              alt="plantuml"
+              style="width: 600px; height: 900px"
+            />
           </td>
           <td>
             <dt>
