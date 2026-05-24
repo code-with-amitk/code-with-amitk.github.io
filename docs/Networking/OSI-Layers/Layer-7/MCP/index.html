@@ -143,37 +143,46 @@ participant "MCP Client" as Client
 participant "MCP Server" as Server
 
 == Connection Setup ==
-Client -> Server: HTTP 3 Way Handshake
-Server --> Client: TLS Tunnel established
+Client <-> Server: HTTP 3 Way Handshake
+Server <-> Client: TLS Tunnel established
 
 == Initialize Handshake (id=1) ==
 note over Client: Client Protocol Version\nClient Advertises its Capabilities
-Client -> Server: initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
-Server --> Client: Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
+note over Client: All MCP Requests use POST\nPOST is required by JSON-RPC 2.0
+
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\n initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
+
+Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\n Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
 note over Server: Server advertises its capabilities
-Client -> Server: notifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
+
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nnotifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
 
 == Tools & Resource Discovery (id=2) ==
-Client -> Server: tools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
-Server --> Client: result (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\ntools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
+
+Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nresult (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
 
 == Tools Invocation (id=3) ==
-Client -> Server: tools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
-Server --> Client: result (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\ntools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
+Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nresult (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
 
 @enduml
       </pre>
             <img
-              src="//www.plantuml.com/plantuml/png/hLHDRnCn4BtlhnZvWAXesdpGIwMWelJGIY1LJGG7oi7nJXCNxtYnPoCAodzdxJKr9H-bY4jsCtxpPlQzjtlcMJfkAbEmPeFmVd854wEHk3T5jq87K_pQ82c4SoqNJbP5KRSTMkbQ4eF83GAaJxURa8uiGD9jKOp7CB54g5XRQglSr30U5nq3zDuau2bSp6PNC8AFyXuk99L-ARzWaRRhjRYkunHcxwOmQuZG07gMSwFz4iiuw98qQsdqTymKy5ANuy51c4cM4MpWIrpf2bVEibNMm0TqNbkweNJmjcpHh3rwqEnX8civrqQpHh_b2NGUtmszeHyt123kl2LNAt4AOdZK5uUngCls_w2xhv2NjWpdcIF1MerbvTkZI1KAQTcqQoJj3r_t1eDU_oGs1PJAg-RcSE2ivLWHHdkUB2KjC4o-bSRZkeEj7rZYCrxIhOqT92iCysReMHo2MEKL-aU3zibYV_kptcRSDVhQad-sE0vzO_Z_AS3McjqAfFPkhcsSmgUmQQMg_djTVLHdGzUfM-sNDKVu8NH9QFaugMf_KicoljLAXdVI7-VCbNjDoIdTsI_2ak5Ld0MHuGLS9n7XN7iL5h-FzWyFjdy4eZV7GS44Upebmp-NonnYHnAxH3rhmcOESv0-_Of1TbAMPN1IKztmL2snaj5elg_ZiPtVeUA0g9sjWt4fPJBKvcAzpjdAfAYMzXzOCy2pqxG8x1tvvuTSPSikQMKxOwC-exr6AMbCWZqjusYxKO5ZnxVkiPof9jsYgP0u2HRy2Pg50VazsMFwixRTD5rPOYJ-tVOiCEEte7zt3PolHZ264x6fznbIsLJc9m00"
+              src="//www.plantuml.com/plantuml/png/lLLTRzCm57tFhxZA0mAnTlrWBnL1cxg73G6hsWWUA0-kSzTwEBQndMe5zRyJEoxkg4efOdjfiljnZdtkkTcviKJRgkI9PPOZl1-EOCWP2jkQe5wYXWb-gr1GX4j6vfgKIQBg3aQP8i926XjI82QyxfOqOAual2P9bi5G2e7KCYdggAqKP5dI8C3hrfjGEO2hF1z17pwH5LmHKPW5-Of9atHrWNG0-Ri9v5KDoG6D9JFEp08BptGjc6M4i-yO8U0vAxBk2qSgf4MG3YzWXIUCjBIIIWuVKHicnLI4n4LHLrjcq02p1eP4aHdZDGcQNJIuuDnBEtPYchg-CWYZcqa-5UuNc05TfvZ60cOhU3kv-T0QZuRGQtUIZI9RWlYUqpiZXLPqAgwagJbAgbh65xJndfIAOvlA4keJIs7TGFELmW4GfJYZn8dk4QO2M1IdaMGgVjHXI0D3Ee2qFabwueEigF_kDkybseKiN3vYX395D2bDdV9GBX2a34fwq4xlLQlRRNNEV9Eheb78sEmIMahh8obdnWuNHCpHCTyIRd3TbAr_eNZ9hiMjz1s2bEZuSZGsFO5q6O_GQNVhc_d--cUTR7pLYhxQBtT3SwpSOpHA2dEqs1fDnUt_KzHAoVSh6jeRNbbfYeTgmv5AzVTpQlowCwU9NXuOKroni1FX2UJXNcvV_l4tIKZBRaF8dCQLAFuuuxX4U_jJRyqiWzpD39x1ECm4BfcXJeULTrFFVSqU_PhUEATkl87qi8LxlryrOgHFitP-UuuyyCxEnQNvlB5yT2qf2kTQ9bHb9tI19V6cjYlbqt9sXzIw2gMbSYOD6qLSR9Qkrt6F8YZIXVm7r5XWh6PYxj0Ry2zXXxRzT2sMiX7BwzD_GXTHmdaWFJoK_gwBDXZx_kiy64w84JslIXGsoE-cxIRW2E8NveaCUUpTTmn96vfjIyRXMxnttcYU3lDb7p8uItUzS8wYg4h-4m00"
               alt="plantuml"
-              style="width: 600px; height: 900px"
+              style="width: 600px; height: 950px"
             />
           </td>
           <td>
             <dt>
-              --- Initialize Handshake <br />
+              All Methods are POST because<br>
+              - JSON-RPC 2.0 standard requires POST for all calls. Even though it's advertising capabilities, it's still a request expecting a response.
+              <br><br>
+
+              - Initialize Handshake <br />
               (Both sides exchange protocolVersion, advertise Capabilities)
-              ---<br />
+              -<br />
               C->S initialize (id=1) Request<br />
               S->C result for id=1 (protocolVersion, capabilities, serverInfo)
               Response<br />
