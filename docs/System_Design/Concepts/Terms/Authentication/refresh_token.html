@@ -33,10 +33,16 @@
       <a href="#jwt">Why JWT Token</a>
       <a href="#issue">Issue with 1 Token System</a>
       <a href="#refresh">Refresh Token</a>
+      <ul>
+        <li><a href="#flow">Flow</a></li>
+        <li><a href="#compromise">Can't Refresh token be Compromised?</a></li>
+        <li><a href="#mim">Detecting MIM(Man in Middle)</a></li>
+      </ul>
+      <a href="#stop">How to Stop an onging Attack</a>
     </aside>
 
     <main style="margin-left: 200px">
-      <h2 id="refresh">Why JWT Token</h2>
+      <h2 id="jwt">Why JWT Token</h2>
       <dl>
         <b><a href="./jwt.html">JWT Token</a>?</b><br />
         &ensp; JWT token is assigned to a user when user Authenticates and then
@@ -76,7 +82,7 @@
         system for entire duration(eg: 90 days)
       </dl>
 
-      <h3>Flow</h3>
+      <h3 id="flow">Flow</h3>
       <dl>
         Now Server returns 2 tokens on login to frontend.<br />
         &ensp; 1. access_token = JWT Token: short‑lived JWT (for example, 15–60
@@ -86,23 +92,74 @@
       </dl>
       <pre><code class="language-css">
   CLIENT/FRONTEND                                     SERVER/BACKEND
-          ------------------ login (user,pass) -------------->
+          ----------- login (user,pass) -------&lg;   /login
                                                     Correct user,pass
-                                                    Generate JWT, refresh token
-                                                            ---------- refresh_token -----> DB
-                                                                                        Store in DB
-          <------ access_token(JWT) + refresh_token(string) --
+                                                    Generate JWT, refresh token1
+                                                            ---------- refresh_token1 -----&gt; DB
+                                                                                          Store in DB
+          &lt;------ access_token(JWT) + refresh_token1(string) --
 
     Access REST endpoint
-          -------- GET USERS (Bearer: &lt;access_token>) ------>/users
+      - GET USERS (Bearer: &lt;access_token&gt;) ------&gt; /users
                                                         Validate JWT
           &lt;--------------- 401 Unauthorized -------- Token expired
 
     Call Refresh endpoint
-          -------- GET token (Refresh: "refresh_token") -----> /auth/refresh
-                                                              validate refresh_token from DB
-                                                              Issue new (access, refresh) token
+          - GET access token (Refresh: "refresh_token1") -&gt; /auth/refresh
+                                                            if (refresh_token1 recieved == stored in DB)
+            &lt;---- refresh_token2 + JWT Token --------    Issue new (access, refresh_token2) token
+                                                            else
+            &lt;--------------- 401 Unauthorized --------       Some Playing older Token --- ATTACKED -- &gt; CUSTOMER ADMIN
+
       </code></pre>
+
+      <h3 id="compromise">Can't Refresh token be Compromised?</h3>
+      <dl>
+        Yes, if JWT token can be compromised, so as refresh token can also be
+        compromised. But once MIM tries to use the refresh token he will be
+        detected
+      </dl>
+
+      <h3 id="mim">Detecting MIM(Man in Middle)</h3>
+      <pre><code class="language-css">
+  CLIENT/FRONTEND                                     SERVER/BACKEND
+          ----------- login (user,pass) -------&lg;   /login
+                                                    Correct user,pass
+                                                    Generate JWT, refresh token1
+                                                            ---------- refresh_token1 -----&gt; DB
+                                                                                          Store in DB
+          ATTACKER(MIM) &lt;- access_token(JWT) + refresh_token1(string) -
+            &lt; Start Exploiting the System using JWT token &gt;
+
+    CLIENT/FRONTEND &lt;---- access_token(JWT) + refresh_token1(string) ----
+        Uses JWT to access endpoints
+
+          ATTACKER(JWT expires)
+              - GET JWT token (Refresh: "refresh_token1") -&gt; /auth/refresh
+                                                            if (refresh_token1 recieved == stored in DB) 
+                &lt;------ refresh_token2 + JWT Token --------    Issue new (access, refresh2) token
+
+    CLIENT/FRONTEND(JWT Expires)
+          - GET JWT token (Refresh: "refresh_token1") -&gt; /auth/refresh
+                                                            if (refresh_token1 recieved != stored in DB)
+                                                            //because stored in db=refresh_token2
+                                                            THIS IS ATTACK  --- ATTACKED -- &gt; CUSTOMER ADMIN
+      </code></pre>
+
+      <h2 id="stop">How to Stop an onging Attack</h2>
+      <dl>
+        Frontend app user informs admin that his device is compromised or
+        lost<br />
+        Admin directly deletes refresh token from databases using ADMIN ONLY
+        access Rest endpoint<br />
+      </dl>
+
+      <h3>How this Admin Only Access REST ENDPOINT is secured?</h3>
+      <dl>
+        Using 2 factor authentication, admin enters password and system sends
+        OTP to mobile number or registered email. Once 2 factor authentication
+        is successful admin will delete the refresh token.
+      </dl>
     </main>
 
     <script type="module">
