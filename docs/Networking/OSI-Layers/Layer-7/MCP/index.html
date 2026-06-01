@@ -59,7 +59,7 @@
         <br />
         <pre><code>
 Claude-MCP-Client ---------|
-                          MCP-Server &lt;--> postgres-DB-reader
+                          MCP-Server &lt;--&gt; postgres-DB-reader
 Cursor-MCP-Client ---------|
         </code></pre>
         <br />
@@ -70,7 +70,7 @@ Cursor-MCP-Client ---------|
 POST /mcp/v1/tools/call HTTP/1.1
 Host: mcpserver.com
 Content-Type: application/json
-Authorization: Bearer &lt;AI_Platform_JWT>
+Authorization: Bearer &lt;AI_Platform_JWT&gt;
 User-Agent: AI-Assistant-Client/1.0
 
 {
@@ -92,16 +92,16 @@ User-Agent: AI-Assistant-Client/1.0
         <pre><code>
   Machine-1                  Machine-2                   Machine-3
 Client(claude cli)          (Auth Server)             (Resource Server)
-               ---- GET www.google.com -------------------->
+               ---- GET www.google.com --------------------&gt;
                &lt;- 401 Unauthorized Challenge -----------
 
-               -- Authenticate ----->
+               -- Authenticate -----&gt;
       my client_id: https://claude.ai/mcp-metadata.json
-                                - Fetch public key ----> claude.ai
+                                - Fetch public key &gt; claude.ai
                                 &lt;--- Public key -------
                             Verify Signature
 
-               --- GET google.com Authorization Header: JWT -->
+               --- GET google.com Authorization Header: JWT --&gt;
         </code></pre>
         <br />
 
@@ -131,7 +131,32 @@ Client(claude cli)          (Auth Server)             (Resource Server)
 Client(claude cli)                    Server(Postgres Connector)
       </code></pre>
 
+      <h2><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">MCP Authorization</a></h2>
+      <dl>
+        OAuth for HTTP/SSE client,server.<br>
+        None for STDIO
+      </dl>
+
       <h2 id="me">Message Exchange</h2>
+      <dl>
+        <a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#session-management">Packet Exchange</a>
+      </dl>
+      <h3>Fields in Header</h3>
+      <dl>
+        <b>Session Id (non mandatory):</b> <br>
+        - Client can send MCP-Session-Id in initialization message, by including it in HTTP 
+        header, if server support Session Id, it will return in Initialization response and client should use
+        it in all subsequent HTTP requests.<br>
+        - if server does not support MCP-Session-Id, it should respond without MCP-Session-Id with HTTP 400 Bad response<br>
+
+        <b>Protocol Version Header (non mandatory):</b><br>
+        - If using HTTP, the client MUST include the MCP-Protocol-Version: protocol-version HTTP header on all subsequent requests to the MCP server.
+        MCP server to respond based on the MCP protocol version. For example: MCP-Protocol-Version: 2025-11-25<br>
+        - if protocol version is not sent, server SHOULD assume protocol version 2025-03-26. If the server receives a request with an invalid or 
+        unsupported MCP-Protocol-Version, it MUST respond with 400 Bad Request.<br>
+        <font color="blue">We can use these(MCP-Session-Id, MCP-Protocol-Version) as strong hints, but not sufficient to detect MCP traffic</font>
+
+      </dl>
       <table>
         <tr>
           <td>
@@ -143,39 +168,45 @@ participant "MCP Client" as Client
 participant "MCP Server" as Server
 
 == Connection Setup ==
-Client <-> Server: HTTP 3 Way Handshake
-Server <-> Client: TLS Tunnel established
+Client &lt;-&gt; Server: HTTP 3 Way Handshake
+Server &lt;-&gt; Client: TLS Tunnel established
 
 == Initialize Handshake (id=1) ==
 note over Client: Client Protocol Version\nClient Advertises its Capabilities
 note over Client: All MCP Requests use POST\nPOST is required by JSON-RPC 2.0
 
-Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\n initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
 
-Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\n Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
+Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
 note over Server: Server advertises its capabilities
 
-Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nnotifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\nnotifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
 
 == Tools & Resource Discovery (id=2) ==
-Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\ntools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
 
-Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nresult (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
+Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
 
 == Tools Invocation (id=3) ==
-Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\ntools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
-Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nresult (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
+Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
 
 @enduml
       </pre>
             <img
-              src="//www.plantuml.com/plantuml/png/lLLTRzCm57tFhxZA0mAnTlrWBnL1cxg73G6hsWWUA0-kSzTwEBQndMe5zRyJEoxkg4efOdjfiljnZdtkkTcviKJRgkI9PPOZl1-EOCWP2jkQe5wYXWb-gr1GX4j6vfgKIQBg3aQP8i926XjI82QyxfOqOAual2P9bi5G2e7KCYdggAqKP5dI8C3hrfjGEO2hF1z17pwH5LmHKPW5-Of9atHrWNG0-Ri9v5KDoG6D9JFEp08BptGjc6M4i-yO8U0vAxBk2qSgf4MG3YzWXIUCjBIIIWuVKHicnLI4n4LHLrjcq02p1eP4aHdZDGcQNJIuuDnBEtPYchg-CWYZcqa-5UuNc05TfvZ60cOhU3kv-T0QZuRGQtUIZI9RWlYUqpiZXLPqAgwagJbAgbh65xJndfIAOvlA4keJIs7TGFELmW4GfJYZn8dk4QO2M1IdaMGgVjHXI0D3Ee2qFabwueEigF_kDkybseKiN3vYX395D2bDdV9GBX2a34fwq4xlLQlRRNNEV9Eheb78sEmIMahh8obdnWuNHCpHCTyIRd3TbAr_eNZ9hiMjz1s2bEZuSZGsFO5q6O_GQNVhc_d--cUTR7pLYhxQBtT3SwpSOpHA2dEqs1fDnUt_KzHAoVSh6jeRNbbfYeTgmv5AzVTpQlowCwU9NXuOKroni1FX2UJXNcvV_l4tIKZBRaF8dCQLAFuuuxX4U_jJRyqiWzpD39x1ECm4BfcXJeULTrFFVSqU_PhUEATkl87qi8LxlryrOgHFitP-UuuyyCxEnQNvlB5yT2qf2kTQ9bHb9tI19V6cjYlbqt9sXzIw2gMbSYOD6qLSR9Qkrt6F8YZIXVm7r5XWh6PYxj0Ry2zXXxRzT2sMiX7BwzD_GXTHmdaWFJoK_gwBDXZx_kiy64w84JslIXGsoE-cxIRW2E8NveaCUUpTTmn96vfjIyRXMxnttcYU3lDb7p8uItUzS8wYg4h-4m00"
+              src="//www.plantuml.com/plantuml/png/rLLDa-Cq4BtxLtJvG46npkI3N5AOsgtiOK81cufTS20S5BadqI9Bmf9J4wZyToHPHXb2oCn0JUrSF1frz-kFrqzvgmrfJ5lpn3334RwVBs7E6GgJ5TZiiO42VsjHK8JtZ6mRKYU9iX6CCaM4WJG6f41qE9wxT63E9HoJ9CzXBeL0QfWKzjQq2l8ywH3Ww-oRu3c3sx9SmWH-8WUu9QBIE_8h9ftH-tKXCoY_Aw1iBIG7j7rjEDCxh7ocXM264Sv-nmW1dxCg7ttXaWff4AJ3wx526Sj66aabXn-nqRREjGY6TvNrDaoZ1cPitqIH3UCs2Uf_G7l7kH_joWrJM_zM8om_5ELQk2ym3OqriGOhs1pWs-B33zbgEOVnO9Zq4paPY8-v-QYbQ1HTYrkfROwQganxXm7Uarfn751PWwrO2kC8BGyAPq2KuemIDtIFi1QsiAplCmjzpc0y74-pqIWRJpkF0hKpP8jg1ctBghK05eVQZN8j_h3Na8RAqXcajeFqZRzabVr_r9rhD3jPENl426wAs2NJrkIXt4KeBLJcGOVZhrnjmwaBybuq4X23dQ6HqlYRb3DjvZiYjkWotn6kyTYv7Vz2yQDUY3lf8mIfqUKhKPlq3QJxMC9mCBAT-NZxEIRzFcPn7o_JrALvAPfMg9KK-iaaDQXRRlu_9eoK_38J8RpBAzk6udLVNrAj7izlfuypVejcVuNUAEbUWu5lyl0TE6t-qrMkxORT1IXz4oLO_UjkHD5UZ4-z5F8SIiSrV0Qhm2MyPvgw-Hty5exTg_lVnlFSxXynLh-eDswTGh7N9JF--uWYHlhCv-65clKgVrgZvsz35FVFlJIZkaXLENKneLfJq1tMn8lF79Gtoyr7fCPwE34h9wQWVEBkDkdn6FKUGP7kv3DGeuCs3HDRXzw1_nAqVhg_2x6NtR3yV2QlO6ifuJmKUvtCoVdMzXWNVeqVaXhkIBDjQnIcfyssuvXp2U8B-Xe4yFYPdGk0TcbE9H2NpU2ztqN_rs5-EO4Sfkdvxhr5KRKr_nC0"
               alt="plantuml"
               style="width: 600px; height: 950px"
             />
           </td>
           <td>
             <dt>
+              <img
+                src="/images/Machine_Learning/MCP/Message_Exchange.png"
+                alt="Message exchange"
+                style="width: 200px; height: 400px"
+              /><br>
+
               All Methods are POST because<br>
               - JSON-RPC 2.0 standard requires POST for all calls. Even though it's advertising capabilities, it's still a request expecting a response.
               <br><br>
@@ -183,22 +214,22 @@ Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: a
               - Initialize Handshake <br />
               (Both sides exchange protocolVersion, advertise Capabilities)
               -<br />
-              C->S initialize (id=1) Request<br />
-              S->C result for id=1 (protocolVersion, capabilities, serverInfo)
+              C-&gt;S initialize (id=1) Request<br />
+              S-&gt;C result for id=1 (protocolVersion, capabilities, serverInfo)
               Response<br />
-              C->S Initialized. notification<br /><br />
+              C-&gt;S Initialized. notification<br /><br />
 
               --------- Tools & Resouce Discovery ------------<br />
-              C->S tools/list (id=2) Reqeuest<br />
-              S->C result for id=2 (tools list for inputs) Response<br /><br />
+              C-&gt;S tools/list (id=2) Reqeuest<br />
+              S-&gt;C result for id=2 (tools list for inputs) Response<br /><br />
 
               ------- Tools Invocation -------------<br />
-              C->S tools/call add(2,3) (id=3) Reqeust<br />
-              S->C result for id=3 Response<br />
-              C->S resources/list (id=5) Request<br />
-              S->C result for id=5 Response<br />
-              C->S resouces/read (id=6) Request<br />
-              S->C result for id=6 Response
+              C-&gt;S tools/call add(2,3) (id=3) Reqeust<br />
+              S-&gt;C result for id=3 Response<br />
+              C-&gt;S resources/list (id=5) Request<br />
+              S-&gt;C result for id=5 Response<br />
+              C-&gt;S resouces/read (id=6) Request<br />
+              S-&gt;C result for id=6 Response
             </dt>
           </td>
         </tr>
@@ -232,6 +263,12 @@ Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: a
             4. Searching Company's Jira, Google docs, confluence(if skill is
             imported to claude cli agent)
           </td>
+        </tr>
+        <tr>
+          <td>Authorization</td>
+          <td>Implementations using an STDIO transport SHOULD NOT follow this any protocol for authorization,
+            and instead retrieve credentials from the environment.</td>
+          <td>OAuth recent standard</td>
         </tr>
       </table>
 

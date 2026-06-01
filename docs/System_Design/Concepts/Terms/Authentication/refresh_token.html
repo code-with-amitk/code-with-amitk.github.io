@@ -57,7 +57,7 @@
         user has to enter his password again. <br />
 
         <u>Solution:</u> Maintain 2 JWT tokens.<br />
-        &ensp; Short lived(24 hours): access token<br />
+        &ensp; Short lived(24 hours): access token = JWT Token<br />
         &ensp; Long lived(90 days): Refresh token
       </dl>
 
@@ -71,15 +71,16 @@
         &ensp; 2. Only short lived token(15 min or 1 hour life) token floats on
         wire, it they are compromised then even, attack duration is reduced.<br />
         &ensp; 3. User need not to enter password again and again in case JWT
-        token has expired and needs renewal. &ensp; 4. Long lived JWT tokens are
-        hard to revoke and permanent key to system for entire duration(eg: 90
-        days)
+        token has expired and needs renewal. <br />
+        &ensp; 4. Long lived JWT tokens are hard to revoke and permanent key to
+        system for entire duration(eg: 90 days)
       </dl>
 
       <h3>Flow</h3>
       <dl>
         Now Server returns 2 tokens on login to frontend.<br />
-        &ensp; 1. access_token: short‑lived JWT (for example, 15–60 minutes).<br />
+        &ensp; 1. access_token = JWT Token: short‑lived JWT (for example, 15–60
+        minutes).<br />
         &ensp; 2. refresh_token: long‑lived random string stored server‑side
         (e.g., 7–90 days)
       </dl>

@@ -50,27 +50,24 @@
 
       <h2 id="inside">Disecting token</h2>
       <dl>
-        JWTs consist of three parts: header + payload + signature, concatenated
-        by dot .
+        A JWT is assigned to user as a authentication token<br />
+        JWTs consist of three parts: (header . payload . signature)
       </dl>
       <pre><code class="language-css">
 jwt-token = header.payload.signature
 {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTc0MDU1OTk2NX0.Dck0cV04Vv7G6ciMt2qvE5_fS2ZMpl5aFuXwKNnD3M0"}
 
-// A JWT is assigned to user as a authentication token
-
-struct st = {
+struct header_st = {
   "alg": "HS256",
   "typ": "JWT",
 }
-header = base64Encode(st)     //Header = Base64encode(algo+type)
+header = base64Encode(header_st)
 
-struct st = {
+struct payload_st= {
   "email": email,
   "exp":   timestamp_to_expiry
 }
-payload = base64Encode(st)    //Payload = Base64encode(email+timestamp)
-
+payload = base64Encode(payload_st)
 
 Signature = HMAC_SHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
     </code></pre>
