@@ -1722,7 +1722,7 @@
   {
     "title": "Refresh Token",
     "url": "/System_Design/Concepts/Terms/Authentication/refresh_token.html",
-    "excerpt": "Refresh Token Home Our team Projects Contact Back Why JWT Token Issue with 1 Token System Refresh Token Why JWT Token JWT Token ? &ensp; JWT token is ..."
+    "excerpt": "Refresh Token Home Our team Projects Contact Back Why JWT Token Issue with 1 Token System Refresh Token Flow Can't Refresh token be Compromised? Detec..."
   },
   {
     "title": "Remote Browser Isolation",
