@@ -666,8 +666,13 @@
   },
   {
     "title": "Frameworks",
+    "url": "/Frameworks/Go/",
+    "excerpt": "Frameworks Home Our team Projects Contact Back Testing in golang Testing in Go is built directly into the language, making it remarkably straightforwa..."
+  },
+  {
+    "title": "Frameworks",
     "url": "/Frameworks/",
-    "excerpt": "Frameworks Home Our team Projects Contact Dev Frameworks Dioxus React Native Testing Frameworks &ensp; Python Python Unittest"
+    "excerpt": "Frameworks Home Our team Projects Contact Back Dev Frameworks Dioxus React Native Testing Frameworks &ensp; Python: Python Unittest &ensp; Go: GoTest"
   },
   {
     "title": "Function in Go",
