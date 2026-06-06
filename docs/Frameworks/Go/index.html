@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Frameworks</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Frameworks/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"><!-- Sidebar --></aside>
+
+    <article style="margin-left: 200px">
+      <h2>Testing in golang</h2>
+      <dl>
+        Testing in Go is built directly into the language, making it remarkably
+        straightforward. You don't need external frameworks; you use the
+        standard testing package. You need to:<br />
+        1. Create a test file with name ending with _test.go<br />
+        2. Write test functions that start with Test
+      </dl>
+
+      <h3>Create Function to be tested</h3>
+      <pre><code class="language-css">
+// Initialize a New Go Module
+$ go mod init test_go
+$ ls -ltr
+ go.mod
+$ cat go.mod
+module test_go
+
+go 1.24.3
+
+//Create function to be tested
+$ vim main.go
+package test_go
+func Add(a, b int) int {
+    return a + b
+}
+      </code></pre>
+
+      <h3>Create test file and test</h3>
+      <pre><code class="language-css">
+$ cat main_test.go
+package test_go
+
+import "testing"
+
+func TestAdd(t *testing.T) {
+    result := Add(2, 3)
+    expected := 5
+
+    if result != expected {
+        t.Errorf("Add(2, 3) = %d; want %d", result, expected)
+    }
+}
+
+// Running the test
+$ go test
+PASS
+ok      test_go 0.002s
+
+      </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
