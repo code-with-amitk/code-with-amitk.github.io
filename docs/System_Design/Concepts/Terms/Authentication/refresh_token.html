@@ -95,30 +95,10 @@
         &ensp; 1. access_token = JWT Token: short‑lived JWT (for example, 15–60
         minutes).<br />
         &ensp; 2. refresh_token: long‑lived random string stored server‑side
-        (e.g., 7–90 days)
+        (e.g., 7–90 days)<br>
+        &ensp; 3. Client/frontend uses Refresh token to renew access/JWT token<br>
+        &ensp; 4. Backend issues both new refresh, JWT token to frontend.
       </dl>
-      <pre><code class="language-css">
-  CLIENT/FRONTEND                                     SERVER/BACKEND
-          ----------- login (user,pass) -------&lg;   /login
-                                                    Correct user,pass
-                                                    Generate JWT, refresh token1
-                                                            ---------- refresh_token1 -----&gt; DB
-                                                                                          Store in DB
-          &lt;------ access_token(JWT) + refresh_token1(string) --
-
-    Access REST endpoint
-      - GET USERS (Bearer: &lt;access_token&gt;) ------&gt; /users
-                                                        Validate JWT
-          &lt;--------------- 401 Unauthorized -------- Token expired
-
-    Call Refresh endpoint
-          - GET access token (Refresh: "refresh_token1") -&gt; /auth/refresh
-                                                            if (refresh_token1 recieved == stored in DB)
-            &lt;---- refresh_token2 + JWT Token --------    Issue new (access, refresh_token2) token
-                                                            else
-            &lt;--------------- 401 Unauthorized --------       Some Playing older Token --- ATTACKED -- &gt; CUSTOMER ADMIN
-
-      </code></pre>
 
       <h3 id="compromise">Can't Refresh token be Compromised?</h3>
       <dl>
@@ -181,15 +161,16 @@ Indexes:
         - If they don't match, then we will return 401 Unauthorized and this can be <font color="red">an MIM Attack</font>. Tenant Admin will revoke after 2factor authentication.
       </dl>
           <img 
-      src="//www.plantuml.com/plantuml/png/jLHDR-8m4BtxLqnlHG82B2SagjAMRhjBeU93N2eX4m_4ky6ER8Tij-f_tqb8caQqg9UD18Znp9jvyvvpQHqtBjw5xCm5k4E8GYuLEnEuaGfXi9mzBXv643WNsPxd6Puqjz85yJgsQ7oj72hNzFNEuuaD-Tgclmr91xQnqQP1Q2f5z_RjRhFb2MaTEzEHarf1m9L8Z7G40Sx4o1ZtdJPm7Ke2PH7D9NqP4G1SSVytAi44TtpDBS8KDmPjCDSKdlDrICM7CcXS5DazU9pCvk25UYiLlFW61IL87jfNfhH3q7iqRz0fdpf4tDf4m9w7Kh1hWvpIVYpda3Kg0ddpF4Z5aC8nbaFH2CVpzU1-F1jEvs0E9okN7jadTOwxADJFY2if-krMkmxPoIhWDkZVqL_y4qcgM77NRpQRjR8BjJbmxi6ln6MjskTPzdE_qmrqR6fFAczNFVss8-42M_jmQT-7j3CUIO_g2CD7naDNTiXt0_HyD4cdrOB9JuQXnR8cvo20RnmQw7GXdSv-2j9jjM6XUEm2RUHV52mLw0FDZXgm2bsGDf-su9caPbAOf9fcQoRPfTf2MLOAUifIMQsNLy5BfUlh-qcFVNehbQZskoEbPzJdrkWTVPHB1-Zt8OixJRIakhbY0slbLg40fw7mJ9sDjIl8Vzc9i-5eU3s7TyQ3s-da0QhMX2Url1jEXrK_mc1yGubxYWco9DpFOBmOZR9mwLIue44IbZadK-3aIgOP7BW08OiIlYznZm8sj18eTbBo0tfEKrmytWpcmsD6Cp9tENr_F5cUr-3hD8zD-FQMu8MlwXLrOQFDswRPlR9e74ZbD92afM10ptzuVNIENX-VthcNuZ9rgWGwhuVBB5KcvAaxM-IiAaDcb_UIlk9T-0y0"
+      src="//www.plantuml.com/plantuml/png/jLJVR-9647xVlsAYUmbI-07D4ogdEiHfqkC81KTvYOGMxuAtiNUjtG5Ae_pl7HllWGKNfG-rX87PcVbclczcBp2HcOGyvKgp2o6NIai8dcUJf-yZI11prs-tBT-sLWgJzMBjf8sDHgcn5PkipRSkvGjNV3SL7RZcqjWcPTEupjBsfdlTwhI5SiWkJ8xAQ4Yu5bkha580shLaZCTeB0I8F7wL5hvCfV0saIaD05-6Ewuhsp1L14wsYTAlBESMLQnoJgQR8buB9ZZo1NSIfd9ffKiYG-Q8BrB2ggARNxrt7oQFimZQgLaHr5jifI07nLFtphH12MOZxO_KHVjNa7FdjW8sF5M23QtavFR7SmGbK6Nmu9MHWg58nrYLYaeuhQyF3-DPE8t0xa_cM1ov5tqfipmrEoddIWowdUuLb2VpXBjaS4z_vT-veeWvnq6hrMeSK0XcttCV_jfY2TMzBBrtWzvrOjQsyQ8hkFhfBvdHcBZ6MT9-3uapdgisnL6EM3AUuW6XuWReELT9hzE1nszCfauUOgeU1F0bIWkzQoYgSpzDSjtfmfFcQqoCLVz8KN3CpcXs0i1gxO9oLRM-posdbvRRGjEIPf9TwPKNfIReHoDLnhQhA7YheRuVLtewftTAYphUFIaz8vmxQpBwQ2GW60oWjAEXjfI-lM61SsgbfG0qu6VcYeqD-kO_FOcpS1GE8pWQFBYRFdw7-cZ2Ytw-3wTXVHuX6D-IuuPiWaOI7cOmVXgDIlDXKk4hQBDbnUHK2dn4oRHC1vX8AAsKFrPo8mKiYHBmd1pw0te-Rl5fSXj4uMb7ip0wgdumVdo-RC3dspmpXFvIu7wkhchgmjBO7qop1-saHL0Q3P2a1y60dl_X-kYTNXy_sxatlqozUWEzz_qoArqNyd2jC_y34YwOGtEqY4tSRoBZvTJdAT-vkeu--BzksISe-tCjxMxFHytxrsRpd7ijlr-g4xvylUKjvLcPrsGvZH6Pqdq8eYWOVYCbOJ8AXY5StgGcVgqKQ1oOtVkpyWsfMRdgbkhT1Mnn5C9u74jtn6SnZh_HQvsb_m80"
       alt="Refresh Token Flow">
       <pre class="puml" visibility: hidden>
-@startuml
 !theme plain
 !define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v14.0/dist
 !option handwritten true
 
-actor Client
+actor Attacker #Red
+actor Admin   #Cyan
+actor Client  #Pink
 participant Backend
 database RefreshTokenTable
 
@@ -243,40 +224,35 @@ end note
     Backend -> RefreshTokenTable: INSERT refresh_tokens\n(employee_id=101, token_hash=H2, expires_at=...)
     Backend --> Client: {jwtToken2, refreshToken2}
 else invalid
-    Backend --> Client: 401 invalid_refresh_token
+note over Attacker
+Attacker had
+stored
+refresh-token1 
+and replays
+end note
+    Attacker -> Backend: POST /token/refresh {refreshToken1}
+    Backend -> RefreshTokenTable: Query token
+    Backend <-- RefreshTokenTable: refreshToken1 expired
+    Backend --> Attacker: 401 invalid_refresh_token
+    Backend --> Admin: ATTACK IN PLACE (Block Client)
+note over Admin
+Admin logs
+using 2FA
+block Client
+access
+end note
 end
 @enduml
       </pre>
 
       <h3 id="mim">Detecting MIM(Man in Middle)</h3>
-      <pre><code class="language-css">
-  CLIENT/FRONTEND                                     SERVER/BACKEND
-          ----------- login (user,pass) -------&lg;   /login
-                                                    Correct user,pass
-                                                    Generate JWT, refresh token1
-                                                            ---------- refresh_token1 -----&gt; DB
-                                                                                          Store in DB
-          ATTACKER(MIM) &lt;- access_token(JWT) + refresh_token1(string) -
-            &lt; Start Exploiting the System using JWT token &gt;
-
-    CLIENT/FRONTEND &lt;---- access_token(JWT) + refresh_token1(string) ----
-        Uses JWT to access endpoints
-
-          ATTACKER(JWT expires)
-              - GET JWT token (Refresh: "refresh_token1") -&gt; /auth/refresh
-                                                            if (refresh_token1 recieved == stored in DB) 
-                &lt;------ refresh_token2 + JWT Token --------    Issue new (access, refresh2) token
-
-    CLIENT/FRONTEND(JWT Expires)
-          - GET JWT token (Refresh: "refresh_token1") -&gt; /auth/refresh
-                                                            if (refresh_token1 recieved != stored in DB)
-                                                            //because stored in db=refresh_token2
-                                                            THIS IS ATTACK  --- ATTACKED -- &gt; CUSTOMER ADMIN
-      </code></pre>
+      <dl>
+        Covered in above flow diagram.
+      </dl>
 
       <h2 id="handle">How the current design handles MIM attack risk</h2>
       <dl>
-      - The refresh design rotates the token on every successful refresh.<br>
+      - The refresh design rotates both tokens on every successful refresh.<br>
       - If an attacker attempts to reuse `refreshToken1` after the backend has rotated it, the request fails because the old row now has `revoked_at != NULL`.<br>
       - The DB checks both `revoked_at IS NULL` and `expires_at &gt; now`, so revoked or expired tokens cannot be reused.
       </dl>
@@ -292,7 +268,7 @@ end
         This step can be carried by tenant admin after 2 step authentication.
         <pre><code class="language-css">
 UPDATE refresh_tokens SET revoked_at = NOW() WHERE employee_id = X AND revoked_at IS NULL
-        </code></pre>
+        </code></pre><br>
         2. Keep revoked rows for audit or cleanup later.<br>
         3. After this, no refresh token for that employee can produce a new JWT.
       </dl>
