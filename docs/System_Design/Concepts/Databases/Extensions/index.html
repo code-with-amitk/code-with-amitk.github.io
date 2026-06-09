@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Extensions/Modules in Postgres</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Extensions/Modules</a>
+      <a href="#pg_trgm">What is pg_trgm</a>
+      <ul>
+        <li><a href="#functions">Functions provided by pg_trgm</a></li>
+        <li><a href="#operators">Operators provided by pg_trgm</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Extensions/Modules in Postgres?</h2>
+      <dl>
+        A extension is a modular package of SQL objects, functions, and compiled
+        code that adds extra features or capabilities to your database that
+        aren't available in the core distribution
+      </dl>
+
+      <h3 id="pg_trgm">What is pg_trgm/Trigram/Trigraph module</h3>
+      <dl>
+        <b>What is Alphanumeric text?</b><br />
+        Alpha(alphabet) and numeric(number).<br />
+        This character set that includes both letters (A-Z, both uppercase and
+        lowercase) and numbers (0-9).<br />
+        It can also include punctuation marks and other special symbols (like @,
+        #, or &)<br />
+        Eg: 3B9-XF4
+      </dl>
+
+      <h4>What is a trigram?</h4>
+      <dl>
+        Trigram is a contigous sequence of 3 or less characters taken from a
+        string.<br />
+        Each word is considered to have two spaces prefixed and one space
+        suffixed when determining the set of trigrams contained in the string.
+      </dl>
+      <table>
+        <tr>
+          <th>String</th>
+          <th>Trigrams</th>
+        </tr>
+        <tr>
+          <td>"cat"</td>
+          <td>“ c”, “ ca”, “cat”, and “at ”</td>
+        </tr>
+        <tr>
+          <td>“foo|bar”</td>
+          <td>“ f”, “ fo”, “foo”, “oo ”, “ b”, “ ba”, “bar”, and “ar ”</td>
+        </tr>
+      </table>
+
+      <h4 id="functions">Functions provided by pg_trgm module</h4>
+      <table>
+        <tr>
+          <th>Function</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>similarity ( text, text ) → real</td>
+          <td>
+            Returns a number that indicates how similar the two arguments are.
+            The range of the result is zero (indicating that the two strings are
+            completely dissimilar) to one (indicating that the two strings are
+            identical).<br />
+            <pre><code class="language-css">
+# SELECT word_similarity('word', 'two words');
+ word_similarity
+-----------------
+             0.8
+
+"word"      trigrams {" w"," wo","wor","ord","rd "}
+"two words" trigrams {" t"," tw","two","wo "," w"," wo","wor","ord","rds","ds "}
+Similar trigrams     {" w"," wo","wor","ord"}
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>word_similarity ( text, text ) → real</td>
+          <td>
+            Returns a number that indicates the greatest similarity between the
+            set of trigrams in the first string and any continuous extent of an
+            ordered set of trigrams in the second string.
+          </td>
+        </tr>
+      </table>
+
+      <h4 id="operators">Operators provided by pg_trgm module</h4>
+      <table>
+        <tr>
+          <th>Operator</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>text % text → boolean</td>
+          <td>
+            Returns true if its arguments have a similarity that is greater than
+            the current similarity threshold set by
+            pg_trgm.similarity_threshold.
+          </td>
+        </tr>
+        <tr>
+          <td>GiST and GIN index operator</td>
+          <td>
+            pg_trgm module provides GiST and GIN index operator classes that
+            allow you to create an index over a text column for the purpose of
+            very fast similarity searches.
+            <pre><code class="language-css">
+CREATE TABLE test_trgm (t text);
+CREATE INDEX trgm_idx ON test_trgm USING GIST (t gist_trgm_ops);
+OR
+CREATE INDEX trgm_idx ON test_trgm USING GIN (t gin_trgm_ops);
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
