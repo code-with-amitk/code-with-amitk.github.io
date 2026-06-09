@@ -89,7 +89,7 @@ User-Agent: AI-Assistant-Client/1.0
         <b>How MCP Client Authenticate to Server?</b> if human user want to
         access any service then they provide password, but for AI agent
         authenticate using OAuth.
-        <pre><code>
+        <pre><code class="language-css">
   Machine-1                  Machine-2                   Machine-3
 Client(claude cli)          (Auth Server)             (Resource Server)
                ---- GET www.google.com --------------------&gt;
@@ -168,47 +168,54 @@ participant "MCP Client" as Client
 participant "MCP Server" as Server
 
 == Connection Setup ==
-Client &lt;-&gt; Server: HTTP 3 Way Handshake
-Server &lt;-&gt; Client: TLS Tunnel established
+Client <-> Server: HTTP 3 Way Handshake
+Server <-> Client: TLS Tunnel established
 
 == Initialize Handshake (id=1) ==
-note over Client: Client Protocol Version\nClient Advertises its Capabilities
-note over Client: All MCP Requests use POST\nPOST is required by JSON-RPC 2.0
+note over Client: Client Advertises its Capabilities
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
 
-Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
-
-Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
 note over Server: Server advertises its capabilities
+Server -> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
 
-Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\nnotifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
+note over Client: Client says Initialized
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\nnotifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
 
 == Tools & Resource Discovery (id=2) ==
-Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
+note over Client: Client asks Tools List
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
 
-Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
+note over Server: Server provides Tools List
+Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
 
 == Tools Invocation (id=3) ==
-Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
-Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
+note over Client: Client invokes the Tool
+Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
+
+note over Server: Server provides invocation result
+Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
 
 @enduml
       </pre>
             <img
-              src="//www.plantuml.com/plantuml/png/rLLDa-Cq4BtxLtJvG46npkI3N5AOsgtiOK81cufTS20S5BadqI9Bmf9J4wZyToHPHXb2oCn0JUrSF1frz-kFrqzvgmrfJ5lpn3334RwVBs7E6GgJ5TZiiO42VsjHK8JtZ6mRKYU9iX6CCaM4WJG6f41qE9wxT63E9HoJ9CzXBeL0QfWKzjQq2l8ywH3Ww-oRu3c3sx9SmWH-8WUu9QBIE_8h9ftH-tKXCoY_Aw1iBIG7j7rjEDCxh7ocXM264Sv-nmW1dxCg7ttXaWff4AJ3wx526Sj66aabXn-nqRREjGY6TvNrDaoZ1cPitqIH3UCs2Uf_G7l7kH_joWrJM_zM8om_5ELQk2ym3OqriGOhs1pWs-B33zbgEOVnO9Zq4paPY8-v-QYbQ1HTYrkfROwQganxXm7Uarfn751PWwrO2kC8BGyAPq2KuemIDtIFi1QsiAplCmjzpc0y74-pqIWRJpkF0hKpP8jg1ctBghK05eVQZN8j_h3Na8RAqXcajeFqZRzabVr_r9rhD3jPENl426wAs2NJrkIXt4KeBLJcGOVZhrnjmwaBybuq4X23dQ6HqlYRb3DjvZiYjkWotn6kyTYv7Vz2yQDUY3lf8mIfqUKhKPlq3QJxMC9mCBAT-NZxEIRzFcPn7o_JrALvAPfMg9KK-iaaDQXRRlu_9eoK_38J8RpBAzk6udLVNrAj7izlfuypVejcVuNUAEbUWu5lyl0TE6t-qrMkxORT1IXz4oLO_UjkHD5UZ4-z5F8SIiSrV0Qhm2MyPvgw-Hty5exTg_lVnlFSxXynLh-eDswTGh7N9JF--uWYHlhCv-65clKgVrgZvsz35FVFlJIZkaXLENKneLfJq1tMn8lF79Gtoyr7fCPwE34h9wQWVEBkDkdn6FKUGP7kv3DGeuCs3HDRXzw1_nAqVhg_2x6NtR3yV2QlO6ifuJmKUvtCoVdMzXWNVeqVaXhkIBDjQnIcfyssuvXp2U8B-Xe4yFYPdGk0TcbE9H2NpU2ztqN_rs5-EO4Sfkdvxhr5KRKr_nC0"
+              src="//www.plantuml.com/plantuml/png/pLRDRjiy4BphAHOwVFYAHev_wejH5odSGmoag14BxQ7kWQOsDXEAL4NAY5lutKkATEbKiA6aHP1Bn92xm-NCpi8NIfDILpcFDDCSuUDa1XFEKEXaZkK6IvZZzme5HVZ0oAeaUHGL9eDHLX2X8Gu9CH3bbyqG1sP3_3AAncEOI26GQYQ5sTLL0UDnv13WRVBEHuxWCardC80lP0kNH6HgJUumSeSspbywWlHg3cbb83cWqcJ9cLfZLjyq5KmpmjaF313mFyl6lLVsKY4rWhHu7ij_uNrcDZLJg81fypnIa2NZ1WlLljA3GcUVvYcStoefoe8knALK1YcdHQBgW0xUaxpWsA4oXuKmhzUMw7HRu0X8KN16YIMZHbW8mrioAwMMLFBaCvRA78sWt-qFarulwGzTn1oLFKYcsGYgYcKB0ImyrZrn8NwQROXzPV48udwd6v_Lcomp__VSEaUzbfaz3nW-p4XAScMEQYYxuKlpbTaaKziRMrjtQ99S50sCXMHxK4gfwvtOoAGdQo9MQ6--8LpXpeNjVgFKL4_5ZQmp1CdHtfUYql4Pn9jGGhVJCo-hyysVNHIatQlalq0UIdjOQEH3GcyTbzQLzbpINgCgf52F5hP4LN7zxzJJKlBZwlbqTw-iIefjOar9UT6-9vod6ZqnBpTjMwBXTaMswc1KP2_Mua9gTkEXr3aB5PziYE3ke_cn9SWEpDGA3F_1jHVGZ7z5BMVRklNwfyScKNVAGrmnfV-EnwVIr8B_ketFRREvLxKmLFzFBWD6V7hWcFxUi0mV4EEFalQJvfcOSGFZSQmqnaoO4r_tBWz69LbcZSf4KUavNMDEQX_hRL4Vo-KjKcqZ36-5dTH-Y12xjuntkzrP4nJfMZu1DGGeNJAnikWE_9iV6uUkc8gDT6JL_0nEUu6Pw3jKeDTOvxzmCr32kNjM2za7JJFiCOxzR7WWlzyZvQhAKMWliEqdgx6zm8_jTiPYGHZNYI_VNuyYkkalwguvT5ZePOttfjNzrsA-7i0OXd6pjIzGP5NEVm40"
               alt="plantuml"
-              style="width: 600px; height: 950px"
+              style="width: 700px; height: 1500px"
             />
           </td>
           <td>
+            <pre><code class="language-css">
+AI Client                 MCP Server
+   ------Initialize Request--&gt;
+   &lt;------Initialize Result--
+   ------Tools List--&gt;
+   &lt;------Tools List Result--
+   ------Tool Call{bash}--&gt;
+   &lt;--Tool Call Result {"text":..} --
+            </code></pre>
             <dt>
-              <img
-                src="/images/Machine_Learning/MCP/Message_Exchange.png"
-                alt="Message exchange"
-                style="width: 200px; height: 400px"
-              /><br>
 
-              All Methods are POST because<br>
-              - JSON-RPC 2.0 standard requires POST for all calls. Even though it's advertising capabilities, it's still a request expecting a response.
+              <b>All Methods are POST because:</b> JSON-RPC 2.0 standard requires POST for all calls. Even though it's advertising capabilities, it's still a request expecting a response.
               <br><br>
 
               - Initialize Handshake <br />
