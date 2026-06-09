@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stack</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <h1>Stack</h1>
+    <ul>
+      <li>
+          <h3><a href="#st">C++ vs Python vs Rust</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="st">C++ vs Python vs Rust</h3>
+    
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+            <th>Go</th>
+        </tr>
+
+        <tr>
+            <td>Declaration</td>
+
+            <td><pre><code class="language-css">    <!--c++-->
+stack&lt;int> st;
+</code></pre></td>
+
+            <td><pre><code class="language-css">    <!--rust-->
+let mut stack: Vec<i32> = Vec::new();
+</code></pre></td>
+
+            <td><pre><code class="language-css">    <!--python-->
+Python doesn't have built-in Stack.
+Its implemented using a list.
+st = []
+</code></pre></td>
+
+            <td>                    <!--Go-->
+                Go doesn't have a built-in stack data structure like C++<br>
+                stack in Go is implemented using a slice.
+                <pre><code class="language-css">
+type Stack struct {
+    vals []int
+}
+                </code></pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Empty</td>
+            <td><pre><code class="language-css">               <!--c++-->
+!st.empty()
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
+self.s1.is_empty()                
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Python-->
+len(st)
+</code></pre></td>
+            <td>                    <!--Go-->
+            <b>Method Reciever (s *Stack)</b><br>
+            (s *Stack) before the function name is a method receiver.<br>
+            This associates the function to Stack type & allows the method to access/modify the Stack member variables.<br>
+            Similar to how you we define method in class in C++ or Java
+            <pre><code class="language-css">
+func (o *Stack)IsEmpty() bool {
+    if len(o.vals) == 0 {
+        return true
+    }
+    return false
+}
+            </code></pre></td>
+        </tr>
+
+        <tr>
+            <td>Last</td>
+            <td><pre><code class="language-css">               <!--c++-->
+st.back()
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
+//pub fn last(&self) -> Option<&T>
+if let Some(&ele) = self.s1.last() {
+    
+}                
+</code></pre></td>
+            <td><pre>               <!--Python-->
+            </pre></td>
+            <td>                    <!--Go-->
+<pre><code class="language-css">
+
+</code></pre>
+            </td>   
+        </tr>
+
+        <tr>
+            <td>Pop</td>
+            <td><pre><code class="language-css">               <!--c++-->
+st.pop()
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
+if let Some(ele) = self.s1.pop() {
+    //ele removed
+}
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Python-->
+st.pop()
+</code></pre></td>
+            <td>                                   <!--Go-->
+                if array size>0, store 1 less element from back
+                <pre><code class="language-css">
+func (o *Stack)Pop() {
+    if len(o.val) > 0 {
+        o.val = o.val[:len(o.val)-1]
+    }
+}
+
+//a= [1,2,3,4,5]
+a = a[:4]   //1,2,3,4
+</code></pre></td>
+        </tr>
+
+        <tr>
+            <td>push</td>
+            <td><pre><code class="language-css">               <!--c++-->
+st.push(a)
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Rust-->
+self.s1.push(x);
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--python-->
+st.append(item)
+</code></pre></td>
+            <td>                                            <!--Go-->
+                Push element at end of slice and store back into vals
+                <pre><code class="language-css">
+func (o *Stack)Push(item int) {
+    o.vals = append(o.vals, item)
+}
+</code></pre></td>
+        </tr>
+
+        <tr>
+            <td>Top</td>
+            <td><pre><code class="language-css">           <!--c++-->
+st.top()
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--rust-->
+self.st.last()
+</code></pre></td>
+            <td><pre><code class="language-css">               <!--Python-->
+st[-1]
+</code></pre></td>
+            <td>
+                <pre><code class="language-css">                <!--Go-->
+func (o *Stack)Top() int {
+    if len(o.val) > 0 {
+        return o.val[len(o.val)-1]
+    }
+    return 0
+}
+                </code></pre>
+            </td>
+        </tr>
+
+    </table>
+    <script src="/scripts/prism.js"></script>
+</body>
+
+</html>

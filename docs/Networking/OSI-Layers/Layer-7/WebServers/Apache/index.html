@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Apache Web Servers</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#arch">Architecture</a><br>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="arch">Apache Web Server Architecture</h2>
+    <dl>
+      Apache uses 1 thread/connection, This is not Recommended. <br>
+      Main thread forks 3-10 children, Each child creates 20-25 threads depending on load.<br>
+      Children creates threads at startup and never creates more. Listener listens for connections & gives connection to other threads.<br>
+    </dl>
+    <pre><code class="language-css">
+      main()
+        |-- child-process1
+        |         |-------------|----------------------|----
+        |         thread1     thread2               thread25
+        |
+        |-- child-process2
+        |
+        |-- child-process3
+        |
+        -- Listener-Thread (80, 8443)
+
+        //maintains  Idle thread pool(thread-4, thread-17, thread-10, thread-50)
+    </code></pre>
+
+    <div class="image-container">
+      <img src="//www.plantuml.com/plantuml/png/TPBFJzjE4CNlyrVCDrn0Ie0lKAcAH4M1g1oQAYrfkUIojeTanVvmTiO9ug-lTxqn0T6RjU_DvptFxXMB2j9O0__LGIsjGY7_WX8Q0gXRIPUwLawm27xB550n5W25VqPLgt95-405tbFOK4Ydz-Gg_4LSUyU41rzVca1GUYV16npiX8MBFWg3o0kC1qOlLt9jsjGutuBWTSWgxGwFajKYuhuvHHhDGWvll7DKYcxvxtApesjltW3waCc6dE1qDbsuQMD4pu8lYLcx9KvzrHZgyckB7vPTDzGGJebPBUbdigwxTXdKxgJriF07ErcFxfIh38M5U_3XYS9elWgaAawPMzbFh9IeGZ7XxNKKgm8FlaTnfjrJNwUljN9U2Fs60bfuRDcCvwF_Jn7AbJPL80TmTZew-uGWNU994X8WZhubr1PkzUCZXRogICHgTm8D4vQAwHXfEOPPe1WunEwNO8XfnNjeYwClQCPuqoOBlLvILsK_sK0dnjlm3ZwVuYMkH6guk3ZFd_mUl9MUl4qDCXSxEN0lfwVOnqAHQqNg-EH4YEMuz1PCFBTZfFHI3hzDvaS95VVIioP_9Z_cSJT3_Cs4PvXl4i3qrhlvV8RjE82jEy1wZ4nXG-bqAxkpcIwVmAxptwIUkAk32uVYiJIQdEIPgXYZjcf9F1Hwbk56L-GPgc97Y6ykstF4G7ojoyk8NhWi3o271lwN8N3KsxYRJ8Ihrj1OynS0"
+       alt="Apache web Server Architecture" class="zoomable-image" id="zoomableImage2">
+    </div>
+    <code class="puml" visibility: hidden>
+      @startuml
+      !pragma teoz true
+      
+      participant browser as b
+      
+      box apache Web Server
+      box Send Response #Azure
+      control "Response\nSender" as rs #lightBlue
+      end box
+      
+      control "main()" as m    #lightBlue
+      
+      box listen Connections #Azure
+      control listener as l  #lightBlue
+      control "Event MPM\nMultiProcessing Module" as mpm  #lightBlue
+      end box
+      
+      queue MessageQ as mq
+      
+      box Process Requests #Azure
+      control "Req-Handler\nWorker-Threads" as wt #lightBlue
+      database DB as db #LightPink
+      end box
+      end box
+      
+      hnote over m
+      forks 3-10 
+      children
+      
+      20-25 
+      threads/child
+      end note
+      
+      hnote over mpm
+      Different MPM
+      for different
+      use case. eg:
+      Prefork, Worker
+      , Event
+      end note
+      
+      m -> l: Create listener thread
+      hnote over l
+      listening on
+      80 = http
+      443 = https
+      end note
+      
+      m -> wt: Create worker thread 
+      m -> rs: Create Sender thread
+      
+      b -> l: http://test.com
+      l -> m: event (GET)
+      m -> mpm: Create EVENT MPM, Use 2 Threads
+      
+      l -> mpm: HTTP GET
+      
+      mpm -> mq: serve GET
+      wt -> mq: Pick
+      mq -> wt: Send test.com \n to client
+      wt -> db: images,text,videos
+      db -> wt: content
+      wt -> mq: "topic=Send\ncontent"
+      
+      mq -> rs: "topic=Send\ncontent"
+      rs -> b: Content
+      
+      @enduml
+    </code>
+
+  </article>
+  <script src="/scripts/common.js"></script>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>

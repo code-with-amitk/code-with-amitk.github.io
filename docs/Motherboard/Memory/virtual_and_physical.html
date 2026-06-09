@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memory</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#why">Why Virtual Memory</a>
+        <a href="#comparison">Comparison</a>
+        <a href="#terms">Terms</a>
+        <ul>
+            <li><a href="#page">Page</a></li>
+            <li><a href="#frame">Frame</a></li>
+            <li><a href="#paging">Paging</a></li>
+            <li><a href="#pdp">Pure Demand Paging</a></li>
+            <li><a href="#pagetable">Page Table</a></li>
+            <li><a href="#mmu">MMU</a></li>
+            <li><a href="#tlb">TLB</a></li>
+        </ul>
+        <a href="#translate">Translate Virtual to Physical Address</a>
+        <ul>
+            <li><a href="#16bit">Conversion Example(16 bit system)</a></li>
+            <li><a href="#3264bit">Conversion Example(32,64 bit system)</a></li>
+        </ul>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+    <article style="margin-left:200px;">   <!-- It contains an article -->
+        <h2 id="why">Why VM</h2>
+        <dl>
+        Now-a-days processes are RAM hungry. Every Program(eg: adobe photoshop, microsoft teams) need more RAM.<br>
+        if 10 such processes want to run simultaneously then 10GB RAM is needed which is not available. 
+        VM is illusion to program that it has complete access to RAM.
+        </dl>
+
+        <h2 id="comparison">Virtual Memory & Physical Memory</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Virtual Memory = Hard Disk</th>
+                <th>Physical Memory = RAM</th>
+            </tr>
+            <tr>
+                <td>Size</td>
+                <td>Bigger</td>
+                <td>Smaller wrt HD. 
+                    Stores data and machine code currently being used by the system.
+                </td>
+            </tr>
+            <tr>
+                <td>Contains</td>
+                <td><a href="#page" target="_blank">Pages</a></td>
+                <td><a href="#frame" target="_blank">Frames</a></td>
+            </tr>
+            <tr>
+                <td>Memory Allocation</td>
+                <td>Contigous</td>
+                <td>Contigous</td>
+            </tr>
+            <tr>
+                <td>Max Memory Sizes</td>
+                <td>
+                    hard Disk=4GB. Virtual Memory=3GB<br>
+                    hard Disk=1TB. Virtual Memory=966GB
+                </td>
+                <td>
+                    hard Disk=4GB. Physical Memory=1GB<br>
+                    hard Disk=1TB. Virtual Memory=4GB
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="terms">Terms</h2>
+        <h3 id="page">Page</h3>
+        <dl>
+            Pages are fixed sized blocks of Virtual Memory. <br>
+            <b>Size:</b> Page size is typically 4KB, but varies as per OS(upto 64KB).<br>
+            Pages are mapped to frames in physical memory
+        </dl>
+
+        <h3 id="frame">Frame</h3>
+        <dl>
+            Frames are fixed-size blocks of physical memory.<br>Page and frame are of same size<br>
+            Physical memory is divided into frames<br>
+            Pages from virtual memory are loaded into available frames in physical memory
+        </dl>
+
+        <h3 id="paging">Paging</h3>
+        <dl>
+            Memory management scheme that eliminates the need for contiguous allocation of physical memory/RAM<br>
+            It divides both virtual and physical memory into fixed-sized blocks, called <a href=#page">pages</a>
+            and <a href="#frame">frames</a> respectively.<br>
+            When a program accesses data, the operating system maps the <a href="#comparison">virtual address to a physical address</a>
+             using page tables.<br>
+            And program gets executed even if they are not entirely loaded into physical memory/RAM.
+        </dl>
+
+        <h3 id="pdp">Pure Demand Paging</h3>
+        <dl>
+            Type of <a href="#paging">paging</a> where <a href="#page">pages</a> are loaded into RAM/memory only when they 
+            are needed (i.e., on demand).<br>
+            Initially, none of the program’s pages are loaded into RAM/physical memory.<br>
+            When a <a href="#page">page</a> is accessed for the first time, a page fault occurs, and the operating system 
+            loads the required page from Virtual Memory/Hard disk into a free <a href="#frame">frame</a> in RAM/physical memory.<br>
+            <b>Advantage of Paging:</b> Minimizes RAM usage and allows for efficient use of available RAM/memory.
+        </dl>
+
+        <h4 id="pagefault">Page Fault</h4>
+        <dl>
+            Page fault occurs to bring <a href="#page">page(From Virtual Memory)</a> to RAM/Physical Memory.<br> 
+            MMU uses a <b><a href="#trap">trap instruction</a></b> to switch control to kernel mode.
+        </dl>
+
+        <h5 id="trap">Trap Instruction (trap())</h5>
+        <dl>
+            To bring required <a href="#page">pages(From Virtual Memory)</a> to RAM/Physical Memory, CPU uses a trap instruction to switch control to kernel mode.
+        </dl>
+        <img
+        src="//www.plantuml.com/plantuml/png/XLJRQXin47tNLmm95FiXZTDBqnhSnCqbBKt0vD8dGr5MOw_mhYIaMSUXzDyh3QlQQwVK3nQhcNFcCcTq6aXwQkfAk7ZgGZjf2EHhN27803AU7SlPv27T5wxfND_Sy7LTTwydSextyh5YBaSTsnvvwNwMqgWAVQy_DLFZ6sEqcOCsS3k-sKiWAhkWhzAhWtCT5eS_TCnRLknLAY6C9GIxHCz90-oVFKiZnaM18S1WTVJcxJlHQq4WbVBnlY_GA62a40mx-9ng6y8jIfLHQ-PeYiJVIxdGub97g2kVWoxMXAAmFfxE6fKA8PivSXmX4aUCKjSnoXN67crHmCpwtSZH7VQlzRoaAuzenBbUQeMj7sX3LWWNkmscgH_HZuw4dSq2qcYm6dJ2rpM7TpI4Rm4ccn1mCJuQEX6E_gOOl_rpmcRhLbATh2RZgmku73zStqFGr4ZIreWxFJUoOkMG1Hr2Wv1ct-llfiMzZtCe6ifEKvFEY8DWP_GaFQPoqVl6aVZ7RExa4g5el4UJyhP90pqMTLy4aX7o2iAJfg9CAItG6wn4RHNkpedA8Lnq4e9MinkngSnz-58rABhAXby2UD9vm7O6MOTfPD7AMkBnMGD9uf0aBdvlf4FbMZKwLbVZ2tmypvFSp9WwasR7g8NZZvzQfb8Drs5RIwasOQFL85rso_nVdKmvyuZnJzOHnwkyMGcLRP2rx-5I5wHhc9eEQ2CVNaUjq92UQMnxbLJFORWzMTKFJgK1imVnsyCItYZ3KQvYeir2y0watoLJjIi5SRVUVpX-UG8CkMVoXiEfZe1tpLbDZbvUUk4eezkuBI0zIlcgA_PMw-mOAPeQ0rY7dfTkdVRskvWVHkVjFDOReL85AAoXjDkIKkT7swKBSHe_chhw0m00"
+        alt="accessing physical page" style="width:800px;height:700px;">
+        <pre class="puml" visibility: hidden>
+            @startuml
+            participant a.exe as aexe
+            participant CPU as cpu
+            participant MMU as mmu
+            participant PageTable as pt
+            participant "trap_handler()\n\nrunning in RAM" as th
+            participant "Hard-Disk/Virtual" as hd
+            
+            note over aexe  #Cyan
+            Access 0x1234
+            (Virtual address)
+            end note 
+            
+            aexe -> cpu: Read 0x1234
+            note over cpu  #Khaki
+            Find physical address
+            corresponding to 0x1234
+            end note
+            
+            cpu -> mmu: Get Physical address for 0x1234
+            note over mmu #LightGreen
+            Divide 0x1234 into
+            
+            page number=1
+            offset=0x034
+            end note
+            
+            mmu -> pt: Is Page number=1 present?
+            pt -> mmu: entry not present
+            note over mmu  #LightGreen
+            PAGE FAULT situation
+            Signal CPU to issue trap()
+            end note
+            
+            mmu -> cpu: execute trap()\ntrap is software interrupt
+            
+            note over cpu  #Khaki
+            Save current process(a.exe)
+            state & switch to kernel
+            mode
+            end note
+            
+            cpu -> th: Execute trap() handler
+            note over th  #LightBlue
+            trap_handler() {
+              Get address of Virtual page
+              Find page on Hard Disk
+            }
+            end note
+            
+            th -> mmu: Give me address of Virtual Page?
+            mmu -> th: page address=0x789
+            th -> hd: Find page=0x789
+            hd -> th: page=x0789
+            
+            note over th   #LightBlue
+            trap_handler() {
+              Find free frame on RAM
+            }
+            end note
+            th -> th: Find free/victim \nframe on RAM
+            
+            hd -> th: Read identified page into frame
+            
+            th -> pt: Update page table entry
+            note over pt  #LightPink
+            Page     Frame
+            0x1234   0x567
+            end note
+            
+            th -> mmu: Page Table updated
+            mmu -> cpu: Page Table updated
+            cpu -> pt: Get Physical address
+            pt -> cpu: 0x567
+            cpu -> aexe: 0x567
+            
+            note over cpu #Khaki
+            cpu resumes operation
+            end note
+            
+            note over aexe   #Cyan
+            program reads content
+            at RAM=0x567
+            end note
+            
+            @enduml
+        </pre>
+
+        <h3 id="pagetable">Page Table</h3>
+        <dl>
+            Stores mapping of Pages(Hard Disk/Virtual Memory) to Frames(RAM/Physical memory).
+        </dl>
+        <img src="/images/Memory/PageTable.png" alt="trie" style="width:200px;height:300px;">
+
+        <h4 id="mmu">MMU(Memory Management Unit) Translate Virtual to Physical Address</h4>
+        <dl>
+            Takes Virtual address(of Virtual Memory/Hard Disk) as Input provides Physical Address(of RAM) as output ie translate virtual to physical address.<br>
+            CPU and MMU are present on single Die, ie on same chip.
+            Mapping of Virtual Address to Physical Address is stored in PAGE TABLE.
+        </dl>
+
+        <h4 id="tlb">TLB(Translation lookaside buffer)</h4>
+        <dl>
+            Practically from complete <a href="#pagetable">Page Table</a> only a small fraction of the page table entries are 
+            heavily read; the rest are barely used.<br>
+            TLB is hardware inside MMU which stores only few entries(8-256) for Virtual-to-Physical mapping.
+        </dl>
+        <dl>
+            <b>TLB Example:</b> Request for Virtual Page comes to TLB<br>
+            - if TLB entry found-> TLB Hit<br>
+            - else TLB miss(goes to Page Table), find entry updates Page Table. restarts trap instruction.
+        </dl>
+        <h5>Problem with TLB</h5>
+        <dl>
+            TLB being small, if it happens process tries to get unused page every time, there will be lot of TLB misses<br>
+            Solution: Software to maintain a cache internally.
+        </dl>
+
+        <h3 id="translate">Translation from Virtual Address(Hard Disk) to Physical Address(RAM)</h3>
+        <dl>
+            Translation typically involves two components: <br>
+            - Page number(or fragment): identifies a page in the virtual address space<br>
+            - Offset: specifies the exact location within a page.
+        </dl>
+        <table>
+            <tr>
+                <th></th>
+                <th>16 bit Architecture</th>
+                <th>32 bit Architecture</th>
+                <th>64 bit Architecture</th>
+            </tr>
+            <tr>
+                <td>Bus Size</td>
+                <td>
+                    16 bit = 2 bytes<br>
+                    - 2<sup>16</sup>=65535 (can access 64KB memory)<br>
+                    - you can plug huge Hard disk but that will be no use<br> since in 1 go Only 2 bytes can be accessed
+                </td>
+                <td>
+                    32 bit = 4 bytes<br>
+                    - 2<sup>32</sup>=4,294,967,296 (can access 4GB memory)<br>
+                    - you can plug huge Hard disk but that will be no use<br> since in 1 go Only 4 bytes can be accessed
+                </td>
+                <td>
+                    64 bit = 8 bytes<br>
+                    - 2<sup>64</sup>=18x10<sup>18</sup> (can access 18x10<sup>9</sup>GB memory)<br>
+                </td>
+            </tr>
+            <tr>
+                <td>Fragment</td>
+                <td>4 bits</td>
+                <td>20 bits</td>
+            </tr>
+            <tr>
+                <td>Offset <br>2^12 = 4096<br>Can access every bit inside page</td>
+                <td>12 bits</td>
+                <td>12 bits</td>
+            </tr>
+        </table>
+
+        <h4 id="16bit">Conversion Example(16 bit system)</h4>
+        <dl>
+            We have above <a href="#pagetable" target="_blank">page table</a>
+        </dl>
+        <pre><code class="language-css">
+            Virtual Memory/Hard Disk	Physical Memory/RAM
+    Size	64KB	                    32KB
+    Count	64k/4k = 16 Pages	        32k/4k = 8 Frames
+        </code></pre>
+
+        <dl><strong>1. Program accesses virtual address=0</strong></dl>
+        <pre><code>
+        Code-Segment    
+            MOV REG 0 ----> CPU
+                             --Get Physical Address for 0--> MMU
+                             <--Physical Address 8192-  Page-0 maps to Frame-2
+          //MMU has mapped all virtual addresses between 0-4095 onto physical addresses 8192-12287.                   
+        </code></pre>
+
+        <dl><strong>2. Program accesses virtual address=8192</strong></dl>
+        <pre><code>
+        Code-Segment    
+            MOV REG 8192 -> CPU
+                             --Get Physical Address for 8192-->       MMU
+                             <--Physical Add (24k=24x1024=24576)-- Page-3 maps to Frame-6                
+        </code></pre>
+
+        <dl><strong>3. Program accesses virtual address=20500</strong></dl>
+        <dt>
+            1stPage(0-4095), 2nd(4096-8191), 3rd(8192-12281), 4th(12282-16383), 5th(16384-20479), 6th(20480-24576)<br>
+            20500 falls 20 byte inside 6th Page.            
+        </dt>
+        <pre><code>
+        Code-Segment    
+            MOV REG 20500 -> CPU
+                              -Get Physical Address for 20500-->       MMU
+                                                                  Page-6 maps to Frame3
+                              <--Physical Add 12302---- Frame-3-start:12282. PhysicalAdd=12282+20=12302             
+        </code></pre>
+
+        <dl><strong>4. Program accesses unmapped address virtual address=24576</strong></dl>
+        <dt>
+            Page Fault? CPU issues trap() system call. OS picks a LRU Frame(from Physical Memory/RAM) 
+            and moves/writes back to the Hard-Disk/Virtual-Memory. Then copies Page into RAM. MMU updates mapping.<br>
+            Page Eviction: Movement of pages in/out of RAM is done by SWAPPER.          
+        </dt>
+        <pre><code>
+        Code-Segment
+            MOV REG 24576 ---> CPU
+                                --Return PhyAdd for 24576-> MMU
+                                                            not present
+                                                            trap()
+                                                                RAM(PM)                             Hard-Disk(VM)
+                                                                  --Frame=0 moved to VM-------------->
+                                                                  <-Page 24576 loaded in RAM(at address 0)--
+                                                      MMU(Updates Mapping)
+                                                      Page(12K not mapped)  
+                                                      Page-24K maps to Frame0
+                                <---Virtual Address 0----           
+        </code></pre>
+
+        <h4 id="3264bit">Conversion Example(32,64 bit system)</h4>
+        <h5>Problem with Page Table</h5>
+        <dt>
+            32 bit OS = 4 bytes. 2<sup>32</sup> = 4,294,967,296 (4 GB addresses can be present. access 4GB memory)<br>
+            4GB/4KB(Page size): 10,48,576 = 1 Million Page entries in Virtual Page Table
+        </dt>
+
+        <h5>Solution-1: <a href="#tlb">TLB</a></h5>
+
+        <h5>Solution-2: Multilevel Page Tables(32 Bit system)</h5>
+        <dl>
+            32 bit address = 10 Bit(Page-Table-1. 2<sup>10</sup>=1024 pages) + 10 Bit(Page-Table-2. 1024 pages) + 12 Bit(offset).<br>
+            <br>
+            Page-Table-1: Contains 1024 pages, each of size = 4KB <br>
+            Page-Table-2: Contains 1024 pages, each of size = 4KB.
+        </dl>
+        <img id="multilevel-page-table" src="/images/Memory/multilevel-page-table.png" width="500" height="350" alt="multilevel-page-table">
+
+    </article>
+    </main>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

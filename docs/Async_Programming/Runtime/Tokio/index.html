@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Runtimes</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">
+        <a href="#create">Creating Task</a>
+        <ul>
+            <li><a href="#spawn">tokio::spawn()</a></li>
+            <li><a href="#blocking">tokio::task::spawn_blocking</a></li>
+            <li><a href="#block_on">executor::block_on</a></li>
+        </ul>
+        <a href="">Comparison</a>
+        <ul>
+            <li><a href="#vs1">spawn() vs spawn_blocking()</a></li>
+            <li><a href="#vs2">spawn() vs spawn_local()</a></li>
+            <li><a href="#vs2">block_on() vs spawn_blocking()</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">   <!-- It contains an article -->
+        <h2 id="task">(Tasks = 
+            <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Threads#usks">Green Thread</a>) 
+            != OS Thread</h2>
+        <dl>
+            Tasks are not threads, these are light weight threads created by runtime.<br>
+            These are non-blocking & task may or may not execute on seperate thread.<br>
+            2 tasks run 
+            <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms#concurrent-opposite-of-sequential">concurrently</a>.
+        </dl>
+
+        <h2 id="create">Creating Tasks</h2>
+        <dl>
+            <b>tokio::main</b> macro we can create main async.<br>
+            <b>tokio::spawn()</b> create concurrent task
+        </dl>
+
+        <table>
+            <tr>
+                <th id="spawn">tokio::spawn() //Green Thread</th>
+                <th id="blocking">tokio::task::spawn_blocking</th>
+                <th id="block_on">executor::block_on</th>
+            </tr>
+            <tr>
+                <td>
+                    - spawn Non-blocking tasks within tokio runtime<br>
+                    - Main thread will wait on JoinHandle(same as pthread_join)
+                    <pre><code class="language-css">
+use tokio::task;
+async fn fun1() {
+    tokio::time::delay_for (std::time::Duration::from_milli(5).await;
+    println!("thread-1");
+}
+async fn fun2() {
+    println!("thread-2");
+}
+
+// create main async.
+#[tokio::main]
+async fn main() {
+    let mut JoinHandles: &lt;Vec> = vec![];
+
+    // Create concurrent task
+    let handle1 = 
+        task::spawn(async{ fun1().await });
+    JoinHandles.push(handle1);
+        
+    let handle2 = 
+        task::spawn(async{ fun2().await });
+    JoinHandles.push(handle2);
+
+    for i in JoinHandles {
+        match i {
+            Ok(_) => {
+                println!("Task success");
+            }
+            Err(e) => {
+                println!("Task fail");
+            }
+        }
+    }
+}
+$ cargo run
+thread-1
+thread-2
+                    </code></pre>
+                </td>
+                <td>
+                    Spawn a blocking task into a separate thread from the Tokio runtime
+                    <pre><code class="language-css">
+use tokio::task;
+fn fun() {
+    println!("fun");
+}
+
+async fn fun(arg) {
+    // 3. Call blocking or 
+    // CPU-intensive function in seperate thread
+    let threadpool_future = 
+        task::spawn_blocking(||fun());
+    todo!()
+}
+
+fn main() {
+    //1. Start tokio runtime
+    let mut rt:Runtime = 
+        tokio::runtime::Runtime::new().unwrap();
+    let local:LocalSet = 
+        tokio::task::LocalSet::new();
+    //2. Spawn a future
+    local.block_on (&mut rt, async move {
+        fun(arg).await
+    });            
+}
+                    </code></pre>
+                </td>
+                <td>
+                    <pre><code class="language-css">
+use futures::executor::block_on;
+async fn fun1() { 
+    print!("fun1"); 
+}
+async fn fun2() { 
+    print!("fun2"); 
+}
+fn main() {
+    // main() blocks until 
+    // fun1(),fun2() does not compelte
+    block_on(fun1());                       
+    block_on(fun2());
+}
+$ main.exe
+fun1 fun2
+                    </code></pre>
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="vs">Comparison</h2>
+        <h3 id="vs1">spawn() vs spawn_blocking()</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>spawn()</th>
+                <th>spawn_blocking()</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>spawn Non-blocking tasks within tokio runtime</td>
+                <td>spawn blocking tasks within tokio runtime</td>
+            </tr>
+            <tr>
+                <td>Where task is executed</td>
+                <td>Within the Tokio runtime's event loop</td>
+                <td>In separate thread from the Tokio runtime's thread pool</td>
+            </tr>
+            <tr>
+                <td>blocking</td>
+                <td>no</td>
+                <td>Yes. Perform CPU-bound or blocking operations without blocking the Tokio runtime's event loop</td>
+            </tr>
+        </table>
+
+        <h3 id="vs2">spawn() vs spawn_local()</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>spawn()</th>
+                <th>spawn_local()</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>spawns async task</td>
+                <td>same</td>
+            </tr>
+            <tr>
+                <td>Where task is executed</td>
+                <td>Spwaned Task can run on any thread managed by Tokio</td>
+                <td>Task should run on same thread that called tokio::spawn_local()</td>
+            </tr>
+        </table>
+
+        <h3 id="vs3">block_on() vs spawn_blocking()</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>block_on()</th>
+                <th>spawn_blocking()</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>
+                    Run 1 future to completion and there is only thread within tokio<br>
+                    - There are no other tasks on tokio
+                </td>
+                <td>
+                    This spawn a blocking task into a separate thread from the Tokio runtime's thread pool.<br>
+                    while there can be other non-blocking tasks on tokio runtime
+                </td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

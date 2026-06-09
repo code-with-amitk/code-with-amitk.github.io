@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Virtualization</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">What is Virtualization</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Virtualization</h2>
+      <dl>
+        1 computer hosting multiple virtual machines, each VM running different
+        operating systems.<br />
+
+        <b>History of Virtulization</b><br />
+        - 1960 IBM experimented 2 VMs. SIMMON and CP-40.<br />
+        - 1974 two computer scientists at UCLA, Gerald Popek and Robert
+        Goldberg, published a seminal paper (Formal Requirements for
+        Virtualizable Third Generation Architectures)<br />
+        - 1990s when researchers at Stanford University developed a new
+        hypervisor by that name and went on to found VMware<br />
+        - 2000 IBM released the z-series, which supported 64-bit virtual address
+        <br /><br />
+
+        <b>Advantages of Virtualization</b><br />
+        1. For companies(like Amazon or Microsoft), which runs 1000s of
+        servers(all different OS), installing seperate machine for every Task
+        would eat their Pocket.<br />
+        2. Easy Migrations: Migrating OS/application to VM is much easier wrt
+        OS<br />
+        3. Software development:* if programmer wants to check his application
+        works on Windows 10, centos, mac etc. Installing all OS on 1 is easy
+        instead of all on different machines.<br /><br />
+
+        <b>Disadvatages of Virtualization</b><br />
+        1. Increased Memory usage: Each VM requires seperate memory,
+        book-keeping of how much memory and address assigned is additional
+        overhead. <br />
+        2. Processor Overhead: Processor has to switch between VM's, increased
+        process switching. <br />
+        3. Performance Overhead: VM cannot perform as same speed as standalone
+        machine.
+      </dl>
+    </article>
+  </body>
+</html>

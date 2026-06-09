@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Saga microservices design pattern</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">Saga DP</a>
+      <ul>
+        <a href="#working">Working of Saga</a>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="what">Saga Design Pattern</h2>
+      <dl>
+        Saga is a method to do Asynchronous
+        <a href="/System_Design/Concepts/Databases/Terms/Transactions.html#dt"
+          >Distributed Transactions</a
+        ><br />
+        With 2 Phase Commit we can perform distributed transaction but, those
+        are Blocking/Synchronous.<br />
+        Read
+        <a href="/System_Design/Concepts/Databases/Terms/Transactions.html#2pc"
+          >2 Phase Commit</a
+        >
+        first
+      </dl>
+
+      <h4 id="working">Working of Saga</h4>
+      <dl>
+        Again considering
+        <a href="/System_Design/Concepts/Databases/Terms/Transactions.html#dt"
+          >Customer ordering Pizza</a
+        >
+        example.
+      </dl>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+                                                                            |-------------- Distributed DB -------------|
+                                                                            |                                           |
+                    orderSvc       KAFKA-BROKER           KitchenSvc     KitchenDB           TransactionSvc       TransactionDB
+  -POST(Pizza 249)-> /order
+                      -Topic:order-events->
+                                          -Topic:order-event->
+                                                            -Check ingredients->
+                                                            &lt;----available---
+                                                            ---INSERT INTO---->
+                                                            //Committed(no wait)//
+                                          &lt;-Topic:Kitchen_event-
+                                          -----------------------Topic:Kitchen_event-------------->
+                                                                                                  --Validate payment method->
+                                                                                                  &lt;----available----
+                                                                                                  ----------INSERT INTO---->
+                                                                                                    //Committed(no wait)//
+                                          &lt;-----------------------Topic:Transaction_event-----------
+                        &lt;-Topic:Kitchen_event
+                        &lt;-Topic:Transaction_event
+Customer &lt;------Order Confirmed
+          </code></pre>
+          </td>
+          <td>
+            <b>Steps</b><br />
+            1. Every microservice writes to its DB (local transaction) <br />
+            2. Publishes an event <br />
+            3. Other services(consumers) react asynchronously, ie writes to
+            their DBs and publishes event<br />
+            4. if 1 service is dead, others are not blocked(as in 2 Phase
+            commit)
+          </td>
+        </tr>
+      </table>
+    </main>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

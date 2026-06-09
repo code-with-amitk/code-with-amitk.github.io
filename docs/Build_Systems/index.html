@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Build Systems</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"></aside>
+
+    <article style="margin-left: 200px">
+      <dl>
+        <b>CMake</b>
+        <dt>
+          <a href="CMake/Introduction.html" target="_blank"
+            >Introduction:</a
+          >What is CMake, Makefile vs CMake, Install<br />
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/tree/master/Build-System/Cmake/Examples"
+            target="_blank"
+            >Examples:</a
+          >
+          Hello World
+          <br />
+
+          <b>Files:</b>
+          <dd>
+            &ensp; CMakeLists.txt<br />
+            &ensp; &ensp; <a href="CMake/Files/CMakeLists.html" target="_blank">Commands</a><br>
+            &ensp; &ensp; &ensp; <a href="CMake/Files/CMakeLists.html#exe">Create Executable:</a> cmake_minimum_required, project, add_executable, target_sources<br>
+            &ensp; &ensp; &ensp; <a href="CMake/Files/CMakeLists.html#lib">Build Library:</a> add_library, target_sources<br>
+            &ensp; &ensp; &ensp; <a href="CMake/Files/CMakeLists.html#link">Link Lib to exe:</a> target_link_libraries()<br>
+            &ensp; &ensp; &ensp; <a href="CMake/Files/CMakeLists.html#subdir">subdirectories:</a> add_subdirectory()<br>
+            &ensp; &ensp; <a href="CMake/Files/CMakeLists.html#keywords" target="_blank">Keywords:</a> SCOPE<br>
+            &ensp; &ensp; <a href="CMake/Files/CMakeLists.html#types" target="_blank">Types/Variables:</a> string, list<br>
+            &ensp; &ensp; <a href="CMake/Files/CMakeLists.html#funcmacro" target="_blank">Functions & Macros:</a> arguments<br>
+            &ensp; <a href="CMake/Files/Files.html">cmake_install.cmake, Makefile, CMakeFiles, CMakeCache.txt</a>
+          </dd>
+
+          <dt>
+          <a href="CMake/Choosing_the_Build_System.html" target="_blank"
+            >Choosing Build System:</a
+          >
+          Generate Makefile or vcproxj file or etc<br />
+
+          <a href="CMake/Terms.html" target="_blank">Terms:</a>
+          Generators
+          </dt>
+        </dt>
+      </dl>
+    </article>
+  </body>
+</html>

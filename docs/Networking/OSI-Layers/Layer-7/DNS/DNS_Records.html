@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>DNS Records</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#dnsrecords">DNS Records</a>
+      <ul>
+        <li><a href="#a-record">A record</a></li>
+        <li><a href="#aaaa-record">AAAA</a></li>
+        <li><a href="#alias-record">Alias</a></li>
+        <li><a href="#caa-record">CAA</a></li>
+        <li><a href="#cname-record">CNAME</a></li>
+        <li><a href="#mx-record">MX</a></li>
+        <li><a href="#ns-record">NS</a></li>
+        <li><a href="#ptr-record">PTR</a></li>
+        <li><a href="#rr-record">RR</a></li>
+        <li><a href="#soa-record">SOA</a></li>
+        <li><a href="#spf-record">SPF</a></li>
+        <li><a href="#txt-record">TXT</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="dnsrecords">DNS Records</h2>
+      <dl>Record created on DNS server for domain</dl>
+      <table>
+        <tr>
+          <th>Record Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td id="a-record">A Record</td>
+          <td>
+            4byte-IP to hostname mapping. Every internet have 1 or more IP
+            addresses. All are returned.<br />
+            <pre><code class="language-css">
+# host A google.com;  dig hostname;  nslookup hostname
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="aaaa-record">AAAA Record</td>
+          <td>
+            128bit-IPv6 to hostname map. (google.com, 2404:6800:4003:c00::65)
+          </td>
+        </tr>
+        <tr>
+          <td id="alias-record">ALIAS Record</td>
+          <td>
+            Works at the root (apex) domain (e.g., example.com). This
+            domain(example.com) can point to another hostname(eg: best.com) So
+            if someone types example.com in browser, he will see contents of
+            best.com<br />
+            <pre><code class="language-css">
+example.com ---points to--> best.com
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="caa-record">
+            CAA(Certificate Authority Authorization) Record
+          </td>
+          <td>
+            Domain owners specify which Certificate Authorities (CAs) are
+            allowed to issue SSL/TLS certificates for their domain<br />
+            If no CAA record exists, any CA can issue a certificate; but if a
+            CAA record is present, only the CAs listed within it are
+            permitted<br />
+            <pre><code class="language-css">
+Type Name Priority Content                 TTL
+CAA	  @	    0	      0 issue "amazon.com"	 300
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="cname-record">CNAME(Canonical Name) Record</td>
+          <td>
+            Stores Alternate name(alias) of domain.<br />
+            <pre><code class="language-css">
+test.com 86400 IN CNAME test1.com     //test.com and test1.com both belongs to same host.
+# host    -v    -t  A ca.example.com
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="mx-record">MX Record (Value 15)</td>
+          <td>
+            Host responsible for handling incoming mails for zone. A preference
+            value and the host name for a mail server/exchanger that will
+            service this zone.
+          </td>
+        </tr>
+        <tr>
+          <td id="ns-record">NS(name server) record (Value 2)</td>
+          <td>Defines Name server for domain or subdomain.</td>
+        </tr>
+        <tr>
+          <td id="ptr-record">PTR record(Value 12)</td>
+          <td>
+            For Reverse Lookup. We need to create PTR record for each IP
+            Address. This Stores hostname corresponding to reverse-dns-name.
+          </td>
+        </tr>
+        <tr>
+          <td id="rr-record">Resource Records / RR</td>
+          <td>
+            Data/Information about particular domain. For single host most
+            common resource record is IP Address.<br />
+            <pre><code class="language-css">
+DOMAINNAME    TIMETOLIVE(sec)    CLASS(IN:for internet)    TYPE_OF_RR    VALUE
+
+DOMAINNAME: Domain to which this RR applies. 
+Each domain can have RRs of multiple domains. 
+This filed is primary search key for search.
+TTL: How stable RR is. Eg: 86400(1 day)
+VALUE: Value of RR can be Number, domain name or string.
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="soa-record">SOA(Start of Authority) (value 6)</td>
+          <td>
+            Provides name of primary source of information about name server’s
+            zone. Eg(Email of admin etc).<br />
+            <pre><code class="language-css">
+# host -v -t SOA example.com
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="spf-record">SPF record</td>
+          <td>
+            Which machines in domain are authorized to send/receive Email in
+            domain. This helps in identifying junk/forged mails.
+          </td>
+        </tr>
+        <tr>
+          <td id="srv-record">SRV record (Value 33)</td>
+          <td>
+            Defines services available in domain. Example, ldap, http, sip
+            etc.<br />
+            <pre><code class="language-css">
+DNS Client                                              DNS-Server
+# host -v  -t SRV _ldap._tcp.example.com;
+dig SRV _ldap._tcp.lab.example.net;
+                            &lt;- 389    server0.example.com---
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="txt-record">TXT record (value 13)</td>
+          <td>
+            Human readable information associated with domain name.<br />
+            <pre><code class="language-css">
+spf1 ip4:72.51.34.34 ip4:70.33.254.29 -all--
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    </script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

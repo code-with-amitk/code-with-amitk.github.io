@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Kubernets Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <body>
+        <nav class="navbar">
+          <!--See .navbar in styles.css-->
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li><a href="/System_Design/Concepts/">Back</a></li>
+            <li>
+              <form id="searchForm">
+                <input
+                  type="search"
+                  id="searchInput"
+                  name="q"
+                  placeholder="Search site"
+                />
+                <input type="submit" value="Go!" />
+              </form>
+            </li>
+          </ul>
+        </nav>
+
+    <aside class="sidebar">
+        <a href="#aag">Ambassador API Gateway</a>
+        <a href="#namespace">Namespace?</a>
+        <a href="#ports">Ports</a>
+        <ul>
+          <li><a href="#containerport">ContainerPort</a></li>
+          <li><a href="#hostport">HostPort</a></li>
+          <li><a href="#nodeport">Nodeport</a></li>
+        </ul>
+        <a href="#auth">Authorization in kubernets</a>
+        <ul>
+            <li><ahref="">1. service Tokens</ahref></li>
+            <li><ahref="">2. Istio Authorization Policy</ahref></li>
+        </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h3 id="aag">Ambassador API Gateway</h3>
+        <dl>
+            This is Kubernetes-native API Gateway for controlling and managing traffic between microservices 
+            within a Kubernetes cluster. Built on top of Envoy Proxy.<br>
+            It integrates with Kubernetes Service objects to route traffic to the appropriate microservices 
+            based on the service name and port.<br>
+            Advatanges:<br>
+            1. Supports Multiple Protocols: HTTP/1.1, HTTP/2, WebSocket, gRPC, and OpenAPI/Swagger<br>
+            2. Other Functions: traffic splitting, load balancing, rate limiting, and authentication.
+        </dl>
+
+      <h3 id="namespace">Namespace</h3>
+      <dl>
+        Namespace divides cluster into smaller units to isolate services,volumes
+        and manage.<br />
+        Namespace contains pods.<br />
+        3 predefined namespaces: Default, Kube-system(resources created by
+        kubernets), Kube-public(reserved for future)
+        <pre><code class="language-css">
+$ kubectl create namespace test                       //Creating new namespace
+$ kubectl --namespace=test  run ngnix --image=nginx   //Deploy namespace
+            </code></pre>
+      </dl>
+
+      <h3 id="ports">Ports</h3>
+      <h4 id="containerport">ContainerPort</h4>
+      <dl>
+        Port on which application inside container is listening
+      </dl>
+
+      <h4 id="hostport">HostPort</h4>
+      <dl>
+        If you want to directly map a host machine port → container port, you can use hostPort<br>
+        Its use is discouraged since only 1 application can take host's port, harder to scale, not load balanced<br>
+      </dl>
+
+      <h4 id="nodeport">Nodeport</h4>
+      <pre><code>
+Client reaches host(http://1.2.3.4:8080) and traffic goes to container's(8080)
+            |------------------ Host (1.2.3.4)--------------------------------|
+            |                                                                 |
+            | 8080 ----> NodePort(30080) -----> Pod(container(service8080))   |
+            |                                                                 |
+            |-----------------------------------------------------------------|
+      </code></pre>
+      <dl>
+        nodePort is mapped to targetPort internally.<br />
+        Why NodePort? 2 Applications can use same internal ports. Eg: App1 uses
+        8080 & App2 uses 8080. When traffic arrives kubernets will send traffic to 
+        both containers.
+      </dl>
+        <pre><code class="language-css">
+$ cat templates/deployment.yaml
+spec:
+  containers:
+    - name: service1
+      image: yourimage
+      ports:
+        - containerPort: 8080         // Port on which container is listening
+          name: port-8080
+
+$ cat templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+    name: service1
+spec:
+    selector:
+    app: service1        # must match your Deployment labels
+    type: NodePort         &lt;---------
+    ports:
+    - port: 8080         # Service port (cluster internal)
+      targetPort: 8080   # Container port inside Pod
+      nodePort: 30080    # External Node port (optional; else auto-assign)
+
+// Create firewall rule to send any packet coming to 8080 on this host → redirect to port 30080 
+$ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 30080
+            </code></pre>
+      </dl>
+
+      <h3 id="auth">Authorization in kubernets</h3>
+      <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>1. Service Token</td>
+            <td>
+                Each pod has a associated service account. Each service account has a service token. 
+                This service account token is mounted as a file in the pod's filesystem. The default path is 
+                `/var/run/secrets/kubernetes.io/serviceaccount/token`.<br>
+                <b>Usage of service token?</b> if service want to communicate/access resources of other services, 
+                then this service will present the service token to API-server and API server will authorize the service.<br>
+                 API server will check <<a-role,Role,Role Binding>> of service(whether service is allowed to access 
+                    other service or not).<br>
+                <b>Can be used Only within cluster</b>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Containers/Kubernets/Terms/istio#istio-authorizationpolicy">
+                2. Istio Authorization Poliy</a></td>
+            <td>Can be used across cluster</td>
+        </tr>
+      </table>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

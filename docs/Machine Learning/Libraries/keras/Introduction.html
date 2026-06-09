@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Keras</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">keras?</a>
+      <a href="#vs"
+        >Neural Networks(keras) vs. Traditional ML Models(scikit-learn)</a
+      >
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Keras?</h2>
+      <dl>
+        This is a high-level API(written in Python) for creating
+        <a href="/Machine Learning/">Neural Networks.</a><br />
+        Keras can run on top of other deep learning frameworks like TensorFlow,
+        Theano, or Microsoft Cognitive Toolkit (CNTK).
+      </dl>
+
+      <h2 id="vs">
+        <a href="/Machine Learning/Terms/Neural_Network/">Neural Networks</a
+        >(Keras) vs. Traditional ML Models(scikit-learn)
+      </h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>
+            <a href="/Machine Learning/Terms/Neural_Network/"
+              >Neural Networks</a
+            >
+          </th>
+          <th>Traditional ML Models</th>
+        </tr>
+        <tr>
+          <td>Build using</td>
+          <td>Keras</td>
+          <td>scikit-learn</td>
+        </tr>
+        <tr>
+          <td>Structure</td>
+          <td>
+            Layers of interconnected
+            <a href="/Machine Learning/Terms/Neural_Network/">neurons</a>
+          </td>
+          <td>
+            Depends on Model. Eg
+            <a href="/Machine Learning/ML_and_Types_Algorithms.html"
+              >Decision Trees/Random Forests</a
+            >(Tree-based hierarchy)
+          </td>
+        </tr>
+        <tr>
+          <td>Training Time</td>
+          <td>Longer</td>
+          <td>Less</td>
+        </tr>
+        <tr>
+          <td>When to Use</td>
+          <td>LOTS of data, Working with Larger,complex non-linear patterns</td>
+          <td>Tabular data, Working with smaller datasets</td>
+        </tr>
+      </table>
+    </article>
+  </body>
+</html>

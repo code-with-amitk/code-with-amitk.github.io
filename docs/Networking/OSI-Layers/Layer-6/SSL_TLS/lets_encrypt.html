@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Let's Encrypt</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Let's Encrypt</a>
+      <a href="#why">Why Let's Encrypt</a>
+      <a href="#ways">Ways to get cert</a>
+      <a href="#how">Get cert signed by Let's Encrypt</a>
+      <ul>
+        <li><a href="#dns">DNS CNAME</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Let's Encrypt</h2>
+
+      <dl>
+        Let's Encrypt is a free, automated, non-profit Certificate Authority
+        (CA) that provides SSL/TLS certificates to enable HTTPS encryption for
+        websites.
+      </dl>
+
+      <h2 id="why">Why use Let's Encrypt</h2>
+      <dl>
+        In market there are many paid CAs(eg: godaddy, digicert, comodo). Let's
+        encrypt is free CA which signs your certificate and provides cert for 3
+        months which can be renewed.
+      </dl>
+
+      <h2 id="ways">Ways to get cert</h2>
+      <dl>
+        There are 2 ways to get cert signed by Let's Encrypt:<br />
+        1. DNS CNAME Check Option: <br />
+        &ensp; Create a CNAME record on DNS server having value provided by
+        Let's Encrypt<br />
+        2. Challenge String:<br />
+        &ensp; Place a challenge string on your server.
+      </dl>
+
+      <h2 id="how">Get cert signed by Let's Encrypt</h2>
+      <h3 id="dns">1. DNS CNAME option</h3>
+      <h4>
+        <a href="https://www.youtube.com/watch?v=T6tx_0LDwzo"
+          >Let's Encrypt Video</a
+        >
+      </h4>
+      <pre><code class="language-css">
+1. Install certbot client, which asks cert from Let's encrypt
+$ sudo apt install certbot
+$ certbot --version
+
+2. Download acme-dns-auth.py script, which will be used for dns-01 challenge
+$ curl -o /etc/letsencrypt/acme-dns-auth.py https://raw.githubusercontent.com/joohoi/acme-dns-certbot-joohoi/master/acme-dns-auth.py
+$ chmod 0700 /etc/letsencrypt/acme-dns-auth.py
+
+3. Move file to /etc/letsencrypt
+$ ls -ltr /etc/letsencrypt/
+-rwxr-xr-x 1 amit amit 5571 Jul  4  2025 acme-dns-auth.py
+
+4. Chamge version to python3
+$ vim /etc/letsencrypt/acme-dns-auth.py
+python3
+
+5. Get cert from Let's Encrypt using certbot client. Here "--debug-challenges" is mandatory, to pause the 
+Certbot execution, then we will place CNAME record in hostinger DNS records.
+My --preferred-challenges = dns
+$  sudo certbot certonly --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py \
+   --preferred-challenges dns --debug-challenges -d api.example.com
+[sudo] password for amit: 
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Requesting a certificate for api.example.com
+Hook '--manual-auth-hook' for api.example.com ran with output:
+ Please add the following CNAME record to your main DNS zone:
+ _acme-challenge.api.example.com CNAME e9543057-1bcf-49ca-9e25-a321af98d599.auth.acme-dns.io.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Challenges loaded. Press continue to submit to CA. Pass "-v" for more info about
+challenges.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Press Enter to Continue
+
+6. Now it waits for you enter CNAME into DNS records. hostinger. Create a CNAME record
+Type=CNAME
+name=_acme-challenge.api.example.com
+value=e9543057-1bcf-49ca-9e25-a321af98d599.auth.acme-dns.io.  //This is challenge string
+TTL=300
+
+7. After adding CNAME record, press enter on certbot terminal.
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/api.example.com/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/api.example.com/privkey.pem
+This certificate expires on 2026-05-09.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+8. Check the cert detials:
+openssl x509 -noout -in /etc/letsencrypt/live/api.example.com/cert.perm -text
+        </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

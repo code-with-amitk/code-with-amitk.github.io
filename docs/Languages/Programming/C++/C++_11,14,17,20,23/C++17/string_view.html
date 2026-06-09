@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>string_view</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is string_view</a>
+        <a href="#characteristics">Characteristics</a>
+        <a href="#">Comparison</a>
+        <ul>
+            <li><a href="#vsstring">string_view vs const string&</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is string_view</h2>
+        <pre>
+            This is lightweight, non-owning view(pointer) to a const sequence of characters. 
+            [Example] Consider a window in your house, looking at a car parked on the street. We can look through the window and see the car, but 
+            can’t touch or move the car. Your window just provides a view to the car, which is a completely separate object.
+            It allows you to refer to a part or the entirety of a string without copying the data, which can lead to performance improvements in specific cases
+        </pre>
+        <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;string_view>
+
+int main() {
+    std::string str = "Hello, World!";
+    std::string_view view(str); // view references the string, no copy is made
+
+    std::cout &lt;&lt; view;  // Outputs: Hello, World!
+
+    std::cout &lt;&lt; view.substr(0, 5);  // Hello
+}
+                
+        </code></pre>
+
+        <h2 id="characteristics">Characteristics</h2>
+        <dl>
+            Read-only: You can only read data through a std::string_view, not modify it.<br>
+            No copying: Avoids the overhead of copying strings in many cases<br>
+            create substrings without incurring the cost of allocation or copying data, unlike std::string, which creates a new object
+        </dl>
+
+        <h2>Comparison</h2>
+        <h3 id="vsstring">string_view vs const string&</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>fun(string_view s)</th>
+                <th>fun(const string& s)</th>
+            </tr>
+            <tr>
+                <td>Substrings</td>
+                <td>Can create a view on a substring without copying or allocating new memory.</td>
+                <td>Requires creating a new std::string for substrings (incurs allocation and copying).</td>
+            </tr>
+            <tr>
+                <td>Null-Termination</td>
+                <td>Does not require null-terminated strings (can point to non-null-terminated buffers).</td>
+                <td>Assumes a valid std::string, which is always null-terminated.</td>
+            </tr>
+        </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

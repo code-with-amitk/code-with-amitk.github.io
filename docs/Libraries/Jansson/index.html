@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Libraries</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#install">Install</a>
+        <a href="#examples">Examples</a>
+        <ul>
+            <li><a href="#ex1">Repo Example</a></li>
+            <li><a href="#json_object_foreach">json_object_foreach()</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Jansson</h2>
+        <pre>
+            Jansson is C library for encoding/decoding/manipulating JSON data.
+        </pre>
+
+        <h2 id="install">Installation (Ubuntu)</h2>
+        <pre><code class="language-css">
+// Get Jansson.tar.gz
+$ ./configure
+$ make
+$ sudo make install
+$ make check        //Run test suite
+        </code></pre>
+
+        <h2 id="examples">Examples</h2>
+        <h3 id="ex1">Build Default Example</h3>
+        <pre><code class="language-css">
+$ cd Jansson/examples
+$ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+-l => library name
+-I => header file include path
+L => Library path
+$ gcc simple_example.c L/usr/local/lib -I../src -ljansson
+$ ./a.out
+        </code></pre>
+
+        <h3 id="json_object_foreach">json_object_set_new(), json_object_foreach()</h3>
+        <pre><code class="language-css">
+#include &lt;jansson.h>
+#include &lt;stdio.h>
+
+int main() {
+
+    // Create a new JSON object
+    json_t *object = json_object();
+    
+    // Add some key-value pairs to the object
+    json_object_set_new (object, "name", json_string("ram"));
+    json_object_set_new (object, "age", json_integer(30));
+
+    // Print the original JSON object
+    char *json_str = json_dumps (object, JSON_INDENT(4));
+    printf("Original JSON object:\n%s\n\n", json_str);
+    free (json_str);
+
+    // Iterate over the key-value pairs in the object using json_object_foreach()
+    const char *key;
+    json_t *value;
+
+    printf("Iterating over the JSON object:\n");
+    json_object_foreach (object, key, value) {
+        if (json_is_string(value)) {
+            printf("Key: %s, Value (string): %s\n", key, json_string_value(value));
+        } else if (json_is_integer(value)) {
+            printf("Key: %s, Value (integer): %" JSON_INTEGER_FORMAT "\n", key, json_integer_value(value));
+        }
+    }
+
+    // Modify the "city" key using json_object_set_new()
+    json_object_set_new (object, "city", json_string("New Wonderland"));
+
+    // Print the updated JSON object
+    json_str = json_dumps(object, JSON_INDENT(4));
+    printf ("\nUpdated JSON object after modifying 'city':\n%s\n", json_str);
+    free (json_str);
+
+    // Free the JSON object
+    json_decref(object);
+
+    return 0;
+}                
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+
+</body>
+</html>

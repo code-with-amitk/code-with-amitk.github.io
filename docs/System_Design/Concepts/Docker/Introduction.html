@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Introduction</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is Docker</a>
+      <a href="#vs">Docker vs Kubernets</a>
+      <a href="#networking">Docker Networking</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Docker</h2>
+      <dl>
+        Docker is one of container implementation. Others are Rocket,
+        Drawbridge, LXC.<br />
+        Docker Inc. is the company that sells the commercial version of Docker.
+        Docker is also available as open source.<br />
+        Docker Daemon / dockerd? Manages Docker objects(Eg: Images, containers,
+        networks, and volumes). dockerd also communicate with other daemons to
+        manage Docker services.<br />
+        Docker client / docker? Users interact with docker client.
+      </dl>
+      <pre><code>
+            User 
+            $ docker run -----> [Docker Client] -----> [Docker Daemon/dockerd]
+        </code></pre>
+
+      <h2 id="vs">Docker vs Kubernets</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Docker</th>
+          <th>Kubernetes(Container Orchestration system)</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>Platform for building containers</td>
+          <td>Platform for managing multiple containers</td>
+        </tr>
+        <tr>
+          <td>Use case</td>
+          <td>Run containers on 1 host</td>
+          <td>
+            Run containers on cluster of machines, providing scaling,
+            self-healing, and rollback
+          </td>
+        </tr>
+        <tr>
+          <td>Commands</td>
+          <td>docker run</td>
+          <td>helm</td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

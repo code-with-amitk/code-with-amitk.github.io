@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VirtIO-GPU 3D</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">VirtIO-GPU 3D?</a>
+      <a href="#how">How it works</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <!-- It contains an article -->
+      <h2 id="what">VirtIO-GPU 3D</h2>
+      <dl>
+        This is virtual GPU device which is used by hypervisors like QEMU/KVM &
+        this is used by Virtual machines running on Windows host.<br />
+        This stack enables virtual machines to access accelerated 3D graphics by
+        providing a paravirtualized GPU rather than exposing the host's physical
+        GPU directly.
+      </dl>
+
+      <h2 id="how">How it works?</h2>
+      <dl>
+        VirtIO-GPU presents a virtual graphics card to the guest OS<br />
+        For 3D acceleration, openGL running on Hardware communicates with VirGL
+        running on VirtIO-GPU 3D.<br /><br />
+
+        <b>Does Windows Support it?</b><br />
+        VirGL is available for Linux guests, but projects and experimental
+        drivers exist for Windows guests, still evolving and not as robust or
+        performant as Linux solutions.<br /><br />
+
+        <b>Is VirtIO-GPU 3D a direct pass-through?</b><br />
+        No, only virtual GPU<br />
+        For direct and full performance GPU access, hypervisors use methods like
+        VFIO (direct passthrough) or SR-IOV (partitioned physical GPU into
+        virtual functions),
+      </dl>
+
+      <h2>Practical Implementations</h2>
+      <h3>
+        <a href="./Terms.html#how"
+          >1. Oracle VirtualBox's provides 1 GPU to all guest VMs</a
+        >
+      </h3>
+      <h3>2. OpenGL.dll interceptor</h3>
+      <dl>
+        <a href="/Libraries/index.html">What is openGL?</a><br />
+        Now Application(inside guest virtual machine) will call openGL APIs
+        which would be intercepted and redirected to the host OS or a virtual
+        GPU backend
+      </dl>
+    </article>
+  </body>
+</html>

@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Refresh Token</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#jwt">Why JWT Token</a>
+      <a href="#issue">Issue with 1 Token System</a>
+      <a href="#refresh">Refresh Token</a>
+      <ul>
+        <li><a href="#flow">Flow</a></li>
+        <li><a href="#compromise">Can't Refresh token be Compromised?</a></li>
+      </ul>
+      <a href="#db">DB Schema for storing Refresh Tokens</a>
+      <a href="#hld">HLD</a>
+      <ul>
+        <li><a href="#mim">Detecting MIM(Man in Middle)</a></li>
+      </ul>
+      <a href="#handle">Handle MIM Attack</a>
+      <ul>
+        <li><a href="#cal">Compromise and logout recovery</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="jwt">Why JWT Token</h2>
+      <dl>
+        <b><a href="./jwt.html">JWT Token</a>?</b><br />
+        &ensp; JWT token is assigned to a user when user Authenticates and then
+        token is used as Bearer token in every request to access the REST
+        endpoint.
+      </dl>
+
+      <h2 id="issue">Issue with 1 Token System(ie only JWT Token)?</h2>
+      <dl>
+        JWT Token is often associated with Password, ie whenever user entered
+        correct password a new JWT token is provided to the user.<br />
+        <u>Long JWT Token expiry(3 months):</u><br />
+        &ensp; if JWT token expiry is kept for longer period and token is
+        compromised. Malicious user can attack system for longer duration of
+        time.<br />
+        <u>Short JWT Token expiry(24 hours):</u><br />
+        &ensp; if JWT token expiry is smaller (ie 1 day), then after every 1 day
+        user has to enter his password again. <br />
+
+        <u>Solution:</u> Maintain 2 JWT tokens.<br />
+        &ensp; Short lived(24 hours): access token = JWT Token<br />
+        &ensp; Long lived(90 days): Refresh token
+      </dl>
+
+      <h2 id="refresh">Refresh Token</h2>
+      <dl>
+        <b>What?</b> refresh Token is not a JWT Token, its a unique
+        string(uuid)<br />
+        <b>Advantages?</b><br />
+        &ensp; 1. It prevents long lived token from floating around on
+        internet<br />
+        &ensp; 2. Only short lived token(15 min or 1 hour life) token floats on
+        wire, it they are compromised then even, attack duration is reduced.<br />
+        &ensp; 3. User need not to enter password again and again in case JWT
+        token has expired and needs renewal. <br />
+        &ensp; 4. Long lived JWT tokens are hard to revoke and permanent key to
+        system for entire duration(eg: 90 days)
+      </dl>
+
+      <h3 id="flow">Flow</h3>
+      <dl>
+        Now Server returns 2 tokens on login to frontend.<br />
+        &ensp; 1. access_token = JWT Token: short‑lived JWT (for example, 15–60
+        minutes).<br />
+        &ensp; 2. refresh_token: long‑lived random string stored server‑side
+        (e.g., 7–90 days)<br>
+        &ensp; 3. Client/frontend uses Refresh token to renew access/JWT token<br>
+        &ensp; 4. Backend issues both new refresh, JWT token to frontend.
+      </dl>
+
+      <h3 id="compromise">Can't Refresh token be Compromised?</h3>
+      <dl>
+        Yes, if JWT token can be compromised, so as refresh token can also be
+        compromised. But once MIM tries to use the refresh token he will be
+        detected
+      </dl>
+
+      <h2 id="db">DB Schema for storing Refresh Tokens</h2>
+      <dl>
+        We will not store JWT token in database, but we will store refresh token
+        in database<br />
+        `refresh_tokens` table stores::<br />
+        - `id` (BIGSERIAL primary key)<br />
+        - `device_id`. (device for which token is generated)<br />
+        - `token_hash` (SHA-256 hex of the raw refresh token)<br />
+        - `expires_at` (timestamp when the token stops being valid)<br />
+        - `created_at` (timestamp when the row was inserted)<br />
+        - `revoked_at` (timestamp when the token was revoked; `NULL` means
+        active)<br><br>
+
+        There can be muliple refresh tokens per user. Past tokens are kept for auditing purposes.
+      </dl>
+
+      <pre><code class="language-css">
+crm=# \d refresh_tokens;
+                                       Table "public.refresh_tokens"
+   Column    |           Type           | Collation | Nullable |                  Default                   
+-------------+--------------------------+-----------+----------+--------------------------------------------
+ id          | bigint                   |           | not null | nextval('refresh_tokens_id_seq'::regclass)
+ device_id   | integer                  |           | not null | 
+ token_hash  | character varying(64)    |           | not null | 
+ expires_at  | timestamp with time zone |           | not null | 
+ created_at  | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
+ revoked_at  | timestamp with time zone |           |          | 
+Indexes:
+    "refresh_tokens_pkey" PRIMARY KEY, btree (id)
+    "idx_refresh_tokens_device" btree (device_id)
+    "idx_refresh_tokens_hash_active" UNIQUE, btree (token_hash) WHERE revoked_at IS NULL
+
+    
+ id | device_id   |  token_hash    |          expires_at           |          created_at           | revoked_at 
+----+-------------+----------------+-------------------------------+-------------------------------+------------
+  1 |           1 | h1             | 2026-07-02 17:28:56.528082+00 | 2026-04-03 17:28:56.52877+00  | 
+  2 |           1 | h2             | 2026-07-02 17:29:11.323039+00 | 2026-04-03 17:29:11.323316+00 | 
+  3 |           1 | h3             | 2026-08-27 09:23:13.566948+00 | 2026-05-29 09:23:13.568534+00 | 
+  4 |           1 | h4             | 2026-08-28 14:39:09.676561+00 | 2026-05-30 14:39:09.677993+00 | 
+  5 |           2 | h5             | 2026-08-28 14:40:40.480155+00 | 2026-05-30 14:40:40.480301+00 | 
+  6 |           2 | h6             | 2026-08-28 14:40:49.488028+00 | 2026-05-30 14:40:49.488215+00 | 
+      </code></pre>
+
+      <h2 id="hld">HLD (High Level Design)</h2>
+      <dl>
+        - There can be muliple refresh tokens per user. Past tokens are kept for auditing purposes.<br>
+        - When user logins, we will create a new refresh token and insert into DB. We will also create JWT token and send both tokens to frontend.<br />
+        - When user access REST endpoint, we will validate the JWT token. If JWT token is valid, we will allow access to REST endpoint. If JWT token is expired, we will return 401 Unauthorized.<br />
+        - When user calls refresh endpoint with refresh token, we will check if the refresh token is valid by comparing the hash of the 
+        received refresh token with the hash stored in DB. If they match and token is not expired and not revoked, 
+        then we will revoke the old refresh token and issue new JWT and refresh token to frontend. <br>
+        - If they don't match, then we will return 401 Unauthorized and this can be <font color="red">an MIM Attack</font>. Tenant Admin will revoke after 2factor authentication.
+      </dl>
+          <img 
+      src="//www.plantuml.com/plantuml/png/jLJVR-9647xVlsAYUmbI-07D4ogdEiHfqkC81KTvYOGMxuAtiNUjtG5Ae_pl7HllWGKNfG-rX87PcVbclczcBp2HcOGyvKgp2o6NIai8dcUJf-yZI11prs-tBT-sLWgJzMBjf8sDHgcn5PkipRSkvGjNV3SL7RZcqjWcPTEupjBsfdlTwhI5SiWkJ8xAQ4Yu5bkha580shLaZCTeB0I8F7wL5hvCfV0saIaD05-6Ewuhsp1L14wsYTAlBESMLQnoJgQR8buB9ZZo1NSIfd9ffKiYG-Q8BrB2ggARNxrt7oQFimZQgLaHr5jifI07nLFtphH12MOZxO_KHVjNa7FdjW8sF5M23QtavFR7SmGbK6Nmu9MHWg58nrYLYaeuhQyF3-DPE8t0xa_cM1ov5tqfipmrEoddIWowdUuLb2VpXBjaS4z_vT-veeWvnq6hrMeSK0XcttCV_jfY2TMzBBrtWzvrOjQsyQ8hkFhfBvdHcBZ6MT9-3uapdgisnL6EM3AUuW6XuWReELT9hzE1nszCfauUOgeU1F0bIWkzQoYgSpzDSjtfmfFcQqoCLVz8KN3CpcXs0i1gxO9oLRM-posdbvRRGjEIPf9TwPKNfIReHoDLnhQhA7YheRuVLtewftTAYphUFIaz8vmxQpBwQ2GW60oWjAEXjfI-lM61SsgbfG0qu6VcYeqD-kO_FOcpS1GE8pWQFBYRFdw7-cZ2Ytw-3wTXVHuX6D-IuuPiWaOI7cOmVXgDIlDXKk4hQBDbnUHK2dn4oRHC1vX8AAsKFrPo8mKiYHBmd1pw0te-Rl5fSXj4uMb7ip0wgdumVdo-RC3dspmpXFvIu7wkhchgmjBO7qop1-saHL0Q3P2a1y60dl_X-kYTNXy_sxatlqozUWEzz_qoArqNyd2jC_y34YwOGtEqY4tSRoBZvTJdAT-vkeu--BzksISe-tCjxMxFHytxrsRpd7ijlr-g4xvylUKjvLcPrsGvZH6Pqdq8eYWOVYCbOJ8AXY5StgGcVgqKQ1oOtVkpyWsfMRdgbkhT1Mnn5C9u74jtn6SnZh_HQvsb_m80"
+      alt="Refresh Token Flow">
+      <pre class="puml" visibility: hidden>
+!theme plain
+!define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v14.0/dist
+!option handwritten true
+
+actor Attacker #Red
+actor Admin   #Cyan
+actor Client  #Pink
+participant Backend
+database RefreshTokenTable
+
+Client -> Backend: POST /login {credentials}
+note over Backend
+user, passwd valid
+Create JWT Token
+Create Refresh Token
+end note
+
+Backend -> RefreshTokenTable: INSERT refresh_tokens\n(employee_id=101, token_hash=H1, expires_at=...)
+Backend --> Client: jwtToken1(expiry=24hour)\nrefreshToken1(expiry=3months)
+
+Client -> Backend: GET /api/resource
+alt jwtToken1 valid
+    Backend --> Client: 200 OK
+else jwtToken1 expired after 24 hours
+    Backend --> Client: 401 Unauthorized
+end
+
+note over Backend
+jwtToken1 expired
+refreshToken1 is valid
+
+Client want new JWTtoken
+using refreshToken
+end note
+
+Client -> Backend: POST /token/refresh {refreshToken1}
+
+note over RefreshTokenTable
+Find refreshToken
+HashSentFromFrontend == HashStoredinDB
+Assigned to employee,
+Not expired
+end note
+
+Backend -> RefreshTokenTable: SELECT employee_id FROM refresh_tokens \nWHERE token_hash=H1 AND revoked_at IS NULL AND expires_at > now
+
+alt valid
+note over RefreshTokenTable
+Revoke the Token recieved from Frontend
+end note
+    Backend -> RefreshTokenTable: UPDATE refresh_tokens \nSET revoked_at=NOW() WHERE token_hash=H1 AND revoked_at IS NULL
+
+note over Backend
+Create a new JWT, refreshToken for employee
+Insert into DB
+end note
+
+    Backend -> RefreshTokenTable: INSERT refresh_tokens\n(employee_id=101, token_hash=H2, expires_at=...)
+    Backend --> Client: {jwtToken2, refreshToken2}
+else invalid
+note over Attacker
+Attacker had
+stored
+refresh-token1 
+and replays
+end note
+    Attacker -> Backend: POST /token/refresh {refreshToken1}
+    Backend -> RefreshTokenTable: Query token
+    Backend <-- RefreshTokenTable: refreshToken1 expired
+    Backend --> Attacker: 401 invalid_refresh_token
+    Backend --> Admin: ATTACK IN PLACE (Block Client)
+note over Admin
+Admin logs
+using 2FA
+block Client
+access
+end note
+end
+@enduml
+      </pre>
+
+      <h3 id="mim">Detecting MIM(Man in Middle)</h3>
+      <dl>
+        Covered in above flow diagram.
+      </dl>
+
+      <h2 id="handle">How the current design handles MIM attack risk</h2>
+      <dl>
+      - The refresh design rotates both tokens on every successful refresh.<br>
+      - If an attacker attempts to reuse `refreshToken1` after the backend has rotated it, the request fails because the old row now has `revoked_at != NULL`.<br>
+      - The DB checks both `revoked_at IS NULL` and `expires_at &gt; now`, so revoked or expired tokens cannot be reused.
+      </dl>
+
+      <h3 id="cal">Compromise and logout recovery</h3>
+      <dl>
+        If an employee is compromised, the main objective is to stop refresh token reuse and force re-authentication.
+      </dl>
+
+      <h4>Revoke compromised refresh tokens</h4>
+      <dl>
+        1. Mark all active refresh tokens for the employee as revoked.
+        This step can be carried by tenant admin after 2 step authentication.
+        <pre><code class="language-css">
+UPDATE refresh_tokens SET revoked_at = NOW() WHERE employee_id = X AND revoked_at IS NULL
+        </code></pre><br>
+        2. Keep revoked rows for audit or cleanup later.<br>
+        3. After this, no refresh token for that employee can produce a new JWT.
+      </dl>
+
+      <h4>Logging out all devices</h4>
+      <dl>
+        To force a complete logout:<br>
+        1. revoke all refresh tokens for the employee<br>
+        2. optionally update a user-wide session/version or invalidate access tokens centrally<br>
+        3. let the existing JWT token expire<br>
+        4. require full login again to issue a fresh JWT and refresh token
+      </dl>
+    </main>
+
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
+    </script>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

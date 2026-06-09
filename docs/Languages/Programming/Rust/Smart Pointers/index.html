@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rust Smart Pointers</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Our team</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>    
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#what">Smart Pointers?</a>
+            <a href="">Examples</a>
+            <ul>
+                <li><a href="#rc">Rc &lt;T></a></li>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                </ul>
+            </ul>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2>What is Smart Pointer?</h2>
+            <dl>
+                Same as C++ Smart,shared pointers, it allocates memory and deallocates when all references to it goes out of scope. They only point to 1 value. Examples: vec&lt;T>, String.<br>
+                Smart pointers are implemented using structs.
+            </dl>
+
+            <h2 id="ex">Examples</h2>
+            <h3 id="rc">Rc&lt;T> (Reference Counted Pointer)</h3>
+            <dl>
+                Single-threaded Shared reference-counting pointers.<br>
+                Rc<T> provides shared ownership of a value of type T, allocated in the heap.<br>
+                <b>clone(): </b> Invoking clone on Rc produces a new pointer to the same allocation in the heap. 
+                When the last Rc pointer to a given allocation is destroyed, the value stored in that allocation 
+                (often referred to as “inner value”) is also dropped
+            </dl>
+            <pre><code class="language-css">
+use std::rc::Rc;
+struct Person {
+    name: String,
+    age: u8,
+}
+fn main() {
+    let person = Rc::new(Person {
+        name: String::from("Alice"),
+        age: 25,
+    });
+
+    println!("Name: {}", person.name);              //Alice
+    println!("Age: {}", person.age);                //25
+
+    let person_clone1 = person.clone();
+    let person_clone2 = person.clone();
+
+    println!("Number of owners: {}", Rc::strong_count(&person));
+
+    drop(person_clone2);
+    println!("Number of owners: {}", Rc::strong_count(&person));
+
+    drop(person_clone1);
+    println!("Number of owners: {}", Rc::strong_count(&person));
+}                
+            </code></pre>
+
+            <h4 id="features">Features</h4>
+            <dl>1. Mutable Reference</dl>
+            <dt>
+                Shared references in Rust disallow mutation by default. You cannot obtain a mutable reference to something inside an Rc<br>
+                If you need mutability, put a Cell or RefCell inside the Rc
+            </dt>
+            <dl>2. Thread Safe (No)</dl>
+            <dt>
+                Reference counting done by Rc is non-atomic, Hence overhead is less(wrt <a href="/Threads_Processes_IPC/Synchronization/Arc.html">Arc&lt;T></a>)<br>
+                Rc does not implement <a href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#sendsync">Send Trait</a><br>
+                Rust compiler will check at compile time that you are not sending Rcs between threads.
+            </dt>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

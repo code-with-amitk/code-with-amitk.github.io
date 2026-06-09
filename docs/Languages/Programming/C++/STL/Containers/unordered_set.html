@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++(unordered_set), Python, Rust(HashSet)</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+    
+    <h3 id="comp">C++ vs Rust vs Python</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust (use std::collections::HashSet)</th>
+            <th>Python (set())</th>
+        </tr>
+        <tr>
+            <td>Create</td>
+            <td>                                   <!--C++-->
+                <table>
+                    <tr>
+                        <td>Empty</td>
+                        <td><pre><code class="language-css">
+unordered_set&lt;string> us;
+                        </code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>set of pairs</td>
+                        <td><pre><code class="language-css">
+using mpair = pair&lt;double, double>;
+struct Hash {
+    size_t operator()(const mpair& p) const {
+        return hash&lt;double>()(p.first) ^ hash&lt;double>()(p.second);
+    }
+};
+unordered_set&lt;mpair, Hash> us(s.begin(), s.end());
+                        </code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Filled<br> from String</td>
+                        <td><pre><code class="language-css">
+string s = "abcda";
+unordered_set&lt;char> us(s.begin(), s.end());
+                        </code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>n sets</td>
+                        <td><pre>
+unordered_set&lt;string> us(n);
+                        </pre></td>
+                    </tr>                    
+                </table>
+            </td>
+            <td>                                   <!--Rust-->
+                <table>
+                    <tr>
+                        <td>Empty</td>
+                        <td><pre>
+let mut hs:HashSet&lt;String> = HashSet::new();
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Filled <br>From String</td>
+                        <td><pre>
+let s = String::from("abcda");
+let mut us:HashSet&lt;char> = s.chars().collect();
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+
+            <td>                                    <!--Python-->
+                <table>
+                    <tr>
+                        <td>Empty</td>
+                        <td><pre>
+hs = set()
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Filled</td>
+                        <td><pre>
+//Copy words from vector
+word: List[str]
+hs = set(words)
+
+# n sets
+graph = [set() for _ in range(n)]
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Find</td>
+            <td><pre>           <!--c++-->
+value = us[key]
+value=count(key)
+            </pre></td>
+            <td><pre>           <!--rust-->
+if let Some(value) = hs.get(&key) {
+    //value returned
+} else {
+    // Not found
+}
+            </pre></td>
+            <td><pre>           <!--python-->
+if key in hs:
+    // contains key
+            </pre></td>
+        </tr>
+
+        <tr>
+            <td>Insert</td>
+            <td><pre>           <!--C++-->
+us.insert(key)
+            </pre></td>
+            <td><pre>           <!--Rust-->
+hs.insert(word);
+            </pre></td>
+            <td><pre>           <!--python-->
+for i in range(0, len(words)):
+    hs.add(wordDict[i])
+            </pre></td>
+        </tr>
+    </table>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rust</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li><a href="index.html">Back</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="">Rust No Crash</a>
+            <ul>
+                <li><a href="#ownership">1. Ownership</a></li>
+                <li><a href="/Languages/Programming/Rust/References%20Borrowing">2. References = Borrowing</a></li>
+                <li><a href="#mma">3. No Manual Memory management</a></li>
+            </ul>
+            <a href="">Faster wrt C++</a>
+            <ul>
+                <li><a href="#aco">4. Aggressive Complier Optimizations</a></li>
+                <li><a href="#rto">5. Less runtime overheads</a></li>
+            </ul>
+            <a href="">Smaller Binary wrt C++</a>
+            <ul>
+                <li><a href="#nortti">6. No RTTI in Rust</a></li>
+            </ul>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <dl>
+                <b>No Crash in Rust due to:</b> 
+                    <a href="#ownership">1. Ownership</a>, 
+                    <a href="/Languages/Programming/Rust/References%20Borrowing">2. Borrowing</a>, 
+                    <a href="#mma">3. No Manual Memory management</a>
+                <br>
+                <b>Faster wrt C++:</b> 
+                    <a href="#aco">4. Aggressive Complier Optimizations</a>, 
+                    <a href="#rto">5. Lower Runtime overheads wrt C++</a>
+                <br>
+                <b>Smaller Binary wrt C++:</b> 
+                    <a href="#nortti">6. No RTTI in Rust</a>
+            </dl>
+
+            <h2 id="why">Rust Over C++</h2>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>C++</th>
+                    <th>Rust</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#ownership">Ownership</a>
+                    </td>
+                    <td>No concept of ownership</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="/Languages/Programming/Rust/References%20Borrowing">Reference(or Borrowing)</a>
+                    </td>
+                    <td>Unsafe (Lead to crashes)</td>
+                    <td>Safe (No crash)</td>
+                </tr>
+            </table>
+
+
+            <h3 id="ownership">1. Ownership <font color="red">(avoid crash in Rust)</font></h3>
+            <dt><b>Ownership?</b><br>
+                - Defines how memory is managed safely(without need of garbage collector) by Rust program.<br>
+                - Every Variable/data have single owner at a time. When the owner goes out of scope, Rust automatically deallocates the memory.<br>
+                - Ownership rules are checked at compile time. Ownership applies to memory allocated on heap(dynamically),
+                 Eg: String(), vector ie those are moved. For variable allocated on Stack (Eg: int, float) variable is copied.
+            </dt>
+            <br>
+            <dd>
+                In Rust, raw pointers (*const T and *mut T) don't embody ownership semantics directly.
+                However, smart pointers like Box<T>, Rc<T>, and Arc<T> do.<br>
+                - Box<T>: It represents ownership of a heap-allocated value.<br>
+                - Rc<T>: It provides reference counting and allows multiple ownership.<br>
+                - Arc<T>: It's like Rc<T>, but with atomic reference counting, suitable for concurrent access.
+            </dd>
+            <table>
+                <tr>
+                    <td>C++ <font color="red">(Crash in C++)</font></td>
+                    <td>Rust (No null pointer Exception(Crash) in Rust)</td>
+                </tr>
+                <tr>
+                    <td>    <!--C++-->
+                        <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;memory>  // For std::unique_ptr
+using namespace std;
+
+int main() {
+    // Create a unique_ptr to manage the std::string object
+    unique_ptr &lt;string> s = make_unique<string>("hello");
+
+    // Transfer ownership to s1
+    unique_ptr &lt; string> s1 = move(s);
+
+    // No compile time check. Run time Segmentation fault
+    cout &lt;&lt; *s;
+
+    std::cout &lt;&lt; *s1;
+
+    return 0;
+}
+                        </code></pre> 
+                    </td>
+                    <td>
+                        <pre><code class="language-css">
+fn main() {
+    // Box owns the heap-allocated String
+    let s = Box::new(String::from("hello")); 
+
+    // Ownership transferred to s1
+    let s1 = s; 
+
+    // Compilation error
+    // value borrowed here after move
+    // The ownership of the String was moved to s1, 
+    //so s is no longer valid to use
+    println!("{}", s);
+
+    // The String is still valid through s1
+    println!("{}", s1);
+} // Box goes out of scope, 
+// and the String is deallocated automatically
+                            
+                        </code></pre>
+                    </td>
+                </tr>
+            </table>
+
+            <h3 id="mma">3. No Manual Memory management <font color="red">(avoid crash in Rust)</font></h3>
+            <dt>
+                - Rust does not provide `new, delete` operators as in C++ for dynamically allocate memory.<br>
+                - Though C++ provides smart pointers, still someone can leak using C++98 new() and delete()<br>
+                - Rust's ownership and borrowing rules ensure memory safety without the need for manual memory management. 
+            </dt>
+            <table>
+                <td>
+                    C++
+                    <pre><code class="language-css">
+int* ptr = new int[10]; // Allocates memory of 10 integer
+delete ptr; // Deallocates the memory pointed to by ptr
+                    </code></pre>
+                </td>
+                <td>
+                    Rust.
+                    <pre><code class="language-css">
+let mut arr: Vec<i32> = Vec::with_capacity(10);     //malloc
+let arr: Vec<i32> = vec![0; 10];                    //malloc + memset
+                    </code></pre>
+                </td>
+            </table>
+
+            <h3 id="aco">4. Aggressive Compiler Optimization <font color="green">(make Rust fast)</font></h3>
+            <h4>1. Inlining</h4>
+            <dt>
+                - Rust's Compiler(LLVM) optimizes code more aggressivly wrt C++ compiler
+                & this is because of ownership rules, LLVM can make assumptions.<br>
+                - LLVM is more aggressive about inlining functions, especially for small functions. 
+                Inlining avoids function call overhead and makes it fast.
+            </dt>
+
+            <h3 id="rto">
+                5. Lower Runtime overheads wrt C++ <font color="green">(make Rust fast)</font>
+            </h3>
+            <h4>5.1 <a href="/Languages/Programming/C++/Terms.html#su">
+                <font color="red">C++ Stack Unwinding causes runtime slowness</font></a>
+            </h4>
+            <table>
+                <td>
+                    C++ (On Exception Stack Unwinding happens)
+                    <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;stdexcept>
+
+int divide(int a, int b) {
+    if (b == 0) {
+        throw std::runtime_error("Division by zero");
+    }
+    return a / b;
+}
+int main() {
+    try {
+        int result = divide(10, 0);
+        std::cout << "Result: " << result << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+    return 0;
+}        
+                    </code></pre>
+                </td>
+                <td>
+                    Rust (<b>Result and Option types</b> for error handling, <br>
+                    which are handled through pattern matching rather than exceptions)
+                    <pre><code class="language-css">
+fn divide(a: i32, b: i32) -> Result<i32, &'static str> {
+    if b == 0 {
+        return Err("Division by zero");
+    }
+    Ok(a / b)
+}
+
+fn main() {
+    match divide(10, 0) {
+        Ok(result) => println!("Result: {}", result),
+        Err(e) => eprintln!("Error: {}", e),
+    }
+}                        
+                    </code></pre>
+                </td>
+            </table>
+
+            <h4 id="nortti">5.2 <a href="/Languages/Programming/C++/Terms.html#rtti">
+                <font color="red">C++ Runtime Type Information (RTTI) increases binary size and runtime overhead</font></a>
+            </h4>
+            <dl>Rust's type system(based on traits and enums), enables polymorphic behavior and dynamic dispatch without the need for RTTI.</dl>
+            <table>
+                <tr>
+                    <td>
+                        C++
+                        <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;typeinfo>
+
+class Base {
+public:
+    virtual ~Base() {}
+};
+
+class Derived : public Base {};
+
+int main() {
+    Base* ptr = new Derived();
+    Derived* derived = dynamic_cast<Derived*>(ptr);
+    if (derived) {
+        std::cout << "Dynamic cast successful\n";
+    } else {
+        std::cout << "Dynamic cast failed\n";
+    }
+    delete ptr;
+    return 0;
+}
+                        </code></pre>
+                    </td>
+                    <td>
+                        <b>Rust</b><br><br>
+                        Box<dyn Printable> enable dynamic dispatch without the need for runtime type information. 
+<pre><code class="language-css">
+trait Printable {
+    fn print(&self);
+}
+
+struct Base;
+struct Derived;
+
+impl Printable for Base {
+    fn print(&self) {
+        println!("Base");
+    }
+}
+
+impl Printable for Derived {
+    fn print(&self) {
+        println!("Derived");
+    }
+}
+
+fn main() {
+    let base: Box<dyn Printable> = Box::new(Derived);
+    base.print(); // Dynamic dispatch without RTTI
+}    
+</code></pre>
+                    </td>
+                </tr>
+            </table>
+
+        </article>
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

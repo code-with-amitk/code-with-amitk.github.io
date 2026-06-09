@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>__has_cpp_attribute</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">__has_cpp_attribute?</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">__has_cpp_attribute</h2>
+        <dl>
+            C++ defines set of preprocessor macro called <a href="../C++11/attributes.html">attributes</a> on C++11 page.<br>
+            __has_cpp_attribute( attribute-token ) Checks for the presence of an attribute named by attribute-token.
+        </dl>
+        <pre><code class="language-css">
+#include &lt;iostream>
+using namespace std;
+
+//depreacted introduced in (C++14)
+#  if __has_cpp_attribute(unlikely)
+# define TEST 10
+#else
+# define TEST 2
+#endif
+
+int main(){
+    cout &lt;&lt; TEST;
+}
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

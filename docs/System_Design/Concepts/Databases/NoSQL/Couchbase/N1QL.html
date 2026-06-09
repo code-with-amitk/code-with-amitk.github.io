@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>N1QL</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">N1QL?</a>
+      <a href="#operators">Operators</a>
+      <a href="#queries">Queries</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">N1QL</h2>
+      <dl>
+        This is Couchbase’s query language. With N1QL you can execute SQL
+        queries(SELECT, FROM) and get results from Couchbase DB(which stores
+        data in Json format)
+      </dl>
+
+      <h2 id="operators">Additional Operators</h2>
+      <dl>
+        Data in Couchbase Server is stored in the form of documents, not rows or
+        columns, so db wuold need additional operators to access nested
+        elements.
+      </dl>
+      <table>
+        <tr>
+          <th>Operator</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>. Dot operator<br />[] operator</td>
+          <td>
+            ‘.’ operator is used to refer to children<br />
+            ‘[]’ refers to an element in an array
+            <pre><code class="language-css">
+SELECT children[0].fname
+    FROM tutorial
+       WHERE fname='Dave'
+      </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>LIKE</td>
+          <td>
+            String matching can be accomplished using the LIKE operator in the
+            WHERE clause.<br />
+            &ensp; % is a wildcard that matches zero or more characters<br />
+            &ensp; _ is a wildcard that matches exactly one character.
+            <pre><code class="language-css">
+// Return info where email ends with yahoo.com
+SELECT fname, email
+    FROM tutorial 
+        WHERE email LIKE '%@yahoo.com'
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>ANY/EVERY - SATISFIES</td>
+          <td>
+            ANY clause allows us to assign a name to an element in the array
+            that we are searching through.<br />
+            SATISFIES keyword is used to specify the filter condition.
+            <pre><code class="language-css">
+// find any person that has a child over the age of 10
+SELECT fname, children
+    FROM tutorial 
+        WHERE ANY child IN tutorial.children SATISFIES child.age > 10  END
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>AND</td>
+          <td>
+            Combining multiple conditions with AND
+            <pre><code class="language-css">
+// return people having at least one child and having a gmail address
+SELECT fname, email, children
+    FROM tutorial 
+        WHERE ARRAY_LENGTH(children) > 0 AND email LIKE '%@gmail.com'
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="queries">Query examples</h2>
+      <table>
+        <tr>
+          <th>Query</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+SELECT *
+  FROM tutorial
+    WHERE fname = 'Ian'
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+{
+  "results": [
+    {
+      "tutorial": {
+        "type": "contact",
+        "fname": "Ian",
+        "lname": "Taylor",
+        "age": 56,
+        "email": "ian@gmail.com",
+        "children": [
+          {
+            "fname": "Abama",
+            "age": 17,
+            "gender": "m"
+          }
+        ],
+        "hobbies": [
+          "golf",
+          "surfing"
+        ]
+      }
+    }
+  ]
+}
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

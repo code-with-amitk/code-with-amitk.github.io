@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dioxus Frontend</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#rsx">UIs with RSX</a>
+        <a href="#steps">Steps to Create Dioxus Web Page</a>
+        <a>Examples</a>
+        <ul>
+            <li><a href="#simple">1. Simple Webpage</a></li>
+            <li><a href="Examples/HotDog.html">2. Hot Dog</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="rsx"><a href="https://dioxuslabs.com/learn/0.6/essentials/rsx/">UIs with RSX</a></h2>
+        <dl>
+            Dioxus renders to HTML
+        </dl>
+
+        <h4 id="steps">Steps to Create Dioxus Web Page</h4>
+        <dl>1. Create new project and update Cargo.toml</dl>
+        <pre><code class="language-css">
+  dx new
+  cargo add chrono --features serde
+  cargo add futures
+  cargo add reqwest --features json
+  cargo add serde --features derive
+  cargo add serde_json
+  cargo add async_recursion
+        </code></pre>
+        
+        <dl>2. Install latest version of the dioxus-cli</dl>
+        <pre><code class="language-css">
+ cargo install dioxus-cli --force
+        </code></pre>
+
+        <dl>3. Install wasm-bindgen-cli to the version matching the Rust Wasm schema (e.g., 0.2.99)</dl>
+        <pre><code class="language-css">
+ cargo install wasm-bindgen-cli --version 0.2.99 --force
+        </code></pre>
+
+        <dl>4. Update the wasm-bindgen Dependency in Cargo.toml</dl>
+        <pre><code class="language-css">
+    [dependencies]
+    async-recursion = "1.1.1"
+    chrono = { version = "0.4.39", features = ["serde"] }
+    dioxus = { version = "0.5", features = ["web"] }
+    dioxus-logger = "0.5.1"
+    futures = "0.3.31"
+    reqwest = { version = "0.12.9", features = ["json"] }
+    serde = { version = "1.0.216", features = ["derive"] }
+    serde_json = "1.0.133"
+    wasm-bindgen = "=0.2.99"
+    
+    [profile]
+    
+    [profile.wasm-dev]
+    inherits = "dev"
+    opt-level = 1
+    
+    [profile.server-dev]
+    inherits = "dev"
+    
+    [profile.android-dev]
+    inherits = "dev"
+        </code></pre>
+
+        <dl>5. rebuild the project</dl>
+        <pre><code class="language-css">
+    cargo clean
+    cargo build
+    dx build
+    dx serve
+        </code></pre>
+
+        <dl>6. Open webpage http://127.0.0.1:8080/</dl>
+
+        <h4 id="simple">1. Simple Webpage</h4>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+#![allow(non_snake_case)]
+use dioxus::prelude::*;
+use dioxus_logger::tracing::{info, Level};
+
+fn main() {
+    dioxus_logger::init(Level::INFO).expect("failed to init logger");
+    info!("starting app");
+    launch(App);
+}
+
+#[component]
+fn App() -> Element {
+    rsx! {
+        div { id: "links",
+            h1 { "test" }
+        }
+    }
+}
+
+$ dx serve
+http://127.0.0.1:8080/
+                </code></pre></td>
+                <td><pre><code class="language-css">
+$ Cargo.toml
+[package]
+name = "hello"
+version = "0.1.0"
+authors = ["amit kumar <23084104+code-with-amitk@users.noreply.github.com>"]
+edition = "2021"
+
+[dependencies]
+async-recursion = "1.1.1"
+chrono = { version = "0.4.39", features = ["serde"] }
+dioxus = { version = "0.5", features = ["web"] }
+dioxus-logger = "0.5.1"
+futures = "0.3.31"
+reqwest = { version = "0.12.9", features = ["json"] }
+serde = { version = "1.0.216", features = ["derive"] }
+serde_json = "1.0.133"
+wasm-bindgen = "=0.2.99"
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
+                </code></pre></td>
+            </tr>
+        </table>
+    </article>
+
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

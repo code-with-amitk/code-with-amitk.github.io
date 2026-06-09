@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Classification</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="/Machine Learning/">Back</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#classifymnist">1. Classify grayscale images into(0 to 9)</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="classifymnist">1. Classify grayscale images(28 × 28 pixels) into their 10 categories (0 through 9)</h3>
+        <dl><strong>Problem we are solving</strong></dl>
+        <dt>
+            - We are provided 60k images(MNIST dataset). 1 image is 28x28 matrix. Each element can have value between (0,255)<br>
+            - We need to create a ML model, which is trained using these 60k images and will predict any input image (0 to 9)
+        </dt>
+        <dt><strong>How a image is represented by 28x28 matrix?</strong></dt>
+            <dd>
+                In a grayscale image represented as a (28, 28) matrix, each element of the
+                 matrix corresponds to the intensity of the pixel at that position.<br>
+                0 represents black: A pixel with an intensity value of 0 is completely black.<br>
+                255 represents white: A pixel with an intensity value of 255 is completely white.<br>
+                Values in between represent shades of gray: The values between 0 and 255 
+                represent varying shades of gray, with higher values indicating lighter shades<br>
+            </dd>
+            <img src="/images/mnist_sample_digits.PNG" 
+            alt="mnist sample digits" style="width:200px;height:70px;">
+
+            <h4>1. Create <a href="../Terms.html#neuralnetwork">Neural Network</a> of 2 dense layers</h4>
+            <dt>a. Create n linear <a href="../Terms.html#layer">layers(functions)</a> using 
+                <a href="../Terms.html#keras">keras</a>, where input & output to layer is a 
+                <a href="../Terms.html#tensor">tensor</a>.
+                <br>
+                b. Add 2 <a href="../Terms.html#layer">Dense layers</a>
+                with (512=<a href="../Terms.html#neuron">neurons</a>, 
+                ReLU=<a href="../Terms.html#ActivationFunction">activation function</a>, 
+                i/p <a href="../Terms.html#tensor">tensor shape</a>=(28*28) matrix
+                <br>
+                c. Add <a href="../Terms.html#lossf">loss function(categorical_crossentropy)</a>, 
+                <a href="../Terms.html#opt">Optimizer</a>, <a href="../Terms.html#metrics">Metrics</a>
+            </dt>
+
+            <img 
+      src="//www.plantuml.com/plantuml/png/RP51Qzmm48Nl-XM3JstOfhPWIoYaf51w2g6anpYOMNdM4P57HXflOah_UwVAfhXXVR3n6t_FRvwkic2IUGmcFtgUCE48BevJP6BvAKiWIEG4UGXaEFO4rItb1voeWby6uEwRFtXLTmlOxRRbbe7GFS01mwpgnoUeDyqzO8O29VFxw793Sy80DoHFCJs-cX5dwgvneTGrVyrOlufykMrior-T-0EAr_TR2dCnxKFpbhChhgd_mtBSouZFHz9g5iz2QOzE0mbbwVo80sMuX4-rNc0ldkq5Z2Z9EvNBUk_AQACpEDFRUpYnz5szqJRkAy0Cskeiwn_zI767En-yB2y5VMWWxg7tWvT2JCOK2CxFlxpMzl8eYkuCdz_aNQKwqqmdJw4oIXuTh3hO7eGunwIwNJbVnvpX-yokTDQoGw4XQWCOEfTqI2mfJii_R39NnFqyXZy0"
+      alt="neural network" style="width:400px;height:400px;">
+      <pre class="puml" visibility: hidden>
+        @startuml
+        skinparam componentStyle rectangle
+        node "Reshape" {
+          [Divide by 255\n\n each value b/w 0,1] as shaper
+        }
+        node "Neural Network" {
+          [Dense_Layer_1\n\nneuron=512\nActivation=Relu] as dl1
+          [Dense_Layer_2\n\nneuron=10\nActivation=softmax] as dl2
+        }
+        interface "test_images = 60000 28x28 matrices \n\n (60000, 28 * 28) \n\n each value b/w[0,255]" as input
+        interface "Probability b/w 0-1 of digit" as p
+        
+        input ..> shaper
+        shaper ..> dl1 : "test_images = (60000, 28*28)\n each value b/w 0,1"
+        dl1 ..> dl2 : 2d tensor
+        dl2 ..> dl1 : Loss Function=\ncategorical_crossentropy
+        dl2 ..> p
+        @enduml  
+        </pre>
+
+            <pre><code class="language-css">
+from keras import models    #Keras is a library(having functions). We are using 1 class from keras having functions.
+from keras import layers
+from keras.datasets import mnist
+
+network = models.Sequential()       //a
+network.add(layers.Dense(512, activation='relu', input_shape=(28*28,))) //b
+network.add(layers.Dense(10, activation='softmax'))
+network.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])  //c
+            </code></pre>
+
+            <h4>2. Prepare input data for neural network</h4>
+            <pre><code class="language-css">
+train_images = (60000, 28(row),28(col))         //a. Load input image 60k matrix of 28x28
+train_images = reshape(60000, 28x28(row),1(col))//b. Convert 28x28 to 784x1
+train_images = train_images.astype ('float32') / 255    //c. Round off every value in matrix between 0 and 1
+            </code></pre>
+
+            <dl><strong>a. Load MNIST dataset(60,000 training images, plus 10,000 test images) to local variables</strong></dl>
+            <dd>
+            <u>train_images?</u> Array containing 60,000 elements(28x28 matrices)<br>
+            <u>train_labels?</u> Array of 60000 labels each label is an integer from 0 to 9, 
+            representing the digit that the corresponds to image.
+            </dd>
+
+            <pre><code class="language-css">
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+            </code></pre>
+
+            <dl><strong>b. Reshape train_images,test_images from 28(row)x28(col) to 28*28=784(rows)x1(col)</strong></dl>
+                <dd>Reshaping means rearranging tensor to to fit input size needed by neural network layer.<br>
+                    Why Reshaping? Our Neural Network expects 1-D array
+                </dd>
+                <pre><code class="language-css">
+# Examples
+>>> x = np.array ( [[1,2],[3,4],[5,6]])
+>>> print(x.shape)
+    (3,2)       //3:Rows, 2:cols
+>>> x = x.reshape(2,3)
+>>> x
+array([[1,2,3],
+       [4,5,6]])
+
+train_images = train_images.reshape ((60000, 28*28))
+test_images = test_images.reshape ((10000, 28*28))
+                </code></pre>
+
+                <dl><strong>c. Convert all train_images,test_images from [0,255] to [0,1]</strong></dl>
+                <pre><code class="language-css">
+# Divide every value by 255.
+0/255 = 0
+148/255 = 0.5803
+...
+1/255 = 0.003921
+
+train_images = train_images.astype ('float32') / 255
+test_images = test_images.astype ('float32') / 255
+                </code></pre>
+
+                <dl><strong>d. Convert train_images,test_images to 
+                    <a href="../Terms.html#to_categorical">One-hot encoded labels</a></strong></dl>
+                <pre><code class="language-css">
+train_labels = to_categorical(train_labels)
+test_labels = to_categorical(test_labels)
+                </code></pre>
+
+            <h4>3. Feed data to neural network and create a tranining loop</h4>
+            <dd>Feed data in batches of 128. ie out of 60k 2D arrays, only feed 128 at a times<br>
+                Network will compute gradients of the weights with regard to the loss on the batch, and update the weights
+            </dd>
+            <pre><code class="language-css">
+network.fit(train_images, train_labels, epochs=5, batch_size=128)
+            </code></pre>
+
+            <h4>Complete Code</h4>
+            <pre><code class="language-css">
+from keras.datasets import mnist
+from keras import models
+from keras import layers
+from tensorflow.keras.utils import to_categorical
+import matplotlib.pyplot as plt
+
+# 1. Create Neural Network
+network = models.Sequential()
+network.add(layers.Dense(512, activation='relu', input_shape=(28*28,)))
+network.add(layers.Dense(10, activation='softmax'))
+network.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])
+
+# 2. Prepare input data for neural network
+try:
+    (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+except Exception as e:
+    print("Exception in load_data():",e)
+train_images = train_images.reshape ((60000, 28*28))
+test_images = test_images.reshape ((10000, 28*28))
+train_images = train_images.astype ('float32') / 255
+test_images = test_images.astype ('float32') / 255
+train_labels = to_categorical(train_labels)
+test_labels = to_categorical(test_labels) 
+
+# 3. Create training loop
+try:
+    network.fit(train_images, train_labels, epochs=5, batch_size=128)
+except Exception as e:
+    print("Exception: ", e)
+
+# 4. Plot the digit
+digit = train_images[4]
+digit = digit.reshape((28, 28))  # Reshape the flattened array to 28x28
+plt.imshow(digit, cmap=plt.cm.binary)
+plt.show()
+
+# 5. Run training data
+> python mnist.py
+Epoch 1/5
+60000/60000 [==============================] - 9s - loss: 0.2524 - acc: 0.9273
+Epoch 2/5
+51328/60000 [========================>.....] - ETA: 1s - loss: 0.1035 - acc: 0.969
+
+# 6. Run on testing data
+>>> test_loss, test_acc = network.evaluate(test_images, test_labels)
+>>> print('test_acc:', test_acc)
+test_acc: 0.9785
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

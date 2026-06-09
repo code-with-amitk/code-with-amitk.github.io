@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tilt by Amo</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#what">What is Tilt</a>
+    <a href="#req">Requirements</a>
+    <a href="#boe">BOE</a>
+    <a href="#api">API Design</a>
+    <a href="#db">DB Schema</a>
+    <a href="#hld">HLD</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="what">What is Tilt</h2>
+    <dl>
+      Tilt is video creation app(same as beReal), the app activates your phone's front and back cameras at the same time<br>
+      User can select any stream (front or back) as major stream and other will be shown as smaller screen with major.
+    </dl>
+
+    <h2 id="req">Requirements (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
+    <h4>Functional</h4>
+    <dt id="req_create1">1. User can create Account on Tilt</dt>
+    <dt id="req_read">2. Whenever new video is posted by friend, user get Push notification</dt>
+    <dt id="req_update1">3. Update self profile</dt>
+    <dt id="req_update2">4. User can add friends</dt>
+    <dt id="req_update3">5. (POST) User can create dualmode video & save on cloud</dt>
+    <dt id="req_delete">6. Delete friend</dt>
+    <dt id="req_account">7. Delete account</dt>
+
+    <h4>Non-Functional</h4>
+      <dt id="req_nonfunc_available">1. Highly available</dt>
+      <dt id="req_nonfunc_secure">2. Secure. Videos should not be leaked on internet</dt>
+
+    <h2 id="boe">BOE</h2>
+    <table>
+      <tr>
+        <th>Metric</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>QPS(Queries per second)</td>
+        <td>Very low, as in when someone opens app then request is sent to system and system sends the updates</td>
+      </tr>
+      <tr>
+        <td>BW Estimates</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Storage Requirements</td>
+        <td>
+          DAU = 1 Million. 1 user uploads 2 videos/day. Video duration = 10 min(100MB)<br>
+          Total video uploads = 1M x 2 = 2M.<br>
+          Data = 2M x 100MB = 200 TB /day.<br>
+          For 5 years = 200TB x 365 x 5 = 365 x 10<sup>15</sup> bytes
+        </td>
+      </tr>
+    </table>
+
+    <h2 id="api">API Design (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
+    <dl><a href="/Networking/OSI-Layers/Layer-7/REST%20API">REST API? <br>REST API Versioning(v1,v2)</a></dl>
+    <table>
+      <tr>
+        <th><h4><a href="#req_create">1. User can create Account on tilt</a></h4></th>
+        <th><h4><a href="#req_read">2. User reads timeline whenever he opens the app</a></h4></th>
+        <th><h4><a href="#req_update1">3. Update self profile</a></h4></th>
+        <th><h4><a href="#req_update3">5. User can create dualmode video & save on cloud</a></h4></th>
+        <th><h4><a href="#req_account">5. Delete Account</a></h4></th>
+      </tr>
+      <tr>
+        <td>
+          <pre><code class="language-css">
+curl -X POST -H "Content-Type: application/json" 
+-d '{"name": "user_id"}' 
+http://127.0.0.1:8080/v1/create_account -vvv
+          </code></pre>
+        </td>
+        <td><pre><code class="language-css">
+curl -X GET http://127.0.0.1:8080/v1/get_all_data
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X PUT -H "Content-Type: application/json" -d 
+'{
+  "user_id": "current_user_id", 
+  "new_name": ["new_name"]
+}' 
+http://127.0.0.1:8080/v1/update -vvv
+        </code></pre></td>
+        <td>
+          <!-- Upload Video -->
+          User saves video in device library<br>
+          Directly send video to tilt server (in parts)
+          <pre><code class="language-css">
+curl -X POST -H "Content-Type: application/json" 
+http://127.0.0.1:8080/v1/upload_video
+-d '{
+  "user_id": "id1",
+  "fragment_no": "fragement-n"
+}' 
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X DELETE -H "Content-Type: application/json" 
+http://127.0.0.1:8080/v1/delete_account
+-d '{
+  "user_id": "id1",
+}'
+        </code></pre></td>
+      </tr>
+
+      <tr>
+        <td><pre><code class="language-css">
+// Create account
+//url=toilt.amo.com
+POST https://url/v1/create_account 
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+
+  /*Mandatory added by HTTP Start*/
+  Content-len: 0                        
+  Host:        //Calculated when req is sent
+  UserAgent: Postman
+  Accept: */*       
+  Accept-Encoding: gzip, deflate, br
+  Connection: Keepalive
+  /*Mandatory added by HTTP End*/
+}
+body {  //JSON
+  "user_name": ""
+}
+        </code></pre></td>
+        <td><pre><code class="language-css">  <!--read timeline-->
+GET https://url/v1/get_location
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "my_username": "",
+}
+          </code></pre></td>
+          <td><pre><code class="language-css">  <!--Update self profile-->
+PUT http://url/v1/update
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "userid": "", 
+  "new_name": "",
+}
+        </code></pre></td>
+        <td><pre><code class="language-css">    <!--Upload Video-->
+PUT http://url/v1/upload
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "user_id": "",
+  "fragment_no": "1"
+}
+        </code></pre></td>
+        <td><pre><code class="language-css">  <!--Delete Account -->
+DELETE http://url/v1/delete_account
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "my_username": ""
+}
+        </code></pre></td>
+      </tr>
+    </table>
+
+    <h2 id="db">DB Schema</h2>
+    <dl><b><a href="/System_Design/Concepts/Databases/Graph%20DB/GraphDB.html">Graph DB</a></b></dl>
+    <pre><code class="language-css">
+// user Table
+| userid (pk) | username | creation_timestamp | last_seen |
+
+// password table
+| userid (pk) | username | password_hash | password_creation_date | expiry_time |
+    </code></pre>
+    <dl>
+      Friends, friends of friends, Likes, comments, videos relationship Would be stored on Graph DB<br>
+      <b>Videos, Comments:</b> Stored on seperate Object store<br>
+      <b>Coments:</b> 
+    </dl>
+
+    <h2 id="hld">HLD</h2>
+    <h4>User uploading video, Friend is notified and Friend watches video</h4>
+    <table>
+      <tr>
+        <td>
+          <div class="image-container">
+            <img src="//www.plantuml.com/plantuml/png/TL9RQnHD47slNr7aU_a45LSVX82IIpGA8GdknY0CXDxkcjqsdUgXBudvztPDTvYT11-dwjIvdEc3c5H8-Sw1qia7p942geWPrluF6fMK9auKO2Wmg-sWEE7UcLUcuoFb56iAUtBWrdF8uJ1qlAHmt_OgWh2jLIJS13LiJuval37hQIxYTPntntiNwz-aqxBueuuFhvUu_31o-YWZHFplp6wswTBoxTp4kK-sjrebwrdSi6bkE4Bvm99nTd1ySYvRRRZLqGTRS3VzGiOz0Fj4w4icp70SI9MlUsl8Zsoot8L8Y7FvSYgccqZ4aEnTMVPZKhWcVB3EoHt6GW2yOnUJHn3Ok2vkx3s1vP4BFw9HZt57DEERp-ZM-_XjjRh4oulbglboQzce-7Ap2JuFAALQtjGP5jdQDOxDWefoNMlU7x64F-V8EeMAQLgDxUh7MMFOc69jjozaR-Z_7DmhaE0DnkLK8jzOyobRi-Wu3yuhGwPUTJnpnnFtAILKpdLSVrYKZeK1olQ9kL-yxjy_nQxLpUiMwTOqpfjkKbcalaUi8WtQyJDidYH_KIooxLeRRisqGR-FymTwLGmiS2llanuw7fkk_LJNNwlkyPRqRSHn_HHqvzdre9tLjoKHQ44-Vw5zTTTUnEcNLMLwuNAYb25KEHj1gq9h9hwoh6ac8VZ7BRRR1vksQCYHv8R15x-FRz7sGWY1bC7U1royguMEG9e4uO3Ov3lt5m00" 
+            alt="Tilt App" class="zoomable-image" id="zoomableImage2" style="width:450px;height:350px;">
+          </div>
+          <pre class="puml" visibility: hidden>
+            @startuml
+            actor user as u
+            box datacenter
+            participant "Load\nBalancer" as lb
+            participant "App\nServer" as as
+            database graphDB as gdb
+            database userDB as udb
+            database "ObjectStore\nAWS S3" as ostore   #LightPink
+            participant "Notification\nSender" as ns
+            end box
+            participant CDN as cdn
+            actor friend_f1 as f
+            
+            note over u
+            Create video
+            end note
+            
+            note over udb
+            Note last_seen
+            time of user
+            We will not send
+            notification to 
+            user not active
+            in last 7 days
+            end note
+            
+            u -> lb: HTTP POST video
+            lb -> as: HTTP POST video
+            group Storing video on Object store
+            as -> ostore: Store Video on Object Store
+            ostore -> as: video URL
+            as -> gdb: Create video node(url)
+            end
+            
+            as -> ns: user_id=uid1\nuploaded video\nObject store
+            ns -> gdb: Get all\nfriends of uid1
+            gdb -> ns: f1,f2
+            group Send notification to user active in last 7 days
+            ns -> udb: Is friend active\nin last 7 days
+            udb -> ns: Yes f1
+            ns -> cdn: video
+            ns -> f: Notification\nUser1 has new\nVideo
+            end
+            
+            group Friend Checks Video of uid1
+            note over f
+            click to
+            check video
+            end note
+            f -> ns: HTTP GET Video
+            ns -> cdn: video
+            note over cdn
+            Video is
+            cached
+            end note
+            cdn -> f: video
+            end
+            
+            note over cdn
+            Video is cached
+            with deletion
+            policy. if not
+            read for 10 days
+            delete
+            end note
+            
+            @enduml
+          </pre>
+        </td>
+        <td>
+          <b><u>Storing videos on CDN:</u></b><br>
+          &ensp; All videos are not stored directly on CDN<br>
+          &ensp; As user uploads a new video its stored on object store (e.g., AWS S3, Azure Blob Storage)<br>
+          &ensp; CDN caches content only when requested by users.<br>
+          &ensp; Videos are stored with proper lifecycle policies (e.g., auto-deletion after a period for inactive videos).
+          <br><br>
+          <u>Adaptive Caching Strategy on CDN:</u><br>
+          - Only store videos on the CDN when they cross a popularity threshold (e.g., number of views, likes, or shares).<br>
+          - Prioritize celebrity or influencer content for CDN storage due to higher demand<br>
+          - Implement a Least Recently Used (LRU) cache eviction strategy on the CDN to optimize storage costs.
+        </td>
+      </tr>
+    </table>
+
+  </article>
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+</html>

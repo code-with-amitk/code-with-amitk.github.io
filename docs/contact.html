@@ -1,0 +1,71 @@
+<!--
+    <!DOCTYPE html> 
+        This is a document type declaration (DTD), which indicate the version of HTML.
+        It is the required initial tag for HTML5 documents. Browser follows appropriate rules and specifications for HTML5.
+
+    <html>
+        This is essential element in an HTML document.
+        It represents the root or top-level element of an HTML file & defines the beginning and end of the HTML content.
+
+    <head>
+        Provides metadata(As document title, character encoding, CSS stylesheets, JavaScript files, and other metadata).
+        Common elements in head section:
+        <title>: Specifies the title of the webpage that is displayed in the browser's title bar or tab.
+        <link rel="stylesheet" href="styles.css">: Links an external CSS stylesheet to apply styles to the HTML elements.
+
+    <body> 
+        This is a container element in an HTML document that contains the visible content of a webpage.
+        Can include text, headings, paragraphs, images, links, lists, tables, forms, and other HTML elements
+            <h1> heading
+            <p> paragraph
+            <img> image
+            <a> link
+    
+    <div>   (Division)
+        This is used to group and organize other HTML elements together
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Code Examples</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <div class="page-container">
+    <header class="header">
+      <nav class="navbar">
+        <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+              <input type="search" name="q" placeholder="Search site" />
+              <input type="submit" value="Go!" />
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <article>
+        <h3>Amit Kumar</h3>
+        <h4>
+          heyamitkumar5@gmail.com<br /><br />
+          <a href="https://www.linkedin.com/in/ak25/">Linkedin</a><br /><br />
+          <a href="https://www.youtube.com/channel/UC4nrHUDyI73y8zW6cMs_1yg"
+            >Youtube</a
+          >
+        </h4>
+      </article>
+    </main>
+
+    <!-- And here is our main footer that is used across all the pages of our website -->
+    <footer>
+      <p>©Copyright 2050 by nobody. All rights reversed</p>
+    </footer>
+  </div>
+</html>

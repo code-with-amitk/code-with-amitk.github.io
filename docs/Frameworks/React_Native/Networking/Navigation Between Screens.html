@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native Navigation</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">Navigation</a>
+        <a href="">Ways to Navigate</a>
+        <ul>
+            <li><a href="#rn">React Navigation</a></li>
+            <li><a href="#expo">Expo Router</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Navigation</h2>
+
+        <h4 id="rn">(Method-1) React Navigation(react-navigation)</h4>
+        <dl>
+            We will create 2 screens (home, profile) and navigate between them
+        </dl>
+        <pre><code class="language-css">
+$ npm install @react-navigation/native @react-navigation/native-stack
+
+// Install for expo managed project
+$ npx expo install react-native-screens react-native-safe-area-context
+        </code></pre>
+
+        <h5>Creating 2 screens and navigating between them</h5>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import {Text, Button} from 'react-native';
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack'   //1
+
+const HomeScreen = ({navigation}: any) => {                     //5
+    return (
+    &lt;Button
+        title="Go to Jane's profile"
+        onPress={() =>
+        navigation.navigate('Profile', {name: 'Jane'})          //5
+        }
+    />
+    );
+};
+const ProfileScreen = ({navigation, route}: any) => {
+    return &lt;Text>This is {route.params.name}'s profile&lt;/Text>;
+};
+
+const Stack = createNativeStackNavigator();
+const Main = () => {
+    return (
+        &lt;Stack.Navigator>            //2
+            &lt;Stack.Screen name="Home" component={HomeScreen} options={{title: 'Welcome Screen'}} />      //3, 4
+            &lt;Stack.Screen name="Profile" component={ProfileScreen} options={{title: 'Profile Screen'}}/>
+        &lt;/Stack.Navigator>
+    );
+};
+
+export default Main;
+                </code></pre></td>
+                <td>
+                    1. import createNativeStackNavigator<br>
+                    2. Whole app need to wrapped inside createNativeStackNavigator().Navigator in App.js<br>
+                    3. Stack.Screen defines 2 screens:<br>
+                    &ensp; name="Home"<br>
+                    &ensp; name="Profile"<br>
+                    4. We can set options such as the screen title for each screen in the options prop of Stack.Screen.<br>
+                    options={{title: 'Welcome Screen'}}<br>
+                    options={{title: 'Profile Screen'}}<br>
+                    5. Each screen takes <b>navigation prop</b>. This prop has various methods to link to other screen<br>
+                    &ensp; navigation.navigate to go to profile screen.
+                </td>
+            </tr>
+        </table>
+
+        <h4 id="expo">Expo Router</h4>
+        <dl>
+        Navigate from Home Screen to ProfileScreen and Back from profile screen to home screen
+        </dl>
+        <pre><code class="language-css">
+///////// _layout.tsx /////////////
+import { Stack } from "expo-router";
+// Defines the navigation stack (Required) in expo-router
+// We can provide different screen options here
+export default function RootLayout() {
+  return (
+    &lt;Stack>
+        &lt;Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} />
+        &lt;Stack.Screen name="ProfileScreen" options={{ title: 'ProfileScreen' }} />
+    &lt;/Stack>
+  );
+}
+
+///////// index.tsx /////////
+import { View, Text, Button } from 'react-native';
+import { useRouter } from 'expo-router';
+
+export default function HomeScreen() {
+  const router = useRouter();
+
+  return (
+    &lt;View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        &lt;Text>Welcome to Home Screen&lt;/Text>
+
+      &lt;Button 
+        title="Go to Profile (Router)" 
+        onPress={() => router.push({ pathname: "/ProfileScreen" })}
+      />
+    &lt;/View>
+  );
+}
+
+///////// ProfileScreen.tsx /////////
+import { View, Text, Button } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+export default function ProfileScreen() {
+  const router = useRouter();
+  const { name } = useLocalSearchParams();
+  return (
+    &lt;View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        &lt;Text>This is the Profile Screen&lt;/Text>
+      
+        {/* Go back to Home Screen */}
+        &lt;Button title="Go Back" onPress={() => router.back()} />
+    &lt;/View>
+  );
+}
+        </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

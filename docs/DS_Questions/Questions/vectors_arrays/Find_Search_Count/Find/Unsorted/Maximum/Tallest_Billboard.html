@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tallest Billboard</title>
+</head>
+<body>
+  <h2>Tallest Billboard</h2>
+  <ul>
+    <li><a href="#a1">Approach-1. 3<sup>n</sup>. DFS. TLE</a></li>
+    <li><a href="#a2">Approach-2. DP</a></li>
+  </ul>
+
+  <h3><a href="https://leetcode.com/problems/tallest-billboard/description/">956. Tallest Billboard</a></h3>
+  <p>You are installing a billboard and want it to have the largest height. The billboard will have two steel supports, one on each side. Each steel support must be an equal height.</p>
+  <p>You are given a collection of rods that can be welded together. For example, if you have rods of lengths 1, 2, and 3, you can weld them together to make a support of length 6.</p>
+  <p>Return the largest possible height of your billboard installation. If you cannot support the billboard, return 0.</p>
+
+  <h4>Example 1:</h4>
+  <pre>
+    Input: rods = [1,2,3,6]
+    Output: 6
+    Explanation: We have two disjoint subsets {1,2,3} and {6}, which have the same sum = 6.
+  </pre>
+
+  <h4>Example 2:</h4>
+  <pre>
+    Input: rods = [1,2,3,4,5,6]
+    Output: 10
+    Explanation: We have two disjoint subsets {2,3,5} and {4,6}, which have the same sum = 10.
+  </pre>
+
+  <h3 id="a1">Approach-1. DFS. 3<sup>n</sup>. TLE</h3>
+  <h4 id="l1">Logic</h4>
+  <p>Find all permutations where a rod can be placed. Every rod can be added to the left rod or the right rod or not added to any.</p>
+
+  <h4 id="com">Complexity</h4>
+  <p><strong>Time:</strong> 3<sup>n</sup>. At every rod, we have 3 choices (place at the left, place at the right, don't place anywhere) and we need to do this for n rods.</p>
+
+  <h4>Code</h4>
+  <pre><code>using vI = vector&lt;int&gt;;
+class Solution {
+    int dfs(vI&amp; rods, int left, int right, int index) {
+        if (index == rods.size()) {
+            if (left == right)
+                return left;
+            return 0;
+        }
+
+        int take_left = dfs(rods, left + rods[index], right, index + 1);
+        int take_right = dfs(rods, left, rods[index] + right, index + 1);
+        int not_take = dfs(rods, left, right, index + 1);
+        return max(max(take_left, take_right), not_take);
+    }
+
+public:
+    int tallestBillboard(vector&lt;int&gt;&amp; rods) {
+        return dfs(rods, 0, 0, 0);
+    }
+};</code></pre>
+
+  <h3 id="a2">Approach-2. DP. I did not understand</h3>
+
+  <h4>Code</h4>
+  <pre><code>using vI = vector&lt;int&gt;;
+int dp[10005][21];
+class Solution {
+    int dfs(vI&amp; rods, int diff, int index) {
+        if (index &gt;= rods.size()) {
+            return (diff == 0) ? 0 : INT_MIN;
+        }
+
+        if (dp[diff + 5001][index] != -1)
+            return dp[diff + 5001][index];
+
+        int take_left = dfs(rods, diff + rods[index], index + 1) + rods[index];
+        int take_right = dfs(rods, diff - rods[index], index + 1);
+        int not_take = dfs(rods, diff, index + 1);
+
+        dp[diff + 5001][index] = max(max(take_left, take_right), not_take);
+        return dp[diff + 5001][index];
+    }
+
+public:
+    int tallestBillboard(vector&lt;int&gt;&amp; rods) {
+        memset(dp, -1, sizeof(dp));
+        return dfs(rods, 0, 0);
+    }
+};</code></pre>
+</body>
+</html>

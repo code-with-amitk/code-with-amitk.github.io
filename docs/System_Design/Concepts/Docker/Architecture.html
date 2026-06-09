@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Architecture</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#arch">Docker</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="arch">Docker Desktop(Windows) / Docker Linux Architecture</h2>
+        <dl><pre><code>
+|---------- Docker Desktop ----------|
+| dockerD   dockerCompose            |
+|                                    |
+| credentialsHelper                  |
+|------------------------------------|
+        </code></pre></dl>
+        <table>
+            <tr>
+                <th>Process</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>DockerD / Docker Deamon / Docker Engine </td>
+                <td>Listens for Docker API requests and performs the actual work of building, running, and distributing container images</td>
+            </tr>
+            <tr>
+                <td>Docker Client (docker)</td>
+                <td>command-line tool you use to interact with Docker. When you run commands like docker run, the client sends those commands to the dockerD</td>
+            </tr>
+            <tr>
+                <td>Docker Compose</td>
+                <td>tool included in Docker Desktop that allows you to define and run multi-container applications using a YAML file</td>
+            </tr>
+            <tr>
+                <td>Credential Helper</td>
+                <td>Manages credentials for accessing private registries securely</td>
+            </tr>
+            <tr>
+                <td>Docker Desktop UI</td>
+                <td>GUI managing containers, images, volumes, and settings</td>
+            </tr>
+        </table>
+    </article>
+
+</body>
+</html>

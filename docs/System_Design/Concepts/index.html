@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+  <head>
+    <title>System Design</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar"></aside>
+
+    <main style="margin-left: 200px">
+      <dl>
+        <font color="red">⇉</font>
+        <a href="GCP/AWS_vs_GCP.html">AWS vs GCP</a><br />
+        <b>AWS</b>: <a href="AWS/Terraforms.html">Terraforms</a>,
+        <a href="AWS/Sheild.html">Sheild</a>, <a href="AWS/VPC.html">VPC</a
+        ><br />
+        <b>GCP:</b>
+        <a href="GCP/Introduction.html">Introduction</a>(Components(Compute
+        Engine, App Engine, BigQuery, Kubernetes Engine)),
+        <a href="GCP/Deploy_Docker_Image.html">Deploy docker image on GCP</a
+        ><br />
+        <a href="Cache/">Cache</a><br />
+        <a href="CDN">CDN</a><br />
+        <a href="Consensus/" target="_blank">Consensus Mechanism:</a> Raft,
+        Paxos<br />
+
+        <a href="./Databases/">Databases</a><br />
+
+        <b>Containers:</b>
+        <a href="Containers/Introduction.html">Container vs VM, Advantages</a>
+        <br />
+
+        <b>Docker</b><br />
+        &ensp;<a href="Docker/Introduction.html">Introduction:</a> Docker,
+        Docker vs Kubernets<br />
+        &ensp;
+        <a href="Docker/Docker-Networking.html">Networking:</a> Bridge, None,
+        Host<br />
+        &ensp;<a href="Docker/Terms.html" target="_blank">Docker Terms:</a>
+        Docker Host, Docker Image, Docker File, Docker Registry, docker-compose,
+        docker volume<br />
+        &ensp;<a href="Docker/Commands.html">Docker Commands, </a> &ensp;<a
+          href="Docker/docker-compose.html"
+          >docker-compose,
+        </a>
+        &ensp;<a href="Docker/SampleDockerFile.html">Sample Docker File</a
+        ><br />
+        &ensp;<a href="Docker/Architecture.html">Architecture</a><br />
+        &ensp;<b>Logging:</b>
+        <a href="Docker/Logging.html">Loki + Promtail + Grafana</a>
+        <br />
+
+        <b>git:</b>
+        <a href="git/Commands.html">Commands</a>,
+        <a href="git/First_Time_Clone.html">1st time clone</a>
+        <br />
+
+        <b>Kafka:</b>
+        <a href="Kafka/Introduction.html">Introduction, Architecture</a><br />
+
+        <b>Kubernets:</b><br />
+        &ensp; <a href="Kubernets/Introduction.html">Introduction</a>,
+        <a href="Kubernets/Architecture.html">Architecture</a><br />
+        &ensp;
+        <a href="Kubernets/Kubernets_Objects.html">Kubernets Objects</a>
+        (ClusterRole, ConfigMap, Deployment, Job, RBAC, ServiceAccount,
+        Services, Secrets, POD)<br />
+        &ensp; <a href="Kubernets/Terms.html">Terms</a>(Namespace, Service
+        Tokens, Nodeport, ContainerPort, HostPort)<br />
+        &ensp; <a href="Kubernets/Commands.html">Commands</a><br />
+
+        <b>K3s:</b>
+        <a href="k3s/Architecture.html">Introduction & Architecture</a><br />
+
+        <b>Microservices:</b>
+        <a href="Microservices/Introduction.html"
+          >microservices vs Deployment monolith</a
+        >, Design Patterns(<a
+          href="Microservices/Design_Patterns/Microservices_design_patterns.html"
+          >All</a
+        >,
+        <a href="Microservices/Design_Patterns/Circuit_Breaker.html"
+          >Circuit Breaker</a
+        >, <a href="Microservices/Design_Patterns/Saga.html">Saga</a>),
+        <a href="Microservices/Event Driven Architecture.html"
+          >Event Driven Architecture</a
+        ><br />
+
+        <b>Terms</b><br />
+        &ensp; Authentication:
+        <a href="Terms/Authentication/jwt.html">JWT Token</a>,
+        <a href="Terms/Authentication/refresh_token.html">Refresh Token</a>,
+        <a href="Terms/Authentication/cookies.html">Cookies (Browser Based)</a
+        ><br />
+        &ensp; <a href="Terms/CAP_Theorem.html">CAP Theorem</a><br />
+        &ensp; Consensus:
+        <a href="Terms/Consensus/Introduction.html">Introduction</a>,
+        Algorithms(<a href="Terms/Consensus/Algorithms/Paxos.html">Paxos</a>,
+        <a href="Terms/Consensus/Algorithms/Raft.html">Raft</a>)<br />
+        &ensp; <a href="Terms/Terms.html">Reliable, Scalable, Maintainable</a>
+        <br />
+        <a href="Load Balancer/">Load Balancer:</a> Advantages, Types,
+        Scheduling Algorithms of LB
+      </dl>
+    </main>
+  </body>
+</html>

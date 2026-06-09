@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Threads Processes IPC</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"></aside>
+
+    <main>
+      <article style="margin-left: 200px">
+        <dl>
+          <b><a href="Introduction.html" target="_blank">Introduction</a></b
+          ><br />
+          &ensp; Thread vs Process, Why processes<br />
+
+          <b>Threads</b><br />
+          &ensp;
+          <a href="Threads/Creation/Threads_Creation.html">Thread Creation:</a>
+          CPP(Threadclass, CPP Functor), Rust (Normal, Scoped), Go (<a
+            href="Threads/Creation/GoRoutines.html"
+            >goroutines</a
+          >), Python, POSIX, Java, Windows<br />
+          &ensp;
+          <a href="Threads/Joinable_Detachable.html"
+            >Joinable Detachable Threads</a
+          ><br />
+          <b>Synchronization</b><br />
+          &ensp;
+          <a href="Synchronization/index.html">What is Synchronization?</a
+          ><br />
+          &ensp;
+          <a href="Synchronization/Problems on synchronization.html"
+            >Problems in sync:</a
+          >
+          Dining Philospher, n Producer n Consumer <br />
+          &ensp;
+          <u>Synchronization Methods:</u><br />
+          &emsp; <a href="Synchronization/index.html">Methods List:</a> Pipes,
+          Shared Memory, condvar, Semaphores, mutex, Arc&lt;mutex>, Rwlocks,
+          channels<br />
+          &emsp; Rust:
+          <a href="Synchronization/Rust/Arc.html">Arc, Arc&lt;mutex></a><br />
+          &emsp; C++:
+          <a href="Synchronization/condition_variable.html"
+            >condition_variable</a
+          ><br />
+          &emsp; mutex: <a href="Synchronization/mutex.html">C++, POSIX, Rust</a
+          ><br />
+
+          <b>IPC</b><br />
+          &ensp; <a href="IPC/index.html">What is IPC?</a><br />
+          &ensp; <u>IPC Methods:</u><br />
+          &emsp; <a href="IPC/Methods.html">Methods List:</a> Pipe,
+          Channels(Rust, go), Named pipes, fifo, Message Queues, Shared Memory,
+          Memory mapped files<br />
+          &emsp; Channels: <a href="IPC/Rust/channels.html">Rust</a>,
+          <a href="IPC/Golang/channels.html">Golang</a><br />
+        </dl>
+      </article>
+    </main>
+  </body>
+</html>

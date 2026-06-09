@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#jwt">Json Web Token</a>
+      <a href="#inside">Disecting token</a>
+      <a href="#authenticatetorestful">JWT Authentication to RESTFul APIs</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="jwt">Json Web Token / oauth_token / auth_token</h2>
+      <dl>
+        <b>What?</b>
+        This is open standard (RFC 7519) used for securely transmitting
+        information between two parties as a JSON object. Mostly used for
+        authentication.
+        <br />
+
+        <b>Usage?</b>
+        For authentication on the web, ie authentication to RESTFul API
+      </dl>
+
+      <h2 id="inside">Disecting token</h2>
+      <dl>
+        A JWT is assigned to user as a authentication token<br />
+        JWTs consist of three parts: (header . payload . signature)
+      </dl>
+      <pre><code class="language-css">
+jwt-token = header.payload.signature
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTc0MDU1OTk2NX0.Dck0cV04Vv7G6ciMt2qvE5_fS2ZMpl5aFuXwKNnD3M0"}
+
+struct header_st = {
+  "alg": "HS256",
+  "typ": "JWT",
+}
+header = base64Encode(header_st)
+
+struct payload_st= {
+  "email": email,
+  "exp":   timestamp_to_expiry
+}
+payload = base64Encode(payload_st)
+
+Signature = HMAC_SHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
+    </code></pre>
+
+      <h3>Complete Code</h3>
+      <pre><code class="language-css">
+      package main
+
+      import (
+        "crypto/hmac"
+        "crypto/sha256"
+        "encoding/base64"
+        "encoding/json"
+        "fmt"
+        "strings"
+        "time"
+      )
+      
+      var jwtSecret = []byte("your-secret-key") // Use the same secret key
+      
+      // Function to base64 URL encode a string
+      func base64UrlEncode(data []byte) string {
+        return strings.TrimRight(base64.URLEncoding.EncodeToString(data), "=")
+      }
+      
+      // Function to create JWT header manually
+      func JWTHeader() string {
+        header := map[string]string{
+          "alg": "HS256",
+          "typ": "JWT",
+        }
+        headerJSON, _ := json.Marshal(header)
+        return base64UrlEncode(headerJSON)
+      }
+
+      // Function to create JWT payload manually
+      func JWTPayload(email string) string {
+        payload := map[string]interface{}{
+          "email": email,
+          "exp":   time.Now().Add(time.Hour * 24).Unix(), // 24-hour expiry
+        }
+        payloadJSON, _ := json.Marshal(payload)
+        return base64UrlEncode(payloadJSON)
+      }
+
+      // Function to create JWT signature manually
+      func JWTSignature(email string) string {
+        headerEncoded := JWTHeader()
+        payloadEncoded := JWTPayload(email)
+
+        signatureInput := headerEncoded + "." + payloadEncoded
+        h := hmac.New(sha256.New, jwtSecret)
+        h.Write([]byte(signatureInput))
+        return base64UrlEncode(h.Sum(nil))
+      }
+
+      func generateManualJWT(email string, owner bool) string {
+        return JWTHeader() + "." + JWTPayload(email) + "." + JWTSignature(email)
+      }
+      
+      func main() {
+        jwt := generateManualJWT("test@example.com")
+        fmt.Println("Generated JWT:", jwt)
+      }
+    </code></pre>
+
+      <h2 id="authenticatetorestful">How JWTs are used for authentication</h2>
+      <pre class="mermaid">
+        sequenceDiagram
+            rect rgb(236, 232, 242)
+            participant dns as DNS
+            participant cdn as CDN
+            participant ub as User-Browser
+            box AWS
+            participant lb as LoadBalancer
+            participant as as Application Server<br>RESTFul Service
+            participant auth as Auth_Service
+            end
+            participant idp as IDP
+
+            note over ub: HTTP GET test.com
+            ub ->> dns: IP of test.com
+            dns ->> ub: IP of CDN
+            ub ->> cdn: HTTP GET test.com
+            cdn ->> ub: Home Page
+            note over ub: User enters username,pass
+            ub ->> lb: HTTP GET test.com(user,pass)
+            lb ->> as: HTTP GET test.com(user,pass)
+            as ->> ub: HTTP Redirect http://auth_svc
+
+            ub ->> auth: http://auth_svc?user?pass
+            auth ->> idp: ?user?pass
+            idp ->> auth: SAML Assertion(Authenticated)
+            auth ->> ub: JWT Token(Json Object)
+
+            note over auth:JWT=(header + payload(username) <br>+ signature(Digital signature of payload))
+            note over ub: Stores JWT in cookie or cache
+            ub ->> as: CRUD(header(bearer token=JWT) + Body)
+
+            note over as: JWT expiry in 5 hours<br>Reissue JWT
+        end
+
+    </pre>
+    </main>
+
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
+    </script>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

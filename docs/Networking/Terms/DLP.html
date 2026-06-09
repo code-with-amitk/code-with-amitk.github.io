@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>DLP</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#dlp">What</a>
+    </aside>
+
+    <div style="margin-left: 200px">
+      <h2 id="what">DLP (Data Loss Prevention)</h2>
+      <dl>
+        if sensitive data is leaked(on cloud), then DLP protects the data by
+        inspecting the cloud services.<br />
+        Data detected by Netskope DLP (Data Loss Prevention) includes sensitive
+        information such as personally identifiable information (adhar, PAN
+        etc), payment card information (PCI), passwords, credentials, and
+        confidential business data.
+      </dl>
+
+      <h2>How it works?</h2>
+      <h4>Uploading Credit card</h4>
+      <dl>
+        if some user uploaded credit card image to a gdrive then DLP can detect,
+        alert & block actions, text in image is scanned using OCR technology
+      </dl>
+
+      <h4>Uploading file containing password</h4>
+      <dl>
+        DLP detects predefined data identifiers, regular expressions (regex),
+        exact data match (EDM), and machine learning-based classifiers.
+      </dl>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html>
+  <head>
+    <title>collections</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <dl>Built-in</dl>
+      <ul>
+        <a href="#arrays">1. Arrays</a>
+        <a href="#slices">2. Slice (vector)</a>
+        <a href="#channels">3. Channels</a>
+        <a href="#maps">4. Maps</a>
+      </ul>
+      <br />
+      <dl>Standard Library Provided</dl>
+      <ul>
+        <a href="#queue">1. Queue(using slice)</a>
+        <a href="#stack">2. Stack(using slice)</a>
+        <a href="#struct">3. struct = class</a>
+        <ul>
+          <li><a href="#structclass">struct as class</a></li>
+          <li><a href="#structtagging">struct tagging</a></li>
+        </ul>
+        <a href="#linkedlist">4. Linked List</a>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2>Built in Collections in Go</h2>
+      <dl>
+        Built in means those collections which are part of the go language
+        syntax.
+      </dl>
+      <h3 id="arrays">1. Array [n]T</h3>
+      <dl>
+        fixed-size collection of elements of the same type. Array cannot be
+        resized<br />
+        <pre><code class="language-css">
+var a [10]int
+                </code></pre>
+      </dl>
+
+      <h3 id="slices">
+        2. Slices [] (Dynamic Array) = C++(vector&lt;int>) = Rust(vec&lt;i32 > )
+      </h3>
+      <dl>
+        Slice is part of an array. Changing the elements of a slice modifies
+        underlying array.
+      </dl>
+      <h4>Slice has 3 components</h4>
+      <dl>
+        1. Pointer(to underlying array)<br />
+        2. Length(number of elements in slice). len(slice)<br />
+        3. Capacity(maximum number of elements it can hold). cap(slice): length
+        of undelying array - 1<br />
+        <br />
+
+        <b>nil slice:</b> slice which does not point to any array(at present),
+        but can in future.
+      </dl>
+
+      <h4>Slice Functions</h4>
+      <dl>
+        <b>append()</b><br />
+        - append() will append the value to slice<br />
+        - append only modifies the original underlying array if the slice's len
+        is less than its cap. If len == cap, a new array is allocated.
+      </dl>
+      <pre><code class="language-css">
+package main
+import "fmt"
+func fun(b *[]int) {
+  // Trying adding beyond capacity
+  *b = append(*b, 5)        //2,3,4,5
+}
+func main() {
+
+    // Create Slice
+    a := [4]int{1, 2, 3, 4}
+    fmt.Println("Before a:", a)   //1,2,3,4
+
+    // Copy Slice
+    b := a[1:4]                   //2,3,4
+
+    fun(&b)
+    fmt.Println("After a:", a)    //1,2,3,4. a remains same
+    fmt.Println("b:", b)          //2,3,4,5
+}
+// Solution: Take array of size [5]
+            </code></pre>
+
+      <dl><b>nil slice, Create slice using make(), 2D Slice</b></dl>
+      <pre><code class="language-css">
+func main() {
+  names := [4]string{"John", "Paul", "George", "Ringo"}
+
+  // Slice
+  a := names[1:3]   // [Paul George]
+  a[0] = "XXX"      // a=[XXX, George], names=[John Paul XXX George]
+  fmt.Printf("%d %d\n", len(a), cap(a))   //len=2, cap=3(underlying array size - 1)
+
+  // nil Slice
+  var b[]string
+  len(b), cap(b)      // 0, 0
+  b = names[1:3]      // b=["XXX", "George"]
+
+  // create Slice using make()
+  // c := make([]T, len, cap)  OR c := make([]T, len)
+  d := make([]string, 3)  //len=3
+  c := make([]string, 0, 2) //len=0,cap=2. Allocates memory of size=2 & points c to it.
+  c = names[2:4]            // c=["George", "Ringo"]
+
+  // append slice
+  append(c, "Ram")
+
+  /***************** 2D Slice ******************/
+  // Method-1
+  var test [][]int
+  for i := 0; i &lt; rows; i++ {
+      test = append(test, make([]int, cols))
+  }
+
+  // Method-2
+  test := make([][]int, rows)
+  for i := range vector {
+      test[i] = make([]int, cols)
+  }
+  /*******************************************/
+
+  // Create hashmap using make()
+  m := make(map[int]int)
+}
+            </code></pre>
+
+      <h3 id="channels"><a href="/Threads_Processes_IPC/">3. Channels</a></h3>
+
+      <h3 id="maps">4. Maps</h3>
+      <dl>
+        A map is a hash table.
+        <a href="/Languages/Programming/C++/index.html">Maps in C++</a><br />
+      </dl>
+      <pre><code class="language-css">
+Syntax: make(map[KeyType]ValueType, initialCapacity)
+
+m := make(map[string]int)   //map[key]value
+m["gold"] = 100
+      </code></pre>
+
+      <h1 id="standardlib">Standard Library Provided Collections</h1>
+
+      <h2 id="queue">1. Queue(Implemented using slice)</h2>
+      <pre><code class="language-css">
+package main
+import "fmt"
+type test struct {		//Declare a struct having slice which will act as queue
+    q []int
+}
+func Constructor() test {
+    return test{}
+}
+func (this *test) Push(x int)  {
+    this.q = append(this.q, x)		//Push() append x to queue
+}
+func (this *MyStack) Pop() {
+    this.q = this.q[1:]   		//Pop() Remove 1st element
+}
+func (this *MyStack) Top() int {
+    return this.q[0]			//Top()
+}
+func (this *MyStack) Empty() bool {	//Size()
+    if len(this.q) == 0 {
+        return true
+    }
+    return false
+}
+        </code></pre>
+
+      <h2 id="stack">
+        <a
+          href="/Languages/Programming/C++/STL/Containers/Container_Adoptors/stack.html"
+          >2. Stack using slice</a
+        >
+      </h2>
+
+      <h2 id="struct">3. struct</h2>
+
+      <h3 id="structclass">struct as class</h3>
+      <dl>
+        Class is defined as struct type. Example: Person is defined of type
+        struct.<br />
+        The struct type can be considered similar to a class, as it allows you
+        to define fields and associated methods.
+      </dl>
+      <pre><code class="language-css">
+package main
+import "fmt"
+
+type student struct {		// Define a struct type
+    name string
+    age  int
+    marks []int		// slice = dynamic ints
+    misc []interface{}	// misc is a slice that can hold values of any type
+}
+
+// Define a method associated with the Person struct
+// To associate a method with a struct, define a method with a receiver type that matches the struct type.
+func (p Person) SayHello() {
+    fmt.Printf("Hello, my name is %s and I am %d years old.\n", p.name, p.age)
+}
+
+func main() {
+    // Create a new instance of Person
+    person := Person{name: "John", age: 30}
+
+    // Call the SayHello method
+    person.SayHello()
+}
+        </code></pre>
+
+      <h3 id="structtagging">struct tagging</h3>
+      <dl>
+        Defines variable name, type and field name which will map in yaml/json
+        file
+      </dl>
+      <pre><code class="language-css">
+test.yaml
+default_action: allow
+rules:
+  - user: "anonymous"
+    domain: "*.internal.example.com"
+    action: block
+
+type Config struct {
+//Field Name    DataType  StructTag: metadata. Look into yaml file when you find
+                          default_action put into DefaultAction
+	DefaultAction string    `yaml:"default_action"`
+	Rules         []Rule `yaml:"rules"`
+}
+
+var cfg Config
+bytes := os.ReadFile("test.yaml")   //Read test.yaml content as bytes
+yaml.Unmarshal(bytes, &cfg)         //Stored bytes into Config struct
+      </code></pre>
+
+      <h2 id="linkedlist">
+        <a
+          href="/DS_Questions/Data_Structures/Linked_List/Compared_c++_rust_python_go.html"
+          >4. Linked List</a
+        >
+      </h2>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

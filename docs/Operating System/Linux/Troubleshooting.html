@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Memory Troubleshooting</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Operating System/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#mem">Memory Issues</a>
+      <a href="#test">Test Server</a>
+      <a href="#openfiles">Too Many Open Files</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="test">Test Server</h3>
+      <dl><a href="/Operating System/">curl</a>: Send HTTP req using curl</dl>
+
+      <h3 id="mem">Memory Issues</h3>
+      <dl></dl>
+
+      <h3 id="openfiles">Too Many Open Files</h3>
+      <dl>
+        <a href="/Operating System/">lsof command:</a> Check file descriptors
+        opened by all processes, Print process and their opened fd count in
+        decending order, Print type of opened Object by process in decending
+        order
+        <br />
+
+        <a href="/Operating System/">proc command</a>
+      </dl>
+    </article>
+
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

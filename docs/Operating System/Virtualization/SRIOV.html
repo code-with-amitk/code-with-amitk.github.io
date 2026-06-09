@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SRIOV</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">What is SRIOV</a>
+      <a href="#pvfun">Physical and Virtual Functions</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">SRIOV / Single root I/O virtualization</h2>
+      <dl>
+        Bypassing the hypervisor's involvement in the communication between the
+        Guest VM driver and the hardware/devices.<br />
+        Physical(Hardware) device attached to host machine will appear as
+        seperate device to each VM.<br />
+        Hardware device must support SRIOV. Hardware device must provide an
+        independent memory space, interrupts, DMA streams to each virtual
+        machine
+      </dl>
+
+      <h2 id="pvfun">Physical and Virtual Functions</h2>
+      <dl>
+        Physical Function? PFs are full PCIe functions ie access to complete
+        PCIe space. This is provided to host OS. <br />
+        Virtual Function? VFs provide to virtual devices.
+      </dl>
+      <img
+        src="/images/operating_system/Virtulization/sriovarchitecture.jpg"
+        alt="SRIOV"
+        style="width: 700px; height: 400px"
+      />
+    </article>
+  </body>
+</html>

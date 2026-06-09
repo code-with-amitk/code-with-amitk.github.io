@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3 Way Comparator</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is 3 way Comparator</h2>
+        <dl>
+            <b>a &lt;=> b</b> Compares the 2 variables(a,b) around it, and returns a value based on a and b<br>
+            See example below
+        </dl>
+        <pre><code class="language-css">
+#include &lt;compare>
+#include &lt;iostream>
+    
+int main()
+{
+    int a = 2, b = 1;
+    auto res = a &lt;=> b;      //Since a is greater than b. res>1
+    /*              res
+        a > b       >1
+        a &lt; b   &lt;1
+        a == b      0
+    */
+    if (res > 0)
+        std::cout &lt;&lt; "a greater than b";
+    else
+        std::cout &lt;&lt; "a not greater than b";
+}
+# ./a.out
+a greater than b
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

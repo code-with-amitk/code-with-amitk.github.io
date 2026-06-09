@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cmake Introduction</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What</a>
+      <a href="#vs">Makefile vs CMake</a>
+      <a href="#install">Install</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">CMake</h2>
+      <dl>
+        CMake is open-source, cross-platform build system generator, which
+        generates build files(Eg Makefile, Ninja, Visual Studio, Xcode etc).<br />
+        CMake is called Meta build system because it does not builds source code
+        to produce software builds (ie exe or a.out) but generates a build
+        system based on project, environment, and user-provided configuration
+        information<br />
+        CMake is CASE SENSITIVE language.
+      </dl>
+
+      <h2 id="vs">CMake vs Makefile</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Makefile</th>
+          <th>CMake</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            <a
+              href="https://github.com/code-with-amitk/Code-examples/blob/master/Languages/Programming_Languages/C/Makefile/README.md"
+              target="_blank"
+              >Makefile</a
+            >
+            is a file defining how files are compiled and linked.
+          </td>
+          <td>
+            CMake, instead, uses a CMakeLists.txt file to describe targets,
+            sources, and dependencies and generates Makefiles
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="install">Install</h2>
+      <h4>Linux</h4>
+      <pre><code class="language-css">
+sudo apt install cmake
+cmake --version
+      </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

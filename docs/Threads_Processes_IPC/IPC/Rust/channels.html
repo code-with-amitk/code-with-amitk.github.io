@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IPC Channels</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#types">Types of Channels</a>
+      <ul>
+        <li><a href="#mpsc">Multi-Producer, Single-Consumer</a></li>
+        <li><a href="#mpmc">Multi-Producer, Multiple-Consumer</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="channel">Rust Channel(for IPC)</h2>
+      <dl>
+        Sender &lt;T> and Receiver &lt;T> are connected via Channel. They can
+        send/recv data via channel.
+      </dl>
+
+      <h2 id="types">Types of Channels</h2>
+      <h3 id="mpsc">1. Multi-Producer, Single-Consumer (mpsc)</h3>
+      <dl>
+        <b>Provided by:</b> Standard library<br />
+        <b id="unbounded">Unbounded?</b> Yes. Means that the channel has no
+        limit on the number of messages it can hold at a time. Sender can
+        continue sending messages indefinitely, they will accumulate in memory
+        until the receiver consumes them.<br />
+        <b id="asynchronous">Asynchronous:</b> No. Means that the sending and
+        receiving operations are non-blocking Sender and receiver can proceed
+        independently. This is
+        <b>synchronous(ie blocking)</b>
+      </dl>
+
+      <table>
+        <tr>
+          <th id="11unbounded">1 Sender 1 Reciever (Unbounded, synchronous)</th>
+          <th id="41">4 Sender 1 Reciever (Unbounded, synchronous)</th>
+          <th id="11bounded">1 Sender 1 Reciever (Bounded, synchronous)</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+fn main() {
+let (tx, rx) = std::sync::mpsc::channel();
+match tx.send(1) {      //send() returns Result
+    Ok(_o) => {
+        println!("Sent");
+    },
+    Err(e) => println!("Sending error {}", e)
+};
+match rx.recv() {       //recv() returns Result
+    Ok(o) => {
+        println!("Recieved {}", o);
+    },
+    Err(e) => println!("Sending error {}", e)
+};
+}
+$ cargo run
+Sent
+Recieved 1
+                    </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+use std::{sync::mpsc, thread};
+fn main() {
+println!("Hello, world!");
+let mut handles = vec![];
+let (t,r) = mpsc::channel();
+for i in 0..3 {
+    let tx = t.clone();
+    // Create 3 threads using for loop
+    // And push joinHandles inside vector
+    handles.push(thread::spawn(move || {
+        match tx.send(i) {
+            Ok(_o) => {
+                println!("Sent by thread {}", i);
+            },
+            Err(e) => {
+                println!("Send Error {}", e);
+            }
+        };
+    }));
+}
+drop(t);
+
+// Single Reciever, recieves all messages
+loop {
+    match r.recv() {
+        Ok(o) => {
+            println!("Rcvd {}", o);
+        },
+        Err(e) => {
+            println!("Recv Error {}", e);
+            break;
+        }
+    };
+}
+
+// Wait on thread's Handles
+for h in handles {
+    h.join().unwrap();
+}
+}
+                    </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+use std::thread;
+use std::time::Duration;
+use std::sync::mpsc;
+
+fn main() {
+let mut handles = vec![];
+
+// Create a synchronous channel with a buffer size of 1
+let (t,r) = mpsc::sync_channel:: &lt;i32>(1);
+
+// Create 3 threads using a for loop
+for i in 0..3 {
+    let tx = t.clone();     // Clone the sender for each thread
+    // Spawn a new thread
+    let handle = thread::spawn(move || {
+        println!("Thread {} has finished", i);
+        tx.send(i as i32).unwrap();
+    });
+
+    // Store the thread handle to join later
+    handles.push(handle);
+}
+
+// Receive messages from threads
+for _ in 0..3 {
+    let received = r.recv().unwrap(); // Receive from the channel
+    println!("Received from thread: {}", received);
+}
+
+// Wait for all threads to finish
+for handle in handles {
+    handle.join().unwrap();
+}
+
+println!("All threads have completed.");
+}
+$ cargo run
+Thread 0 has finished
+Thread 1 has finished
+Thread 2 has finished
+Received from thread: 0
+Received from thread: 1
+Received from thread: 2
+All threads have completed.
+                    </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="mpmc">2. Multi-Producer, Multiple-Consumer</h3>
+      <dl>
+        <b>Provided by:</b> tokio runtime<br />
+        <b><a href="#unbounded">Unbounded:</a></b> yes<br />
+        <b><a href="#asynchronous">Asynchronous</a>:</b> yes <br /><br />
+
+        <b> multi consumer, producer(Unbounded, Asynchronous) </b>
+      </dl>
+      <pre><code class="language-css">
+# Cargo.toml
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+async-channel = {version = "1.5"}
+
+# main.rs
+use async_channel;
+use tokio::task;
+use tokio;
+use tokio::sync::Mutex;
+use std::sync::Arc;
+
+async fn send_thread(t: async_channel::Sender &lt;Arc&lt;Mutex&lt;i32>>>, var: Arc&lt;Mutex&lt;i32>>) {
+{
+    let mut a= var.lock().await;        //returns MutexGuard&lt;_, i32>
+    *a += 1;
+}
+match t.send(var).await{    //returns Result&lt;(), SendError&lt;i32>>
+    Ok(_o) => {
+        println!("Sent Arc&lt;Mutex> on channel");
+    }, 
+    Err(e) => {
+        println!("Error: {}", e);
+    }
+};
+
+}
+async fn recv_thread(r: async_channel::Receiver&lt;Arc&lt;Mutex&lt;i32>>>) {
+match r.recv().await{    //returns MutexGuard&lt;_, i32>
+    Ok(o) => {
+        println!("Recieved Mutex");
+        let a = o.lock().await;
+        println!("{} ", *a);
+    }, 
+    Err(e) => {
+        println!("Error: {}", e);
+    }
+};
+}
+#[tokio::main]
+async fn main() {
+//This would be passed between threads
+let var = Arc::new(Mutex::new(0));
+let mut handles = vec![];
+let (t, r) = async_channel::unbounded();
+// Create 3 tokio tasks, sending on channel
+for _ in 0..3 {
+    let tx = t.clone();
+    let var_clone = var.clone();
+    let handle = task::spawn(send_thread(tx, var_clone));
+    handles.push(handle);
+}
+
+for _ in 0..3 {
+    let rx = r.clone();
+    let handle = task::spawn(recv_thread(rx));
+    handles.push(handle);
+}
+
+for h in handles {
+    h.await.unwrap();
+}
+}
+            </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

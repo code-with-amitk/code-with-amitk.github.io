@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gateway</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#srx">SRX</a>
+        <ul>
+            <li><a href="#authtable">Authentication Table</a></li>
+            <li><a href="#commands">Commands</a></li>
+        </ul>        
+    </aside>
+
+    <main>
+        <article style="margin-left:200px;">
+            <h3 id="srx">SRX</h3>
+            <dt><u>Security Poilcy</u></dt>
+            <p>Set of rules(Rules: Permit, deny or tunnel) that determine how network traffic is controlled, inspected, and allowed or denied
+            </p>
+
+            <dt><u>Domain based policies</u></dt>
+            <p>Policies are created to manage traffic between different security domains/zones.<br>
+                    For example, you might have separate zones for the internal network, the DMZ, and 
+                    external networks. Policies define how traffic is allowed or denied between these zones.
+            </p>
+    
+            <dt><u>Group based policies</u></dt>
+            <p>Policies can also be based on user groups. User group policies can be configured to apply different 
+                rules based on group membership.<br>
+                For example, you can create rules for specific groups of users, granting or denying access to certain 
+                resources or applications.
+            </p>
+
+            <dl id="authtable"><strong>Authentication Table</strong></dl>
+            <p>Authentication table contains the IP addresses of active users. Each entry contains:<br>
+                    username, device IP(from where logged in), domainname, groups.
+            </p>
+            <pre><code class="language-css">
+                1. On qa-central or dav-central.
+                $ get_vsrx_tanant <tanent-id>
+                  TenantPop: uuid1
+                    srx: ip-address-1
+                  TenantPop: uuid2
+                    srx: ip-address-2
+                  TenantPop: uuid3
+                    srx: ip-address-3
+                
+                2. Login to any srx
+                $ ssh root@ip-address-2
+                Password:
+                # run show services user-identification authentication-table authentication-source all
+                Total entries: 8
+                Key            Username       groups(Ref by policy)   state
+                1.2.3.4        administrator                          Valid
+                4.5.6.6        amit                                   Valid             //user=amit logged with IP
+                
+                # run show services user-identification authentication-table authentication-source all extensive
+                Domain: test.com
+                    IP: 1.2.3.4
+                    username: User
+                    groups: g1,g2
+                    state: Valid
+                    timestamp:
+                    age: 150
+            </code></pre>
+
+            <dl id="commands"><strong>Commands</strong></dl>
+            <dd>IP Addresses</dd>
+            <pre>
+              > cli
+              > show interfaces terse
+            </pre>
+
+            <dd>JIMS Configuration</dd>
+            <pre><code class="language-css">
+              root# cli
+              root> edit
+
+              Entering configuration mode
+              root# show | display set                              //All services
+              set version 10.4R
+              set global interfaces 1o0 ...........   //Interfaces for connectivity
+              set                                     //zones
+              ..                                      //Policies
+              
+              # show services user-identification | display set     //for JIMS
+              set services user-identification device-information authentication-source-network-access-controller
+              set services user-identification device-information end-user-profile profile-name a domain-name <>
+              set services user-identification device-information end-user-profile profile-name a-group device-identity string <>
+              set services user-identification identity-maangement connection connect-method https
+              
+              delete services user-identification identity-maangement connection connect-method https        //To delete config
+              
+              set services user-identification identity-maangement connection port 443
+              set services user-identification identity-maangement connection primary address jims-IP        //Primary
+              set services user-identification identity-maangement connection primary client-id test
+              set services user-identification identity-maangement connection primary client-secret test
+              set services user-identification identity-maangement connection secondary address jims-IP      //Secondary
+              set services user-identification identity-maangement connection secondary client-id test
+              set services user-identification identity-maangement connection secondary client-secret <>
+              set services user-identification identity-maangement batch-query items-per-batch 100
+              set services user-identification identity-maangement batch-query query-interval 5
+              
+              root# deactivate services user-identification identity-management connection secondary          //Deactivate Secondary
+              root# commit
+              root# set services user-identification identity-maangement connection primary address jims-IP   //Set New Primary
+              root# commit
+              root# set services user-identification identity-maangement connection primary client-secret test
+              root# commit
+            </code></pre>
+
+            <dd>Logging</dd>
+            <pre><code class="language-css">
+              exit
+              exit
+              > configure
+              Entering configuration mode
+              # set services user-identification identity-maangement traceoptions file test.txt
+              # set services user-identification identity-maangement traceoptions flag all
+              # set services user-identification identity-maangement traceoptions level all
+              # exit
+              Exiting configuration mode
+              > exit
+              > cat /var/log/test.txt
+              Batch query logs
+              
+              set groups jims-server services user-identification identity-management traceoptions file jims_query.log
+              set groups jims-server services user-identification identity-management traceoptions file size 10M
+              set groups jims-server services user-identification identity-management traceoptions level all
+              set groups jims-server services user-identification identity-management traceoptions flag all
+              set groups jims-server services user-identification identity-management traceoptions flag jims-validator-query
+              
+              show log jims-query.log
+              or
+              goto shell prompt and open /var/log/jims-query.log
+            </code></pre>
+
+            <dd>Counters, Status</dd>
+            <pre><code class="language-css">
+              # run show services user-identification identity-management counters
+              # run show services user-identification identity-management status
+                          Primary server :
+                          Address                      : ip
+                          Port                         : 443
+                          Source                       : Automatic
+                          Interface                    : Automatic
+                          Routing-instance             : Automatic
+                          Connection method            : HTTPS
+                          Connection status            : Online
+                          Last received status message : OK (200)
+                          Access token                 : <>
+                          Token expire time            : 2022-01-31 16:20:08
+              
+                          Secondary server :
+                          Address                      : ip
+                          Port                         : 443
+                          Source                       : Automatic
+                          Interface                    : Automatic
+                          Routing-instance             : Automatic
+                          Connection method            : HTTPS
+                          Connection status            : Online
+                          Last received status message : OK (200)
+                          Access token                 : <>
+                          Token expire time            : 2022-01-31 16:22:19
+                  </code></pre>
+
+            <dd>Reboot</dd>
+            <pre>
+                # reboot
+            </pre>
+
+            <dd>Groups from Domain</dd>
+            <pre>
+                > cli
+                > request services user-identification authentication-source jims groups domain test.com status
+                node0:
+                -------------------------------------------
+                Server-type: JIMS
+                Domain: test.com
+                Groups: finished:(800 groups are Processed)
+            </pre>
+
+            <img 
+            src="//www.plantuml.com/plantuml/png/TLF1Rjf04BtlLuoKIo8r80ogg1MYe2G7ggIXCMbxY5Gjzc1Mc5spkwP1yiTtnWQnf2a7aD-yUVCUCxvnNbfVhGjHqgzALIcrXygX1UcWWhDIwTL9RPnwjSKxPJ7rnkwO9ZCuwsSo6qOdpA-Jn-JM54L3P5vg2YQcmyNm7sA2TjiETNRBh2_o7Ilv_j2KDuq83llloi-_skwtjanc10-yl2P_CIJLtALMpH7kjwYz4q8RZs1uQ2LUE71XSgK5wWou9Af3QuD3q1061lgqaimxJp2jhFAx2z5WCTKd937u70q4m6nNOWmF9ZUQdcujIe_PJAq9lBfkJ1mQnhFxPFRAUo0WcTp587uQkqgyzCfePdsJt7Rxz3ZjSSyqXbudwlGx0v7idCSrSvunDJPZlLxKZmQzOpWXCuh76ubRzsJgd5rU1363VR4BRoo2qf3AT8c2lOq2cmMd2e4WteZI7KUtM-4znp2r9aNdC8E9NfXN_QhXvLIO45MUFhUnzlfZJ-e4vjPKfHlblKzv94Yx6R6XUExWsyjvGUFvGWxZdsJbb-3D2bbr4sGFhr0jphc99BBvXG0ehTcgZ8ZSVGos7qhK6CnHMFn75MW_50hkTLOQfRtepgLFbxyt5TfTTnjrEQqxofyO_vWRnixHmn6zkcpH0_B622krI9ijT1g-HxqEJ4rP5TAZ4sCAXjghb2_nyAS6BWlCwK6Cu4DYlS9TpHlMSesryoHPYtf_kJLxgN_8GcNGRIADv5erBrQE6VnHVac7NhVJzdDkwAjQ5ty1"
+            alt="srx authentication table" >
+            <pre class="puml" visibility: hidden>
+                @startuml
+                participant user as u #pink
+                participant ActiveDirectory as ad #3dad82
+                participant JIMSCollector as col #3dc8f8
+                participant JIMSServer as srv #3d9af8
+                participant SQL as sql #3de838
+                participant SRX as srx #3de882
+                
+                col -> ad: Subscribe Events
+                
+                note over u
+                User login
+                end note
+                u -> ad: login 
+                
+                note over ad #3dad82
+                     Event log(Security)
+                Event:
+                  Id: 4624
+                  Type: Logon
+                  CreatedTime: <>
+                User:
+                  Id: ATEST\user
+                  SID: 
+                WorkStation:
+                  Name: COMP1
+                  IP: 1.2.3.4
+                System:
+                  RecordId: 123241
+                end note
+                
+                ad -> col: EventLog(4624)
+                note over col #3dc8f8
+                  Store in cache
+                user=ATEST\user
+                logon=ATEST\user
+                CreatedTime=<>
+                end note
+                
+                col -> srv: Processed Info\n\n User=ATEST\user\n ip=ATEST\user\n RecordCreatedAt=<>\n groups=g1,g2
+                srv -> sql: store in table
+                
+                srx -> srv: Oauth token Req
+                note over srv #3d9af8
+                if(srx in db)
+                  provide oauth
+                end note
+                srv -> srx: oauth token
+                
+                note over srv #3d9af8
+                   REST Endpoint
+                /batch_query/v2/users
+                end note
+                
+                srx -> srv: /batch_query/v2/users
+                srv -> sql: get users
+                srv <- sql: users
+                srx <- srv: users in db
+                
+                note over srx #3de882
+                1. Populates
+                Authentication table
+                
+                end note
+                
+                legend
+                = Authentication table
+                |key|Username|state|
+                |1.2.3.4|user|Valid //user=amit logged with IP|
+                
+                end legend
+                @enduml
+            </pre>
+
+        </article>
+    </main>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    </script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

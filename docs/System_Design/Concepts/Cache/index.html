@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cache</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+  <aside class="sidebar">
+    <a href="#what">What is Cache</a>
+    <a href="#types">Types of Cache</a>
+    <a href="#where">Where Caches can be placed?</a>
+    <a href="#appserveranddb">Cache Between AppServer & DB</a>
+    <ul>
+      <li><a href="#eviction">Cache Eviction Policies</a></li>
+      <li><a href="#redisvmemcached">Redis vs Memcached</a></li>
+    </ul>
+  </aside>
+
+  <main style="margin-left:200px;">
+    <h2 id="what">What is Cache?</h2>
+    <dl>
+      Cache is temporary storage that stores the result of frequently accessed data in memory so that subsequent requests are served more quickly<br>
+      <b>What data should be cached?</b>
+      Mostly used, less frequently changing data is stored in cache. (Eg: Metadata, configuration data)<br>
+      <b>What should not be cached?</b> Data that is frequently/actively changing.<br>
+      Cache lies near to requester so that requester need not to go hard-disk to retrieve data. This reduces latency.
+    </dl>
+
+    <h2 id="types">Types of Cache</h2>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>1. Write Thru Cache</td>
+        <td>
+          Data written to cache and DB both. 1st to cache then to DB. Latency is high<br>
+          Disadvantage: Cache flooding
+        </td>
+      </tr>
+      <tr>
+        <td>2. Write Around Cache</td>
+        <td>
+          Data is directly written on DB. Then later cache updates itself from DB<br>
+          Cache flooding is avoided
+        </td>
+      </tr>
+      <tr>
+        <td>3. Write Back Cache</td>
+        <td>
+          Data is directly written to cache only. Then later DB updates itself from cache<br>
+          Disadvantage: Risk of Data loss(cache may fail)
+        </td>
+      </tr>
+    </table>
+
+    <h2 id="where">Where Caches can be placed?</h2>
+    <table>
+      <tr>
+        <th>Place</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Web Browser Cache</td>
+        <td>
+          <table>
+            <tr>
+              <td>
+                Browser stores local copies of web resources for faster retrieval the next time on Hard-disk. <br>
+                Ex: Once browser downloads CSS, JS files, images (for a session) there is no need again to download<br>
+                from same server and can be cached <br><br>
+                <b>CACHE-CONTROL HEADER:</b><br>
+                HTTP server instructs browser(http client) to cache a particular content for<br>
+                 TTL duration in cache control header. Format: Response Header {cache-control: public, max-age: 45223} <br>
+                 
+                 <img src="/images/databases/cache/http_response_header.png" style="width:250px;height:250px;">
+              </td>
+              <td>
+                <img
+                src="//www.plantuml.com/plantuml/png/RP3FIWCn48VlynJ3UbKVm8CMbs8FAWLNl7Z9do4Tkfq9ITRKjpUbGIZq6BxlzmLcbOj9PJdC05QFE8mpanHyCsx7GWFUl7BObItB7emhcl0pKqAJSO7OXkmuckO_9wqTs0imZAr4twA26vEyvxmVJfO34e_jIxZGlyX-KFevbse6MF3k4Uq3RgPfYo_h2ODgcEdUwG7iYRd6cXjDe2TmtNxNCwpv-hBcBeugXQJyf_hx5jV7oEaNOKNYstN-0000"
+                alt="Browser cache" class="zoomable-image" id="zoomableImage2" style="width:200px;height:250px;">
+                <pre class="puml" visibility: hidden>
+                  @startuml
+      
+                  box "Client Machine" #LightPink
+                  actor User as u
+                  participant Browser as b
+                  participant "Cache\non Harddisk" as c
+                  end box
+                  
+                  participant WebServer as ws
+                  
+                  u -> b: HTTP GET google.com
+                  b -> c: Has page?
+                  c -> b: No
+                  b -> ws: HTTP GET google.com
+                  ws -> b: Content
+                  b -> c: Content, Expiry 
+                  @enduml
+                </pre>      
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>Between Application Server and Database</td>
+        <td></td>
+      </tr>
+    </table>
+
+    <h2 id="appserveranddb">Cache Between AppServer & DB</h2>
+    <h3 id="eviction">Cache Eviction Policies</h3>
+    <dl>
+      No eviction returning an error the memory limit is reached<br>
+      All keys LRU removing keys by the least recently used first<br>
+      Volatile LRU removing keys, that have an expiration time set, by the least recently used first.<br>
+      All keys random removing keys randomly<br>
+      Volatile random removing keys, that have an expiration time set, randomly<br>
+      Volatile TTL removing keys, that have an expiration time set, by the shortest time to live first.
+    </dl>
+
+    <h3 id="redisvmemcached">Redis vs Memcached</h3>
+    <table>
+      <tr>
+        <th></th>
+        <th>Redis (Open source implemented in C)</th>
+        <th>Memcached(Open source implemented in C)</th>
+      </tr>
+      <tr>
+        <td>In Memory</td>
+        <td>y</td>
+        <td>y</td>
+      </tr>
+      <tr>
+        <td>Key-value pair</td>
+        <td>y (key &lt; 250B, value &lt; 1MB) </td>
+        <td>y (key &lt; 512MB, value &lt; 512MB) </td>
+      </tr>
+      <tr>
+        <td>Speed</td>
+        <td>less. It does not have any inbuilt datatypes</td>
+        <td>
+          More. Bcoz it supports datatypes as(string,hash,list,set,sorted set etc)
+        </td>
+      </tr>
+      <tr>
+        <td>How internally implemented</td>
+        <td>Slab Allocator</td>
+        <td>Encapsulated version of the malloc/free</td>
+      </tr>
+      <tr>
+        <td>Scaling</td>
+        <td>Multi-threaded. Scales vertically. Give more cores, more memory</td>
+        <td>Single Threaded. Scales horizontally</td>
+      </tr>
+      <tr>
+        <td>Cache Eviction policies</td>
+        <td>Only 1 LRU</td>
+        <td>6 different policies</td>
+      </tr>
+    </table>
+
+  </main>
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+</html>

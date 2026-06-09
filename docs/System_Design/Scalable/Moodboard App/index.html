@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Moodboard App</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#what">What is Moodboard?</a>
+    <a href="#req">Requirements</a>
+    <a href="#boe">BOE</a>
+    <a href="#api">System APIs</a>
+    <a href="#db">DB</a>
+    <a href="#hld">HLD</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="what">What is Moodboard (Digital pinboard) = ID App by Amo</h2>
+    <dl>
+      Suppose you are going on vacation and you created pinboard where you will pin (photos, videos, text)
+    </dl>
+
+    <h2 id="req">Requirements</h2>
+    <h4>Functional (CRUD)</h4>
+    <dl>
+      <dt id="req_create">1. Create. User can create the pinboard</dt>
+      <dt id="req_read">2. Read. User can see the created pinboard</dt>
+      <dt id="req_update">3. Update. User can add/delete/update text/video/image on pinboard</dt>
+      <dt id="req_delete">4. Delete. User can delete pinboard</dt>
+    </dl>
+
+    <h4>Non-Functional</h4>
+    <dl>
+      <dt id="req_reliable">1. Reliable. Once board created, it should be not autoremove image,text,video on board</dt>
+      <dt id="req_latency">2. Latency: No latency in viewing/editing the Moodboard</dt>
+      <dt id="req_secure">3. Secure: Board should be visible to friends only</dt>
+    </dl>
+
+    <h2 id="boe">BOE</h2>
+    <dl>
+      BW requirements not huge, User can create video(upload), then photo(upload) etc.
+    </dl>
+
+    <h2 id="api">System APIs (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
+    <dl>
+    <a href="/Networking/OSI-Layers/Layer-7/REST%20API">REST API? <br>REST API Versioning(v1,v2)</a>
+    </dl>
+    <table>
+      <tr>
+        <th><h4><a href="#req_create">1. Create</a></h4></th>
+        <th><h4><a href="#req_read">2. Read</a></h4></th>
+        <th><h4><a href="#req_update">3. Update</a></h4></th>
+        <th><h4><a href="#req_delete">4. Delete</a></h4></th>
+      </tr>
+      <tr>
+        <td>
+          <pre><code class="language-css">
+curl -X POST -H "Content-Type: application/json" 
+-d '{"name": "board_us"}' http://127.0.0.1:8080/v1/board/create -vvv
+          </code></pre>
+        </td>
+        <td><pre><code class="language-css">
+curl -X GET http://127.0.0.1:8080/v1/board/get -vvv
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X PUT -H "Content-Type: application/json" -d 
+'{"old_name": "board", "new_name": "NewBoard2"}' 
+http://127.0.0.1:8080/v1/board/update -vvv
+        </code></pre></td>
+        <td><pre><code class="language-css">
+curl -X DELETE -H "Content-Type: application/json" 
+-d '{"old_name": "board_us"}' 
+http://127.0.0.1:8080/v1/board/delete -vvv
+        </code></pre></td>
+      </tr>
+
+      <tr>
+        <td><pre><code class="language-css">
+POST https://url/v1/board/create   //url=id.amo.com
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+
+  /*Mandatory added by HTTP Start*/
+  Content-len: 0                        
+  Host:        //Calculated when req is sent
+  UserAgent: Postman
+  Accept: */*       
+  Accept-Encoding: gzip, deflate, br
+  Connection: Keepalive
+  /*Mandatory added by HTTP End*/
+}
+body {  //JSON
+  //Suppose travelling to US
+  name: us_board
+}
+          </code></pre></td>
+          <td><pre><code class="language-css">
+//All boards of a user
+GET https://url/v1/boards
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "old_name": "Board", 
+  "new_name": "NewBoard2"
+}
+          </code></pre></td>
+          <td><pre><code class="language-css">
+// Update existing board name
+PUT http://url/v1/board/update
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+          </code></pre></td>
+        <td><pre><code class="language-css">
+// Delete existing board name
+Delete http://url:8080/v1/board/delete
+header {
+  Authorization: {Bearer "API_KEY_TOKEN"},
+  ..other fields..
+}
+body {  //JSON
+  "old_name": "Board_to_be_deleted", 
+  "new_name": "test"
+}
+        </code></pre></td>
+      </tr>
+    </table>
+
+    <h2 id="db">DB Schema</h2>
+    <dl><a href="/System_Design/Concepts/Databases/Graph%20DB/">Graph DB</a></dl>
+    <pre><code class="language-css">
+user Table
+| userid(pk) | username | created_at(timestamp) | enabled |
+
+password Table 
+| user_id(pk) | password_hash | created_at | expiry_at |
+
+- Photos, Videos will be stored in Object Store
+- Friends list, comments would be stored in Graph DB.
+ 
+Photo Table
+| photo_id(pk) | photo_url(url on object store) | user_id (fk) | comment_id |
+
+MoodBoard Table
+| moodboard_id(pk) | user_id(fk) | 
+    </code></pre>
+
+    <h2 id="hld">HLD</h2>
+    <h3>
+      <a href="#req_read">1. Reading moodboard</a><br>
+      <a href="#req_update">2. Updating moodboard (ie upload photo)</a><br>
+    </h3>
+    <table>
+      <tr>
+        <th>1 user</th>
+        <th>1 Million users</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="image-container">
+            <img 
+              src="//www.plantuml.com/plantuml/png/jLFFJ-Cw4BxxhnY5ItagUdgyMoLMqDBTHPIbQjDRBnDxQ0E9nsjFME2ltpWMJOEGzhIdsD_d-RxvCRaCWbwQkbAeXJri0dd008qg-0MoQnI46LaXdm70oUmLhNBefTIbGokmO3HJhD3g55SL0_hAkJNvvyHXK3yRQWXkyU498_BK7U1aKUxsiYpjqo0uM-vPU6kNdZM5m3wBCGu7ZwvB2bH5mdGdPL2mm41mFUtGGf4rq5RJCzbzyKXQriAUjlQgnZUsiFw_a-VGvZFr_CigrS3P5wYA2NpFyoLyc-TGCvk2qHjL5P74y2c98P8feGbaw_bYFilX7_Ywkh_BLCAx5yKdx45OinMoeYmB0QScgfad54gcAmgERI0rPVCwEjYVTXN7g9G8D9EZt8xa6dM00uHzh5aOca2-LnWyxxOZK4LQGXzx3cYDCfuTk3WnOAiqipUbHQ40evVnQv_JnxOkD_beummAdMvjzBun5_-D-uJRw_dMlZVZegnnHsEeMAEKR2ywyQrDneslUlKEwkVqTznw-MGt7DOpLcNqIkH4dG5gJKwmg0WUsDSeeqUt6pkxEnsIeNoZ5h4iy5pw9lJjIpDDlywxQtU9g3j0VHuEbQUeDmRDjMlFnsgkY-D30V6U5lEE10qA0Zzyr6nvjLajmhygtpTrOR6iZZM7wt_pOprVvUqdlz_QGwEXgtFmB_pXQR_CLxFRCQGfGcYqZXMfIxAcgQlV"
+              alt="mpls" style="width:400px;height:400px;" class="zoomable-image" id="zoomableImage">
+          </div>
+          <pre class="puml" visibility: hidden>
+            @startuml
+            actor User as u
+            box "Data Center"   #Cyan
+            participant LoadBalancer as lb
+            participant AppServer as as
+            queue Kafka as kafka  #LightPink
+            participant "Photo\nProcessor" as pa
+            participant Diesel as diesel
+            database DB as db
+            end box
+            database "ObjectStore\nAmazon S3" as os  #Brown
+            
+            u -> lb: HTTP GET moodboard
+            lb -> as: HTTP GET moodboard
+            as -> diesel: "SELECT * FROM"
+            diesel -> db: "SELECT * FROM"
+            db -> as: content
+            note over as
+            Create HTTP Response
+            Body(moodboard)
+            end note
+            as -> u: moodboard
+            
+            note over u
+            moodboards shown
+            to user
+            end note
+            
+            note over u
+            User selects
+            moodboard2 and
+            drop photo on
+            coordinates (x,y)
+            end note
+            
+            u -> lb: HTTP PUT(Update)\nuserId=1, moodboardId=2\n content=image, location=(x,y)\nphoto url
+            u -> lb: photo
+            lb -> as: HTTP PUT(Update)\nuserId=1, moodboardId=2\n content=image, location=(x,y)\nphoto url
+            lb -> as: photo
+            
+            note over as
+            validate photo:
+            - acceptable format(jpg,png)
+            - acceptable size
+            - not virus
+            end note
+            
+            as -> kafka: photo
+            kafka -> pa: photo
+            note over pa
+            resize, compress
+            end note
+            
+            pa -> os: photo
+            pa -> db: Metadata of photo
+            note over db
+            URLs/
+            Thumbnails
+            end note
+            
+            as -> diesel: INSERT INTO\nmoodboard table
+            diesel -> db: INSERT INTO\nmoodboard table
+            
+            as -> u: ACK, Update success
+            
+            @enduml
+          </pre>
+        </td>
+        <td>
+          <table>
+            <tr>
+              <th>Issue</th>
+              <th>Solution</th>
+            </tr>
+            <tr>
+              <td>
+                Single Point of Failure<br>
+                1 Application Server, 1 DB might fail
+              </td>
+              <td>
+                Multiple Application Servers. 
+                <a href="https://github.com/code-with-amitk/Code-examples/blob/master/System-Design/Concepts/Containers/Kubernets/Helm-Chart/Files_in_HelmChart/README.md">Autoscaling using Helm Chart</a><br>
+                Multiple <a href="/System_Design/Concepts/Databases/DB_Scaling">Database Replication</a>
+              </td>
+            </tr>
+            <tr>
+              <td>Scalabilty Issues</td>
+              <td>On heavy load in addition to Load Balancing, 
+                <a href="/System_Design/Concepts/Databases/DB_Scaling/Sharding/">Sharding</a> would be helpful</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table> 
+
+  </article>
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+</html>

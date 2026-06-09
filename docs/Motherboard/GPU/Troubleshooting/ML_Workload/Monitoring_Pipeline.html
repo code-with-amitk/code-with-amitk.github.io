@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monitoring Pipeline</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#pipeline">Monitoring Pipeline</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="pipeline">Monitoring Pipeline</h3>
+        <dl>
+            We have GPU farm, 1000's of GPUs where ML workload need to be run<br><br>
+            
+            <b>On GPU following processes would be running:</b><br>
+            <u>1. ML Job</u><br><br>
+
+            <a href="../GPU_Metrics_Collection.html">2. GPU Metrics Collector(seperate process):</a> collects metrics, exposes to prometheus on 8000. Metrics:<br>
+            &ensp; GPU utilization (%)<br>
+            &ensp; Memory(Total available/Used Memory/cached)<br>
+            &ensp; Temperature<br>
+            &ensp; Active processes<br>
+            <br><br>
+
+            <u>3. ML Log Monitor(seperate process):</u> collects application errors<br>
+            &ensp; OOM errors<br>
+            &ensp; CUDA errors<br>
+            &ensp; Numerical instability warnings<br>
+            &ensp; Training divergence<br>
+            &ensp; Hardware errors<br>
+            Should parse both stdout/stderr and log files.<br><br>
+
+            <a href="../Health_Checker.html">4. Health Checker(seperate process):</a> Takes preventive measures, if values goes above threshold<br>
+        </dl>
+        
+        <table>
+            <tr>
+                <th>Detects</th>
+                <th>Condition</th>
+                <th>Response</th>
+            </tr>
+            <tr>
+                <td>High temperature</td>
+                <td><pre><code>
+if gpu_temp > 85°C
+                </code></pre></td>
+                <td>
+                    Throttle(less) training speed
+                </td>
+            </tr>
+            <tr>
+                <td>High Memory</td>
+                <td><pre><code>
+if gpu_mem > 90%
+                </code></pre></td>
+                <td>
+                    Memory Cleanup. Clear caches
+                </td>
+            </tr>
+            <tr>
+                <td>Hung Process</td>
+                <td>
+                    Deadlock (no progress)
+                </td>
+                <td>
+                    Kill hanging threads
+                </td>
+            </tr>
+            <tr>
+                <td>ML Process → Hits OOM Error</td>
+                <td>Detects in logs</td>
+                <td>Triggers → Reduce batch size</td>
+            </tr>
+        </table>
+
+        <pre><code>
+Docker Container (per GPU):
+├── Main ML Process (PID 1)
+├── GPU Monitor Daemon (port 8000/metrics)
+├── Log Monitor Thread
+├── Health Checker Thread
+└── Metrics Exporter (Prometheus client)
+        </code></pre>
+        
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Database Transactions</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Transaction</a>
+      <a href="#terms">Terms</a>
+      <ul>
+        <a href="#dirtyread">Dirty Read</a>
+        <a href="#readskew">Read Skew</a>
+        <a href="#dirtywrite">Dirty Write</a>
+        <a href="#writeskew">Write Skew</a>
+      </ul>
+      <a href="#dt">Distributed Transactions</a>
+      <ul>
+        <a href="#2pc">2Phase Commit</a>
+        <a href="#features">Features of DT</a>
+        <a href="#problems">Problems with DT</a>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Transaction</h2>
+      <dl>
+        A transaction is a way for an application to group several reads and
+        writes together into a logical unit.<br />
+        Application sends data packet to DbMgr. DB Manager will not write every
+        packet to database but it groups several reads/writes together into a
+        logical unit called transaction.<br />
+        Conceptually, all the reads and writes in a transaction are executed as
+        one operation: either the entire transaction succeeds (commit) or it
+        fails (abort, rollback).<br />
+        If it fails, the application can safely retry.
+        <pre><code class="language-css">
+                                            |----|
+Application ---data pkt----> |DB Manager|   | DB |
+                                            |----|
+      </code></pre>
+        <b>Why Transaction is needed?</b><br />
+        1. <a href="/System_Design/Concepts/Databases/">Atomicity</a>: if
+        Application is writing 20KB json document to DB. After 10KB node
+        crashes, User will see partially updated values which is Wrong. if write
+        is done as part of transaction into Atomic DB, partial write is
+        discarded and db moves to prev state<br />
+        2. Safety Gurantees
+      </dl>
+
+      <table>
+        <tr>
+          <th></th>
+          <th><a href="#dirtyread">Dirty Read</a></th>
+          <th><a href="#dirtywrite">Dirty Write</a></th>
+        </tr>
+        <tr>
+          <td>1. Read Committed</td>
+          <td>No</td>
+          <td>No</td>
+        </tr>
+      </table>
+
+      <h2>Terms</h2>
+      <h3>Read Related</h3>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td id="dirtyread">Dirty Read</td>
+          <td>
+            A <a href="#transaction">transaction</a> is writing some row to the
+            database, but the transaction got aborted inbetween, ie data is not
+            committed.<br />
+            if another transaction can see that uncommitted data, it is a dirty
+            read<br />
+            <b>To Prevent Dirty Read?</b> Database remembers both the old
+            committed value and the new value set by the transaction. Currently
+            ongoing write transaction holds the write lock. While the
+            transaction is ongoing, any other transactions that read the object
+            are simply given the old value. Only when the new value is committed
+            do transactions switch over to reading the new value.
+          </td>
+        </tr>
+        <tr>
+          <td id="readskew">Read Skew / Non repeatable read</td>
+          <td>
+            Say Alice has $1,000 of savings at a bank, split across two accounts
+            with $500 each. Now a transaction transfers $100 from one of her
+            accounts to the other. If she looks at balance at same moment she
+            might find 500$ in one, 400$ in another<br />
+            Solution: <a href="Isolation.html">Snapshot Isolation</a>
+          </td>
+        </tr>
+      </table>
+
+      <h3>Write Related</h3>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Decription</th>
+        </tr>
+        <tr>
+          <td id="dirtywrite">Dirty Write</td>
+          <td>
+            Two <a href="#transaction">transactions</a> concurrently try to
+            update the same row in a database. 1st write transaction was
+            uncommitted, data in DB is in inconsistent state<br />
+            On top of this incorrect data, 2nd transaction writes, this is Dirty
+            write.<br />
+            <b>To prevent dirty write?</b> Take lock over row then write a
+            transaction, if transaction fails revert the change and then release
+            the lock
+          </td>
+        </tr>
+        <tr>
+          <td id="writeskew">Write Skew / Phantom</td>
+          <td>
+            Race condition caused when 2 transactions update different rows in
+            same table after reading common data from table<br />
+            Example:<br />
+            &ensp; There is a hospital where atleast 1 doctor is required to be
+            on shift(always) in hospital.<br />
+            &ensp; Doctors can giveup their shifts if they are Sick, provided
+            atleast 1 of their collegue stays in hospital.<br />
+            &ensp; Alice & Bob are 2 doctors(on particular shift) feeling unwell
+            and decide to request leave.<br />
+            &ensp; Both click "Apply leave" button at same time.
+            <pre><code class="language-css">
+Table doctors
+name    on_call
+Alice   true
+Bob     true
+Carol   false
+
+    Alice                 doctors
+  select * from doctors
+  where on_call = true                Bob
+                &lt;---------         select * from doctors
+                            --------> where on_call = true
+   if(on_call>2)
+   update doctors
+   set on_call=false
+   where name=Alice --txn1-->
+                                    if(on_call>2)
+                        commit txn1   update doctors
+                                      set on_call=false
+                           &lt-txn2--  where name=Alice
+                        commit txn2
+Table doctors
+name    on_call
+Alice   false
+Bob     false
+Carol   false
+            </code></pre>
+            Lock cannot solve the issue, Since both transactions are updating
+            DIFFERENT ROWS in DB.<br />
+            <b>Solution:</b>
+            - if both transactions should have run one after other, txn2 will
+            get (on_call&lt;2) and write would have been prevented.
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="dt">Distributed Transaction</h2>
+      <dl>
+        Example(Customer ordering Pizza)<br />
+        &ensp; To create an order different microservices need to enter related
+        data into THEIR respective databases.<br />
+        &ensp; txn1a,txn1b,txn1c are all part of 1 transaction only. All
+        transactions should be committed together ie part of 1 transaction, if
+        any of transaction(txn1a or txn1b or txn1c) fail other transaction
+        should be reverted.<br />
+        Committing different transactions(txn1a, txn1b, txn1c) into different
+        DBs and all transactions(txn1a + txn1b + txn1c = t1) are part of 1
+        transaction is called
+        <b>DISTRIBUTED TRANSACTION</b>
+        <pre><code class="language-css">
+Customer
+   - Pizza 240/-> createOrder()
+                    |-
+                    |-customer-service --read cust id------>         DB1
+                                    &lt;-----------------
+                    |-Order-service2 --trxn1a(Write order)----->     DB2
+                    |-Kitchen-service3 --trxn1b(Enter item)--->      DB3
+                    |-Accounting-service4 --trxn1c(Create Record)--> DB4
+        </code></pre>
+      </dl>
+
+      <h3 id="2pc">
+        2 Phase Commit / 2PC (Way to acheive
+        <a href="#dt">Distributed Transaction</a>)
+      </h3>
+
+      <h4>XA Transaction / Open XA (eXtended Architecture)</h4>
+      <dl>
+        This is standard for implementing <a href="#2pc">two phase commit</a>,
+        supported by many traditional relational databases (including
+        PostgreSQL, MySQL, DB2, SQL Server, and Oracle)<br />
+        It talks about interfacing with a transaction coordinator(Broker) using
+        C APIs. Microservice should talk to DB using network driver or client
+        library.
+      </dl>
+
+      <h4 id="working">Working of 2PC (A Definite Promise)</h4>
+      <dl>
+        <b>Coordinator</b>
+        - Can be external(Zookeeper) or internal(any microservice)
+      </dl>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+                                                                |-------------- Distributed DB -------------|
+                                                                |                                           |
+              orderSvc(Coordinator)            KitchenSvc     KitchenDB           TransactionSvc       TransactionDB
+  --Pizza 249----->
+                  *********** PHASE-1(Prepare) of 2PC Start ************
+                  ------------Prepare(trxnid=1)-->
+                                                --Check ingredients->
+                                                &lt;----available----
+                                                ---Lock DB--------->
+                                                /// Thread Waiting ///
+                  &lt;-----------Ready--------------
+
+                  -------------------------------------Prepare(trxnid=1)------------------>
+                                                                                        --Validate payment method->
+                                                                                        &lt;----available----
+                                                                                        ---Lock DB--------->
+                                                                                        /// Thread Waiting ///
+                  &lt;-----------------------------------------Ready-------------------------
+                  *********** PHASE-1 of 2PC End ************
+
+                  *********** PHASE-2(Commit) of 2PC Start ************
+                  ------------Commit(trxnid=1)-->
+                                                --Write into DB->
+                                                // Lock Released
+                  &lt;-----------Done--------------
+
+                  -------------------------------------Prepare(trxnid=1)------------------>
+                                                                                        --Write into DB->
+                                                                                        // Lock Released
+                  &lt;-----------------------------------------Done-------------------------
+                  *********** PHASE-2 of 2PC End ************
+          </code></pre>
+          </td>
+          <td>
+            <b>Steps</b><br />
+            1. Coordinator generates globally unique transactionId and sends to
+            microservices. Now-on-wards microservices will use same id for
+            communication.<br />
+            2. Coordinator sends Prepare message(with transactionId) asking
+            microservices whether they can commit or not?<br />
+            3. When microservices recieves prepare, it makes sure that it can
+            commit to DB at any cost.<br />
+            - Even if microservices crashes After sending Yes. Then after
+            recovery it has to commit the transaction. <br />
+            - There is no turning Back. <br />
+            5. Coordinator recieves response from all nodes. This is called
+            <font color="red">COMMIT POINT</font><br />
+            6. Coordinator writes its decision to Transaction log. so that if
+            any microervice responds with No, whole commit can be moved to prev
+            state.<br />
+            7. Phase-2: Coordinator Send Message to commit. microervice Commit
+            ie write to DB else //if any one says no Phase-2: Send Abort Message
+            to all microervice via coordinator
+
+            <br /><br />
+            <u><font color="red">DOUBT/UNCETAIN STATE</font>:</u><br />
+            - Coordinator sends prepare, microervice voted Yes, and Coordinator
+            crashes.<br />
+            Now microervices are in Doubt state. microervices will wait forever
+            for Coordinator to send Phase-2 message(Commit or Abort).<br /><br />
+
+            <u><font color="red">HEURISTICS DECISIONS</font>:</u><br />
+            Microervices can communicate & decide amongst themseleves once did
+            not hear from Coordinator for particular time.<br />
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="features">Features of Distributed Transaction</h3>
+      <dl>
+        <b>1. All Commit or All Abort:</b> Either all nodes commit or all nodes
+        abort.<br />
+        <b>2. A transaction commit is IRREVOCABLE:</b> ie once node decides to
+        commit, then there is no turning back. Reason: Once data has been
+        committed, it becomes visible to other transactions, and thus other
+        clients may start relying on that data. Suppose 1 microservice dies &
+        fails to commit, then this service should commit again once it comes
+        back, ie never go back.
+      </dl>
+
+      <h3 id="problems">Problems with Distributed Transaction</h3>
+      <dl>
+        <b>1. Not supported by modern technologies</b> Eg: NoSQL DB does not
+        support. Apache Kafka, Cassandra, RabbitMQ does not support.<br />
+        <b>2. DT is form of Synchronous RPC:</b>
+        Look at <a href="#working">Working on 2PC</a> Kitchen microservice is
+        waiting, holding locks If coordinator crashes → Kitchen blocks
+        indefinitely and even cannot write other transactions<br />
+        &ensp; Solution: Saga Design Pattern
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MariaDB</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">MariaDB</a>
+      <a href="#vs">MariaDB vs postgresQL</a>
+    </aside>
+
+    <main>
+      <article style="margin-left: 200px">
+        <h2 id="what">What is MariaDB</h2>
+        <dl>- MariaDB is SQL DB, community-developed fork of MySQL.</dl>
+
+        <h2 id="vs">MariaDB vs postgresQL</h2>
+        <table>
+          <tr>
+            <th></th>
+            <th>MariaDB</th>
+            <th>PostgresSQL</th>
+          </tr>
+          <tr>
+            <td>Migration from MySQL</td>
+            <td>Easy and compatible</td>
+            <td>Not easy</td>
+          </tr>
+          <tr>
+            <td>Storage Engines</td>
+            <td>
+              Offers various storage engines, eg: ColumnStore for analytical
+              processing (OLAP)
+            </td>
+            <td>Does not have engines</td>
+          </tr>
+          <tr>
+            <td>Thread Pooling</td>
+            <td>
+              MariaDB's built-in thread pool can efficiently handle a large
+              number of concurrent connections, perform better than postgres
+            </td>
+            <td>No thread pool</td>
+          </tr>
+          <tr>
+            <td>Features</td>
+            <td>Less wrt postgres</td>
+            <td>More</td>
+          </tr>
+        </table>
+      </article>
+    </main>
+  </body>
+</html>

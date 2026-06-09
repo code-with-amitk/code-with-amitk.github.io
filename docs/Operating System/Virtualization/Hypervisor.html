@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hypervisor</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#vmm">VMM/Hypervisor</a>
+      <a href="#types">Types of Hypervisor</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="vmm">VMM(Virtual Machine Monitor)/Hypervisor</h2>
+      <dl>
+        Creates multiple (virtual) machines on the same physical hardware.Each
+        Guest VM directs the system calls to kernel using VMM. VMM traps into
+        kernel.<br /><br />
+        <b>Major Hypervisors:</b><br />
+        &ensp; 1. XEN: Open source Linux based type-1.<br />
+        &ensp; 2. VMWARE ESXI:<br />
+        &ensp; 3. HYPER-V: Hypervisor by Microsoft.<br />
+        &ensp; &ensp; 3A. AZURE Runs on customized version of Hyper V. Its
+        hardened and stripped down.<br />
+        &ensp; 4. KVM: Open source Linux based. Used in RHEV(Redhat Enterprise
+        Virtualization).
+      </dl>
+
+      <h2 id="types">Types of Hypervisor</h2>
+      <img
+        src="/images/operating_system/Virtulization/Type1_Type2_Hypervisors.jpg"
+        alt="Type 1 Type 2 VMM"
+        style="width: 500px; height: 200px"
+      />
+      <table>
+        <tr>
+          <th></th>
+          <th>1. TYPE-1/NATIVE/BARE-METAL/ESXI</th>
+          <th>2. TYPE-2/Hosted Hypervisor</th>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td>
+            Run directly on the host’s hardware. Eg: Citrix Xenserver, microsoft
+            Hyper-V, VMWare ESX/ESXi<br />
+            Equivalent to OS of system
+          </td>
+          <td>
+            Run as a software layer on an operating system, like other computer
+            programs. Eg: VMWare Work Station, VM-Ware Player, Virtual box, QEMU
+          </td>
+        </tr>
+        <tr>
+          <td>How it works</td>
+          <td>
+            Type 1 VMM is divided into
+            <a
+              href="https://github.com/code-with-amitk/Code-examples/tree/master/Operating_Systems/Linux/Protection_Rings"
+              target="_blank"
+              >Protection rings</a
+            >.<br />
+            Ring3(User processes), Ring2, Ring1(guest VM kernel) lies in Guest
+            VM while Ring0(kernel mode) lies in hypervisor<br />
+            User process issues system call, it reaches Ring1(it does sanity
+            checks), reaches Ring0(perform instructions)
+            <img
+              src="/images/operating_system/Virtulization/How_Type1_Hypervisor_works.jpg"
+              alt="Type 1 Type 2 VMM"
+              style="width: 700px; height: 250px"
+            />
+          </td>
+          <td>
+            Problem? Since Type-2 Hypervisor itself is not in kernel space, if
+            some user want to install some ISR or signal handler how he can
+            do?<br />
+
+            Solution: Type 2 hypervisors therefore have a kernel module
+            operating in ring 0
+          </td>
+        </tr>
+      </table>
+    </article>
+  </body>
+</html>

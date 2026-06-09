@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>attributes</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Attributes?</a>
+        <a href="#types">Attribute Types</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Attributes?</h2>
+        <dl>
+            Preprocessor macros introduced after c++11. These allows user to pass information to complier for various purposes. Examples:<br>
+            - Code optimization, enforce constraints(conditions) on code, do some specific code generation
+
+            you cannot define your own attributes.
+            Attributes are given standard values which can be expanded using __has_cpp_attribute( attribute-token ) C++20.
+        </dl>
+        <pre><code class="language-css">
+attribute-token   |         Attribute        |  Value     | Standard 
+--------------------|--------------------------|------------|------------
+carries_dependency  | `[[carries_dependency]]` |  200809L   |	(C++11) 
+deprecated          | `[[deprecated]]`         | 201309L    | (C++14) 
+    fallthrough       |     `[[fallthrough]]`    | 201603L    | (C++17) 
+    likely          |     `[[likely]]`         |  201803L   | (C++20)
+    maybe_unused    |   `[[maybe_unused]]`     |  201603L   | (C++17)
+    no_unique_address |   `[[no_unique_address]]`|  201803L	  | (C++20)
+    nodiscard         |	  `[[nodiscard]]`        | 201603L, 201907L | (C++17), (C++20)
+    noreturn          |   `[[noreturn]]`         |  200809L   | (C++11)
+    unlikely          |   `[[unlikely]]`         |  201803L   |	(C++20)
+        </code></pre>
+
+        <h2 id="types">Types of Attributes</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Meaning</th>
+                <th>Usage</th>
+            </tr>
+            <tr>
+                <td>carries_dependency</td>
+                <td>Tells complier to skip unnecessary memory fence instructions for this function 
+                    as it will consumes/releases memory being part atomic operation.</td>
+            </tr>
+            <tr>
+                <td>deprecated</td>
+                <td>function would be deprecated</td>
+                <td>
+                    <pre><code class="language-css">
+[[deprecated("Use addTemplated(int,int) instead")]]
+int add(int a, int b){return a+b;}
+int main(){
+        cout &lt;&lt; add(1,2);
+}
+# g++ test.cpp                //Gets complied but with warning
+    : warning: ‘int add(int, int)’ is deprecated: Use addTemplated(int,int) instead [-Wdeprecated-declarations]
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>[[fallthrough]] only with switch</td>
+                <td>Indicates that the fall through from the previous case label is intentional & 
+                    compiler should not throw warning. fallthrough can only be used with switch statement.</td>
+                <td><pre><code class="language-css">
+/////Code generating warning ////
+void fun(int n) {
+    switch (n) {
+    case 1:
+        cout &lt;&lt; "1"
+    default:
+        cout &lt;&lt; "default";
+    }
+}
+int main(){
+    fun(1);
+}
+$ g++ fallthru.cpp -Wimplicit-fallthrough
+test.cpp: In function ‘void f(int)’:
+test.cpp:11:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    2 |    cout &lt;&lt; "1"
+
+///////Code not generating warning//////////
+void fun(int n) {
+    switch (n) {
+    case 1:
+        cout &lt;&lt; "1";
+    [[fallthrough]];
+    default:
+        cout &lt;&lt; "default";
+    }
+}
+int main(){
+    fun(1);
+}
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>likely, unlikely</td>
+                <td>These are Branch prediction macros, Can be applied to labels or statements.<br>
+
+                    [[likely]]: When applied to statement, tells that path of execution to this statement is more likely to be hit and complier should optimize for same.<br>
+                    [[unlikely]]: When applied to statement, tells that path of execution to this statement is less likely to be hit and complier should optimize for same.
+                </td>
+                <td><pre><code class="language-css">
+///**C Implementation:** These are defined as follows in linux kernel code.///
+http://lxr.linux.no/linux+v3.6.5/include/linux/compiler.h
+#define likely(x)      __builtin_expect(!!(x), 1) 
+#define unlikely(x)    __builtin_expect(!!(x), 0) 
+
+- Example:
+    - Here, if condition is marked likely. 
+    - Compiler will optimize the program considering if is very likely to be hit.
+    - If prediction is correct, it means there is zero cycle of jump instruction
+    - but if prediction is wrong, then it will take several cycles, because processor needs to flush it’s pipeline
+
+const char *home_dir ; 
+home_dir = getenv("HOME"); 
+if (likely(home_dir))  
+    printf("home directory: %s\n", home_dir); 
+else
+    perror("getenv"); 
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>[[nodiscard]](C++17)  [[nodiscard("reason")]](C++20)</td>
+                <td>
+                    Compiler will issue a warning if return value is discarded from nodiscard function.<br>
+                    Where nodicard can be used? Function declaration, Enumeration declaration, class declaration
+                </td>
+                <td><pre><code class="language-css">
+//////////////////////////FUNCTION DECLARATION///////////////////
+[[nodiscard]] int f(){
+    return 1;
+}
+int main(){
+    f();
+}
+$ g++ nodiscard.cpp
+test.cpp: In function ‘int main()’:
+test.cpp:9:3: warning: ignoring return value of ‘int f()’, declared with attribute nodiscard [-Wunused-result]
+    9 |  f();
+        |  ~^~
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>noreturn</td>
+                <td>
+                    - Indicates function will never returns to caller. This means function either throw an exception or call std::terminate. <br>
+                    - The behavior is undefined if the function with this attribute actually returns.<br>
+                    - Advantage Complier will not do clean up tasks(pushing rbp etc) and can optimize the function's code.
+                </td>
+                <td><pre><code class="language-css">
+[[noreturn]] void fun(std::string message) {
+    cout &lt;&lt; message;
+    if (THROW_EXCEPTION_ON_ASSERT)
+        throw AssertException(std::move(message));
+    terminate();
+}
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>[[no_unique_address]] C++20</td>
+                <td>
+                    - Can only be applied to non-static data member of class/struct. <br>
+                    - Indicates that this data member need not have an seperate address from all other non-static data members of its class.<br>
+                    - But its implementation/compiler dependent not guranteed. For example: if member is Empty type compiler may optimize to occupy NO SPACE(same as in empty base).
+                </td>
+                <td><pre><code class="language-css">
+struct inner {};
+class A{
+    int var;
+    [[no_unique_address]] inner i1,i2;
+public:
+    void f(){
+    cout &lt;&lt; "i1=" &lt;&lt; addressof(i1);
+    cout &lt;&lt; "i2=" &lt;&lt; addressof(i2);
+    }
+};
+
+int main(){
+    A a;
+    a.f();
+}
+                </code></pre></td>
+            </tr>
+        </table>
+
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

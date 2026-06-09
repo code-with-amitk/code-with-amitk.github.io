@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Secure Web Gateway</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#what">What</a>
+    <a href="#req">1. Requirements</a>
+    <a href="#boe">2. BOE</a>
+    <a href="#db">3. DB & Pipelines</a>
+    <a href="#hld">4. HLD</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+        <h3 id="what">What is SWG</h3>
+        <dl>
+          <a href="/Networking/Terms/index.html#sase">SASE?</a>, 
+          <a href="/Networking/Terms/index.html#sse">SSE?</a>, 
+          SWG is subset of SSE for security.
+        </dl>
+
+        <h3 id="req">1. Requirements</h3>
+        <h4>Functional</h4>
+        <dl>
+        1. Filtering and monitoring web traffic to enforce security policies
+        <br>
+        2. URL Filtering: Some URLs are marked as filtered and policies are enforced on their access.
+        <br>
+        3. Web Traffic Filtering: Inspect/filter web traffic in real-time, allow/block access to websites based on predefined security policies.
+        <br>
+        4. Malware and Threat Protection: Scan & block web content for malware, viruses, and other malicious code.
+        <br>
+        5. Data Loss Prevention (DLP): Enforce DLP policies to prevent sensitive data from being leaked or shared.
+        <br>
+        6. SSL/TLS Inspection: SWGs can decrypt and inspect encrypted web traffic to detect threats hidden within encrypted connections. This is crucial as many threats now use encryption to evade detection.
+        <br>
+        7. User Authentication: Integrate with identity and access management systems to enforce security policies based on user roles and permissions.
+        <br>
+        8. Reporting and Analytics: Generate reports and provide insights into web usage patterns and security incidents.
+        <br>
+        9. Cloud-Based or On-Premises: Can be deployed in the cloud/on-premises, or as hybrid solution, depending on an organization’s requirements and preferences.
+        <br>
+        10. Mobile Device Support: Protect mobile devices, ensuring that users are secured even when they access the internet from smartphones and tablets.
+        <br>
+        11. Anomaly detection:
+        </dl>
+
+        <h4>Non Functional</h4>
+        <dl>Scalable, Reliable, Fast, Highly available</dl>
+
+        <h3 id="db">3. Databases & Events</h3>
+        <h4>Databases</h4>
+        <table>
+          <tr>
+            <th>Database</th>
+            <th>Stores</th>
+          </tr>
+          <tr>
+            <td>MySQL</td>
+            <td>1. Cust-Public,pvt keys are stored in HSM(Hardware security module): 
+              When tenant is onboarded, Cert hierarchy is created. All keys, certs, signatures stored here.<br>
+              2. All tenant data<br>
+              3. Storing meta data for Druid cluster
+            </td>
+          </tr>
+          <tr>
+            <td>Redis (key/value store)</td>
+            <td>Generic task queing and task broker(Apart from kafka, when all nodes are not prod,cons)</td>
+          </tr>
+          <tr>
+            <td>Mongodb</td>
+            <td>Events which are fed to kafka are stored here and it acts as source of truth</td>
+          </tr>
+        </table>
+
+        <h4>Event Pipeline/Message Buses</h4>
+        <dl>
+          <b>1. Kafka:</b> Event Producers: Services. Services reach Evt-Svc, which puts events in kafka & also into mongodb<br>
+          Events Consumers: Druid OLAP<br>
+          <b>2. Zero MQ:</b> In memory fast storage, high performance. Whereas kafka is persistant datasource
+        </dl>
+
+        <h4>Metadata of Distributed Systems</h4>
+        <dl>Zookeeper</dl>
+
+         <h4>Observability</h4>
+        <dl>Sumologic, Datadog(Bit inexpensive wrt sumo), SignalFX(Best solution for scaling the app), ELK(Druid Logging)
+        </dl>
+
+        <h4>Load Balancing</h4>
+        <dl>ngnix, haproxy, F5</dl>
+
+        <h3 id="hld">4. HLD</h3>
+        <pre class="puml" visibility: hidden>
+          @startuml
+          !pragma teoz true
+          
+          actor Admin as ad
+          box "Home POP" #Cyan
+          participant UI as ui
+          participant provisner as pro
+          participant kanfigSvc as cs
+          end box
+          
+          box "Mikro POP" #Gold
+          participant OtherSvc as svc
+          end box
+          
+          ad -> ui: Configure Policies
+          note over ui
+          Policies stored
+          as files
+          end note
+          
+          ui -> pro: policy data
+          pro -> cs: data
+          cs -> svc: policy data
+          
+          @enduml
+        </pre>
+        <img 
+            src="//www.plantuml.com/plantuml/png/LKxDJiCm3BxxASmuym8zeA4TW0FQ9CG3cCGRqTeuSfoAyVJ4QgMfn-__srSZjJQDy52KBXEXiVoXQMC02YQABt5A6QaYHVYMNzozoSHuEfvs-7YuKOP2QYcaGjdmwzsTBMt8eZAdcbbTws0ZNYcVq-Lp3Yw62fmZzXbOjZxILMKTUvKnRg97-s5TatKEzoX5V7hkBmOyYBStxOTbx3ckaCKOPMRrcolRyoRA4NhJEOsyt70dG4jULbG6BEw-OIGZw8JpeGuB3hL3lx6rmPvpRDFu3m00"
+            alt="srx authentication table" >
+
+    </article>
+  </main>
+  <script src="/scripts/prism.js"></script>
+</body>
+</html>

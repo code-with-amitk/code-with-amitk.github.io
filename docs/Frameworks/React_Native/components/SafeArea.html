@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#safearea">SafeArea</a>
+        <a href="#safeAreaView">SafeAreaView</a>
+        <a href="#safeAreaProvider">SafeAreaProvider</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="safearea">What is SafeArea</h2>
+        <dl>
+            <b>SafeArea?</b><br>
+            Area of the app screen that is not covered by elements like the status bar, navigation bar, notches, or home indicators. 
+            Content placed within the safe area is guaranteed to be visible and not obstructed by operating system or hardware interfaces.
+            This is particularly important for devices with irregular screen shapes, such as iPhones with notches or Android devices with rounded corners.
+            <br><br>
+
+            <b>UnSafeArea?</b><br>
+            Area of the screen that may be covered by the status bar, navigation bar, notches, or other system UI elements.
+            Content placed in the unsafe area may not be fully visible or accessible to the use
+        </dl>
+
+        <h2 id="safeAreaView">SafeAreaView Component</h2>
+        <dl>
+            Component provided by React Native that automatically adjusts its child content to stay within the safe area boundaries of the screen.
+            <br><br>
+            
+            <b>When to use SafeAreaView?</b><br>
+            When you want to ensure that your content is visible and not obscured by system UI elements (e.g., notches, status bars, home indicators).
+            <br><br>
+
+            <b>When not to use SafeAreaView?</b><br>
+            When your content does not need to avoid system UI elements (e.g., internal components that are already within a safe area).
+        </dl>
+
+        <h2 id="safeAreaProvider">SafeAreaProvider</h2>
+        <dl>
+            Used at the root of your app to enable safe area awareness throughout the application.
+        </dl>
+    </article>
+
+</body>
+</html>

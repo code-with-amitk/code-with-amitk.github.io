@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daemon Service</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">Daemon, Service?</a>
+        <a href="#systemd">systemd</a>
+    </aside>
+
+    <div style="margin-left:200px;">
+        <h3 id="what">Daemon, Service?</h3>
+        <h4>Daemon</h4>
+        <dd>Process running in background to perform system tasks.</dd>
+
+        <h4>Service</h4>
+        <dd>1 or more daemon/processes combined together for servicing the user. 
+            Eg: File server, Apache/httpd service(shows 5-6 processes in ps), sshd, systemd</dd>
+        <pre><code class="language-css">
+# ps -aux|grep systemd
+PID   %cpu  %mem   vsz    rss  tty  state  start-time   command
+root     1   0.0  0.0  193844  5808   ?    Ss    2020  1:11  /usr/lib/systemd/systemd --switched-root --system
+root    632  0.0  0.0  390601  5782   ?    Ss    2020  1:11  /usr/lib/systemd/systemd-journald     //Event Logging with journald
+root    669  0.0  0.0  112121  1212   ?    Ss    2020  1:11  /usr/lib/systemd/systemd-udevd
+root    904  0.0  0.0  129492  8589   ?    Ss    2020  1:11  /usr/lib/systemd/systemd-logind            
+        </code></pre>            
+
+        <dl><strong>Converting Process to service</strong></dl>
+        <pre><code class="language-css">
+# g++ test.cpp -o AmitService -std=c++11
+int main(){
+    cout<<"Sleeping for 9 sec";
+    this::thread::sleep_for(chrono::microseconds(9*10pow6));
+    cout<<"Awake";
+}
+# vim /etc/systemd/system/AmitService.service
+[Unit]
+Description=Test Service
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=amit
+ExecStart=/usr/bin/env /home/amit/code/test.cpp
+[Install]
+WantedBy=multi-user.target
+# systemctl start|enable|status|disable AmitService
+# cat /var/log/message                        //Check Logs            
+        </code></pre>
+
+
+        <h3 id="systemd">Systemd (Parent of All processes)</h3>
+        <dd>(In fedora, RHEL, CentOS) This is Replacement of init process. System and Service manager</dd>
+        <dl><strong>Advantages of systemd over init?</strong></dl>
+        <dd>
+            1. systemd can start multiple services parallely(while init cannot) which reduces boot time of a system.<br>
+            2. Ability to remove unneccessary services.<br>
+            3. systemd itself takes less booting time wrt init.            
+        </dd>
+        <h4>Units in systemd</h4>
+        <dd>
+            This is systemd specific Object that perform/controls particular task. 
+            systemd unit have Name,Type,unit-file(ini/configuration file).<br>
+            Example: consider systemd as a bus driver and the units such as gear, clutch, lever, brake, accelerator, etc. 
+            Bus driver uses controllers to drive/control bus, systemd uses units to control the system processes and services.<br>
+            Commands to List all units, 1 type of units
+        </dd>
+        <dl><strong>Types of Units</strong></dl>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>extension</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Target</td>
+                <td>*.target</td>
+                <td>To define the 
+                    various system states, the SysV uses numbers, known as run-levels, while the Systemd uses target-units</td>
+            </tr>
+            <tr>
+                <td>Service</td>
+                <td>*.service</td>
+                <td>To start/stop/restart/reload a service daemon Eg Apache webserver</td>
+            </tr>
+            <tr>
+                <td>Socket</td>
+                <td>*.service</td>
+                <td>For IPC majorly</td>
+            </tr>
+        </table>
+
+        <dl><strong>Service unit</strong></dl>
+        <dd>
+        Service units have a .service extension and represent system services.<br>
+        <u>Dependent services:</u> A Service may be dependent on 0 or more services, stopping/restarting 1 may require start/stop others also. # systemctl list-dependencies<br>
+        <u>Masking Services:</u> A system may have conflicting services installed. Eg: iptables, firewalld. Masking service means if service is started by mistake nothing will happen. #systemctl mask
+        </dd>
+
+        <dl><strong>Socket Unit</strong></dl>
+        <dd>
+            Socket units have a .socket extension and represent inter-process communication (IPC) sockets that systemd should monitor.
+        </dd>
+        <pre><code>
+            # systemctl list-units --type=socket --all                   //List all socket units, active and inactive
+        </code></pre>
+
+        <dl><strong>Target Unit</strong></dl>
+        <dd>
+            systemd units named as *.target. Every target has a configuration file at /usr/lib/systemd/*target.<br>
+            To define the various system states, the SysV uses numbers, known as run-levels, while the Systemd uses 
+            keyword, known as target-units. Eg: Graphical, Multiuser, Rescue, Emergency<br>
+            One target can be part of another target. Eg: graphical.target includes multi-user.target which in turn depends on basic.target.
+        </dd>
+        <pre><code class="language-css">
+// Listing all available targets and check which current?
+$ systemctl    list-units    --type=target    --all    
+$ vim    /usr/lib/systemd/*.target
+# systemctl    get-default
+    graphical.target            
+
+// Setting the mode/target    
+# systemctl     set-default    graphical.target
+# systemctl    isolate    multi-user.target            //This changes system to Text-mode without booting the system. System is still in graphical mode.    #systemctl isolate <dst-target-system>
+# systemctl    ioslate    graphical.target            //Brings back Graphical.target    
+
+// Booting kernel in rescue.target/emergency.target
+- Interrupt boot loader by pressing any key
+- Press e to edit command line>    At end of Line starting with linux16 enter       systemd.unit=rescue.target 
+- Press Ctrl+x to save and exit
+    systemd.unit=emergency.target        //This boots root system in RO mode. 
+        </code></pre>
+
+        <h4>Booting up with systemd</h4>
+        <dd>
+            Power On > systemd process > Reads default.target(This is symlink to graphical.target) > 
+            Reads /etc/system-d/system/multi-user.target (Sets env for multi-user support. Starts firewall services) >
+            Reads basic.target (Starts graohical manager service) >
+            Reads sysinit.target (Mounts system mounts, swap spaces, devices. Kernel additional options etc.) >
+             Reads local-fs.target (Handles low level services. Performs actions on /etc/fstab, /etc/inittab)            
+        </dd>
+
+        <dl><strong>Troubleshooting booting process</strong></dl>
+        <pre><code class="language-css">
+//Built-in command to examine boot process. You can find out the units which are facing errors 
+during boot up and can further trace and correct boot component issues.
+    # systemd-analyze    
+
+//shows the time spent in kernel,  and normal user space
+    # systemd-analyze time
+        Startup finished in 1440ms (kernel) + 3444ms (userspace)
+
+//Prints a list of all running units, sorted  by the time taken by then to initialize, in this way you can have idea of 
+    which services are taking long time to start during boot up.          
+    $ systemd-analyze blame        
+    2001ms mysqld.service
+    234ms httpd.service
+    191ms vmms.service
+
+//Shows if there are any syntax errors in the system units. Systemd-analyze plot can be used to write down whole startup process to a SVG formate file.
+# systemd-analyze plot > boot.svg        
+        </code></pre>
+    </div>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,2167 @@
+[
+  {
+    "title": "__has_cpp_attribute",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++20/__has_cpp_attribute.html",
+    "excerpt": "__has_cpp_attribute Home Our team Projects Contact __has_cpp_attribute? __has_cpp_attribute C++ defines set of preprocessor macro called attributes on..."
+  },
+  {
+    "title": "1870. Minimum Speed to Arrive on Time",
+    "url": "/DS_Questions/Algorithms/Binary_Search/Minimum_Speed_to_Arrive_on_Time.html",
+    "excerpt": "1870. Minimum Speed to Arrive on Time 1870. Minimum Speed to Arrive on Time You are given a floating-point number hour, representing the amount of tim..."
+  },
+  {
+    "title": "3 Way Comparator",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++20/3 way Comparator.html",
+    "excerpt": "3 Way Comparator Home Our team Projects Contact What What is 3 way Comparator a &lt;=> b Compares the 2 variables(a,b) around it, and returns a value ..."
+  },
+  {
+    "title": "673. Number of Longest Increasing Subsequence",
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/SubSequence/Number of Longest Increasing Subsequence.html",
+    "excerpt": "673. Number of Longest Increasing Subsequence 673. Number of Longest Increasing Subsequence Self Video Approach-1, DP. Time: O(n 2 ), Space: O(n) 673...."
+  },
+  {
+    "title": "77. Combinations",
+    "url": "/DS_Questions/Algorithms/Backtracking/Combinations.html",
+    "excerpt": "77. Combinations 77. Combinations Given two integers n and k, return all possible combinations of k numbers chosen from the range [1, n]. You may retu..."
+  },
+  {
+    "title": "Abbreviated Function Template",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++20/Abbreviated_Function_Template.html",
+    "excerpt": "Abbreviated Function Template Home Our team Projects Contact Abbreviated Function Template? Abbreviated Function Template When only auto or concept au..."
+  },
+  {
+    "title": "Abstraction",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Abstraction/Introduction.html",
+    "excerpt": "Abstraction Home Our team Projects Contact Back Abstraction? What is Abstraction Concept of hiding the complex internal details of a system and showin..."
+  },
+  {
+    "title": "Administrative Law",
+    "url": "/Law/Administrative Law/",
+    "excerpt": "Administrative Law Home Our team Projects Contact What is Administrative law Conseil d'État Doctrines Separation of Powers Post decisional hearing Exc..."
+  },
+  {
+    "title": "Administrative Law",
+    "url": "/Law/Interpretation_of_Statutes/",
+    "excerpt": "Administrative Law Home Our team Projects Contact Back Statutes Interpretation of Statutes Intrinsic aids Extrinsic aids Statutes? Means a written law..."
+  },
+  {
+    "title": "AdvancedContainerTypes",
+    "url": "/Languages/Scripting/Python/Containers/AdvancedContainerTypes.html",
+    "excerpt": ""
+  },
+  {
+    "title": "Aggregate initialization",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++20/Aggregate initialization.html",
+    "excerpt": "Aggregate initialization Home Our team Projects Contact Aggregate initialization Types of initialization Aggregate initialization Aggregate is any of ..."
+  },
+  {
+    "title": "Aggregation",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Association/Aggregation/Introduction.html",
+    "excerpt": "Aggregation Home Our team Projects Contact Back Aggregation? What is Aggregation Relation between contained and container object, Contained Object can..."
+  },
+  {
+    "title": "Algorithms",
+    "url": "/DS_Questions/Algorithms/",
+    "excerpt": "Algorithms Binary Search Backtracking IntervalScheduling or IntervalGreedy"
+  },
+  {
+    "title": "Amazon",
+    "url": "/Companies/Amazon/",
+    "excerpt": "Amazon Home Our team Projects Contact Leadership Principals"
+  },
+  {
+    "title": "Anomaly Detection using Scikit Learn",
+    "url": "/Machine Learning/Code/anomaly_detection_using_scikit_learn.html",
+    "excerpt": "Anomaly Detection using Scikit Learn Home Our team Projects Contact Back Inlier, outlier Inlier, outlier, Novelty Inlier: A Data point that falls with..."
+  },
+  {
+    "title": "Apache Web Servers",
+    "url": "/Networking/OSI-Layers/Layer-7/WebServers/Apache/",
+    "excerpt": "Apache Web Servers Home Our team Projects Contact Architecture Apache Web Server Architecture Apache uses 1 thread/connection, This is not Recommended..."
+  },
+  {
+    "title": "Arbitration Concillation & Dispute Resolution",
+    "url": "/Law/Arbitration_Concillation_and_dispute_resolution/",
+    "excerpt": "Arbitration Concillation & Dispute Resolution Home Our team Projects Contact Arbitration & Concillation Act 1996 UNCITRAL Model Law Conventions Concil..."
+  },
+  {
+    "title": "Arc",
+    "url": "/Threads_Processes_IPC/Synchronization/Rust/Arc.html",
+    "excerpt": "Arc Home Our team Projects Contact Back What is Arc Features of Arc Rc&lt;T> vs Arc&lt;T> Arc&lt;mutex> mutex without Arc does not compile in Threads ..."
+  },
+  {
+    "title": "Architecture",
+    "url": "/System_Design/Concepts/Docker/Architecture.html",
+    "excerpt": "Architecture Home Our team Projects Contact Docker Docker Desktop(Windows) / Docker Linux Architecture |---------- Docker Desktop ----------| | docker..."
+  },
+  {
+    "title": "Association",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Association/Introduction.html",
+    "excerpt": "Association Home Our team Projects Contact Back Association? What is Association Means any kind of relationship between 2 objects. There are 2 kinds o..."
+  },
+  {
+    "title": "Async Programming",
+    "url": "/Async_Programming/Introduction.html",
+    "excerpt": "Async Programming What is async Async vs Threading Home Our team Projects Contact Back --> What is Asynchronous? This is concurrency model where multi..."
+  },
+  {
+    "title": "Async Programming",
+    "url": "/Async_Programming/",
+    "excerpt": "Async Programming Home Our team Projects Contact Introduction: What is async, async, await, block_on(), Future, Async vs Threading notify-rs(Watch cha..."
+  },
+  {
+    "title": "attributes",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/attributes.html",
+    "excerpt": "attributes Home Our team Projects Contact Attributes? Attribute Types Attributes? Preprocessor macros introduced after c++11. These allows user to pas..."
+  },
+  {
+    "title": "AWS vs GCP",
+    "url": "/System_Design/Concepts/GCP/AWS_vs_GCP.html",
+    "excerpt": "AWS vs GCP Home Our team Projects Contact Back Compute Docker, Kubernets Identity Management Load Balancer Machine Learning Networking Security Sheild..."
+  },
+  {
+    "title": "AWS vs GCP",
+    "url": "/System_Design/Concepts/GCP/Introduction.html",
+    "excerpt": "AWS vs GCP Home Our team Projects Contact Back 5 key Components GCE(Compute Engine=VM) App Engine Big Query GKE(Kubernets Engine) Cloud Ecosystem AWS ..."
+  },
+  {
+    "title": "Backtracking",
+    "url": "/DS_Questions/Algorithms/Backtracking/",
+    "excerpt": "Backtracking All Combinations"
+  },
+  {
+    "title": "Bhartiya Nagrik Suraksha Sanhita(Law of Crimes II)",
+    "url": "/Law/Bhartiya_Nagrik_Suraksha_Sanhita/",
+    "excerpt": "Bhartiya Nagrik Suraksha Sanhita(Law of Crimes II) Home Our team Projects Contact BNSS? Majistrate, CJM, ACJM Complaint Arrest Bail Charge Plea bargai..."
+  },
+  {
+    "title": "Bhartiya Sakshya Adhiniyam (Law of Evidence)",
+    "url": "/Law/Bhartiya_Sakshya_Adhiniyam/",
+    "excerpt": "Bhartiya Sakshya Adhiniyam (Law of Evidence) Home Our team Projects Contact Bhartiya Sakshya Adhiniyam Evidence Fact Presumption Admission Confession ..."
+  },
+  {
+    "title": "Binary Search",
+    "url": "/DS_Questions/Algorithms/Binary_Search/",
+    "excerpt": "Binary Search Minimum Speed to Arrive on Time"
+  },
+  {
+    "title": "Binary Trees",
+    "url": "/DS_Questions/Data_Structures/Trees/Types_of_Trees.html",
+    "excerpt": "Binary Trees Home Our team Projects Contact Types of Trees Binary Trees Binary Search Trees AVL Trees Red Black Trees BTrees Trie Heap Ternary Search ..."
+  },
+  {
+    "title": "Binary Trees",
+    "url": "/DS_Questions/Data_Structures/Trees/",
+    "excerpt": "Binary Trees Home Our team Projects Contact Types of Trees Binary Trees C++, Rust, Python, Go C++, Rust, Python, Go C++ Rust Python(List []) Go Defini..."
+  },
+  {
+    "title": "bitwise",
+    "url": "/Languages/Programming/C/bitwise.html",
+    "excerpt": "bitwise Home Our team Projects Contact"
+  },
+  {
+    "title": "Blockchain",
+    "url": "/BlockChain/Introduction.html",
+    "excerpt": "Blockchain Home Our team Projects Contact Blockchain? How bitcoin can be issued? Smart Contract Solidity Wallet Blockchain What? This is an immutable(..."
+  },
+  {
+    "title": "Blockchain",
+    "url": "/BlockChain/",
+    "excerpt": "Blockchain Home Our team Projects Contact Introduction &ensp; What is Blockchain, Why to learn, Limitations &ensp; How bitcoin can be issued? Terms &e..."
+  },
+  {
+    "title": "Blockchain Terms",
+    "url": "/BlockChain/Terms.html",
+    "excerpt": "Blockchain Terms Home Our team Projects Contact Back BlockchainAddress (Sender or Receiver) Block Genesis Block Transaction POW(Proof of Work) POS(Pro..."
+  },
+  {
+    "title": "Build Security Libraries",
+    "url": "/Networking/OSI-Layers/Layer-3/Security/Build Security Libraries.html",
+    "excerpt": "Build Security Libraries Home Our team Projects Contact Botan Openssl Build on x86 Cross Compile for ARM Botan Scrypt Hashing Algo SHA-256, SHA-384, a..."
+  },
+  {
+    "title": "Build Systems",
+    "url": "/Build_Systems/",
+    "excerpt": "Build Systems Home Our team Projects Contact Back CMake Introduction: What is CMake, Makefile vs CMake, Install Examples: Hello World Files: &ensp; CM..."
+  },
+  {
+    "title": "Bump by Amo",
+    "url": "/System_Design/Scalable/Bump/",
+    "excerpt": "Bump by Amo Home Our team Projects Contact What is Bump Requirements BOE API Design DB Schema HLD Design-1: Kafka Design Design-2: Websocket AppServer..."
+  },
+  {
+    "title": "C",
+    "url": "/Languages/Programming/C/",
+    "excerpt": "C Home Our team Projects Contact Bitwise Makefile Compile"
+  },
+  {
+    "title": "C, C++, Rust, Python, Go",
+    "url": "/DS_Questions/Data_Structures/Linked_List/Compared_c++_rust_python_go.html",
+    "excerpt": "C, C++, Rust, Python, Go Linked Lists Linked List (C, C++, Python, Rust, Go) Linked List (C, C++, Python, Rust, Go) C C++ Rust Python Go Representatio..."
+  },
+  {
+    "title": "C++",
+    "url": "/Languages/Programming/C++/",
+    "excerpt": "C++ Home Our team Projects Contact Back 6 Implicit Functions &ensp; Constructor (1. Default, 2. copy, 3. move) &ensp; Assignment Operator(4. Copy, 5. ..."
+  },
+  {
+    "title": "C++ 11,4,17,20,23",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/",
+    "excerpt": "C++ 11,4,17,20,23 Home Our team Projects Contact C++11 &ensp; attributes: carries_dependency, depreacated, fallthrough, likely, unlikely, maybe_unused..."
+  },
+  {
+    "title": "C++, Rust, Python, Go",
+    "url": "/Languages/Programming/C++/STL/Containers/ordered_map.html",
+    "excerpt": "C++, Rust, Python, Go Home Our team Projects Contact map C++, Rust, Python, Go C++, Rust, Python, Go C++ Rust Python Go Create map&lt;char, int> m; //..."
+  },
+  {
+    "title": "C++, Rust, Python(Strings), Go",
+    "url": "/Languages/Programming/C++/String.html",
+    "excerpt": "C++, Rust, Python(Strings), Go Home Our team Projects Contact Strings String (C++ vs Python vs Rust vs Go) String (C++ vs Python vs Rust) C++ Rust Pyt..."
+  },
+  {
+    "title": "C++(unordered_set), Python, Rust(HashSet)",
+    "url": "/Languages/Programming/C++/STL/Containers/unordered_set.html",
+    "excerpt": "C++(unordered_set), Python, Rust(HashSet) Home Our team Projects Contact C++ vs Rust vs Python C++ Rust (use std::collections::HashSet) Python (set())..."
+  },
+  {
+    "title": "C++(vector), Rust(Vec), Python(List []), Go([])",
+    "url": "/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector.html",
+    "excerpt": "C++(vector), Rust(Vec), Python(List []), Go([]) Home Our team Projects Contact Vectors C++, Rust, Python, Go, C C++, Rust, Python, Go(No semicolons), ..."
+  },
+  {
+    "title": "Cache",
+    "url": "/System_Design/Concepts/Cache/",
+    "excerpt": "Cache Home Our team Projects Contact What is Cache Types of Cache Where Caches can be placed? Cache Between AppServer & DB Cache Eviction Policies Red..."
+  },
+  {
+    "title": "Cargo",
+    "url": "/Languages/Programming/Rust/Cargo.html",
+    "excerpt": "Cargo Home Our team Projects Contact What is cargo cargo commands cargo build cargo doc cargo publish cargo install What is cargo Cargo is Rust's buil..."
+  },
+  {
+    "title": "CDN (Content Delivery Network)",
+    "url": "/System_Design/Concepts/CDN/",
+    "excerpt": "CDN (Content Delivery Network) Home Our team Projects Contact What is CDN CDN serving web page to Browser What is CDN(Content delivery network) / Virt..."
+  },
+  {
+    "title": "Choosing the Build System",
+    "url": "/Build_Systems/CMake/Choosing_the_Build_System.html",
+    "excerpt": "Choosing the Build System Home Our team Projects Contact Back How CMake decides Generate Makefile or vcproj How CMake decides to generate Makefile of ..."
+  },
+  {
+    "title": "Civil Procedure Code and Limitation Act",
+    "url": "/Law/Civil_Procedure_code_and_limitation_act/",
+    "excerpt": "Civil Procedure Code and Limitation Act Home Our team Projects Contact Suit Appeal Doctrines Res Judicata Decree Civil court jurisdiction Pleading, Ty..."
+  },
+  {
+    "title": "Class Templates",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Class Templates.html",
+    "excerpt": "Class Templates Home Our team Projects Contact Back Class Template How Internally works? 0 templated argument Class Templates Generic class which havi..."
+  },
+  {
+    "title": "Cmake Introduction",
+    "url": "/Build_Systems/CMake/Examples.html",
+    "excerpt": "Cmake Introduction Home Our team Projects Contact Back Hello World"
+  },
+  {
+    "title": "Cmake Introduction",
+    "url": "/Build_Systems/CMake/Introduction.html",
+    "excerpt": "Cmake Introduction Home Our team Projects Contact Back What Makefile vs CMake Install CMake CMake is open-source, cross-platform build system generato..."
+  },
+  {
+    "title": "CMake Terms",
+    "url": "/Build_Systems/CMake/Terms.html",
+    "excerpt": "CMake Terms Home Our team Projects Contact Back Generators Generators CMake supports multiple build systems(Makefile, Ninja, Visual studio etc), these..."
+  },
+  {
+    "title": "CMakeLists.txt",
+    "url": "/Build_Systems/CMake/Files/CMakeLists.html",
+    "excerpt": "CMakeLists.txt Home Our team Projects Contact Back CMakeLists.txt Create Executable Create Library Link Lib to executable subdirectory Keywords SCOPE ..."
+  },
+  {
+    "title": "Code Examples",
+    "url": "/",
+    "excerpt": "This is a document type declaration (DTD), which indicate the version of HTML. It is the required initial tag for HTML5 documents. Browser follows app..."
+  },
+  {
+    "title": "collections",
+    "url": "/Languages/Programming/Go/Collections.html",
+    "excerpt": "collections Home Our team Projects Contact Back Built-in 1. Arrays 2. Slice (vector) 3. Channels 4. Maps Standard Library Provided 1. Queue(using slic..."
+  },
+  {
+    "title": "Collections",
+    "url": "/Languages/Programming/Rust/Collections/",
+    "excerpt": "Collections Home Our team Projects Contact String"
+  },
+  {
+    "title": "Companies",
+    "url": "/Companies/",
+    "excerpt": "Companies Home Our team Projects Contact Amazon"
+  },
+  {
+    "title": "Company Law",
+    "url": "/Law/Company_Law/",
+    "excerpt": "Company Law Home Our team Projects Contact Company? Auditor of Company Prospectus MoA & AoA Definitions of Company Doctrine of Lifting the Veil of Inc..."
+  },
+  {
+    "title": "Compile",
+    "url": "/Languages/Programming/C/Compile.html",
+    "excerpt": "Compile Home Our team Projects Contact Compilation Steps Pre Processing Compiler (cc) Linker (ld) Compilation Steps test.c [Pre-processor] test.i [Com..."
+  },
+  {
+    "title": "Composition",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Association/Composition/Introduction.html",
+    "excerpt": "Composition Home Our team Projects Contact Back Composition? What is Composition Relation between contained and container object, If container Object ..."
+  },
+  {
+    "title": "Concept",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++20/Concept_Contraint.html",
+    "excerpt": "Concept Home Our team Projects Contact Concept? Constriant? What is Concept? If we have a Template class defining templated or non templated functions..."
+  },
+  {
+    "title": "condition_variable",
+    "url": "/Threads_Processes_IPC/Synchronization/condition_variable.html",
+    "excerpt": "condition_variable Home Our team Projects Contact Back What? Code Thr1 signalling Thr2 Ping pong game Using pthread std::condition_variable, unique_lo..."
+  },
+  {
+    "title": "Consensus",
+    "url": "/System_Design/Concepts/Consensus/",
+    "excerpt": "Consensus Home Our team Projects Contact Back What Categories of consensus mechanisms Implementations 1. Paxos 2. RAFT Consensus Mechanism What is Con..."
+  },
+  {
+    "title": "Consensus",
+    "url": "/System_Design/Concepts/Terms/CAP_Theorem.html",
+    "excerpt": "Consensus Home Our team Projects Contact Back CAP CAP Theorem CAP = Consistency , Availability Partition-Tolerance CAP theorem says: Only 2 out 3 can ..."
+  },
+  {
+    "title": "Consensus",
+    "url": "/System_Design/Concepts/Terms/Consensus/Introduction.html",
+    "excerpt": "Consensus Home Our team Projects Contact What is Consensus? Raft vs Paxos What is Consensus Consensus is a process of agreement between distrusting no..."
+  },
+  {
+    "title": "constexpr",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/constexpr_macro.html",
+    "excerpt": "constexpr Home Our team Projects Contact constexpr constexpr usecases constexpr vs macro constexpr variables constexpr function constexpr constructor ..."
+  },
+  {
+    "title": "Constitutional Law of India",
+    "url": "/Law/Constitutional_law_of_India/",
+    "excerpt": "Constitutional Law of India Home Our team Projects Contact Preamble Principles of Constitution Federal, Unitary, Union Fundamental Rights Directive Pr..."
+  },
+  {
+    "title": "Constructor",
+    "url": "/Languages/Programming/C++/6 Implicit Functions/Constructors.html",
+    "excerpt": "Constructor Home Our team Projects Contact Back Constructor Ctr calling Hierarchy Ctr Initializer list Types of Ctr Copy (lvalue ref) Move (rvalue ref..."
+  },
+  {
+    "title": "Container Commands",
+    "url": "/System_Design/Concepts/Kubernets/Commands.html",
+    "excerpt": "Container Commands Home Our team Projects Contact Back Namespace Commands POD Commands Container Commands Commands |- Worker node |- Docker runtime |-..."
+  },
+  {
+    "title": "Containers",
+    "url": "/System_Design/Concepts/Containers/Introduction.html",
+    "excerpt": "Containers Home Our team Projects Contact Containers Containers This Self contained package that contains everything that binary/application need to r..."
+  },
+  {
+    "title": "Contract",
+    "url": "/Law/Contract/",
+    "excerpt": "Contract Home Our team Projects Contact Contract Aggrement vs Contract Bailment Terms Doctrines Gurantee Parternership Contract Law of Contract Man sh..."
+  },
+  {
+    "title": "Cookies for Domain based Authentication",
+    "url": "/System_Design/Concepts/Terms/Authentication/cookies.html",
+    "excerpt": "Cookies for Domain based Authentication Home Our team Projects Contact Back Per browser Cookie based Auth Cookie based Authentication for seperate Bro..."
+  },
+  {
+    "title": "Couchbase",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Couchbase/Introduction.html",
+    "excerpt": "Couchbase Home Our team Projects Contact Couchbase? Couchbase This is NoSQL database(storing data in json structure) which offers SQL-compatible query..."
+  },
+  {
+    "title": "Criminology & Penology",
+    "url": "/Law/Criminology_and_Penology/",
+    "excerpt": "Criminology & Penology Home Our team Projects Contact Criminology? Schools of Criminology Juvenile delinquency Juvenile Court Indeterminate sentence R..."
+  },
+  {
+    "title": "CUDA",
+    "url": "/Motherboard/GPU/CUDA/Introduction.html",
+    "excerpt": "CUDA Home Our team Projects Contact What is CUDA? Concepts Grid, Blocks, Threads, Thread Block Cluster Kernel Inter Thread Communication Thread Memory..."
+  },
+  {
+    "title": "Cypher",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Graph DB/Cypher.html",
+    "excerpt": "Cypher Home Our team Projects Contact What Syntax What Declarative graph query language that allows efficient querying, updating and administering of ..."
+  },
+  {
+    "title": "Daemon Process",
+    "url": "/Languages/Programming/Go/Code Examples/get_cpu_usage.html",
+    "excerpt": "Daemon Process Home Our team Projects Contact Back Detached Daemon Process Child Process Log CPU usage into file Detached Daemon Process We will creat..."
+  },
+  {
+    "title": "Daemon Service",
+    "url": "/Operating System/Deamon Service/",
+    "excerpt": "Daemon Service Home Our team Projects Contact Daemon, Service? systemd Daemon, Service? Daemon Process running in background to perform system tasks. ..."
+  },
+  {
+    "title": "Data Structures",
+    "url": "/DS_Questions/Data_Structures/",
+    "excerpt": "Data Structures Home Our team Projects Contact Linked List Trees"
+  },
+  {
+    "title": "Data Structures",
+    "url": "/Data_Structures/Hash_Tables/Introduction.html",
+    "excerpt": "Data Structures Home Our team Projects Contact DAT? Hash Table? Internal Impl? Hash Collision 1. Open Addressing 2. Seperate Chaining Rehashing Implem..."
+  },
+  {
+    "title": "Data Structures",
+    "url": "/Data_Structures/",
+    "excerpt": "Data Structures --> Home Our team Projects Contact Back Go! Comparison &ensp; Hash Table vs Self-Balancing Binary Trees Hash Tables &ensp; HT?, DAT(Di..."
+  },
+  {
+    "title": "Data Structures Compared",
+    "url": "/Data_Structures/Comparison.html",
+    "excerpt": "Data Structures Compared Hashtable vs SB-BT? --> Home Our team Projects Contact Back Go! Hash Table vs Self-Balancing BT Hash table BST(Binary Search ..."
+  },
+  {
+    "title": "Database Commands",
+    "url": "/System_Design/Concepts/Databases/Commands/",
+    "excerpt": "Database Commands Home Our team Projects Contact Login Create Create DB & Connect to it Create table & insert data Table Index Read List Database, Lis..."
+  },
+  {
+    "title": "Database Indexing",
+    "url": "/System_Design/Concepts/Databases/Terms/Indexing/",
+    "excerpt": "Database Indexing Home Our team Projects Contact Indexing Indexing Types Hash Index Btree Index Reverse Indexing What is Indexing? Indexing is used fo..."
+  },
+  {
+    "title": "Database Indexing",
+    "url": "/System_Design/Concepts/Databases/Terms/Joins_Left_Right.html",
+    "excerpt": "Database Indexing Home Our team Projects Contact Back SQL Execution Order What is Join How join is internally implemented Types of Joins Complex Joins..."
+  },
+  {
+    "title": "Database Scaling",
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/Replication/",
+    "excerpt": "Database Scaling Home Our team Projects Contact What is Replication Types of Replication What is Replication? Keeping a copy of the same data on multi..."
+  },
+  {
+    "title": "Database Scaling",
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/",
+    "excerpt": "Database Scaling Home Our team Projects Contact 1. Replication 2. Federation 3. Sharding"
+  },
+  {
+    "title": "Database Schema",
+    "url": "/System_Design/Concepts/Databases/DB_Schema/",
+    "excerpt": "Database Schema Home Our team Projects Contact What is Schema? What is DB Schema? Its blueprint for a database. It defines the structure of the databa..."
+  },
+  {
+    "title": "Database Transactions",
+    "url": "/System_Design/Concepts/Databases/Terms/All_Terms.html",
+    "excerpt": "Database Transactions Home Our team Projects Contact Back ACID Atomicity Consistency Durability Isolation ACID Atomicity , Consistency , Isolation , D..."
+  },
+  {
+    "title": "Database Transactions",
+    "url": "/System_Design/Concepts/Databases/Terms/Transactions.html",
+    "excerpt": "Database Transactions Home Our team Projects Contact Back Transaction Terms Dirty Read Read Skew Dirty Write Write Skew Distributed Transactions 2Phas..."
+  },
+  {
+    "title": "Databases",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
+    "excerpt": "Databases Home Our team Projects Contact Column DB faster than row Difference OLAP Column DB faster than row Row oriented Coloumn oriented Consider em..."
+  },
+  {
+    "title": "Databases",
+    "url": "/System_Design/Concepts/Databases/",
+    "excerpt": "Databases Home Our team Projects Contact Back SQL vs NoSQL SQL Databases &ensp; DB Types: PostgreSQL, MariaDB , MySQL, Amazon RDS, Amazon Aurora &ensp..."
+  },
+  {
+    "title": "decltype",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/decltype.html",
+    "excerpt": "decltype Home Our team Projects Contact What Variable declaration using decltype char, int lambda Template decltype auto What is decltype Inspects the..."
+  },
+  {
+    "title": "Deque",
+    "url": "/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/Deque.html",
+    "excerpt": "Deque Deque C++ vs Python vs Rust C++ vs Python vs Rust C++ Rust Python Declaration deque dq let mut dq:VecDeque = VecDeque::new(); self.dq = deque() ..."
+  },
+  {
+    "title": "Diesel Migration",
+    "url": "/Languages/Programming/Rust/Diesel/diesel-cli.html",
+    "excerpt": "Diesel Migration Home Our team Projects Contact diesel-cli? Database, Table creation using Diesel Using Migrations in Production CRUD using Diesel (po..."
+  },
+  {
+    "title": "Diesel ORM",
+    "url": "/Languages/Programming/Rust/Diesel/",
+    "excerpt": "Diesel ORM Home Our team Projects Contact What is Diesel CRUD using Diesel (postgres) Install postgres Create user, Login with user Postgres Commands(..."
+  },
+  {
+    "title": "Dioxus Frontend",
+    "url": "/Frameworks/Dioxus/Frontend/Examples/HotDog.html",
+    "excerpt": "Dioxus Frontend Home Our team Projects Contact Hotdog Installation & project setup Code What is Hotdog We'll be building a small app called: HotDog - ..."
+  },
+  {
+    "title": "Dioxus Frontend",
+    "url": "/Frameworks/Dioxus/Frontend/",
+    "excerpt": "Dioxus Frontend Home Our team Projects Contact UIs with RSX Steps to Create Dioxus Web Page Examples 1. Simple Webpage 2. Hot Dog UIs with RSX Dioxus ..."
+  },
+  {
+    "title": "Dioxus Rust",
+    "url": "/Frameworks/Dioxus/",
+    "excerpt": "Dioxus Rust Home Our team Projects Contact What is Dioxus? Frontend using Dioxus Terms Components rsx macro Event Handlers States Local Vars Signals G..."
+  },
+  {
+    "title": "DLP",
+    "url": "/Networking/Terms/DLP.html",
+    "excerpt": "DLP Home Our team Projects Contact Back What DLP (Data Loss Prevention) if sensitive data is leaked(on cloud), then DLP protects the data by inspectin..."
+  },
+  {
+    "title": "DNS",
+    "url": "/Networking/OSI-Layers/Layer-7/DNS/Introduction.html",
+    "excerpt": "DNS Home Our team Projects Contact Back DNS? Name resolution Forward Lookup Reverse Lookup Terms CyberSquatting DNS Zone File DNS Queries Types Name s..."
+  },
+  {
+    "title": "DNS Records",
+    "url": "/Networking/OSI-Layers/Layer-7/DNS/DNS_Records.html",
+    "excerpt": "DNS Records Home Our team Projects Contact Back DNS Records A record AAAA Alias CAA CNAME MX NS PTR RR SOA SPF TXT DNS Records Record created on DNS s..."
+  },
+  {
+    "title": "Docker Commands",
+    "url": "/System_Design/Concepts/Docker/Commands.html",
+    "excerpt": "Docker Commands Home Our team Projects Contact Create Docker Image Run docker image inside Container Run arm binaries on x86 Load Docker Image Command..."
+  },
+  {
+    "title": "docker compose",
+    "url": "/System_Design/Concepts/Docker/docker-compose.html",
+    "excerpt": "docker compose Home Our team Projects Contact Docker compose Examples Golang_app, postgresDB Docker Compose We can create multiple containers(eg: go, ..."
+  },
+  {
+    "title": "Docker Networking",
+    "url": "/System_Design/Concepts/Docker/Docker-Networking.html",
+    "excerpt": "Docker Networking Home Our team Projects Contact Back Docker Networking 1. Bridge 2. None 3. Host Docker Networking Connecting Docker Containers with ..."
+  },
+  {
+    "title": "Docker Terms",
+    "url": "/System_Design/Concepts/Docker/Terms.html",
+    "excerpt": "Docker Terms Home Our team Projects Contact Back docker-compose Docker Host Container Image/Docker Image Dockerfile Docker registry Docker Volume Exam..."
+  },
+  {
+    "title": "Dockerfile",
+    "url": "/System_Design/Concepts/Docker/SampleDockerFile.html",
+    "excerpt": "Dockerfile Home Our team Projects Contact Back What is Dockerfile Dockerfile Instructions Dockerfile Example Create docker image Check docker image Wh..."
+  },
+  {
+    "title": "Drafting Pleading & Conveyancing",
+    "url": "/Law/Drafting_Pleading_and_Conveyancing/",
+    "excerpt": "Drafting Pleading & Conveyancing Home Our team Projects Contact Pleading Particulars Deed Deed Reciept Promissory note Bond Pleading Pleading(CPC 1908..."
+  },
+  {
+    "title": "Draw Rectangle Around Faces",
+    "url": "/Machine Learning/Code/opencv/Draw_Rectangle_around_faces.html",
+    "excerpt": "Draw Rectangle Around Faces Home Our team Projects Contact Back Opencv draw Rectangle around faces import cv2 //1 import sys faceCascadeObject = cv2.C..."
+  },
+  {
+    "title": "Drone Architecture",
+    "url": "/Drones/Architecture.html",
+    "excerpt": "Drone Architecture Home Our team Projects Contact Back Architecture Architecture Description |-------------- Drone -----------------| | | FAN | [Circu..."
+  },
+  {
+    "title": "Drone Terms",
+    "url": "/Drones/Terms/Terms.html",
+    "excerpt": "Drone Terms Home Our team Projects Contact Back Start Here Firmware(Ardupilot) Hardware Boards SITL (Software-in-the-Loop) Start Reading Here First Ti..."
+  },
+  {
+    "title": "Drones",
+    "url": "/Drones/",
+    "excerpt": "Drones Home Our team Projects Contact Back Architecture Getting Started Terms &ensp; Firmware: Ardupilot, Arducopter, PX4 &ensp; Hardware Boards: APM,..."
+  },
+  {
+    "title": "DS Questions",
+    "url": "/DS_Questions/",
+    "excerpt": "DS Questions Home Our team Projects Contact Questions Data Structures Algorithms"
+  },
+  {
+    "title": "Economics",
+    "url": "/Economics/",
+    "excerpt": "Economics Home Our team Projects Contact GST Example-1: Table Manufacturing Example-2: Exporting IT Services outside India GST GST(Goods and Services ..."
+  },
+  {
+    "title": "Environmental Law",
+    "url": "/Law/Environmental_Law/",
+    "excerpt": "Environmental Law Home Our team Projects Contact Enviormental Law 1986 Water (Prevention & Control of Pollution) Act 1974 Pollution Control Boards Air..."
+  },
+  {
+    "title": "Event Driven Architecture",
+    "url": "/System_Design/Concepts/Microservices/Event Driven Architecture.html",
+    "excerpt": "Event Driven Architecture Home Our team Projects Contact EDA? Components of EDA Benefits of EDA Apache Kafka What is Event Driven Architecture (EDA)? ..."
+  },
+  {
+    "title": "Examples",
+    "url": "/Frameworks/React_Native/Examples.html",
+    "excerpt": "Examples Home Our team Projects Contact Back 1st Mobile app Create apk file using expo Create 1st Mobile App Expo Getting Started npx(Node Package exe..."
+  },
+  {
+    "title": "Exception Handling",
+    "url": "/Languages/Programming/C++/Exception Handling.html",
+    "excerpt": "Exception Handling Home Our team Projects Contact Back What is Exception try, throw, catch Examples Divide by 0 numeric_limits Exception in constructo..."
+  },
+  {
+    "title": "Facebook News Feed",
+    "url": "/System_Design/Scalable/Facebook/Facebook News Feed.html",
+    "excerpt": "Facebook News Feed Home Our team Projects Contact Requirements Back of Envelope API Design DB Schema SQL DB Problems in Above design Sol1=Redis Sol2=n..."
+  },
+  {
+    "title": "Features Rust",
+    "url": "/Languages/Programming/Rust/Features.html",
+    "excerpt": "Features Rust Home Our team Projects Contact Features of Rust 1. High Performance: Designed to be efficient and fast with low level control over resou..."
+  },
+  {
+    "title": "Federation",
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/Federation/",
+    "excerpt": "Federation Home Our team Projects Contact Federation"
+  },
+  {
+    "title": "Files generated by CMake",
+    "url": "/Build_Systems/CMake/Files/Files.html",
+    "excerpt": "Files generated by CMake Home Our team Projects Contact Back CMakeLists.txt Compiling source files cmake_install.cmake Makefile CMakeFiles CMakeCache...."
+  },
+  {
+    "title": "Find",
+    "url": "/DS_Questions/Questions/vectors_arrays/Find_Search_Count/",
+    "excerpt": "Find Home Our team Projects Contact Find"
+  },
+  {
+    "title": "Find Search Count",
+    "url": "/DS_Questions/Questions/vectors_arrays/Find_Search_Count/Find/Unsorted/",
+    "excerpt": "Find Search Count Home Our team Projects Contact Maxiumum All elements occur 3times or ntimes. 1 element once"
+  },
+  {
+    "title": "Find Search Count",
+    "url": "/DS_Questions/Questions/vectors_arrays/",
+    "excerpt": "Find Search Count Home Our team Projects Contact Find Search Count Intervals Progressions SubSequence SubArray"
+  },
+  {
+    "title": "First Time Clone",
+    "url": "/System_Design/Concepts/git/First_Time_Clone.html",
+    "excerpt": "First Time Clone Home Our team Projects Contact Back 1. Setup ssh keys 2. Map ssh keys 3. Fork upstream repo Why git is needed Today you cannot surviv..."
+  },
+  {
+    "title": "flag Command line Arguments",
+    "url": "/Languages/Programming/Go/Command_Line_Arguments/flag.html",
+    "excerpt": "flag Command line Arguments Home Our team Projects Contact Back os.args vs flag Parse Command line arguments flag pacakge The flag package is a built-..."
+  },
+  {
+    "title": "Fold Expression",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++17/Fold Expression.html",
+    "excerpt": "Fold Expression Home Our team Projects Contact Fold Expression Types of folds Fold Expression It simplifies operations over template parameter packs T..."
+  },
+  {
+    "title": "fork",
+    "url": "/Motherboard/Memory/fork.html",
+    "excerpt": "fork Home Our team Projects Contact fork(). Create child process clone() COW(Copy on Write) Code examples 1 child of parent n forks 2 children of pare..."
+  },
+  {
+    "title": "Fortinet",
+    "url": "/Networking/Networking_Devices/Fortinet_Firewall.html",
+    "excerpt": "Fortinet Home Our team Projects Contact FortiAuthenticator REST API Solution Authentication Methods Webservice Basic Authentication OAuth Bearer Token..."
+  },
+  {
+    "title": "Frameworks",
+    "url": "/Frameworks/Go/",
+    "excerpt": "Frameworks Home Our team Projects Contact Back Testing in golang Testing in Go is built directly into the language, making it remarkably straightforwa..."
+  },
+  {
+    "title": "Frameworks",
+    "url": "/Frameworks/",
+    "excerpt": "Frameworks Home Our team Projects Contact Back Dev Frameworks Dioxus React Native Testing Frameworks &ensp; Python: Python Unittest &ensp; Go: GoTest"
+  },
+  {
+    "title": "Function in Go",
+    "url": "/Languages/Programming/Go/Functions.html",
+    "excerpt": "Function in Go Home Our team Projects Contact Back make Multiple Returns Naked Return Function as values Closure range() Function Format package main ..."
+  },
+  {
+    "title": "Function Pointer",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/Function pointer.html",
+    "excerpt": "Function Pointer Home Our team Projects Contact Function pointer C++ (std::function) C Callback Function Function Pointer C++ (std::function) Instance..."
+  },
+  {
+    "title": "Function Templates",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Function Templates.html",
+    "excerpt": "Function Templates Home Our team Projects Contact Back Function Templates Not Allowed Double, objects Assembly (Function Templates) Function Templates..."
+  },
+  {
+    "title": "Functions",
+    "url": "/Languages/Programming/Rust/Functions.html",
+    "excerpt": "Functions Home Our team Projects Contact What is Closure Closure Types Move Closure Borrow Closure Closure = Lambda(C++) Closure is a function-like co..."
+  },
+  {
+    "title": "Functions in Postgres",
+    "url": "/System_Design/Concepts/Databases/Stored_Procedures_and_Functions/Functions/Introduction.html",
+    "excerpt": "Functions in Postgres Home Our team Projects Contact Functions Stored Procedures vs Function Example Print all data from employee table Call Functions..."
+  },
+  {
+    "title": "Games",
+    "url": "/Games/",
+    "excerpt": "Games Home Our team Projects Contact Number Guessing Game Lawn Tennis Number guessing game We have selected a random number between 1 and 100. See if ..."
+  },
+  {
+    "title": "Gartner Terms",
+    "url": "/Networking/Terms/Gartner Terms.html",
+    "excerpt": "Gartner Terms Home Our team Projects Contact Captive Portal Gartner Terms Magic Quadrant SASE SD-WAN SSE SIEM SDN Captive Portal captive portal is a w..."
+  },
+  {
+    "title": "Gateway",
+    "url": "/Networking/Networking_Devices/SRX_Firewall.html",
+    "excerpt": "Gateway Home Our team Projects Contact SRX Authentication Table Commands SRX Security Poilcy Set of rules(Rules: Permit, deny or tunnel) that determin..."
+  },
+  {
+    "title": "GCP",
+    "url": "/System_Design/Concepts/GCP/Deploy_Docker_Image.html",
+    "excerpt": "GCP Home Our team Projects Contact Back Deploy on GCP Deploy Docker Image on GCP 1. Create a docker image 2. Create Compute Engine instance on GCP htt..."
+  },
+  {
+    "title": "Getting Started",
+    "url": "/Drones/Getting_Started.html",
+    "excerpt": "Getting Started Home Our team Projects Contact Back Getting Started Once you have the basic understanding of Drone Architecture and its compoenents/Te..."
+  },
+  {
+    "title": "git commands",
+    "url": "/System_Design/Concepts/git/Commands.html",
+    "excerpt": "git commands Home Our team Projects Contact Back log // Commits between branches $ git clone .. $ git branch -r //All branches branch3 branch2 branch1..."
+  },
+  {
+    "title": "Glew Library",
+    "url": "/Libraries/Glew/Introduction.html",
+    "excerpt": "Glew Library Home Our team Projects Contact Glew? Print Glew Version What is Glew? Glew is OpenGL's Extension Wrangler Library that helps developers i..."
+  },
+  {
+    "title": "Glew Library",
+    "url": "/Libraries/Glew/",
+    "excerpt": "Glew Library Home Our team Projects Contact Glew? &ensp; What is Glew &ensp; Program to print Glew version"
+  },
+  {
+    "title": "Go",
+    "url": "/Languages/Programming/Go/Install_Go.html",
+    "excerpt": "Go Home Our team Projects Contact Install Go Install Go Ubuntu WSL Windows $ wget https://go.dev/dl/go1.22.4.linux-amd64.tar.gz $ sudo tar -C /usr/loc..."
+  },
+  {
+    "title": "Go",
+    "url": "/Languages/Programming/Go/",
+    "excerpt": "Go Home Our team Projects Contact Back Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command line Arguments: os.args , flag package C..."
+  },
+  {
+    "title": "Go Hello World",
+    "url": "/Languages/Programming/Go/Code Examples/Hello World.html",
+    "excerpt": "Go Hello World Home Our team Projects Contact Back Hello World Hello World Program go mod init test will create go module = test $ mkdir test $ cd tes..."
+  },
+  {
+    "title": "Go Loops",
+    "url": "/Languages/Programming/Go/Loops.html",
+    "excerpt": "Go Loops Home Our team Projects Contact for while for for initialization; condition; increment/decrement { // Code to be executed } for i := 1; i &lt;..."
+  },
+  {
+    "title": "Go modules and Packages",
+    "url": "/Languages/Programming/Go/Modules/",
+    "excerpt": "Go modules and Packages Home Our team Projects Contact Package, Module import statement go.mod file go.sum file How to add external module to code Pac..."
+  },
+  {
+    "title": "Go Routine",
+    "url": "/Threads_Processes_IPC/Threads/Creation/GoRoutines.html",
+    "excerpt": "Go Routine Home Our team Projects Contact Back What is Go routine Code Hello World 10 Threads executing 1 function Memory Leak in goroutine Bounded go..."
+  },
+  {
+    "title": "Go Statements",
+    "url": "/Languages/Programming/Go/Statements.html",
+    "excerpt": "Go Statements Home Our team Projects Contact Back Defer if switch Defer defer statement defers execution of a function until the surrounding function ..."
+  },
+  {
+    "title": "Go Variables",
+    "url": "/Languages/Programming/Go/Variables.html",
+    "excerpt": "Go Variables Home Our team Projects Contact Declaration & Initialization Built in Variable Declaration & Initialization fun main() { // Variable decla..."
+  },
+  {
+    "title": "Golang IPC Channels",
+    "url": "/Threads_Processes_IPC/IPC/Golang/channels.html",
+    "excerpt": "Golang IPC Channels Home Our team Projects Contact Back Channel? select (wait on many channels) Types of Channels Buffered / Bounded Unbounded / Unbuf..."
+  },
+  {
+    "title": "GPU HealthCheck",
+    "url": "/Motherboard/GPU/Troubleshooting/Health_Checker.html",
+    "excerpt": "GPU HealthCheck Home Our team Projects Contact GPU Health Check GPU Health Check - if memory > 90%. Release memory - if temprature > 85. Add batch del..."
+  },
+  {
+    "title": "GPU Introduction",
+    "url": "/Motherboard/GPU/Introduction.html",
+    "excerpt": "GPU Introduction Home Our team Projects Contact GPU? Applications of GPU CPU vs GPU Graphics Card DGPU/Dual GPU GPU This is specialized electronic cir..."
+  },
+  {
+    "title": "GPU Kubernets Cluster Config",
+    "url": "/Motherboard/GPU/Troubleshooting/Kubernets_Cluster/Node_Config_in_Cluster.html",
+    "excerpt": "GPU Kubernets Cluster Config Home Our team Projects Contact Pacakges on GPU Node 1. Install Pacakges GPU Node Setup # Install drivers sudo apt install..."
+  },
+  {
+    "title": "GPU Memory, Temprature, Processes",
+    "url": "/Motherboard/GPU/Troubleshooting/GPU_Metrics_Collection.html",
+    "excerpt": "GPU Memory, Temprature, Processes Home Our team Projects Contact GPU Metrics GPU Metrics Generation Create Prometheus Metrics for: - Memory (Total, Us..."
+  },
+  {
+    "title": "GPU Node deployment with argoCD",
+    "url": "/Motherboard/GPU/Troubleshooting/Kubernets_Cluster/Node_deployment_with_argoCD.html",
+    "excerpt": "GPU Node deployment with argoCD Home Our team Projects Contact 1. Install argoCD kubectl create namespace argocd kubectl apply -n argocd -f https://ra..."
+  },
+  {
+    "title": "Grafana",
+    "url": "/System_Design/Concepts/Docker/Grafana.html",
+    "excerpt": "Grafana Home Our team Projects Contact Configuring Grafana Configure Grafana Loki + Promtail + Grafana are running Steps to configure Logging in Grafa..."
+  },
+  {
+    "title": "Graph Databases",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Graph DB/GraphDB.html",
+    "excerpt": "Graph Databases Home Our team Projects Contact What is Graph DB? Represent Entities & Relations Comments on Photo How particular node is searched in g..."
+  },
+  {
+    "title": "Graph Databases",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Graph DB/",
+    "excerpt": "Graph Databases Home Our team Projects Contact Graph DB & its Advatanges Cypher (Graph query Language)"
+  },
+  {
+    "title": "Graphics Pipeline",
+    "url": "/Libraries/Graphics_Pipeline/",
+    "excerpt": "Graphics Pipeline Home Our team Projects Contact Back Graphics Pipeline Graphics pipeline from Windows VM(guest) to physical GPU on the host Render Gr..."
+  },
+  {
+    "title": "Ground Control Station",
+    "url": "/Drones/Terms/GCS.html",
+    "excerpt": "Ground Control Station Home Our team Projects Contact Back GCS Mission Planner Drivers Documentation User Interface Ground Control Stations (GCS) - Gr..."
+  },
+  {
+    "title": "gRPC",
+    "url": "/Networking/OSI-Layers/Layer-7/gRPC/Introduction.html",
+    "excerpt": "gRPC Home Our team Projects Contact Back What is gRPC RPC Protobuf .proto file gRPC Hello server gRPC server gRPC client What is gRPC? Google Remote P..."
+  },
+  {
+    "title": "Hash MessageDigest MAC HMAC",
+    "url": "/Networking/OSI-Layers/Layer-3/Security/Hash MAC.html",
+    "excerpt": "Hash MessageDigest MAC HMAC Home Our team Projects Contact Hash_MessageDigest Hashing Algorithms MD4, MD5 SHA1=128 SHA2=256 SHA3=512(Keccak) Argon2,Ar..."
+  },
+  {
+    "title": "Heap / Priority Queue",
+    "url": "/Languages/Programming/C++/STL/Containers/Container_Adoptors/heap_priority_queue.html",
+    "excerpt": "Heap / Priority Queue Home Our team Projects Contact Max Heap C++ vs Python vs Rust C++ vs Python vs Rust C++ Rust (use std::collections::BinaryHeap) ..."
+  },
+  {
+    "title": "Hindu Law",
+    "url": "/Law/Hindu Law/",
+    "excerpt": "Hindu Law Home Our team Projects Contact Hindu Custom Hindu Marraige Hindu marriage act 1955 Hindu marriage Amendment act 1976 Adoption Maintenance Hi..."
+  },
+  {
+    "title": "How to Reach Microservice",
+    "url": "/System_Design/Scalable/Methods to reach Microservice/",
+    "excerpt": "How to Reach Microservice Home Our team Projects Contact 1. API Gateway 2. External Load Balancer Ways to reach Microservice from public network 1. AP..."
+  },
+  {
+    "title": "HTTP",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html",
+    "excerpt": "HTTP Home Our team Projects Contact Back What is HTTP Features of HTTP Advatanges, Disadvatanges HTTP Methods What is HTTP Client-server/Request-Respo..."
+  },
+  {
+    "title": "HTTP",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/HTTP Headers.html",
+    "excerpt": "HTTP Home Our team Projects Contact Back Headers Request Header Response Header HTTP Headers HTTP header is a field(key:value) in an HTTP request or r..."
+  },
+  {
+    "title": "HTTP Cookie",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/HTTP Cookie.html",
+    "excerpt": "HTTP Cookie Home Our team Projects Contact Back What is HTTP Cookie Why Cookie Terms Stolen Cookie Cookie Surrogate HTTP Cookie / Web cookie / Interne..."
+  },
+  {
+    "title": "Hypervisor",
+    "url": "/Operating System/Virtualization/Hypervisor.html",
+    "excerpt": "Hypervisor Home Our team Projects Contact Back VMM/Hypervisor Types of Hypervisor VMM(Virtual Machine Monitor)/Hypervisor Creates multiple (virtual) m..."
+  },
+  {
+    "title": "Image Classification",
+    "url": "/Machine Learning/Code/Image Classification.html",
+    "excerpt": "Image Classification Home Our team Projects Contact Back 1. Classify grayscale images into(0 to 9) 1. Classify grayscale images(28 × 28 pixels) into t..."
+  },
+  {
+    "title": "Install Database",
+    "url": "/System_Design/Concepts/Databases/install.html",
+    "excerpt": "Install Database Home Our team Projects Contact Installing Postgres Create user, Login with User Installing Postgres Linux Windows $ sudo apt install ..."
+  },
+  {
+    "title": "Install Rust",
+    "url": "/Languages/Programming/Rust/install.html",
+    "excerpt": "Install Rust Home Our team Projects Contact Install Rust Functions(Closure) Install Rust & Cargo Ubuntu WSL Windows $ curl --proto '=https' --tlsv1.2 ..."
+  },
+  {
+    "title": "Integrity",
+    "url": "/Networking/OSI-Layers/Layer-3/Security/Integrity.html",
+    "excerpt": "Integrity Home Our team Projects Contact Integrity? Methods to achieve Integrity What is Integrity Ensuring that data or systems remain accurate, cons..."
+  },
+  {
+    "title": "Intellectual Property Law",
+    "url": "/Law/Intellectual_Property_Law/",
+    "excerpt": "Intellectual Property Law Home Our team Projects Contact Back Statutes Interpretation of Statutes Intrinsic aids Extrinsic aids Intellectual Property ..."
+  },
+  {
+    "title": "Interrupts",
+    "url": "/Operating System/Linux/Kernel/Interrupts/",
+    "excerpt": "Interrupts Home Our team Projects Contact What is interrupt Interrupt Flow Interrupt Vector Table Probing What is Interrupt Interrupt is event/signals..."
+  },
+  {
+    "title": "Intervals",
+    "url": "/DS_Questions/Questions/vectors_arrays/Intervals/",
+    "excerpt": "Intervals Non-overlapping Intervals"
+  },
+  {
+    "title": "IntervalScheduling or IntervalGreedy",
+    "url": "/DS_Questions/Algorithms/IntervalScheduling_or_IntervalGreedy/",
+    "excerpt": "IntervalScheduling or IntervalGreedy IntervalSchedulingor IntervalGreedy"
+  },
+  {
+    "title": "IntervalScheduling orIntervalGreedy",
+    "url": "/DS_Questions/Algorithms/IntervalScheduling_or_IntervalGreedy/IntervalScheduling_or_IntervalGreedy.html",
+    "excerpt": "IntervalScheduling orIntervalGreedy IntervalScheduling orIntervalGreedy Use Case Problem Step by Step Algorithm Use Case Finding non-overlapping inter..."
+  },
+  {
+    "title": "Introduction",
+    "url": "/Machine Learning/Code/opencv/",
+    "excerpt": "Introduction Home Our team Projects Contact Back What is opencv How opencv works Code Draw Rectangle around faces What is opencv opensource library(C+..."
+  },
+  {
+    "title": "Introduction",
+    "url": "/System_Design/Concepts/Docker/Introduction.html",
+    "excerpt": "Introduction Home Our team Projects Contact Back What is Docker Docker vs Kubernets Docker Networking What is Docker Docker is one of container implem..."
+  },
+  {
+    "title": "IP Addressing Scheme",
+    "url": "/Networking/OSI-Layers/Layer-3/Protocols/IP_Internet_Protocol/",
+    "excerpt": "IP Addressing Scheme Home Our team Projects Contact IP Addressing Scheme"
+  },
+  {
+    "title": "IPC",
+    "url": "/Threads_Processes_IPC/IPC/Methods.html",
+    "excerpt": "IPC Home Our team Projects Contact Back Methods Methods of IPC Method Communication Synchronization 1. Pipe, Rust Channels Parent to child viceversa Y..."
+  },
+  {
+    "title": "IPC",
+    "url": "/Threads_Processes_IPC/IPC/",
+    "excerpt": "IPC Home Our team Projects Contact Back What IPC? For communication between 2 processes, Parent and child as well."
+  },
+  {
+    "title": "IPC Channels",
+    "url": "/Threads_Processes_IPC/IPC/Rust/channels.html",
+    "excerpt": "IPC Channels Home Our team Projects Contact Back Types of Channels Multi-Producer, Single-Consumer Multi-Producer, Multiple-Consumer Rust Channel(for ..."
+  },
+  {
+    "title": "IPS",
+    "url": "/Networking/Terms/IPS.html",
+    "excerpt": "IPS Home Our team Projects Contact What IPS (Intrusion Prevention System) Scans network traffic & detect, block vulnerability, cyberattack attempts. H..."
+  },
+  {
+    "title": "iptables",
+    "url": "/Networking/OSI-Layers/Layer-3/iptables.html",
+    "excerpt": "iptables Home Our team Projects Contact what Tables in iptables Examples What is iptables? iptables is a user-space application that configures Linux ..."
+  },
+  {
+    "title": "Isolation",
+    "url": "/System_Design/Concepts/Databases/Terms/Isolation.html",
+    "excerpt": "Isolation Home Our team Projects Contact Back Isolation Isolation Levels 1. Read Committed 2. Snapshot Isolation What is Isolation In terms of DB, Iso..."
+  },
+  {
+    "title": "JavaScript",
+    "url": "/Languages/Scripting/Javascript/",
+    "excerpt": "JavaScript Home Our team Projects Contact Introduction Functions &ensp; Arrow Function"
+  },
+  {
+    "title": "JavaScript Functions",
+    "url": "/Languages/Scripting/Javascript/Functions.html",
+    "excerpt": "JavaScript Functions Home Our team Projects Contact Arrow Arrow / Lambda(C++) / Closure(Rust) / AnonymousFunction Regular Function Arrow Function Synt..."
+  },
+  {
+    "title": "JavaScript Introduction",
+    "url": "/Languages/Scripting/Javascript/introduction.html",
+    "excerpt": "JavaScript Introduction Home Our team Projects Contact What is Javascript Client Side/Server Side Javascript? JavaScript is a scripting language that ..."
+  },
+  {
+    "title": "Joinable Detachable Threads",
+    "url": "/Threads_Processes_IPC/Threads/Joinable_Detachable.html",
+    "excerpt": "Joinable Detachable Threads --> Home Our team Projects Contact Back Joinable? CPP Detachable? CPP Joinable Thread Thread1(Main Process) waits for thre..."
+  },
+  {
+    "title": "JSX",
+    "url": "/Libraries/JSX/",
+    "excerpt": "JSX Home Our team Projects Contact What is JSX Examples Embedding Expressions in JSX JSX(JavaScript Syntax eXtension) This is XML-like extension to th..."
+  },
+  {
+    "title": "Juniper Products",
+    "url": "/Products/Juniper/",
+    "excerpt": "Juniper Products Security Director Menu Item 2 Menu Item 3"
+  },
+  {
+    "title": "Jurisprudence",
+    "url": "/Law/Jurisprudence/",
+    "excerpt": "Jurisprudence Home Our team Projects Contact Jurisprudence? Theories of Law Manu's Law Natural Law theory Maine's movement of progressive societies Sc..."
+  },
+  {
+    "title": "K3s",
+    "url": "/System_Design/Concepts/k3s/Architecture.html",
+    "excerpt": "K3s Home Our team Projects Contact What Architecture k3s vs Kubernets What K3s is a lightweight Kubernetes distribution designed for resource-constrai..."
+  },
+  {
+    "title": "Kafka",
+    "url": "/System_Design/Concepts/Kafka/Introduction.html",
+    "excerpt": "Kafka Home Our team Projects Contact Back Kafka? Message delivery methods Architecuture Terms Cluster Partition Broker Topics & Messages Consumers Con..."
+  },
+  {
+    "title": "Keras",
+    "url": "/Machine Learning/Libraries/keras/Introduction.html",
+    "excerpt": "Keras Home Our team Projects Contact Back keras? Neural Networks(keras) vs. Traditional ML Models(scikit-learn) What is Keras? This is a high-level AP..."
+  },
+  {
+    "title": "Keras Layers",
+    "url": "/Machine Learning/Libraries/keras/Layers_and_APIs.html",
+    "excerpt": "Keras Layers Home Our team Projects Contact Back APIs / Model / Container? API Types keras Layers? Types of Layers API / Model / Container? API/Contai..."
+  },
+  {
+    "title": "Kerberos",
+    "url": "/Networking/OSI-Layers/Layer-7/Kerberos.html",
+    "excerpt": "Kerberos Home Our team Projects Contact What Terms What is Kerberos - Kerberos is authentication protocol where ticket(TGT) is provided to authenticat..."
+  },
+  {
+    "title": "Kernel",
+    "url": "/Operating System/Linux/Kernel/",
+    "excerpt": "Kernel Home Our team Projects Contact What is kernel User, kernel mode IO / Input Output Interrupts What is Kernel Heart of Linux OS. Kernel is chunk ..."
+  },
+  {
+    "title": "Kotlin",
+    "url": "/Languages/Programming/Kotlin/",
+    "excerpt": "Kotlin Home Our team Projects Contact What What is Kotlin? Kotlin is a modern, trending programming language that was released in 2016 by JetBrains. C..."
+  },
+  {
+    "title": "Kubernets",
+    "url": "/System_Design/Concepts/Kubernets/Introduction.html",
+    "excerpt": "Kubernets Home Our team Projects Contact Back Kubernets? Kubernets Kubernetes is Container Orchestrator Orhestration means managing the lifecycles of ..."
+  },
+  {
+    "title": "Kubernets Architecture",
+    "url": "/System_Design/Concepts/Kubernets/Architecture.html",
+    "excerpt": "Kubernets Architecture Home Our team Projects Contact Back Architecture Master Node Worker Node POD Terms namespace service PVC Kubernets Architecture..."
+  },
+  {
+    "title": "Kubernets Objects",
+    "url": "/System_Design/Concepts/Kubernets/Kubernets_Objects.html",
+    "excerpt": "Kubernets Objects Home Our team Projects Contact Back Kubernets Objects? Kubernets Objects Types ClusterRole ConfigMap Deployment Job RBAC ServiceAcco..."
+  },
+  {
+    "title": "Kubernets Terms",
+    "url": "/System_Design/Concepts/Kubernets/Terms.html",
+    "excerpt": "Kubernets Terms Home Our team Projects Contact Back Ambassador API Gateway Namespace? Ports ContainerPort HostPort Nodeport Authorization in kubernets..."
+  },
+  {
+    "title": "Labour and Industrial Law",
+    "url": "/Law/Labour_and_Industrial_law/",
+    "excerpt": "Labour and Industrial Law Home Our team Projects Contact Industrial Legislation Acts 1947, Industrial Dispute Act Works Committee Trade Union Industri..."
+  },
+  {
+    "title": "Lambda Expression",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/Lambda expression.html",
+    "excerpt": "Lambda Expression Home Our team Projects Contact Back What Syntax Examples Pass by Value Pass by Reference Break, return in lambda Generic lambda Lamb..."
+  },
+  {
+    "title": "Land Laws UP Revenue Code",
+    "url": "/Law/Land_Laws_UP_Revenue_Code/",
+    "excerpt": "Land Laws UP Revenue Code Home Our team Projects Contact Back People Bhumidhar Asami Thekedar Zamindar Allottee Land Sir Land khudkasht Land Terms Aba..."
+  },
+  {
+    "title": "Langchain Introduction",
+    "url": "/Machine Learning/LangChain/Introduction.html",
+    "excerpt": "Langchain Introduction Home Our team Projects Contact Back Langchain? What is Langchain This is a framework for developing applications powered by lar..."
+  },
+  {
+    "title": "Langchain Terms",
+    "url": "/Machine Learning/LangChain/Terms.html",
+    "excerpt": "Langchain Terms Home Our team Projects Contact Back Messages LangChain Messages Messages Messages are the unit of communication in chat models. They a..."
+  },
+  {
+    "title": "Languages",
+    "url": "/Languages/",
+    "excerpt": "Languages Home Our team Projects Contact Back Programming Markup Scripting"
+  },
+  {
+    "title": "Law",
+    "url": "/Law/",
+    "excerpt": "Law Home Our team Projects Contact Administrative Law Arbitration Concillation & Dispute Resolution Bhartiya_Nagrik_Suraksha_Sanhita Bhartiya_Sakshya_..."
+  },
+  {
+    "title": "Law of Crimes",
+    "url": "/DS_Questions/Questions/vectors_arrays/Progressions/Calculate Money in Leetcode Bank.html",
+    "excerpt": "Law of Crimes Home Our team Projects Contact Problem Approach Code 1716. Calculate Money in Leetcode Bank Hercy wants to save money for his first car...."
+  },
+  {
+    "title": "Law of Crimes",
+    "url": "/Law/Law_of_Crimes/",
+    "excerpt": "Law of Crimes Home Our team Projects Contact Offense? Definitions Cheating Extra-territorial Offence Law againt Defemation Offense Against State Offen..."
+  },
+  {
+    "title": "Law of Human Rights",
+    "url": "/Law/Law_of_Human_Rights/",
+    "excerpt": "Law of Human Rights Home Our team Projects Contact Back Human Rights Objects Kinds Theories History of Evolution International human rights law Univer..."
+  },
+  {
+    "title": "Law of Property & Easement",
+    "url": "/Law/Law_of_Property_&_Easement/",
+    "excerpt": "Law of Property & Easement Home Our team Projects Contact Transfer of Property Act 1882 Actionable Claim Notice Property Types Rules Rule against Perp..."
+  },
+  {
+    "title": "Law of Torts & Consumer Protection",
+    "url": "/Law/Law_of_Torts&Consumer_Protection/",
+    "excerpt": "Law of Torts & Consumer Protection Home Our team Projects Contact Tort? Felonious tort Foriegn tort Waiver of Tort Ex turpi causa non oritur actio Mal..."
+  },
+  {
+    "title": "Lawn Tennis",
+    "url": "/Games/Lawn_Tennis.html",
+    "excerpt": "Lawn Tennis Home Our team Projects Contact Comparison of Racquets Comparison Name Suitable For Features Popular Racquets Power/Game Improvement Racque..."
+  },
+  {
+    "title": "Layer-2",
+    "url": "/Networking/OSI-Layers/Layer-2/",
+    "excerpt": "Layer-2 Home Our team Projects Contact Hub, Rounter, Switch Ping from Host-1 to Host-2 Hub, Rounter, Switch Ping from Host-1 to Host-2 @startuml parti..."
+  },
+  {
+    "title": "Layer-2.5",
+    "url": "/Networking/OSI-Layers/Layer-2.5/",
+    "excerpt": "Layer-2.5 Home Our team Projects Contact MPLS"
+  },
+  {
+    "title": "Layers, Design Issues",
+    "url": "/Networking/OSI-Layers/Duties_of_Layers.html",
+    "excerpt": "Layers, Design Issues Home Our team Projects Contact Back Hub,Switch,Bridge,Router Layers, Design Issues Layer Design Issues Duties Protocols Applicat..."
+  },
+  {
+    "title": "Layers, Design Issues",
+    "url": "/Networking/OSI-Layers/",
+    "excerpt": "Layers, Design Issues Home Our team Projects Contact Back Duties, Protocols of Each Layer Layer-2: hub router switch bridge, Ping from Host-1 to Host-..."
+  },
+  {
+    "title": "Leadership Principals",
+    "url": "/Companies/Amazon/LeadershipPrincipals.html",
+    "excerpt": "Leadership Principals Home Our team Projects Contact Insist for higher standards Earn trust of others Leadership Principles (SAR(Situation Action Resu..."
+  },
+  {
+    "title": "Legal History",
+    "url": "/Law/Legal History/",
+    "excerpt": "Legal History Home Our team Projects Contact East India Company 1639-1726, British Settlements 1775, Raja Nand Kumar Acts 1773 Regulating Act 1781 Set..."
+  },
+  {
+    "title": "Legal Language and Legal Writing",
+    "url": "/Law/LegalLanguage_and_LegalWriting/",
+    "excerpt": "Legal Language and Legal Writing Home Our team Projects Contact Back Word meanings Ab-initio: From start Abate: To reduce Abetment: Encourage for crim..."
+  },
+  {
+    "title": "Let's Encrypt",
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/lets_encrypt.html",
+    "excerpt": "Let's Encrypt Home Our team Projects Contact Back Let's Encrypt Why Let's Encrypt Ways to get cert Get cert signed by Let's Encrypt DNS CNAME What is ..."
+  },
+  {
+    "title": "Libraries",
+    "url": "/Libraries/Jansson/",
+    "excerpt": "Libraries Home Our team Projects Contact What Install Examples Repo Example json_object_foreach() What is Jansson Jansson is C library for encoding/de..."
+  },
+  {
+    "title": "Libraries",
+    "url": "/Libraries/",
+    "excerpt": "Libraries Home Our team Projects Contact JSON Parsing: Jansson JSX React Libraries for 2D, 3D graphics rendering: OpenGL & DirectX, Glew for OpenGL, V..."
+  },
+  {
+    "title": "Lifetime in Rust",
+    "url": "/Languages/Programming/Rust/lifetime.html",
+    "excerpt": "Lifetime in Rust Home Our team Projects Contact What is lifetime lifetime in struct lifetime Elision What is lifetime Lifetimes tells how long referen..."
+  },
+  {
+    "title": "Linked Lists",
+    "url": "/DS_Questions/Data_Structures/Linked_List/",
+    "excerpt": "Linked Lists LRU Cache Compared LinkedList C,C++,Rust,Python,Go"
+  },
+  {
+    "title": "Linux Commands",
+    "url": "/Operating System/Linux/Commands.html",
+    "excerpt": "Linux Commands Home Our team Projects Contact Back atop curl df htop lsof proc top atop Usage:CPU, Memory usage of process, Network Throughput, Disk T..."
+  },
+  {
+    "title": "Load Balancer",
+    "url": "/System_Design/Concepts/Load Balancer/",
+    "excerpt": "Load Balancer Home Our team Projects Contact Back what Advatanges of LB 1. Failover Types of LB Places where LB can be kept Scheduling Algorithms for ..."
+  },
+  {
+    "title": "Load Testing Tools",
+    "url": "/Networking/OSI-Layers/Layer-7/LoadTestingTools.html",
+    "excerpt": "Load Testing Tools Home Our team Projects Contact Bombardier Bombardier (HTTP Load Generation Tool) Install $ go install github.com/codesenberg/bombar..."
+  },
+  {
+    "title": "Log Storage",
+    "url": "/System_Design/Scalable/Log_Management_Service/",
+    "excerpt": "Log Storage Home Our team Projects Contact Requirements HLD Log management Service Design a service that collects Logs from network devices(firewalls,..."
+  },
+  {
+    "title": "Logging",
+    "url": "/System_Design/Concepts/Docker/Logging.html",
+    "excerpt": "Logging Home Our team Projects Contact Logging inside Container Loki + [Promtail or Alloy] + Grafana Deployment on local docker using docker-compose d..."
+  },
+  {
+    "title": "Longest Arithmetic Subsequence of Given Difference",
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/SubSequence/Longest_Subsequence_forming_Arithmetic_Progression.html",
+    "excerpt": "Longest Arithmetic Subsequence of Given Difference Longest Arithmetic Subsequence of Given Difference Approach-1, Hashtable. Time: O(n), Space: O(n) 1..."
+  },
+  {
+    "title": "LRU Cache",
+    "url": "/DS_Questions/Data_Structures/Linked_List/LRU_Cache.html",
+    "excerpt": "LRU Cache --> LRU Cache Approach-1, Double Linked List+Hashtable. Time: O(1), Space: O(n) 146. LRU Cache Design a data structure that follows the cons..."
+  },
+  {
+    "title": "lvalue, rvalue",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/lvalue_rvalue_reference.html",
+    "excerpt": "lvalue, rvalue Home Our team Projects Contact Back lvalue, rvalue lvalue reference rvalue reference XValue/Expiring Value PRvalue lvalue, rvalue lvalu..."
+  },
+  {
+    "title": "Machine Learning",
+    "url": "/Machine Learning/Run_ML_on_AMD_GPU.html",
+    "excerpt": "Machine Learning Home Our team Projects Contact Run ML on AMD GPU Run ML on AMD GPU 1. Windows version (>10, 1709) 2. Install minconda in C:\\Users\\ami..."
+  },
+  {
+    "title": "Machine Learning",
+    "url": "/Machine Learning/",
+    "excerpt": "Machine Learning Home Our team Projects Contact Back Create Virtual Env in Python Run ML on AMD GPU Machine Learning & Types: Supervised Learning, Sem..."
+  },
+  {
+    "title": "Machine Learning Models",
+    "url": "/Machine Learning/ML_Models/Calorie_Predictor_DecisionTree_and_RandomForestRegressor.html",
+    "excerpt": "Machine Learning Models Home Our team Projects Contact Back Calorie prediction (DecisionTreeRegressor, Random Forest) Models Model doing prediction Mo..."
+  },
+  {
+    "title": "Machine Learning Models",
+    "url": "/Machine Learning/ML_Models/Claude_Code/",
+    "excerpt": "Machine Learning Models Home Our team Projects Contact Back Things Calude can do Things to do with Claude Code Automate the work Enter the project fol..."
+  },
+  {
+    "title": "Machine Learning Terms",
+    "url": "/Machine Learning/Terms/Neural_Network/",
+    "excerpt": "Machine Learning Terms Home Our team Projects Contact Back Neural Network? Neuron Neural Network This is brain-inspired AI model which uses interconne..."
+  },
+  {
+    "title": "Machine Learning Terms",
+    "url": "/Machine Learning/Terms.html",
+    "excerpt": "Machine Learning Terms Home Our team Projects Contact Back AI vs ML vs DL What is ML ML Model? Learning Type Supervised Unsupervised Semisupervised Re..."
+  },
+  {
+    "title": "Machine Learning Types",
+    "url": "/Machine Learning/ML_and_Types_Algorithms.html",
+    "excerpt": "Machine Learning Types Home Our team Projects Contact Back What is ML? Types of ML? Supervised Unsupervised Semisupervised Reinforcement Generative AI..."
+  },
+  {
+    "title": "Makefile",
+    "url": "/Languages/Programming/C/Makefile.html",
+    "excerpt": "Makefile Home Our team Projects Contact What Terms Targets Variables Terms Examples What is Makefile Makefile consists of a set of RULES. Rules consis..."
+  },
+  {
+    "title": "MariaDB",
+    "url": "/System_Design/Concepts/Databases/SQL/MariaDB/",
+    "excerpt": "MariaDB Home Our team Projects Contact MariaDB MariaDB vs postgresQL What is MariaDB - MariaDB is SQL DB, community-developed fork of MySQL. MariaDB v..."
+  },
+  {
+    "title": "Markup Languages",
+    "url": "/Languages/Markup/",
+    "excerpt": "Markup Languages Home Our team Projects Contact SAML"
+  },
+  {
+    "title": "MCP",
+    "url": "/Networking/OSI-Layers/Layer-7/MCP/",
+    "excerpt": "MCP Home Our team Projects Contact Back MCP MCP vs HTTP Message Exchange MCP parsing in SWG Common MCP Request Examples What would surely present in M..."
+  },
+  {
+    "title": "Memory",
+    "url": "/Motherboard/Memory/virtual_and_physical.html",
+    "excerpt": "Memory Home Our team Projects Contact Why Virtual Memory Comparison Terms Page Frame Paging Pure Demand Paging Page Table MMU TLB Translate Virtual to..."
+  },
+  {
+    "title": "Memory Troubleshooting",
+    "url": "/Operating System/Linux/Troubleshooting.html",
+    "excerpt": "Memory Troubleshooting Home Our team Projects Contact Back Memory Issues Test Server Too Many Open Files Test Server curl : Send HTTP req using curl M..."
+  },
+  {
+    "title": "Memory Types",
+    "url": "/Motherboard/Memory/Memory_Types.html",
+    "excerpt": "Memory Types Home Our team Projects Contact CPU Registers 1. General Purpose Registers RSP(stack pointer) RBP(base pointer) 2. Segment Registers(16 bi..."
+  },
+  {
+    "title": "Meta Integration",
+    "url": "/Networking/Integrations/Meta/",
+    "excerpt": "Meta Integration Home Our team Projects Contact Back Send Lead Info from Meta to Backend How to register as a developer, how to use the app dashboard ..."
+  },
+  {
+    "title": "Microservices",
+    "url": "/System_Design/Concepts/Microservices/Introduction.html",
+    "excerpt": "Microservices Home Our team Projects Contact Back Microservice? Advantages? Disadvantages? Deployment Monolith Advantages? Disadvantages? Situations w..."
+  },
+  {
+    "title": "microservices design patterns",
+    "url": "/System_Design/Concepts/Microservices/Design_Patterns/Microservices_design_patterns.html",
+    "excerpt": "microservices design patterns Home Our team Projects Contact Back Microservice DP? Circuit Breaker DP Microservices Design Patterns These are software..."
+  },
+  {
+    "title": "mkcert",
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/mkcert.html",
+    "excerpt": "mkcert Home Our team Projects Contact Back What Using mkcert Ubuntu Windows What is mkcert For anything in production, you’ll be purchasing your SSL c..."
+  },
+  {
+    "title": "Mobile Billing System",
+    "url": "/System_Design/Scalable/Mobile_Billing_System/",
+    "excerpt": "Mobile Billing System Home Our team Projects Contact Back What Requirements BOE Storage estimates Traffic estimates Network Architecture DB Schema/Tab..."
+  },
+  {
+    "title": "Modules Rust",
+    "url": "/Languages/Programming/Rust/Modules.html",
+    "excerpt": "Modules Rust Home Our team Projects Contact What Creating a Module super keyword struct inside module enum inside module use keyword use as pub use / ..."
+  },
+  {
+    "title": "Monitoring Pipeline",
+    "url": "/Motherboard/GPU/Troubleshooting/ML_Workload/Monitoring_Pipeline.html",
+    "excerpt": "Monitoring Pipeline Home Our team Projects Contact Monitoring Pipeline Monitoring Pipeline We have GPU farm, 1000's of GPUs where ML workload need to ..."
+  },
+  {
+    "title": "Moodboard App",
+    "url": "/System_Design/Scalable/Moodboard App/",
+    "excerpt": "Moodboard App Home Our team Projects Contact What is Moodboard? Requirements BOE System APIs DB HLD What is Moodboard (Digital pinboard) = ID App by A..."
+  },
+  {
+    "title": "Moot Court",
+    "url": "/Law/Moot Court/",
+    "excerpt": "Moot Court Home Our team Projects Contact Back Moot Court What? A moot court is a simulated, non-binding court proceeding used in legal education wher..."
+  },
+  {
+    "title": "Motherboard",
+    "url": "/Motherboard/Terms/",
+    "excerpt": "Motherboard Home Our team Projects Contact Back UART (Universal Asynchronous Receiver-Transmitter) Hardware communication protocol (a set of rules) us..."
+  },
+  {
+    "title": "Motherboard",
+    "url": "/Motherboard/",
+    "excerpt": "This is a document type declaration (DTD), which indicate the version of HTML. It is the required initial tag for HTML5 documents. Browser follows app..."
+  },
+  {
+    "title": "Movie Review Classification(+ve or -ve)",
+    "url": "/Machine Learning/Code/Classify_movie_reviews_positive_or_negative_from_imdb.html",
+    "excerpt": "Movie Review Classification(+ve or -ve) Home Our team Projects Contact Back Classify movie reviews 50k reviews are in DB, Classify Review as +ve or -v..."
+  },
+  {
+    "title": "MPLS",
+    "url": "/Networking/OSI-Layers/Layer-2.5/mpls.html",
+    "excerpt": "MPLS Home Our team Projects Contact What Packet Flow MPLS(Multiprotocol Label Switching) This is protocol-agnostic routing technique used in telecommu..."
+  },
+  {
+    "title": "Muslim Law",
+    "url": "/Law/Muslim Law/",
+    "excerpt": "Muslim Law Home Our team Projects Contact Source of mohammedan law Mohammedans Sects of Islam(Shia, Sunni) Shia vs Sunni Nikah Iddat,Hiba-i-muddat Typ..."
+  },
+  {
+    "title": "Mutex",
+    "url": "/Threads_Processes_IPC/Synchronization/mutex.html",
+    "excerpt": "Mutex Home Our team Projects Contact Back Mutex? Problems in mutex? Creating Mutex C++11 POSIX Rust Wrappers around Mutex lock_guard unique_lock Mutex..."
+  },
+  {
+    "title": "N1QL",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Couchbase/N1QL.html",
+    "excerpt": "N1QL Home Our team Projects Contact N1QL? Operators Queries N1QL This is Couchbase’s query language. With N1QL you can execute SQL queries(SELECT, FRO..."
+  },
+  {
+    "title": "Near by Recommendation System",
+    "url": "/System_Design/Scalable/yelpProximityServer_nearbyRecommendationSystem/",
+    "excerpt": "Near by Recommendation System Home Our team Projects Contact What Requirements BOE System APIs Databases SQL Tables DB Scaling & Paritioning HLD Authe..."
+  },
+  {
+    "title": "Netskope",
+    "url": "/Networking/Networking_Devices/Gateway/Netskope.html",
+    "excerpt": "Netskope Home Our team Projects Contact Why Capabilities Why SWG? 1. Additional security to data in transit to Managed, unmanaged cloud apps. SWG Capa..."
+  },
+  {
+    "title": "Netskope DPOP",
+    "url": "/Networking/Networking_Devices/Gateway/Netskope_DPOP.html",
+    "excerpt": "Netskope DPOP Home Our team Projects Contact DPOP? Benefits How requests can reach DPOP? DPOP Interfaces Custom Certs for SSL Inspection DPOP(Dataplan..."
+  },
+  {
+    "title": "Netskope SWG",
+    "url": "/Networking/SWG/",
+    "excerpt": "Netskope SWG Home Our team Projects Contact Back What How it works Terms Policy types in Netskope Configurations in Netskope Proxy Chaining Netskope X..."
+  },
+  {
+    "title": "Network Peering Steering",
+    "url": "/Networking/Terms/Network_Peering.html",
+    "excerpt": "Network Peering Steering Home Our team Projects Contact Peering vs Steering Network Peering Network Steering Peering as Steering Peering vs Steering N..."
+  },
+  {
+    "title": "Networking",
+    "url": "/Networking/OSI-Layers/Layer-3/Protocols/IP_Internet_Protocol/IP_Addressing_Scheme/",
+    "excerpt": "Networking Home Our team Projects Contact OSI Layers IP Addressing Scheme Types of IP Addressing 1. Classful Addressing. Ancient Valid IPv4 Addresses ..."
+  },
+  {
+    "title": "Networking",
+    "url": "/Networking/",
+    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Integrations: &ensp; Meta Networking Devices &ensp; Firewalls:..."
+  },
+  {
+    "title": "Networking Devices",
+    "url": "/Networking/Networking_Devices/",
+    "excerpt": "Networking Devices Home Our team Projects Contact Firewall Gateway Router Firewall sits at gate of organization in DMZ Zone. Gateway / SWG(Secure Web ..."
+  },
+  {
+    "title": "Nginx",
+    "url": "/Networking/OSI-Layers/Layer-7/WebServers/Nginx/",
+    "excerpt": "Nginx Home Our team Projects Contact Nginx Best Practices Serve 56k Connections Serve 10M(1 Cr) Connections Ngnix Web Server Best Practices(Used by Ng..."
+  },
+  {
+    "title": "noexcept",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/noexcept.html",
+    "excerpt": "noexcept Home Our team Projects Contact What noexcept operator What is noexcept throw is deprecated in C++11, will be removed in C++20. noexcept opera..."
+  },
+  {
+    "title": "Non overlapping Intervals",
+    "url": "/DS_Questions/Questions/vectors_arrays/Intervals/Non-overlapping_Intervals.html",
+    "excerpt": "Non overlapping Intervals --> 435. Non-overlapping Intervals Given an array of intervals intervals where intervals[i] = [starti, endi], return the min..."
+  },
+  {
+    "title": "notify-rs",
+    "url": "/Async_Programming/notify-rs.html",
+    "excerpt": "notify-rs Home Our team Projects Contact Back notify-rs? RecommendedWatcher vs PollWatcher RecommendedWatcher code PollWatcher Code What is notify-rs ..."
+  },
+  {
+    "title": "NVML",
+    "url": "/Motherboard/GPU/Troubleshooting/NVML.html",
+    "excerpt": "NVML Home Our team Projects Contact NVML Applications NVIDIA Management Library NVML is C-based API developed by NVIDIA for managing and monitoring th..."
+  },
+  {
+    "title": "OAuth",
+    "url": "/Networking/OSI-Layers/Layer-7/OAuth.html",
+    "excerpt": "OAuth Home Our team Projects Contact What OAuth in Fortinet Authenticator What is OAuth(Open Authorization) - Standard protocol for token-based authen..."
+  },
+  {
+    "title": "OpenGL",
+    "url": "/Libraries/OpenGL/",
+    "excerpt": "OpenGL Home Our team Projects Contact Back Introduction &ensp; What is OpenGL &ensp; OpenGL vs DirectX &ensp; Create \"Hello World\" Window"
+  },
+  {
+    "title": "OpenGL Introduction",
+    "url": "/Libraries/OpenGL/Introduction.html",
+    "excerpt": "OpenGL Introduction Home Our team Projects Contact OpenGL? OpenGL vs DirectX Hello World Window What is OpenGL This is a library for 2D and 3D graphic..."
+  },
+  {
+    "title": "Operating System",
+    "url": "/Operating System/",
+    "excerpt": "Operating System Home Our team Projects Contact Back Daemon Service Linux &ensp; Troubleshooting: (Memory) &ensp; Kernel: ( Interrupts ) &ensp; Comman..."
+  },
+  {
+    "title": "os Command line Arguments",
+    "url": "/Languages/Programming/Go/Command_Line_Arguments/os_args.html",
+    "excerpt": "os Command line Arguments Home Our team Projects Contact Back os.arg os.arg The os.Args variable (found in the os package) is a simple slice of string..."
+  },
+  {
+    "title": "Pandas",
+    "url": "/Machine Learning/Libraries/Pandas/Conversion.html",
+    "excerpt": "Pandas Home Our team Projects Contact Back Conversion Conversion Why conversion is needed? most machine learning frameworks (e.g. TensorFlow), work di..."
+  },
+  {
+    "title": "Pandas",
+    "url": "/Machine Learning/Libraries/Pandas/Introduction.html",
+    "excerpt": "Pandas Home Our team Projects Contact Back What is Pandas Datastructures What is Pandas Is is an open-source Python library used for data manipulation..."
+  },
+  {
+    "title": "Pandas RW from file",
+    "url": "/Machine Learning/Libraries/Pandas/Read_Write_Data_from_file.html",
+    "excerpt": "Pandas RW from file Home Our team Projects Contact Back Functions for RW from file read_csv(), .columns describe() head() dropna() Functions for RW fr..."
+  },
+  {
+    "title": "Paxos Consensus Algorithm",
+    "url": "/System_Design/Concepts/Terms/Consensus/Algorithms/Paxos.html",
+    "excerpt": "Paxos Consensus Algorithm Home Our team Projects Contact Paxos? How it works What is Paxos? Paxos works without a permanent leader Each node can have ..."
+  },
+  {
+    "title": "Plotting in Pandas",
+    "url": "/Machine Learning/Libraries/Pandas/Plotting.html",
+    "excerpt": "Plotting in Pandas Home Our team Projects Contact Back Plotting Plotting This means drawing a 2-D plot from dataframes. # predefined df print('{}\\n'.f..."
+  },
+  {
+    "title": "Pointers",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/smart_shared_unique.html",
+    "excerpt": "Pointers Home Our team Projects Contact Pointers Raw Smart Unique Copy Constructible Move Constructible make_unique Shared Copy Constructible Copy Ini..."
+  },
+  {
+    "title": "Pointers",
+    "url": "/Languages/Programming/Go/Pointers.html",
+    "excerpt": "Pointers Home Our team Projects Contact Pointers Single Linked List Pointer & operator generates pointer to operand. * operator derefences pointer’s v..."
+  },
+  {
+    "title": "Polymorphism",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Introduction.html",
+    "excerpt": "Polymorphism Home Our team Projects Contact Back Polymorphism? What is Polymorphism Poly(many), morphs(forms). Allows allowing a 1 function, operator,..."
+  },
+  {
+    "title": "Pooling, Websockets, Webhooks",
+    "url": "/Networking/Terms/Pooling_Websockets_Webhooks.html",
+    "excerpt": "Pooling, Websockets, Webhooks Home Our team Projects Contact Ways to connect Pooling Long Pooling WebSockets Web hooks Ways Web Client connect to Web ..."
+  },
+  {
+    "title": "Problems on Synchronization",
+    "url": "/Threads_Processes_IPC/Synchronization/Problems on synchronization.html",
+    "excerpt": "Problems on Synchronization Home Our team Projects Contact Back Dining Philosphers Problem n Producer n Consumer Dining Philosphers Problem (Concurren..."
+  },
+  {
+    "title": "Processes",
+    "url": "/Motherboard/Memory/Processes.html",
+    "excerpt": "Processes Home Our team Projects Contact Process Child Process=fork() Memory Layout of a Process Code Segment(.text) Data Segment(.data, .bss) Stack S..."
+  },
+  {
+    "title": "Products",
+    "url": "/Products/",
+    "excerpt": "Products Juniper"
+  },
+  {
+    "title": "Professional Ethics",
+    "url": "/Law/Professional_Ethics/",
+    "excerpt": "Professional Ethics Home Our team Projects Contact What is Professional Ethics? Advocate? Bar Council of India & State Bar Council Advocate Act 1961 P..."
+  },
+  {
+    "title": "Programming",
+    "url": "/Languages/Programming/",
+    "excerpt": "Programming Home Our team Projects Contact Back C C++ Go &ensp; Go vs CPP Kotlin Rust &ensp; Rust vs CPP"
+  },
+  {
+    "title": "Progression",
+    "url": "/DS_Questions/Questions/vectors_arrays/Progressions/",
+    "excerpt": "Progression Home Our team Projects Contact Calculate Money in Leetcode Bank"
+  },
+  {
+    "title": "Protocols",
+    "url": "/Networking/OSI-Layers/Layer-3/Protocols/",
+    "excerpt": "Protocols Home Our team Projects Contact IP(Internet Protocol)"
+  },
+  {
+    "title": "Public International Law",
+    "url": "/Law/Public International Law/",
+    "excerpt": "Public International Law Home Our team Projects Contact International Law? Definitions Theoris Weaknesses Grotius Father of International Law Is Inter..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/MappingType/Dictionary.html",
+    "excerpt": "Python Home Our team Projects Contact What Comprehension enumerate Removal Zip(iteratable) What Keys are immutable(non changable). If we try entering ..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/MappingType/NamedTuple.html",
+    "excerpt": "Python Home Our team Projects Contact What Comprehension enumerate Removal Zip(iteratable) What A NamedTuple is a lightweight, immutable data structur..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/MappingType/OrderedDict.html",
+    "excerpt": "Python Home Our team Projects Contact What What OrderedDict is a dictionary subclass that remembers the order that keys were first inserted. dict vs O..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/MappingType/",
+    "excerpt": "Python Home Our team Projects Contact Type Represented by Description Comprehension Dictionary/HashMap (Mutable key-value) {} y Ordered Dictionary {} ..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/Sequence/List.html",
+    "excerpt": "Python Home Our team Projects Contact What Creating List Append to List List Comprehension Nesting of list Insert Sort Slice List as Stack List as que..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/Sequence/Tuples.html",
+    "excerpt": "Python Home Our team Projects Contact What Create Tuple Packing, Unpacking What RO/Immutable lists ie values inside tuples cannot be changed. a = [1,2..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/Sequence/",
+    "excerpt": "Python Home Our team Projects Contact Type Represented by Description Comprehension List (Mutable) [] ordered collections, Can store different data ty..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/",
+    "excerpt": "Python Home Our team Projects Contact Type Description Example Seqeunce Containers Sequence containers are ordered collections that support indexing a..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Control_Flow.html",
+    "excerpt": "Python Home Our team Projects Contact if for match range if if x &lt; 0: x = 0 print('Negative changed to zero') elif x == 0: print('Zero') else: //Op..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Functions/",
+    "excerpt": "Python Home Our team Projects Contact Value, Reference Function passing Variable no of args Types of Functions Types of Functions Decorator enumerate(..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Introduction.html",
+    "excerpt": "Python Home Our team Projects Contact What What Python is interpreted(executes statement line by line), general Purpose language. Other Interpreted la..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/",
+    "excerpt": "Python Home Our team Projects Contact Introduction - What is Python? - Python is dynamic typed language Terms / Concepts - Global Interpreter Lock? - ..."
+  },
+  {
+    "title": "Python Terms",
+    "url": "/Languages/Scripting/Python/Terms_Concepts.html",
+    "excerpt": "Python Terms Home Our team Projects Contact GIL Memory Management PEP 8 Serialization Global Interpreter Lock This is a mutex used for limiting access..."
+  },
+  {
+    "title": "Questions",
+    "url": "/DS_Questions/Questions/",
+    "excerpt": "Questions Home Our team Projects Contact Vectors & Arrays"
+  },
+  {
+    "title": "Queue",
+    "url": "/Languages/Programming/C++/STL/Containers/Container_Adoptors/queue.html",
+    "excerpt": "Queue Queue C++ vs Python vs Rust C++ vs Python vs Rust vs Go C++ Rust Python Go Declaration queue&lt;int> q; Implemented as VecDeque import queue cla..."
+  },
+  {
+    "title": "Raft Consensus Algorithm",
+    "url": "/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html",
+    "excerpt": "Raft Consensus Algorithm Home Our team Projects Contact Raft? How it works What is Raft? Raft is a consensus algorithm that is designed to be easy to ..."
+  },
+  {
+    "title": "Rate Limiter",
+    "url": "/System_Design/Scalable/Rate Limiter/",
+    "excerpt": "Rate Limiter Home Our team Projects Contact What Requirements HLD Rate Limiting Algorithms Req1 Req2 Issues Race Condition Synchronization issue What ..."
+  },
+  {
+    "title": "React",
+    "url": "/Libraries/React/What_Terms.html",
+    "excerpt": "React Home Our team Projects Contact React Terms Components Rendering lists Event Handler Remembering State Sharing data between components What is Re..."
+  },
+  {
+    "title": "React",
+    "url": "/Libraries/React/",
+    "excerpt": "React Home Our team Projects Contact What is React React Terms Components Rendering lists Event Handler Remembering State Sharing data between compone..."
+  },
+  {
+    "title": "React Native",
+    "url": "/Frameworks/React_Native/components/SafeArea.html",
+    "excerpt": "React Native Home Our team Projects Contact SafeArea SafeAreaView SafeAreaProvider What is SafeArea SafeArea? Area of the app screen that is not cover..."
+  },
+  {
+    "title": "React Native",
+    "url": "/Frameworks/React_Native/components/",
+    "excerpt": "React Native Home Our team Projects Contact Components FlatList ScrollView, ParallaxScrollView SafeAreaView and SafeAreaProvider Text TextInput Themed..."
+  },
+  {
+    "title": "React Native",
+    "url": "/Frameworks/React_Native/",
+    "excerpt": "React Native Home Our team Projects Contact Back Introduction: React Native, Comparison(React vs React Native), apk file using expo Examples: 1st Mobi..."
+  },
+  {
+    "title": "React Native Components",
+    "url": "/Frameworks/React_Native/Terms/text_view_props_state.html",
+    "excerpt": "React Native Components Home Our team Projects Contact Terms Component text view Props State Terms Components Functions in React and JSX are called Co..."
+  },
+  {
+    "title": "React Native FlatList",
+    "url": "/Frameworks/React_Native/components/FlatList.html",
+    "excerpt": "React Native FlatList Home Our team Projects Contact What Examples Simple FlatList What is FlatList? displays a scrolling list of changing, but simila..."
+  },
+  {
+    "title": "React Native hooks",
+    "url": "/Frameworks/React_Native/hooks/",
+    "excerpt": "React Native hooks Home Our team Projects Contact What is hook Types of hook useState useEffect What is hook? Hooks allow function components to have ..."
+  },
+  {
+    "title": "React Native Introduction",
+    "url": "/Frameworks/React_Native/Introduction.html",
+    "excerpt": "React Native Introduction Home Our team Projects Contact React Native? Comparison Create apk file using expo Back What is React Native? React Native i..."
+  },
+  {
+    "title": "React Native Navigation",
+    "url": "/Frameworks/React_Native/Networking/Navigation Between Screens.html",
+    "excerpt": "React Native Navigation Home Our team Projects Contact Navigation Ways to Navigate React Navigation Expo Router Navigation (Method-1) React Navigation..."
+  },
+  {
+    "title": "React Native Networking",
+    "url": "/Frameworks/React_Native/Networking/FetchDataFromRestEndpoint.html",
+    "excerpt": "React Native Networking Home Our team Projects Contact Networking? Examples GET from REST What is Networking Many mobile apps need to load resources f..."
+  },
+  {
+    "title": "React Native Networking",
+    "url": "/Frameworks/React_Native/Networking/Passing data between screens.html",
+    "excerpt": "React Native Networking Home Our team Projects Contact Pass Data Passing data between screens _layout.tsx Defines the navigation stack (Required) in e..."
+  },
+  {
+    "title": "React Native Networking",
+    "url": "/Frameworks/React_Native/Networking/",
+    "excerpt": "React Native Networking Home Our team Projects Contact Navigation between Screens Fetch data from REST endpoint Passing data between Screens"
+  },
+  {
+    "title": "React Native ScrollView",
+    "url": "/Frameworks/React_Native/components/ScrollView.html",
+    "excerpt": "React Native ScrollView Home Our team Projects Contact ScrollView? Simple ScrollView ParallaxScrollView? ParallaxScrollView vs ScrollView ScrollView? ..."
+  },
+  {
+    "title": "React Native TextInput",
+    "url": "/Frameworks/React_Native/components/textInput.html",
+    "excerpt": "React Native TextInput Home Our team Projects Contact What Examples Convert to Pizza What is textinput? React native Component to take user inputs Exa..."
+  },
+  {
+    "title": "React Native ThemedView",
+    "url": "/Frameworks/React_Native/components/ThemedView.html",
+    "excerpt": "React Native ThemedView Home Our team Projects Contact ThemedView? ThemedView? ThemedView is a custom component that adapts its styling based on the c..."
+  },
+  {
+    "title": "React Native TouchableOpacity",
+    "url": "/Frameworks/React_Native/components/TouchableOpacity.html",
+    "excerpt": "React Native TouchableOpacity Home Our team Projects Contact TouchableOpacity? TouchableOpacity over Button TouchableOpacity? TouchableOpacity is a pr..."
+  },
+  {
+    "title": "React Projects",
+    "url": "/Libraries/React/React_Projects.html",
+    "excerpt": "React Projects Home Our team Projects Contact Tic Tac Toe Game Tic Tac Toe Game Without State Storage github link"
+  },
+  {
+    "title": "Refresh Token",
+    "url": "/System_Design/Concepts/Terms/Authentication/refresh_token.html",
+    "excerpt": "Refresh Token Home Our team Projects Contact Back Why JWT Token Issue with 1 Token System Refresh Token Flow Can't Refresh token be Compromised? DB Sc..."
+  },
+  {
+    "title": "Remote Browser Isolation",
+    "url": "/Networking/OSI-Layers/Layer-7/RBI Remote Browser Isolation.html",
+    "excerpt": "Remote Browser Isolation Home Our team Projects Contact What RBI modes RBI Types Remote Browser Isolation / Web Isolation This is a cybersecurity appr..."
+  },
+  {
+    "title": "remove_pointer_t",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/remove_pointer_t.html",
+    "excerpt": "remove_pointer_t Home Our team Projects Contact What What is remove_pointer_t Remove pointer from type #include &lt;iostream> #include &lt;type_traits..."
+  },
+  {
+    "title": "REST API",
+    "url": "/Networking/OSI-Layers/Layer-7/REST API/",
+    "excerpt": "REST API Home Our team Projects Contact Back What is REST API? How REST Works? Why RESTful? Comparison REST vs HTTP REST vs SOAP REST vs gRPC Versioni..."
+  },
+  {
+    "title": "Runtimes",
+    "url": "/Async_Programming/Runtime/Tokio/",
+    "excerpt": "Runtimes Home Our team Projects Contact Creating Task tokio::spawn() tokio::task::spawn_blocking executor::block_on Comparison spawn() vs spawn_blocki..."
+  },
+  {
+    "title": "Runtimes",
+    "url": "/Async_Programming/Runtime/",
+    "excerpt": "Runtimes Home Our team Projects Contact What is Runtime? Runtimes Tokio What is Runtime? Runtime provides: &ensp; Reactor: Support for performing asyn..."
+  },
+  {
+    "title": "Rust",
+    "url": "/Languages/Programming/Rust/Why_rust_over_cpp.html",
+    "excerpt": "Rust Home Our team Projects Contact Back Rust No Crash 1. Ownership 2. References = Borrowing 3. No Manual Memory management Faster wrt C++ 4. Aggress..."
+  },
+  {
+    "title": "Rust",
+    "url": "/Languages/Programming/Rust/",
+    "excerpt": "Rust Home Our team Projects Contact Back Why Rust Over C++(Ownership, Borrowing) Automated Tests Cargo Collections Database Interaction Diesel ORM enu..."
+  },
+  {
+    "title": "Rust enum",
+    "url": "/Languages/Programming/Rust/enum.html",
+    "excerpt": "Rust enum Home Our team Projects Contact What is enum enum Types Not holding data holding data Option Enum = NULL What is enum Enums are User defined ..."
+  },
+  {
+    "title": "Rust Provided Triats",
+    "url": "/Languages/Programming/Rust/Trait/Rust Provided Triats/",
+    "excerpt": "Rust Provided Triats Home Our team Projects Contact Copy & Clone trait default trait drop trait future trait Iterator trait Send, Sync trait Copy & Cl..."
+  },
+  {
+    "title": "Rust References & Borrowing",
+    "url": "/Languages/Programming/Rust/References Borrowing/",
+    "excerpt": "Rust References & Borrowing Home Our team Projects Contact Borrowing, Reference? Types of references Dangling References Exclusive/Mutable References ..."
+  },
+  {
+    "title": "Rust Slices",
+    "url": "/Languages/Programming/Rust/Slice.html",
+    "excerpt": "Rust Slices Home Our team Projects Contact What is Slice Types Slice String Slice Array Slice Creating Slice What is Slice Slice is somepart of larger..."
+  },
+  {
+    "title": "Rust Smart Pointers",
+    "url": "/Languages/Programming/Rust/Smart Pointers/",
+    "excerpt": "Rust Smart Pointers Home Our team Projects Contact Smart Pointers? Examples Rc &lt;T> Features What is Smart Pointer? Same as C++ Smart,shared pointer..."
+  },
+  {
+    "title": "Saga microservices design pattern",
+    "url": "/System_Design/Concepts/Microservices/Design_Patterns/Circuit_Breaker.html",
+    "excerpt": "Saga microservices design pattern Home Our team Projects Contact Back Circuit Breaker DP Circuit Breaker Design Pattern Suppose service1 gets some dat..."
+  },
+  {
+    "title": "Saga microservices design pattern",
+    "url": "/System_Design/Concepts/Microservices/Design_Patterns/Saga.html",
+    "excerpt": "Saga microservices design pattern Home Our team Projects Contact Back Saga DP Working of Saga Saga Design Pattern Saga is a method to do Asynchronous ..."
+  },
+  {
+    "title": "SAML",
+    "url": "/Languages/Markup/SAML/",
+    "excerpt": "SAML Home Our team Projects Contact What is SAML How SAML works SAML Assertion What is SAML Security based XML protocol for user authentication, limit..."
+  },
+  {
+    "title": "scikit-learn",
+    "url": "/Machine Learning/Libraries/scikit-learn/",
+    "excerpt": "scikit-learn Home Our team Projects Contact Back What What is scikit-learn Used for create Machine Learning models , which can be fed using Pandas dat..."
+  },
+  {
+    "title": "Scripting Languages",
+    "url": "/Languages/Scripting/",
+    "excerpt": "Scripting Languages Home Our team Projects Contact Javascript Python"
+  },
+  {
+    "title": "Secure Web Gateway",
+    "url": "/System_Design/Scalable/SWG/",
+    "excerpt": "Secure Web Gateway Home Our team Projects Contact What 1. Requirements 2. BOE 3. DB & Pipelines 4. HLD What is SWG SASE? , SSE? , SWG is subset of SSE..."
+  },
+  {
+    "title": "Security",
+    "url": "/Networking/OSI-Layers/Layer-3/Security/",
+    "excerpt": "Security Home Our team Projects Contact Terms Integrity &ensp; Achieved using: &ensp; &ensp; Hashing (SHA256, MD5, Argon2), MAC, HMAC &ensp; &ensp; Si..."
+  },
+  {
+    "title": "Security Director",
+    "url": "/Products/Juniper/Security_Director.html",
+    "excerpt": "Security Director Security Director What is Security Director What is Security Director This is security management platform provided by Juniper. It i..."
+  },
+  {
+    "title": "SetTypes",
+    "url": "/Languages/Scripting/Python/Containers/SetTypes.html",
+    "excerpt": ""
+  },
+  {
+    "title": "Sharding",
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/Sharding/",
+    "excerpt": "Sharding Home Our team Projects Contact What When to use Sharding How App Server interacts with shards Issues in Sharding Sharding=Scalabilty? Shardin..."
+  },
+  {
+    "title": "Sheild",
+    "url": "/System_Design/Concepts/AWS/Sheild.html",
+    "excerpt": "Sheild Home Our team Projects Contact Back What is VPC Sheild (DDOS Protection) What is DDOS WAF vs Sheild Levels of Protection Level Explanation Stan..."
+  },
+  {
+    "title": "Sidecar Container",
+    "url": "/System_Design/Concepts/Containers/Sidecar_Container.html",
+    "excerpt": "Sidecar Container Home Our team Projects Contact What is Sidecar Container Main Container vs Sidecar Sidecar Container A sidecar is a helper container..."
+  },
+  {
+    "title": "Signing",
+    "url": "/Networking/OSI-Layers/Layer-3/Security/Signing.html",
+    "excerpt": "Signing Home Our team Projects Contact Signing Algos fr DS What is Signing / Digital Signatures This is Hash encrypted by PVT-KEY. Digital Signature P..."
+  },
+  {
+    "title": "Single Number II",
+    "url": "/DS_Questions/Questions/vectors_arrays/Find_Search_Count/Find/Unsorted/All_Elements_Occur_3times_orNTimes_1Element_once.html",
+    "excerpt": "Single Number II Home Our team Projects Contact Problem Approach-1, unordered_map, Count Frequency. Time:O(n), Space:O(m) Approach-2, unordered_set, T..."
+  },
+  {
+    "title": "Solana Blockchain",
+    "url": "/BlockChain/Solana.html",
+    "excerpt": "Solana Blockchain Home Our team Projects Contact Solana Solana Solana is a high-performance, decentralized blockchain platform designed for fast, scal..."
+  },
+  {
+    "title": "SQL Database",
+    "url": "/System_Design/Concepts/Databases/SQL/",
+    "excerpt": "SQL Database Home Our team Projects Contact SQL DB Issues"
+  },
+  {
+    "title": "SQL Issues",
+    "url": "/System_Design/Concepts/Databases/SQL/SQL_Issues.html",
+    "excerpt": "SQL Issues Home Our team Projects Contact Scaling Issues with SQL DB Scaling Issues with SQL DB Customer Table Orders Table Id(pk) | name OrderId | Cu..."
+  },
+  {
+    "title": "SQL vs NoSQL",
+    "url": "/System_Design/Concepts/Databases/SQL_vs_NoSQL.html",
+    "excerpt": "SQL vs NoSQL Home Our team Projects Contact SQL vs NoSQL SQL vs NoSQL SQL / Structured / Relational NoSQL / unStructured / nonRelational Examples Amaz..."
+  },
+  {
+    "title": "SRIOV",
+    "url": "/Operating System/Virtualization/SRIOV.html",
+    "excerpt": "SRIOV Home Our team Projects Contact Back What is SRIOV Physical and Virtual Functions SRIOV / Single root I/O virtualization Bypassing the hypervisor..."
+  },
+  {
+    "title": "Stack",
+    "url": "/Languages/Programming/C++/STL/Containers/Container_Adoptors/stack.html",
+    "excerpt": "Stack Home Our team Projects Contact Stack C++ vs Python vs Rust C++ vs Python vs Rust C++ Rust Python Go Declaration stack&lt;int> st; let mut stack:..."
+  },
+  {
+    "title": "STL",
+    "url": "/Languages/Programming/C++/STL/",
+    "excerpt": "STL Home Our team Projects Contact Containers Associative Containers Unsorted Unordered Associative Example How elements are stored Access Advantages ..."
+  },
+  {
+    "title": "Stored Procedures Introduction",
+    "url": "/System_Design/Concepts/Databases/Stored_Procedures_and_Functions/Stored_Procedures/Introduction.html",
+    "excerpt": "Stored Procedures Introduction Home Our team Projects Contact Stored Procedure? Examples Transfer funds Commands List Stored Procedure Drop Stored Pro..."
+  },
+  {
+    "title": "String",
+    "url": "/Languages/Programming/Rust/Collections/String.html",
+    "excerpt": "String Home Our team Projects Contact String literal String Slice Opeartions on String String Literal String Both have different ownership and mutabil..."
+  },
+  {
+    "title": "string_view",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++17/string_view.html",
+    "excerpt": "string_view Home Our team Projects Contact What is string_view Characteristics Comparison string_view vs const string& What is string_view This is lig..."
+  },
+  {
+    "title": "Struct Embedding",
+    "url": "/Languages/Programming/Go/Features/Struct_Embedding.html",
+    "excerpt": "Struct Embedding Home Our team Projects Contact Back Struct Embedding Struct Embedding Struct embedding (also called \"anonymous fields\") is Go’s way o..."
+  },
+  {
+    "title": "SubSequences",
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/SubSequence/",
+    "excerpt": "SubSequences Longest Subsequence forming Arithmetic Progression Number of Longest Increasing Subsequence"
+  },
+  {
+    "title": "SubSequences",
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/",
+    "excerpt": "SubSequences SubSequences"
+  },
+  {
+    "title": "Synchronization",
+    "url": "/Threads_Processes_IPC/Synchronization/",
+    "excerpt": "Synchronization Home Our team Projects Contact Back What is Synchronization? Synchronization Methods What is Synchronization Coordination b/w processe..."
+  },
+  {
+    "title": "Synchronous Asynchronous Channels",
+    "url": "/Async_Programming/InterTask_Communication/Synchronous_Asynchronous_Channels.html",
+    "excerpt": "Synchronous Asynchronous Channels Home Our team Projects Contact Back Synchronous vs Asynchronous Channels Code Synchronous(1 Producer 1 Consumer) Syn..."
+  },
+  {
+    "title": "System Design",
+    "url": "/System_Design/Concepts/",
+    "excerpt": "System Design Home Our team Projects Contact Back ⇉ AWS vs GCP AWS : Terraforms , Sheild , VPC GCP: Introduction (Components(Compute Engine, App Engin..."
+  },
+  {
+    "title": "System Design",
+    "url": "/System_Design/Scalable/",
+    "excerpt": "System Design Home Our team Projects Contact Authentication Flow Methods to reach Microservice System Designs: &ensp; Bump (by Amo) &ensp; Facebook(Ne..."
+  },
+  {
+    "title": "System Design",
+    "url": "/System_Design/",
+    "excerpt": "System Design Home Our team Projects Contact Back 8 building blocks SD Interview Questions Concepts Scalable Systems 8 Building Blocks of System Desig..."
+  },
+  {
+    "title": "Tallest Billboard",
+    "url": "/DS_Questions/Questions/vectors_arrays/Find_Search_Count/Find/Unsorted/Maximum/Tallest_Billboard.html",
+    "excerpt": "Tallest Billboard Tallest Billboard Approach-1. 3 n . DFS. TLE Approach-2. DP 956. Tallest Billboard You are installing a billboard and want it to hav..."
+  },
+  {
+    "title": "Template Parameter Pack",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Template Parameter Pack.html",
+    "excerpt": "Template Parameter Pack Home Our team Projects Contact Back Parameter Pack? Parameter Pack with left fold What is Parameter Pack A template parameter ..."
+  },
+  {
+    "title": "Tensorflow",
+    "url": "/Machine Learning/Libraries/Tensorflow/",
+    "excerpt": "Tensorflow Home Our team Projects Contact Back What What is tensorflow This is ML Open source library(EXPOSING APIs) for numerical computation and lar..."
+  },
+  {
+    "title": "Terms",
+    "url": "/Frameworks/React_Native/Terms/Development_build.html",
+    "excerpt": "Terms Home Our team Projects Contact Back Development build Create dev build 1. Using EAS 2. Local Development Build React native app consists of 2 pa..."
+  },
+  {
+    "title": "Terms",
+    "url": "/Languages/Programming/C++/Terms.html",
+    "excerpt": "Terms Home Our team Projects Contact Stack Unwinding Runtime Type Information (RTTI) Stack Unwinding Whenever a exception is thrown, process of deallo..."
+  },
+  {
+    "title": "Terms",
+    "url": "/Networking/Terms/Terms.html",
+    "excerpt": "Terms Home Our team Projects Contact Back User Agent User Agent This is a self-identification string that a software application sends to a web server..."
+  },
+  {
+    "title": "Terms",
+    "url": "/Operating System/Virtualization/Terms/",
+    "excerpt": "Terms Home Our team Projects Contact Back QEMU Virglrenderer Venus Server Venus Protocol QEMU Emulator and virtualizer, used as use space component of..."
+  },
+  {
+    "title": "Terms",
+    "url": "/System_Design/Concepts/Terms/Authentication/jwt.html",
+    "excerpt": "Terms Home Our team Projects Contact Back Json Web Token Disecting token JWT Authentication to RESTFul APIs Json Web Token / oauth_token / auth_token ..."
+  },
+  {
+    "title": "Terms",
+    "url": "/System_Design/Concepts/Terms/Terms.html",
+    "excerpt": "Terms Home Our team Projects Contact Back Reliable Scalable Maintainable Reliable / Reliability System to continue to work correctly, even when things..."
+  },
+  {
+    "title": "Terrform",
+    "url": "/System_Design/Concepts/AWS/Terraforms.html",
+    "excerpt": "Terrform Home Our team Projects Contact Back What is Terraform Terraform (Infrastructure as code. IaC) This is tool/script for building, changing the ..."
+  },
+  {
+    "title": "Tests in Rust",
+    "url": "/Languages/Programming/Rust/Automated Tests.html",
+    "excerpt": "Tests in Rust Home Our team Projects Contact Automated Tests Examples Simple Function Modules for Test Run Test by name Ignore some tests async functi..."
+  },
+  {
+    "title": "Thread Code",
+    "url": "/Threads_Processes_IPC/Threads/Creation/Threads_Creation.html",
+    "excerpt": "Thread Code Home Our team Projects Contact Back CPP 1. Thread class 2. Functor Rust 1. std::thread::spawn 2. std::thread::Builder 3. Asynchronous Fram..."
+  },
+  {
+    "title": "Threads Processes IPC",
+    "url": "/Threads_Processes_IPC/Introduction.html",
+    "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Thread vs Process Why Processes Threads vs Processes (Mechanisms used for executing code con..."
+  },
+  {
+    "title": "Threads Processes IPC",
+    "url": "/Threads_Processes_IPC/",
+    "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Introduction &ensp; Thread vs Process, Why processes Threads &ensp; Thread Creation: CPP(Thr..."
+  },
+  {
+    "title": "Tilt by Amo",
+    "url": "/System_Design/Scalable/Tilt/",
+    "excerpt": "Tilt by Amo Home Our team Projects Contact What is Tilt Requirements BOE API Design DB Schema HLD What is Tilt Tilt is video creation app(same as beRe..."
+  },
+  {
+    "title": "Tiny URL",
+    "url": "/System_Design/Scalable/tinyurl/",
+    "excerpt": "Tiny URL Home Our team Projects Contact What Requirements BOE System APIs Databases SQL Tables DB Scaling & Paritioning HLD Authenticate to RESTful AP..."
+  },
+  {
+    "title": "TLS SSL",
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/Introduction.html",
+    "excerpt": "TLS SSL Home Our team Projects Contact Back What SSL vs TLS NSS vs Openssl What is TLS/SSL SSL/TLS are Layer6 protocol for Authentication+Encryption. ..."
+  },
+  {
+    "title": "TLS SSL",
+    "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/",
+    "excerpt": "TLS SSL Home Our team Projects Contact Back SNI SNI (Server Name Indication) SSL Client can specify the domain name it is trying to reach, this is pur..."
+  },
+  {
+    "title": "Trait Rust",
+    "url": "/Languages/Programming/Rust/Trait/",
+    "excerpt": "Trait Rust Home Our team Projects Contact What Declaration & Definition User Defined Traits Traits as fun arg Returning trait from fun Rust Lib provid..."
+  },
+  {
+    "title": "Type Triats",
+    "url": "/Languages/Programming/C++/C++_11,14,17,20,23/C++11/Type Triats.html",
+    "excerpt": "Type Triats Home Our team Projects Contact What is Type Triat Types 1. Primary 2. Composite 3. Supported Operation 4. Miscellaneous What is Type Triat..."
+  },
+  {
+    "title": "Types in golang",
+    "url": "/Languages/Programming/Go/Types.html",
+    "excerpt": "Types in golang Home Our team Projects Contact Back Types Types of types Basic Aggregate Reference Interface Types? Go is statically typed language me..."
+  },
+  {
+    "title": "Uber System Design",
+    "url": "/System_Design/Scalable/Uber/",
+    "excerpt": "Uber System Design Home Our team Projects Contact Requirements BOE API Design User APIs Driver APIs HLD Requirements Functional There would be 2 entit..."
+  },
+  {
+    "title": "Unittest or Pyunit",
+    "url": "/Frameworks/Python/Unittest/",
+    "excerpt": "Unittest or Pyunit Home Our team Projects Contact Unittest Examples Simple Test Writing Mock object Pyunit or Unitest Used to test a unit of source co..."
+  },
+  {
+    "title": "unordered_map",
+    "url": "/Languages/Programming/C++/STL/Containers/unordered_map.html",
+    "excerpt": "unordered_map Home Our team Projects Contact C++ Rust (use std::collections::HashMap) Python ({} Dictionary) Go Create unordered_map&lt;string, int> u..."
+  },
+  {
+    "title": "Unsafe Rust",
+    "url": "/Languages/Programming/Rust/Unsafe/",
+    "excerpt": "Unsafe Rust Home Our team Projects Contact What is Unsafe Why need Unsafe What is Unsafe? There can be 2 types of Rust. Safe Rust Unsafe Rust (Like C ..."
+  },
+  {
+    "title": "Unsorted",
+    "url": "/DS_Questions/Questions/vectors_arrays/Find_Search_Count/Find/",
+    "excerpt": "Unsorted Home Our team Projects Contact Unsorted"
+  },
+  {
+    "title": "Variadic Templates",
+    "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Variadic Templates.html",
+    "excerpt": "Variadic Templates Home Our team Projects Contact Back What is Variadic? Variadic Class Template Variadic Function Template What is Variadic Templates..."
+  },
+  {
+    "title": "Vehicle Types",
+    "url": "/Drones/Terms/Vehicle_Types.html",
+    "excerpt": "Vehicle Types Home Our team Projects Contact Back Planes Copters Rovers Boats Sub Vehicle Types Planes (Fixed-Wing Aircraft) Fast, and have long range..."
+  },
+  {
+    "title": "VGPU Terms",
+    "url": "/Motherboard/GPU/Terms.html",
+    "excerpt": "VGPU Terms Home Our team Projects Contact GPU Accelration How Oracle VirtualBox's provides 1 GPU to all guest VMs GPU Acceleration Specific tasks whic..."
+  },
+  {
+    "title": "VirtIO-GPU 3D",
+    "url": "/Motherboard/GPU/VirtIO-GPU.html",
+    "excerpt": "VirtIO-GPU 3D Home Our team Projects Contact Back VirtIO-GPU 3D? How it works VirtIO-GPU 3D This is virtual GPU device which is used by hypervisors li..."
+  },
+  {
+    "title": "Virtual environment in Python",
+    "url": "/Machine Learning/Code/VirtualEnv.html",
+    "excerpt": "Virtual environment in Python Home Our team Projects Contact Back Windows Miniconda Create Virtual Environment Windows //Install python from Microsoft..."
+  },
+  {
+    "title": "Virtualization",
+    "url": "/Operating System/Virtualization/Introduction.html",
+    "excerpt": "Virtualization Home Our team Projects Contact Back What is Virtualization Virtualization 1 computer hosting multiple virtual machines, each VM running..."
+  },
+  {
+    "title": "Voice Recognition System",
+    "url": "/Machine Learning/Code/Call openAI APIs.html",
+    "excerpt": "Voice Recognition System Home Our team Projects Contact Back Call openAI APIs using code Call openai APIs from code(get response from chatbot) a. Get ..."
+  },
+  {
+    "title": "Voice Recognition System",
+    "url": "/Machine Learning/Code/Voice to text.html",
+    "excerpt": "Voice Recognition System Home Our team Projects Contact Back Voice to Text(using python) Voice to Text. Speak in Mic and print in text 1. Create & Sta..."
+  },
+  {
+    "title": "VPC",
+    "url": "/System_Design/Concepts/AWS/VPC.html",
+    "excerpt": "VPC Home Our team Projects Contact Back What is VPC VPC (Virtual Pvt Cloud) This is a private, isolated virtual network environment where you can laun..."
+  },
+  {
+    "title": "Vulkan",
+    "url": "/Libraries/Vulkan/",
+    "excerpt": "Vulkan Home Our team Projects Contact Back What is Vulkan Features of Vulkan Vulkan OpenGL and Vulkan both are grahics rendering libraries developed b..."
+  },
+  {
+    "title": "Wasm Rust",
+    "url": "/Languages/Programming/Rust/Wasm/",
+    "excerpt": "Wasm Rust Home Our team Projects Contact Wasm Wasm-bindgen Wasm (WebAssembly) low-level bytecode format that allows developers to write portable, high..."
+  },
+  {
+    "title": "Web Server",
+    "url": "/System_Design/Concepts/Web Server/",
+    "excerpt": "Web Server Home Our team Projects Contact Types of Web Server Types of Web Server Stateful Stateless What Remembers client data state(session data, pr..."
+  },
+  {
+    "title": "Web Server in Go",
+    "url": "/Languages/Programming/Go/Web_Server.html",
+    "excerpt": "Web Server in Go Home Our team Projects Contact Web Server 1 Endpoint to increment, other to return(synchronization) Web Server in Go package main imp..."
+  },
+  {
+    "title": "Web Servers",
+    "url": "/Networking/OSI-Layers/Layer-7/WebServers/",
+    "excerpt": "Web Servers Home Our team Projects Contact Apache Web Server Nginx Web Server"
+  },
+  {
+    "title": "WebGL",
+    "url": "/Libraries/WebGL/",
+    "excerpt": "WebGL Home Our team Projects Contact Back What is WebGL How it works Applications WebGL WebGL (Web Graphics Library) is a browser-based JavaScript API..."
+  },
+  {
+    "title": "Why Cloud",
+    "url": "/Networking/Terms/Why Cloud.html",
+    "excerpt": "Why Cloud Home Our team Projects Contact Why Cloud Data, Control Plane Why Cloud? - Cloud adoption is all time high and constantly growing. The demand..."
+  },
+  {
+    "title": "Why Go over other Languages",
+    "url": "/Languages/Programming/Go/Why_go_over_other_lang.html",
+    "excerpt": "Why Go over other Languages Home Our team Projects Contact Back Go vs CPP Go vs CPP Go CPP Memory Management Go has Automatic Garbage Collection, whic..."
+  }
+]

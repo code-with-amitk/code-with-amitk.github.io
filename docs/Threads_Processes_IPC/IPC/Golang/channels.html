@@ -1,0 +1,256 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Golang IPC Channels</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Threads_Processes_IPC/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Channel?</a>
+      <ul>
+        <li><a href="#select">select (wait on many channels)</a></li>
+      </ul>
+      <a href="#types">Types of Channels</a>
+      <ul>
+        <li><a href="#buffered">Buffered / Bounded</a></li>
+        <li><a href="#unbuffered">Unbounded / Unbuffered</a></li>
+        <li><a href="#directional">Bidirectional / Directional</a></li>
+      </ul>
+      <a href="#internal">Internal Implementation</a>
+      <a href="#fast">How Channels are Fast</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Go Channel(for IPC)</h2>
+      <dl>
+        Go channels are used for synchronizing IPC between goroutines(Same as
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Threads#usks"
+          >Rust Tasks = Green Threads</a
+        >). Go routines are managed by Go runtime.<br />
+        we can send/recv data via channel with operator, &lt;- between
+        goroutines. The data flows in the direction of the arrow.<br />
+        channels are datastructures allocated on heap that reference both sender
+        and receiver goroutines<br />
+        <b>close():</b> Only sender can close a channel to indicate that no more
+        values will be sent.
+      </dl>
+      <table>
+        <td>
+          <pre><code class="language-css">
+// Create a channel
+ch := make(chan int)
+
+// Send/recv values on Channel
+ch &lt;- v            // Send v to channel ch.
+v := &lt;-ch          // Receive from ch, and assign value to v.
+
+// close the channel
+// Reciever can check if channel is closed?
+v, ok := &lt;-ch
+if ok == false {
+  // channel is closed
+}
+
+// Reading all values from channel until it is closed
+for v := range ch {
+  fmt.Println(v)
+}
+        </code></pre>
+        </td>
+        <td>
+          <pre><code class="language-css">
+//        (channel, capacity)
+ch := make(chan int, 100)
+// Creates 1 channel that can hold up to 100 items
+// ie ints without blocking the sender
+        </code></pre>
+        </td>
+      </table>
+
+      <h3 id="select">select(wait on multiple channels)</h3>
+      <dl>
+        Channels need not to be closed because channels are not files; you don't
+        need to close them
+      </dl>
+      <h4>Code</h4>
+      <dl>
+        <b>1. Write/Read data on channels</b>
+      </dl>
+      <pre><code class="language-css">
+package main
+import (
+	"fmt"
+)
+func main() {
+  // 1. Declare 3 unbuffered channels ch1,ch2,done 
+	ch1 := make(chan int)
+	ch2 := make(chan int)
+	done := make(chan int)
+
+  // 2. go routine. Send data on channels
+	go func() {
+		ch1 &lt;- 1
+		ch2 &lt;- 2
+		close(done)
+	}()
+
+  // 3. Keep waiting on channels
+	for {
+		select {
+		case v1, ok := &lt;-ch1:  // Recieve data on ch1
+			if ok {
+				fmt.Println("ch1:", v1)
+			}
+		case v2, ok := &lt;-ch2:  // Recieve data on ch2
+			if ok {
+        fmt.Println("ch2:", v2)
+			}
+		case &lt;-done:           // Receive data on done
+      fmt.Println("Bye!")
+      return
+    default:
+      // Print this, when no channel is ready
+      fmt.Println("No case ready")
+    }
+  }
+}
+$ go run main.go
+ch1: 1
+ch2: 2
+Bye!
+      </code></pre>
+
+      <h2 id="types">Types of Channels</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th id="buffered">Buffered / Bounded</th>
+          <th id="unbuffered">Unbuffered / Unbounded</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            When buffer length is provided a buffered channel is created<br />
+            <pre><code class="language-css">
+ch := make(chan int, 100)
+        </code></pre>
+          </td>
+          <td>
+            Channel created without any size<br />
+            <pre><code class="language-css">
+ch := make(chan int)
+        </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>No reciever</td>
+          <td>No issue</td>
+          <td>
+            Memory Leak in <a href="/Languages/Programming/Go/">goroutine</a>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="buffered">1.</h3>
+      <dl>
+        . Send to a buffered channel block only when the buffer is full.
+        Receives block when the buffer is empty.
+      </dl>
+
+      <h3 id="directional">Bidirectional / Directional</h3>
+      <dl>
+        In Go, all channels start as bidirectional, but you can use directional
+        types to enforce API safety and prevent bugs.
+      </dl>
+
+      <table>
+        <tr>
+          <th></th>
+          <th>1. Bidirectional</th>
+          <th>2. Directional (Recieve only)</th>
+          <th>3. Directional (Send only)</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>Can both send and receive data</td>
+          <td>Data can only read data from it</td>
+          <td>Data can only put data into it</td>
+        </tr>
+        <tr>
+          <td>Format</td>
+          <td>(chan T)</td>
+          <td>&lt;-chan T</td>
+          <td>chan&lt;- T</td>
+        </tr>
+      </table>
+      <dl>
+        <b>Why use directional Channels?</b><br />
+        &ensp; 1. Safety: If we have a function that only processes results, we
+        should use directional(RO) channel &lt;-chan T. Using bidirectional may
+        accidently send data on the channel
+      </dl>
+
+      <h2 id="internal">Internal Implementation of Channels</h2>
+      <dl>
+        When we call <b>make(chan int, 10)</b>, the runtime allocates a
+        <b>struct hchan</b> on heap
+      </dl>
+      <pre><code class="language-css">
+func main() {
+	ch1 := make(chan int)
+}
+
+// Channel struct 
+// (heap, hchan with buffer + sendq/recvq queues)
+type hchan struct {
+    qcount   uint           // bytes queued
+    dataqsiz uint           // buffer size
+    buf      unsafe.Pointer // ring buffer (heap)
+    elemsize uint16  // elem size
+    closed   uint32
+    elemtype *_type
+    sendx    uint          // send index
+    recvx    uint          // recv index
+    recvq    waitq         // blocked RECEIVERS  
+    sendq    waitq         // blocked SENDERS ← your goroutine lives here
+}
+      </code></pre>
+
+      <h2 id="fast">Why Channels are Fast</h2>
+      <dl>
+        1. Direct Copying: If a sender is waiting and a receiver arrives, the Go
+        runtime copies the data directly from the sender's stack to the
+        receiver's stack, skipping the channel buffer entirely<br />
+        2. No busy-waiting: Instead of "busy-waiting" (spinning), a blocked
+        goroutine is "parked" by the Go scheduler.
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

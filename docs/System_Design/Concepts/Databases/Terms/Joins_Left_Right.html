@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Indexing</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#order">SQL Execution Order</a>
+      <a href="#what">What is Join</a>
+      <a href="#how">How join is internally implemented</a>
+      <a href="#kinds">Types of Joins</a>
+      <a href="#complex">Complex Joins</a>
+      <ul>
+        <li><a href="#cinnerjoin">Inner Join</a></li>
+      </ul>
+    </aside>
+
+    <main>
+      <article style="margin-left: 200px">
+        <h2 id="order">SQL Execution Order</h2>
+        <dl>
+          This follows the standard logical processing order (predefined in SQL
+          standards like ANSI SQL): <br />
+          1. FROM/JOINs (builds initial dataset from tables). <br />
+          2. WHERE (filters rows; absent here). <br />
+          3. GROUP BY (groups rows, computes aggregates like SUM). <br />
+          4. HAVING (filters groups using aggregates). <br />
+          5. SELECT (chooses/evaluates columns, applies aliases). <br />
+          6. ORDER BY (sorts final result). <br />
+          7. LIMIT/OFFSET (limits rows; absent here)
+        </dl>
+
+        <h2 id="what">What is Join?</h2>
+        <dl>
+          A JOIN is a single optimized query handled by the DBMS, reducing
+          network roundtrips and leveraging indexes.<br />
+          It matches rows from different tables using a common column (like
+          CustomerID) that shares related data, as seen in Orders and Customers
+          tables. <br />
+          <b>Advantages:</b><br />
+          &ensp; 1. Reduces the need for multiple, separate queries to different
+          tables, improving performance and lowering server load.
+        </dl>
+
+        <h2 id="how">How join is internally implemented</h2>
+        <dl>
+          <b
+            >How join is different from I doing query to table-1 storing data
+            and then doing query to table-2?</b
+          ><br />
+          JOINs are implemented by the database engine (e.g., via nested loops,
+          hash joins, or merge joins). It scans indexes or tables, matches rows
+          on the join condition, and returns combined results.<br />
+          No separate handles are opened per table; the optimizer plans a single
+          execution path, often using memory or temp storage for efficiency.
+        </dl>
+
+        <h2 id="kinds">Types of Joins</h2>
+        <dl>Lets consider we have 2 tables(employee and department)</dl>
+        <pre><code class="language-css">
+Employee-Table          Departments-Table
+id      Name            id         dept
+1       Alice           1           HR
+2       Bob             2           IT
+3       Charlie         4           Sale
+        </code></pre>
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Examples</th>
+          </tr>
+          <tr>
+            <td id="innerjoin">
+              INNER JOIN<br />Returns matching rows from both tables
+            </td>
+            <td>
+              Inner join (on empid)<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+        </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td id="leftjoin">
+              LEFT JOIN (or LEFT OUTER JOIN)<br />
+              Returns all rows from left table, matching from right; NULLs for
+              non-matches.
+            </td>
+            <td>
+              LEFT JOIN on ID=EmpID<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+3       Charlie            null
+            </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td id="rightjoin">
+              RIGHT JOIN (or RIGHT OUTER JOIN)<br />
+              Returns all rows from right table, matching from left; NULLs for
+              non-matches.
+            </td>
+            <td>
+              Right JOIN on ID=EmpID<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+4       null               Sales
+            </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td id="fullouterjoin">
+              FULL OUTER JOIN<br />Returns all rows from both tables; NULLs for
+              non-matches.
+            </td>
+            <td>
+              FULL OUTER JOIN on ID=EmpID<br />
+              <pre><code class="language-css">
+ID      Name               dept
+1       Alice              HR
+2       Bob                IT
+3       Charlie            null
+4       null               Sales
+            </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td id="crossjoin">
+              CROSS JOIN<br />Cartesian product; all combinations without
+              condition
+            </td>
+            <td>
+              Returns 9 rows (3x3 combinations), e.g., Alice-HR, Alice-IT,
+              Alice-Sales, etc.
+            </td>
+          </tr>
+        </table>
+
+        <h2 id="complex">Complex Joins</h2>
+        <h4 id="cinnerjoin"><a href="#innerjoin"></a>Inner Join</h4>
+        <table>
+          <tr>
+            <th>Tables</th>
+            <th>Complex SQL Query</th>
+          </tr>
+          <tr>
+            <td>
+              <pre><code class="language-css">
+// Create 3 tables
+CREATE TABLE IF NOT EXISTS customers(custid INTEGER NOT NULL, 
+name VARCHAR(50) NOT NULL UNIQUE);
+INSERT INTO customers (custid, name) VALUES (1, 'B');
+INSERT INTO customers (custid, name) VALUES (2, 'A');
+INSERT INTO customers (custid, name) VALUES (3, 'C');
+
+CREATE TABLE IF NOT EXISTS orders(custid INTEGER NOT NULL, 
+amount INTEGER NOT NULL);
+INSERT INTO orders (custid, amount) VALUES (1, 100);
+INSERT INTO orders (custid, amount) VALUES (2, 200);
+INSERT INTO orders (custid, amount) VALUES (3, 300);
+
+CREATE TABLE IF NOT EXISTS lineitems(custid INTEGER NOT NULL, 
+data VARCHAR(50) NOT NULL UNIQUE);
+INSERT INTO lineitems (custid, data) VALUES (1, 'X');
+INSERT INTO lineitems (custid, data) VALUES (2, 'Y');
+INSERT INTO lineitems (custid, data) VALUES (3, 'Z');
+
+customers            Ooders               lineItems
+custid  name      custid  amount        custid  data
+1       B           1       100           1     X
+2       A           2       200           2     Y
+3       C           3       300           3     Z
+            </code></pre>
+            </td>
+            <td>
+              <a href="#order">Order of execution</a>
+              <pre><code class="language-css">
+SELECT c.CustID, c.Name, SUM(o.Amount) 
+FROM Orders o INNER JOIN LineItems l ON (o.CustID = l.CustID)     //1
+              INNER JOIN Customers c ON (o.CustID = c.CustID) 
+GROUP BY c.CustID, c.Name 
+HAVING SUM(o.Amount) > 100 
+ORDER BY SUM(o.Amount) DESC
+
+Shortnames: Customers=c, Orders=o, LineItems=l
+
+This is order of execution:
+1. FROM Orders o INNER JOIN LineItems l ON (o.CustID = l.CustID) 
+                  INNER JOIN Customers c ON (o.CustID = c.CustID) 
+This will create join of all tables
+Name  custid  amount  data
+B       1       100       X
+A       2       200       Y
+C       3       300       Z
+
+2. GROUP BY c.CustID, c.Name. collapses identical groups into single rows
+
+3. HAVING SUM(o.Amount) > 100.
+eliminates the B
+Name  custid  amount  data
+A       2       200   Y
+C       3       300   Z
+
+4. SELECT c.CustID, c.Name, SUM(o.Amount) 
+Name  custid  amount
+A       2     200	
+C       3     300	
+
+5. ORDER BY SUM(o.Amount) DESC 
+sorts the two rows: C first (300), then A (200).
+Name  custid  amount
+C       3     300	
+A       2     200	
+            </code></pre>
+            </td>
+          </tr>
+        </table>
+      </article>
+    </main>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

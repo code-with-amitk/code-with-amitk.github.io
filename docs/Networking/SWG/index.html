@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Netskope SWG</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="/Networking/">Back</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#how">How it works</a>
+        <a href="#terms">Terms</a>
+        <a href="#types">Policy types in Netskope</a>
+        <a href="#configurations">Configurations in Netskope</a>
+        <a href="#proxychain">Proxy Chaining Netskope</a>
+        <a href="#xff">XFF</a>
+        <a href="#events">Events</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What Netskope SWG?</h2>
+        <dl>
+            Netskope SWG (Secure Web Gateway) functions as a cloud-based security solution that monitors and controls web traffic by 
+            inspecting URLs, analyzing content, and applying policies to detect and block malicious websites, malware, and data leaks
+        </dl>
+
+        <h2 id="how">How SWG works</h2>
+        <dl>
+            1. Admin creates policies in UI (Eg: browser=Chrome, action=drop) which is passed to Policy Enginer module<br>
+            2. When packet hits SWG, data is extracted from header (eg: user-agent, browser etc) and a event message is created with &lt;key,value> fields<br>
+            3. Event message is passed to policy module, which takes action based on fields from event message
+        </dl>
+        
+        <div class="image-container">
+            <img src="https://netskope-techdocs.github.io/doc-stage/en/image/uuid-dc0f6d7a-3b0f-3cf2-e56e-62a71e3ecab8.png" 
+            alt="netskope policies" style="width:250px;height:230px;" class="zoomable-image" id="zoomableImage2">
+        </div>
+
+        <h2 id="terms">Terms</h2>
+        <table>
+            <tr>
+                <th>Term</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Data Loss Prevention (DLP) Protection</td>
+                <td>
+                    Protect sensitive data by detecting and preventing unauthorized data transfers.
+                    Can be customized for specific type of data eg: Personally Identifiable Information (PII) or Payment Card Information (PCI).
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="types">Policy types in Netskope SWG</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>
+                    <a href="https://docs.netskope.com/en/add-bypasses-in-netskope/#:~:text=There%20are%20two%20types%20of%20bypasses%20when%20it,Applicable%20to%20Web%20and%20SSL%2FTLS%20encrypted%20traffic%20only.">
+                        Bypass Policies</a></td>
+                <td>
+                    Traffic is bypassed from Netskope SWG and is sent direct to the destination. Types of bypass
+                    <table>
+                        <tr>
+                            <td><a href="#steering">Steering Configuration</a></td>
+                            <td>
+                               This is not a policy But a mode
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                1. SSL DND (action=bypass): Bypass the traffic donot decrypt<br>
+                                2. SSL Decrypt
+                            </td>
+                            <td>
+                                <img src="/images/Netskope/ssl-bypass.png" 
+                                alt="ssl bypass policies" style="width:400px;height:200px;" class="zoomable-image" id="zoomableImage2"><br>
+                                Whenever SSL traffic comes to Netskope, there can be 2 modes:<br>
+                                1. <u>Donot decrypt(ByPass)</u><br>
+                                &ensp; <a href="#actionbypass">(RTP policy evaluation (action=bypass))</a>
+                                still happens but only with those attributes that can be derived without decrypting the traffic.
+                                <br><br>
+                                2. <u>Decrypt</u>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Real-time Protection</td>
+                <td>
+                    Policies matched against pre-defined Categories. Set action based on criteria. For Real time traffic.
+                    <table>
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td id="actionbypass"><u>Bypass Specific Traffic <br>(action = Bypass)</u></td>
+                            <td>
+                                Policies > RTP > (Source=user/group/OU, Destination=CloudApps(Gdrive), Action=Bypass)<br>
+                                Policies > RTP > (Source=user/group/OU, Destination=Category(Alcohol, Drugs, Abusing), Action=Bypass)<br>
+                                Policies > RTP > (Source=user/group/OU, Destination=AppInstance(), Action=Bypass)<br>
+                                Policies > RTP > (Source=user/group/OU, Destination=Any Web Traffic(Browse/Upload/Download), Action=Bypass)<br>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Egress IP Policy
+                </td>
+                <td>
+                    <b>Egress IP:</b> Interface network address that identifies traffic leaving a system or network. Outgoing
+                    packet's source IP will be Egress IP of router/gateway. That means all outgoing packets will same same source IP
+                    ie of gateway<br><br>
+
+                    <b>Egress IP Policy(Netskope):</b> Natskope cloud only accept packets from dedicated(pre configured)
+                    Egress IP addresses.
+                </td>
+            </tr>
+            <tr>
+                <td>Enterprise Browser Policy (not RBI)</td>
+                <td>
+                    <b>Natskope One Enterprise Browser?</b> This is not a seperate standalone browser, rather this is some security features enabled
+                    in any browser mkaing it dedicated browser designed for company use. But it uses RBI to render contents on user's device.
+                </td>
+            </tr>
+            <tr>
+                <td>Fall back</td>
+                <td>
+                    This policy determines how the system handles traffic or files when security inspection fails, 
+                    Eg: file too large(DLP cannot happen).<br>
+                    Now what action should be taken? Continue traffic, Block or alert
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="configurations">Configurations in Netskope</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td id="steering"><a href="https://docs.netskope.com/en/steering-configuration/">Steering Configurations</a></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                Settings > Security Cloud Platform > Steering Configuration
+                                <img src="https://netskope-techdocs.github.io/doc-stage/en/image/uuid-ce676729-5821-2cbd-c9a4-aeab15a1cfc5.png" 
+            alt="netskope steering config" style="width:230px;height:170px;" class="zoomable-image" id="zoomableImage2">
+                            </td>
+                            <td>
+                                Controls, which traffic gets steered to Netskope for real-time deep analysis and which traffic gets bypassed.<br>
+                                By default all traffic from tenant is steered to netskope<br><br>
+                                <b>Steering Exception:</b> We can define exception for particular traffic, this will be bypassed entirely from Netskope at the device level and is sent direct to the destination. 
+                                It will never reach the Netskope Cloud.
+
+                                <table>
+                                    <tr>
+                                        <th></th>
+                                        <th><a href="#types">SSL DND</a></th>
+                                        <th>Steering Exception</th>
+                                    </tr>
+                                    <tr>
+                                        <td>What</td>
+                                        <td>Traffic is sent to netskope cloud, (Header info:IP,users) are logged.<br>
+                                            Then traffic sent to origin server without decryption</td>
+                                        <td>Traffic never hits netskope cloud</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Use Cases</td>
+                                        <td>Customer is using other VPN client with netskope client(eg: AnyConnect).
+                                            nsclient tries to steer traffic to netskope cloud, but customer donot want it
+                                        </td>
+                                        <td>Company allows employees to check their bank account information
+                                            and company donot want to decrypt banking(username, passwords) info
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <h2 id="cep">Cloud Explicit Proxy Netskope</h2>
+        <dl>
+            Way to direct traffic from any device to the Netskope Cloud by using a Proxy Auto Configuration (PAC) file configured in browser.<br>
+            This is orthogonal to nsclient installed on device and sending traffic to Netskope cloud.
+            <br><br>
+
+            <b>When Explicit proxy is useful?</b> When installing the client is not feasible<br>
+        </dl>
+
+        <h2 id="proxychain">Proxy Chaining Netskope</h2>
+        <dl>
+            Customer will setup a onpremises proxy(netskope or other). User browser will hit onpremises proxy for HTTP requests.
+            onpremises proxy will connect proxy2 on Netskope cloud. And proxy2 will connect to destination server.<br>
+            Here 2 proxies are present, proxy1(onpremises), proxy2(On netskope cloud), hence its proxy Chaining.<br>
+            
+            What is <a href="https://github.com/code-with-amitk/Code-examples/blob/master/System-Design/Concepts/Proxy_Servers/README.adoc">proxy server?</a> 
+            <br><br>
+
+            <b>How its done?</b><br>
+            Configure on-premises proxy to send traffic to Netskope proxy and add Proxy1(onpremises proxy) IP address to allowlist.
+        </dl>
+
+        <div class="image-container">
+            <img src="//www.plantuml.com/plantuml/png/TL9DRnen4BtxLuoIIo8rRQ4zSOX2btnGHUgg8MeFkPZri5XuFPRj3Q2g_xqUBGkuWjDwdz_7czcz2r7ws3P6p6a3HHiYDUYXzDZeW07WijXAArmYwKexQIEy1lJVFAtJ0sI0TfxTJcXj3KdLNQhixkA7PUFaJflju889RY3GAaZXGYmjHGHwHy_ms0I2GXg3Ih1fY1xbJlj9t6-SIRQnUsSFO7LkCinCpafuykcaXAnh0hYVLkvGa8aMOrYHGwWCjTbudUymgJWv4qqmH6rbr9IliYQg3RAYFhC6WCjdNIzZgUrAJ6s8QPP3Xs8C5VeeNgTm2oyOKqWTqh58O7gA5rtR12NUkGr15f3x23vNhTTn2mLF2wMHSK6-IJSyR8ANKdD20iPATU00fgM81AafhS7e48_2spdSt88QmQD-HsWGod413zgWK7pHpaUC77LCa62EqXwh64JqSh7G5QG0iivZ8_hFcKUumGYUPhCI7kzdkpr_hAWHGfe8ierBj55N_4aiB5BH__--0mD56z0V1RX1LtKNyFNp5_Y9NJ_-RNO5j7A71YAzzQ9dghMzOiyFJePmVSpVexs0n-0kC26B36RH-rZ7EtYptt_DO4Ohj2UMy6QVK2hqLtlIDS_KZ-E69_VLgyBepv7zc_rzyq1-BRr2nQURZlLNk26RrQTtN_VbvwIsGjob-BOn_m00"
+             alt="Proxy Chaining Netskope" class="zoomable-image" id="zoomableImage2">
+          </div>
+
+        <pre class="puml" visibility: hidden>
+            @startuml
+            box Customer Premises  #Cyan
+            participant UserBrowser as ub
+            participant Downloader as d
+            participant "OnPrem Proxy1" as p1
+            end box
+            
+            hnote over p1
+            Also Called
+            Downstream Proxy/
+            Explicit Proxy
+            end note
+            
+            hnote over p2
+            Also Called
+            Explicit Proxy
+            end note
+            
+            box IDP 
+            participant IDP as idp
+            end box
+            
+            box netskope cloud
+            participant Proxy2 as p2
+            end box
+            
+            box Destination
+            participant google as g
+            end box
+            
+            hnote over p1  #LightPink
+            Install netskope CA cert
+            UI > Settings > Certs >
+            Signing CA
+            end note
+            
+            hnote over p2   #LightPink
+            UI > Settings 
+            > Security Cloud Platform
+            > Proxy Chaining
+            > Add Proxy1 IP
+            to allow list
+            end note
+            
+            ub -> d: Give me PAC File
+            d -> ub: PAC
+            hnote over ub
+            PAC directs
+            traffic to onprem
+            Proxy
+            end note
+            
+            ub -> p1: HTTP GET google.com
+            
+            alt authentication flow
+            hnote over p1
+            Authenticate
+            user
+            end note
+            
+            p1 -> ub: HTTP 403 Redirect IDP
+            ub -> idp: HTTP GET
+            idp -> ub: Login(user,pass)
+            ub -> idp: user,pass
+            idp -> p1: Auth Done
+            idp -> ub: HTTP Redirect proxy\nJWT Token
+            ub -> p1: HTTP GET\nHeader(JWT Token)
+            end
+            
+            p1 -> p2: HTTP GET google.com\nHeaders:{\nJWT Token\nX-Forwarded-For-Header}
+            p2 -> g: HTTP GET google.com
+            g -> ub: body
+            
+            @enduml
+        </pre>
+
+        <h2 id="xff">XFF</h2>
+        <dl>
+            <a href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP Headers.html#xff">What is XFF Header, why its used?</a><br>
+
+            <b>How to implement in Natskope</b><br>
+            1. Browser should be installed with XFF header extension<br>
+            2. While list Client's public IP on Natskope Tenant UI > Settings > Security Cloud Platform > 
+                Explicit Proxy > IP Address Allowlist & User Identity > Add IP Address<br>
+            3. When presented download root CA cert into browser cert store<br>
+            4. Set up Proxy in browser. Settings > proxy > 
+        </dl>
+
+        <h2 id="events">Events</h2>
+        <dl>
+            Event is web traffic log which help organization for deeper inspection of packet.
+            The events are designed to provide near real-time insights into web transactions. Types of events:
+        </dl>
+
+        <h3>Page Event</h3>
+        <dl>Detailed logs about web page interactions.
+            A Page Event aggregates multiple connections (ads, images, scripts, etc.) that occur when a user 
+            visits a single webpage, presenting them as one consolidated event for simpler analysis.
+        </dl>
+
+        <h3>Application Event</h3>
+        <dl>Detailed activities within a cloud application, such as uploading, downloading, or 
+            logging in, often interpreted by Netskope for "cloud" apps</dl>
+            
+        <h3>Alerts</h3>
+        <dl>
+            Triggered when traffic matches a defined policy (like DLP or threat protection), indicating a potential security issue.
+        </dl>
+
+        <h3>Network Events</h3>
+        <dl>
+            Logs related to network traffic, including Netskope Private Access (NPA) and Cloud Firewall (CFW) activities.
+        </dl>
+
+        <h3>Transaction Event</h3>
+        <dl>
+            Detailed HTTP web traffic logs, provide granular information about websites users have accessed<br>
+        
+
+            <b>Configure Transaction Event:</b><br>
+            Settings > Tools > REST API v2 > New Token > Add Endpoint > 
+            /api/v2/events/token/transaction_events endpoint > create the API token.
+            <br><br>
+
+            <b>Query Transaction Event</b><br>
+            - Netskope retains transaction events for seven days by default if not consumed.<br>
+            - Transaction events are stored in Google PubSubLite by Netskope ingestion services.<br>
+            - Once configured, these can be queried at endpoint token/transaction_events.<br>
+            - subscription/backlog_message_count: Number of messages that have been sent to a PubSubLite subscription<br>
+        </dl>
+
+    </article>
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

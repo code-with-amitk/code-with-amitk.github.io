@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Anomaly Detection using Scikit Learn</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#inout">Inlier, outlier</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="inout">Inlier, outlier, Novelty</h3>
+      <dl>
+        <strong>Inlier: </strong> A Data point that falls within the normal
+        range defined by the majority of the data. it fits the expected pattern
+      </dl>
+      <dl>
+        <strong>outlier:</strong> A data point that deviates significantly from
+        the main cluster
+      </dl>
+
+      <dl>
+        <strong>Anomaly Detection:</strong> Finding unusual patterns in data
+      </dl>
+      <dt><u>1. Outlier Detection / Unsupervised anomaly detection</u></dt>
+      <dd>
+        - Training data might contain some outliers already<br />
+        - Goal is to identify these outliers based on how far they deviate from
+        the majority of the data
+      </dd>
+      <dt><u>2. Novelty Detection / Semi-supervised anomaly detection</u></dt>
+      <dd>
+        - Training data does not have outliers<br />
+        - Real time data/Production data has outliers, which needed to be found.
+      </dd>
+    </article>
+  </body>
+</html>

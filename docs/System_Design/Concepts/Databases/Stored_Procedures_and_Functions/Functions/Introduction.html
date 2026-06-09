@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Functions in Postgres</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#what">Functions</a>
+    <a href="../Stored_Procedures/Introduction.html" target="_blank">Stored Procedures vs Function</a>
+    <a href="#ex">Example</a>
+    <ul>
+      <li><a href="#ex1">Print all data from employee table</a></li>
+    </ul>
+    <a href="#code">Call Functions/Procedures from C++</a>
+  </aside>
+
+    <article style="margin-left:200px;">
+      <h2 id="what">Functions in Postgres</h2>
+      <dl>
+        <b>Functions</b><br>
+        &ensp; Functions are reusable blocks of code that can accept parameters and return a value.<br>
+        &ensp; Functions cannot modify data inside database but they can be used to perform calculations, display data etc
+
+        <b>Advantages:</b><br>
+        &ensp; 1. Code Reusability: Functions allow you to write code once and reuse it multiple times, reducing redundancy.<br>
+        &ensp; 2. Modularity: Functions help in breaking down complex tasks into smaller, manageable pieces.<br>
+        &ensp; 3. Improved Readability: Functions can make the code more readable and easier to understand.<br>
+        &ensp; 4. Performance: Functions can optimize performance by reducing the amount of data transferred between the database and application.<br>
+        &ensp; 5. Security: Functions can encapsulate sensitive logic and restrict direct access to underlying tables.<br>
+      </dl>
+
+      <h2 id="ex">Examples</h2>
+      <h3 id="ex1">Print all data from employee table</h3>
+      <pre><code class="language-css">
+CREATE OR REPLACE FUNCTION print_employee()
+RETURNS TABLE (id INT, name TEXT, age INT, department TEXT) AS $$
+BEGIN
+    RETURN (SELECT * FROM employee);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Call as:
+SELECT get_employee_count();
+      </code></pre>
+
+      <h2 id="call">Call Function/Procedure from C++</h2>
+      <table>
+        <tr>
+          <th>C Code</th>
+          <th>CPP Code</th>
+        </tr>
+        <tr>
+          <td><pre><code class="language-css">
+$ apt-get install libpq-dev
+
+#include &lt;libpq-fe.h>
+#include &lt;iostream>
+
+void call_postgres_function() {
+    // Connect to database
+    PGconn *conn = PQconnectdb("dbname=yourdb user=youruser password=yourpass host=localhost");
+    
+    if (PQstatus(conn) != CONNECTION_OK) {
+        std::cerr << "Connection failed: " << PQerrorMessage(conn);
+        PQfinish(conn);
+        return;
+    }
+
+    // Call a FUNCTION (returns value)
+    const char *func_query = "SELECT calculate_salary(123)"; // Replace with your function
+    PGresult *func_res = PQexec(conn, func_query);
+    
+    if (PQresultStatus(func_res) != PGRES_TUPLES_OK) {
+        std::cerr << "Function call failed: " << PQerrorMessage(conn);
+    } else {
+        char *result = PQgetvalue(func_res, 0, 0);
+        std::cout << "Function returned: " << result << std::endl;
+    }
+    PQclear(func_res);
+
+    // Call a PROCEDURE (no return value)
+    const char *proc_query = "CALL update_salary(123, 10.0)"; // Replace with your procedure
+    PGresult *proc_res = PQexec(conn, proc_query);
+    
+    if (PQresultStatus(proc_res) != PGRES_COMMAND_OK) {
+        std::cerr << "Procedure call failed: " << PQerrorMessage(conn);
+    } else {
+        std::cout << "Procedure executed successfully" << std::endl;
+    }
+    PQclear(proc_res);
+
+    PQfinish(conn);
+}
+          </code></pre></td>
+          <td><pre><code class="language-css">
+$ sudo apt-get install libpqxx-dev
+
+#include &lt;pqxx/pqxx>
+#include &lt;iostream>
+
+void call_postgres_with_libpqxx() {
+    try {
+        // Establish connection
+        pqxx::connection conn("dbname=yourdb user=youruser password=yourpass host=localhost");
+        
+        // Call a FUNCTION
+        pqxx::work txn1(conn);
+        pqxx::result func_res = txn1.exec("SELECT calculate_salary(123)");
+        txn1.commit();
+        
+        if (!func_res.empty()) {
+            std::cout << "Function returned: " << func_res[0][0].as<std::string>() << std::endl;
+        }
+
+        // Call a PROCEDURE
+        pqxx::work txn2(conn);
+        txn2.exec("CALL update_salary(123, 10.0)");
+        txn2.commit();
+        std::cout << "Procedure executed successfully" << std::endl;
+        
+    } catch (const std::exception &e) {
+        std::cerr << "Database error: " << e.what() << std::endl;
+    }
+}
+          </code></pre></td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

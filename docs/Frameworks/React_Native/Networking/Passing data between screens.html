@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native Networking</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#pass">Pass Data</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="pass">Passing data between screens</h2>
+        <h4>_layout.tsx</h4>
+        <dl>
+        Defines the navigation stack (Required) in expo-router. We can provide different screen options here
+        </dl>
+        <pre><code class="language-css">
+import { Stack } from "expo-router";
+export default function RootLayout() {
+    return (
+    &lt;Stack>
+        &lt;Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} />
+        &lt;Stack.Screen name="ProfileScreen" options={{ title: 'ProfileScreen' }} />
+    &lt;/Stack>
+    );
+}
+        </code></pre>
+
+        <h4>index.tsx</h4>
+        <pre><code class="language-css">
+import { View, Text, Button } from 'react-native';
+import { useRouter } from 'expo-router';
+
+export default function HomeScreen() {
+    const router = useRouter();
+
+    return (
+    &lt;View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        &lt;Text>Welcome to Home Screen&lt;/Text>
+
+        &lt;Button 
+        title="Go to Profile (Router)" 
+        onPress={() => router.push({ pathname: "/ProfileScreen", params: { name: "John Doe" } })}
+        />
+    &lt;/View>
+    );
+}
+        </code></pre>
+
+        <h4>ProfileScreen.tsx</h4>
+        <pre><code class="language-css">
+import { View, Text, Button } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+
+export default function ProfileScreen() {
+    const router = useRouter();
+    const { name } = useLocalSearchParams();
+    return (
+    &lt;View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        &lt;Text>This is the Profile Screen {name}&lt;/Text>
+        
+        {/* Go back to Home Screen */}
+        &lt;Button title="Go Back" onPress={() => router.back()} />
+        &lt;/View>
+    );
+}
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

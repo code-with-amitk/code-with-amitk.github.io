@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vulkan</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="what">What is Vulkan</a>
+      <a href="features">Features of Vulkan</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Vulkan</h2>
+      <dl>
+        <a href="../OpenGL/">OpenGL</a> and Vulkan both are grahics rendering
+        libraries developed by Khronos Group.<br />
+        Vulkan is successor of openGL and addresses shortcomings of OpenGL(like
+        less CPU overhead, better multi-threading support, and improved
+        performance)<br />
+        Both APIs(OpenGL & Vulkan) serve as intermediate layer between software
+        and the GPU hardware, translating application graphics commands into
+        GPU-specific instructions
+      </dl>
+
+      <h2 id="features">Features of Vulkan</h2>
+      <dl>
+        Cross-platform support across devices and operating systems (Windows,
+        Linux, Android, etc.).<br />
+        Fine-grained control over GPU operations such as command buffers,
+        memory, and pipelines.<br />
+        Designed to leverage modern GPUs efficiently, improving frame rates and
+        reducing latency in graphics-intensive applications.
+      </dl>
+    </article>
+  </body>
+</html>

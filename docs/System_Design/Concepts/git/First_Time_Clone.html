@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <title>First Time Clone</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#sshkey">1. Setup ssh keys</a>
+      <a href="#map">2. Map ssh keys</a>
+      <a href="#fork">3. Fork upstream repo</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2>Why git is needed</h2>
+      <dl>
+        Today you cannot survive as software engineer without knowledge of
+        git<br />
+        git is Version Control System which stores your company's code at
+        central place(central server)<br />
+        From mid-90s to the mid-2000s Perforce era to Git (released 2005) demand
+        to store code centrally exists will continue ever<br />
+        Here we will look into steps which a software engineer should take once
+        he joins a new organization and want to clone his company's 1st Project
+        to get started with work
+      </dl>
+
+      <h2 id="sshkey">1. ssh keys</h2>
+      <h3>1a. Create your ssh public, pvt key pair</h3>
+      <dl>
+        github/gitlab allows code to be cloned using ssh keys(Username, Password
+        is deprecated) , so you have to create your public, private
+        key(locally).<br />
+        You can refer
+        <a
+          href="https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key"
+          >this</a
+        >
+        document to create your public, Private key pair<br />
+        Your public, pvt keys should be created inside
+        C:\Users\your-user-name\.ssh
+      </dl>
+      <pre><code class="language-css">
+C:\Users\your-user-name\.ssh> dir
+ Directory of C:\Users\your-user-name\.ssh
+
+16-11-2025  17:50    &lt;DIR>          .
+13-02-2026  07:29    &lt;DIR>          ..
+23-06-2025  09:00               464 id_ed25519
+23-06-2025  09:00                98 id_ed25519.pub
+      </code></pre>
+
+      <h3>1b. Add your public key to your github/gitlab account</h3>
+      <dl>
+        Create your account on github/gitlab. We will refer gitlab(here).<br />
+        <b>Steps:</b><br />
+        1. Sign up with your email Id, you will land on this page:
+        https://gitlab.com/your-username/<br />
+        2. Click on your Profile Picture on Right side > Preferences > SSH Keys
+        > 3. Add New key<br />
+        4. Open file(id_ed25519.pub) created in previous step and paste the
+        content<br />
+        - Title: your username<br />
+        - Usage Type: Authentication & Signing<br />
+        - Expiration Date: Never<br />
+        - Add
+      </dl>
+
+      <h2 id="map">2. Map ssh keys to your github/gitlab account</h2>
+      <h3>Create C:\Users\your-user-name\.ssh\config file</h3>
+      <dl>
+        Once keys are created, these keys need to be mapped to your
+        github/gitlab username, this is done using config file<br />
+        if file does not exist, create manually
+        C:\Users\your-user-name\.ssh\config<br />
+        Once file is created, add this entry into the file
+      </dl>
+      <pre><code class="language-css">
+> C:\Users\your-user-name\.ssh\config
+
+Host myusername
+  HostName gitlab.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+        </code></pre>
+
+      <h3>Test ssh keys</h3>
+      <dl>
+        Now you have mapped the ssh key to your gitlab account its time to test
+        the ssh keys.<br />
+        Once you see the Welcome message you are all set for fork your company's
+        upstream repository.
+      </dl>
+      <pre><code class="language-css">
+> ssh -T gitlab_myuser
+Enter passphrase for key 'C:\Users\your-user-name\.ssh\id_ed25519@gitlab.com': 
+Welcome to GitLab, @user
+      </code></pre>
+
+      <h2 id="fork">3. Fork your company's upstream repo</h2>
+      <dl>
+        Forking the upstream repository means creating a local copy for your
+        use<br />
+        All you changes will land on your local fork, when you want to push on
+        upstream you need to create a pull request.<br />
+        <b>Steps:</b><br />
+        1. Go to your gitlab account<br />
+        2. In search bar, search (Your Company Name), you will see
+        "Company-Name:Project1". Click on that<br />
+        3. you will land on this page
+        "https://gitlab.com/Your-Company-Name/Project1"<br />
+        4. Click Fork on right, this will create a local copy in your gitlab
+        account.<br /><br />
+        It might take some time, code will appear under
+        <a href="https://gitlab.com/dashboard/projects">gitlab Projects</a>.
+      </dl>
+
+      <h2 id="clone">4. Clone your forked code</h2>
+      <dl>
+        Under
+        <a href="https://gitlab.com/dashboard/projects">gitlab Projects</a> you
+        can see 2 enteries<br />
+        <pre><code class="language-css">
+your-username / Project1     ... 1    //Clone this
+your-company-name / Project1 ... 2
+        </code></pre>
+        <br />
+        You have to clone 1st(ie your-username / Project1)
+      </dl>
+
+      <pre><code class="language-css">
+// This is your config entry
+> C:\Users\your-user-name\.ssh\config
+Host myusername
+  HostName gitlab.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+
+C:\>git clone git@gitlab.com:myusername/Project1.git
+Cloning into 'Project1'...
+Enter passphrase for key '/c/Users/&lt;your username>/.ssh/your-user-name':
+remote: Enumerating objects: 355, done.
+remote: Counting objects: 100% (241/241), done.
+remote: Compressing objects: 100% (213/213), done.
+remote: Total 355 (delta 93), reused 97 (delta 6), pack-reused 114 (from 1)
+Receiving objects: 100% (355/355), 1.00 MiB | 1.20 MiB/s, done.
+Resolving deltas: 100% (106/106), done.
+      </code></pre>
+      <dl>
+        Now you are all set to make changes and create Pull Requests on Your
+        Company's Upstream Repo
+      </dl>
+    </main>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Type Triats</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is Type Triat</a>
+        <a href="#types">Types</a>
+        <ul>
+            <li><a href="#primary">1. Primary</a></li>
+            <li><a href="#composite">2. Composite</a></li>
+            <li><a href="#supported">3. Supported Operation</a></li>
+            <li><a href="#miscellaneous">4. Miscellaneous</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Type Triat?</h2>
+        <dl>
+            Way to inspect properties & transform properties of template variable. These are resolved at compile time.<br>
+            Why this is good? We can improve our code, for particular data types eg: pointers.
+        </dl>
+        <pre><code class="language-css">
+#include &lt;type_traits>
+cout &lt;&lt; is_same &lt;int, int32_t>::value;  //1   If T and U are same type return true else false.
+cout &lt;&lt; is_same &lt;int, float>::value;    //0            
+        </code></pre>
+
+        <h2 id="types">Types of Type Triat?</h2>
+        <h3 id="primary">1. Primary Type Triat</h3>
+        <pre>
+            /usr/include/boost/type_traits/is_void.hpp
+            /usr/include/c++/8/type_traits.cpp
+
+            is_void: checks if a type is void
+            is_null_pointer(C++14): checks if a type is std::nullptr_t
+            is_integral:checks if a type is an integral type
+            is_floating_point:checks if a type is a floating-point type
+            is_array:checks if a type is an array type
+            is_enum:checks if a type is an enumeration type
+            is_union:checks if a type is an union type
+            is_class:checks if a type is a non-union class type
+            is_function:checks if a type is a function type
+            is_pointer:checks if a type is a pointer type
+            is_lvalue_reference: checks if a type is a lvalue reference
+            is_rvalue_reference: checks if a type is a rvalue reference
+            is_member_object_pointer: checks if a type is a pointer to a non-static member object
+            is_member_function_pointer: checks if a type is a pointer to a non-static member function
+        </pre>
+
+        <h3 id="composite">2. Composite Type Triat</h3>
+        <pre>
+            is_fundamental: checks if a type is a fundamental type(void or nullptr_t)
+            is_arithmetic: checks if a type is an arithmetic type
+            is_scalar: checks if a type is a scalar type
+                - cv-qualified arithmetic, pointer, pointer to member, enumeration, or nullptr_t type
+            is_object: checks if a type is an object type
+            is_compound: checks if a type is a compound type
+                - array, function, object pointer, function pointer, member object pointer, member function pointer, 
+                reference, class, union, or enumeration,
+            is_reference: checks if a type is either a lvalue reference or rvalue reference
+            is_member_pointer: checks if a type is a pointer to an non-static member function or object
+        </pre>
+        <dl>Example:</dl>
+        <pre><code class="language-css">
+int main(){
+    class test{};
+        cout &lt;&lt; (is_compound &lt;test>::value
+                        ? "T is compound"
+                        : "T is not a compound") &lt; '\n';
+
+        cout &lt;&lt; (is_compound &lt;int>::value
+                        ? "T is compound"
+                        : "T is not a compound") &lt;&lt; '\n';	
+}
+/*
+Output:
+# ./a.out 
+T is compound
+T is not a compound
+*/
+        </code></pre>
+
+        <h3 id="supported">Supported Operation</h3>
+        <pre>
+        Tells if type supports the operation or not?
+        
+        is_constructible,is_trivially_constructible,is_nothrow_constructible: checks if a type has a constructor for specific arguments
+        is_default_constructible,is_trivially_default_constructible,is_nothrow_default_constructible:checks if a type has a default constructor
+        is_copy_constructible,is_trivially_copy_constructible,is_nothrow_copy_constructible:checks if a type has a copy constructor
+        is_move_constructible,is_trivially_move_constructible,is_nothrow_move_constructible:checks if a type can be constructed from an rvalue reference
+        is_assignable,is_trivially_assignable,is_nothrow_assignable:checks if a type has a assignment operator for a specific argument
+        is_copy_assignable,is_trivially_copy_assignable,is_nothrow_copy_assignable:checks if a type has a copy assignment operator
+        is_move_assignable,is_trivially_move_assignable,is_nothrow_move_assignable:checks if a type has a move assignment operator
+        is_destructible,is_trivially_destructible,is_nothrow_destructible:checks if a type has a non-deleted destructor
+        has_virtual_destructor:checks if a type has a virtual destructor
+        is_swappable_with,is_swappable,is_nothrow_swappable_with,is_nothrow_swappable:checks if objects of a type can be swapped with objects of same or different type
+        </pre>
+
+        <dl>Example (is_copy_constructible)</dl>
+        <pre><code class="language-css">
+            T is copy_constructible type if: 1. T is not a referenceable type OR 2. a function type with a cv-qualifier-seq
+
+#include &lt;type_traits>
+struct Ex1 {
+    string str; // member has a non-trivial copy ctor
+};
+
+int main(){
+    if(is_copy_constructible<Ex1>::value)
+        cout &lt;&lt; "Ex1 is copy-constructible";
+}
+/*./a.out
+Ex1 is copy-constructible
+*/
+        </code></pre>
+
+        <h3 id="miscellaneous">Miscellaneous transformations</h3>
+        <dl>List of all miscellaneous type traits</dl>
+        <pre>
+            1. enable_if: Helps in conditionally removing functions from overload resolution in SFINAE based on type traits & 
+            provide separate function overloads and specializations for different type traits.
+        </pre>
+        <pre><code class="language-css">
+#include &lt;iostream>
+#include &lt;type_traits>
+using namespace std;
+
+// 1st argument is_integral::value 2nd: int. Hence type deduced as int
+template &lt;typename T, enable_if_t &lt;is_integral &lt;T>::value, int> = 0>
+void fun(T a,T b){
+    cout &lt;&lt; a+b;
+}
+
+int main(){
+    fun('a','b');	//195
+//	fun(10.5,9.5);	//error: no matching function for call to ‘fun(double, double)’
+    fun(1,2);	//3
+}
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

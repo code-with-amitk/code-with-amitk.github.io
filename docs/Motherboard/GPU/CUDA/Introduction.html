@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CUDA</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What is CUDA?</a>
+        <a href="#concepts">Concepts</a>
+        <ul>
+            <li><a href="#gbt">Grid, Blocks, Threads, Thread Block Cluster</a></li>
+            <li><a href="#kernel">Kernel</a></li>
+            <li><a href="#communication">Inter Thread Communication</a></li>
+            <li><a href="#tm">Thread Memory</a></li>
+            <li><a href="numberofthreads">How many threads GPU can have?</a></li>
+        </ul>
+        <a href="#ex">Example</a>
+        <ul>   <!--This is a sub-menu-->
+            <li><a href="#vecadd">Vector Addition on GPU</a></li>
+        </ul>
+        <a href="#sm">Streaming Multiprocessor</a>
+        <a href="#gpc">Graphics Processing Clusters (GPCs)</a>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2 id="what">CUDA(Compute Unified Device Architecture)</h2>
+            <dl>
+                This is parallel computing platform and programming model created by NVIDIA.<br>
+                It leverages the parallel compute engine in NVIDIA GPUs to solve many complex computational problems<br>
+                CUDA comes with a software environment that allows developers to use C++ as a high-level programming language.
+            </dl>
+
+            <h3 id="programming"><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank">CUDA Programming Model</a></h3>
+
+            <h2 id="concepts">Concepts</h2>
+            <h3 id="gbt">Grid, Block, Threads</h3>
+            <table>
+                <tr>
+                    <th>Term</th>
+                    <th>Meaning</th>
+                </tr>
+                <tr>
+                    <td>Thread</td>
+                    <td>
+                        Smallest unit of execution in CUDA<br>
+                        Thread within same Block runs same code but with different data (data parallelism)<br>
+                        Each thread is identified using thread index (threadIdx.x, threadIdx.y, threadIdx.z).
+                    </td>
+                </tr>
+                <tr>
+                    <td>Block</td>
+                    <td>
+                        1 block can have 1024 threads at most<br>
+                        Threads in a block can communicate with each other through shared memory<br>
+                        A group of threads that execute on the same <a href="#sm" target="_blank">Streaming Multiprocessor (SM)</a>
+                        on the GPU are on same block
+                    </td>
+                </tr>
+                <tr>
+                    <td>Grid</td>
+                    <td>
+                        Collection of blocks that execute a kernel
+                        <br>
+                    <table>
+                        <tr>
+                            <td><pre><code>
+Grid (3D: gridDim.x, gridDim.y, gridDim.z)
+├── Block (0,0,0) (3D: blockDim.x, blockDim.y, blockDim.z)
+│   ├── Thread (0,0,0)
+│   ├── Thread (1,0,0)
+│   ├── Thread (2,0,0)
+│   ├── ...
+│   ├── Thread (blockDim.x-1, blockDim.y-1, blockDim.z-1)
+├── Block (1,0,0)
+│   ├── Thread (0,0,0)
+│   ├── ...
+├── Block (0,1,0)
+├── ...
+└── Block (gridDim.x-1, gridDim.y-1, gridDim.z-1)
+                            </code></pre></td>
+                            <td>
+                                <img src="/images/Motherboard/GPU_grid_block_threads.jpg" alt="CUDA View of GPU" 
+                                class="zoomable-image" id="zoomableImage2" style="width:400px;height:300px;">
+                            </td>
+                        </tr>
+                    </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Thread Block Cluster</td>
+                    <td>
+                        A Thread Block Cluster (or simply Cluster) is a feature introduced in NVIDIA’s Hopper architecture 
+                        (e.g., H100 GPU, Compute Capability 9.0) and later.<br>
+                        This is group of thread blocks which are scheduled to run together on a <a href="#gpc" target="_blank">
+                            GPU Processing Cluster (GPC)</a><br>
+                        <u>Advantage is:</u> Clusters allow blocks within the same cluster to share resources and synchronize,
+                        Remember that blocks in different clusters cannot communicate directly.<br>
+                    </td>
+                </tr>
+            </table>
+
+            <h3 id="kernel">Kernel</h3>
+            <dl>
+                Kernels are the functions that run on the GPU. They are executed in parallel by multiple threads.<br>
+                These functions are called from the host (CPU) and executed in parallel on GPUs<br>
+                A kernel is defined using the __global__ declaration specifier<br>
+                Number of CUDA threads that execute that kernel is given using &lt;&lt;&lt;blocks, threads&gt;&gt;&gt; syntax.<br>
+Each thread that executes the kernel is given a unique thread ID that is accessible within the kernel through built-in variables.
+            </dl>
+            <pre><code class="language-css">
+/* 
+__global__ : This is kernel function
+Parameters:
+    A,B,C: Pointers to floating point arrays stored on GPU global memory.
+           A,B: input arrays. C: OUtput array where sum of A & B is stored.
+*/
+__global__ void VecAdd(float* A, float* B, float* C)
+{
+    /*
+    threadIdx {x,y,z} This is a built-in CUDA variable that gives the unique ID of the thread within the block.
+    threadIdx.x: x position of the thread in the block.
+        Thread0, x=0. C[0] = A[0] + B[0]
+        Thread1, x=1. C[1] = A[1] + B[1]
+    */
+    int i = threadIdx.x;
+    C[i] = A[i] + B[i];
+}
+
+int main()
+{
+    /*
+        <<<number_of_blocks, threads_per_block>>>
+        <<<1, N>>> means there will be 1 block with N threads.
+        N: Set somewhere before in code
+           if the arrays have 1024 elements, we can set N = 1024 so that each thread processes one element of the arrays.
+    */
+    VecAdd<<<1, N>>>(A, B, C);
+    ...
+}
+            </code></pre>
+
+            <h3 id="communication">Inter Thread Communication</h3>
+            <h4>1. Threads within the Same Block</h4>
+            <dl>
+                Threads in the same block can communicate using shared memory<br>
+                Synchronization within a block is achieved using <b>__syncthreads()</b>
+            </dl>
+            <h4>2. Threads in Different Blocks</h4>
+            <dl>
+                There is no built-in synchronization mechanism across blocks within a kernel (like __syncthreads())<br>
+                <b>Workarounds for Inter-Block Communication:</b><br>
+                &ensp; Global Memory: Threads in different blocks can write to and read from global memory (e.g., the arrays A, B, C in the code).<br>
+                &ensp; Atomic Operations: Use atomic functions to ensure that updates to global memory are done safely.<br>
+                &ensp; Multiple Kernel Launches: If inter-block communication is needed, you can 
+                launch multiple kernels sequentially, where the output of one kernel serves as the input to the next
+            </dl>
+
+            <h3 id="mh">Memory Hierarchy</h3>
+            <dl>
+                Memory available with each thread:<br>
+                1. private local memory<br>
+                2. Shared memory in block(lifetime of block)<br>
+                3. 
+            </dl>
+
+            <h3 id="numberofthreads">How many threads GPU can have?</h3>
+            <dl>
+                Maximum grid dimensions (2³¹ - 1 for x, 65,535 for y and z) <br>
+                Maximum threads per block (1024)<br>
+                65535 x 1024 = 67 Million threads per grid.<br>
+                Theoretically billions of threads per kernel launch
+            </dl>
+
+            <h2 id="ex">Example</h2>
+            <h3 id="vecadd">Vector Addition on GPU</h3>
+            <table>
+                <tr>
+                    <td>
+                        <dl>
+                        <b>Below is simple code for teaching example to demonstrate CUDA’s basic concepts:</b> <br>
+                        &ensp; Launching a kernel<br>
+                        &ensp; Managing GPU memory<br>
+                        &ensp; Parallelizing a simple computation
+                        <br><br>
+                        </dl>
+
+                        <pre><code class="language-css">
+#include &lt;cuda_runtime.h>
+#include &lt;stdio.h>
+#define N 512
+
+__global__ void VecAdd(float* A, float* B, float* C) {
+    int i = threadIdx.x;
+    C[i] = A[i] + B[i];
+}
+
+int main() {
+    // 1. Allocate memory on the host
+    float *h_A = (float*)malloc(N * sizeof(float));
+    float *h_B = (float*)malloc(N * sizeof(float));
+    float *h_C = (float*)malloc(N * sizeof(float));
+
+    // 2. Initialize host arrays
+    for (int i = 0; i < N; i++) {
+        h_A[i] = (float)i;
+        h_B[i] = (float)i * 2;
+    }
+
+    // 3. Allocate memory on the GPU device
+    float *d_A, *d_B, *d_C;
+    cudaMalloc(&d_A, N * sizeof(float));
+    cudaMalloc(&d_B, N * sizeof(float));
+    cudaMalloc(&d_C, N * sizeof(float));
+
+    // 4. Copy data from host to device
+    cudaMemcpy(d_A, h_A, N * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, N * sizeof(float), cudaMemcpyHostToDevice);
+
+    // 5. Launch kernel code. 
+    // <<1,N=512>> means this function would be executed on 1 block with 512 threads.
+    VecAdd<<<1, N>>>(d_A, d_B, d_C);
+
+    // 6. Once results are calculated copy result back
+    cudaMemcpy(h_C, d_C, N * sizeof(float), cudaMemcpyDeviceToHost);
+
+    // 7. Verify (optional)
+    for (int i = 0; i < N; i++) {
+        if (h_C[i] != h_A[i] + h_B[i]) {
+            printf("Error at index %d\n", i);
+            break;
+        }
+    }
+
+    // 8. Clean up GPU and host memory
+    cudaFree(d_A); cudaFree(d_B); cudaFree(d_C);
+    free(h_A); free(h_B); free(h_C);
+
+    return 0;
+}
+                    </code></pre></td>
+                    <td>
+                        <dl>
+                        <b>Real-World Scenarios for GPU Usage:</b><br>
+                        &ensp; Huge matrix operations for tranining neural networks<br>
+                        &ensp; Image processing<br>
+                        &ensp; Cryptography<br>
+                        &ensp; Bug data processing
+                        <br><br>
+
+                        <b>How to decide on Number of threads to use?</b><br>
+                        &ensp; In problem on left side, we used 512 threads.<br>
+                        &ensp; Common choices are 256, 512, or 1024 threads per block, 
+                        as they are multiples of the warp size (32 threads), which is the unit of execution on NVIDIA GPUs.<br>
+                        &ensp; Threads/block depends on problem size and the GPU architecture.
+                        <br><br>
+
+                        <b>How to decide on Number of blocks to use?</b><br>
+                        &ensp; Based on number of threads needed<br>
+                        &ensp; blocks = ceil(total_elements(=512 in problem on left) / threads_per_block)
+                        </dl>
+                    </td>
+                </tr>
+            </table>
+            
+
+            <h3 id="sm">Streaming Multiprocessor (SM)</h3>
+            <dl>
+                SM is responsible for executing threads in parallel.<br>
+                Each SM contains multiple CUDA cores (for arithmetic operations), load/store units, special function units<br>
+                SMs execute thread blocks assigned to them by the CUDA runtime.<br>
+                Example: NVIDIA A100 GPU (Ampere architecture) has 108 SMs, each with 64 CUDA cores. Each SM can handle up to 2,048 threads concurrently.
+            </dl>
+            <dl>Does the GPU Have as Many SMs as Blocks?</dl>
+            <dt>
+                No. Blocks: A software construct defined by the programmer in the CUDA kernel launch (e.g., <<<num_blocks, threads_per_block>>>). 
+                    The number of blocks can be arbitrary, often much larger than the number of SMs.<br>
+                    SMs: A fixed hardware resource on the GPU (e.g., 108 SMs on an A100). <br><br>
+
+                <u>Relation b/w Blocks and SMs:</u><br>
+                &ensp; CUDA runtime schedules blocks to available SMs. Each SM can execute multiple blocks concurrently, up to resource limits<br>
+                &ensp; If there are more blocks than SMs, the GPU schedules blocks in waves.
+            </dt>
+
+            <h3 id="gpc">Graphics Processing Clusters (GPCs)</h3>
+            <dl>
+                GPC is primarily used in the GPU’s graphics pipeline (e.g., for rendering tasks in gaming or visualization)
+            </dl>
+            <pre><code>
+                1 GPC = Multiple SMs + raster engines + Texture processing clusters (TPCs)
+            </code></pre>
+            <dl>
+                NVIDIA A100 GPU has 8 GPCs, each with 13~14 SMs
+            </dl>
+            <pre><code>
+GPU
+├── GPC 0
+│   ├── SM 0
+│   │   ├── CUDA Cores (e.g., 64 cores)
+│   │   ├── Shared Memory
+│   │   ├── Registers
+│   │   ├── Warp Schedulers
+│   │   ├── Load/Store Units
+│   │   ├── Thread Blocks (e.g., Block 0, Block 1)
+│   │   │   ├── Threads (0,0,0), (1,0,0), ..., (threadIdx.x, y, z)
+│   ├── SM 1
+│   ├── ...
+│   ├── SM n (e.g., 12 SMs per GPC)
+│   ├── Texture Processing Cluster (TPC)
+│   ├── Raster Engine
+├── GPC 1
+│   ├── SMs, TPCs, etc.
+├── ...
+├── GPC m (e.g., 8 GPCs in A100)
+├── Global Memory (HBM/GDDR)
+├── L2 Cache
+├── Memory Controllers
+            </code></pre>
+
+        </article>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

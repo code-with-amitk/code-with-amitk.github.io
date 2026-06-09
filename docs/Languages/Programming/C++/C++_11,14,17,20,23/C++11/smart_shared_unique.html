@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pointers</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#">Pointers</a>
+        <a href="#raw">Raw</a>
+        <a href="#smart">Smart</a>
+        <ul>
+            <li><a href="#unique">Unique</a></li>
+            <ul>
+                <li><a href="#ucc">Copy Constructible</a></li>
+                <li><a href="#umc">Move Constructible</a></li>
+                <li><a href="#make_unique">make_unique</a></li>
+            </ul>
+            <li><a href="#shared">Shared</a></li>
+            <ul>
+                <li><a href="#scc">Copy Constructible</a></li>
+                <li><a href="#sci">Copy Initializable</a></li>
+                <li><a href="#make_shared">make_shared</a></li>
+                <li><a href="#internal">Internal implemented?</a></li
+            </ul>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="pointers">Pointers</h2>
+
+        <h3 id="raw">Raw Pointers</strong></h3>
+        <pre><code>
+// As defined in C
+int *p = new int();         //p is raw pointer.
+        </code></pre>
+
+        <h3 id="smart">Smart pointers</h3>
+        <dl>
+            Automatically deletes the allocated memory when goes out of scope.<br>
+            <b>How?</b> Allocate memory in ctr, Delete memory in dtr. Bcoz Destructors are automatically executed when Object goes out of scope.<br>
+            <b>Why?</b> Programmer may allocate memory using new() & later might forget to use delete().
+        </dl>
+        <dl><b>Smart Pointer Implementation Example</b></dl>
+        <pre><code class="language-css">
+template &lt;class T>
+class A{                    //This class is Smart pointer
+    T *a;         //int *a;
+public:
+    A(T *r) : a(r) { cout &lt;&lt; "Allocated\n"; }              //A(int *r):a(r)
+    ~A(){
+        delete a;
+        cout &lt;&lt; "Freed\n";
+    }
+    T &operator *(){        //int &operator *()    //& returns a only, does not create new copy
+        return *a;
+    }
+};
+
+int main(){
+    //Automatic template type deduction => Provided in C++17
+    A &lt;int> obj(new int());	//obj is my pointer now. I can carry all pointer operations
+    *obj = 10;
+    cout &lt;&lt; *obj;
+
+    A  &lt;float> obj1(new float());
+}
+
+# g++ smart_pointers
+Allocated
+10
+Allocated 
+
+Freed
+Freed
+        </code></pre>
+
+        <h4>Unique vs Smart pointer</h4>
+        <table>
+            <tr>
+                <th></th>
+                <th>Unique</th>
+                <th>Shared</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Only 1 Owner of memory, ie only 1 pointer to an object</td>
+                <td>Multiple owners of a resource</td>
+            </tr>
+            <tr>
+                <td>Copy Constructible</td>
+                <td>No, any attempt to make a copy of a unique_ptr will cause a compile-time error. copy ctr, assignment operator are deleted</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Move Constructible</td>
+                <td>Yes,can be moved using the new move semantics</td>
+                <td>Yes</td>
+            </tr>
+        </table>
+
+        <h3 id="unique">Unique pointer (type of smart pointer)</h3>
+        <h4 id="ucc">Copy Constructible(No)</h4>
+        <dl>
+            There can be only one unique_ptr to any resource, any attempt to make a copy of a 
+            unique_ptr will cause a compile-time error.
+        </dl>
+            <pre><code class="language-css">
+unique_ptr&lt;int> p(new int(5))       // Okay
+unique_ptr&lt;T> c = p;              // Error: Can't copy unique_ptr
+            </code></pre>
+
+        <h4 id="umc">Move Constructible(Yes)</h4>
+            <pre><code class="language-css">
+unique_ptr&lt;int> p(new int(5))            // Okay
+unique_ptr&lt;T> cptr = std::move(ptr);     // Okay, resource now stored in cptr
+            </code></pre>
+
+        <h4 id="make_unique">Creating unique_ptr using make_unique</h4>
+        <pre><code class="language-css">
+make_unique &lt;T>()
+    - Avoid use of new operator
+    - Provides exception safety, as new and delete internally handled by compiler. 
+    - Memory is allocated to 0.
+
+    struct Config {
+        int a;
+        Config() {
+            a = g;
+        }
+    };
+    int main() {
+        shared_ptr &lt;Config> ptr = make_unique <Config>(); //Call default constructor of class Config
+        cout &lt;&lt; ptr->a;                                   //15
+    }
+        </code></pre>
+
+        <h3 id="shared">Shared pointer (type of smart pointer)</h3>
+        <h4 id="scc">Copy Constructible(Yes)</h4>
+        <dl>
+            Multiple pointers can point to same resource, 
+            Owner count is maintained using reference counting
+            When none is referencing the memory, it's deleted automatically.
+        </dl>
+        <pre><code class="language-css">
+shared_ptr &lt;int> p   =   int* p   //We can think like this
+
+shared_ptr &lt;T> ptr(new int(2));       // Okay
+shared_ptr &lt;T> cptr = ptr;       // Okay.  Are Copy Constructible
+        </code></pre>
+
+        <h4 id="sci">Copy Initialization(No)</h4> 
+        <dl>
+        When we initialise with =, we invoke copy-initialisation<br>
+        Why CI not allowed? Because shared_ptr constructor is explicit and a explicit construtor is not copy-assignable
+        </dl>
+<pre><code class="language-css">
+int* b = new int;
+shared_ptr &lt;int> a = b;      //Error
+        </code></pre>
+
+
+        <h4 id="make_shared">Create shared pointer using make_shared</h4>
+        <pre><code class="language-css">
+#include &lt;memory>
+#include &lt;iostream>
+using namespace std;
+constexpr int g = 15;
+struct Config {
+    int a;
+    Config() {
+        a = g;
+    }
+};
+int main() {
+    shared_ptr &lt;Config> ptr = make_shared &lt;Config>(); //Call default constructor of class Config
+    cout &lt;&lt; ptr->a;                                   //15
+}
+        </code></pre>
+        <h5 id="internal">How shared_ptr is implemented internally?</h5>
+        <dl>
+            shared_ptr maintains 2 things.<br>
+            Creation of shared_ptr: reference_count=1<br>
+            On every new shared_ptr creation: reference_count++<br>
+            Deletion/Reset: reference_count--
+        </dl>
+        <pre><code>
+int reference_count;
+T* data;                  //and a pointer to the object being shared
+
+template &lt;typename T>
+class shared_ptr {
+    struct ControlBlock {   //stores a pointer to the object being shared (T* ptr_) and a reference count (int ref_count_).
+        T* ptr_;
+        int ref_count_;
+    };    
+    ControlBlock* data_;
+public:
+    shared_ptr(T* ptr) {
+        data_ = new ControlBlock;
+        data_->ptr_ = ptr;
+        data_->ref_count_ = 1;
+    }
+    
+    shared_ptr(const shared_ptr& other) {
+        data_ = other.data_;
+        data_->ref_count_++;
+    }
+    
+    ~shared_ptr() {
+        if (--data_->ref_count_ == 0) {
+            delete data_->ptr_;
+            delete data_;
+        }
+    }    
+};
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Struct Embedding</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#se">Struct Embedding</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="se">Struct Embedding</h2>
+      <dl>
+        Struct embedding (also called "anonymous fields") is Go’s way of
+        practicing
+        <a
+          href="/Languages/Programming/C++/Characteristics of OOPS/Association/Composition/Introduction.html"
+          >Composition</a
+        >.<br />
+        A struct can include another struct as a field without a name
+      </dl>
+      <pre><code class="language-css">
+type Engine struct {
+    yearofmake int
+}
+
+func (e Engine) Start() {
+    fmt.Println("Engine started")
+}
+
+type Car struct {
+    Engine // This is an embedded field
+    Model  string
+}
+
+func main() {
+    c := Car{
+        Engine: Engine{yearofmake: 2000},
+        Model:  "Sedan",
+    }
+
+    // You can access fields and methods of Engine directly on Car
+    fmt.Println(c.yearofmake) 
+    c.Start() 
+}
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

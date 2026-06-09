@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Native hooks</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">What is hook</a>
+      <a href="#types">Types of hook</a>
+      <ul>
+        <li><a href="#usestate">useState</a></li>
+        <li><a href="#useeffect">useEffect</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is hook?</h2>
+      <dl>
+        Hooks allow function components to have access to state and other React
+        features(eg: lifecycle methods). Because of this, class components are
+        generally no longer needed.
+        <br /><br />
+
+        <b>Conditions for hooks</b><br />
+        Can only be called inside React function components<br />
+        Must be called at the top level of a component<br />
+        Cannot be used conditionally
+      </dl>
+
+      <h2 id="types">Types of hooks</h2>
+      <h4 id="usestate">useState hook</h4>
+      <dl>
+        Usage involves declaring a state variable, and when variable is updated
+        react will trigger a re-render.
+      </dl>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+import React, { useState } from 'react';
+
+function ColorSelector() {
+    const [color, setColor] = useState('red');              //1
+
+    return (
+        &lt;div style={{ backgroundColor: color }}>     //3
+            &lt;p>Current Color: {color}&lt;/p>
+            &lt;button onClick={() => setColor('blue')}>Change to Blue&lt;/button>  //2
+        &lt;/div>
+    );
+}
+                </code></pre>
+          </td>
+          <td>
+            <img
+              src="/images/react/useState.png"
+              alt="state variables"
+              style="width: 250px; height: 150px"
+            />
+            <br /><br />
+            1. Creates a state variable(Local Variable) color initially set to
+            'red'. setColor() is a function to update the color state
+            variable<br />
+            &ensp; When setColor() is called, React automatically re-renders the
+            component<br />
+            2. Button, onclick of button setColor() function is called, which
+            updates the state variable<br />
+            3. As state variable is called, React re-renders and background
+            color changes to blue.
+          </td>
+        </tr>
+      </table>
+
+      <h4 id="useeffect">useEffect hook</h4>
+      <dl>
+        <b>What is side effect in React</b><br />
+        In React side effect is action or operation that occurs in a component
+        after rendering, but is not directly related to rendering the user
+        interface.<br />
+        <u>Examples of side effects:</u><br />
+        &ensp; Making an asynchronous request to fetch data from an API<br />
+        &ensp; Changing the title of a webpage<br />
+        &ensp; Setting up a subscription to an external data source<br />
+        &ensp; Keeping user information<br />
+        &ensp; Updating themes
+        <br /><br />
+
+        useEffect manages side effects in components.
+      </dl>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+import React, { useState, useEffect } from 'react';     //1
+
+function DataFetcher() {
+    const [data, setData] = useState(null);             //2
+    
+    useEffect(() => {                                   //3
+        fetch('https://reactnative.dev/movies.json') //HTTP GET
+        .then(response => response.json())              //4
+        .then(result => setData(result));               
+    }, []);                                             //3a
+
+    return 
+        &lt;div>
+            {data ? JSON.stringify(data) : 'Loading...'}
+        &lt;/div>;
+}
+export default DataFetcher;
+                </code></pre>
+          </td>
+          <td>
+            <b>Output</b><br />
+            { "title":"The Basics - Networking", "description":"Your app fetched
+            this from a remote endpoint!", "movies": [ {"id":"1","title":"Star
+            Wars","releaseYear":"1977"}, {"id":"2","title":"Back to the
+            Future","releaseYear":"1985"}, {"id":"3","title":"The
+            Matrix","releaseYear":"1999"},
+            {"id":"4","title":"Inception","releaseYear":"2010"},
+            {"id":"5","title":"Interstellar","releaseYear":"2014"} ] }
+            <br /><br />
+            1. Hooks useEffect, useState used<br />
+            2. Local variable data is created<br />
+            3. Inside useEffect() hook HTTP GET(fetch()) is called, on response
+            response data is set<br />
+            &ensp; a. empty dependency array [] ensures, fetch runs only once<br />
+            4. .then statements:<br />
+            &ensp; 1st then(parses response): response is the raw HTTP response
+            object, response.json() converts the response body to a JSON
+            object<br />
+            &ensp; 2nd then(update component state): result is the parsed JSON
+            data from the previous step, setData(result) updates the component's
+            state with the fetched data<br />
+
+            <br /><br />
+            <b
+              ><font color="red"
+                >Code without useEffect() = endless re-render</font
+              ></b
+            >
+            <pre><code class="language-css">
+import React, { useState, useEffect } from 'react';
+function DataFetcher() {
+    const [data, setData] = useState(null);
+    
+        fetch('https://reactnative.dev/movies.json')
+        .then(response => response.json())
+        .then(result => setData(result));
+
+    return 
+        &lt;div>
+            {data ? JSON.stringify(data) : 'Loading...'}
+        &lt;/div>;
+}
+export default DataFetcher;
+                    </code></pre>
+            if fetch() is called without useEffect() following will happen:<br />
+            fetch() is called > setData() updates data variable > This triggers
+            another component render > fetch() runs again > Creates an endless
+            cycle of re-renders<br />
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

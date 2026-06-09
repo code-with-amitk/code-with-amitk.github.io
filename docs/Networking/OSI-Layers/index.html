@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Layers, Design Issues</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"><!--See .sidebar in styles.css--></aside>
+
+    <article style="margin-left: 200px">
+      <dl>
+        <a href="Duties_of_Layers.html">Duties, Protocols of Each Layer</a
+        ><br />
+        <a href="./Layer-2/">Layer-2:</a> hub router switch bridge, Ping from
+        Host-1 to Host-2<br />
+        <a href="./Layer-2.5">Layer-2.5</a><br />
+        &ensp; MPLS<br />
+        <b>Layer-3</b><br />
+        &ensp; Protocols: <a href="Layer-3/Protocols/index.html">IP</a><br />
+        &ensp; <a href="Layer-3/Security/index.html">Security:</a> HMAC, MAC,
+        Signing, Integrity, Build Libraries(Botan, Openssl)<br />
+        &ensp; <a href="Layer-3/iptables.html">iptables</a><br />
+
+        <b>Layer-6</b>(Presentation)<br />
+        &ensp; <a href="Layer-6/SSL_TLS/Introduction.html">SSL_TLS:</a> TLS,
+        SSL, TLS vs SSL, NSS(TLS Implementation) vs Openssl<br />
+        &ensp; <a href="Layer-6/SSL_TLS/mkcert.html">mkcert</a>(Local Self
+        Signed CA(for dev testing))<br />
+        &ensp; <a href="Layer-6/SSL_TLS/Terms/index.html">Terms:</a> SNI<br />
+        &ensp; <a href="Layer-6/SSL_TLS/lets_encrypt.html">Let's Encrypt</a> Get
+        cert signed by Let's Encrypt Root CA<br />
+
+        <b>Layer-7</b>(Application)<br />
+        &ensp; Protocols:<br />
+        &emsp; DNS:
+        <a href="Layer-7/DNS/Introduction.html">Introduction</a>(Name
+        resolution, Forward, Reverse lookup, Terms),
+        <a href="Layer-7/DNS/DNS_Records.html">DNS Records</a>(A, AAAA, Alias,
+        CAA, CNAME, MX, PTR, RR, SOA, SPF, TXT)<br />
+        &emsp; gRPC:
+        <a href="Layer-7/gRPC/Introduction.html">Introduction</a>(gRPC, gRPC vs
+        REST), <a href="Layer-7/gRPC/Introduction.html">Code</a>(golang gRPC
+        server & client)<br />
+        &emsp; HTTP:
+        <a href="Layer-7/HTTP/AdvDis_Features_Methods.html"
+          >Features, Adv, Disadv, Methods(GET,POST,PUT,DELETE)</a
+        >, <a href="Layer-7/HTTP/HTTP Headers.html">Header</a>,
+        <a href="Layer-7/HTTP/HTTP Cookie.html">Cookie</a><br />
+        &emsp; <a href="Layer-7/Kerberos.html">Kerberos</a><br />
+        &emsp; <a href="Layer-7/MCP/">MCP(Model Context Protocol)</a><br />
+        &emsp; <a href="Layer-7/OAuth.html">OAuth</a><br />
+
+        &ensp; <a href="Layer-7/REST API/index.html">REST API</a><br />
+
+        &ensp; WebServers: <a href="Layer-7/WebServers/Apache/">Apache</a>,
+        <a href="Layer-7/WebServers/Nginx/">Ngnix</a><br />
+
+        &ensp; <a href="Layer-7/LoadTestingTools.html">Load testing Tools</a
+        ><br />
+        &ensp;
+        <a href="Layer-7/RBI Remote Browser Isolation.html"
+          >RBI(Remote Browser Isolation)</a
+        >
+      </dl>
+    </article>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Nginx</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#best">Nginx Best Practices</a>
+    <ul>
+      <li>
+        <a href="#56k">Serve 56k Connections</a>
+        <a href="#10M">Serve 10M(1 Cr) Connections</a>
+      </li>
+    </ul>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="best">Ngnix Web Server Best Practices(Used by Ngnix)</h2>
+    <h4 id="56k">Can serve upto 56k concurrent connections (solves C10k problem) https://www.aosabook.org/en/nginx.html</h4>
+    <table>
+      <tr>
+        <th>Use</th>
+        <th>How</th>
+      </tr>
+      <tr>
+        <td>SO_REUSEPORT(also called Kernel Socket Sharding)</td>
+        <td>Multiple threads can listen on (same socket+ip) combination. Load is spread evenly across multiple threads.</td>
+      </tr>
+      <tr>
+        <td>NON_BLOCKING, ASYNC sockets.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>SSL-Terminators and Load Balancers.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Skip kernel stack</td>
+        <td>
+          Write custom driver to send pkt directly to Application, kernel stack is complicated and slow<br>
+          How fast can this be? Intel has a benchmark where the process 80 million packets/second on a fairly lightweight server in user mode.
+        </td>
+      </tr>
+      <tr>
+        <td>MULTI-CORE</td>
+        <td>
+          Some code gets slower on running with cores because code is written badly. We want to get faster as we add more cores.<br>
+          Recommendations: Keep Data structures/core, Avoid atomic operation(those are expensive), Lock-free data structures
+        </td>
+      </tr>
+      <tr>
+        <td>COMPRESS DATA</td>
+        <td>Use cache friendly data</td>
+      </tr>
+      <tr>
+        <td>MULTI-THREADED</td>
+        <td>What's thread model(Pipelined or worker?). Set processor affinity</td>
+      </tr>
+      <tr>
+        <td>EVENT TRIGGERED LIBRARIES: (Eg: libtevent)</td>
+        <td>
+          Use ET-libraries in-place of poll() or select().
+          poll() is better than select(). select can only monitor 1024(FD_SETSIZE) sockets.<br>
+          <b>Why ET Libraries?</b> offer significant performance advantages, especially when dealing with a large number of concurrent connections
+        </td>
+      </tr>
+      <tr>
+        <td>LOAD BALANCING IN WORKER THREADS</td>
+        <td>
+          Ngnix defines accept_mutex directive(if enabled), worker processes will accept new connections by turn.<br>
+          Else all worker processes will be notified about new connections, and if volume of new connections is low,<br>
+          some of the worker processes may just waste system resources
+        </td>
+      </tr>
+      <tr>
+        <td>NON_BLOCKING STATE MACHINE</td>
+        <td>
+          <b>What is state machine?</b> State machine like pre-defined rules for chess on server. Every HTTP transaction has pre-defined action and state to which server should transition<br>
+          Each worker-thread can serve 1000s of web-clients.<br>
+          Ngnix provides separate state machines for different protocols. Eg: HTTP, POP, IMAP, SMTP
+        </td>
+      </tr>
+      <tr>
+        <td>TUNING KERNEL & NGNIX KERNEL</td>
+        <td>
+          <b>a. net.core.somaxconn:</b> Maximum number of connections that can be queued for acceptance. Default=128, Maximum value=65535<br>
+          <b>b. net.core.netdev_max_backlog:</b> Rate at which packets are buffered by the network card before being handed off to the CPU. Default is 128, Maximum value: 65535<br>
+          <b>c. sys.fs.file-max:</b> no of opened files. Maximum: 1MB
+        </td>
+      </tr>
+    </table>
+
+    <h4 id="10M">SCALING WEB SERVER FOR 10 Million(1 Crore) CONNECTIONS (Solves C10M problem)</h4>
+    <table>
+      <tr>
+        <th>Use</th>
+        <th>How</th>
+      </tr>
+      <tr>
+        <td>Control Plane</td>
+        <td>Seperating the Control Plane. <br>
+          All functions that determine which path to use for sending packet. Routing protocols, spanning tree, ldp,
+        </td>
+      </tr>
+      <tr>
+        <td>Data/Forwarding Plane</td>
+        <td>Seperating the Data/Forwarding Plane. <br>
+          All functions/processes that forward packets from one interface to another.
+        </td>
+      </tr>
+    </table>
+    <h5>Why Seperation of Control & Data Plane is needed</h5>
+    <dl>
+      <b>Because Kernel is doing both that is problem</b> GIVE CONTROL PLANE TO KERNEL & DATA PLANE TO APPLICATION<br>
+    </dl>
+    <dl><b>1. Data Plane on Application</b></dl>
+    <dt>
+      Tasks packet handling, memory management, process scheduling should be handled by application.<br><br>
+      <u>1a. Packet Handling (Don’t let kernel handle the packets, pass directly to application):</u><br>
+      &ensp; Write Your Own Custom Driver To Bypass The Stack<br>
+      &ensp; kernel stack is complicated and slow
+      &ensp; PF_RING, Netmap, Intel DPDK (data plane development kit) drivers. Intel has benchmark of 
+      80 million packets/sec on lightweight server<br><br>
+
+      <u>1b. Memory Management:</u><br>
+      &ensp; Preallocate all memory all at once on startup.<br>
+      &ensp; Reduces page table size.<br>
+      &ensp; Co-locate Data: Don’t place data on different parts of memory via pointers. 
+      Each time you follow a pointer it will be a cache miss.
+    </dt>
+    
+  </article>
+
+</body>
+</html>

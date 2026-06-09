@@ -1,0 +1,348 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Machine Learning Models</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <form>
+          <input type="search" name="q" placeholder="Search site" />
+          <input type="submit" value="Go!" />
+        </form>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="cal"
+        >Calorie prediction (DecisionTreeRegressor, Random Forest) Models</a
+      >
+      <ul>
+        <li><a href="#model">Model doing prediction</a></li>
+        <li><a href="#validation">Model Validation</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="cal">
+        Calorie prediction using DecisionTreeRegressor, Random Forest Model
+      </h2>
+      <dl>
+        <b>Requirement</b><br />
+        &ensp; We are running a company which need to predict calories needed by
+        atheletes based on duration, pulse, maxpulse rates of their workouts<br />
+        &ensp; We need a ML model which takes (Duration,Pulse,Maxpulse,Calories)
+        as input and predicts Calories burned during athlete workout.
+        <br /><br />
+
+        <b>How it Works</b><br />
+        We will write
+        <a href="../ML_and_Types_Algorithms.html#models"
+          >Decision Tree Regressor(Supervised Learning Machine Learning
+          Model)</a
+        >
+        &
+        <a href="../ML_and_Types_Algorithms.html#models"
+          >Random Forest Regressor(Supervised Learning Machine Learning
+          Model)</a
+        >
+        which takes (Duration, Pulse, MaxPulse) as input and predict Calories
+        burned by athelete and them compare Mean Absolute Error of both
+        models<br />
+        Steps<br />
+        &ensp; 1. We are provided with Raw data(data.csv containing
+        Duration,Pulse,Maxpulse,Calories). We will:<br />
+        &emsp; - Clean the raw data ie remove empty rows<br />
+        <table>
+          <td>
+            <pre><code class="language-css">
+data.csv(Raw data)
+    Duration  Pulse  Maxpulse  Calories
+Duration,Pulse,Maxpulse,Calories
+60,      110,    130,    409.1
+60,      117,    145,    479.0
+60,      103,    135,    340.0
+45,      109,    175,    282.4
+45,      117,    148,    406.0
+60,      102,    127,    300.5
+45    104     134.0       NaN
+                </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+Cleaned data:
+Duration  Pulse  Maxpulse  Calories
+60,      110,    130,    409.1
+60,      117,    145,    479.0
+60,      103,    135,    340.0
+45,      109,    175,    282.4
+45,      117,    148,    406.0
+60,      102,    127,    300.5
+                </code></pre>
+          </td>
+        </table>
+        &emsp; - Split the data ie seperate
+        traning('Duration','Pulse','Maxpulse') and prediction data(Calories)
+        <pre><code class="language-css">
+X = Data, y = prediction
+
+      |- train_X (traning data 1)
+      |- val_X (training data 2)
+data -|- train_y (prediction for 1)
+      |- val_y (prediction for 2)
+        </code></pre>
+        &ensp; 2. Feed model with traning and prediction data<br />
+        &ensp; 3. Now model is ready for predictions, feed the model with real
+        world data. get predictions<br />
+        &ensp; 4. Measure how far model deviated by comparing predictions from
+        traning, Real world data using mean absolute error.
+      </dl>
+
+      <h3 id="model">Model doing prediction</h3>
+      <table>
+        <tr>
+          <th>DecisionTree, Random Forest Regression Models</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+import pandas as pd                        //1
+from sklearn.tree import DecisionTreeRegressor //2
+from sklearn.ensemble import RandomForestRegressor//2
+from sklearn.model_selection import train_test_split //2
+from sklearn.metrics import mean_absolute_error     //3
+
+# This function takes the raw data and cleans it
+def clean_the_data(file):
+	df = pd.read_csv(file)                          //3
+	print("Raw data\n", df.to_string())
+	clean_df = df.dropna(axis=0)                       //4
+	print("Cleaned data:\n", clean_df.to_string())
+	return clean_df
+
+# split the data into traning and validation(testing data)
+# 		|- train_X (traning data 1)
+# 		|- val_X (training data 2)
+# data -|- train_y (prediction for 1)
+# 		|- val_y (prediction for 2)
+def split_data(data):                             //5,6
+	features = ['Duration','Pulse','Maxpulse']
+	X = data[features]
+	y = data.Calories
+    # X = Training, y = prediction
+    # split data into half
+	train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 0, test_size=0.5)
+	print("train_X:\n", train_X.to_string())
+	print("val_X:\n", val_X.to_string())
+	print("train_y:\n", train_y.to_string())
+	print("val_y:\n", val_y.to_string())
+	return train_X, val_X, train_y, val_y
+	
+# Train using traninig, prediction data
+# Get Decision Tree Model
+def get_DecisionTreeRegressor_model(train_X, train_y):
+	dtree = DecisionTreeRegressor(random_state=1)
+	dtree.fit(train_X, train_y)                     //8
+	return dtree
+    
+# Get Random Forest Model
+def get_RandomForest_model(train_X, train_y):
+	forest_model = RandomForestRegressor(random_state=1)
+	forest_model.fit(train_X, train_y)            //8
+	return forest_model
+
+# Let model predict over training data 2
+def model_predict(model, val_X):
+	return model.predict(val_X)                         //9
+
+def get_mean_absolute_error(prediction_from_data1, prediction_from_data2):
+	return mean_absolute_error(prediction_from_data1, prediction_from_data2)
+	
+print("---------- Splitting Data ----------")
+clean_df = clean_the_data("data.csv")
+train_X, val_X, train_y, val_y = split_data(clean_df)
+print("---------- Splitting End ----------")
+
+model_dtree = get_DecisionTreeRegressor_model(train_X, train_y) //7
+model_rforest = get_RandomForest_model(train_X, train_y)        //7
+
+print("---------- Predictions Start ----------")
+dtree_prediction = model_predict(model_dtree, val_X)         
+rforest_prediction = model_predict(model_rforest, val_X)     
+print("Decision Tree prediction:\n", dtree_prediction)
+print("Random Forest prediction:\n", rforest_prediction)
+print("---------- Predictions End ----------")
+
+print("---------- Mean Absolute Error ----------")
+print("decision Tree MAE:",                                     //11
+    get_mean_absolute_error(dtree_prediction, 
+                            val_y))
+print("Random Forest MAE:",                                     //11
+    get_mean_absolute_error(rforest_prediction, 
+                            val_y))
+                </code></pre>
+          </td>
+          <td>
+            1. import pandas (We will convert data from csv to
+            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+              >dataframe using pandas</a
+            >.)<br />
+            2. Use
+            <a href="../ML_and_Types_Algorithms.html#dtr"
+              >DecisionTreeRegressor</a
+            >, <a href="../ML_and_Types_Algorithms.html#dtr">Random Forest</a>
+            from
+            <a href="/Libraries/Python/Machine_Learning/scikit-learn"
+              >Scikit Learn</a
+            ><br />
+            2. Import train_test_split to split the data into 2 sets<br />
+            2. import mean_absolute_error for calculating
+            <a href="#validation">MEA</a> later in code<br />
+
+            3.
+            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+              >read_csv() (From Pandas)</a
+            >: Read csv data into dataframe using <br /><br />
+            4.
+            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+              >dropna() (From Pandas)</a
+            >: Clean the data by removing empty rows<br /><br />
+
+            We only have 1 set of data, from which we will seperate traning and
+            prediction data<br />
+            5. Traning data: 'Duration','Pulse','Maxpulse'<br />
+            6. Prediction data: 'Calories'<br /><br />
+
+            7. Create
+            <a href="/Libraries/Python/Machine_Learning/scikit-learn"
+              >DecisionTreeRegressor</a
+            >,
+            <a href="/Libraries/Python/Machine_Learning/scikit-learn"
+              >RandomForestRegressor</a
+            >
+            models <br />
+            8.
+            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+              >fit() (From scikit-learn)</a
+            >
+            Feed the training and prediction data to model. Supervised
+            learning<br />
+            9.
+            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+              >predict(on Training data 2) (From scikit-learn)</a
+            >
+            Output of model. Predict the calories based on traninig data. You
+            will see model gives same values for calories as fed. This is
+            <b>overfitting</b><br /><br />
+
+            11. <a href="#validation">Validate the model</a> using mean absolute
+            error<br /><br />
+
+            <b>Output:</b>
+            <font color="red"
+              >MAE of Random Forest is Far less than Decision Tree</font
+            >
+            <pre><code class="language-css">
+---------- Splitting Data ----------
+Raw data
+    Duration  Pulse  Maxpulse  Calories
+0        60    110     130.0     409.1
+1        60    117     145.0     479.0
+2        60    103     135.0     340.0
+3        45    109     175.0     282.4
+4        45    117     148.0     406.0
+5        60    102     127.0     300.5
+6        45    104     134.0       NaN
+Cleaned data:
+    Duration  Pulse  Maxpulse  Calories
+0        60    110     130.0     409.1
+1        60    117     145.0     479.0
+2        60    103     135.0     340.0
+3        45    109     175.0     282.4
+4        45    117     148.0     406.0
+5        60    102     127.0     300.5
+train_X:
+    Duration  Pulse  Maxpulse
+3        45    109     175.0
+0        60    110     130.0
+4        45    117     148.0
+val_X:
+    Duration  Pulse  Maxpulse
+5        60    102     127.0
+2        60    103     135.0
+1        60    117     145.0
+train_y:
+ 3    282.4
+0    409.1
+4    406.0
+val_y:
+ 5    300.5
+2    340.0
+1    479.0
+---------- Splitting End ----------
+---------- Predictions Start ----------
+Decision Tree prediction:
+ [409.1 409.1 409.1]
+Random Forest prediction:
+ [355.576 355.576 397.104]
+---------- Predictions End ----------
+---------- Mean Absolute Error ----------
+decision Tree MAE: 82.53333333333335
+Random Forest MAE: 50.849333333333355
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="validation">Model Validation (Mean Absolute Error = MEA)</h3>
+      <dl>
+        <b>Predictive Accuracy?</b> What is quality of prediction that model
+        made? How close are model's predictions to actual result?
+        <br />
+
+        <b>How to measure?</b><br />
+        &ensp; Compare predicted values from training data and actual predicted
+        values from real world data. It will mix of good and bad predictions<br />
+        &ensp; Looking through a list of 10,000 predicted and actual values
+        would be pointless. We need to summarize this into a single metric.<br />
+        &ensp; <b>Mean Absolute Error (MAE): </b> Average of abs value of
+        (actual - predicted)<br />
+        <table>
+          <tr>
+            <th>Actual Calories</th>
+            <th>Predicted Calories</th>
+          </tr>
+          <tr>
+            <td>200</td>
+            <td>190</td>
+          </tr>
+          <tr>
+            <td>300</td>
+            <td>310</td>
+          </tr>
+        </table>
+        MEA = ((200-190) + abs(300-310))/2 = 10
+        <br /><br />
+        <b
+          ><font color="darkpink"
+            >Random Forest is better than Decision Tree, due to low MEA</font
+          ></b
+        >
+      </dl>
+    </article>
+
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

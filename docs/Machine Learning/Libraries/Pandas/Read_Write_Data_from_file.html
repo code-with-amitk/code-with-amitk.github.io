@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Pandas RW from file</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#rw">Functions for RW from file</a>
+      <ul>
+        <li><a href="#read_csv">read_csv(), .columns</a></li>
+        <li><a href="#describe">describe()</a></li>
+        <li><a href="#head">head()</a></li>
+        <li><a href="#dropna">dropna()</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="rw">Functions for RW from File</h2>
+      <h4>data.csv</h4>
+      <dl>We will feed this data to pandas</dl>
+      <pre><code class="language-css">
+# data.csv 
+Duration,   Pulse,  Maxpulse,   Calories
+60,         110,    130,        409.1
+60,         117,    145,        479.0
+60,         103,    135,        340.0
+,         109,    175,        282.4
+      </code></pre>
+
+      <h4 id="read_csv">read_csv(), .columns</h4>
+      <dl>
+        <b>read_csv():</b> read and create a dataframe<br />
+        <b>.columns:</b> list the coloumn header in the dataframe
+      </dl>
+      <pre><code class="language-css">
+$ test.py
+import pandas as pd
+df = pd.read_csv('data.csv')    #read in data frame
+print(df.to_string())
+print(df.columns)
+
+   Duration  Pulse  Maxpulse  Calories
+0      60.0    110       130     409.1
+1      60.0    117       145     479.0
+2      60.0    103       135     340.0
+3       NaN    109       175     282.4
+
+Index(['Duration', 'Pulse', 'Maxpulse', 'Calories'], dtype='object')
+      </code></pre>
+
+      <h4 id="describe">describe()</h4>
+      <dl>
+        describe(): Returns 8 values for each coloumn<br />
+        &ensp; count: The number of non-null values. (For Duration coloumn,
+        count=3)<br />
+        &ensp; mean: The average value. (For Duration coloumn, 70+60+50/3 =
+        60)<br />
+        &ensp; std: The standard deviation.<br />
+        &ensp; min: The minimum value. (For duration coloumn, min val=50)<br />
+        &ensp; 25%: The 25th percentile (first quartile).<br />
+        &ensp;&ensp; Imagine sorting each column from lowest to highest value.
+        If you go a quarter way through the list, you'll find a number that is
+        bigger than 25% of the values, ie 25%<br />
+        &ensp; 50%: The 50th percentile (median).<br />
+        &ensp; 75%: The 75th percentile (third quartile).<br />
+        &ensp; max: The maximum value. (For duration coloumn, max val=70)
+      </dl>
+      <pre><code class="language-css">
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.describe())
+
+       Duration       Pulse    Maxpulse    Calories
+count       3.0    4.000000    4.000000    4.000000
+mean       60.0  109.750000  146.250000  377.625000
+std        10.0    5.737305   20.155644   85.148904
+min        50.0  103.000000  130.000000  282.400000
+25%        55.0  107.500000  133.750000  325.600000
+50%        60.0  109.500000  140.000000  374.550000
+75%        65.0  111.750000  152.500000  426.575000
+max        70.0  117.000000  175.000000  479.000000
+      </code></pre>
+
+      <h4 id="head">head()</h4>
+      <dl>head returns 1st n rows from dataframe, default is 5</dl>
+
+      <h4 id="dropna">dropna</h4>
+      <dl>Drop the empty rows from dataframe</dl>
+      <pre><code class="language-css">
+import pandas as pd
+df = pd.read_csv('data.csv')
+print("Before drop\n", df.to_string())
+df = df.dropna(axis=0)
+print("After drop\n", df.to_string())
+
+Before drop
+    Duration  Pulse  Maxpulse  Calories
+0      60.0    110       130     409.1
+1      60.0    117       145     479.0
+2      60.0    103       135     340.0
+3       NaN    109       175     282.4
+
+After drop
+    Duration  Pulse  Maxpulse  Calories
+0      60.0    110       130     409.1
+1      60.0    117       145     479.0
+2      60.0    103       135     340.0
+      </code></pre>
+
+      <h4>Features</h4>
+      <dl>Selecting some columns from dataframe is called features.</dl>
+      <pre><code class="language-css">
+import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.to_string())
+features = ['Duration', 'Pulse']
+print(df[features])
+
+    Duration  Pulse  Maxpulse  Calories
+0      60.0    110       130     409.1
+1      60.0    117       145     479.0
+2      60.0    103       135     340.0
+3       NaN    109       175     282.4
+
+   Duration  Pulse
+0      60.0    110
+1      60.0    117
+2      60.0    103
+      </code></pre>
+    </article>
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

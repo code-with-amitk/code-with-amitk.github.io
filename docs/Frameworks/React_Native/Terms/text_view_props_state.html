@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native Components</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#terms">Terms</a>
+        <ul>
+            <li><a href="#component">Component</a></li>
+            <ul>
+                <li><a href="#text">text</a></li>
+                <li><a href="#view">view</a></li>
+            </ul>
+            <li><a href="#props">Props</a></li>
+            <li><a href="#state">State</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="terms">Terms</h2>
+        <h4 id="component"><a href="https://reactnative.dev/docs/intro-react" target="_blank">Components</a></h4>
+        <dl>Functions in React and JSX are called Components
+            <br>
+            <b>Parent Component:</b> Any component that renders other components is called Parent.
+            Example Cat is parent and fun is child Component.
+        </dl>
+        <h5 id="text">1. Text Component</h5>
+        <dl>Used to show text</dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import React from 'react';
+import {Text} from 'react-native';      //1
+
+const fun = (a: string,b: string) => {
+  return a + " " + b;
+};
+
+// const FUNCTION_NAME=(argument list) => {Body}
+const Cat = () => {                     //2
+    const name = "Pinky";
+    return <Text>Hello, I am cat {name} belong to {fun("titu", "lal")}</Text>;  //3
+};
+export default Cat;                    //4
+
+$ npx expo start --tunnel
+                </code></pre></td>
+                <td>
+                    1. Import React Native’s <b>Text</b> Core Component<br>
+                    2. component starts as a function <pre><code class="language-css">
+const Cat = () => {};
+                    </code></pre><br>
+                    Whatever a function component returns is rendered as a React element.<br>
+                    3. We can call function from inside of {}
+                    4. export the function using default
+                </td>
+            </tr>
+        </table>
+
+        <h5 id="view">2. View Component</h5>
+        <dl>Used to embed 2 or more components(eg: text, textinput)
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import React from 'react';
+import {Text, View, TextInput} from 'react-native';     //1
+
+const ViewComp = () => {            //2
+    return (
+    &lt;View>
+    &lt;Text>
+        My Name..
+    &lt;/Text>
+    &lt;TextInput style={{height: 40, borderColor: 'gray',borderWidth: 1}}
+        defaultValue="Name me!"
+    >&lt;/TextInput>
+    &lt;/View>
+    );
+}
+
+const Main = () => {            //3
+    return (
+        &lt;ViewComp/>          //4
+        &lt;ViewComp/>
+    );
+};
+export default Main;
+
+$ npx expo start --tunnel
+                </code></pre></td>
+                <td>
+                    1. Import Text, View, TextInput<br>
+                    2. ViewComp() function returns View component. Text, TextInput are placed inside it<br>
+                    3. Call function from default component<br>
+                    4. We can call 1 function multiple times to avoid writing same code again and again
+                </td>
+            </tr>
+        </table>
+
+        <h4 id="props">Props / Properties</h4>
+        <dl>
+            Props means something which can be passed to Components. Eg: struct, string etc
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import React from 'react';
+import {Text, View} from 'react-native';
+
+type Emp = {        //1
+    name: string
+};
+
+const ViewComp = (e: Emp) => {    //2
+    return (
+    &lt;View>
+        &lt;Text>
+        My Name..{e.name}
+        &lt;/Text>
+    &lt;/View>
+    );
+}
+
+const Main = () => {
+    return (
+        &lt;ViewComp name="Ram"/>       //3
+    );
+};
+export default Main;
+                </code></pre></td>
+                <td>
+                    1. prop declared<br>
+                    2. Component accepts prop as argument<br>
+                    3. Prop passed while calling the function.
+                    We have passed value to name, this should be exactly same as variable name inside Prop.
+                </td>
+            </tr>
+        </table>
+
+        <h4 id="state">State (local variable)</h4>
+        <dl>
+            State is useful for handling data that changes over time or that comes from user interaction
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import React, { useState } from 'react';        //1
+import {Text, View} from 'react-native';
+
+
+const ViewComp = () => {
+    const [hungry, setHungry] = useState(true);         //2
+    return (
+        &lt;View>
+            &lt;text>I am cat sofie and I am {hungry ? 'Hungry' : 'full'}&lt;/text>
+            &lt;button onClick={                        //3
+                ()=>setHungry(false)
+            }>
+                Click to Feed me</button>
+                &lt;text>Thanks Now I am {hungry ? 'Hungry' : 'full'}&lt;/text>
+        &lt;/View>
+    );
+}
+
+const Main = () => {
+    return (
+        &lt;>           //4
+            &lt;ViewComp/>
+        &lt;/>
+    );
+};
+
+export default Main;
+                </code></pre></td>
+                <td>
+                    1. import useState from React<br>
+                    2. Create hungry state variable inside the function. Initialize the true<br>
+                    &ensp; we can use useState to track any kind of data: strings, numbers, Booleans, arrays, objects. For example,
+                     const [counter, setCounter] = useState(0)!<br>
+                    &ensp; Function setHungry() will used to set value of variable hungry<br>
+                    3. Add button component<br>
+                    4. Wrap inside JSX fragments
+                </td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!--
+    <!DOCTYPE html> 
+        This is a document type declaration (DTD), which indicate the version of HTML.
+        It is the required initial tag for HTML5 documents. Browser follows appropriate rules and specifications for HTML5.
+
+    <html>
+        This is essential element in an HTML document.
+        It represents the root or top-level element of an HTML file & defines the beginning and end of the HTML content.
+
+    <head>
+        Provides metadata(As document title, character encoding, CSS stylesheets, JavaScript files, and other metadata).
+        Common elements in head section:
+        <title>: Specifies the title of the webpage that is displayed in the browser's title bar or tab.
+        <link rel="stylesheet" href="styles.css">: Links an external CSS stylesheet to apply styles to the HTML elements.
+
+    <body> 
+        This is a container element in an HTML document that contains the visible content of a webpage.
+        Can include text, headings, paragraphs, images, links, lists, tables, forms, and other HTML elements
+            <h1> heading
+            <p> paragraph
+            <img> image
+            <a> link
+    
+    <div>   (Division)
+        This is used to group and organize other HTML elements together
+-->
+<!doctype html>
+<html>
+  <head>
+    <title>Motherboard</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"><!--See .sidebar in styles.css--></aside>
+
+    <main>
+      <!--Here is our page's main content-->
+      <article style="margin-left: 200px">
+        <!-- It contains an article -->
+        <dl>
+          <b>Memory</b><br />
+          &ensp;
+          <a href="Memory/virtual_and_physical.html"
+            >Virtual & Physical Memory</a
+          ><br />
+          &ensp;
+          <a href="Memory/Memory_Types.html">Memory Types(Registers, Caches)</a
+          ><br />
+          &ensp; <a href="Memory/Processes.html">Processes</a><br /><br />
+
+          <b><a href="Terms/">Terms:</a></b> UART <br /><br />
+
+          <b>GPU</b><br />
+          &ensp; <b><a href="GPU/Introduction.html">Introduction:</a></b> What
+          is GPU, Applications of GPU, Advantages, Disadvantages, CPU vs GPU,
+          Dual GPU, Graphics Card <br />
+
+          &ensp; <b>Troubleshooting <b>Nvidia</b> GPU for ML Workload:</b>
+          <a href="GPU/Troubleshooting/ML_Workload/Monitoring_Pipeline.html"
+            >Monitoring Pipeline</a
+          >,
+          <a href="GPU/Troubleshooting/NVML.html"
+            >NVML(NVIDIA Management Library)</a
+          >
+          <br />
+
+          &ensp;
+          <b
+            >Kubernetes Cluster Configuration on <b>Nvidia</b> GPU for ML
+            Workload:</b
+          >
+          <a
+            href="GPU/Troubleshooting/Kubernets_Cluster/Node_Config_in_Cluster.html"
+            >GPU Node Configuration in kubernets Cluster</a
+          >,
+          <a
+            href="GPU/Troubleshooting/Kubernets_Cluster/Node_deployment_with_argoCD.html"
+            >GPU Node deployment with argoCD</a
+          >
+          <br />
+
+          &ensp; <b>CUDA</b><br />
+          &emsp;
+          <a href="GPU/CUDA/Introduction.html" target="_blank">Introduction</a
+          ><br />
+          &emsp;&emsp; Kernels, Blocks, Grid, Threads, Inter Thread
+          Communication<br />
+          &emsp;&emsp; Vector Addition on GPU<br />
+          &emsp;&emsp; Streaming Multiprocessor (SMs), Graphics Processing
+          Clusters (GPCs)<br />
+
+          &ensp; <b><a href="GPU/VirtIO-GPU.html">VirtIO-GPU</a></b
+          ><br />
+
+          &ensp; <b><a href="GPU/Terms.html">Terms</a>:</b> GPU Acceleration<br />
+          &ensp;
+          <a href="/Libraries/"
+            >Graphics pipeline from Windows VM(guest) to physical GPU on the
+            host</a
+          >
+        </dl>
+      </article>
+    </main>
+  </body>
+</html>

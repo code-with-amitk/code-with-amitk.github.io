@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native ScrollView</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">ScrollView?</a>
+        <ul>
+            <li><a href="#simple">Simple ScrollView</a></li>
+        </ul>
+        <a href="#whatparallax">ParallaxScrollView?</a>
+        <ul>
+            <li><a href="#vs">ParallaxScrollView vs ScrollView</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what"><a href="https://reactnative.dev/docs/using-a-scrollview" target="_blank">ScrollView?</a></h2>
+        <dl>generic scrolling container that can contain multiple components and views
+        </dl>
+
+        <h3>Examples</h3>
+        <h4 id="simple">Simple ScrollView</h4>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import React from 'react';
+import {Image, ScrollView, Text} from 'react-native';
+
+const logo = {
+  uri: 'https://reactnative.dev/img/tiny_logo.png',
+  width: 64,
+  height: 64,
+};
+const App = () => (
+    &lt;ScrollView>
+        &lt;Text style={{fontSize: 96}}>Scroll me plz&lt;/Text>
+        &lt;Image source={logo} />
+        &lt;Text style={{fontSize: 96}}>If you like&lt;/Text>
+        &lt;Image source={logo} />
+    &lt;/ScrollView>
+);
+
+export default App;
+                </code></pre></td>
+                <td>
+                </td>
+            </tr>
+        </table>
+
+            <h2 id="whatparallax" href="https://www.npmjs.com/package/react-native-parallax-scroll-view" target="_blank">
+                ParallaxScrollView</h2>
+            <dl>
+                A ScrollView-like component that:<br>
+                &ensp; Has a parallax header(Header using parallax effect to create the illusion of depth)<br>
+                &ensp; background header image moves at a different speed than the foreground content, creating a depth effect<br>
+                &ensp; Has an optional sticky header<br>
+                &ensp; Can be nested within other views<br>
+                &ensp; Works on iOS and Android
+            </dl>
+            <h4 id="vs">ParallaxScrollView vs ScrollView</h4>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>ParallaxScrollView</th>
+                    <th>ScrollView</th>
+                </tr>
+                <tr>
+                    <td>Scrolling Behavior</td>
+                    <td>Parallax effect while scrolling</td>
+                    <td>Normal scrolling</td>
+                </tr>
+                <tr>
+                    <td>Header Background</td>
+                    <td>Allows setting a headerBackgroundColor</td>
+                    <td>No background customization</td>
+                </tr>
+                <tr>
+                    <td>Use Case</td>
+                    <td>Engaging UI with an animated background</td>
+                    <td>Standard scrolling pages</td>
+                </tr>
+            </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rust Slices</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css">
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Our team</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>    
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#slice">What is Slice</a>
+            <a href="">Types Slice</a>
+            <ul>
+                <li><a href="#stringslice">String Slice</a></li>
+                <li><a href="#arrayslice">Array Slice</a></li>
+                <li><a href="#creatingslices">Creating Slice</a></li>
+            </ul>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="what">What is Slice</h2>
+            <dl>
+                Slice is somepart of larger data, it <b><u>always borrow data(Hence RO)</u></b> from the sliced type.<br>
+                It gives you a view into a larger collection. Slice cannot grow<br>
+                Slices always borrow from another object. Original object has to remain 'alive' (in scope) for at least as long as slice is alive.
+            </dl>
+
+            <h4 id="stringslice">String Slice</h4>
+            <pre><code class="language-css">
+fn main() {
+    let s:&str = "TestHere";
+    let s_slice:&str = &s[1..3];    //Slice always borrow data
+    println!("{}", s_slice);            //es
+}
+    </code></pre>
+
+            <h4 id="arrayslice">Array Slice</h4>
+            <pre><code class="language-css">
+fn main() {
+    let arr:[i32; 5] = [1,2,3,4,5];
+    let arr_slice:&[i32] = &arr[2..4];
+    println!("{:?}", arr_slice);        //[3,4]
+    let arr_slice_full:&[i32] = &arr[2..];
+    println!("{:?}", arr_slice_full);        //[3,4,5]
+}
+            </code></pre>
+
+            <h4 id="creatingslices">Creating Slices</h4>
+            <pre><code class="language-css">
+fn main() {
+    let s:&str = "TestHere";
+    let s_slice_full:&str = &s[..];      //TestHere
+    let s_slice1:&str = &s[2..s.len()];  //stHere
+    let s_slice2:&str = &s[2..];         //stHere
+    let s_slice3:&str = &s[0..2];        //Te
+    let s_slice4:&str = &s[0..s.len()];  //TestHere
+}
+            </code></pre>
+                
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

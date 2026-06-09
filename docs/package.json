@@ -1,0 +1,14 @@
+{
+  "name": "code-with-amitk-search",
+  "version": "1.0.0",
+  "description": "Search index builder for code-with-amitk.github.io",
+  "scripts": {
+    "build-index": "node scripts/build-search-index.js"
+  },
+  "dependencies": {
+    "jsdom": "^22.1.0"
+  },
+  "keywords": ["search", "static-site"],
+  "author": "",
+  "license": "MIT"
+}

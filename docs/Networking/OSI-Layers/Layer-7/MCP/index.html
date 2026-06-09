@@ -1,0 +1,476 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>MCP</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#mcp">MCP</a>
+      <a href="#vs">MCP vs HTTP</a>
+      <a href="#me">Message Exchange</a>
+      <a href="#parsing">MCP parsing in SWG</a>
+      <a href="#requestex">Common MCP Request Examples</a>
+      <a href="#present">What would surely present in MCP Request</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="mcp">MCP(Model Context Protocol)</h2>
+      <dl>
+        <b>What?</b> It is the opensource standard way how AI agents(like claude
+        CLI) interacts & gets information from outside world(eg: github, google
+        drive, postgres db reader etc)<br />
+
+        <b>Client Server Architecture:</b> AI Agent(eg: Claude CLI) acts as the
+        client, and the service provider(eg: postgres DB reader) act as the
+        server.<br />
+
+        <b>Communication:</b> Client and server uses Server-Sent Events (SSE) or
+        WebSockets over HTTP and uses HTTPS (SSL/TLS) to encrypt the JSON-RPC
+        messages.<br />
+
+        <b>MCP is Opensource/Vendor Agnostic:</b> That means any agent can use
+        MCP to interact with MCP server and access tools/services
+        <br />
+        <pre><code>
+Claude-MCP-Client ---------|
+                          MCP-Server &lt;--&gt; postgres-DB-reader
+Cursor-MCP-Client ---------|
+        </code></pre>
+        <br />
+
+        <b>Message Format:</b> JSON-RPC with specific feilds (eg: methodm
+        params, id etc)<br />
+        <pre><code class="language-css">
+POST /mcp/v1/tools/call HTTP/1.1
+Host: mcpserver.com
+Content-Type: application/json
+Authorization: Bearer &lt;AI_Platform_JWT&gt;
+User-Agent: AI-Assistant-Client/1.0
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "fetch_webpage",
+    "arguments": {
+      "url": "http://www.google.com/"
+    }
+  },
+  "id": 42
+}
+        </code></pre>
+        <br />
+        <b>How MCP Client Authenticate to Server?</b> if human user want to
+        access any service then they provide password, but for AI agent
+        authenticate using OAuth.
+        <pre><code>
+  Machine-1                  Machine-2                   Machine-3
+Client(claude cli)          (Auth Server)             (Resource Server)
+               ---- GET www.google.com --------------------&gt;
+               &lt;- 401 Unauthorized Challenge -----------
+
+               -- Authenticate -----&gt;
+      my client_id: https://claude.ai/mcp-metadata.json
+                                - Fetch public key &gt; claude.ai
+                                &lt;--- Public key -------
+                            Verify Signature
+
+               --- GET google.com Authorization Header: JWT --&gt;
+        </code></pre>
+        <br />
+
+        <b
+          >Can existing tools(old postgres DB reader) talk over MCP directly, or
+          do they need an update?</b
+        ><br />
+        &ensp; They would need to be updated since every MCP server need to
+        expose some new endpoint eg: tools/list, execute_query.<br />
+        &ensp; <u>Endpoint execute_query:</u> MCP server provides a
+        endpoint(execute_query) which accepts the JSON-RPC payload, translates
+        it into an actual SQL query, executes it against the database, and
+        reformats the tabular SQL rows back into clean text/JSON for the AI
+        model.<br />
+
+        <b
+          >Why couldn't we use an existing RPC protocol (like gRPC or
+          JSON-RPC)?</b
+        ><br />
+        &ensp; MCP is just AI specific way of getting information over existing
+        RPC protocols.<br />
+        &ensp; AI agent converts generic prompts to REST endpoint calls(eg:
+        code-review) and use these endpoints to perform the tasks
+      </dl>
+      <pre><code class="language-css">
+  Machine-1                             Machine-2
+Client(claude cli)                    Server(Postgres Connector)
+      </code></pre>
+
+      <h2><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">MCP Authorization</a></h2>
+      <dl>
+        OAuth for HTTP/SSE client,server.<br>
+        None for STDIO
+      </dl>
+
+      <h2 id="me">Message Exchange</h2>
+      <dl>
+        <a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#session-management">Packet Exchange</a>
+      </dl>
+      <h3>Fields in Header</h3>
+      <dl>
+        <b>Session Id (non mandatory):</b> <br>
+        - Client can send MCP-Session-Id in initialization message, by including it in HTTP 
+        header, if server support Session Id, it will return in Initialization response and client should use
+        it in all subsequent HTTP requests.<br>
+        - if server does not support MCP-Session-Id, it should respond without MCP-Session-Id with HTTP 400 Bad response<br>
+
+        <b>Protocol Version Header (non mandatory):</b><br>
+        - If using HTTP, the client MUST include the MCP-Protocol-Version: protocol-version HTTP header on all subsequent requests to the MCP server.
+        MCP server to respond based on the MCP protocol version. For example: MCP-Protocol-Version: 2025-11-25<br>
+        - if protocol version is not sent, server SHOULD assume protocol version 2025-03-26. If the server receives a request with an invalid or 
+        unsupported MCP-Protocol-Version, it MUST respond with 400 Bad Request.<br>
+        <font color="blue">We can use these(MCP-Session-Id, MCP-Protocol-Version) as strong hints, but not sufficient to detect MCP traffic</font>
+
+      </dl>
+      <table>
+        <tr>
+          <td>
+      <pre class="puml" visibility: hidden>
+@startuml
+title MCP Client-Server Sequence Diagram
+
+participant "MCP Client" as Client
+participant "MCP Server" as Server
+
+== Connection Setup ==
+Client &lt;-&gt; Server: HTTP 3 Way Handshake
+Server &lt;-&gt; Client: TLS Tunnel established
+
+== Initialize Handshake (id=1) ==
+note over Client: Client Protocol Version\nClient Advertises its Capabilities
+note over Client: All MCP Requests use POST\nPOST is required by JSON-RPC 2.0
+
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n initialize (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "method": "initialize",\n  "params": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "roots": {"listChanged": false}\n    },\n    "clientInfo": {"name": "Test", "version": "0.1.0"}\n  }\n}
+
+Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
+note over Server: Server advertises its capabilities
+
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\nnotifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
+
+== Tools & Resource Discovery (id=2) ==
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/list (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "method": "tools/list"\n}
+
+Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=2)\n{\n  "jsonrpc": "2.0",\n  "id": 2,\n  "result": {\n    "tools": [\n      {"name": "add", "inputSchema": {"type": "object", "properties": {"a", "b"}}},\n      {"name": "echo", "inputSchema": {"type": "object", "properties": {"type": "string"}}}\n    ]\n  }\n}
+
+== Tools Invocation (id=3) ==
+Client -&gt; Server: POST /jsonrpc\nHost: mcp-server.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\ntools/call (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "method": "tools/call",\n  "params": {\n    "name": "add",\n    "arguments": {"a": 2, "b": 3}\n  }\n}
+Server --&gt; Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid \nContent-Type: application/json\nresult (id=3)\n{\n  "jsonrpc": "2.0",\n  "id": 3,\n  "result": {\n    "content": [\n      {"type": "text", "text": "2+3 = 5"}\n    ]\n  }\n}
+
+@enduml
+      </pre>
+            <img
+              src="//www.plantuml.com/plantuml/png/rLLDa-Cq4BtxLtJvG46npkI3N5AOsgtiOK81cufTS20S5BadqI9Bmf9J4wZyToHPHXb2oCn0JUrSF1frz-kFrqzvgmrfJ5lpn3334RwVBs7E6GgJ5TZiiO42VsjHK8JtZ6mRKYU9iX6CCaM4WJG6f41qE9wxT63E9HoJ9CzXBeL0QfWKzjQq2l8ywH3Ww-oRu3c3sx9SmWH-8WUu9QBIE_8h9ftH-tKXCoY_Aw1iBIG7j7rjEDCxh7ocXM264Sv-nmW1dxCg7ttXaWff4AJ3wx526Sj66aabXn-nqRREjGY6TvNrDaoZ1cPitqIH3UCs2Uf_G7l7kH_joWrJM_zM8om_5ELQk2ym3OqriGOhs1pWs-B33zbgEOVnO9Zq4paPY8-v-QYbQ1HTYrkfROwQganxXm7Uarfn751PWwrO2kC8BGyAPq2KuemIDtIFi1QsiAplCmjzpc0y74-pqIWRJpkF0hKpP8jg1ctBghK05eVQZN8j_h3Na8RAqXcajeFqZRzabVr_r9rhD3jPENl426wAs2NJrkIXt4KeBLJcGOVZhrnjmwaBybuq4X23dQ6HqlYRb3DjvZiYjkWotn6kyTYv7Vz2yQDUY3lf8mIfqUKhKPlq3QJxMC9mCBAT-NZxEIRzFcPn7o_JrALvAPfMg9KK-iaaDQXRRlu_9eoK_38J8RpBAzk6udLVNrAj7izlfuypVejcVuNUAEbUWu5lyl0TE6t-qrMkxORT1IXz4oLO_UjkHD5UZ4-z5F8SIiSrV0Qhm2MyPvgw-Hty5exTg_lVnlFSxXynLh-eDswTGh7N9JF--uWYHlhCv-65clKgVrgZvsz35FVFlJIZkaXLENKneLfJq1tMn8lF79Gtoyr7fCPwE34h9wQWVEBkDkdn6FKUGP7kv3DGeuCs3HDRXzw1_nAqVhg_2x6NtR3yV2QlO6ifuJmKUvtCoVdMzXWNVeqVaXhkIBDjQnIcfyssuvXp2U8B-Xe4yFYPdGk0TcbE9H2NpU2ztqN_rs5-EO4Sfkdvxhr5KRKr_nC0"
+              alt="plantuml"
+              style="width: 600px; height: 950px"
+            />
+          </td>
+          <td>
+            <dt>
+              <img
+                src="/images/Machine_Learning/MCP/Message_Exchange.png"
+                alt="Message exchange"
+                style="width: 200px; height: 400px"
+              /><br>
+
+              All Methods are POST because<br>
+              - JSON-RPC 2.0 standard requires POST for all calls. Even though it's advertising capabilities, it's still a request expecting a response.
+              <br><br>
+
+              - Initialize Handshake <br />
+              (Both sides exchange protocolVersion, advertise Capabilities)
+              -<br />
+              C-&gt;S initialize (id=1) Request<br />
+              S-&gt;C result for id=1 (protocolVersion, capabilities, serverInfo)
+              Response<br />
+              C-&gt;S Initialized. notification<br /><br />
+
+              --------- Tools & Resouce Discovery ------------<br />
+              C-&gt;S tools/list (id=2) Reqeuest<br />
+              S-&gt;C result for id=2 (tools list for inputs) Response<br /><br />
+
+              ------- Tools Invocation -------------<br />
+              C-&gt;S tools/call add(2,3) (id=3) Reqeust<br />
+              S-&gt;C result for id=3 Response<br />
+              C-&gt;S resources/list (id=5) Request<br />
+              S-&gt;C result for id=5 Response<br />
+              C-&gt;S resouces/read (id=6) Request<br />
+              S-&gt;C result for id=6 Response
+            </dt>
+          </td>
+        </tr>
+      </table>
+
+      <h2>Modes of Operation</h2>
+      <dl>There can be 2 modes of operation: Local, Remote</dl>
+      <table>
+        <tr>
+          <th></th>
+          <th>Local / STDIO</th>
+          <th>Remote (HTTPS/SSE)</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            Claude CLI runs on a machine and for all operations it need not to
+            leave the machine
+          </td>
+          <td>
+            Claude CLI need to connect to MCP server over the netwrok or within
+            company network and client need to auth via OAuth
+          </td>
+        </tr>
+        <tr>
+          <td>Example</td>
+          <td>
+            1. git clone repo; Ans ask questions about repo<br />
+            2. Shell commands<br />
+            3. Spawning subagent<br />
+            4. Searching Company's Jira, Google docs, confluence(if skill is
+            imported to claude cli agent)
+          </td>
+        </tr>
+        <tr>
+          <td>Authorization</td>
+          <td>Implementations using an STDIO transport SHOULD NOT follow this any protocol for authorization,
+            and instead retrieve credentials from the environment.</td>
+          <td>OAuth recent standard</td>
+        </tr>
+      </table>
+
+      <h2 id="vs">MCP vs HTTP</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Traditional Web Traffic</th>
+          <th>With MCP</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <pre><code>
+POST /submit-form HTTP/1.1        &lt;&lt;&lt; Method(POST), Endpoint(https://www.google.com/submit-form)
+Host: www.google.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Bearer jwtToken
+name=alice&message=hello
+          </code></pre>
+          </td>
+          <td>
+            <pre><code>
+POST /mcp/v1/tools/call HTTP/1.1        &lt; &lt; POST method to send data. /mcp/v1/tools/call(This is REST endpoint of MCP Server)
+Host: mcpserver.com     &lt;&lt; MCP Server(https://mcpserver.com)
+Content-Type: application/json
+Authorization: Bearer AI_Platform_JWT
+User-Agent: AI-Assistant-Client/1.0
+{                                       &lt;&lt; Payload
+  "jsonrpc": "2.0",
+  "method": "tools/call",               &lt;&lt; Method
+  "params": {
+    "name": "fetch_webpage",
+    "arguments": {
+      "url": "http://www.google.com/"
+    }
+  },
+  "id": 42
+}
+          </code></pre>
+            <b>Headers:</b><br />
+            - Are HTTP headers or WebSocket upgrade headers, SSE headers<br />
+            <table>
+              <tr>
+                <td>Host</td>
+                <td>HTTP Host header, often present</td>
+              </tr>
+              <tr>
+                <td>Content-Type</td>
+                <td>
+                  Content-Type: application/json [Often]<br />
+                  Content-Type: text/event-stream [Used for Streaming]
+                </td>
+              </tr>
+              <tr>
+                <td>Authorization</td>
+                <td>
+                  Authorization: Bearer_token OR <br />
+                  Authorization: X-API-Key: abc123 [API Keys] OR <br />
+                  Authorization: Cookie: sessionid=xyz [Cookies] OR <br />
+                  Authorization: mTLS OR <br />
+                  Authorization: local
+                </td>
+              </tr>
+              <tr>
+                <td>User Agent</td>
+                <td>
+                  Claude OpenAI SDK<br />
+                  LangChain<br />
+                  Cursor<br />
+                  custom agent<br />
+                  absent entirely
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>Destination Endpoint</td>
+          <td>
+            https://www.google.com/submit-form <br />
+            Reqeust is directed to final destination visible in HTTP Request
+          </td>
+          <td>
+            api.external-mcp-provider.com <br />
+            HTTP Request sent MCP Server endpoint. method is present in json
+            body
+          </td>
+        </tr>
+        <tr>
+          <td>Payload</td>
+          <td>Body contains the raw data intended for the destination</td>
+          <td>JSON-RPC object</td>
+        </tr>
+        <tr>
+          <td>Json Structure Attached</td>
+          <td>No</td>
+          <td>Always</td>
+        </tr>
+        <tr>
+          <td>Reaching endpoint</td>
+          <td>Directly reach</td>
+          <td>MCP client can reach resource via MCP Server</td>
+        </tr>
+      </table>
+
+      <h2 id="parse">MCP parsing in SWG</h2>
+      <dl>
+        Netskope must look past the HTTP headers and parses the JSON body.<br />
+        Earlier blocking policy was created by finding destination URL in HTTP
+        header eg(https://google.com) but in MCP Json body has to be parsed.
+      </dl>
+
+      <h2 id="requestex">Common MCP Request Examples</h2>
+      <table>
+        <tr>
+          <td>
+            HTTP GET (same for SSE,)
+            <pre><code>
+POST /rpc HTTP/1.1
+Host: mcp_server.com
+Content-Type: application/json
+Authorization: Bearer token
+{
+  "method": "tools/call",
+  "params": {
+    "name": "Access Page",
+    "arguments": {
+      "url": "https://example.com"
+    }
+  }
+}
+
+// Response
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "content of webpage https://example.com"
+    }
+  ]
+}
+            </code></pre>
+          </td>
+          <td>
+            DB Access
+            <pre><code>
+{
+  "method": "tools/call",
+  "params": {
+    "name": "postgres.query",
+    "arguments": {
+      "sql": "SELECT * FROM users"
+    }
+  }
+}
+            </code></pre>
+          </td>
+          <td>
+            Filesystem Access
+            <pre><code>
+{
+  "method": "tools/call",
+  "params": {
+    "name": "filesystem.read",
+    "arguments": {
+      "path": "/etc/passwd"
+    }
+  }
+}
+          </code></pre>
+          </td>
+          <td>
+            github access
+            <pre><code>
+{
+  "method": "tools/call",
+  "params": {
+    "name": "github.get_file",
+    "arguments": {
+      "repo": "org/private-repo",
+      "path": "secrets.txt"
+    }
+  }
+}
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="present">What would surely present in MCP Request</h2>
+      <dl>
+        This is high probability that these fields would be present in MCP
+        request:<br />
+        &ensp; 1. Method / Operation type: tools/call, action:invoke, op:call<br />
+        &ensp; 2. Structured Json: <br />
+        &emsp; Capability Identifier(name in params)<br />
+        &emsp; Sensitive Payload Data(URLs, SQL, file paths, prompts, shell
+        commands, repo names)
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

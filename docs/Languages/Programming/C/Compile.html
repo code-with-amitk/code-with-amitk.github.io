@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Compile</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#steps">Compilation Steps</a>
+            <ul>
+                <li><a href="#processor">Pre Processing</a></li>
+                <li><a href="#compiler">Compiler (cc)</a></li>
+                <li><a href="#linker">Linker (ld)</a></li>
+            </ul>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h3 id="steps">Compilation Steps</h3>
+
+            <pre><code class="language-css">
+test.c [Pre-processor] test.i [Compiler (cc)] test.s [Assembler] test.o  [Linker (ld)] a.exe
+source                Intermediate           Assembly            Object      /\
+file                  File                   Code                File        libcrypto.a(openssl)
+            </code></pre>
+
+            <h4 id="processor">Pre Processoring(*.c → *.i)</h4>
+            <dl>
+                Converts source-code *.c to Intermidiate files *.i<br>
+                <u>Functions:</u> <br>
+                &ensp; Remove comments from code<br>
+                &ensp; Expands include statements, macros. Expands anything else with #<br>
+                -E Flag Stop after the preprocessing stage; do not run the compiler proper
+            </dl>
+            <pre><code class="language-css">
+# gcc -E test.c > m
+# cat m
+typedef unsigned char __u_char;
+...
+extern int fprintf (FILE *__restrict __stream,
+    const char *__restrict __format, ...);
+extern int printf (const char *__restrict __format, ...);
+...
+int main(){
+    printf("Hello");
+}              
+            </code></pre>
+
+            <h4 id="compiler">Compiler ((*.i → *.o))</h4>
+            <dl>
+                Generates Object files. Only when told compiler generates asm files. Converts Intermediate files to object files.<br>
+                Compiler is only bothered about function declaration, it does not check definition.<br>
+                Linking definition to function is task of Linker.<br>
+                Functions Lexical Analysis, parsing, Semantic Analysis, Verify code syntax<br>
+                -S Flag Stop after the stage of compilation proper; do not assemble
+            </dl>
+            <pre><code class="language-css">
+// Generate Object files.
+// Header file paths needed to be passed
+// Libraries NOT NEEDED to be passed.   -lcrypto(NOT NEEDED)
+//-I: gcc Flag to pass path of Header files.
+// -fopenmp -O3 -std=c++20     are compiler flags
+
+# g++ -c test.c -I/opt/openssl/include -fopenmp -O3 -std=c++20 -o test.o
+# ls   
+test.o                
+            </code></pre>
+
+            <h4 id="linker">Linker(ld) (*.o → *[.exe])</h4>
+            <dl>
+                lets you are working on project having 10 modules, each having seperate *.c file. 
+                All c files create object files and at end you want 1 EXE file. Linker does it. Linker links code from library<br>
+                Linker Also links from external libraries (eg: openssl)<br>
+                Linker needs library path & library name(Which contains function definitions)
+            </dl>
+            <pre><code class="language-css">
+LIBS = -lcrypto -ldl -lpthread -ldl -lrt           //Use libcrypto.a, libpthread.a
+OPENSSL_LIBS_PATH = /opt/openssl                   //contains libcrypto.a, libssl.a
+
+# g++ test.o ${LIBS} -o test-exe -L$(OPENSSL_LIBS_PATH)
+# ls
+test-exe
+            </code></pre>
+
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

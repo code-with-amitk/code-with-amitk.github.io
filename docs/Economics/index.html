@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Economics</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#gst">GST</a>
+        <a href="#ex1">Example-1: Table Manufacturing</a>
+        <a href="#ex2">Example-2: Exporting IT Services outside India</a>
+    </aside>
+
+    <main>  <!--Here is our page's main content-->
+        <article style="margin-left:200px;">   <!-- It contains an article -->
+            <h2 id="gst">GST</h2>
+            <dl><strong>GST(Goods and Services Tax)?</strong></dl>
+            <dt>
+                This is indirect tax which has replaced many indirect taxes in India such as the excise duty, VAT, services tax, etc. <br>
+                Levied on the supply of goods and services.
+            </dt>
+
+            <h3 id="ex1">Example-1: Table Manufacturing</h3>
+            <dt>
+                let's suppose I am table manufacturer, who purchases wood at 118(100+18%GST) <br>
+                and sold it at 236(200+18% GST). 118 I paid and 236 i recieved from customer.                
+            </dt>
+            <pre><code>
+Wood seller --[100 + 18%GST]--> Purchase wood at 118
+
+Created Table --[200 + 18%GST]--> Sold to Customer at 236
+            </code></pre>
+            <dt>
+                <b>Input Tax = 18/- (-18)</b> Amount of tax paid by Me(business) for purchase of goods or services that are used for business purposes.<br>
+                <b>Output Tax = 36/- (+36)</b> GST collected by a Me(business) on the sale of goods or services.
+            </dt>
+            <dt>
+                <b>Tax to be paid to Govt:</b> Output Tax - Input Tax = 18/-
+            </dt>
+
+            <h3 id="ex2">Example-2: Exporting IT Services outside India</h3>
+            <dt>
+                let's suppose I am IT Solutions Provider. I worked on client project and recieved 1000/- from client outside India.<br>
+                I purchased Desktop table for my business at cost 100+18%GST = 118<br>
+            </dt>
+            <dt>
+                <b>Exports are zero-rated under GST, meaning you don't charge GST on export services, but you can claim Input Tax</b>
+            </dt>
+            <pre><code>
+Table --[100 + 18%GST]--> Purchase table at 118     //Paid GST=18.
+
+Created Software --[1000 + 0=GST] --> Recieved from Customer.   //Exports are 0 rated GST.
+            </code></pre>
+            <dt>
+                <b>Input Tax = 18/- (-18)</b> Amount of tax paid by Me(business) for purchase of goods that are used for business purposes.<br>
+                <b>Output Tax = 0.</b> GST collected by a Me(business) on the sale of services, exports are 0 rated GST.
+            </dt>
+            <dt>
+                <b><u>Claim the Input Tax (-18):</u></b> Input Tax cannot be credited into Bank Account.<br>
+                Sell some services/product to customer in INDIA and charge GST. I sold laptop (200+18%GST=236/-) to customer in India. Output tax=36/-<br>
+                <u>Tax to be paid to Govt:</u> Output Tax - Input Tax = 18/-
+            </dt>
+        </article>
+    </main>
+
+    <script src="/scripts/search.js"></script>
+</body>
+</html>

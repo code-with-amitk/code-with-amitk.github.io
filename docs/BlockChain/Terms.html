@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Blockchain Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="#BlockchainAddress">BlockchainAddress (Sender or Receiver)</a>
+      <a href="#block">Block</a>
+      <ul>
+        <li><a href="#genesis">Genesis Block</a></li>
+      </ul>
+      <a href="#transaction">Transaction</a>
+      <a href="#pow">POW(Proof of Work)</a>
+      <a href="#pos">POS(Proof of Stake)</a>
+      <a href="#bcclients">Bitcoin Clients</a>
+      <a href="#Mining">Mining</a>
+      <a href="#smartcontract">Smart Contract</a>
+      <a href="#solidity">Solidity</a>
+      <a href="#wallet">Wallet</a>
+      <a href="#web3">Web3</a>
+    </div>
+
+    <article style="margin-left: 200px">
+      <h3 id="BlockchainAddress">BlockchainAddress (Sender or Receiver)</h3>
+      <dl>
+        Public, Private key pair is calculated for user. Public key of user is
+        treated as User Address<br />
+        Bitcoin address of node is calculated using Hash of Public key.
+        Public/Pvt keys generated using secp256k1 ECC Algorithm.<br />
+        Hash is generated using RIPEMD160 + SHA256.
+      </dl>
+      <pre><code class="language-css">
+K(public key) = k(pvt key) * G(constant)
+K --> |SHA256| --256bit--> |RIPEMD160| --> 160bit(Address)
+160bit(Address) --> |Encode(Base58 Check)| --> Bitcoin Address      //Base58-Check(RIPEMD160(SHA256(K)))
+        </code></pre>
+
+      <h3 id="block">Block</h3>
+      <dl>
+        Blockchain is composed of blocks(Header + payload). Block stores the
+        transactions. Header is metadata, while payload is actual transaction
+        data.<br />
+        <b>Block creation: </b>
+        The only way to add new information to the blockchain is to add a block
+        to the end of it. Only Qualified users create blocks and send them to
+        other nodes. If the block is valid, other users accept it. If it’s
+        invalid, they ignore it and may punish block creator. The valid block
+        propagates through the network in a few seconds.
+      </dl>
+
+      <h4 id="genesis">
+        Genesis Block.
+        <a
+          href="https://www.blockchain.com/explorer/blocks/btc/000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
+          >Bitcoin block#0</a
+        >
+      </h4>
+      <dl>
+        1st block in blockchain. This is hardcoded at time when blockchain
+        started. This is same as other blocks, just it does not have pointer to
+        prev block
+      </dl>
+      <pre><code class="language-css">
+Header/Metadata => |block number | timestamp (when the block was created) | block hash | nonce |
+Data/Payload =>  |Sender address | Recipient address | amount of transaction | fee |
+
+struct block {
+    struct block_header* bh;
+    struct block* prev_block;   //This is Hash pointer(not normal pointer)
+    long timestamp;
+    long nonce;
+    long transaction_counter
+    struct transactions* t;
+    struct other_attribute* oa;
+}
+        </code></pre>
+
+      <h3 id="transaction">Transaction</h3>
+      <dl>
+        1 block can store 1 or multiple transactions. Whenever a transaction(s)
+        happens on blockchain, a block is created and stored on chain.
+        Transactions are used to record various activities, such as
+        cryptocurrency transfers, smart contract executions, and other changes
+        to the blockchain’s state.
+      </dl>
+
+      <h3 id="pow">POW(Proof of Work)</h3>
+      <dl>
+        There are 2 types of blockchain systems: POW &
+        <a href="#pos">POS(Proof of Stake)</a>. In POW system, to add a new
+        block mining needed to be done. Miner who solves the puzzle(finds hash
+        of transaction) is rewarded some bitcoins and transaction fee.<br />
+
+        <b>Problems with POW:</b>
+        1. Energy efficiency: Miners compete to solve complex mathematical
+        puzzles using huge computational power.<br />
+        2. Centralization Concerns: More power more chances to solve 1st, this
+        means more bitcoins goes with people/companies who own huge machines.<br />
+        3. Accessibility: Only those having specialized mining hardware, have
+        more bitcoins.
+      </dl>
+
+      <h3 id="pos">POS(Proof of Stake) (Ethereum uses it)</h3>
+      <dl>
+        Why POS came in? Due to problems in
+        <a href="#pow">POW(Proof of Work)</a><br />
+
+        <b>How POS Works?</b>
+        <pre><code class="language-css">
+    Proposer                                  Validator-1                  Validator-2
+                                        (Hold coins to stake)
+1. Create block
+(having transaction)  -|--broadcasted---->  block is Good
+                        |------------------------------------------------> block is good
+Block included on chain
+Reward distributed to both
+      </code></pre>
+
+        1. Validators/forgers/stakers(same as miners in POW system) validate
+        transactions based on:<br />
+        &ensp; a. Number of coins they hold<br />
+        &ensp; b. And how many coins they are willing to "stake" as
+        collateral.<br />
+        2. Validators are selected in a deterministic manner, often based on
+        factors like the amount of coins staked and the length of time they’ve
+        been staking.<br />
+        3. Validators are incentivized to act honestly because they have "their
+        coins" – if they validate fraudulent transactions, they risk losing
+        their staked coins.<br />
+        4. Validators are rewarded with transaction fees and sometimes a portion
+        of the transaction fees paid by users.<br />
+        <b>Advantages of POS:</b><br />
+        &ensp; 1. Less power consumption wrt POW system: The need for solving
+        computational puzzles is eliminated, which significantly reduces energy
+        consumption compared to PoW.
+      </dl>
+
+      <h3 id="bcclients">BlockChain Clients</h3>
+      <dl>
+        There are two main types of Bitcoin clients:<br />
+        1. Full Node: These clients download and validate the entire Bitcoin
+        blockchain<br />
+        2. Lightweight Node: These clients do not download the entire
+        blockchain. Instead, they rely on full nodes to verify transactions for
+        them. Examples:<br />
+        &ensp; 1. Bitcoin Core (Fullnode Bitcoin client): Holds complete
+        blockchain in local system. Requires ~500GB of space.<br />
+        &ensp; 2. Electrum (Lightweight Bitcoin client): It allows to interact
+        with the Bitcoin network(bitcoin network is blockchain). With client we
+        can send and receive transactions, and manage your Bitcoin holdings.<br />
+        &ensp; 3. Kukai (Lightweight Tezos client): This is wallet service on
+        Tezos blockchain. Tezos is based on Proof of stake, while Bitcoin core,
+        electrum are Proof of work blockchains
+      </dl>
+
+      <h3 id="Mining">Mining</h3>
+      <dl>
+        Let’s suppose Alice wants to send 1 BTC(bitcoin) to Bob, alice sends
+        message on network.<br />
+        Miner Nodes(Verfiers of transaction) recieve the Alice’s message and
+        starts a race to find HASH of desired diffculty(defined by software).<br />
+        Node(Miner) who solves it 1st is rewarded with some transaction
+        fee(0.001 BTC) + bitcoin reward.<br />
+        Miner-1, solves the puzzle and sends to network for verification. Other
+        miners verifies it using consensus and transaction is added as a node to
+        ledger=blockchain.<br />
+        As more and more miners join the network, the total hash rate — the
+        combined computing power of all miners — increases
+      </dl>
+
+      <h3 id="smartcontract">Smart Contract</h3>
+      <dl>
+        These are the programs that run on blockchain having business logic.
+        This get automatically executed when certain conditions are met. These
+        are secure and unstoppable.<br />
+        Represents aggrement b/w 2 parties & allows parties to securly conduct
+        business.<br />
+        <u>SC Properties:</u><br />
+        1. Immutable logs: SC creates logs which are immutable, those cannot be
+        changed.<br />
+        2. Distributed: Output of contract is Validated/verified by other nodes
+        on the network.
+      </dl>
+
+      <h3 id="solidity">Solidity</h3>
+      <dl>
+        High level Object oriented programming language for writing smart
+        contracts.<br />
+        <u>Features:</u> Based on C,C++,python, Statically typed: Checking
+        happens at compile time, Supports inheritance: 1 smart contract can be
+        used by other
+      </dl>
+
+      <h3 id="wallet">Wallet</h3>
+      <dl>
+        In the context of blockchain(eg: bitcoin, tezoz), a wallet is a digital
+        tool that allows you to store, manage, and interact with your Bitcoin
+        holdings. It’s used to create and manage Bitcoin addresses, which are
+        used to send and receive Bitcoin transactions. A Bitcoin wallet consists
+        of two main components:<br />
+        1. Public Addresses(Hash number): These are account numbers in
+        blockchain network. You share these addresses with others when you want
+        to receive Bitcoin. They are derived from your wallet’s public key.<br />
+        2. Private Keys: These are secret keys that helps control/access
+        bitcoins associated with your addresses. Whoever has access to the
+        private key has control over the Bitcoin at that address.
+      </dl>
+
+      <h2 id="web3">Web3</h2>
+      <dl>
+        <b>Web1.0:</b> 1991-2004. Most sites were static. Most were consumers<br />
+        <b>Web2.0:</b> Users have started producing content using forums, social
+        media. 2004 - Till Date<br />
+        <b>Web3.0:</b>Proposed next stage of the internet, which is
+        decentralization, increased user control over data, ownership via
+        blockchain.<br />
+        <b>Aim:</b> shift power from large corporation to users
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

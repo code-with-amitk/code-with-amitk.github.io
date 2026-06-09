@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Drones/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"></aside>
+
+    <article style="margin-left: 200px">
+      <h2>Getting Started</h2>
+      <dl>
+        Once you have the basic understanding of
+        <a href="/Drones/">Drone Architecture</a> and its
+        <a href="/Drones/">compoenents/Terms</a>. <br />
+        You can start with Simulators, Instead of buying all physical
+        components.
+      </dl>
+
+      <h2>Simulating the Drone System</h2>
+      <dl>
+        Ardupilot: Simulate Flying drone<br />
+        MissionPlanner: Ground Station Communicating with drone
+      </dl>
+      <pre><code>
+|--- WSL(Ubuntu) ---------|                            |----- Windows -----|
+|                         |                            |                   |
+|     Ardupilot           |                            | MissionPlanner    |
+|(Simulate Flying Drone)  |                            | (Ground Station)  |
+| Barometer, GPS,         | &lt;--- Mavlink(UDP) --->     |                   |
+| gyro/accelerometer      |                            |                   |
+|-------------------------|                            |-------------------|
+      </code></pre>
+
+      <h3>
+        1. Launch <a href="/Drones/">Ardupilot</a> on WSL(This is Simulated
+        Drone)
+      </h3>
+      <dl>
+        <b>This is SITL = sim_vehicle.py</b><br />
+        As we know, Ardupilot is the software running on circuit board of
+        drone<br />
+        <a href="/Drones/Terms/Terms.html#ardupilot"
+          >Install and start ardupilot</a
+        >
+      </dl>
+
+      <h3>2. Connect Mission Planner(GCS)</h3>
+      <dl>
+        a. Install & start <a href="Terms/GCS.html">GCS</a><br />
+        b. Connect to SITL(ie ardupilot started in step-1):<br />
+        &ensp; Top-right dropdown > Select UDP > Click CONNECT (it will connect
+        to ardupilot)<br />
+      </dl>
+
+      <h3>3. Start Simulated Flight</h3>
+      <dl></dl>
+    </article>
+  </body>
+</html>

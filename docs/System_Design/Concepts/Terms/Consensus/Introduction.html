@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Consensus</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">What is Consensus?</a>
+      <a href="#vs">Raft vs Paxos</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2>What is Consensus</h2>
+      <dl>
+        Consensus is a process of agreement between distrusting nodes on a final
+        state of data.
+      </dl>
+
+      <h2 id="vs">Raft vs Paxos</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Paxos</th>
+          <th>
+            <a
+              href="/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html"
+              target="_blank"
+              >Raft</a
+            >
+          </th>
+        </tr>
+        <tr>
+          <td>understanding</td>
+          <td>Hard</td>
+          <td>Easy</td>
+        </tr>
+        <tr>
+          <td>robust</td>
+          <td>More</td>
+          <td>Less</td>
+        </tr>
+        <tr>
+          <td>Consensus Mechanism</td>
+          <td>Quorum-based, no fixed leader</td>
+          <td>Leader-based log replication</td>
+        </tr>
+        <tr>
+          <td>Roles</td>
+          <td>Proposers, Acceptors, Learners</td>
+          <td>Leader, Followers, Candidates</td>
+        </tr>
+        <tr>
+          <td>Use Cases</td>
+          <td>
+            Advanced fault tolerance. <br />Applications with higher reliability
+            needs (e.g., distributed locking, consensus in high-load DBs).
+          </td>
+          <td>
+            Simpler implementation and maintenance. Logging and replicated state
+            machines
+          </td>
+        </tr>
+      </table>
+    </main>
+  </body>
+</html>

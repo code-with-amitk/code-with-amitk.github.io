@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Remote Browser Isolation</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#what">What</a>
+    <a href="#modes">RBI modes</a>
+    <a href="#types">RBI Types</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h3 id="#what">Remote Browser Isolation / Web Isolation</h3>
+    <dd>This is a cybersecurity approach where user's web browsing activites are performed on secured remote-cloud based container
+      machine instead of local computer.
+    </dd>
+
+    <dl><strong>Benefits of RBI</strong></dl>
+    <dd>
+      <u>1. No risk of malware infections:</u> If webpage has malware, then client laptop is secured since, it would not execute on laptop.<br>
+      <u>2. Protection Against Web-Based Attacks(Phishing):</u> Phising Email executes script on machine to get data. 
+      Now script will not execute on client machine.<br>
+      <u>3. Support for BYOD and Remote Work:</u> access the web without risking the security of corporate networks or sensitive 
+      data stored on personal devices.
+    </dd>
+
+    <dl><strong>How it works?</strong></dl>
+    <image style="height:400px;width:350px" src="http://www.plantuml.com/plantuml/png/RKyzJyGm3DtzAunkPc2jqEa694POcL3YMjUeQHov2NVYr-DSAqg1qUyzlu_JN9oMEaMuo-hEayF2yeb5AuEZ8efrPaKtOuLioa0XkrJGgrnMmWDukI95gJtYOHpS67PQabHSI8kQTbGELuxlogbdNVYiO1UQ8q2ImYWVHdWyF2jpUkCOvM8MPtx0mUGmkMXcOiRIy-srVG5Kl3-Yx_0bSyAR7do3gCFPL0lqCuB-Yn3xvXv-fJmw8fxjw8v0NGkqscos1PwadKD8vwrBrXPSkrUpn7LhRrkNzTzLoI96h1hNeXkmQxclkMd-n3NK5fwCg5Fy0W00"/>
+    <code class="puml" visibility: hidden>
+      @startuml
+      !pragma teoz true
+      actor user as u
+      participant browser as b
+      
+      box cloud  #khaki
+      participant container as c
+      participant pixel_renderer as pr
+      end box
+      
+      note over b #GreenYellow
+      page1 has 
+      malicios code
+      end note
+      
+      u -> b: Open page1
+      b -> c: send page1
+      
+      note over c #GreenYellow
+      page1 opened
+      
+      malicios code
+      <access c:>
+      c: not present
+      Do nothing
+      end note
+      pr -> u:Page rendered as pixel
+      
+      u -> b:click url
+      b -> c:click url
+      note over c  #GreenYellow
+      click url
+      end note
+      pr -> u: url1
+      
+      @enduml      
+    </code>
+
+    <h3 id="modes">RBI Rendering Modes</h3>
+    <table>
+      <tr>
+        <th></th>
+        <th>Used By</th>
+        <th>What</th>
+      </tr>
+      <tr>
+        <td>Pixel Rendering</td>
+        <td>High Risk users(Administrators, Executives)</td>
+        <td>
+          - Container does not send (pictures, fonts, style sheets, Javascript files) back to browser
+        </td>
+      </tr>
+      <tr>
+        <td>DOM(Document Object Model)<br> based Rendering</td>
+        <td>Medium Risk Websites</td>
+        <td>
+          - Container does not send Javascript files back to browser.
+          - fonts, style sheets are sent to browser
+        </td>
+      </tr>
+      <tr>
+        <td>Streaming Media</td>
+        <td>Lower risk</td>
+        <td>
+          - RBI will only render risky web page elements, allowing other to be rendered in user's browser.
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="types">RBI Types</h3>
+    <table>
+      <tr>
+        <th>Type</th>
+        <th>Meaning</th>
+      </tr>
+      <tr>
+        <td>Targetted RBI</td>
+        <td>
+          - Coupled with <a href="/Networking/Terms/#sase">SWG</a>.<br>
+          - Creates containers on the fly, when uncategorized or risky website is surfed by user
+        </td>
+      </tr>
+      <tr>
+        <td>Full RBI</td>
+        <td>For Executives. All websites are opened in RBI</td>
+      </tr>
+      <tr>
+        <td>Email RBI</td>
+        <td>Email is opened in RBI. All embedded URLs are done Read-Only</td>
+      </tr>
+      <tr>
+        <td>Document RBI</td>
+        <td>
+          User opens page on browser, that page is opened in cloud container.<br>
+          Any downloadable document is rendered as static pdf
+        </td>
+      </tr>
+      <tr>
+        <td>Application Access Control RBI</td>
+        <td>
+          Applications are opened in cloud and presented as pixel rendered.
+        </td>
+      </tr>
+    </table>
+
+  </article>
+
+</body>
+</html>

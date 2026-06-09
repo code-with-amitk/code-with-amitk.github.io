@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What</h2>
+        <dl>
+            OrderedDict is a dictionary subclass that remembers the order that keys were first inserted.
+dict vs OrderedDict OrderedDict preserves order in which keys are inserted. reguar dict does not track the insertion order.
+        </dl>
+
+        <pre><code class="language-css">
+from collections import OrderedDict 
+
+d = {} 
+d['a'] = 1
+d['b'] = 2
+d['c'] = 3
+d['d'] = 4
+    
+for key, value in d.items(): 
+    print(key, value)              #('a', 1) ('c', 3) ('b', 2) ('d', 4)   //See no order
+    
+od = OrderedDict() 
+od['a'] = 1
+od['b'] = 2
+od['c'] = 3
+od['d'] = 4
+    
+for key, value in od.items(): 
+    print(key, value)             #('a', 1) ('b', 2) ('c', 3) ('d', 4)    //See order
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

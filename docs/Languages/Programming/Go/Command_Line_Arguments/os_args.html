@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <title>os Command line Arguments</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#cla">os.arg</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="cla">os.arg</h2>
+      <dl>
+        The os.Args variable (found in the os package) is a simple slice of
+        strings. It captures everything typed after the program name in the
+        terminal.<br />
+        <b>How it works?</b><br />
+        It indexes every space-separated word. <br />
+        Index 0: Always the path to the program itself.<br />
+        The Rest: Any arguments passed by the user.<br />
+        <b>Example:</b> If you run ./myscript save --force --id=10, os.Args
+        looks like this: ["./myscript", "save", "--force", "--id=10"]<br />
+        <b>The Downside:</b> To use this, you have to manually write logic to
+        figure out what --force means or convert "10" from a string to an
+        integer.<br /><br />
+
+        <a href="flag.html">flag package</a> is better than os.args.
+      </dl>
+
+      <h2>Code</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+package main
+import (
+    "fmt"
+    "os"
+)
+func main() {
+    fmt.Println ("Number of command line args", len(os.Args))
+    for i := 0; i < len(os.Args); i++ {
+        fmt.Println ("args[", i, "]", os.Args[i])
+    }
+}
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ go build main.go
+$ ./main test tt asa da
+Number of command line args 5
+args[0]:  ./main
+args[ 0 ] ./main
+args[ 1 ] test
+args[ 2 ] tt
+args[ 3 ] asa
+args[ 4 ] da
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Install Database</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#postgres">Installing Postgres</a>
+    <a href="#createuser">Create user, Login with User</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="postgres">Installing Postgres</h2>
+      <table>
+        <tr>
+          <th>Linux</th>
+          <th>Windows</th>
+        </tr>
+        <tr>
+          <td><pre><code class="language-css">
+$ sudo apt install postgresql postgresql-contrib
+$ sudo apt install libpq-dev
+$ psql --version
+$ sudo service postgresql status
+$ sudo netstat -plunt |grep postgres    //Check port
+tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      255/postgres        
+$
+          </code></pre></td>
+          <td><a href="https://www.w3schools.com/postgresql/postgresql_install.php">Install Postgres on Windows</a></td>
+        </tr>
+      </table>
+
+    <h2 id="createuser">Create user, Login with User</h2>
+    <dl>
+      When installing postgres on Windows/Linux, Installation scripts creates a local user=postgres, but inside postgres there is a
+      seperate user called postgres.<br>
+      Purpose of Local postgres user is to login postgres DB, then change the password of DB(internal's postgres user). Since all
+      database operations are carried using DB's internal postgres user.
+    </dl>
+      <table>
+        <tr>
+          <th>Linux</th>
+          <th>Windows</th>
+        </tr>
+        <tr>
+          <td><pre><code class="language-css">
+# cat /etc/passwd|grep postgres
+postgres:x:105:109:PostgreSQL administrator,,,:/var/lib/postgresql:/bin/bash
+
+// Change passwd Unix postgres user
+$ sudo passwd postgres  //Change Unix password of postgres user
+new password:
+Retype new password:
+
+
+// Change authentication from peer to md5(to accept password to connect)
+$ sudo vim /etc/postgresql/14/main/pg_hba.conf 
+#local   all             postgres                                peer
+local   all             postgres                                md5
+$ sudo systemctl restart postgresql
+
+// Login to postgres using local postgres user
+$ sudo -u postgres psql
+postgres=#
+
+// Change password of DB(internal user=postgres)
+postgres=# ALTER USER postgres WITH PASSWORD 'NEW PASSWORD';
+ALTER ROLE
+postgres=# \q
+
+// Check Login to postgres using DB's(Internal postgres user)
+$ psql -U postgres -W
+Password: &lt;NEW PASSWORD>
+
+          </code></pre></td>
+          <td>
+            <pre><code class="language-css">
+// Port provided at time of installation
+C:\Users\user> netstat -ant | find "5432"
+TCP    0.0.0.0:5432           0.0.0.0:0              LISTENING       InHost
+TCP    [::]:5432              [::]:0                 LISTENING       InHost
+
+
+// During installtion postgres creates user=postgres
+// password is provided during installation only
+C:\Users\user> psql -U postgres
+Password for user postgres:
+
+psql (17.3)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=#
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

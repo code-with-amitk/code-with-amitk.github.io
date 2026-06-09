@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Commands</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#create">Create Docker Image</a>
+        <a href="#run">Run docker image inside Container</a>
+        <a href="#x86onarm">Run arm binaries on x86</a>
+        <a href="#load">Load Docker Image</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3>Commands</h3>
+        <h4 id="create">Create, List, Delete Docker Image</h4>
+        <dl>
+            <b>Windows:</b><br>
+            &ensp; Docker Desktop should be running.<br> 
+            &ensp; <a href="./Architecture.html" target="_blank">
+            Docker desktop provides dockerD(docker engine)</a> which builds the container image.
+        </dl>
+        <pre><code>
+    [docker-cli]                                   [Docker Desktop]         [Docker Hub]
+docker build -f Dockerfile  -----Dockerfile------>  Pull ubuntu ----------->
+                                                            &lt;------------------
+                                                    create docker image
+                &lt;---------- docker image --------------
+        </code></pre>
+
+        <pre><code class="language-css">
+/* build: Build a Docker image from a Dockerfile, stores in a local registry on your system
+   -t:     name and tag of docker file */
+$ docker build . -f Dockerfile -t test_image
+
+/* View docker image stored in a local registry on your system
+   Windows: docker image stored inside docker desktop
+   linux: docker image stored on /var/lib/docker/ */
+> docker images
+REPOSITORY   TAG       IMAGE ID       CREATED             SIZE
+test_image   latest    50f13db48e16   About an hour ago   133MB
+
+/* See contents of docker image */
+$ docker image inspect image_id
+
+/* Save docker image in current working directory */
+$ docker save -o docker-image newsreader-cli-test
+
+/* Delete Docker image */
+> docker image rmi 50f13db48e16
+Untagged: test_image:latest
+Deleted: sha256:50f13db48e16c4701ea2b6bce36a6b3be6df914edbb7156d7dba98333965c47a
+> docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+>
+            </code></pre>
+
+            <h4 id="run">Run docker image inside Container</h4>
+            <table>
+                <tr>
+                    <td>
+                        <dl>
+                            - This will create a container and run image inside the container<br>
+                            - Check docker ps in another terminal
+                        </dl>
+                        <pre><code class="language-css">
+/* TERMINAL-1
+ -i: Interactive, -t: tty, 
+ --rm: Remove if already running container with this name. 
+       Delete the container when you exit container (exit)
+*/
+> docker run -it --rm test_image:latest bash
+root@4136a6a47eba:/app# ls
+certs  main
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+/* TERMINAL-2 */
+> docker ps
+CONTAINER ID   IMAGE               COMMAND   CREATED         STATUS         PORTS      NAMES
+1ea2e46290b0   test_image:latest   "bash"    6 seconds ago   Up 5 seconds   8080/tcp   distracted_merkle
+                    </code></pre></td>
+                </tr>
+                <tr>
+                    <td>
+                        <dl>- But when you exit from container, container is killed.</dl>
+                        <pre><code class="language-css">
+/* TERMINAL-1 */
+root@4136a6a47eba:/app# exit
+                    </code></pre></td>
+                    <td><pre><code class="language-css">
+/* TERMINAL-2 */
+> docker ps
+>
+                    </code></pre></td>
+                </tr>
+            </table>
+
+            <h4 id="run1">Run binary listening on port=8080 inside container</h4>
+            <pre><code class="language-css">
+> docker build . -f Dockerfile -t test_image
+> docker run -d -p 8080:8080 --name test_container test_image:latest
+> curl http://localhost:8080/login
+> docker stop test_container
+> docker rm test_container
+            </code></pre>
+
+            <h4 id="ways">Ways to run containers</h4>
+            <pre><code class="language-css">
+/* 
+Run Image Inside Container
+    --volume <host-dir>:<container-dir>[:options]
+            Mount a directory from the host system into the container. 
+            For example 
+                On host there are some files inside /home/amit, which i want to access inside container
+                I can mount using /home/amit:/test
+                All files in /home/amit would be present inside /test in container.
+    --user 1001. user ID inside the container.
+    test-docker-image. Image name from which container is created
+    cmd. Command executed inside container when its created
+*/    
+$ docker run --volume /home/amit:/test --user &lt;uid of user> test-docker-image cmd
+
+// Run commands present inside test.sh inside docker container
+$ docker run --platform linux/amd64 -i newsreader-cli-test &lt; ~/test.sh
+            </code></pre>
+
+            <h4 id="run">Run Interactive session inside Container</h4>
+            <pre><code class="language-css">            
+/* 
+Run session inside Container
+    -i interactive. Keep STDIN open even if not attached. allows you to interact with the container.
+    -t Allocate a pseudo-TTY. Helps to run an interactive shell session in the container.
+    --volume: explained above
+    --entrypoint: 
+        Overrides the default entry point of the Docker image
+        /bin/bash, container should start with the /bin/bash shell instead of the default entry point defined in the image.
+    brunneis/python:3.9.0-ubuntu: specific Docker image
+        brunneis: This is the username or organization on Docker Hub that owns the repository.
+        python: This is the name of the repository.
+        3.9.0-ubuntu: Tag for the image, indicating it contains Python 3.9.0 based on an Ubuntu operating system.
+    -c CPU shares (relative weight)
+
+Overall
+    Run Docker image(brunneis/python:3.9.0-ubuntu) inside container at /bin/bash
+    Mounts the /home/amit directory from the host to /test
+    Run command -c 'ls -ltr'
+*/
+$ docker run -it --volume /home/amit:/test --entrypoint /bin/bash brunneis/python:3.9.0-ubuntu -c 'ls -ltr'
+        </code></pre>
+
+        <h4 id="x86onarm">Running arm binaries on x86</h4>
+        <dl><strong>1. Enable multiple platform builds on docker. Create arm build on docker</strong></dl>
+        <pre><code class="language-css">
+/*
+Run arm compiled binary on x86
+    --privileged:
+        flag gives the container extended privileges
+        When run with --privileged flag, container gains access to all the host's devices and can 
+        perform tasks that are otherwise restricted for security reasons. Eg:
+            Change kernel parameters
+            Access and manipulate system devices
+            Perform other operations typically limited to root access on the host
+    --rm:
+        Automatically removes the container once it exits, to keep system clean.
+    tonistiigi/binfmt:  Docker image available on Docker Hub
+        tonistiigi: This is the username or organization on Docker Hub that owns the repository.
+        binfmt: This is the name of the repository. Register new binary formats in the kernel,
+                allowing the host system to execute binaries of different architectures (e.g., ARM on x86_64)
+    --install all: tells binfmt to install support for all available binary formats
+
+// docker run: This command runs a new container.
+// --privileged: gives the container extended privileges
+// --rm: container is automatically removed after it exits.
+// tonistiigi/binfmt: is a pre-built docker image that contains the necessary tools to install binary format handlers
+// install support for all available binary formats.
+*/
+$ docker run --privileged --rm tonistiigi/binfmt --install all            
+        </code></pre>
+
+        <dl><strong>2. docker build. Create docker image from docker file</strong></dl>
+        <pre><code class="language-css">
+/*
+BASE_IMAGE: placeholder used in the Dockerfile to specify the base image for the build process
+    = arm64v8/ubuntu:18.04  //dynamically change the base image without modifying the Dockerfile.
+*/
+$ docker build --build-arg="BASE_IMAGE=arm64v8/ubuntu:18.04" . -t tag1
+        </code></pre>
+
+        <dl><strong>3. Run make command for ARM env inside docker container</strong></dl>
+        <pre><code class="language-css">
+$ docker run --volume test:/checker --user $(shell id -u) tag2 make BUILD_DIR=build-docker-arm TARGET_ARM=1 -C /checker/cpu clean all
+        </code></pre>
+
+        <h4>Other Commands</h4>
+<pre><code class="language-css">
+//Login
+$ docker login repository
+
+//Download docker image locally on system
+$ docker image pull artifactory/path:image-tag
+</code></pre>
+
+    <h4 id="load">Loading Docker Image</h4>
+    <pre>
+        Loading means untar the docker image and load inside docker engine, still image is not running. To run the 
+        image still we need to do "docker run"
+    </pre>
+    <pre><code class="language-css">
+        // docker desktop should be running
+
+        cmd> docker load -i fragmuffin-pygcode_oci.tar.gz
+        Loaded image: fragmuffin-pygcode:latest
+
+        // List
+        cmd> docker images
+        REPOSITORY            TAG       IMAGE ID       CREATED        SIZE
+        fragmuffin-pygcode    latest    d0da2aa0fd41   13 hours ago   87.3MB
+        newsreader-cli-test   latest    59c21a173ad7   21 hours ago   579MB
+
+        // Inspect OS of docker image
+        > docker inspect --format='{{.Os}}/{{.Architecture}}' 59c21a173ad7
+        'linux/amd64'
+
+        // Unload
+        cmd> docker image rmi fragmuffin-pygcode
+        Untagged: fragmuffin-pygcode:latest
+        Deleted: sha256:d0da2aa0fd41ee2604c74a93748e85452b3fa1d665df61f4dfc62f077f9131a6
+
+    </code></pre>
+    </article>
+    
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

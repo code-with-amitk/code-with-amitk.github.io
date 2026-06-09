@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CMakeLists.txt</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#lists">CMakeLists.txt</a>
+      <ul>
+        <li><a href="#exe">Create Executable</a></li>
+        <li><a href="#lib">Create Library</a></li>
+        <li><a href="#link">Link Lib to executable</a></li>
+        <li><a href="#subdir">subdirectory</a></li>
+      </ul>
+      <a href="#keywords">Keywords</a>
+      <ul>
+        <li><a href="#scope">SCOPE</a></li>
+      </ul>
+      <a href="#types">Types/Variables</a>
+      <a href="#funcmacro">Function & Macro</a>
+      <ul>
+        <li><a href="#arg">Arguments</a></li>
+      </ul>
+      <a href="#cond">Conditionals & Loops</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="lists">CMakeLists.txt / CML / lists file</h2>
+      <dl>
+        <b>Commands?</b> Commands are directives provided in CML to create
+        executable or library.
+      </dl>
+
+      <h3 id="exe">Creating executable</h3>
+      <pre><code class="language-css">
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.23)             #CMake version         #1st 2 are Mandatory commands
+project(MyProjectName)                           #project-name
+
+add_executable(MyProgram)                        #(exe_name)
+target_sources(MyProgram
+  PRIVATE                                        # Scope: See below
+    MyProgram/main.cpp                           
+)
+
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Executable
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  MyProjectName  cmake_install.cmake
+      </code></pre>
+
+      <h3 id="lib">
+        Build <a href="<a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Libraries/Static_Dynamic"
+          target="_blank"
+          >Static Library *.a</a
+        >
+      </h3>
+
+      <pre><code class="language-css">
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.23)              #CMake version         #1st 2 are Mandatory commands
+project(MyProjectName)                            #project-name
+
+add_library(MyLibrary)                            #Defines a library name to be created. Does not build library
+target_sources(MyLibrary
+  PRIVATE                                         #Scope: See below
+    main.cxx                                      #Source code
+
+  PUBLIC                                          # Scope: See below
+    FILE_SET myHeaders                            #name of SET=myheaders (OPTIONAL)
+    TYPE HEADERS                                  #TYPE type: kind of files we are describing headers.
+    BASE_DIRS                                     #BASE_DIRS: Location of files
+      include
+    FILES                                         #FILES: is the list of files
+      include/library_header.h
+)
+
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Library
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  libMathFunctions.a  cmake_install.cmake
+      </code></pre>
+
+      <h3 id="link">Link Lib to executable</h3>
+      <pre><code class="language-css">
+cmake_minimum_required(VERSION 3.22.1)            #CMake version          #1st 2 are Mandatory commands
+project(Tutorial)                                 #project-name
+add_executable(Tutorial Tutorial/Tutorial.cxx)    #(exe_name generate_from_main.cpp)
+target_link_libraries(Tutorial                    #Link Library(MathFunctions) to executable(Tutorial)
+        PRIVATE
+                MathFunctions
+)
+
+add_library(MathFunctions)                        #Defines a library name to be created. Does not build library
+
+target_sources(MathFunctions                      #Create target(MathFunctions library) using source(MathFunctions.cxx)
+  PRIVATE
+    MathFunctions/MathFunctions.cxx
+
+  PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS
+      MathFunctions
+    FILES
+      MathFunctions/MathFunctions.h
+)
+
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Library
+$ ls build/
+CMakeCache.txt  CMakeFiles  Makefile  Tutorial  cmake_install.cmake  libMathFunctions.a
+$ ./build/Tutorial 34
+The square root of 34 is 5.83095
+      </code></pre>
+
+      <h3 id="subdir">Subdirectories(Multiple CMakeLists.txt files)</h3>
+      <table>
+        <tr>
+          <td>
+            Top level CMakeLists.txt<br />
+            Subdirectory(Tutorial) contains commands to build executable(earlier
+            it was in top level CML)
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.22.1)        #CMake version         #1st 2 are Mandatory commands
+project(Tutorial)                             #Project name
+add_subdirectory(Tutorial)
+
+$ cat Tutorial/CMakeLists.txt
+add_executable(Tutorial Tutorial.cxx)           #(exe_name generate_from_Tutorial.cxx)
+target_sources(Tutorial                         #Create target(Tutorial executable) using source(Tutorial.cxx)
+  PRIVATE
+    Tutorial.cxx
+)
+target_link_libraries(Tutorial                  #Link Library(MathFunctions) to executable(Tutorial)
+  PRIVATE
+    MathFunctions
+)
+
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cmake -B build
+$ ls build
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+
+$ cmake --build build      //Create Library
+$ ls build/
+CMakeCache.txt  CMakeFiles  Makefile  Tutorial  cmake_install.cmake  libMathFunctions.a
+$ ./build/Tutorial 34
+The square root of 34 is 5.83095
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="types">Types / Variables</h2>
+      <dl>CMake only has 2 types: strings and lists</dl>
+      <table>
+        <tr>
+          <th>CMake Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><b>Strings</b></td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (city "delhi")                            # Create a variable using set, provide initial value
+message ("${city}")                           # Print value of variable
+
+$ cmake -P CMakeLists.txt                     # -p is script mode. it informs CMake this file is not intended to have a project() command
+delhi
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Lists:</b><br />Strings with semicolons</td>
+          <td>
+            <table>
+              <tr>
+                <td>
+                  Append to list
+                  <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")                  # Create a variable using set, provide initial value
+list (APPEND cities "jaipur")         # append to List. 
+message ("Cities: ${cities}")
+
+$ cmake -P CMakeLists.txt
+Cities: delhi;jaipur
+            </code></pre>
+                </td>
+                <td>
+                  Iterating using foreach
+                  <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")              # Create a variable using set, provide initial value
+list (APPEND cities "jaipur")     # append to List. 
+
+foreach (city IN LISTS cities)    # Iterate over list
+        message("city: ${city}")
+endforeach()
+
+$ cmake -P CMakeLists.txt
+city: delhi
+city: jaipur
+            </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="funcmacro">Functions, Macros</h2>
+      <dl>
+        Similar to C/C++, functions & macros have statments/commands which can
+        be called later and would be repeated if not done in function
+      </dl>
+      <table>
+        <tr>
+          <th></th>
+          <th>Function</th>
+          <th>Macros</th>
+        </tr>
+        <tr>
+          <td>Difference</td>
+          <td>
+            1. Can see all the variables created in all the frames above them<br />
+            2. Functions create local copy of variable
+          </td>
+          <td>
+            1. Can see all the variables created in all the frames above them<br />
+            2. Macros donot create local copies, work on global variable
+            directly
+          </td>
+        </tr>
+        <tr>
+          <td>Creation & Calling</td>
+          <td>
+            <pre><code class="language-css">
+function(name [arg1 ...])
+  commands
+endfunction()
+name
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+macro(name [arg1 ...])
+  commands
+endmacro()
+name
+          </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            1. Can see all the variables created in all the frames above them
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+function(foo)               # Function
+        message ("cities: ${cities}") #Function can see vars declared above
+endfunction()
+foo()                       # Calling function
+
+$ cmake -P CMakeLists.txt
+cities: delhi;jaipur
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+macro(bar)               
+        message ("cities: ${cities}") #macro can see vars declared above
+bar()                       # Calling macro
+$ cmake -P CMakeLists.txt
+cities: delhi;jaipur
+          </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            2. Functions create local copy of variable<br />
+            Macro works on global variable only
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+function(foo)
+        list (APPEND cities "pune")
+        message ("Function cities: ${cities}")
+endfunction()
+foo()
+
+$ cmake -P CMakeLists.txt
+Function cities: delhi;jaipur;pune
+After fun call cities: delhi;jaipur
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat CMakeLists.txt
+set (cities "delhi")
+list (APPEND cities "jaipur")
+macro(foo)
+        list (APPEND cities "pune")
+        message ("macro cities: ${cities}")
+endmacro()
+foo()
+message ("After macro call cities: ${cities}")
+
+$ cmake -P CMakeLists.txt
+macro cities: delhi;jaipur;pune
+After macro call cities: delhi;jaipur;pune
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="arg">Arguments</td>
+          <td>
+            Arguments are passed in order.<br />
+            function(my_function ARG1 ARG2)<br />
+            &ensp; <u>ARGN(Unnamed Argument)</u>: any additional arguments
+            passed beyond ARG2.
+            <pre><code class="language-css">
+$ vim CMakeLists.txt
+function(fun ARG1 ARG2)               #fun us function name. ARG1, ARG2 are arguments
+    message("ARG1: ${ARG1}")
+    message("ARG2: ${ARG2}")
+    message("Remaining arguments (ARGN): ${ARGN}")
+endfunction()
+fun(value_for_arg1 value_for_arg2 extra_arg1 extra_arg2)    #Calling the function
+
+$ cmake -p CMakeLists.txt
+ARG1: value_for_arg1
+ARG2: value_for_arg2
+Remaining arguments (ARGN): extra_arg1 extra_arg2
+          </code></pre>
+          </td>
+          <td>same</td>
+        </tr>
+      </table>
+
+      <h2 id="keywords">Keywords</h2>
+      <h3 id="scope">scope (PUBLIC, PRIVATE, INTERFACE)</h3>
+      <h4>1. PRIVATE / non-interface property</h4>
+      <dl>
+        only available to the target which owns it for example PRIVATE headers
+        will only be visible to the target they're attached to.
+      </dl>
+      <h4 id="interface">INTERFACE</h4>
+      <dl>
+        Only available to targets which link the owning target. A header-only
+        library is an example of a collection of INTERFACE properties
+      </dl>
+      <h4 id="public">PUBLIC</h4>
+      <dl>
+        union of the PRIVATE and INTERFACE properties. PUBLIC are available to
+        both the owning target and consuming targets.
+      </dl>
+
+      <pre><code class="language-css">
+target_sources(MyLibrary
+  PRIVATE
+    FILE_SET internalOnlyHeaders
+    TYPE HEADERS
+    FILES
+      InternalOnlyHeader.h
+
+  INTERFACE
+    FILE_SET consumerOnlyHeaders
+    TYPE HEADERS
+    FILES
+      ConsumerOnlyHeader.h
+
+  PUBLIC
+    FILE_SET publicHeaders
+    TYPE HEADERS
+    FILES
+      PublicHeader.h
+)
+      </code></pre>
+
+      <h2 id="cond">Conditionals & Loops</h2>
+      <h3>if ()</h3>
+      <pre><code class="language-css">
+$ cat test.cmake
+set(var True)
+if(var)
+  message("Defined Variable: True")
+else()
+  message("Defined Variable: False")
+endif()
+
+$ cmake -P test.cmake
+Defined Variable: True
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

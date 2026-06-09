@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Types in golang</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Types</a>
+      <a href="#types">Types of types</a>
+      <ul>
+        <li><a href="#basic">Basic</a></li>
+        <li><a href="#aggregate">Aggregate</a></li>
+        <li><a href="#reference">Reference</a></li>
+        <li><a href="#interface">Interface</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Types?</h2>
+      <dl>
+        Go is statically typed language means every variable's type is fixed at
+        compile time, which helps catch errors early and makes code reliable.
+      </dl>
+
+      <h2 id="types">Types of types</h2>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td id="basic">1. Basic Type</td>
+          <td>
+            <b>int, float64, bool, string</b><br />
+            <pre><code class="language-css">
+var a int = 42
+str := "Go is awesome" // Type inference
+b := true
+var f float64 = float64(a)      //Type Conversion
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="aggregate">2. Aggregate Types</td>
+          <td>
+            <b>1. Arrays:</b>An array is a fixed-size sequence of elements of
+            the same type.<br />
+            <pre><code class="language-css">
+colors := [3]string{"red", "green", "blue"}
+            </code></pre>
+            <br />
+            <b>2. struct</b><br />
+            <pre><code class="language-css">
+type Person struct {
+    Name string
+    Age  int
+}
+func (p Person) fun() string {  //Define function for struct
+    return "Hello, my name is " + p.Name
+}
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td id="ref">Reference Types</td>
+          <td>
+            <b>Pointers:</b> variable that stores the memory address of another
+            variable (&)<br />
+            <b><a href="Collections.html">slices:</a></b
+            ><br />
+            <b><a href="/Languages/Programming/C++/STL">maps</a></b
+            ><br />
+            <b>functions</b><br />
+            <b><a href="/Threads_Processes_IPC">channels</a></b>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="interface">4. Interface</h3>
+      <dl>
+        Interface only declares the functions those should be implemented by
+        concrete types<br />
+        This is similar to
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime#pv"
+          >Abstract Class C++98</a
+        >,
+        <a href="/Languages/Programming/C++/C++_11,14,17,20,23/index.html"
+          >Concepts in C++20</a
+        ><br />
+        In C++, we design our class hierarchy first. In Go, you often design
+        your interfaces. These are Binded at Dynamic(ie runtime).<br />
+        In Go, the philosophy is to "accept interfaces, return structs."
+      </dl>
+      <pre><code class="language-css">
+// Interface declares functions to be implemented by concrete types
+type Speaker interface {
+    Speak() string
+}
+
+// Concrete Struct A
+type Human struct{}
+func (h Human) Speak() string { return "Hello!" }
+
+// Concrete Struct B
+type Dog struct{}
+func (d Dog) Speak() string { return "Woof!" }
+
+// This function doesn't care if it gets a Human or a Dog
+// accept interfaces, return structs
+func MakeItTalk(s Speaker) {
+    fmt.Println(s.Speak())
+}
+            </code></pre>
+      <h4>Interface Pollution Problem</h4>
+      <dl>
+        Creating interfaces where they aren't actually needed. ie creating
+        interface for every class<br />
+        <b>Symptoms of Interface Pollution</b><br />
+        1. One-to-One Mapping: Every single struct has a corresponding
+        interface<br />
+        2.Harder Navigation: In an IDE, clicking "Go to Definition" on a method
+        takes you to the interface definition rather than the actual code doing
+        the work.
+      </dl>
+      <table>
+        <tr>
+          <th>Polluted Interface</th>
+          <th>Good Interface</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+// Defined in the same package as the logic, 
+// just for the sake of it.
+type Worker interface {
+    DoWork()
+}
+
+type MyWorker struct{}
+func (m MyWorker) DoWork() { ... }
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+// Defined by the CONSUMER who needs the work done.
+type Performer interface {
+    DoWork()
+}
+
+func Execute(p Performer) {
+    p.DoWork()
+}
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

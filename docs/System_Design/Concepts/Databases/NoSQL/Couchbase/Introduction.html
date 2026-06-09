@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Couchbase</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Couchbase?</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Couchbase</h2>
+      <dl>
+        This is NoSQL database(storing data in json structure) which offers
+        SQL-compatible query language called SQL++ (N1QL nickel).<br />
+        Developers familiar with SQL to easily query JSON data structure using
+        SQL like queries.<br />
+        This makes Couchbase a multi-model database that blends the strengths of
+        both relational (SQL, ACID transactions) and NoSQL systems (flexibility,
+        performance, scale) into a single platform.<br />
+        Data in Couchbase Server is stored in the form of <b>documents</b>, not
+        rows or columns.
+      </dl>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

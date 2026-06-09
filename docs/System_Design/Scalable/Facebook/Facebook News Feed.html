@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Facebook News Feed</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#req">Requirements</a>
+    <a href="#boe">Back of Envelope</a>
+    <a href="#api">API Design</a>
+    <a href="#db">DB Schema</a>
+    <ul>
+      <li><a href="#sql">SQL DB</a></li>
+      <ul>
+        <li><a href="#problemsind1">Problems in Above design</a></li>
+        <ul>
+          <li><a href="#redis">Sol1=Redis</a></li>
+          <li><a href="#neoj4">Sol2=neoj4</a></li>
+        </ul>
+      </ul>
+    </ul>
+    <a href="#hld">HLD</a>
+    <ul>
+      <li><a href="#auth">Authenticate User to Facebook</a></li>
+      <li><a href="#post">POST Message</a></li>
+      <li><a href="#get">GET Newsfeed</a></li>
+      <ul>
+        <li><a href="#push">Push Model</a></li>
+        <li><a href="#pull">Pull Model</a></li>
+        <li><a href="#newsfeedarch">Newfeed Architecture</a></li>
+      </ul>
+    </ul>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h2 id="req">Requirements (CRUD)</h2>
+    <h4>Functional</h4>
+    <dl id="func-req">
+      1. User can Read the feed.<br>
+      2. User can Create the feed(images, text, videos)
+    </dl>
+    <h4>Non Functional</h4>
+    <dl>
+      1. Update the feed<br>
+      2. Delete the item from feed<br>
+      3. News feed keep on extending when it gets over
+    </dl>
+
+    <h2 id="boe">Back of Envelope</h2>
+    <pre>
+      World Population      | InternetUsers(60%)    | FB Users(80-85% of Internet users) | Active FB Users(20%)
+      ----------------------|-----------------------|------------------------------------|--------------------
+      7 Billion //Year 2020 | 7 x 0.6 = 4.2 Billion |    4.2 x 0.8 = 3.5 Billion         | 3.5 x .2 = 700 Million
+    </pre>
+    <h4 id="traffic">Traffic Estimates (Incoming Requests/sec)</h4>
+    <pre>
+      700 Million pulling their new feed 5 times a day. Total New feed requests = 700 x 5 = 3500 Million requests/day.
+      3500/24x60x60 = Around 39,000 Requests/sec.
+    </pre>
+    <h4 id="storage">Storage Estimates</h4>
+    <pre>
+      <b>Cache/CDN</b>
+      Suppose We want to keep 500 posts/user on CDN for quick fetch.
+      Total posts to be stored. 500 x 700 Million = 350 Billion.
+      Let's assume on average each posts is 1 KB in size. Total bytes = 350 TB
+      Assuming 1 server can cache is 100GB. Total servers needed = 350 TB / 100 GB = 3500 Machines needed in total
+    </pre>
+
+    <h2 id="api">API Design</h2>
+      <h4 id="#func-req">1. Create Record</h4>
+      <pre><code class="language-css">
+POST https://url/v1/post_feed
+header {
+    Authorization: {Bearer "API_KEY_TOKEN"},
+}
+body {
+    heading, description, picture_url, video_url
+}
+      </code></pre>
+
+      <h4 id="#func-req">2. Reading the Feed</h4>
+      <pre><code class="language-css">
+GET HTTP/2 https://url/v1/read_feed
+header {
+    Authorization: {Bearer "API_KEY_TOKEN"},
+}
+body {
+    to be filled
+}
+      </code></pre>
+
+      <h2 id="db">DB Schema</h2>
+      <h4 id="sql">SQL DB</h4>
+      <pre>
+      User information, password, comments can be stored in seperate tables.
+      Likes to Comments can be stored in seperate table and comments table can store like_id.
+      </pre>
+
+      <pre><code class="language-css">
+User Table                                                    Password Table
+| username | user_id(pk) | created_at | enabled |             | user_id(pk) | password_hash | created_at | expiry_at |
+
+Comments Table: Comment can have text,video,image,@,#,likes,shares
+| comment_id (pk) | text_id(fk) | user_id (fk) | media-id(fk) | created_at | like_id(fk) | share_id(fk) | ...
+      id1                t1           u1            m1              -             l1          s1
+
+Text Table                                likes Table                                               Media Table (Photo, text, video)
+| key=text_id (pk) | value=text url |     | key=like_id (pk) | value=file url storing all likes |   | key=text_id (pk) | value=text url |
+        t1              hello                   l1                (user2, user3, user4 ..)
+
+>> Friends & Friends of Friends stored in Graph DB
+      </code></pre>
+
+      <h5 id="problemsind1">Problems in Above design (likes table)</h5>
+      <dl>1. Race Condition, when number of likes on comment grows in Millions</dl>
+      <dd>We will keep appending userid's on in same file (ie same row). if new like comes in DB has to read entire line
+        then add userid at end and update table.<br>
+        This can cause race condition (if 100's of users try to like same comment at same time).
+      </dd>
+
+      <h6 id="redis">Solution-1 (Key-Value DB: Redis)</h6>
+      <dl>
+        Seperate row for each like. Key-Value DBs can handle huge datasets with fast lookups<br>
+        Precomputing the number of likes.
+      </dl>
+      <pre><code class="language-css">
+likes Table
+SADD comment_id1 user1
+SADD comment_id1 user2
+SADD comment_id1 user3
+SADD comment_id2 user2
+SREM comment_id1 user2   # Unlike
+SCARD comment:id1:likes        # Get like count
+      </code></pre>
+
+      <h6 id="neoj4"><a href="/System_Design/Concepts/Databases/Graph%20DB/">Solution-2 (Graph DB(neoj4))</a></h6>
+      <dl>
+        In a graph database, you can model User and Comment as nodes and the LIKES relationship as an edge.<br>
+        Likes = Number of edges
+      </dl>
+      <pre><code class="language-css">
+        user-1    ----authored-->     comment-1
+                                        /\
+        user2 ----------liked------------|
+      </code></pre>
+
+      <h2 id="hld">HLD</h2>
+      <h4 id="auth"><a href="/System_Design/Concepts/Terms/Authentication/jwt.html">JWT based authentication to facebook.com</a></h2>
+      <h4 id="post">POST Message</h4>
+      <dl>
+        The system limits the number of posts a user can make within a certain period, vital to prevent spam and abusive content
+      </dl>
+      <img
+      src="//www.plantuml.com/plantuml/png/LP51Qm8n48Nl-HN1SxjYsvFGebRQFGXAjPJ2WamsOpSO9o4PnVRNDmcqkgUTUM--USDc4Xa27mzM-FGrhV50B5zcK-ybH0dU2-NESlgnxWqi7EXP7h2gfoTiZU64eS2nvpr3ss7MsrpqhDS0lfkNXLe992rJg10TEKRfohfqZtYFkJfoXvHGODIYXXDAXH0mRDdjaGgTkJuUnVJ26KStuWsIkJ07muQ-hgYSTFiahHhBUhDPoTLolP4xQ54vjwzQTnYUHiCTecweggeQGME8gMee9pWsFoNWSNHt_z1GwuYHUClV7Y-THMgeyBFb_BF0Z6SU3sgqrWs4LVa4YDSd_7aGirV-uVXVB6tMjRg84oITNlON"
+      alt="post comment" style="width:400px;height:300px;">
+      <code class="puml" visibility: hidden>
+        @startuml
+        participant FBApp as app
+        box AWS
+        participant LoadB as lb
+        participant AppServer as as
+        participant Cache as cache
+        participant GraphDB as db
+        end box
+        
+        hnote over app 
+        User authenticated
+        Have bearer_token
+        end note
+        
+        hnote over as
+        Authentication,
+        Rate Limiting
+        end note
+        
+        app -> lb: HTTP POST facebook.com/v1/feed\n...Headers...\nAuthotization=1234\ncontent_type\ncontent_len\n\n...BODY...\ntext:"Hello"
+        lb -> as: HTTP POST "Hello"
+        as -> cache: "Hello"
+        cache -> db: "Hello"
+        @enduml
+      </code>
+
+      <h4 id="get">GET Newsfeed</h4>
+      <table>
+        <tr>
+          <th></th>
+          <th id="push">Push Model</th>
+          <th id="pull">Pull Model</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>Whenever someone posts a item(text, video, audio), Generate newsfeed for all friends/followers 
+            and send to friend/follower. Client side browser caches it and delivers when client comes online
+          </td>
+          <td>
+            Only Generate feed whenever request to retrieve comes from client
+          </td>
+        </tr>
+        <tr>
+          <td>Advantage, Disadvatange</td>
+          <td>
+            <b>Adv:</b> Newfeed is calculated in advance, which leads to very less delay on client to read news feed<br>
+            <b>Disadv:</b> For inactive users/friends also newfeed is calculated. More resources are used upfront
+          </td>
+          <td>
+            <b>Adv:</b> Newfeed is calculated for active users only, which leads to low resource usage<br>
+            <b>Disadv:</b> Client can get significant latency in receiving newsfeed as its calculated when client asks
+          </td>
+        </tr>
+        <tr>
+          <td>Usecase</td>
+          <td>
+            we use a push model for the majority of users
+          </td>
+          <td>
+            Celebrity Case: Whenever a celebrity posts a message. Feed for its followers is calculated and delivered.
+          </td>
+        </tr>
+      </table>
+
+      <h5>What we will do?</h5>
+      <dl>
+        We will use both of approaches based on the situation. See usecase in above table
+      </dl>
+
+      <h5 id="newsfeedarch">Newfeed Architecture</h5>
+      <div class="image-container">
+        <img src="//www.plantuml.com/plantuml/png/VP9BSzCm4CVl-oaMzm93EN3DGAUFqj0P7cLQXeilYhrADBLNZXuDzDEZbHmtJIWpEKJx_tb_QsjFVL0knBw3LuDJorvX8Fk8mKK2K4sm3gCdXyfZXCPoSBR3wcmOQhubzs0Qgb8cFqGy-cAMgt3UHNf2hnJR69xJskwYwqYHiFfAtgibrVn3pfdhrqzzVbbtJyxd-WPnJuUmiB_pfEq2ZyuUeoCW3YRymP-fUA6Q5ScJJKpvzEYDuNjeLL0BvIc3b-T2ZH3kQkQEY86unMI2h1ki3mUwAhjgladXvNcLfODG_p1M1QfvxjIm6cc1_oDbsdXDrBwW_JR6HSnwrpjzootq_5POxr_Y98xuxYGXCxpvVdk7rMVgEbk1ybAMjvjDDJb9LOfxeBQpV4FNxSVtDLyuKe7Qt15WwMmSSFxf3g-SILgFLaymQ9j5KNhEAQ0kJCqZP0IIM32XNeGAaqSfENR61tdHtHba4_3AT86SFv2NNZNhakzv3_DTPIczDhfcmN0bInxbCtZRasLwKqOfpdwzdVAwnRSeotBTGh-MR3D3MIFOvE5Ob-C7MKdJ7ez3d41A163jHpxzcwv7ffK789qcAXTMR0EXVI0dHIXtLIBfpAgdOnoSJIz4C9WcH4V74gFi6760V32zMfOjadvRTvpb9KRPG83J5CU--mi0" 
+        alt="Get Newsfeed" class="zoomable-image" id="zoomableImage2">
+      </div>
+      <code class="puml" visibility: hidden>
+        @startuml
+        !pragma teoz true
+        
+        actor user as u
+        control "App\nService" as as    #LightBlue
+        control "Fanout\nService" as fo #LightBlue
+        queue "Message\nQueue" as mq
+        control "Workers" as w      #LightBlue
+         
+        box userdb #Azure
+        entity UserCache as cudb    #LightPink
+        database UserDB as udb           #LightGreen
+        end box
+        
+        box postdb #Azure
+        entity "Cache\nPostDB" as cpdb #LightPink
+        database "PostDB\nGraphDB" as pdb   #LightGreen
+        end box
+        
+        box newsfeed #Azure
+        entity "Cache\nNewsfeed" as cnf #LightPink
+        control "Newsfeed\nService" as nfs    #LightBlue
+        end box
+        
+        u -> as: POST "Hello"
+        as -> cpdb: "Hello"
+        cpdb -> pdb: "Hello"
+        as -> fo: userId=1\nCreated POST
+        
+        group GET Friends of userId=1
+        fo -> cudb: Get friends\nof userid=1
+        cudb -> udb:Get friends\nof userid=1
+        udb -> fo: friend list
+        end
+        
+        group GET User Filters
+        fo -> cudb: Get userid\nfilters
+        cudb -> udb:Get userid\nfilters
+        udb -> fo: filters(if\nuser has muted someone)
+        end
+        
+        fo -> mq: friendId + PostId
+        mq -> w: data
+        w -> cnf: data<postid, userid>
+        cnf -> nfs: data
+        nfs -> pdb: Get post
+        pdb -> nfs: post
+        hnote over nfs
+        Create post
+        username, profile
+        picture,post content
+        post image
+        end note
+        nfs -> u: news feed
+        
+        @enduml
+      </code>
+
+  </article>
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+</html>

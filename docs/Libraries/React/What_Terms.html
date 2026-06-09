@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">React</a>
+        <a href="#terms">Terms</a>
+        <ul>
+            <li><a href="#components">Components</a></li>
+            <li><a href="#lists">Rendering lists</a></li>
+            <li><a href="#handler">Event Handler</a></li>
+            <li><a href="#state">Remembering State</a></li>
+            <li><a href="#sharing">Sharing data between components</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what"><a href="https://react.dev/learn">What is React</a></h2>
+        <dl>
+            React is a JavaScript library(using component-based approach) for building user interfaces (UIs)<br>
+            <br>
+
+            <b>How React works</b><br>
+            React uses a virtual DOM which is a lightweight copy of the real DOM (Document Object Model) to render user interfaces (UI)
+            When data changes, React updates the virtual DOM instead of directly updating the entire DOM. React then uses a diffing algorithm to compare the new and previous virtual DOMs to identify changes. 
+            React only updates the parts of the DOM that need to be changed, which reduces the need for full page reloads
+        </dl>
+
+        <h2 id="terms">Terms</h2>
+        <h4 id="components">Components</h4>
+        <dl>
+            React components are JavaScript functions that return markup
+            <br><br>
+
+            <b>export default keyword</b> specify the main component in the file.
+        </dl>
+        <pre><code class="language-css">
+function Button() {    //This is button component
+    return (
+        &lt;button>Submit&lt;/button>
+    );
+}
+
+export default function MyApp() {   //export default is Starting point
+    return (
+        &lt;div>
+            &lt;h1>Welcome to my app&lt;/h1>
+            &lt;Button />        //button component inside other component
+        &lt;/div>
+    );
+}
+        </code></pre>
+
+        <h4 id="lists">Rendering lists</h4>
+        <dl>
+            will rely on JavaScript features like for loop and the array map() function to render lists of components.
+        </dl>
+        <table>
+            <tr>
+                <td>
+                    <pre><code class="language-css">
+const vals = [
+    {name:'Amit', marks:'1'},  
+    {name:'tami', marks:'2'},
+];
+function ListComponent() {    //This is List component
+    const Items = [];
+    for (let i = 0; i &lt; vals.length; i++)  {
+        Items.push(
+            &lt;li>{vals[i].name}, {vals[i].marks}&lt;/li>
+        );
+    }
+    return (
+        &lt;ul>
+            {Items}
+        &lt;/ul>  
+    );
+}
+export default function main() {    //export default is Starting point
+    return (
+    &lt;div>
+        &lt;h1>Welcome to my app&lt;/h1>
+        &lt;ListComponent />        // Calling Component from this Component
+    &lt;/div>
+    );
+}
+                    </code></pre>
+                </td>
+                <td>
+<b>Output from Code</b><br><br>
+Welcome to my app<br>
+- Amit, 1<br>
+- tami, 2
+                </td>
+            </tr>
+        </table>
+
+        <h4 id="handler">Event Handler</h4>
+        <dl>
+            You can respond to events by declaring event handler functions
+        </dl>
+        <table>
+            <tr>
+                <td>
+                    <pre><code class="language-css">
+function handler() {
+    alert('You clicked me');
+}
+function Button() {    //Component
+    return (
+        &lt;button onclick={handler}>
+            Submit
+        &lt;/button>  
+    );
+}
+export default function main() {
+    return (
+    &lt;div>
+            &lt;h1>Welcome to my app&lt;/h1>
+            &lt;Button /> 
+    &lt;/div>
+    );
+}
+                    </code></pre>
+                </td>
+                <td><pre>
+Welcome to my app
+ -------
+|Submit|    << When click, alert is seen
+ -------
+                </pre></td>
+            </tr>
+        </table>
+        
+        <h4 id="state"><a href="https://react.dev/learn#updating-the-screen">Remembering State</a></h4>
+        <dl>
+            Often, we want our component to “remember” some information and display it. For example, maybe we want to count the 
+            number of times a button is clicked. To do this, add state to our component
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import { useState } from 'react';
+
+export default function MyApp() {
+    return (
+    &lt;div>
+        &lt;h1>Counters</h1>
+        &lt;MyButton />             // Calls MyButton Component
+    &lt;/div>
+    );
+}
+
+function MyButton() {
+    // useState() will return 2 things.
+    // current state variable (a), and the function that update it (setA).
+    const [a, setA] = useState(0);
+
+    function handleClick() {
+        setA(a + 1);
+    }
+
+    return (
+    &lt;button onClick={handleClick}>
+        Clicked {a} times
+    &lt;/button>
+    );
+}
+                </code></pre></td>
+                <td>
+                    <img src="/images/react/state_variables.png" alt="State variables" style="width:200px;height:100px;">
+                </td>
+            </tr>
+        </table>
+
+        <h4 id="sharing"><a href="https://react.dev/learn#sharing-data-between-components">
+            Sharing data between components</a></h4>
+        <dl>
+
+        </dl>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import { useState } from 'react';
+
+export default function MyApp() {          //Execution Starts here
+    const [a, setA] = useState(0);               //Varaiable storing value
+
+    function handleClick() {
+        setA(a + 1);
+    }
+
+    return (
+        // 2 instances of MyButton() called.
+        // State(a) is passed to each MyButton()
+        // The information you pass down like this is called props
+    &lt;div>
+        &lt;h1>Counters that update together&lt;/h1>
+        &lt;MyButton a={a} onClick={handleClick} />
+        &lt;MyButton a={a} onClick={handleClick} />
+    &lt;/div>
+    );
+}
+
+function MyButton({ a, onClick }) {        //Arguments(var, eventHandler)
+    return (
+    &lt;button onClick={onClick}>
+        Clicked {a} times
+    &lt;/button>
+    );
+}
+                </code></pre></td>
+                <td>
+                    <img src="/images/react/sharing_info_between_components.png" alt="Shared State variables" style="width:200px;height:100px;">
+                </td>
+            </tr>
+        </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

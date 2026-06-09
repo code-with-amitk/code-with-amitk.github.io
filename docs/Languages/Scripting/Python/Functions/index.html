@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#valref">Value, Reference</a>
+        <a href="#fun">Function passing</a>
+        <a href="#var">Variable no of args</a>
+        <a href="#types">Types of Functions</a>
+        <a href="#args"><a href="#types">Types of Functions</a>
+        <ul>
+            <li><a href="#decorator">Decorator</a></li>
+            <li><a href="#enumerate">enumerate()</a></li>
+            <li><a href="#lambda">lambda</a></li>
+            <li><a href="#generator">generator</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="valref">Call by value, Call By Reference</h2>
+        <dl>
+            <b>Pass by value</b><br>
+            Copy of the actual object is passed. Changing the value of the copy of the object will not change the value of the original object.
+            <br><br>
+
+            <b>Pass by reference</b><br>
+            Everything in python is passed by Reference<br>
+            Reference to the actual object is passed. Changing the value of the new object will change the value of the original object.
+        </dl>
+        <pre><code class="language-css">
+def appendNumber(arr):
+    arr.append(4)
+    
+arr = [1, 2, 3]
+appendNumber(arr)   #Call by reference
+print(arr)  #Output: => [1, 2, 3, 4]
+        </code></pre>
+
+        <h2 id="pass">Function passing</h2>
+        <table>
+            <tr>
+                <th>Passing as</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Function used as Object</td>
+                <td>
+                    <pre><code class="language-css">
+def fun():
+    return "Hello"
+test = fun
+print(test())        #Hello
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Function passed as argument to other function</td>
+                <td><pre><code class="language-css">
+def f(a,b):
+    return a+b
+def f1(var):
+    print("hello",var)
+f1(f(1,2))              #Passing function f() as argument of f1() //hello 3
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>Function as Mutable Objects</td>
+                <td><pre><code class="language-css">
+// MUTABLE OBJECTS(list,dictionary etc): Are shared between subsequent calls
+def fun2(a, L=[]):
+    L.append(a)
+    return L
+print(fun2(1))     #[1]
+print(fun2(2))     #[1,2]
+print(fun2(3))     #[1,2,3]
+                </code></pre></td>
+            </tr>
+        </table>
+
+        <h2 id="var">Variable no of arguments</h2>
+        <pre><code class="language-css">
+def fun(*arg):
+    for var in arg:
+        print(var)
+        return
+fun ( 10, 20, 30 )
+fun ( 1, 2 )
+fun ( 'te', 90 )
+        </code></pre>
+
+        <h2 id="types">Types of Functions</h2>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Inner, function inside function</td>
+                <td><pre><code class="language-css">
+# Note that the order in which the inner functions are defined does not matter.
+def parent():
+    print("Parent")
+    def fun1():
+        print("fun1")
+    def fun2():
+        print("fun2")
+    fun2()
+    fun1()
+parent()        #O/P: parent fun2 fun1
+                </code></pre></td>
+            </tr>
+        </table>
+
+        <h2 id="args">Function Arguments</h2>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Arguments taking default value</td>
+                <td><pre><code class="language-css">
+def fun1(a, c='Again'):            #c is default arguments
+    if a == 1:
+        print('Test1')
+    elif a==11 and c=='Hello':
+        print('Test3')
+fun1(1)                 #Test1
+                </code></pre></td>
+            </tr>
+            <tr>
+                <td>kwarg(Keyword Arguments)</td>
+                <td>
+                    You can provide different sets of named parameters without having to define them explicitly in the function signature.
+                    <pre><code class="language-css">
+def fun(**kwargs):
+    for key,value in kwargs.items():
+        print(f"{key}: {value}")
+
+fun(a='g', b=1.9, f="test")
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td id="decorator">Decorator</td>
+                <td>
+                    a decorator is a powerful design pattern that allows you to modify or 
+                    extend the behavior of functions or methods without changing their original code<br>
+                    Decorators wrap around a function to enhance or modify its behavior
+                    Python builtin decorators: @staticmethod, @classmethod, and @property
+                    <pre><code class="language-css">
+def sonu(fun_arg):
+    def wrapper():
+        print("Before calling the function.")
+        fun_arg()
+        print("After calling the function.")
+    return wrapper
+
+# Decorator=sonu is called before fun() & fun() is passed as argument to sonu
+@sonu       #This is Decocator
+def fun():
+    print("Hello, World!")
+
+fun()
+
+# Output
+Before calling the function.
+Hello, World!
+After calling the function.
+                    </code></pre>
+
+                    <table>
+                        <tr>
+                            <td>@staticmethod</td>
+                            <td>
+                                A static method is a method that belongs to a class rather than 
+                                an instance of the class. It doesn't receive any implicit first argument (no self or cls)
+                                <pre><code class="language-css">
+class Calculator:
+    @staticmethod
+    def add_numbers(x, y):
+        return x + y
+
+# Can be called without creating an instance
+result = Calculator.add_numbers(5, 10)
+print(result)  # Outputs: 15
+                                </code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@classmethod (used for alternative constructors)</td>
+                            <td>
+                                A class method receives the class itself as the first argument (cls), allowing it to modify class-level attributes.
+                                <pre><code class="language-css">
+class Employee:
+    company = "Default Company"
+
+    @classmethod
+    def change_company(cls, new_company):       #cls is 1st arg(Means class)
+        cls.company = new_company
+
+    @classmethod
+    def create_employee(cls, name):
+        return cls(name)
+
+    def __init__(self, name):
+        self.name = name
+
+# Can modify class-level attributes
+Employee.change_company("Tech Corp")
+                                
+                                </code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@property</td>
+                            <td>
+                                Allows you to define methods that can be accessed like attributes, 
+                                providing getter, setter, and deleter functionality.
+                                <pre><code class="language-css">
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):               #self(instance)
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        if value >= 0:
+            self._radius = value
+        else:
+            raise ValueError("Radius cannot be negative")
+
+    @property
+    def area(self):
+        return 3.14 * self._radius ** 2
+
+# Usage
+circle = Circle(5)
+print(circle.radius)  # Getter
+circle.radius = 10    # Setter
+print(circle.area)    # Computed property
+                                </code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td id="enumerate">enumerate() function</td>
+                <td>
+                    This is used to iterate over an iterable (Eg: list, tuple, or string). It returns a tuple(index, value of each item)
+                    <pre><code class="language-css">
+# enumerate(iterable, start=0(optional))
+
+# Iterate over List=vector
+my_list = ['apple', 'banana', 'cherry']
+for index, fruit in enumerate(my_list):
+    print(f"Index: {index}, Value: {fruit}")
+
+# Iterate over hashmap=Dictionary
+my_dict = {'a': 1, 'b': 2, 'c': 3}
+for index, key in enumerate(my_dict):
+    print(f"Index: {index}, Key: {key}, Value: {my_dict[key]}")
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td id="lambda">Lambda / Anonymous function</td>
+                <td>
+                    Can accept any number of arguments, but can only have a single expression.
+                    Use-case: Require an anonymous function for a short time period.
+                    <pre><code class="language-css">
+# Assigning lambda functions to a variable
+mul = lambda a, b : a * b
+print(mul(2, 5))    # output => 10
+
+# Wrapping lambda functions inside another function
+def myWrapper(n):
+ return lambda a : a * n
+mulFive = myWrapper(5)
+print(mulFive(2))    # output => 10
+                    </code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td id="generator">Generator</td>
+                <td>
+                    Generator returns an iterator object which can be iterated over.
+                    <pre><code class="language-css">
+def simple_generator(n):
+    for i in range(n):
+        yield i
+
+# Using the generator
+gen = simple_generator(5)
+for num in gen:
+    print(num)
+# Output
+0
+1
+2
+3
+4
+                    </code></pre>
+                    <b>How yeild works here?</b>
+                    The yield keyword is crucial in creating generators. When yield is encountered:<br>
+                    &ensp; The function's execution is paused<br>
+                    &ensp; A value is returned to the caller<br>
+                    &ensp; The function's state is preserved<br>
+                    &ensp; Execution can resume from where it left off
+                </td>
+            </tr>
+        </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

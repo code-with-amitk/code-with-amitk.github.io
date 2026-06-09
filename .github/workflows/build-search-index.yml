@@ -1,0 +1,37 @@
+name: Build Search Index
+
+on:
+  push:
+    branches:
+      - source  # Change to your main branch name
+    paths:
+      - 'docs/**/*.html'
+      - '.github/workflows/build-search-index.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm install jsdom
+        working-directory: docs
+      
+      - name: Build search index
+        run: node scripts/build-search-index.js
+        working-directory: docs
+      
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/search-index.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update search index" && git push)

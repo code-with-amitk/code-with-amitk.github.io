@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Learning Types</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="index.html">Back</a></li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">What is ML?</a>
+        <a href="#types">Types of ML?</a>
+        <ul>
+            <li><a href="#">Supervised</a></li>
+            <li><a href="#">Unsupervised</a></li>
+            <li><a href="#">Semisupervised</a></li>
+            <li><a href="#">Reinforcement</a></li>
+            <li><a href="#">Generative AI</a></li>
+        </ul>
+        <a href="#slmodels">Supervised Learning Model</a>
+        <ul>
+          <li><a href="#reg">Regressions</a>
+            <ul>
+              <li><a href="#dtr">Decision Tree</a></li>
+              <li><a href="#ranforr">Random Forest</a></li>
+            </ul>
+          </li>
+          <li><a href="#classifiers">Classifiers</a>
+            <ul>
+              <li><a href="#dtc">Decision Tree</a></li>
+            </ul>
+          </li>
+        </ul>
+        <a href="#uslmodels">Unsupervised Learning Model</a>
+        <ul>
+          <li><a href="#">Model 1</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">Machine Learning and ML Model?</h2>
+        <dl>
+            ML is the process of training a <a href="#models">Machine Learning model</a>, to
+            make useful predictions or generate content (like text, images, audio,
+            or video) from data.
+        </dl>
+
+       <h2 id="types">Types of Machine Learning</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Supervised Learning</th>
+          <th>Unsupervised Learning</th>
+          <th>Semisupervised Learning</th>
+          <th>Reinforcement learning</th>
+          <th>Generative AI</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            Training data feed to the algorithm includes the desired
+            solutions(called labels). <br>
+            Example: This is like a student learning new material by studying old exams that contain both questions and answers
+          </td>
+          <td>
+            Dataset does not have labels. ML model tries to learn without
+            teacher. ML has to estimate whether it's correct/incorrect and create its own rules
+          </td>
+          <td>lot of unlabeled data and a little bit of labeled data.<br>
+            Examples: 1. FB Photos: When we load photos, 
+            we provide labels to few and leave others. AI identifies photos.</td>
+          <td>
+            Agent(AI Program) can observe the environment, select and
+            perform actions, and get rewards or penalties based on actions performed within an environment<br>
+            Example: used to train robots to perform tasks, like walking around a room
+          </td>
+          <td>
+            Models that creates content from user input. <br>
+            Eg: <br>Create unique images, music compositions, jokes, <br>
+                Text-to-text<br>
+                Text-to-image<br>
+                Text-to-video<br>
+                Text-to-code<br>
+                Text-to-speech<br>
+                Image and text-to-image
+          </td>
+        </tr>
+        <tr>
+          <td>Types</td>
+          <td>
+            <b>1. Classification (give yes/no):</b><br />
+            <u>Example</u><br>
+            &ensp; a. Spam Filterning: Algo is trained with many example emails along
+            with their class (spam or ham). Each email has a label.<br />
+            <u>Types of classification models:</u><br>
+            &ensp; &ensp; 1. Binary classification: Model output a value from a class that contains only two values, for example rain or no rain<br>
+            &ensp; &ensp; 2. Multiclass classification: Output a value from a class that contains more than 2 values. Eg: rain, hail, snow, or sleet<br><br>
+
+            <b>2. Regression: (give % or numeric value):</b><br />
+            Predict whether based on inputs, Predict price of car provided with
+            some inputs(mileage, age, brand, etc.)<br /><br>
+
+            <b>3. Logistic Regression (yes/no with %):</b><br />
+            Mix of classfication & Regression. Example: 20% of chances being a
+            spam.
+          </td>
+          <td>
+            <b>1. Clustering:</b><br />
+            The model finds data points that demarcate natural groupings.
+            <img src="/images/Machine_Learning/clustering-01.png" alt="Clustering" style="width:250px;height:150px;">
+            <br>Algorithms used:<br>
+            &ensp; k-Means<br>
+            &ensp; Hierarchical Cluster Analysis (HCA)<br>
+            &ensp; Expectation Maximization<br>
+            <b>2. Visualization and dimensionality reduction</b><br />
+            With unlabelled data this algorithm provides ouput which can be
+            plotted on 2-D, 3-D plane. Algorithms used:<br />
+            &ensp; Principal Component Analysis (PCA)<br>
+            &ensp; Kernel PCA<br>
+            &ensp; Locally-Linear Embedding (LLE)<br>
+            &ensp; t-distributed Stochastic Neighbor Embedding (t-SNE)<br>
+            <b>3. Association rule learning:</b><br />
+            This provides output as relations between attributes. Algorithms used:<br>
+            &ensp; Apriori <br>
+            &ensp; Eclat
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Algorithms</td>
+          <td>
+            k-Nearest Neighbors<br>
+            Linear Regression<br>
+            Logistic Regression<br>
+            Support Vector Machines (SVMs)<br>
+            Decision Trees & Random Forests<br>
+            Neural networks
+          </td>
+          <td>
+            Clustering: k-Means, Hierarchical Cluster Analysis (HCA),
+            Expectation Maximization<br />
+            Visualization and dimensionality reduction: Principal Component
+            Analysis (PCA), Kernel PCA, Locally-Linear Embedding (LLE),
+            t-distributed Stochastic Neighbor Embedding (t-SNE)<br />
+            Association rule learning: Apriori, Eclat
+          </td>
+          <td>Deep belief networks (DBNs)</td>
+          <td></td>
+        </tr>
+      </table>
+
+      <h2 id="slmodels">Supervised Learning Models</h2>
+      <dl>
+        Machine Learning model is a Algorithm, which makes predictions after getting trained on data<br>
+        <b>Supervised Learning:</b><br>
+        &ensp; <u>Regression:</u> Decision Tree Regressor<br>
+        &ensp; <u>Classification:</u> Decision Tree Classifier<br>
+      </dl>
+
+      <h3 id="reg">Regression</h3>
+      <h4 id="dtr">Decision Tree Regressor</h4>
+      <dl>
+            This is Binary Tree(not balanced) which works in flowchart-like manner where each internal node represents a "test" on an attribute, 
+            each branch represents the outcome of the test, and each leaf node represents numerical value (ie Prediction).<br>
+            <b>How it works?</b> Predicting Whether a Customer Will Buy a Product Using Two Decision Trees
+            <table>
+              <tr>
+                <td><img src="/images/Machine_Learning/decision_tree_customer_demographics.png" alt="Decision Tree" style="width:500px;height:250px;"></td>
+                <td>If Tree 1 predicts "Purchase" and Tree 2 predicts "No Purchase", the final prediction might be "Purchase" or "No Purchase" 
+            depending on the weight or confidence assigned to each tree.</td>
+              </tr>
+            </table>
+            <u>Information Gain in Decision Tree</u><br>
+            &ensp; Information Gain tells us how useful a question (or feature) is for splitting data into groups<br>
+            &ensp; It measures how much the uncertainty decreases after the split. <br>
+            &ensp; For example if we split a dataset of people into "Young" and "Old" based on age and all young people bought the product 
+            while all old people did not, the Information Gain would be high<br>
+            <u>Gini Index in Decision Tree:</u> Metric to measure how often a randomly chosen element would be incorrectly identified. 
+            Lower Gini index represents a better split<br><br>
+
+            <b id="fitting">Fitting</b><br>
+            <u id="overfitting">Overfitting in Decision Tree</u><br>
+            when tree has too many splits becomes too deep, and it makes <font color="red">very good predictions to training data</font>,
+            but does <font color="red">poor predictions on new data</font>.<br>
+            As the tree gets deeper, the dataset gets sliced up into leaves with fewer choices.
+            we'll have 2<sup>10</sup> groups by the time we get to the 10th level. That's 1024 leaves.<br>
+            When we divide the tree in too many leaves, we also have fewer data in each leaf.
+            Very few Leaves will make predictions that are quite close to actual values, 
+            but they may make very unreliable predictions for new data (because each prediction is based on only a few input samples).
+            <br>
+            <u id="underfitting">Underfitting in Decision Tree</u><br>
+            On otherside, if only few splits are performed(only 2 or 4), Resulting predictions may be far off for most input samples, 
+            even in the training data.<br>
+            When a model fails to capture important distinctions and patterns in the data, & perform 
+            <font color="red">poorly even in training data, poorly in new data</font> is underfitting<br>
+            <u>Overfitting or underfitting(What's preferred)?</u> We need to hit a sweet spot between 2
+      </dl>
+
+      <h4 id="ranforr">Random Forest Regressor</h4>
+      <dl>
+        <b>Problems with Decision Tree:</b>
+        &ensp; Overfitting(Deep tree with lot of leaves) or underfitting(very less depth)
+        &ensp; Random forest solves it
+        <br><br>
+
+        <b>What is Random Forest?</b><br>
+        &ensp; Random forest uses lot of decision trees & make prediction by averaging 
+        each of Component trees.<br>
+        &ensp; Has much better predictive accuracy than a single decision tree & works well with default params
+      </dl>
+
+      <h3 id="classifiers">Classifiers</h3>
+      <h4 id="dtc">Decision Tree Classifier</h4>
+
+    </article>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++, Rust, Python, Go </title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+    
+    <h1>map</h1>
+    <ul>
+      <li>
+          <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="comp">C++, Rust, Python, Go</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python</th>
+            <th>Go</th>
+        </tr>
+        <tr>
+            <td>Create</td>
+            <td><pre>                       <!--C++-->
+map&lt;char, int> m;
+            </pre></td>
+
+            <td><pre>                       <!--Rust-->
+//Empty
+let btm:BTreeMap = BTreeMap::new()
+
+//&lt;key=i32, value=vector&lt;i32>>
+let btm:BTreeMap&lt;i32, Vec&lt;i32>> = BTreeMap::new();
+                
+//init
+iter(): is called on the array to create
+        an iterator over its elements
+cloned(): method is used to clone each
+          tuple's elements. This is necessary
+          because &str is a reference type,
+          and we need to create owned values
+          to store in the HashMap.
+collect(): method consumes the iterator and collects
+           the cloned tuples into a HashMap&lt;char, &str>
+let btm: BTreeMap<i32, &str> = [
+    (2, "abc"),
+    (3, "def"),
+    (4, "ghi"),
+    (5, "jkl"),
+    (6, "mno"),
+    (7, "pqrs"),
+    (8, "tuv"),
+    (9, "wxyz"),
+]
+.iter()
+.cloned()
+.collect();
+            </pre></td>
+
+            <td><pre>                           <!--Python-->
+#Empty
+self.hm = {}
+
+#key,val
+self.hm={1:1, 2:2}
+
+#hashmap &lt;key=int, value=vector<int>>
+um = {}
+value = [1,2,3]
+um[10] = value
+                </pre></td>
+
+            <td><pre>                           <!--Go-->
+var hm map[string[int]]  //key=string, value=int
+
+// Using make function (key=pointer, val="pointer")
+var hm = make(map[*Node]*Node)
+            </pre></td>
+        </tr>
+
+        <tr>
+            <td>Delete/Erase</td>
+            <td><pre>                           <!--C++-->
+um.erase(key);
+Range: um.erase(start,end);
+            </pre></td>
+            <td></td>   <!--Rust-->
+            <td></td>   <!--Python-->
+            <td>        <!--Go-->
+            </td>
+        </tr>
+
+        <tr>
+            <td>Find</td>
+            <td><pre>                               <!--C++-->
+if (um.find("key") != um.end())
+OR
+value=count(key)
+// Smallest Key
+  min_element(um.begin(), um.end())
+            </pre></td>
+            <td><pre>                               <!--Rust-->
+if let Some(value) = btm.get(&key) {
+} else {
+}
+OR 
+if let Some(value) = btm.get_mut(&key) {
+    value = 1;
+} else {
+}
+            </pre></td>
+            <td><pre>                              <!--Python-->
+value = um[key]
+            </pre></td>
+            <td><pre>                               <!--Go-->
+value = hm[key]
+if value != nil {
+    //Found
+}
+            </pre></td>
+        </tr>
+
+        <tr>
+            <td>Insert</td>
+            <td>vec.insert(v.begin() + 2, 7)</td>   <!--c++-->
+            <td><pre>    <!--Rust-->
+btm.insert(key, value);
+            </pre></td>
+            <td></td>
+            <td><pre>    <!--Go-->
+hm["test"] = 1
+            </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Iterate over elements</td>
+            <td><pre>                    <!--c++-->
+map&lt;int, int> m;
+for (auto&i:m) {
+    cout << i.first << "," << i.second;
+}
+            </pre></td>
+            <td><pre>                  <!--Rust-->
+for (key, value) in &hm {
+    println!("Key: {}, Value: {}", key, value);
+}
+OR
+for (key, value) in hm.iter() {
+    println!("Key: {}, Value: {}", key, value);
+}
+            </pre></td>
+            <td><pre>                     <!--Python-->
+for key,value in um.items():
+  
+            </pre></td>
+            <td><pre>                       <!--Go-->
+            </pre></td>
+        </tr>
+
+    </table>
+
+    <script src="/scripts/prism.js"></script>
+</body>
+
+</html>

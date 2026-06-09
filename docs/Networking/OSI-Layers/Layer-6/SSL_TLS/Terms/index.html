@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>TLS SSL</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#sni">SNI</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="sni">SNI (Server Name Indication)</h2>
+      <dl>
+        SSL Client can specify the domain name it is trying to reach, this is
+        purely for server information<br />
+        Server uses it to pick correct certificate when 1 server IP hosts
+        multiple TLS sites<br />
+        SSL Server can host multiple domains on 1 IP address. SNI is TLS
+        extension(defined in RFC 6066) and carried in unencrypted ClientHello.
+      </dl>
+      <pre><code class="language-css">
+SSL Client                          SSL Server
+        -- CLIENT HELLO -------------->
+        (SNI:I want to connect xyz.com)
+                                    Retrieve cert of xyz.com from store
+        <--- Server Cert(xyz.com)------
+Verified cert
+        <------ Key exchange begin ---->
+      </code></pre>
+
+      <h3>Benefits of SNI</h3>
+      <dl>
+        1. A proxy can apply policies matching on domain name. if instead of SNI
+        client connects on IP then policies cannot be searched based on IP and
+        cannot be applied
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

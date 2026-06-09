@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#create">Create Tuple</a>
+        <a href="#pack">Packing, Unpacking</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What</h2>
+        <dl>
+            RO/Immutable lists ie values inside tuples cannot be changed.
+        </dl>
+        <pre><code class="language">
+a = [1,2,3,4]
+a[0]=5                 #'tuple' object does not support item assignment
+        </code></pre>
+
+        <dl>Length of empty tuple = 0</dl>
+        <pre><code class="language-css">
+e = ()
+print(e)        #()
+print(len(e))   #0
+        </code></pre>
+
+        <dl><b>Nested Tuple</b></dl>
+        <pre><code class="language-css">
+n = a,(4,5,'h')
+print(n)        #((1, 3, 'f', 'my'), (4, 5, 'h'))
+        </code></pre>
+
+        <h2 id="create">Create Tuple</h2>
+        <pre><code class="language-css">
+// Creating after Input from user
+a = input("Input some comma seprated numbers : ")     #1,2,3,4
+t = tuple(a)
+print('Tuple:',t)                                     #(1,2,3,4)
+
+// Created with or without ()
+b = (1,3,'f','my')
+a = 1,3,'f','my'
+print(a)                #(1, 3, 'f', 'my')
+
+//Creating Tuples from list
+c = ([1, 2, 3])
+print(c)        #[1, 2, 3]
+c[0]=4
+print(c)        #[4, 2, 3]
+        </code></pre>
+
+        <h2 id="pack">Packing/Unpacking of Tuples</h2>
+        <dl>
+            PACKING: Filling the values inside tuple<br>
+            UNPACKING: Unpacking the tuple to variables
+        </dl>
+        <pre><code class="language-css">
+            f = 12345, 54321, 'hello!'      #PACKING
+            x,y,z = f                       #UNPACKING to values
+            print(x,y,z)                    #12345 54321 hello
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Native FlatList</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">   <!-- Sidebar -->
+        <a href="#what">What</a>
+        <a href="">Examples</a>
+        <ul>
+            <li><a href="#simple">Simple FlatList</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2><a href="https://reactnative.dev/docs/using-a-listview" target="_blank">What is FlatList?</a></h2>
+        <dl>displays a scrolling list of changing, but similarly structured, data.
+            Unlike the more generic ScrollView, the FlatList only renders elements that are currently
+            showing on the screen, not all the elements at once(unlike ScrollView).<br>
+            Designed to efficiently render large lists of data with optimal performance.
+            FlatList component requires two props: data and renderItem
+            <br><br>
+            <a href="https://www.youtube.com/watch?v=iMCM1NceGJY&list=LL&index=2&t=326s" target="_blank">Very Good Video</a>
+        </dl>
+
+        <h2>Examples</h2>
+        <h4 id="simple">Simple FlatList</h4>
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+import { View, Text, SafeAreaView, FlatList } from 'react-native';  //1
+export default function App() {
+    const students = [                  //2
+        {id: "1", "name": "amit"},
+        {id: "2", "name": "bohan"},
+        {id: "3", "name": "charan"},
+    ]
+    // Arrow Function
+    // const function_name = (arguments) => (Function body return JSX);
+    const renderItem = ({ item }) => (      //5
+    &lt;View>
+        &lt;Text>{item.name}&lt;/Text>
+    &lt;/View>
+    );
+
+    return (
+    &lt;SafeAreaView>
+        &lt;FlatList            //3
+            data= {students}
+            renderItem= {renderItem}
+            keyExtractor={(item) => item.id.toString()} //4
+        />
+    &lt;/SafeAreaView>
+    );
+}
+                </code></pre></td>
+                <td>
+1. import<br>
+2. Create Array of Object in JavaScript. [] is Array, {} is Object
+<br><br>
+&ensp; Array/list/collection [] is collection of values, Can contain multiple elements of different types<br>
+&ensp; Object/HashMap/Dictionary {}: key-value pair collection<br>
+&ensp; Nested Objects in Arrays. Placing {} inside [] creates an array of objects
+<br><br>
+<b>This format will remain consistent across React Native FlatList implementations:</b><br>
+3. Define FlatList inside SafeAreaView<br>
+<pre><code class="language-css">
+&lt;FlatList
+    //data prop. takes array on which we will iterate(students here)
+    data={students}
+
+    //See below
+    keyExtractor={(item) => item.id.toString()}
+
+    //renderItem prop. See below
+    renderItem={renderItem}
+/>
+</code></pre>
+4. keyExtractor is function, which returns which property on object is used as key<br>
+keyExtractor{(item) => } //item is fixed always<br>
+Make students.id as key
+<pre><code class="language-css">
+keyExtractor={(item) => }
+</code></pre>
+
+5. renderItem Arrow Function
+<pre><code class="language-css">
+Format:
+const function_name = (arguments) => (Function body return JSX);
+
+// {item}. Destructure the item which we want to iterate,
+// so that we have access to each item inside the function
+const renderItem = ({ item }: {item:any}) => (
+    Return view
+);
+</code></pre>
+                </td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+
+</body>
+</html>

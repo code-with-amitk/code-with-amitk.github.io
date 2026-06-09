@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>constexpr</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#constexpr">constexpr</a>
+        <a href="#usecases">constexpr usecases</a>
+        <a href="#vsmacro">constexpr vs macro</a>
+        <a href="#var">constexpr variables</a>
+        <a href="#fun">constexpr function</a>
+        <a href="#ctr">constexpr constructor</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="constexpr">constexpr (constant expression)</h2>
+            <dl>Tells compiler that function or variable should be evaluated at compile time, allowing the compiler 
+                to perform computations during compilation rather than at runtime.<br>
+                Also function body should not contain any code which need runtime calculations.<br>
+            </dl>
+            <dl>- Below code is not candidate of constexpr</dl>
+            <pre><code>
+constexpr int dynamicSquare(int x) {
+    return x * time(nullptr);  // Invalid, time() is not constexpr
+}                
+            </code></pre>
+
+            <h2 id="usecases">Use cases of constexpr</h2>
+            <div class="tab">
+                <button class="tablinks" onclick="opencode(event, 'comptime')">Compile-Time Evaluation</button>
+                <button class="tablinks" onclick="opencode(event, 'arrinit')">Array initialization</button>
+                <button class="tablinks" onclick="opencode(event, 'constexprs')">Constant Expressions</button>
+                <button class="tablinks" onclick="opencode(event, 'tempmeta')">Template Metaprogramming</button>
+                <button class="tablinks" onclick="opencode(event, 'perfopt')">Performance Optimization</button>
+            </div>
+
+            <div id="comptime" class="tabcontent">
+                <h5>Compile-Time Evaluation</h5>
+                <pre><code>
+constexpr int square(int x) {
+    return x * x;
+}
+
+int main() {
+    constexpr int result = square(5);  // Computed at compile time
+    // ...
+}    
+                </code></pre>
+            </div>
+
+            <div id="arrinit" class="tabcontent">
+                <h5>Array initialization</h5>
+                <pre><code>
+constexpr int size = 5;
+int array[size] = {1, 2, 3, 4, 5};  // Compile-time initialization                       
+                </code></pre>
+            </div>
+
+            <div id="constexprs" class="tabcontent">
+                <h5>Constant Expressions</h5>
+                <pre><code>
+//constexpr can be used to define constants, 
+allowing them to be used in contexts where only constant expressions are allowed
+constexpr double pi = 3.14159;                     
+                </code></pre>
+            </div>
+
+            <div id="tempmeta" class="tabcontent">
+                <h5>Template Metaprogramming</h5>
+                <pre><code>
+//generate code at compile time
+template &lt;int N>
+    constexpr int factorial() {
+        return N == 0 ? 1 : N * factorial<N - 1>();
+    }
+    
+    int main() {
+        constexpr int result = factorial<5>();  // Computed at compile time
+        // ...
+    }                                            
+                </code></pre>
+            </div>
+
+            <div id="perfopt" class="tabcontent">
+                <h5>Performance Optimization</h5>
+                <pre><code>
+//improved performance by allowing the compiler to optimize and eliminate runtime computations
+constexpr int computeValue() {
+    // Some computation
+    return result;
+}
+
+int main() {
+    constexpr int value = computeValue();  // Computed at compile time
+    // ...
+}                                                             
+                </code></pre>
+            </div>
+
+            <h2 id="vsmacro">constexpr vs macro</h2>
+            <dl>Macros in C++ are a form of text substitution done by the preprocessor<br>
+                Macros are not subject to the same rules and restrictions as constexpr<br>
+                Macros replace code at the 
+                <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/C/Compile">preprocessing stage</a>, and they don't have a 
+                clear understanding of the C++ language constructs<br>
+                Macros are not type safety<br>
+                They are not guaranteed to be evaluated at compile time
+            </dl>
+            <pre><code class="language-css">
+#define SQUARE(x) ((x) * (x))
+int main() {
+    int result = SQUARE(5 + 1);  // Expanded to (5 + 1 * 5 + 1), unexpected behavior
+    // ...
+}                
+            </code></pre>
+
+            <h2 id="var">constexpr variables</h2>
+            <dl>
+                1. must be immediately initialized<br>
+                2. Must have constant destruction. if of class type(class must have constexpr destructor).
+            </dl>
+
+            <h2 id="fun">constexpr function</h2>
+            <dl>
+                1. Should not be virtual<br>
+                2. Must not be a coroutine<br>
+                3. function body must not contain: goto block
+            </dl>
+
+            <h2 id="ctr">constexpr contructor</h2>
+            <dl>
+                1. whose function body is not = delete;
+            </dl>
+        </article>
+    <script src="/scripts/prism.js"></script>
+</body>
+</html>

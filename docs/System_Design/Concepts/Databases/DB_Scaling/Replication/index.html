@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Scaling</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+       </li>
+    </ul>
+</nav>
+
+  <aside class="sidebar">
+    <a href="#what">What is Replication</a>
+    <a href="#types">Types of Replication</a>
+  </aside>
+
+  <main>
+    <article style="margin-left:200px;">
+        <h2 id="what">What is Replication?</h2>
+        <dl>
+          Keeping a copy of the same data on multiple machines. Each node that stores the copy is called Replica.
+        </dl>
+        <h3>Advantages of Replication</h3>
+        <dl>
+          <b>1. Parallel Processing:</b> Master: Handles all write operations, Slaves:  Handles all read operations<br>
+          <b>2. Reliable(Data is served even DB crashes, or some DB goes down under load):</b> Data will be served from other slave<br>
+          <b>3. Highly available(Even if some of DBs are down, client will get response):</b> Since some slaves will be up.
+        </dl>
+
+        <h2 id="types">Types of Replication</h2>
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Meaning</th>
+            <th>Digram</th>
+          </tr>
+          <tr>
+            <td>
+              Master/Slave or <br><br>
+              Leader/Follower
+            </td>
+            <td>
+              <b>Master/Leader:</b> 1 node is designated as master. Client does RW operations with master. Session is stored in 
+              master's DB. Then slaves read from it.<br>
+              <b>Slaves:</b> Read Only.  slave database gets copies of the data from the master database. 
+              All slaves replicate data from most updated slave via replication log.<br><br>
+              <b>Advantage</b><br><br>
+              &ensp; <u>1. Parallel Processing:</u> Read(Slaves), Write(Master) is supported paralally<br>
+              &ensp; <u>2. Reliable:</u> Since multiple copies of data is maintained<br>
+              &ensp; <u>3. Highly availabile:</u> <br><br>
+              <b>Disadvantage</b><br>
+              &ensp; a. Logic is required to promote slave to master(when master fails)<br>
+              &ensp; b. If high number of slaves, more write operations can lead to replication lag.
+            </td>
+            <td>
+              <img src="/images/databases/master-slave-replication.PNG"
+              alt="Master Slave DB" style="width:300px;height:400px;">
+
+            </td>
+          </tr>
+
+          <tr>
+            <td>Master/Master or <br>Active/Active or <br>Leader/Leader</td>
+            <td>
+              There are 2 or more leader nodes. Client can write to any 1 of leader. 
+              Other leaders will act as slave and read all data from present leader.<br>
+            </td>
+          </tr>
+        </table>
+    </article>
+  </main>
+
+</body>
+</html>

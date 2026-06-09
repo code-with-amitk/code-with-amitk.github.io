@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+  <head>
+    <title>lvalue, rvalue</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <a href="/Languages/Programming/C++/C++_11,14,17,20,23/">Back</a>
+        </li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">lvalue, rvalue</a>
+      <a href="#lref">lvalue reference</a>
+      <a href="#rref">rvalue reference</a>
+      <a href="#xvalue">XValue/Expiring Value</a>
+      <a href="#prvalue">PRvalue</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">lvalue, rvalue</h2>
+      <dl>
+        <b>lvalue(locator value): </b> Anything that can hold a address. Appear
+        on the left-hand side of an assignment.<br />
+        <b>rvalue(read value): </b> temporary value that does not occupy a
+        persistent memory location. Appears on the right-hand side of an
+        assignment
+      </dl>
+      <pre><code class="language-css">
+int a = 10;                 // a is l value
+                            // 10 is rvalue
+int x = a+b;                // x is l value
+                            // a+b is rvalue
+        </code></pre>
+
+      <h2 id="lref">lvalue reference or Reference Variable (&)</h2>
+      <dl>
+        Reference to bind to lvalue. This is same as reference variable<br />
+        <b>Usage:</b> Pass large objects without copying.
+      </dl>
+      <pre><code class="language-css">
+int a = 10;
+int &b = a;         // lvalue reference
+b = 11;
+cout &lt;&lt; a;    // 11
+        </code></pre>
+      <dl>
+        <b>Example:</b>
+        <a
+          href="/Languages/Programming/C++/6 Implicit Functions/Constructors.html#copy"
+          target="_blank"
+          >Copy Constructor</a
+        >
+        is lvalue reference
+      </dl>
+
+      <h2 id="rref">rvalue reference (&&)</h2>
+      <dl>
+        Reference that binds to an rvalue(temporary value).<br />
+        <b>Usage:</b> <br />
+        &ensp; Move semantics (ie moving a temporary withut copying it).<br />
+        &ensp; Perfect forwarding in template functions.
+      </dl>
+      <pre><code class="language-css">
+int a = 10;
+int &&b = 10;            // rvalue reference
+        </code></pre>
+      <dl>
+        <b>Example:</b>
+        <a
+          href="/Languages/Programming/C++/6 Implicit Functions/Constructors.html#move"
+          target="_blank"
+          >Move constructor</a
+        >
+      </dl>
+
+      <h2 id="xvalue">XValue / Expiring Value</h2>
+      <dl>(b+c) is called xvalue/temporary value which is ready to expire</dl>
+      <pre><code class="language-css">
+a = b+c;  
+        </code></pre>
+
+      <h2 id="prvalue">PRValue / Pure R Value</h2>
+      <dl>Literal value is called pure R value</dl>
+      <pre><code class="language-css">
+a = 42;
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPU Memory, Temprature, Processes</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#memtemp">GPU Metrics</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h3 id="memtemp">GPU Metrics Generation</h3>
+        <dl>
+            Create Prometheus Metrics for:<br>
+            - Memory (Total, Used), Memory consumed by processes<br>
+            - GPU Utilization<br>
+            - Active Processes<br>
+            - Temperature of GPU
+        </dl>
+        
+        <table>
+            <tr>
+                <td><pre><code class="language-css">
+# Updated GPUMonitor with Prometheus export
+from prometheus_client import Gauge, start_http_server
+
+class GPUMonitor:
+    def __init__(self, gpu_ids):
+        # Prometheus metrics
+        self.gpu_util = Gauge('gpu_utilization', 'GPU utilization %', ['gpu_id'])
+        self.gpu_mem = Gauge('gpu_memory', 'GPU memory used MB', ['gpu_id'])
+        self.gpu_temp = Gauge('gpu_temp', 'GPU temperature C', ['gpu_id'])
+        
+        # Start metrics server
+        start_http_server(8000)
+        
+    def collect_metrics(self):
+        metrics = []
+        for i, gpu in enumerate(self.gpus):
+            # ... existing collection code ...
+            
+            # Export to Prometheus
+            self.gpu_util.labels(gpu_id=i).set(util.gpu)
+            self.gpu_mem.labels(gpu_id=i).set(mem.used / 1024**2)
+            self.gpu_temp.labels(gpu_id=i).set(temp)
+                </code></pre></td>
+                <td>
+                    <b>(GRAFANNA)Visualization & Dashboard</b><br>
+                    <table>
+                        <tr>
+                            <td>GPU Cluster Overview</td>
+                            <td>Job Performance</td>
+                            <td>Alert Dashboard</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Heatmap of GPU utilization across nodes<br>
+                                Memory usage trends<br>
+                                Temperature distribution
+                            </td>
+                            <td>
+                                Training loss/accuracy curves<br>
+                                Batch processing times<br>
+                                GPU memory vs. batch size
+                            </td>
+                            <td>
+                                Active incidents<br>
+                                Error rate over time<br>
+                                Recovery success rate
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heap / Priority Queue</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <h1>Max Heap</h1>
+    <ul>
+      <li>
+          <h3><a href="#heap">C++ vs Python vs Rust</a></h3>
+      </li>
+    </ul>
+
+    <h3 id="heap">C++ vs Python vs Rust</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust (use std::collections::BinaryHeap)</th>
+            <th>Python</th>
+        </tr>
+
+        <tr>
+            <td>Declaration</td>
+            <td><pre>                       <!--c++-->
+priority_queue&lt;pair&lt;key, value>> pq
+            </pre></td>
+
+            <td>                       <!--Rust-->
+max_heap
+                <table>
+                    <tr>
+                        <td>i32</td>
+                        <td><pre>
+let mut max_heap: BinaryHeap&lt;> = 
+BinaryHeap::new();                            
+                        </pre></td>
+                    </tr>
+                    <tr>
+                        <td>Pair &lt;i32, char></td>
+                        <td><pre>
+let mut max_heap:BinaryHeap<(i32, char)> = 
+BinaryHeap::new();
+                        </pre></td>
+                    </tr>
+                </table>
+<br>
+min_heap 
+                <table>
+                    <tr>
+                        <td>i32</td>
+                        <td><pre>
+use std::cmp::Reverse;
+let mut min_heap: BinaryHeap&lt;Reverse&lt;i32>> = 
+BinaryHeap::new();
+                        </pre></td>
+                    </tr>
+                </table>
+            </td>
+
+            <td><pre>                       <!--Python-->
+#Python does not provide built-in heap.
+#But it provides heapq module for heap operations on list
+import heapq
+
+# Creating a Max Heap
+max_heap = []
+heapq.heapify(max_heap)  # Convert list into a max heap
+            </pre></td>    
+        </tr>
+
+        <tr>
+            <td>push</td>
+            <td><pre>       <!--c++-->
+dq.push_back(x)
+            </pre></td>
+            <td><pre>       <!--Rust-->
+max_heap.push(x);
+min_heap.push(Reverse(x));
+            </pre></td>
+            <td><pre>       <!--Python-->
+self.dq.append(x)
+            </pre></td>
+        </tr>
+
+        <tr>
+            <td>Front, Back element</td>
+            <td><pre>
+dq.front()
+dq.back()
+            </pre></td>
+            <td><pre>
+heap.front()
+dq.back()
+            </pre></td>
+            <td><pre>
+self.dq[0]
+self.dq[-1]
+            </pre></td>
+        </tr>
+
+        <tr>
+            <td>Pop, Top</td>
+            <td><pre>       <!--c++-->
+dq.pop_front()
+dq.pop_back()
+            </pre></td>
+            <td><pre>                   <!--Rust-->
+pub fn pop(&mut self) -> Option<T>
+while let Some(top) = max_heap.pop() {
+}
+if let Some(Reverse(top)) = min_heap.pop(){
+
+}
+            </pre></td>
+            <td><pre>
+self.dq.pop()
+self.dq.popleft()
+            </pre></td>
+        </tr>
+        <tr>
+            <td>Check empty</td>
+            <td>!dq.empty()</td>
+            <td>!dq.empty()</td>
+            <td>bool(self.dq) != False</td>
+        </tr>
+
+        <tr>
+            <td>size</td>
+            <td>dq.size()</td>
+            <td>dq.len()</td>
+            <td>len(self.dq)</td>
+        </tr>
+    </table>
+
+</body>
+</html>

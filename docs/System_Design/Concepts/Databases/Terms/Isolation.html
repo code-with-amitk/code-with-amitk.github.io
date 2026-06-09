@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Isolation</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Isolation</a>
+      <a href="#levels">Isolation Levels</a>
+      <ul>
+        <a href="#readcommitted">1. Read Committed</a>
+        <a href="#snapshotiso">2. Snapshot Isolation</a>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Isolation</h2>
+      <dl>
+        In terms of DB, Isolation means concurrently executing
+        <a href="Transactions.html">transactions</a> are isolated from each
+        other<br />
+        <b>Example:</b><br />
+        Two clients simultaneously incrementing a counter that is stored in a
+        database. Each client needs to read the current value, add 1, and write
+        the new value back (assuming there is no increment operation built into
+        the database). The counter should have increased from 42 to 44, because
+        two increments happened, but it actually only went to 43 because of the
+        race condition.
+      </dl>
+
+      <h2 id="levels">Isolation Levels</h2>
+      <dl>
+        Defines how much 1 transaction must be isolated from other on concurrent
+        transactions
+      </dl>
+      <h3 id="readcommitted">1. Read Committed</h3>
+      <dl>
+        Transactions running at the read committed isolation level prevents
+        <a href="Transactions.html">dirty reads</a>. Only those transaction are
+        visible those are commited<br />
+        Transactions running at the read committed isolation level prevents
+        <a href="Transactions.html">dirty Writes</a> by delaying the second
+        write until the first writes transaction has committed
+      </dl>
+      <h3 id="snapshotiso">
+        2. Snapshot Isolation (also called multi version concurrency control
+        (MVCC))
+      </h3>
+      <dl>
+        Snapshot isolation is a solution to
+        <a href="Transactions.html">Read Skew</a> problem. Read
+        <a href="Transactions.html">Read Skew</a> first. Now how database can
+        ensure Alice to see correct account balances?<br />
+        &ensp; - Database must keep committed version of object(snapshot) and
+        display this version until new data is not committed. Once commit
+        succeeds ie 400$ in Account-1 & 600$ in Account-2, then DB should show
+        most recent commit.<br />
+        &ensp; - <b>MVCC:</b> Instead of keeping 2 copies(as in Snapshot
+        isolation), MVCC keeps multiple copies
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

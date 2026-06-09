@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unordered_map</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Rakkas&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <article style="margin-left: 200px">
+      <table>
+        <tr>
+          <th></th>
+          <th>C++</th>
+          <th>Rust (use std::collections::HashMap)</th>
+          <th>Python ({} Dictionary)</th>
+          <th>Go</th>
+        </tr>
+        <tr>
+          <td>Create</td>
+          <td>
+            <pre><code class="language-css">   <!--C++-->
+unordered_map&lt;string, int> um;
+            </code></pre>
+          </td>
+
+          <td>
+            <!--Rust-->
+            <table>
+              <tr>
+                <td>Empty</td>
+                <td>
+                  <pre><code class="language-css">
+let hm:HashMap = HashMap::new()
+                        </code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td>Key ,value</td>
+                <td>
+                  <pre><code class="language-css">
+let hm:HashMap&lt;i32, Vec&lt;i32>> = HashMap::new();
+                        </code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td>initialize</td>
+                <td>
+                  <pre><code class="language-css">
+iter(): is called on the array to create
+        an iterator over its elements
+cloned(): method is used to clone each
+            tuple's elements. This is necessary
+            because &str is a reference type,
+            and we need to create owned values
+            to store in the HashMap.
+collect(): method consumes the iterator and collects
+            the cloned tuples into a HashMap&lt;char, &str>
+let hm: HashMap&lt;i32, &str> = [
+    (2, "abc"),
+    (3, "def"),
+    (4, "ghi"),
+    (5, "jkl"),
+    (6, "mno"),
+    (7, "pqrs"),
+    (8, "tuv"),
+    (9, "wxyz"),
+]
+.iter()
+.cloned()
+.collect();
+                        </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+
+          <td>
+            <pre><code class="language-css">                               <!--Python-->
+#Empty
+self.hm = {}
+
+#key,val
+self.hm={1:1, 2:2}
+
+#hashmap &lt;key=int, value=vector&lt;int>>
+um = {}
+value = [1,2,3]
+um[10] = value
+            </code></pre>
+          </td>
+
+          <td>
+            <pre><code class="language-css">                              <!--Go-->
+hm := make(map[int]int) //[key]value
+OR
+var hm map[string[int]]  //key=string, value=int
+OR
+var hm map[string]*int  //key=string, value=*int
+            </code></pre>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Delete/Erase</td>
+          <td>
+            <pre><code class="language-css">    <!--c++-->
+um.erase(key);
+Range: um.erase(start,end);
+            </code></pre>
+          </td>
+          <td></td>
+          <!--Rust-->
+          <td></td>
+          <!--Python-->
+          <td>
+            <!--Go-->
+            <pre><code class="language-css">
+delete(hm, key)
+            </code></pre>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Find</td>
+          <td>
+            <pre><code class="language-css">    <!--C++-->
+if (um.find("key") != um.end())
+OR
+value=count(key)
+// Smallest Key
+  min_element(um.begin(), um.end())
+            </code></pre>
+          </td>
+
+          <td>
+            <!--Rust-->
+            <table>
+              <tr>
+                <td>Search</td>
+                <td>
+                  <pre><code class="language-css">
+if let Some(value) = hm.get(&key) {
+} else {
+}
+                        </code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td>Mutable</td>
+                <td>
+                  <pre><code class="language-css">
+if let Some(value) = hm.get_mut(&key) {
+    value = 1;
+} else {
+}
+                        </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+
+          <td>
+            <!--Python-->
+            value = um[key]
+          </td>
+          <td>
+            <pre><code class="language-css">        <!--Go-->
+value = hm[key]
+if value != nil {
+    //Found
+}
+            </code></pre>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Insert</td>
+          <td>
+            <pre><code class="language-css">   <!--c++-->
+vec.insert(v.begin() + 2, 7)
+
+//Count occurences
+for (auto&i:vec)
+  um[i]++
+            </code></pre>
+          </td>
+
+          <td>
+            <table>
+              <!-- Table1 -->
+              <tr>
+                <th>Method</th>
+                <th>Code</th>
+              </tr>
+              <tr>
+                <td>Insert</td>
+                <td>
+                  <pre><code class="language-css">
+hm.insert(key, value);
+            </code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td>Count occurences</td>
+                <td>
+                  <table>
+                    <!-- Table2 -->
+                    <tr>
+                      <th>method</th>
+                      <th>code</th>
+                    </tr>
+                    <tr>
+                      <td>get_mut</td>
+                      <td>
+                        <pre><code class="language-css">
+for i in 0..nums.len() {
+    if let Some(val) = hm.get_mut(&nums[i]) {
+        *val += 1;
+    } else {
+        hm.insert(nums[i],1);
+    }
+} 
+                        </code></pre>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>entry</td>
+                      <td>
+                        <pre><code class="language-css">
+// entry() returns enum{Occupied, Vacant}
+*hm.entry(nums[i]).or_insert(0) += 1;
+                    </code></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+
+          <td>
+            <pre><code class="language-css">    <!--Python-->
+# Count number of occurences
+um = {}
+nums = [1,2,3,1,2]
+for i in nums:
+  if i in um:
+    um[i] += 1
+  else:
+    um[i] = 1
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">    <!--Go-->
+hm["test"] = 1
+
+//Count number of occurences
+for i:=0; i&lt;len(nums);i++ {
+    hm[nums[i]]++
+}
+                </code></pre>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Iterate over elements</td>
+          <td>
+            <pre><code class="language-css">                   <!--c++-->
+for (const auto& [key, value] : um) {
+    out += value*(value-1)/2;
+}
+            </code></pre>
+          </td>
+
+          <td>
+            <!--Rust-->
+            <table>
+              <tr>
+                <td>iter</td>
+                <td>
+                  <pre><code class="language-css">
+for (key, value) in hm.iter() {
+    println!("Key: {}, Value: {}", *key, *value);
+}
+                        </code></pre>
+                </td>
+              </tr>
+              <tr>
+                <td>&hm</td>
+                <td>
+                  <pre><code class="language-css">
+for (key, value) in &hm {
+    println!("Key: {}, Value: {}", key, value);
+}
+                        </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+
+          <td>
+            <pre>                 <!--Python-->
+for key,value in um.items():
+  
+            </pre>
+          </td>
+          <td>
+            <pre><code class="language-css">                   <!--Go-->
+for key, value := range hm {
+    out += (value-1)*value/2
+}
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

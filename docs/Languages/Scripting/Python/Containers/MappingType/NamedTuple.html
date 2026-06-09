@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">What</a>
+        <a href="#comprehension">Comprehension</a>
+        <a href="#enumerate">enumerate</a>
+        <a href="#removal">Removal</a>
+        <a href="#zip">Zip(iteratable)</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what">What</h2>
+        <dl>
+            A NamedTuple is a lightweight, immutable data structure in Python that allows you to create 
+            tuple-like objects with named fields. It provides a way to create simple, memory-efficient classes with named attributes.<br>
+            NamedTuples combine the best of tuples (immutability, performance) and dictionaries (named access) 
+            while maintaining a lightweight, memory-efficient structure.
+        </dl>
+
+        <pre><code class="language-css">
+from collections import namedtuple
+
+# Creating a NamedTuple
+Person = namedtuple('Person', ['name', 'age', 'city'])
+
+# Instantiating a NamedTuple
+john = Person(name='John Doe', age=30, city='New York')
+
+# Accessing fields
+print(john.name)    # Outputs: John Doe
+print(john.age)     # Outputs: 30
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Server</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+  </head>
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+  <aside class="sidebar">
+    <a href="#types">Types of Web Server</a>
+  </aside>
+
+  <main style="margin-left:200px;">
+    <h2 id="types">Types of Web Server</h2>
+    <table>
+      <tr>
+        <th></th>
+        <th>Stateful</th>
+        <th>Stateless</th>
+      </tr>
+      <tr>
+        <td>What</td>
+        <td>
+          Remembers client data state(session data, profile image etc) from one request to the next<br>
+        </td>
+        <td>
+          HTTP requests from users can be sent to any web servers, which<br>
+          fetch state data from a shared data store.
+        </td>
+      </tr>
+      <tr>
+        <td>Disadvantage</td>
+        <td>
+          Everytime request from same Client has to be sent to same server<br>
+          Adding or removing servers is much more difficult with this approach<br>
+          Challenging to handle server failures
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Advatanges</td>
+        <td></td>
+        <td>stateless system is simpler, more robust, and scalable.</td>
+      </tr>
+    </table>
+    
+    <img src="/images/webserver/web-servers-types.png" 
+    alt="Web Server" style="width:700px;height:400px;">
+
+  </main>
+
+</body>
+</html>

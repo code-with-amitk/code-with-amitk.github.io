@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    </aside>
+
+    <article style="margin-left:200px;">
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Represented by</th>
+                <th>Description</th>
+                <th>Comprehension</th>
+            </tr>
+            <tr>
+                <td><a href="Dictionary.html">Dictionary/HashMap (Mutable key-value)</a></td>
+                <td>{}</td>
+                <td></td>
+                <td>y</td>
+            </tr>
+            <tr>
+                <td><a href="OrderedDict.html">Ordered Dictionary</a></td>
+                <td>{}</td>
+                <td>Subclass of dictionary, remembers the order in which keys are inserted</td>
+                <td>y</td>
+            </tr>
+            <tr>
+                <td><a href="NamedTuple.html">NamedTuple (Immutable)</a></td>
+                <td>()</td>
+                <td>Access via dot notation, More memory-efficient, Fixed fields</td>
+                <td>n</td>
+            </tr>
+        </table>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

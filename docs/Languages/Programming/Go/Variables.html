@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Go Variables</title>
+        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/prism.css"/>
+        <!-- Add any necessary CSS and JavaScript files -->
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li>
+                <form>
+                    <input type="search" name="q" placeholder="Search site" />
+                    <input type="submit" value="Go!" />
+                </form>
+            </li>
+            </ul>
+        </nav>
+
+        <aside class="sidebar">    <!--See .sidebar in styles.css-->
+            <a href="#declaration">Declaration & Initialization</a>
+            <a href="#builtin">Built in</a>
+        </aside>
+
+        <article style="margin-left:200px;">
+            <h2 id="declaration">Variable Declaration & Initialization</h2>
+            <pre><code class="language-css">
+fun main() {
+        // Variable declaration and initialization
+        var num int = 10
+        var name string = "John Doe"
+        var flag bool = true
+        
+        // Variable declaration without initialization (zero value assignment)
+        var age int
+        var score float64
+        var isValid bool
+        
+        // Short variable declaration (with type inference)
+        count := 5
+        message := "Hello, world!"
+        isFound := false
+        
+        // Printing the variables
+        fmt.Println(num)
+        fmt.Println(name)
+}
+            </code></pre>
+
+            <h2 id="builtin">Built in variables</h2>
+            <dl>
+                - bool, string, int  int8  int16  int32  int64, uint uint8 uint16 uint32 uint64 uintptr,<br>
+                - byte{alias for uint8}, rune{alias for int32}//Represents a Unicode code point, float32 float64,<br>
+                - complex64 complex128
+            </dl>
+        </article>
+
+        <script src="/scripts/prism.js"></script>
+    </body>
+</html>

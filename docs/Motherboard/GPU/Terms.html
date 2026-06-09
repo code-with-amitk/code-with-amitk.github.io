@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VGPU Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#acc">GPU Accelration</a>
+      <a href="#how">How Oracle VirtualBox's provides 1 GPU to all guest VMs</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="acc">GPU Acceleration</h2>
+      <dl>
+        Specific tasks which can be parallelized, are offloaded from the CPU to
+        the GPU.
+      </dl>
+
+      <h3 id="how">How Oracle VirtualBox's provides 1 GPU to all guest VMs</h3>
+      <dl>
+        Hardware 3D drivers are installed in guest OS. VirtualBox adds some
+        Windows OS system files to enable Direct3D acceleration. Tunnels 3D
+        commands from the guest to the host GPU using a special driver and
+        communication channel
+      </dl>
+    </article>
+  </body>
+</html>

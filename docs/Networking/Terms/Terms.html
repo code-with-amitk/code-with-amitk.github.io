@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#ua">User Agent</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="ua">User Agent</h2>
+      <dl>
+        This is a self-identification string that a software application sends
+        to a web server
+      </dl>
+      <pre><code class="language-css">
+GET / HTTP/1.1
+Host: example.com
+Headers:
+	User-Agent: ztfp-client/1.0     &lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	Authorization: Bearer valid:alice
+	Accept-Encoding: gzip
+      </code></pre>
+      <h3>Types of UA</h3>
+      <table>
+        <tr>
+          <th>UA String</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>ztfp-client/1.0</td>
+          <td>
+            UA belongs to the IBM z/TPF (Transaction Processing Facility)
+            system<br />
+            z/TPF is a high-performance operating system used primarily by
+            industries that handle massive volumes of transactions in real-time,
+            such as airlines (for reservations) and large financial
+            institutions.<br />
+            When you see ztfp-client/1.0, it indicates that an application
+            running on an IBM mainframe is making an automated HTTP request to a
+            web service.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Mozilla/5.0 (Windows NT 10.0; Win64; x64) <br />AppleWebKit/537.36
+            (KHTML, like Gecko) <br />Chrome/123.0.0.0 Safari/537.36
+          </td>
+          <td>Chrome (Windows)</td>
+        </tr>
+        <tr>
+          <td>curl/7.68.0</td>
+          <td>cURL command line tool</td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

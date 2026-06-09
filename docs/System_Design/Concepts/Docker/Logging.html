@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Logging</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#how">Logging inside Container</a>
+      <a href="#sol1">Loki + [Promtail or Alloy] + Grafana</a>
+      <ul>
+        <li>
+          <a href="#deployment1"
+            >Deployment on local docker using docker-compose</a
+          >
+        </li>
+        <ul>
+          <li><a href="#dc">docker-compose.yml</a></li>
+          <li><a href="#config-alloy">config.alloy</a></li>
+          <li><a href="#lc">loki-config.yml</a></li>
+          <li><a href="#gds">grafana-datasource.ymll</a></li>
+        </ul>
+        <li><a href="#deployment2">Deployment inside AWS</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="how">Logging inside Container</h2>
+      <dl>
+        <b>Problem?</b> I have a small go application, which dumps logs on
+        console, But when this application runs inside container on AWS, How
+        logs can be seen?<br />
+        <b>Solution?</b> [Promtail or Alloy] + Loki + Grafana<br />
+        <b>Choosing Alloy over Promtail:</b>
+        &ensp; Promtail is a legacy log collection agent that has been replaced
+        by Grafana Alloy. <br />
+        &ensp; Promtail was designed primarily for log collection, Alloy is a
+        unified agent that collects logs, metrics, traces, and profiles &
+        actively developed.
+      </dl>
+
+      <h3 id="sol1">Solution = Alloy → Loki → Grafana</h3>
+      <dl>For No so Large applications, We can deploy this pipeline</dl>
+      <pre><code>
+                                                     ------------ logs --------------
+                                                    |                                \/
+[Go Application] --logs-->  [ Alloy ]  --logs--> [ Loki ](3100) <--HTTP GET logs-- [Grafana]
+                          (Filter, Parse,        (Cut into Chunks,                (Dashboard)
+                          Label)                  Store in organized
+                                                  manner for
+                                                  Time-range and 
+                                                  label-based queries)
+        </code></pre>
+      <dl>
+        <u>Go Application:</u> writes logs to stdout/stderr as it currently
+        does<br />
+        <u>Docker/Container Runtime:</u> Captures these stdout/stderr streams<br />
+        <u>Alloy:</u><br />
+        &ensp; Runs as a sidecar container or daemonset<br />
+        &ensp; Scrapes the container logs from the Docker log files<br />
+        &ensp; Adds labels to identify the source (container name, pod name,
+        etc.)<br />
+        &ensp; Sends logs to Loki
+        <br />
+        <u>Loki:</u> Receives, stores logs from Alloy. Indexes the logs<br />
+        <u>Grafana:</u> Connects to Loki & gets logs when user want to view the
+        logs. Provides UI for querying and visualizing logs
+      </dl>
+
+      <h4 id="deployment1">Deployment on local docker using docker-compose</h4>
+      <dl id="dc"><b>docker-compose.yml</b></dl>
+      <pre><code class="language-css">
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres # Create user with username(postgres), password(postgres)
+      POSTGRES_DB: crm     # Create database named crm
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql # For auto-creating tables
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go_app
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432 # Port on which the database is running
+      DB_USER: postgres # Username for the database
+      DB_PASSWORD: postgres
+      DB_NAME: crm
+      APP_LOG_TO: /logs/app.log # added the env variable for log file path
+    volumes:
+      - ./container_logs:/logs #/app.log  # Application will write logs to /logs/app.log(.env)
+          # Mount all files from (/logs/app.log inside container) to (./container_logs on host)
+          # so that alloy can mount container_logs folder on host to /tmp/app_logs inside alloy container
+    ports:
+      - "8080:8080"
+    depends_on:   # Create db container before app container
+      - db
+
+  loki:
+    image: grafana/loki:latest #Take image from Docker Hub
+    container_name: loki        # Name of the container
+    user: root               # Run the container as root user to avoid permission issues
+    ports:
+      - "3100:3100"         # Expose Loki on port 3100
+    volumes:
+      - ./loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - loki_data:/tmp/loki
+    command: -config.file=/etc/loki/loki-config.yaml  # Use the configuration file
+    networks:
+      - app-network
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: grafana_alloy
+    ports:
+      - 12345:12345 # Access Alloy on port http:://localhost:12345
+    volumes:
+      - ./config.alloy:/etc/alloy/config.alloy  # mount local config.alloy file to /etc/alloy/config.alloy
+      - ./container_logs:/tmp/app_logs/   # Mount folder(container_logs on host) to 
+          # folder(/tmp/app_logs inside the alloy container), so these logs can be scraped
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    depends_on:   # Create app, loki container before alloy container. in same order
+      - app
+      - loki
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    depends_on:
+      - loki
+    networks:
+      - app-network
+
+volumes:
+  # db_data volume is a named Docker volume used to persist PostgreSQL data outside the container
+  # When you first start the database, this volume is empty. PostgreSQL will initialize it with its data files
+  db_data:
+  alloy_data: {}
+  loki_data:  {}
+networks:
+  app-network:
+    driver: bridge
+        </code></pre>
+
+      <dl id="config-alloy"><b>config.alloy</b></dl>
+      <pre><code class="language-css">
+/*
+Why this file is needed? 
+- We saw in docker-compose.yml, app.log file is copied to alloy container. 
+- if logs are copied, Can't Alloy directly forward to Grafanna?
+
+go_app --logs--> Host -----logs--------> Alloy
+                  |                          |- /tmp/app_logs/
+                  |-container_logs
+
+Usage of this Alloy?
+- Filter, Parse, Label recieved application logs.
+- Decide endpoint to where application logs to be sent? To loki
+*/
+
+logging {
+  level = "info"
+  format = "logfmt"
+}
+
+/* 
+  Component-1(local.file_match) named "app_logs" 
+  - Locate the log files in alloy container
+  - Application logs are stored in /tmp/app_logs/app.log inside alloy container.
+*/ 
+local.file_match "app_logs" {   // app_logs is name of component
+  // path_targets block defines list of targets from where logs will be collected.
+  path_targets = [
+      // This is the path inside alloy container where app logs are stored
+      // We can provide generic paths also. "_path" = "/tmp/*/*.log"
+      {"__path__" = "/tmp/app_logs/app.log"},
+    ]
+    // defaults to 10 seconds. After how much time the file will be checked for new logs.
+    sync_period = "5s"
+    
+}
+
+/*
+  Component 2(loki.write) named "default"
+*/
+loki.write "default" {
+  // endpoint defines URL where logs should be sent.
+  // we can create multiple endpoints if we want to send logs to multiple places.
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+
+/*
+  Component 3(loki.source.file) named "local_files"
+  - Scrape content from File(source.file) and forward_to pipeline.
+*/
+loki.source.file "local_files" {
+  targets = local.file_match.app_logs.targets // This is list of targets to scrape
+      // Read logs from app_logs component defined above and feed into a pipeline.
+    forward_to = [loki.process.filter_logs.receiver] 
+}
+
+/*
+  Component 4(loki.process): Parse log fields, attach labels, set timestamp, 
+  then pushes output to the Loki server using loki.write
+*/
+loki.process "filter_logs" {
+  // extracts level, time, caller, and msg from the JSON log line.
+  stage.json {
+    expressions = {
+      "level"  = "level",
+      "time"   = "time",
+      "caller" = "caller",
+      "message" = "msg",      // msg field is renamed to message for clarity in the pipeline
+    }
+  }
+
+  // stage.labels block sets level and caller as labels for 
+  // efficient filtering in Grafana (e.g., {level="info"} or {caller="go-server/main.go:93"}).
+  stage.labels {
+    values = {
+      "level"  = "level",
+      "caller" = "caller",
+    }
+  }
+  // stage.timestamp converts the time field to a standard format
+  // Converts (2025-05-31T10:09:40.198+0530) to 2006-01-02T15:04:05.999Z07:00
+  stage.timestamp {
+    source = "time"
+    format = "2006-01-02T15:04:05.999Z07:00"
+  }
+  forward_to = [loki.write.default.receiver]
+}
+        </code></pre>
+
+      <dl id="lc"><b>loki-config.yml</b></dl>
+      <pre><code class="language-css">
+auth_enabled: false
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 24h
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/index
+    cache_location: /loki/index_cache
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/chunks
+        </code></pre>
+
+      <dl id="gds">
+        Grafanna will run on localhost:3000<br />
+        <b>grafana-datasource.yml</b>
+      </dl>
+      <pre><code class="language-css">
+apiVersion: 1
+datasources:
+  - name: Loki
+    type: loki
+    url: http://loki:3100
+    isDefault: true
+        </code></pre>
+
+      <dl id="runc"><b>Run Containers</b></dl>
+      <pre><code class="language-css">
+// Start docker desktop (Since docker cli will connect with docker engine)
+
+> docker-compose up -d
+[+] Running 7/7
+ ✔ Network go-server_app-network  Created                                                                          0.1s 
+ ✔ Network go-server_default      Created                                                                          0.1s 
+ ✔ Container go-server-db-1       Started                                                                          3.6s 
+ ✔ Container loki                 Started                                                                          3.6s 
+ ✔ Container grafana              Started                                                                          4.1s 
+ ✔ Container promtail             Started                                                                          3.9s 
+ ✔ Container go-server-app-1      Started                                                                          3.6s
+
+// List all containers
+> docker ps                         
+CONTAINER ID   IMAGE                    COMMAND                  CREATED              STATUS              PORTS         
+           NAMES
+6725da48c337   go-server-app            "./main"                 About a minute ago   Up About a minute   0.0.0.0:8080->8080/tcp   go-server-app-1
+650e2ca190fd   grafana/promtail:3.4.1   "/usr/bin/promtail -…"   About a minute ago   Up About a minute                 
+           promtail
+78c2aaeda9f8   grafana/grafana:latest   "/run.sh"                About a minute ago   Up About a minute   0.0.0.0:3000->3000/tcp   grafana
+48cba656a368   postgres:16              "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp   go-server-db-1
+        
+// Go inside postgres container & list tables
+> docker exec -it 48cba656a368 bash
+root@48cba656a368:/# psql -U myuser mydb
+psql (16.9 (Debian 16.9-1.pgdg120+1))
+Type "help" for help.
+
+mydb=# \dt
+           List of relations
+ Schema |     Name     | Type  | Owner
+--------+--------------+-------+--------
+ public | employee     | table | myuser
+ public | followup     | table | myuser
+ public | leads        | table | myuser
+ public | password     | table | myuser
+ public | requirements | table | myuser
+ public | tenants      | table | myuser
+(6 rows)
+</code></pre>
+
+      <dl><b>Kibana dashboard</b></dl>
+      <pre><code class="language-css">
+http://localhost:3000   [admin/admin]
+
+        </code></pre>
+
+      <h4 id="deployment2">Deployment inside AWS</h4>
+      <h5>ECS Instance 1</h5>
+      <dl>
+        Promtail runs as
+        <a href="../Container/Sidecar_Container.html" target="_blank"
+          >sidecar container</a
+        >
+      </dl>
+      <pre><code>
+[ECS Cluster]
+├── App Task
+│   ├── Go App Container
+│   └── Promtail Sidecar Container
+└── Database Task (or better yet, AWS RDS)
+    └── PostgreSQL Container (with EFS volume for persistence)
+        </code></pre>
+
+      <h5>ECS Instance-2</h5>
+      <pre><code>
+[ECS Service]
+├── Loki Container (or separate service)
+└── Grafana Container (or separate service)
+        </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

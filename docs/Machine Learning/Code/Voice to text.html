@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Voice Recognition System</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#voicertotext">Voice to Text(using python)</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="voicertotext">Voice to Text. Speak in Mic and print in text</h3>
+
+      <dl>
+        <strong>
+          <a href="/Machine%20Learning/Code/VirtualEnv.html" target="_blank"
+            >1. Create & Start the Virtual Env</a
+          >
+        </strong>
+      </dl>
+
+      <dl>
+        <strong
+          >2. Install voice recognition system with Python(SpeechRecognition,
+          PyAudio)</strong
+        >
+      </dl>
+      <pre><code class="language-css">
+(virtual_avatar) c:\Users\amit\miniconda3\envs>pip install SpeechRecognition
+..
+(virtual_avatar) c:\Users\amit\miniconda3\envs>pip install PyAudio
+..
+ERROR: Could not build wheels for pyaudio which use PEP 517 and cannot be installed directly
+            </code></pre>
+
+      <dt>
+        <strong
+          >if pyaudio is not installed, try installing using pipwin</strong
+        >
+      </dt>
+      <pre><code class="language-css">
+(virtual_avatar) c:\Users\amit\miniconda3\envs>conda install portaudio
+(virtual_avatar) c:\Users\amit\miniconda3\envs>pip install pipwin
+(virtual_avatar) c:\Users\amit\miniconda3\envs>pipwin install pyaudio
+..
+Successfully installed PyAudio-0.2.11
+            </code></pre>
+
+      <dl>
+        <strong
+          >3. Run this
+          <a
+            href="https://reintech.io/blog/how-to-create-a-voice-recognition-system-with-python"
+            target="_blank"
+          >
+            code</a
+          ></strong
+        >
+      </dl>
+      <pre><code class="language-css">
+import speech_recognition as sr
+
+recognizer = sr.Recognizer()
+
+def capture_voice_input():
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = recognizer.listen(source)
+    return audio
+    
+def convert_voice_to_text(audio):
+    try:
+        text = recognizer.recognize_google(audio)
+        print("You said: " + text)
+    except sr.UnknownValueError:
+        text = ""
+        print("Sorry, I didn't understand that.")
+    except sr.RequestError as e:
+        text = ""
+        print("Error; {0}".format(e))
+    return text
+
+def process_voice_command(text):
+    if "hello" in text.lower():
+        print("Hello! How can I help you?")
+    elif "goodbye" in text.lower():
+        print("Goodbye! Have a great day!")
+        return True
+    else:
+        print("I didn't understand that command. Please try again.")
+    return False
+    
+def main():
+    end_program = False
+    while not end_program:
+        audio = capture_voice_input()
+        text = convert_voice_to_text(audio)
+        end_program = process_voice_command(text)
+
+if __name__ == "__main__":
+    main()
+
+(virtual_avatar) c:\Users\amit\miniconda3\envs>cd c:\go-here\Code\python\virtual_avatar
+(virtual_avatar) c:\go-here\Code\python\virtual_avatar>python code.py
+Listening ..
+                </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

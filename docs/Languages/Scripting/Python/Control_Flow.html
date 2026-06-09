@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#if">if</a>
+        <a href="#for">for</a>
+        <a href="#match">match</a>
+        <a href="#range">range</a>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="if">if</h2>
+        <pre><code class="language-css">
+if x &lt; 0:
+    x = 0
+    print('Negative changed to zero')
+elif x == 0:
+    print('Zero')
+else:                           //Optional
+    print('More')
+        </code></pre>
+
+        <h2 id="for">for statement</h2>
+        <pre><code class="language-css">
+words = ['cat', 'window', 'defenestrate']  //Iterate over list
+for w in words:
+    print(w, len(w))
+
+for i in range(0, 4):                     //Iterate over range
+    print (i)           #0,1,2,3
+
+str = "abc"
+for i in reversed(str):                   //Reverse Print
+    print (i)                             //cba
+        </code></pre>
+
+        <h2 id="match">match statement</h2>
+        <pre><code class="language-css">
+def http_error(status):
+match status:
+    case 400:
+        return "Bad request"
+    case 404:
+        return "Not found"
+    case 418:
+        return "I'm a teapot"
+    case _:
+        return "Something's wrong with the internet"
+        </code></pre>
+
+        <h2 id="range">range statement</h2>
+        <dl>iterate over a sequence of numbers</dl>
+        <pre><code class="language-css">
+>>> for i in range(5):
+...     print(i)
+        </code></pre>
+
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

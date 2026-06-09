@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hash MessageDigest MAC HMAC</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="stylesheet" href="/css/prism.css"/>
+</head>
+
+
+<body>
+  <nav class="navbar">    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li>
+        <form id="searchForm">
+            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+        </form>
+        </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">    <!--See .sidebar in styles.css-->
+    <a href="#hash">Hash_MessageDigest</a>
+    <a href="#algos">Hashing Algorithms</a>
+    <ul>
+      <li>MD4, MD5</li><br>
+      <li>SHA1=128</li><br>
+      <li>SHA2=256</li><br>
+      <li>SHA3=512(Keccak)</li><br>
+      <li>Argon2,Argon2i,Argon2id</li><br>
+      <li>bcrypt</li>
+    </ul>
+    <a href="#mac">MAC</a>
+    <a href="#hmac">HMAC</a>
+  </aside>
+
+  <article style="margin-left:200px;">
+    <h3 id="hash">Hashing or Message Digest</h3>
+    <dl>
+      Hashing is method to achieve <a href="/Networking/OSI-Layers/Layer-3/Security/Hash MAC.html" target="_blank">Integrity</a>
+      <br><br>
+    
+      <b>What is Hashing?</b>
+      Transforming String into FIXED-LENGTH string Value. From Hash Message cannot be retrieved back. 
+      Hash function should not generate same value for different input strings.<br>
+      MD5 started producing that and hence considered broken.
+    </dl>
+    <pre><code class="language-css">
+      Kumar >  | Hash Function |  > random_string
+    </code></pre>
+
+    <dl><strong>Why to use Hash</strong></dl>
+    <dd>
+      For security, password Hash is stored. Whenever someone enters password hashes are compared.
+    </dd>
+
+    <dl><strong>How GPU can crack a Hash?</strong></dl>
+    <dd>
+      GPUs are particularly effective at performing parallel computations. <br>
+      They contain numerous cores that can execute instructions simultaneously, making them well-suited for tasks 
+      like hashing, which involve performing the same operation on multiple inputs simultaneously.<br>
+      GPUs can test a large number of password guesses(Brute force) in parallel, making them much faster at 
+      trying different combinations.<br>
+      But <a href="#argon">Argon2</a> hash is GPU resistant.
+    </dd>
+    
+    <h3 id="algos">Hashing Algorithms</h3>
+    <table>
+      <tr>
+        <th>Hash Algorithm</th>
+        <th>Detials</th>
+      </tr>
+      <tr>
+        <td>SHA1, SHA0(broken)</td>
+        <td>Published: 1995. Input: 2128 bit. Output Hash(bits): 160</td>
+      </tr>
+      <tr>
+        <td>SHA256(not broken)</td>
+        <td>Published: 2012. Input: 2128 bit. Output Hash(bits): 256</td>
+      </tr>
+      <tr>
+        <td>SHA3_512(Keccak)</td>
+        <td>Published: 2015. Input: 264 bit. Output Hash(bits): 512</td>
+      </tr>
+      <tr>
+        <td>MD4,MD5(broken)</td>
+        <td>Published: 2015. Input: Infinite. Output Hash(bits): 128
+            <br>
+            <b>MD4 Implementation</b><br>
+            <pre><code class="language-css">
+1. Take four 32-bit words, initialized to fixed constants.
+C1(01 23 45 67), C2:(89 ab cd ef), C3(fe dc ba 98), C4(76 54 32 10)
+
+2. Take 4 Functions
+    f(x,y,z) = (x & y) | ((~x) & z)
+    g(x,y,z) = (x & z)| (y & (~z))
+    h(x,y,z) = x ^ y ^ z
+    i(x,y,z) = y ^ (x | (~z))
+
+3. Break input into 32-bit words
+                Input(512 bits)  ->  |Break into 16 pieces| ->     m1 .. m16
+if input is not 512 bit pad it
+
+4. Perform 4 or 16 round Operations.
+//AM: Addition Modulo
+  Round-1:    F(K2,K3,K4) ->  AM ->  AM -> |Rotate left bit by s places| ->  AM -> K2
+                              /\     /\                                      /\
+                              C1     m1                                      C2
+  Round-2: For m2 and so on..
+            </code></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Argon2</td>
+        <td>
+  <b>How Argon2 is GPU resistant?</b><br>
+    <dd>
+    <u>1. Memory Hardness:</u><br>
+    Argon2 is a memory-hard hashing algorithm, meaning that it requires a lot of memory to be computed.<br>
+    Since GPU typically have less memory available compared to CPUs. As a result, even though GPUs can perform computations quickly, 
+    they may struggle with the memory requirements of Argon2.
+    </dd>
+    <dd>
+    <u>2. Parallelism resistance:</u><br>
+    While GPUs excel at parallel computations, Argon2 is designed to require significant serial computation as well. <br>
+    This means that even though GPUs can try many password guesses in parallel, they may still be limited by the sequential nature of certain parts of the Argon2 algorithm.
+    </dd>
+    <dd>
+    <u>3. Configuration parameters</u><br>
+    Argon2 allows for the adjustment of parameters(such as the memory cost, time cost, and parallelism degree)<br>
+    By appropriately configuring these parameters, it's possible to tune Argon2 to be less susceptible to GPU-based attacks
+    </dd>
+
+        <b>Argon2, Argon2i, Argon2id</b><br>
+          <table>
+            <tr>
+              <th></th>
+              <th>Usage/Feature</th>
+              <th>Resistant to</th>
+            </tr>
+            <tr>
+              <td>argon2</td>
+              <td>preferred for password hashing and key derivation</td>
+              <td>because it's resistant to side-channel attacks</td>
+            </tr>
+            <tr>
+              <td>argon2d</td>
+              <td></td>
+              <td>more resistant to GPU attacks</td>
+            </tr>
+            <tr>
+              <td>argon2id</td>
+              <td>hybrid of Argon2i and Argon2d</td>
+              <td></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>  <!--bcrypt-->
+        <td>
+          bcrypt(based on Blowfish cipher)<br>
+          Output: Fixed 60 characters
+        </td>
+        <td>
+          <b>Go Code to produce bcrypt hash</b><br><br>
+          <i>See everytime different hash is produced even for same password</i><br>
+          <table>
+            <tr>
+              <td><pre><code class="language-css">
+package main
+import (
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
+)
+func main() {
+	password := []byte("password")
+	hashedPassword, err := bcrypt.GenerateFromPassword(password, 10)
+	if err == nil {
+		fmt.Println(string(hashedPassword))
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		fmt.Println("Password mismatch", err)
+	} else {
+		fmt.Println("Password mismatched successfully")
+	}
+}
+> go run main.go
+$2a$10$CaqDrA3GmB9LkbBuUxuohO1YekAW1h4HeWqhSOY0lYav3OZAragFC
+Password mismatched successfully
+> go run main.go
+$2a$10$Hy1V1itBzEe7c7eINFKADenbFWapCX8DKp6fgMlL9XbdL9Ky2vMx6
+Password mismatched successfully
+> go run main.go
+$2a$10$a89EOl.nq53g2AGA5kBAgertEqSyVZyrcocC..wMTNJnHcYYmjsN.
+Password mismatched successfully
+              </code></pre></td>
+              <td>
+                <b>Different parts of the hash:</b><br>
+                  $2a$10$CaqDrA3GmB9LkbBuUxuohO1YekAW1h4HeWqhSOY0lYav3OZAragFC<br>
+
+                  <pre><code class="language-css">
+$2a       $10   $Hy1V1itBzEe7c7eINFKADe  nbFWapCX8DKp6fgMlL9XbdL9Ky2vMx6
+│         │     │                        │
+Algorithm Cost  Salt (22 chars)          Hash (31 chars)
+                  </code></pre>
+                  <table>
+                    <tr>
+                      <td>2a</td>
+                      <td>Version of bcrypt</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>Cost factor. This means 2^10 = 1024 iterations. How computationally expensive the hash is</td>
+                    </tr>
+                    <tr>
+                      <td>Hy1V1itBzEe7c7eINFKADe<br>(22 Characters)</td>
+                      <td>Salt. Randomly generated for each hash</td>
+                    </tr>
+                    <tr>
+                      <td>nbFWapCX8DKp6fgMlL9XbdL9Ky2vMx6<br>(31 characters)</td>
+                      <td>Hash. The actual hash of the password</td>
+                    </tr>
+                  </table>
+                  <br><br>
+                <b>Why different hash is produced every time?</b><br>
+                &ensp; bcrypt automatically generates a new random salt each time you hash a password.<br>
+                &ensp; The salt is stored as part of the hash (the first 22 characters after the version/cost info)
+                <br><br>
+
+                <b>How Verification Works?</b><br>
+                &ensp; extracts the version,cost,salt from the stored hash<br>
+                &ensp; Hashes the input password using: same version,cost,salt<br>
+                &ensp; Compares the newly generated hash with the stored hash
+              </td>
+            </tr>
+          </table>
+
+          
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="mac">MAC</h3>
+    <dd>
+      Examples: CMAC, SHA1-HMAC, MD5-HMAC, UMAC
+    </dd>
+    <pre><code class="language-css">
+    (Message + Pvt Key) > |Hash function| > MAC
+    </code></pre>
+
+    <h3 id="hmac">HMAC(Hashed MAC)</h3>
+    <dd>More complex way of calculating MAC</dd>
+    <pre><code class="language-css">
+      secret Key ->(XOR) <- Inner Pad     Secret Key-> (XOR) <- Outer Pad
+                    \/                                 \/
+                    M1                                 M2
+            |M-1| Message | M2 |      
+    </code></pre>
+
+  </article>
+  <script src="/scripts/prism.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+</html>

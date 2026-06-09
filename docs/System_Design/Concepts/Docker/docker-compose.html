@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>docker compose</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <!-- Add any necessary CSS and JavaScript files -->
+</head>
+<body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <form id="searchForm">
+                <input type="search" id="searchInput" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">    <!--See .sidebar in styles.css-->
+        <a href="#what">Docker compose</a>
+        <a href="#ex">Examples</a>
+        <ul>
+            <li><a href="#ex1">Golang_app, postgresDB</a></li>
+        </ul>
+    </aside>
+
+    <article style="margin-left:200px;">
+        <h2 id="what"><a href="https://docs.docker.com/compose/" target="_blank">Docker Compose</a></h2>
+        <dl>
+            We can create multiple containers(eg: go, postgres) from single file using docker compose. 
+            Each container(services, networks, and volumes) have 1 entry inside this file<br>
+            Then, with a single command, you create and start all the services from your configuration file<br>
+            Docker Compose will create and manage one container per service, as recommended by docker<br>
+            Services can be scaled up (except for stateful services like databases)
+        </dl>
+
+        <h2 id="ex">Examples</h2>
+        <h3 id="ex1">Container-1(Golang app), Container-2(postgres DB)</h3>
+        <h4>docker-compose.yml</h4>
+        <pre><code class="language-css">
+$ cat docker-compose.yml
+
+version: '3.8'      #latest stable version that supports all modern Docker features
+
+services:           # Defines the containers that will be created
+  postgres:
+    image: postgres:latest                      # Uses official Postgres image
+    container_name: postgres                    # Explicit container name
+    environment:                                # Environment variables
+      POSTGRES_USER: youruser                   # Database username
+      POSTGRES_PASSWORD: yourpassword           # Database password
+      POSTGRES_DB: yourdb                       # Default database name
+    ports:
+      - "5432:5432"                             # Maps host:container ports
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent storage
+    networks:
+      - go-postgres-net                         # Attaches to precreated network
+    healthcheck:                                # Checks if DB is ready
+      test: ["CMD-SHELL", "pg_isready -U youruser -d yourdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .                                    # Builds from Dockerfile in current directory
+    container_name: go-app
+    ports:
+      - "8080:8080"                             # Exposes app port
+    environment:                                # DB connection vars
+      DB_HOST: postgres                         # Uses service name as hostname
+      DB_USER: youruser
+      DB_PASSWORD: yourpassword
+      DB_NAME: yourdb
+      DB_PORT: 5432
+    depends_on:                                 # Startup order
+      postgres:
+        condition: service_healthy              # Waits until DB is ready
+    networks:
+      - go-postgres-net                         # Same network as DB
+
+volumes:
+  postgres_data:                                # Named volume for DB persistence
+
+networks:
+  go-postgres-net:
+    external: true                              # Uses our pre-created network
+        </code></pre>
+
+        <h4>Create containers</h4>
+        <pre><code class="language-css">
+// Build or rebuild services. Forces a rebuild of images (even if they exist)
+$ docker-compose build
+
+// Start containers in background. starts all services in the compose file
+// -d: background
+$ docker-compose up -d
+
+// Show status of containers
+$ docker-compose ps
+NAME              IMAGE           COMMAND                  SERVICE   CREATED         STATUS                  PORTS
+go-server-app-1   go-server-app   "./main"                 app       2 seconds ago   Up Less than a second   0.0.0.0:8080->8080/tcp
+go-server-db-1    postgres:16     "docker-entrypoint.s…"   db        32 hours ago    Up Less than a second   0.0.0.0:5432->5432/tcp
+
+// Remove data stored in persistant volume. if you want to rebuild your database
+# docker volume rm go-server_db_data 
+
+// Stop and Delete containers,networks
+$ docker-compose down
+        </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+</body>
+</html>

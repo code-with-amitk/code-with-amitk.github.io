@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Log Storage</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/System_Design/">Contact</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#req">Requirements</a>
+      <a href="#hld">HLD</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Log management Service</h2>
+      <dl>
+        Design a service that collects Logs from network devices(firewalls,
+        routers, switches) and supports full text search over ingested log
+        corpus.
+      </dl>
+
+      <h2 id="req">Requirements</h2>
+      <h3>Functional</h3>
+      <dl>
+        1. Inject (POST): Accep a batch of log events(JSON) from devices, return
+        an injestion acknowledgment.<br />
+        2. Search: Accept time range, filter parameters and full text query,
+        return matching log entries with parameters<br />
+        3. Alerts (Management): Register or update an alert rule(eg: regex match
+        or threshold over time window); return alert<br />
+        4. GET alerts/[alert id]/status: Return current status of the
+        alert(active/inactive), recent firing timestamp
+      </dl>
+
+      <h3>Non Functional</h3>
+      <dl>
+        <b>High Throughput:</b> System should injest logs from tens of thousands
+        of devices, sending millions of events per second
+      </dl>
+
+      <h2 id="hld">HLD</h2>
+
+      <img
+        src="/images/System_Design/Log_Management_Service.png"
+        alt="log management service"
+        style="width: 700px; height: 800px"
+      />
+
+      <h3>A. Injestion Layer</h3>
+
+      <h4>A1. Ingestion Service (The "Validator & Router")</h4>
+      <dl>
+        Receive a raw string, turn it into a structured object(JSON)+add meta
+        data unique uuid<br />
+        <b>Ingestion Service writes to Kafka(not the database)</b> This is
+        because no database can handle the raw, unbuffered "firehose" of a
+        million writes per second without a queue in front of it. <br />
+        <u>Functions of Injestion Service:</u><br />
+        1. Parse: It breaks the string into a JSON object<br />
+        2. Enrich: It adds metadata (like the IP address of the device or a
+        unique log_id)<br />
+        3. Route: It pushes the log to a Kafka topic.<br />
+        <pre><code class="language-css">
+Input= "tenant-A 1707312000 ERROR auth-mod Login failed for user 123"
+Output:
+{
+  "tenant": "tenant-A",
+  "timestamp": "2026-02-07T12:00:00Z",
+  "level": "ERROR",
+  "module": "auth-mod",
+  "message": "Login failed for user 123",
+  "ingest_id": "uuid-987"
+}
+            </code></pre>
+      </dl>
+
+      <h3>B. Processing & Storage Layer</h3>
+      <h4>B1. Indexer Service (The "Search Engine Writer")</h4>
+      <dl>
+        It consumes from Kafka topic and prepares data for
+        OpenSearch(SSD-based).<br />
+        - Since SSD is expension, Index all logs for the last 7 days.<br />
+        - OR, index only Critical/Error/Warn for 30 days and ignore "Debug"
+        entirely.
+      </dl>
+
+      <h4>B2. Storer Service (The "Archivist")</h4>
+      <dl>
+        Stores everything. It writes the raw JSON to S3 (Cold Store) in
+        compressed formats like Parquet.<br />
+        <u>Why store in cold Store/S3?</u> If OpenSearch crashes or you need to
+        perform a "Forensic Audit" from a year ago, you go to S3. It is 1/10th
+        the cost of OpenSearch.<br />
+        It waits until it has a large chunk of data (e.g., 100MB or 5 minutes of
+        logs) and uploads a single file to:
+        s3://logs/tenant-A/2026/02/07/logs_1200.parquet.
+      </dl>
+
+      <h3>C. Alerting Layer</h3>
+      <dl>
+        Alerting usually happens in one of two ways: Real-time or Scheduled.
+      </dl>
+      <h4>C1. Stream Processing Service(Flink/Spark Streaming)</h4>
+      <dl>
+        For "Real-time" alerts (e.g., a regex match), a service consumes
+        directly from Kafka, evaluates the rule, and triggers an alert
+        immediately.
+      </dl>
+
+      <h4>C2. Query-Based Alerting Service</h4>
+      <dl>
+        For "Threshold" alerts (e.g., "more than 500 errors in 5 minutes"), a
+        service periodically runs a count query against the Search Engine.
+      </dl>
+
+      <h4>C3. Alert State Store</h4>
+      <dl>
+        A fast Key-Value store (like Redis or DynamoDB) to track the
+        [alert_id]/status (active/inactive) and firing timestamps.
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

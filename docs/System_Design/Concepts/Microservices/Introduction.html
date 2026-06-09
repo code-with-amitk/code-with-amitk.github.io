@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Microservices</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">Microservice?</a>
+      <ul>
+        <li><a href="#adv">Advantages?</a></li>
+        <li><a href="#disadv">Disadvantages?</a></li>
+      </ul>
+      <a href="#mono">Deployment Monolith</a>
+      <ul>
+        <li><a href="#monoadv">Advantages?</a></li>
+        <li><a href="#monodisadv">Disadvantages?</a></li>
+        <li>
+          <a href="#monolithsituation"
+            >Situations where monolithic is suitable</a
+          >
+        </li>
+      </ul>
+      <a href="#comp">Microservice vs Deployment Monolith</a>
+      <a href="#microservicesdp">Microservices Design Patterns</a>
+      <a href="Event Driven Architecture.html"
+        >Event Driven Architecture (EDA)</a
+      >
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="what">What is Microservices</h2>
+      <dl>
+        Bigger project is broken into independent modules/processes(called
+        microservice) running on independent VM or Docker container. Size of
+        microservices can vary from 100 LOC to 10k.<br />
+        Microservices are stateless because new MS boots in to serve existing
+        request, it should not care about states.
+      </dl>
+      <h4 id="adv">Advatanges of Microservices</h4>
+      <dl>
+        <b>1. Independent deployble modules:</b> All teams can work
+        independently of each other. Teams can make their own technology
+        decisions.<br />
+        <b>2. Adopting New Technology:</b> Developers can employ a completely
+        new technology stack (without affecting the others).<br />
+        <b>3. Easy replacement:</b> Complete microservice can be re-engineered
+        or replaced easily, without affecting other microservices<br />
+        <b>4. Resilience:</b> If 1 microservice of a system fails, failure will
+        not cascade to rest of the system. Rest of system can carry on
+        working.<br />
+        <b>5. Scaling:</b> Each microservice can be scaled independently.
+      </dl>
+      <h4 id="disadv">Disadvatanges of Microservices</h4>
+      <dl>
+        <b>1. Increased Operation effort:</b> MS system have many more units wrt
+        deployment monolith hence requires larger operations efforts<br />
+        <b>2. Increased Latency:</b> MS communicate over network, hence will
+        take more time wrt file based communication.<br />
+        <b>3. Testing all microservice together:</b> if 1 microservice is
+        broken, it will break whole system.
+      </dl>
+
+      <h2 id="mono">Deployment Monolith</h2>
+      <dl>All components are integrated into a single codebase.</dl>
+      <h4 id="monoadv">Advantages of Monolith</h4>
+      <dl>
+        <b>1. Simplicity in Development:</b> With everything in one place,
+        development is often faster and simpler, making it easier for new team
+        members to onboard<br />
+        <b>2. Ease of Deployment:</b> Deploying a monolithic application
+        involves managing fewer moving parts<br />
+        <b>3. Simplified Testing:</b> all components are part of a single unit,
+        allowing for efficient end-to-end testing without complex inter-service
+        communication<br />
+        <b>4. Low Latency:</b> Since all components run within the same process,
+        IPC takes less time.
+      </dl>
+      <h4 id="monodisadv">Disadvantages of Monolith</h4>
+      <dl>
+        <b>1. Scalability Challenges:</b> If 1 module need more resources,
+        entire application must be scaled up, since other modules might not
+        function with new resource, this leads to unneccessary time wastage.<br />
+        <b>2. Slower Development Speed:</b> Dev1 working on part1, dev2 on
+        part2. Integration testing might need more time. dev1 might use lib1 and
+        dev2 lib2<br />
+        <b>3. Technology Constraints:</b> challenging to adopt new technologies
+        or frameworks without significant rework<br />
+        <b>4. High Dependency Risks:</b> An issue in one component can affect
+        the entire application’s functionality.
+      </dl>
+      <h4 id="monolithsituation">Situations where monolithic is suitable</h4>
+      <dl>
+        <b>1. Startups and Small Teams:</b> Small teams (2 to 5 members), a
+        monolithic architecture allows for faster development and deployment<br />
+        <b>2. Proof of Concept Development:</b> Creating MVP(Minimum Viable
+        Product)<br />
+        <b>3. Simple Non-Scalable Application:</b> If application has simple
+        functionality and does not have complexity or scalability demands<br />
+        <b>4. Min Latency required:</b> Spacecraft system. A delay of
+        microseconds b/w component communication is not acceptable<br />
+        <b>5. Less Operational Complexity:</b> For systems which need less
+        Operational complexity, monolith is preferred.
+      </dl>
+
+      <h2 id="comp">Microservice vs Deployment Monolith</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Microservice</th>
+          <th>Monolith</th>
+        </tr>
+        <tr>
+          <td>CI/CD pipeline</td>
+          <td>Smaller</td>
+          <td>
+            Huge. Time taken to execute CI/CD is big. Machine needed to build
+            CI/CD should be high end
+          </td>
+        </tr>
+        <tr>
+          <td>Debugging</td>
+          <td>Easy. Memory leak in MS will crash MS only</td>
+          <td>
+            Hard. Memory leak in monolith will crash whole system & hard to
+            debug
+          </td>
+        </tr>
+        <tr>
+          <td>Communication</td>
+          <td>network. Add latency</td>
+          <td>files, IPC</td>
+        </tr>
+        <tr>
+          <td>Stateless</td>
+          <td>Yes</td>
+          <td>No. Modules will be tightly coupled</td>
+        </tr>
+        <tr>
+          <td>security</td>
+          <td>More. since all MS are isolated from each other</td>
+        </tr>
+        <tr>
+          <td>delivery to Market</td>
+          <td>Fast</td>
+          <td>slow</td>
+        </tr>
+        <tr>
+          <td>Complexity</td>
+          <td>Small code, easy to understand</td>
+          <td>Huge code, tough to correlate</td>
+        </tr>
+        <tr>
+          <td>Database</td>
+          <td>Each should have its own DB or atleast its own DB schema.</td>
+          <td>Might use common</td>
+        </tr>
+      </table>
+    </main>
+  </body>
+</html>
