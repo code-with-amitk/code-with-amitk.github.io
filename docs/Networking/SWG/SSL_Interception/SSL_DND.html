@@ -24,8 +24,11 @@
     </nav>
 
     <aside class="sidebar">
-        <a href="#what">What is SSL DND?</a>
-        
+        <a href="#what">SSL DND?</a>
+        <ul>
+            <li><a href="#ch">Characteristics</a></li>
+            <li><a href="#flow">Flow</a></li>
+        </ul>
     </aside>
 
     <article style="margin-left: 200px">
@@ -36,14 +39,14 @@
             destination without terminating the TLS session.
         </dl>
 
-        <h3>Key Characteristics</h3>
+        <h3 id="ch">Key Characteristics</h3>
         <dl>
             * Zero Visibility: The proxy does not possess the destination's private keys and cannot inspect the encrypted payload.<br>
             * End-to-End Integrity: The TLS handshake occurs directly between the client and the remote server, ensuring that certificate validation and encryption remains unbroken.<br>
             * SNI-Based Routing: While the payload is opaque, the proxy uses the Host header from the CONNECT request (and optionally the SNI in the Client Hello) to perform DNS resolution and routing.
         </dl>
 
-        <h3>Flow</h3>
+        <h3 id="flow">Flow</h3>
         <dl>
             There are 2 distinct TCP legs.<br>
             <b>1. Inbound Leg:</b> Proxy accepts a TCP connection on the listener port and parses the initial HTTP CONNECT header.<br>

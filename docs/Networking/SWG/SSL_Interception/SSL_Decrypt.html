@@ -25,7 +25,11 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="#what">What is SSL Decrypt</a>
+      <a href="#what">SSL Decrypt</a>
+      <ul>
+        <li><a href="#ch">Characteristics</a></li>
+        <li><a href="#flow">Flow</a></li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
@@ -35,27 +39,26 @@
         secure web gateways (such as Netskope, Zscaler, Palo Alto, etc.) to
         inspect the contents of HTTPS traffic that would otherwise be encrypted
         and unreadable.<br />
-        Core Idea is: The proxy temporarily terminates the encrypted connection
-        from the client, decrypts the traffic, inspects it, and then creates a
-        new encrypted connection to the destination server.<br />
-        2 encrypted channels exist. 1 from Client to proxy other from Proxy to
+        Core Idea is: <br>
+        - The proxy temporarily terminates the encrypted connection
+        from the client, decrypts the traffic, inspects it<br>
+        - Proxy then creates a new encrypted connection to the destination server.<br />
+        - 2 encrypted channels exist. 1 from Client to proxy other from Proxy to
         Server.<br />
         Browser <--TLS--> Proxy <--TLS--> Google
       </dl>
 
-      <h3>Key Characteristics</h3>
+      <h3 id="key">Key Characteristics</h3>
       <dl>
-        * Zero Visibility: The proxy does not possess the destination's private
-        keys and cannot inspect the encrypted payload.<br />
-        * End-to-End Integrity: The TLS handshake occurs directly between the
-        client and the remote server, ensuring that certificate validation and
-        encryption remains unbroken.<br />
-        * SNI-Based Routing: While the payload is opaque, the proxy uses the
-        Host header from the CONNECT request (and optionally the SNI in the
-        Client Hello) to perform DNS resolution and routing.
+        * Forged Leaf Certificate: Proxy terminates the Client TLS Connection using its own
+        forged leaf certificate.<br />
+        * Seperate TLS Connections: Proxy opens a new TLS connection with upstream server,
+        and TLS connection with client. It helps inspecting the packet in both directions<br />
+        * Proxy Root CA Installed on Client: For client to trust forged certificate, proxy's
+        ROOT CA certificate must be installed on Browser Client's Trust Store.
       </dl>
 
-      <h3>Flow</h3>
+      <h3 id="flow">Flow</h3>
       <dl>
         1. Client Requests a Website (Browser → https://google.com)<br />
         2. Proxy Intercepts the traffic<br />
@@ -69,6 +72,93 @@
         inspect<br />
         7. After inspection, Proxy encrypts again and sends traffic to Google.
       </dl>
+    <img 
+        src="//www.plantuml.com/plantuml/png/XLJDRjj64BxlKtnmBb9jAVvn2fI0YiYC6nkr5S9K3mLyMPCZSI5gbzbTEHAA0Ztr0Oe-GHyjJzBXigRNZjFuP0rdlftlcs_chVFI-isw5bxvcj1OiztXynz_8y-lSAazsO8Qhup6uBofQ4rMraYdkBwSNm-5S2kb6sdb6eu-RaWNDBNMV9fNgbXfSWx7KSgPsMQoB9LUukXG25buOx5tnlcEB5uZhHLflmVfa0ekyQfGZTGUUrdRLlYGuTNShAKtJnFYtZg0ALxLQbdvJEdLqzobCSkQneLPXymShzvR8lqhrRNv9CHaWgoIZd2K8FqmcvsdSymtMbEDdFocmMGYH8hHZyWINCpdMP_r29oSdfw832DEIXCS7nuYDOnG127FMVExMhcAobizcASPV0Tl6j87q0RpgnmxyiEecUC4dJmZfqeA6HTIbwwIAy8Ww0CMrBMCMCrxiiEuqL3G0LoqF378PvUOOEzEwbMGOjZEGzrBJyY4DfvWM_bW5ctvU_8fiOOBLN36O7YhG_rJCMdhBODGEHOjUUO-JN3J-i9vr2GNA1W32sCHr_KFS_wpbpa078sHLbIiKCYY8WuSSw3z5slb73x_-HUtfyaomi-q6sIZupVV3mLmCiRspU4FuzGIVuhR5-Z-qjdaiOy3vDCdln-oPiPF5vxiPF-eweENpcqu5Fkk-zI-V3f6pjucA8skQT8bMcg2VJdg9lAThzquwWg_1OsIo4RuNPGKgzDxAimp3tFkvhb_gsE6pvWvjTHKucu7YXeUjbKHo3kZgJTCPnOMz7nRL58l2VluIUbWs_-cc_I1Rco6WP0Uy8fEFswa0Ave4VcL7dq_5a3dsP8AkskyGn7U0pjemHp6lMBH3fma-ALntf9S__y2T5XX0RfMymJjdXNT4cB_g-lmA5gy4Bd8kwcze3jYsH_BWzLPO3pJz_bgzKBSorgLZE70_EfGBW2vb4ex3xTpdjOyCznjT5bJA-3DGrvhNEPj2RCFSoRPA9u8u0ryHUswBQaCYU6m6rtlm7G5e1msZifmBsUl6IMMlHFk6qReTNd12Tb1tZlXXWb_omg5r62oJJkXpSESl_H3j15vP8xJ16UgLBOxigpCPGV5Fn0VmdCT34TbkDtzUHeqDIljQUiXssL_CERmgmFZzag7lYmH05ZWVv2PMXLCfxrPVV3TLNQ0UPx3CSq-UiscL7sVFSTU-niQqOlzzi9_oSSrHZlgBqMCyJmdrZ8JR_dvpRh-5m00"
+        alt="SSL_DND" style="width:700px;height:1200px;">
+    <pre class="puml" visibility: hidden>
+@startuml
+title proxy — SSL Interception (Ephemeral CA MITM)
+
+skinparam sequenceArrowThickness 2
+skinparam BoxPadding 10
+
+actor "Browser / Client" as C
+participant "Proxy" as P #Tomato
+participant "Ephemeral CA" as CA #lightPink
+participant "google.com" as S #GreenYellow
+
+== Phase 1: CONNECT Tunnel Setup ==
+
+C -> P: HTTP CONNECT google.com:443
+P --> C: 200 Connection Established\n(TCP tunnel open, no TLS yet)
+
+== Phase 2: Client-side TLS Handshake (Proxy acts as server) ==
+
+C -> P: TLS ClientHello (SNI = "bank.com")
+activate P
+note right of P: GetCertificate()\nSNI = "google.com" extracted.
+
+P -> CA: Request leaf cert for "google.com"
+activate CA
+note right of CA
+  1. Check cache
+  2. Cache miss → GenerateKey(P-256)
+  3. x509.CreateCertificate(
+       CN=google.com, SAN=google.com,
+       NotAfter=+1h,
+       Issuer=Ephemeral CA
+     )
+  4. Store in cache
+end note
+CA --> P: *tls.Certificate { leaf: google.com }
+deactivate CA
+
+P --> C: TLS ServerHello +\nCertificate(CN=google.com, signed by ephemeral CA) +\nServerHelloDone
+C -> P: ClientKeyExchange + Finished
+P -> C: Finished
+note over C,P #Aqua
+  Left-side TLS established.
+  Proxy decrypts client traffic.
+end note
+
+== Phase 3: Upstream TLS Handshake (Proxy acts as client) ==
+
+P -> S: TCP connect + TLS ClientHello (SNI = "google.com")
+activate S
+S --> P: TLS ServerHello + Certificate(google.com cert) + ServerHelloDone
+note right of P
+  Proxy validates real cert
+  against system CA bundle.
+  Real cert SANs are NOT copied
+  to the forged cert — only SNI
+  is used as CN/SAN.
+end note
+
+P -> S: ClientKeyExchange + Finished
+S --> P: Finished
+note over P,S #Aqua
+  Right-side TLS established.
+  Proxy can inspect upstream traffic.
+end note
+deactivate S
+
+== Phase 4: Bidirectional Inspection ==
+
+C -> P: Encrypted HTTP Request (plaintext after decrypt)
+note right of P
+  Proxy reads plaintext:
+    • Policy check
+    • DLP, TSS scan
+    • MCP inspection
+end note
+P -> S: Re-encrypted HTTP Request
+S --> P: Encrypted HTTP Response
+P --> C: Re-encrypted HTTP Response
+
+deactivate P
+@enduml
+    </pre>
+
     </article>
     <script src="/scripts/prism.js"></script>
   </body>
