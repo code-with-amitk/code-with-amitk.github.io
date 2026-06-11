@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SSL DND(Do Not Decrypt)</title>
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">    <!--See .navbar in styles.css-->
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Our team</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="/Networking/index.html">Back</a></li>
+          <li>
+            <form>
+                <input type="search" name="q" placeholder="Search site" />
+                <input type="submit" value="Go!" />
+            </form>
+           </li>
+        </ul>
+    </nav>
+
+    <aside class="sidebar">
+        <a href="#what">What is SSL DND?</a>
+        
+    </aside>
+
+    <article style="margin-left: 200px">
+        <h2 id="what">SSL DND(Donot Decrypt)</h2>
+        <dl>
+            In SSL-DND mode, the proxy operates as a transparent Layer 4 tunnel. It utilizes the standard 
+            HTTP CONNECT method to establish a bi-directional byte-stream between the client and the 
+            destination without terminating the TLS session.
+        </dl>
+
+        <h3>Key Characteristics</h3>
+        <dl>
+            * Zero Visibility: The proxy does not possess the destination's private keys and cannot inspect the encrypted payload.<br>
+            * End-to-End Integrity: The TLS handshake occurs directly between the client and the remote server, ensuring that certificate validation and encryption remains unbroken.<br>
+            * SNI-Based Routing: While the payload is opaque, the proxy uses the Host header from the CONNECT request (and optionally the SNI in the Client Hello) to perform DNS resolution and routing.
+        </dl>
+
+        <h3>Flow</h3>
+        <dl>
+            There are 2 distinct TCP legs.<br>
+            <b>1. Inbound Leg:</b> Proxy accepts a TCP connection on the listener port and parses the initial HTTP CONNECT header.<br>
+            <b>2. Resolution:</b> Proxy performs an asynchronous DNS lookup for the requested target.<br>
+            <b>3. Outbound Leg:</b> Proxy initiates a secondary TCP handshake with the target IP on the external interface (eth0).<br>
+            <b>4. Promotion:</b> Upon successful upstream connection, the proxy returns 200 Connection Established and promotes the sockets to a bi-directional "pipe."
+        </dl>
+        <img 
+        src="//www.plantuml.com/plantuml/png/XLHXRzem4FsUNt5gfGaa6YKX7IKQKrdQhTKcnWJLD8alNh12j62diJF6r1_V8pQo8wCY14GlxzwTxzxvLaXIosPRUXN-5rbH4IRX8YqBokIAXT783_0J9kCW22w02CZQLrtwlER_zh2WzLzQjoJHFdP9ZqpIcf7ooq_K3Vpe-bf_upOattNfEUTvIVsCRv4UHyWR-k4uyiCuYUDX6w8edZUPz6HM-KBMb6o1FiFxFhoyG1U4KHzQj5dRQ70I3VkJYUUHKiBbfq8yDnIMwHo6i2Dxs12s5XloXmxWORcS3s3vRG4hjcBWLE4nBYbmRCMnRTs6zchKujk-HzaQ3bmhGBVG1Dm4Du4XOcs7cZob2rSVTG0aiFWrEy8VhZhm0ARfrnCXBOpIwiXuAbStWVJxR7QVBi4CvZ08JsiWKOKeCHUDWW1IpXZSe-L-buNOqBN9YJqyLLUge0TQbXnwWXKJaxtl9j4ML7mKjn9Sfdl2u6wsKDrzkfixCxS5yrtIadyqjDu3pdPgdTlBTwPAcrTJKHt8NRzQHKp_DpLrV6GSfEfl-qGpAK1oUAfqYUyWfnBMH1B5TUnzmZmZh0DB2FquICPXzARXz3QvksR8HzUPHkaePJg5ekbiT63RmV0HxKxVfPmRlabc9DMpcKxN4lgrMGitIADLLHOPaGL7ps37RI-PEw6zzhI-mBT2JKToxSVpjyBRItxk-Z14TnNS8vY6sOlgefyVPwwScTSj_ZRRyXK0"
+        alt="SSL_DND" style="width:700px;height:1200px;">
+    <pre class="puml" visibility: hidden>
+@startuml
+participant "Client\n127.0.0.1:9000" as client
+participant "Proxy Server" as server
+participant "InternalGW\n10.255.255.254" as gw
+participant "google.com\n142.253.192.14:443" as google
+
+==(tcp.stream eq 6) || (tcp.stream eq 7)  || (udp.stream eq 0)  || (udp.stream eq 1)==
+
+alt #Bisque TCP 3 way handshake, HTTP, TLS \n\n (tcp.stream eq 6)
+note over client
+127.0.0.1:9000(random)
+end note
+note over server
+127.0.0.1:8080
+end note
+alt TCP
+client -> server : SYN
+client <- server : SYN, ACK
+client -> server : ACK
+end
+
+alt HTTP
+client -> server: CONNECT google.com:443
+server -> client: ACK
+server -> client: 200 Conn Established
+end
+
+alt TLS
+client -> server : Client Hello (sni=google.com)
+server -> client: Server Hello
+end
+end
+
+alt #Cyan DNS over UDP (udp.stream eq 1)
+server -> gw: DNS Query \n A google.com
+gw -> server: DNS Query resp \n 142.253.192.14
+end
+
+alt #Azure 3 way handshake, TLS \n\n Server Connects to Upstream & get data \n\n (tcp.stream eq 7)
+note over server
+172.22.11.40:9120(random)
+end note
+note over google
+142.253.192.14:443
+end note
+
+alt TCP
+server -> google: SYN
+server <- google: SYN,ACK
+server -> google: ACK
+end
+
+alt TLS
+server -> google: Client Hello (sni=google.com)
+server <- google: ACK
+google -> server: Server Hello
+google <- server: ACK
+google -> server: Application Data
+end
+end
+
+alt #Bisque ProxyServer sends data to client \n\n (tcp.stream eq 6)
+note over server
+127.0.0.1:8080
+end note
+note over client
+127.0.0.1:9000
+end note
+
+server -> client: Application Data
+server <- client: ACK
+server <- client: FIN
+server -> client: ACK
+end
+
+@enduml
+    </pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
