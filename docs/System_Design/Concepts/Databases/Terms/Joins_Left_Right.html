@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Database Indexing</title>
@@ -45,7 +45,8 @@
         <h2 id="order">SQL Execution Order</h2>
         <dl>
           This follows the standard logical processing order (predefined in SQL
-          standards like ANSI SQL): <br />
+          standards like ANSI SQL):
+          <b>FJW GH SOL</b><br />
           1. FROM/JOINs (builds initial dataset from tables). <br />
           2. WHERE (filters rows; absent here). <br />
           3. GROUP BY (groups rows, computes aggregates like SUM). <br />
@@ -204,7 +205,6 @@ custid  name      custid  amount        custid  data
             </code></pre>
             </td>
             <td>
-              <a href="#order">Order of execution</a>
               <pre><code class="language-css">
 SELECT c.CustID, c.Name, SUM(o.Amount) 
 FROM Orders o INNER JOIN LineItems l ON (o.CustID = l.CustID)     //1
@@ -214,8 +214,12 @@ HAVING SUM(o.Amount) > 100
 ORDER BY SUM(o.Amount) DESC
 
 Shortnames: Customers=c, Orders=o, LineItems=l
+                </code></pre>
+              <br />
 
-This is order of execution:
+              <a href="#order">Order of execution:</a> FROM, GROUPBY, SELECT,
+              ORDERBY
+              <pre><code>
 1. FROM Orders o INNER JOIN LineItems l ON (o.CustID = l.CustID) 
                   INNER JOIN Customers c ON (o.CustID = c.CustID) 
 This will create join of all tables

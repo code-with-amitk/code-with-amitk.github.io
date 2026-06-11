@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SSL Decrypt</title>
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/index.html">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is SSL Decrypt</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">SSL Decrypt / MITM / SSL/TLS Inspection</h2>
+      <dl>
+        SSL Decrypt is a security technique used by proxies, firewalls, and
+        secure web gateways (such as Netskope, Zscaler, Palo Alto, etc.) to
+        inspect the contents of HTTPS traffic that would otherwise be encrypted
+        and unreadable.<br />
+        Core Idea is: The proxy temporarily terminates the encrypted connection
+        from the client, decrypts the traffic, inspects it, and then creates a
+        new encrypted connection to the destination server.<br />
+        2 encrypted channels exist. 1 from Client to proxy other from Proxy to
+        Server.<br />
+        Browser <--TLS--> Proxy <--TLS--> Google
+      </dl>
+
+      <h3>Key Characteristics</h3>
+      <dl>
+        * Zero Visibility: The proxy does not possess the destination's private
+        keys and cannot inspect the encrypted payload.<br />
+        * End-to-End Integrity: The TLS handshake occurs directly between the
+        client and the remote server, ensuring that certificate validation and
+        encryption remains unbroken.<br />
+        * SNI-Based Routing: While the payload is opaque, the proxy uses the
+        Host header from the CONNECT request (and optionally the SNI in the
+        Client Hello) to perform DNS resolution and routing.
+      </dl>
+
+      <h3>Flow</h3>
+      <dl>
+        1. Client Requests a Website (Browser → https://google.com)<br />
+        2. Proxy Intercepts the traffic<br />
+        3. Proxy Creates Its Own TLS Session to google (Proxy → Google)<br />
+        4. Using Emphemeral CA proxy generates CA Cert(CN = google.com, Issuer =
+        Corporate CA)<br />
+        5. proxy sends this cert to Browser, Since Client has already installed
+        trusted root certificate from proxy into "Trusted Certificate Store",
+        Client browser accepts the cert<br />
+        6. Traffic arrives encrypted from browser. Proxy decrypts it. Now it can
+        inspect<br />
+        7. After inspection, Proxy encrypts again and sends traffic to Google.
+      </dl>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
