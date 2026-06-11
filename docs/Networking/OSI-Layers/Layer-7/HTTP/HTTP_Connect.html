@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTTP Connect</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#connect">HTTP Connect</a>
+      <a href="#why">Why HTTP Connect is Required?</a>
+      <a href="#order">Sequential Order of Traffic</a>
+      <a href="#direct">Direct Connection (No Proxy = No HTTP Connect)</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="connect">HTTP Connect</h2>
+      <p>
+        HTTP Connect is message the is sent by Web Client to forward proxy. It
+        is never sent by web Client to Web server<br />
+        <font color="red"
+          >That means when in (Browser Settings &gt; Proxy &gt; Proxy Server) is
+          defined then only browser generates the HTTP Connect message.</font
+        >
+      </p>
+      <pre><code class="language-css">
+Web-Browser                                                   Forward-Proxy
+          HTTP CONNECT www.example.com:443 HTTP/1.1
+          Host: www.example.com:443
+          Proxy-Connection: Keep-Alive
+          User-Agent: Mozilla/5.0 ...
+          Proxy-Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+          -----------------------------------------------------&gt;
+
+                            HTTP/1.1 200 Connection Established
+                            Proxy-Agent: Squid/5.7
+          &lt;-----------------------------------------------------
+      </code></pre>
+
+      <h3 id="why">Why HTTP Connect is Required?</h3>
+      <p>
+        To understand why the HTTP CONNECT method is used, we need to talk about
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/System-Design/Concepts/Proxy_Servers/README.adoc"
+          >forward proxies (web proxies)</a
+        ><br />
+        Web Client sends request to intermediary proxy server to request
+        permission to pass through.<br />
+
+        When you connect to an HTTPS website (which uses TLS encryption), your
+        traffic is encrypted. If you are behind a corporate firewall or using a
+        web proxy, that proxy needs to route your traffic. However, because TLS
+        is encrypted end-to-end, the proxy cannot read the application data
+        (like the specific URL path or headers) to know where to send it.<br />
+
+        More importantly, if the proxy tried to intercept and read the TLS
+        handshake directly, it would break the security chain (resulting in a
+        certificate warning). To solve this, the client uses HTTP CONNECT to
+        tell the proxy: "Please just open a raw TCP pipeline to this specific
+        domain and port, and then step out of the way." Once the proxy
+        establishes that connection, it blindly forwards data back and forth,
+        allowing the client and the destination server to perform their private
+        TLS handshake directly through the proxy.
+      </p>
+
+      <h3 id="order">Sequential Order of Traffic</h3>
+      <p>
+        1. TCP Handshake: Client --&gt; Proxy (SYN, SYN-ACK, ACK)
+        <br />
+        2. Proxy Tunneling: Client sends HTTP CONNECT to the Proxy.<br />
+        3. Proxy Approval: Proxy connects to the destination server, then sends
+        200 Connection Established back to the Client.<br />
+        4. TLS Handshake (End-to-End): Client sends TLS Client Hello through the
+        proxy to the Destination Server.<br />
+        5. Encrypted Data: Standard encrypted HTTPS traffic flows through the
+        tunnel.
+      </p>
+
+      <h3 id="direct">Direct Connection (No Proxy = No HTTP Connect)</h3>
+      <p>
+        When you are at home on your personal Wi-Fi, your browser typically has
+        a direct route to the destination web server. In this case, your client
+        doesn't need to ask an intermediary for permission or routing help. It
+        just initiates a TCP handshake directly with the web server's IP address
+        and immediately sends the TLS Client Hello. HTTP CONNECT is completely
+        absent from this workflow.<br />
+        <font color="red"
+          >OR that means Proxy is not configured in User's Browser
+          Settings.</font
+        >
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
