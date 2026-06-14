@@ -1,45 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>String</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css">
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Our team</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>    
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>String</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#literal">String literal</a>
-            <a href="/Languages/Programming/Rust/Slice.html">String Slice</a>
-            <a href="#operations">Opeartions on String</a>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#literal">String literal</a>
+      <a href="/Languages/Programming/Rust/Slice.html">String Slice</a>
+      <a href="#operations">Opeartions on String</a>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h2 id="literal">String Literal</h2>
-            <dl>
-                String Both have different ownership and mutability characteristics.
-                String literal: string local variable, stored on stack
-            </dl>
-            <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <h2 id="literal">String Literal</h2>
+      <dl>
+        String Both have different ownership and mutability characteristics.
+        String literal: string local variable, stored on stack
+      </dl>
+      <pre><code class="language-css">
 let a:string = "test";
             </code></pre>
 
-            <h2 id="operations">Operations on String</h2>
-            <pre><code class="language-css">
+      <h2 id="operations">Operations on String</h2>
+      <pre><code class="language-css">
 /////////////  Concatenate /////////////////////////
 // push_str()
 let s2 = String::from("Hello");
@@ -74,8 +76,8 @@ for a in hello.chars() {
     println!("{}",a)
 }
             </code></pre>
-        </article>
+    </article>
 
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

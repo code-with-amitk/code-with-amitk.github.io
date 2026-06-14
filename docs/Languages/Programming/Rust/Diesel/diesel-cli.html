@@ -1,61 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Diesel Migration</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#whatcli">diesel-cli?</a>
-        <a href="#create">Database, Table creation using Diesel</a>
-        <a href="#prod">Using Migrations in Production</a>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#whatcli">diesel-cli?</a>
+      <a href="#create">Database, Table creation using Diesel</a>
+      <a href="#prod">Using Migrations in Production</a>
     </aside>
 
-    <article style="margin-left:200px;">
-        <dl>
-        <a href="https://diesel.rs/guides/getting-started">CRUD using Diesel (postgres)</a>
-    </dl>
-        
-        <h2 id="whatcli">diesel_cli</h2>
-        <pre><code class="language-css">
+    <article style="margin-left: 200px">
+      <dl>
+        <a href="https://diesel.rs/guides/getting-started"
+          >CRUD using Diesel (postgres)</a
+        >
+      </dl>
+
+      <h2 id="whatcli">diesel_cli</h2>
+      <pre><code class="language-css">
 $ cargo install diesel_cli --no-default-features --features postgres
 $ sudo apt install libpq        //for the PostgreSQL backend
         </code></pre>
-        <dl>
-            diesel_cli is a tool which is used to interact with your database schema.
-        </dl>
-        <h4>Usage of diesel CLI</h4>
-        <dl>
-            <b>1. Running Database <a href="#migrationscripts">Migrations scripts</a></b><br>
-            <b>2. Generating Rust Code for Your Database Schema</b>
-        </dl>
+      <dl>
+        diesel_cli is a tool which is used to interact with your database
+        schema.
+      </dl>
+      <h4>Usage of diesel CLI</h4>
+      <dl>
+        <b
+          >1. Running Database
+          <a href="#migrationscripts">Migrations scripts</a></b
+        ><br />
+        <b>2. Generating Rust Code for Your Database Schema</b>
+      </dl>
 
-        <h4>Diesel Migration Scripts</h4>
-        <dl>
-            Migrations are essentially scripts that make changes to your database schema. 
-        </dl>
+      <h4>Diesel Migration Scripts</h4>
+      <dl>
+        Migrations are essentially scripts that make changes to your database
+        schema.
+      </dl>
 
-        <h2 id="create">Database, Table creation using Diesel</h2>
-        
-        <h4>1. Create .env file containing DATABASE_URL to connect to postgres</h4>
-        <h5>Add DATABASE_URL string to .env</h5>
-        <pre><code class="language-css">
+      <h2 id="create">Database, Table creation using Diesel</h2>
+
+      <h4>
+        1. Create .env file containing DATABASE_URL to connect to postgres
+      </h4>
+      <h5>Add DATABASE_URL string to .env</h5>
+      <pre><code class="language-css">
 // username = username of postgres database
 // password = password of postgres database
 // localhost = machine on which database need to setup
@@ -63,9 +75,12 @@ $ sudo apt install libpq        //for the PostgreSQL backend
 $ echo DATABASE_URL=postgres://username:password@localhost/database_name > .env
         </code></pre>
 
-        <h4>2. Create database using diesel</h4>
-        <h5>Database & migrations directory Creation using command <font color="red"><code>diesel setup</code></font></h5>
-        <pre><code class="language-css">
+      <h4>2. Create database using diesel</h4>
+      <h5>
+        Database & migrations directory Creation using command
+        <font color="red"><code>diesel setup</code></font>
+      </h5>
+      <pre><code class="language-css">
 $ cd /root/code/rust/personalized_report_card/backend
 backend# diesel setup
 Creating migrations directory at: /root/code/rust/personalized_report_card/backend/migrations
@@ -74,11 +89,15 @@ root@Amit:~/code/rust/personalized_report_card/backend# ls
 Cargo.lock  Cargo.toml  Docs  diesel.toml  migrations  src  target
         </code></pre>
 
-        <h5><code>diesel setup</code> will also creates <font color="red"><code>diesel.toml</code></font></h5>
-        <dl>
-            When we ran diesel setup, a file called diesel.toml was created which tells Diesel to maintain a file at src/schema.rs for us
-        </dl>
-        <pre><code class="language-css">
+      <h5>
+        <code>diesel setup</code> will also creates
+        <font color="red"><code>diesel.toml</code></font>
+      </h5>
+      <dl>
+        When we ran diesel setup, a file called diesel.toml was created which
+        tells Diesel to maintain a file at src/schema.rs for us
+      </dl>
+      <pre><code class="language-css">
 # For documentation on how to configure this file,
 # see https://diesel.rs/guides/configuring-diesel-cli
 
@@ -90,9 +109,8 @@ custom_type_derives = ["diesel::query_builder::QueryId", "Clone"]
 dir = "/root/code/rust/personalized_report_card/backend/migrations"
         </code></pre>
 
-
-        <h5>Connect to DB to check database(teachers) created?</h5>
-        <pre><code class="language-css">
+      <h5>Connect to DB to check database(teachers) created?</h5>
+      <pre><code class="language-css">
 root@Amit:~/code/rust/personalized_report_card/backend# sudo -u postgres psql
 psql (16.6 (Ubuntu 16.6-0ubuntu0.24.04.1))
 Type "help" for help.
@@ -110,27 +128,37 @@ postgres=# \l
 postgres=# \q
             </code></pre>
 
-        <h5>What Files created by migration script?</h5>
-        <pre><code class="language-css">
+      <h5>What Files created by migration script?</h5>
+      <pre><code class="language-css">
 root@Amit:~/code/rust/personalized_report_card/backend# ls -ltr migrations/00000000000000_diesel_initial_setup/
 total 8
 -rw-r--r-- 1 root root 1145 Dec  7 10:14 up.sql
 -rw-r--r-- 1 root root  328 Dec  7 10:14 down.sql
         </code></pre>
 
-        <h4>3. Create Table(teachers_login) schema</h4>
-        <h5>Create table's migration files(up.sql, down.sql) using command 
-            <font color="red"><code>$ diesel migration generate teachers_login</code></font></h5>
-        <dd>We will define table schema inside up.sql<br>Commands to teardown table are in down.sql</dd>
-        <pre><code class="language-css">
+      <h4>3. Create Table(teachers_login) schema</h4>
+      <h5>
+        Create table's migration files(up.sql, down.sql) using command
+        <font color="red"
+          ><code>$ diesel migration generate teachers_login</code></font
+        >
+      </h5>
+      <dd>
+        We will define table schema inside up.sql<br />Commands to teardown
+        table are in down.sql
+      </dd>
+      <pre><code class="language-css">
 root@Amit:~/code/rust/personalized_report_card/backend# diesel migration generate teachers_login
 Creating migrations/2024-12-07-102706_teachers_login/up.sql
 Creating migrations/2024-12-07-102706_teachers_login/down.sql
         </code></pre>
 
-        <h5>Create table's(teachers_login) Schema. ie manually open the files and add schema</h5>
-        <dd>Table has 2 coloumns (email, hashed password)</dd>
-        <pre><code class="language-css">
+      <h5>
+        Create table's(teachers_login) Schema. ie manually open the files and
+        add schema
+      </h5>
+      <dd>Table has 2 coloumns (email, hashed password)</dd>
+      <pre><code class="language-css">
 root@Amit:~/code/rust/personalized_report_card/backend# cat migrations/2024-12-07-102706_teachers_login/up.sql
 CREATE TABLE teachers_login (
   id SERIAL PRIMARY KEY,
@@ -141,19 +169,23 @@ root@Amit:~/code/rust/personalized_report_card/backend# cat migrations/2024-12-0
 DROP TABLE teachers_login
         </code></pre>
 
-        <h4>4. Create table(teachers_login)</h4>
-        <h5>Create the table by running <font color="red"><code>$diesel migration run</code></font> command</h5>
-        <dd>
-            Using above command Only Table is created using schema in up.sql<br>
-            if you want to delete the table <font color="red"><code>$diesel migration revert</code></font>
-        </dd>
-        <pre><code class="language-css">
+      <h4>4. Create table(teachers_login)</h4>
+      <h5>
+        Create the table by running
+        <font color="red"><code>$diesel migration run</code></font> command
+      </h5>
+      <dd>
+        Using above command Only Table is created using schema in up.sql<br />
+        if you want to delete the table
+        <font color="red"><code>$diesel migration revert</code></font>
+      </dd>
+      <pre><code class="language-css">
 root@Amit:~/code/rust/personalized_report_card/backend# diesel migration run
 Running migration 2024-12-07-102706_teachers_login
         </code></pre>
 
-        <h5>Connect to DB to check table(teachers_login) created?</h5>
-        <pre><code class="language-css">
+      <h5>Connect to DB to check table(teachers_login) created?</h5>
+      <pre><code class="language-css">
 # sudo -u postgres psql
 psql (16.6 (Ubuntu 16.6-0ubuntu0.24.04.1))
 Type "help" for help.
@@ -185,9 +217,12 @@ teachers=# select * from teachers_login;
 teachers=# \q
         </code></pre>
 
-        <h5>Diesel creates <font color="red"><code>schema.rs</code></font>(ie rust file) for you</h5>
-        <dd>This file is created when diesel migration run is executed</dd>
-        <pre><code class="language-css">
+      <h5>
+        Diesel creates <font color="red"><code>schema.rs</code></font
+        >(ie rust file) for you
+      </h5>
+      <dd>This file is created when diesel migration run is executed</dd>
+      <pre><code class="language-css">
 # cat src/schema.rs 
 // @generated automatically by Diesel CLI.
 
@@ -201,20 +236,27 @@ diesel::table! {
 }
         </code></pre>
 
-        <h2 id="prod"><a href="https://diesel.rs/guides/getting-started">Using Migrations in Production</a></h2>
-        <dl>
-            When preparing your app for use in production, you may want to run your migrations during the application’s initialization 
-            phase. You may also want to include the migration scripts as a part of your code, to avoid having to copy them to your 
-            deployment location/image etc.
-            <br><br>
+      <h2 id="prod">
+        <a href="https://diesel.rs/guides/getting-started"
+          >Using Migrations in Production</a
+        >
+      </h2>
+      <dl>
+        When preparing your app for use in production, you may want to run your
+        migrations during the application’s initialization phase. You may also
+        want to include the migration scripts as a part of your code, to avoid
+        having to copy them to your deployment location/image etc.
+        <br /><br />
 
-            The diesel_migrations crate provides the embed_migrations! macro, allowing you to embed migration scripts in the final 
-            binary. Once your code uses it, you can simply include connection.run_pending_migrations(MIGRATIONS) at the start of your 
-            main function to run migrations every time the application starts.
-        </dl>
+        The diesel_migrations crate provides the embed_migrations! macro,
+        allowing you to embed migration scripts in the final binary. Once your
+        code uses it, you can simply include
+        connection.run_pending_migrations(MIGRATIONS) at the start of your main
+        function to run migrations every time the application starts.
+      </dl>
     </article>
 
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>

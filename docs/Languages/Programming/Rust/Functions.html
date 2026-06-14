@@ -1,72 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Functions</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
-    
-<body>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
     <nav class="navbar">
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
         <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
         </li>
-        </ul>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#closure">What is Closure</a>
-        <a href="#closuret">Closure Types</a>
-        <ul>
-            <li><a href="#move">Move Closure</a></li>
-            <li><a href="#borrow">Borrow Closure</a></li>
-        </ul>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#closure">What is Closure</a>
+      <a href="#closuret">Closure Types</a>
+      <ul>
+        <li><a href="#move">Move Closure</a></li>
+        <li><a href="#borrow">Borrow Closure</a></li>
+      </ul>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="closure">Closure = Lambda(C++)</h2>
-        <dl>Closure is a function-like construct that can capture variables from the environment in which it is defined.</dl>
-        <table>
-            <tr>
-                <th></th>       <!--Table header-->
-                <th>Rust (Closure)</th>
-                <th>C++ (Lambda)</th>
-            </tr>
-            <tr>                    <!--Table Row-->
-                <td>Can capture variables from their surrounding environment</td>       <!--table data-->
-                <td>Yes</td>
-                <td>Yes</td>
-            </tr>
-            <tr>
-                <td>Syntax</td>
-                <td>|...| { ... } </td>
-                <td> [ ] (parameters) { ... }</td>
-            </tr>
-            <tr>
-                <td>Different Types</td>
-                <td>Move, Borrow Closure</td>
-                <td>There are no types in lambda</td>
-            </tr>
-            <tr>
-                <td>Can place break in closure?</td>
-                <td>No. You can do return. But rust does not allow break due to ownership and borrow check rules</td>
-                <td>Yes</td>
-            </tr>
+    <article style="margin-left: 200px">
+      <h2 id="closure">Closure = Lambda(C++)</h2>
+      <dl>
+        Closure is a function-like construct that can capture variables from the
+        environment in which it is defined.
+      </dl>
+      <table>
+        <tr>
+          <th></th>
+          <!--Table header-->
+          <th>Rust (Closure)</th>
+          <th>C++ (Lambda)</th>
+        </tr>
+        <tr>
+          <!--Table Row-->
+          <td>Can capture variables from their surrounding environment</td>
+          <!--table data-->
+          <td>Yes</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Syntax</td>
+          <td>|...| { ... }</td>
+          <td>[ ] (parameters) { ... }</td>
+        </tr>
+        <tr>
+          <td>Different Types</td>
+          <td>Move, Borrow Closure</td>
+          <td>There are no types in lambda</td>
+        </tr>
+        <tr>
+          <td>Can place break in closure?</td>
+          <td>
+            No. You can do return. But rust does not allow break due to
+            ownership and borrow check rules
+          </td>
+          <td>Yes</td>
+        </tr>
+      </table>
 
-        </table>
-
-        <h2 id="closuret">Closure Types</h2>
-        <h4 id="move">Move Closure</h4>
-            <dl>A move closure captures variables from its environment by taking ownership of them (i.e., moving them). Example</dl>
-            <pre><code class="language-css">
+      <h2 id="closuret">Closure Types</h2>
+      <h4 id="move">Move Closure</h4>
+      <dl>
+        A move closure captures variables from its environment by taking
+        ownership of them (i.e., moving them). Example
+      </dl>
+      <pre><code class="language-css">
 fn main() {
     let x = 10;
     let closure = || {
@@ -77,9 +90,12 @@ fn main() {
 }
             </code></pre>
 
-        <h4 id="borrow">Borrow Closure</h4>
-            <dl>A borrow closure captures variables by borrowing them (i.e., creating references to them)</dl>
+      <h4 id="borrow">Borrow Closure</h4>
+      <dl>
+        A borrow closure captures variables by borrowing them (i.e., creating
+        references to them)
+      </dl>
     </article>
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>

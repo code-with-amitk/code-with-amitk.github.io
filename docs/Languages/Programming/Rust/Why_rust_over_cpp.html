@@ -13,7 +13,7 @@
             <li><a href="#">Our team</a></li>
             <li><a href="#">Projects</a></li>
             <li><a href="/contact.html">Contact</a></li>
-            <li><a href="index.html">Back</a></li>
+            <li><a href="/Languages/Programming/Rust/">Back</a></li>
             <li>
                 <form>
                     <input type="search" name="q" placeholder="Search site" />
@@ -81,38 +81,37 @@
 
 
             <h3 id="ownership">1. Ownership <font color="red">(avoid crash in Rust)</font></h3>
-            <dt><b>Ownership?</b><br>
+            <p><b>Ownership?</b><br>
                 - Defines how memory is managed safely(without need of garbage collector) by Rust program.<br>
                 - Every Variable/data have single owner at a time. When the owner goes out of scope, Rust automatically deallocates the memory.<br>
                 - Ownership rules are checked at compile time. Ownership applies to memory allocated on heap(dynamically),
                  Eg: String(), vector ie those are moved. For variable allocated on Stack (Eg: int, float) variable is copied.
-            </dt>
             <br>
-            <dd>
                 In Rust, raw pointers (*const T and *mut T) don't embody ownership semantics directly.
-                However, smart pointers like Box<T>, Rc<T>, and Arc<T> do.<br>
-                - Box<T>: It represents ownership of a heap-allocated value.<br>
-                - Rc<T>: It provides reference counting and allows multiple ownership.<br>
-                - Arc<T>: It's like Rc<T>, but with atomic reference counting, suitable for concurrent access.
-            </dd>
+                However, smart pointers like Box &lt;T&gt;, Rc&lt;T&gt;, and Arc&lt;T&gt; do.<br>
+                - Box&lt;T&gt;: It represents ownership of a heap-allocated value.<br>
+                - Rc&lt;T&gt;: It provides reference counting and allows multiple ownership.<br>
+                - Arc&lt;T&gt;: It's like Rc&lt;T&gt;, but with atomic reference counting, suitable for concurrent access.
+                </p>
             <table>
                 <tr>
                     <td>C++ <font color="red">(Crash in C++)</font></td>
                     <td>Rust (No null pointer Exception(Crash) in Rust)</td>
                 </tr>
                 <tr>
-                    <td>    <!--C++-->
+                    <td>
+                        <a href="/Languages/Programming/C++/C++_11,14,17,20,23/C++11/smart_shared_unique.html">unique_ptr</a><br>
                         <pre><code class="language-css">
-#include &lt;iostream>
-#include &lt;memory>  // For std::unique_ptr
+#include &lt;iostream&gt;
+#include &lt;memory&gt;  // For std::unique_ptr
 using namespace std;
 
 int main() {
     // Create a unique_ptr to manage the std::string object
-    unique_ptr &lt;string> s = make_unique<string>("hello");
+    unique_ptr &lt;string&gt; s = make_unique &lt;string&gt;("hello");
 
     // Transfer ownership to s1
-    unique_ptr &lt; string> s1 = move(s);
+    unique_ptr &lt; string&gt; s1 = move(s);
 
     // No compile time check. Run time Segmentation fault
     cout &lt;&lt; *s;
@@ -156,42 +155,43 @@ fn main() {
             </dt>
             <table>
                 <td>
-                    C++
+                    C++<br>
                     <pre><code class="language-css">
 int* ptr = new int[10]; // Allocates memory of 10 integer
 delete ptr; // Deallocates the memory pointed to by ptr
                     </code></pre>
                 </td>
                 <td>
-                    Rust.
+                    Rust<br>
                     <pre><code class="language-css">
-let mut arr: Vec<i32> = Vec::with_capacity(10);     //malloc
-let arr: Vec<i32> = vec![0; 10];                    //malloc + memset
+let mut arr: Vec&lt;i32&gt; = Vec::with_capacity(10);     //malloc
+let arr: Vec&lt;i32&gt; = vec![0; 10];                    //malloc + memset
                     </code></pre>
                 </td>
             </table>
 
             <h3 id="aco">4. Aggressive Compiler Optimization <font color="green">(make Rust fast)</font></h3>
-            <h4>1. Inlining</h4>
-            <dt>
+            <p>
+                <b>Inlining</b><br>
                 - Rust's Compiler(LLVM) optimizes code more aggressivly wrt C++ compiler
                 & this is because of ownership rules, LLVM can make assumptions.<br>
                 - LLVM is more aggressive about inlining functions, especially for small functions. 
                 Inlining avoids function call overhead and makes it fast.
-            </dt>
+            </p>
 
             <h3 id="rto">
                 5. Lower Runtime overheads wrt C++ <font color="green">(make Rust fast)</font>
             </h3>
-            <h4>5.1 <a href="/Languages/Programming/C++/Terms.html#su">
-                <font color="red">C++ Stack Unwinding causes runtime slowness</font></a>
-            </h4>
+
+            <dl><b>5.1 <a href="/Languages/Programming/C++/Terms.html#su">
+                <font color="red">C++ <a href="/Languages/Programming/C++/Terms.html#su">Stack Unwinding</a> causes runtime slowness</font></a>
+            </b></dl>
             <table>
                 <td>
-                    C++ (On Exception Stack Unwinding happens)
+                    C++ (On Exception <a href="/Languages/Programming/C++/Terms.html#su">Stack Unwinding</a> happens)
                     <pre><code class="language-css">
-#include &lt;iostream>
-#include &lt;stdexcept>
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
 
 int divide(int a, int b) {
     if (b == 0) {
@@ -202,9 +202,9 @@ int divide(int a, int b) {
 int main() {
     try {
         int result = divide(10, 0);
-        std::cout << "Result: " << result << std::endl;
+        std::cout &lt;&lt; "Result: " &lt;&lt; result;
     } catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        std::cerr &lt;&lt; "Exception: " &lt;&lt; e.what();
     }
     return 0;
 }        
@@ -214,7 +214,7 @@ int main() {
                     Rust (<b>Result and Option types</b> for error handling, <br>
                     which are handled through pattern matching rather than exceptions)
                     <pre><code class="language-css">
-fn divide(a: i32, b: i32) -> Result<i32, &'static str> {
+fn divide(a: i32, b: i32) -&lt; Result &lt;i32, &'static str&gt; {
     if b == 0 {
         return Err("Division by zero");
     }
@@ -223,8 +223,8 @@ fn divide(a: i32, b: i32) -> Result<i32, &'static str> {
 
 fn main() {
     match divide(10, 0) {
-        Ok(result) => println!("Result: {}", result),
-        Err(e) => eprintln!("Error: {}", e),
+        Ok(result) =&lt; println!("Result: {}", result),
+        Err(e) =&lt; eprintln!("Error: {}", e),
     }
 }                        
                     </code></pre>
@@ -238,10 +238,10 @@ fn main() {
             <table>
                 <tr>
                     <td>
-                        C++
+                        C++<br>
                         <pre><code class="language-css">
-#include &lt;iostream>
-#include &lt;typeinfo>
+#include &lt;iostream&gt;
+#include &lt;typeinfo&gt;
 
 class Base {
 public:
@@ -252,11 +252,11 @@ class Derived : public Base {};
 
 int main() {
     Base* ptr = new Derived();
-    Derived* derived = dynamic_cast<Derived*>(ptr);
+    Derived* derived = dynamic_cast&lt;Derived*&gt;(ptr);
     if (derived) {
-        std::cout << "Dynamic cast successful\n";
+        std::cout &lt;&lt; "Dynamic cast successful\n";
     } else {
-        std::cout << "Dynamic cast failed\n";
+        std::cout &lt;&lt; "Dynamic cast failed\n";
     }
     delete ptr;
     return 0;
@@ -265,7 +265,7 @@ int main() {
                     </td>
                     <td>
                         <b>Rust</b><br><br>
-                        Box<dyn Printable> enable dynamic dispatch without the need for runtime type information. 
+                        Box<dyn Printable> enable dynamic dispatch without the need for runtime type information.<br>
 <pre><code class="language-css">
 trait Printable {
     fn print(&self);

@@ -1,43 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Diesel ORM</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What is Diesel</a>
-        <a href="https://diesel.rs/guides/getting-started" target="_blank">CRUD using Diesel (postgres)</a>
-        <a href="/System_Design/Concepts/Databases/install.html" target="_blank">Install postgres</a>
-        <a href="/System_Design/Concepts/Databases/install.html" target="_blank">Create user, Login with user</a>
-        <a href="/System_Design/Concepts/Databases/Commands/" target="_blank">Postgres Commands(Create, Read, Update, Delete Tables)</a>
-        <a href="diesel-cli.html">Diesel CLI & migration</a>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is Diesel</a>
+      <a href="https://diesel.rs/guides/getting-started" target="_blank"
+        >CRUD using Diesel (postgres)</a
+      >
+      <a href="/System_Design/Concepts/Databases/install.html" target="_blank"
+        >Install postgres</a
+      >
+      <a href="/System_Design/Concepts/Databases/install.html" target="_blank"
+        >Create user, Login with user</a
+      >
+      <a href="/System_Design/Concepts/Databases/Commands/" target="_blank"
+        >Postgres Commands(Create, Read, Update, Delete Tables)</a
+      >
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="what"><a href="https://diesel.rs/">What is Diesel</a></h2>
-        <dl>
-            Diesel is a ORM(object-relational mapping). <br>
-            ORM is programming technique that connects object-oriented programming (OOP) code with relational databases<br>
-            The foundational thing an ORM does is map data from a database to an object/structs within code (among other things)<br>
-            Diesel can connect Postgres, MySQL, SQLlite databases
-        </dl>
-
+    <article style="margin-left: 200px">
+      <h2 id="what"><a href="https://diesel.rs/">What is Diesel</a></h2>
+      <p>
+        Diesel is a ORM(object-relational mapping). <br />
+        ORM is programming technique that connects object-oriented programming
+        (OOP) code with relational databases<br />
+        The foundational thing an ORM does is map data from a database to an
+        object/structs within code (among other things)<br />
+        Diesel can connect Postgres, MySQL, SQLlite databases
+      </p>
     </article>
-</body>
+  </body>
 </html>

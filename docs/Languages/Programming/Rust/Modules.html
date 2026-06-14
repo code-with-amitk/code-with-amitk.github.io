@@ -1,56 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>Modules Rust</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css">
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Our team</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>    
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Modules Rust</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#what">What</a>
-            <a href="#create">Creating a Module</a>
-            <a href="#super">super keyword</a>
-            <a href="#struct">struct inside module</a>
-            <a href="#enum">enum inside module</a>
-            <a href="#use">use keyword</a>
-            <ul>
-                <li><a href="#useas">use as</a></li>
-                <li><a href="#pubuse">pub use / Reexporting</a></li>
-            </ul>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What</a>
+      <a href="#create">Creating a Module</a>
+      <a href="#super">super keyword</a>
+      <a href="#struct">struct inside module</a>
+      <a href="#enum">enum inside module</a>
+      <a href="#use">use keyword</a>
+      <ul>
+        <li><a href="#useas">use as</a></li>
+        <li><a href="#pubuse">pub use / Reexporting</a></li>
+      </ul>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h3 id="what">What</h3>
-            <dl>
-                Module is a block to manage the code in Rust. Module can have(functions, constants, enums, triats, structs etc)<br>
-                Similar to <b>namespaces, modules in c++</b> & <b>modules in python</b>. <br>
-                We can create module using mod module_name {}
-            </dl>
+    <article style="margin-left: 200px">
+      <h3 id="what">What</h3>
+      <dl>
+        Module is a block to manage the code in Rust. Module can have(functions,
+        constants, enums, triats, structs etc)<br />
+        Similar to <b>namespaces, modules in c++</b> & <b>modules in python</b>.
+        <br />
+        We can create module using mod module_name {}
+      </dl>
 
-            <h3 id="create">Creating a module & accessing its function</h3>
-            <dl>
-                1. Complete Hierarchy has to be made explicitly public ie module_b & fun(). By default everything is private and cannot be accessed.<br>
-                2. functions can be accessed either using Absolute or relative path.<br>
-                Absolute path: starts from crate, 
-                Relative path: starts from scope in which module is called. //Preferred
-            </dl>
-            <pre><code class="language-css">
+      <h3 id="create">Creating a module & accessing its function</h3>
+      <dl>
+        1. Complete Hierarchy has to be made explicitly public ie module_b &
+        fun(). By default everything is private and cannot be accessed.<br />
+        2. functions can be accessed either using Absolute or relative path.<br />
+        Absolute path: starts from crate, Relative path: starts from scope in
+        which module is called. //Preferred
+      </dl>
+      <pre><code class="language-css">
 crate
 └── module_a
     |── module_b
@@ -74,11 +79,13 @@ fn main(){
 }
             </code></pre>
 
-            <h3 id="super">super keyword</h3>
-            <dl>
-                With keyword super, We can construct relative paths that begin in the parent module. This is like starting a filesystem path with the .. syntax
-            </dl>
-            <pre><code class="language-css">
+      <h3 id="super">super keyword</h3>
+      <dl>
+        With keyword super, We can construct relative paths that begin in the
+        parent module. This is like starting a filesystem path with the ..
+        syntax
+      </dl>
+      <pre><code class="language-css">
 mod module_a {
     fn fun_a(){}
     pub mod module_b {
@@ -109,14 +116,15 @@ crate
                 └── super ---------
             </code></pre>
 
-            <h3 id="struct">struct inside module</h3>
-            <pre>
+      <h3 id="struct">struct inside module</h3>
+      <pre>
                 1. To access structure has to declared public, but still all feilds of struct remains private.
                 2. To access any field, that feild has to be made public.
                 3. We need to define a implementation fo access fields in module_a::st since there is a private member.
                 4. Then we can access members using dotted notation.
-            </pre>
-            <pre><code class="language-css">
+            </pre
+      >
+      <pre><code class="language-css">
 mod module_a {
     pub struct st{           //1
         pub a:u32,          //2
@@ -140,11 +148,12 @@ pub fn fun1 {
 }
             </code></pre>
 
-            <h3 id="enum">enum inside module</h3>
-            <pre>
+      <h3 id="enum">enum inside module</h3>
+      <pre>
                 Unlike structure in module, if enum is public all its variants are also public. We need to explicitly make every enum variant as public as in struct.
-            </pre>
-            <pre><code class="language-css">
+            </pre
+      >
+      <pre><code class="language-css">
 mod module_a {
     pub enum color {
         red,          //all enum variants are public if enum is public
@@ -157,9 +166,12 @@ pub fn fun() {
 }
             </code></pre>
 
-            <h3 id="use">use keyword</h3>
-            <dl>Similar to type alias/using keyword in c++, use is used to bring Paths into Scope.</dl>
-            <pre><code class="language-css">
+      <h3 id="use">use keyword</h3>
+      <dl>
+        Similar to type alias/using keyword in c++, use is used to bring Paths
+        into Scope.
+      </dl>
+      <pre><code class="language-css">
 mod module_a {
     pub mod module_b {
         pub fn fun() {}
@@ -173,9 +185,9 @@ pub fn fun1() {
 }
             </code></pre>
 
-            <h4 id="useas">use as</h4>
-            <dl>Defining shorter name for path.</dl>
-            <pre><code class="language-css">
+      <h4 id="useas">use as</h4>
+      <dl>Defining shorter name for path.</dl>
+      <pre><code class="language-css">
 use std::fmt::Result as FmtResult;
 use std::io::Result as IoResult;
 
@@ -188,12 +200,13 @@ fn function2() -> IoResult<()> {
 }
             </code></pre>
 
-            <h4 id="pubuse"> pub use / Reexporting</h4>
-            <pre>
+      <h4 id="pubuse">pub use / Reexporting</h4>
+      <pre>
                 After bringing a name into scope with the use keyword, the name available in the new scope is private, To use it we combine pub and use.
 This technique is called re-exporting because we’re bringing an item into scope but also making that item available for others to bring into their scope.
-            </pre>
-            <pre><code class="language-css">
+            </pre
+      >
+      <pre><code class="language-css">
 mod module_a {
     pub mod module_b {
         pub fn fun() {}
@@ -206,7 +219,7 @@ pub fn fun2() {
     module_b::fun();
 }
             </code></pre>
-        </article>
-        <script src="/scripts/prism.js"></script>
-    </body>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

@@ -1,52 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>Cargo</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css"/>
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Our team</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Cargo</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#what">What is cargo</a>
-            <a href="">cargo commands</a>
-            <ul>
-                <li><a href="#build">cargo build</a></li>
-                <li><a href="#doc">cargo doc</a></li>
-                <li><a href="#publish">cargo publish</a></li>
-                <li><a href="#install">cargo install</a></li>
-            </ul>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is cargo</a>
+      <a href="">cargo commands</a>
+      <ul>
+        <li><a href="#build">cargo build</a></li>
+        <li><a href="#doc">cargo doc</a></li>
+        <li><a href="#publish">cargo publish</a></li>
+        <li><a href="#install">cargo install</a></li>
+      </ul>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h2 id="what">What is cargo</h2>
-            <dl>
-                Cargo is Rust's build system and package manager. It downloads dependencies,libraries from 
-                crates.io(public repo for libraries). Rust can also be build using cmake.
-            </dl>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is cargo</h2>
+      <p>
+        Cargo is Rust's build system and package manager. It downloads
+        dependencies,libraries from crates.io(public repo for libraries). Rust
+        can also be build using cmake.
+      </p>
 
-            <h2>cargo commands</h2>
-            <h3 id="build">cargo build</h3>
-            <dl>
-                This it used to build the project. <br>
-                Cargo.toml is Cargo's configuration format. src directory contains source code
-            </dl>
-            <pre><code class="language-css">
+      <h2>cargo commands</h2>
+      <h3 id="build">cargo build</h3>
+      <p>
+        This it used to build the project. <br />
+        Cargo.toml is Cargo's configuration format. src directory contains
+        source code
+      </p>
+      <pre><code class="language-css">
 //1. Create a project named hello_cargo. it creates cargo.toml, src directory
 $ cargo new hello_cargo
 $ cd hello_cargo; dir
@@ -75,12 +79,13 @@ $ cargo build --release                                         //opt-level = 3
 target/debug/hello_cargo
             </code></pre>
 
-            <h3 id="doc">cargo doc</h3>
-            <dl>
-                Documentation comments use three slashes, ///.We place documentation comments just before the item we want to document.<br>
-                Crate Comments //! describes the purpose of my_crate
-            </dl>
-            <pre><code class="language-css">
+      <h3 id="doc">cargo doc</h3>
+      <p>
+        Documentation comments use three slashes, ///.We place documentation
+        comments just before the item we want to document.<br />
+        Crate Comments //! describes the purpose of my_crate
+      </p>
+      <pre><code class="language-css">
 //! # My Crate
 //!
 //! `my_crate` is a collection of utilities to make performing certain calculations more convenient.
@@ -103,7 +108,7 @@ impl Solution {
 ///
 /// assert_eq!(9, answer);
 /// ```
-    fn add(a:i32, b:i32)->i32{
+    fn add(a:i32, b:i32)-&lt;i32{
         a + b
     }
 }
@@ -118,12 +123,12 @@ $ cargo doc --open                //Will open Front page of create root
 $ cargo test add()                //This will run test case in documentation
             </code></pre>
 
-            <h3 id="publish">cargo publish</h3>
-            <dl>
-                We can publish crate on crates.io for others to use it.<br>
-                Steps to publish:
-            </dl>
-            <pre><code class="language-css">
+      <h3 id="publish">cargo publish</h3>
+      <p>
+        We can publish crate on crates.io for others to use it.<br />
+        Steps to publish:
+      </p>
+      <pre><code class="language-css">
 Steps to publish
 
 1. Login to https://crates.io/ using github account
@@ -138,7 +143,7 @@ $ cat cargo.toml
 [package]
 name = "guessing_game"
 version = "0.1.0"
-authors = ["Your Name <you@example.com>"]
+authors = ["Your Name "&lt;you@example.com&gt;"]
 edition = "2018"
 description = "A fun game where you guess what number the computer has chosen."
 license = "MIT OR Apache-2.0"
@@ -154,17 +159,17 @@ $ cargo publish
 $ cargo yank --vers 0.1.0
             </code></pre>
 
-            <h3 id="install">cargo install</h3>
-            <dl>
-                Allows to install a binary crate locally.<br>
-                All binaries installed with cargo install are stored in the installation root’s bin folder.
-            </dl>
-            <pre><code class="language-css">
+      <h3 id="install">cargo install</h3>
+      <p>
+        Allows to install a binary crate locally.<br />
+        All binaries installed with cargo install are stored in the installation
+        root’s bin folder.
+      </p>
+      <pre><code class="language-css">
 $ cargo install ripgrep   //Installing ropgrep binary crate
             </code></pre>
+    </article>
 
-        </article>
-
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
