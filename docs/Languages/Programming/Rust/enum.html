@@ -1,47 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>Rust enum</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css"/>
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Our team</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>    
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Rust enum</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#what">What is enum</a>
-            <a href="">enum Types</a>
-            <ul>
-                <li><a href="#not">Not holding data</a></li>
-                <li><a href="#hold">holding data</a></li>
-            </ul>
-            <a href="#option">Option Enum = NULL</a>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What is enum</a>
+      <a href="">enum Types</a>
+      <ul>
+        <li><a href="#not">Not holding data</a></li>
+        <li><a href="#hold">holding data</a></li>
+      </ul>
+      <a href="#option">Option Enum = NULL</a>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h2 id="what">What is enum</h2>
-            <dl>
-                Enums are User defined data type(Similar to other languages) which can be assigned some limited values. 
-                In rust enum variable can/cannot hold the data (Eg: String).
-            </dl>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is enum</h2>
+      <p>
+        Enums are User defined data type(Similar to other languages) which can
+        be assigned some limited values. In rust enum variable can/cannot hold
+        the data (Eg: String).<br />
+        C++ enums are named integer constants, whereas Rust enums are Data Types
+        that can carry distinct payloads of data per variant
+      </p>
 
-            <h2 id="">enum types</h2>
-            <h3 id="not">1. Not holding data</h3>
+      <h3>Properties of enum in Rust</h3>
+      <table>
+        <tr>
+          <th>Property</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>
+            Individual variants can contain completely different types of data
+          </td>
+          <td>
             <pre><code class="language-css">
+// Rust
+enum WebEvent {
+    PageLoad,                 // No data
+    KeyPress(char),           // Tuple variant
+    Click { x: i64, y: i64 }, // Anonymous struct variant
+}
+      </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Attach behavior directly to your enums using impl blocks</td>
+          <td>
+            <pre><code class="language-css">
+impl WebEvent {
+    fn log_event(&self) {
+        // Method logic here
+    }
+}
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Safety via Exhaustive Pattern Matching</td>
+          <td>
+            Rust forces you to account for every single enum variant using the
+            match keyword. Leaving out a variant causes a compile-time failure,
+            preventing unintended runtime edge cases.<br />
+            <b>wrt C++.</b> While a modern C++ compiler can generate warnings
+            for unhandled cases inside a switch statement on an enum class, it
+            will still compile and run.
+          </td>
+        </tr>
+        <tr>
+          <td>Specialized optimizations</td>
+          <td>
+            Because the Rust compiler understands the exact layout of its enums,
+            it performs specialized optimizations.<br />
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="">enum types</h2>
+      <h3 id="not">1. Not holding data</h3>
+      <pre><code class="language-css">
 #[derive(Debug)]            //To print debugging information
 enum Color{                 //Declare enum
     Red,
@@ -59,8 +117,8 @@ fn main() {
 }
             </code></pre>
 
-            <h3 id="hold">2. Enum Holding the data</h3>
-            <pre><code class="language-css">
+      <h3 id="hold">2. Enum Holding the data</h3>
+      <pre><code class="language-css">
 // Enum holding 1 datatype
 use std::{string::String, u32};
 
@@ -137,17 +195,63 @@ IPv6 IPv6(
 Disconnected NoIP
             </code></pre>
 
-            <h2 id="option">Option Enum = NULL</h2>
+      <h2 id="option">Option Enum = NULL</h2>
+      <p>
+        The Option enum in Rust is a built-in generic type used to represent a
+        value that may or may not be present.<br />
+        Because <b>Rust does not have a null value</b> like many other
+        programming languages, it relies on the Option type to safely encode the
+        concept of "nothingness" without risking null pointer<br /><br />
+        <b>Usage of Option Enum:</b>
+        Preventing Null Pointer Exceptions: In other languages, forgetting to
+        check for null can crash your application at runtime. Rust forces you to
+        acknowledge the None variant via the compiler, guaranteeing safety.
+      </p>
+      <table>
+        <tr>
+          <td>
+            Syntax<br />
             <pre><code class="language-css">
-enum Option &lt;T> {        //T is template which can take any type: i32, i64 etc
+pub enum Option&lt;T&gt; {
+    Some(T), // Contains a value of type T
+    None,    // Represents the absence of a value
+}
+      </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+fn divide(numerator: f64, denominator: f64) -&gt;&gt;Option&lt;f64&gt; {
+    if denominator == 0.0 {
+        None // Division by zero is impossible, return "nothing"
+    } else {
+        Some(numerator / denominator) // Return the calculated value wrapped in Some
+    }
+}
+fn main() {
+    let result1 = divide(10.0, 2.0);
+    let result2 = divide(10.0, 0.0);
+
+    // Handling result1 using a match statement
+    match result1 {
+        Some(value) =&gt; println!("Success! The result is: {}", value),
+        None &gt; println!("Error: Cannot divide by zero!"),
+    }
+}
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <pre><code class="language-css">
+enum Option &lt;T&gt; {        //T is template which can take any type: i32, i64 etc
     Some (T),
     None,
 }
 
 1. Initializing and using Option &lt;T>
 fn main() {
-    let a : Option &lt;i32> = Some(2);
-    let b : Option &lt;i32> = None;
+    let a : Option &lt;i32&gt; = Some(2);
+    let b : Option &lt;i32&gt; = None;
 
     println! ("a:{:#?}",a);
     println! ("b:{:#?}",b);
@@ -158,26 +262,29 @@ a : Some(
 )     
 b : None
 
-2. Option &lt;T> cannot be added to non-Option &lt;T>
+2. Option &lt;T&gt; cannot be added to non-Option &lt;T>
 fn main() {
     let x: i8 = 5;
-    let y: Option &lt;i8> = Some(5);
+    let y: Option &lt;i8&gt; = Some(5);
 
     let sum = x + y;                //Compliation Error
 }    
             </code></pre>
 
-            <h3 id="nullmistake">Creating NULL was mistake?</h3>
-            <dl>
-                Tony Hoare(inventor of NULL) said invention of NULL is his Billion dollar mistake. Why?<br>
-                Using NULL value as non-NULL value. Eg: derefercing NULL ptr. It will crash. Problem is not in NULL but at places it gets misused.<br>
-                There are multiple situations, where crash is caused due to NULL. Example: NULL References when derefrenced will cause crash
-            </dl>
-            <pre><code class="language-css">
+      <h3 id="nullmistake">Creating NULL was mistake?</h3>
+      <p>
+        Tony Hoare(inventor of NULL) said invention of NULL is his Billion
+        dollar mistake. Why?<br />
+        Using NULL value as non-NULL value. Eg: derefercing NULL ptr. It will
+        crash. Problem is not in NULL but at places it gets misused.<br />
+        There are multiple situations, where crash is caused due to NULL.
+        Example: NULL References when derefrenced will cause crash
+      </p>
+      <pre><code class="language-css">
 int fun(struct A*& p){              //Funtion taking NULL reference
     if (p == nullptr)
         cout &lt;&lt; "Got Null ptr reference\n";
-    cout &lt;&lt; p->a;
+    cout &lt;&lt; p-&gt;a;
 }
 int main(){
     struct A* p = nullptr;
@@ -188,14 +295,16 @@ Got Null ptr reference
 Segmentation Fault
             </code></pre>
 
-            <h3 id="avoidnull">How Rust avoid Null ptr?</h3>
-            <dl>
-                1. Variable that can have NULL/other value is declared as Option &lt;T><br>
-                2. Rust does not allow creating structure object without initializing its members.
-                It can be initialized with Some or None. No crash, None will be printed.
-            </dl>
-        </article>
+      <h3 id="avoidnull">How Rust avoid Null ptr?</h3>
+      <dl>
+        1. Variable that can have NULL/other value is declared as Option
+        &lt;T&gt;<br />
+        2. Rust does not allow creating structure object without initializing
+        its members. It can be initialized with Some or None. No crash, None
+        will be printed.
+      </dl>
+    </article>
 
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
