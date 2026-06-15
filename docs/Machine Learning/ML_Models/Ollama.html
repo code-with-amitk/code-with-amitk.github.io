@@ -30,6 +30,14 @@
         <li><a href="#efficiency">Model Efficiency</a></li>
         <li><a href="#any">Can Ollama run any model?</a></li>
       </ul>
+      <a href="#usecases">Use Cases</a>
+      <ul>
+        <li>
+          <a href="#voicesearch"
+            >CRM Voice Search feature (Speak donot Write)</a
+          >
+        </li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
@@ -76,7 +84,7 @@ ollama version is 0.30.8
         numbers mathematically represent patterns in data.<br />
 
         Examples:<br />
-        - Opensource Models: Llama, Gemma, Phi, Llama 3.2 <br />
+        - Opensource Models: Llama, Gemma, Phi, Llama 3.2, Qwen 2.5 3B <br />
         - Closedsource Models: gpt(openai), Claude (Anthropic).
       </p>
       <pre><code class="language-css">
@@ -119,6 +127,31 @@ ollama version is 0.30.8
         file and use a simple file called a Modelfile to load it into Ollama
         manually.
       </p>
+
+      <h2 id="usecases">Use Cases</h2>
+      <h3 id="voicesearch">CRM Voice Search feature (Speak donot Write)</h3>
+      <dl><b>Business Problem?</b></dl>
+      <p>
+        You have a frontend CRM app written in react native, which hits REST
+        endpoints on golang backend and pushes and gets data. App has
+        ViewAllRequirements page which shows all requirements in row format.
+        When user clicks on 1 requirement it shows complete information about
+        the requirement. Now we want a feature on frontend app(smart search),
+        that employee or owner SPEAK on Frontend app example:
+      </p>
+      <pre><code class="language-css">
+All requirements which are not followed up since 2 weeks OR
+All requirements from Ajnara grace OR
+(in Hindi) Mujhe piche 5 dino k untouched requirement do OR
+indarpur unfollowed for 2 weaks   //Spelling mistake. Area name mistake
+        </code></pre>
+      <p>
+        Frontend should show the authorized data. What changes are required on
+        frontend and what are required on backend? We want 0 cost solution,
+        backend would hosted on AWS.
+      </p>
+
+      <dl><b>Solution</b></dl>
     </article>
 
     <script src="/scripts/search.js"></script>
