@@ -74,8 +74,66 @@
 
         <a href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Connect.html">Why HTTP Connect?</a>
       </p>
+
+      <h4>Simple Flow</h4>
+      <img 
+        src="//www.plantuml.com/plantuml/png/VPHFRnen4CNl_XIZFK6bXAZD2QbLMfA6IFc3W5ugBeDt03TUZslFal3jQzOiAQ7qPcb_y_pUpAolec2Gkh8AjN20WJNa1312aOypzotmIwHGg3c_mayAF0rrbEySNZ2Key2l6-MJXj76OofDw9f2ev2Fvqik3eZI-kRpzVq87hYiBHMAN0b9Nns03oJ1wDZ0J_Ej6iwDDRBfpTnjm0KwXuVIFtoKG5Zbac2Mni6aSP5AbinBI-UQgqAfNT2pBpl3VHXEfwC939uU7sy6KtY3-vUNdvHZ8U34xN0rDBzGFuDcvputbKs4BQOo0MT9Ez_IXuyN5p18A6anxE0c2iwjYIig_-LaUZ_PLGx9MZw-d5ube9R9unqi0bS7yDw6sXjvKoveZRP6eH5RepSmStECL08xYCuKIg4Lc6yyngW008uLwaWx03pAwXtLzhyFr4PiqkXzTaKs4bH6AkWOWZid53HvoUtldhYrY6HJVS_4M1DOmiNCWQOWi3O8joI3T3OBer6eUAVHpa1pvIq9DOPMwCgumcU25oChM71OKWdwJULaiF_9v8tRbJKAfzOiqE-Qefo8U-UY9otZ37KIt5NlqDBwFbmpR7yYat73he7Ifx_5nXHhAyTBzDLxkm7VB8BQhq78TDwYqst8CJgB_0gqSVBuMkWeTMTCwSfJCxuc7JPU05tPDc3hnhEBT6AahMg6kblNQa-rpqSVyjj1mtPOdMvlJ9f3-Q7JLST6B2y1wz98ZzRaHAchf5jNzWy0"
+        alt="Simple SSL_DND Floe" style="width:700px;height:700px;">
+      <pre class="puml" visibility: hidden>
+@startuml
+actor Client as "Client\nBrowser"
+box ZeroTrustForwardProxy
+participant server as "server.go"
+participant dlp as "DLP Module"
+end box
+
+participant Metrics as "Observability/\nGrafanna"
+participant Upstream as "Origin Server/\ngoogle.com"
+
+Client -> server: HTTPS CONNECT google.com:443
+note over server
+Hijack conn=HTTPS
+end note
+server --> Client: 200 Connection Established
+
+Client -> server: TLS ClientHello
+note over server
+extractSNI from ClientHello
+end note
+
+
+server -> server: "evaluatePolicy \nbased on sni"
+
+alt bypass
+    server -> server: use bypass path
+    server -> Upstream: establish TLS connection
+else mitm (ie Intercept HTTPS)
+    server -> server: "select/issue leaf\n cert via GetCertificate"
+    server -> Client: complete TLS handshake with forged certificate
+    server -> Upstream: complete TLS handshake with Origin server
+    Client -> server: HTTPS request
+    server -> server: InspectRequest(req)
+
+    server -> dlp: Do DLP inspection
+    dlp -> server: Result
+note over server
+Apply policy
+based on result
+end note
+    server -> Upstream: HTTPS(forward request)
+    Upstream -> server: HTTPS(Reply)
+    server -> server: Decrypt and Inspect response
+    server -> Client: HTTPS(Response)
+end
+server -> Metrics: ObserveHandshake()/Record*()
+server -> server: log audit/event
+
+@enduml
+      </pre>
+
+      <h4>Detialed Flow</h4>
     <img 
-        src="//www.plantuml.com/plantuml/png/XLJDRjj64BxlKtnmBb9jAVvn2fI0YiYC6nkr5S9K3mLyMPCZSI5gbzbTEHAA0Ztr0Oe-GHyjJzBXigRNZjFuP0rdlftlcs_chVFI-isw5bxvcj1OiztXynz_8y-lSAazsO8Qhup6uBofQ4rMraYdkBwSNm-5S2kb6sdb6eu-RaWNDBNMV9fNgbXfSWx7KSgPsMQoB9LUukXG25buOx5tnlcEB5uZhHLflmVfa0ekyQfGZTGUUrdRLlYGuTNShAKtJnFYtZg0ALxLQbdvJEdLqzobCSkQneLPXymShzvR8lqhrRNv9CHaWgoIZd2K8FqmcvsdSymtMbEDdFocmMGYH8hHZyWINCpdMP_r29oSdfw832DEIXCS7nuYDOnG127FMVExMhcAobizcASPV0Tl6j87q0RpgnmxyiEecUC4dJmZfqeA6HTIbwwIAy8Ww0CMrBMCMCrxiiEuqL3G0LoqF378PvUOOEzEwbMGOjZEGzrBJyY4DfvWM_bW5ctvU_8fiOOBLN36O7YhG_rJCMdhBODGEHOjUUO-JN3J-i9vr2GNA1W32sCHr_KFS_wpbpa078sHLbIiKCYY8WuSSw3z5slb73x_-HUtfyaomi-q6sIZupVV3mLmCiRspU4FuzGIVuhR5-Z-qjdaiOy3vDCdln-oPiPF5vxiPF-eweENpcqu5Fkk-zI-V3f6pjucA8skQT8bMcg2VJdg9lAThzquwWg_1OsIo4RuNPGKgzDxAimp3tFkvhb_gsE6pvWvjTHKucu7YXeUjbKHo3kZgJTCPnOMz7nRL58l2VluIUbWs_-cc_I1Rco6WP0Uy8fEFswa0Ave4VcL7dq_5a3dsP8AkskyGn7U0pjemHp6lMBH3fma-ALntf9S__y2T5XX0RfMymJjdXNT4cB_g-lmA5gy4Bd8kwcze3jYsH_BWzLPO3pJz_bgzKBSorgLZE70_EfGBW2vb4ex3xTpdjOyCznjT5bJA-3DGrvhNEPj2RCFSoRPA9u8u0ryHUswBQaCYU6m6rtlm7G5e1msZifmBsUl6IMMlHFk6qReTNd12Tb1tZlXXWb_omg5r62oJJkXpSESl_H3j15vP8xJ16UgLBOxigpCPGV5Fn0VmdCT34TbkDtzUHeqDIljQUiXssL_CERmgmFZzag7lYmH05ZWVv2PMXLCfxrPVV3TLNQ0UPx3CSq-UiscL7sVFSTU-niQqOlzzi9_oSSrHZlgBqMCyJmdrZ8JR_dvpRh-5m00"
+        src="//www.plantuml.com/plantuml/png/XLNDJYD74BxtKtnYBtR0vWSsKaPoj6QMNL30Z1Zd48bBCrEsMnvtptQtmLOKAQSyG9GdoAFjawIc1uO6iHjEk5prTNrVVLN-uBoqVhsgX5U-8jJMRBRu-kS_oFDBN6XFjg3QAwFHEwiNj28hAwHZN5rCh_f2kANIjRHo1KTVrgGB6bjh7gOBLImrEOUZAENKR39PbahFSNWWX2oyiTWvvNn75lj8AqNQxq0wfEBERF39s0TfownfIZ26LuMgfVRO2Q6GcU7TrAoaDoyJucPRn37ULMg-y9dIIq6w1B_mikRQghdIoCdUazs_rNDZvXKD2xCA23dUVRP4-ZUgAlCWn6Y4R24TuJ11UZsPdALJJDTQKyKGVbrZD18YnU1dP0dEfzEiote6JavEZaM60IUb2OuE3f0QHYY2ucVEoxjAkGMLjxetJJFu5jxKfFUW3QQNERRa-r4pHycZZWEdIWePvrANRY6NX5xG3QoyQnYvmBGVDneAMe3pXYTw-UG28-pSIRqCKlIRmQbxwGcPqCOJR2ChpAmf_qm-9TPqfWhEwFLlzMDzB2Pjl6KGAeU2oJVSnmbk6WCvZuha30LZO6RiYxhkOSv_zJ87WCCXqWKLInIoM900ZZZG_8kLSWvV__gRszDa6U4NslQomT7x7_i2E1vYy_xWfs5gYR-AsnTe_zB9wBcFFUJZ5v-ViYR6ZsUUx6ZtSD45BvnRSoZsO_jLy_B94Batbg1qstGmPaDDi5y7xKH-y9KRHbtXzw1H4ja8VuYIOdKwJuLvjevkvxbxgsE6hvWvDTV4gx45HGttcwe8vAFHr1ccDGiBUhOf5bBF2Rluf7ImxUDqaoxGZiqm4D8zNjtnbxKKm2ND8h_Ii--70cWzMr9XjxLtAC9xy5REcCEmKopQWUC4lzREMvAhxoz0YnKMe6qrJz3iMT4k8NQ_kGxFeiKBaOkydTeRkYEM_RayM9q5nYjzNwzM9yIzh5J960xChmhb0f1pgRJpS5ldQGLspzrQbnKr0juyvJN6TP2MCBcUCibQKIa0R-0NrApRdCgG67u1ZAwsOBe2K0vhHsMuevDzHebbRuNxlX4wNTvoGhQNTqwuOSB_PuL2QZ3PkfdG-d7ER_WXseWyCiT9WbDLAjiUMLdXeeNY3oyEuPaEXgCotExkFFNgYfNsjF6GpR8_6RF_pO5nUwL3LvO802pmlyXCfGgcqzoiBlZnCjl3DC_Xc6ONlM9JggxFZcEd_GqDwCr-W_1lyt6rqOwwIn5ZlCw9jSp41tv-lQh-0m00"
         alt="SSL_DND" style="width:700px;height:1200px;">
     <pre class="puml" visibility: hidden>
 @startuml
@@ -85,9 +143,11 @@ skinparam sequenceArrowThickness 2
 skinparam BoxPadding 10
 
 actor "Browser / Client" as C
+box ForwardProxy
 participant "Proxy" as P #Tomato
 participant "Ephemeral CA" as CA #lightPink
-participant "google.com" as S #GreenYellow
+end box
+participant "Origin Server/\ngoogle.com" as S #GreenYellow
 
 == Phase 1: CONNECT Tunnel Setup ==
 
