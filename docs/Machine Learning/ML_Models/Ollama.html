@@ -38,39 +38,22 @@
           >
         </li>
       </ul>
+      <a href="#install">Install & Run Ollama</a>
+      <ul>
+        <li><a href="#download">Download Model(qwen)</a></li>
+        <li><a href="#hit">Hit Qwen RestAPIs</a></li>
+        <li><a href="#logs">Qwen Logs</a></li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">Ollama (Inference Engine)</h2>
+      <h2 id="what">Ollama (Orchestrator / Inference Engine)</h2>
       <p>
         Ollama is a model runner (also called an inference engine).
-        <b>Ollama runs the models</b> like: Llama, Gemma, Phi etc
+        <b>Ollama runs the models</b> like: Llama, Gemma, Phi, qwen etc
       </p>
 
-      <h3>Ollama Installation & Run</h3>
-      <pre><code class="language-css">
-$ wget https://ollama.com/download/ollama-linux-amd64.tar.zst
-$ tar -xvf ollama-linux-amd64.tar.zst
-it creates 2 directories bin, lib
-
-$ mv bin/ollama /usr/bin
-$ ls -ltr /usr/bin/ollama
--rwxr-xr-x 1 amit amit 38094736 Jun 12 08:44 /usr/bin/ollama
-
-$ ls /usr/lib/ollama
-..libraries..
-
-// Start LLM (Terminal-1)
-$ ollama serve
-..
-[GIN] 2026/06/13 - 17:41:57 | 200 |    1.044922ms |       127.0.0.1 | GET      "/api/version"
-
-// Terminal-2
-$ ollama -v
-ollama version is 0.30.8
-      </code></pre>
-
-      <h2 id="models">Model / AI Model</h2>
+      <h2 id="models">What is AI Model?</h2>
       <p>
         <b>What is AI Model?</b> <br />
         This is not an executable(exe), or shared library(so file). It doesn’t
@@ -127,6 +110,129 @@ ollama version is 0.30.8
         file and use a simple file called a Modelfile to load it into Ollama
         manually.
       </p>
+
+      <h2 id="install">Installing & Running Ollama</h2>
+      <pre><code class="language-css">
+$ curl -fsSL https://ollama.com/install.sh | sh
+&gt;&gt;&gt; Cleaning up old version at /usr/local/lib/ollama
+&gt;&gt;&gt; Installing ollama to /usr/local
+&gt;&gt;&gt; Downloading ollama-linux-amd64.tar.zst
+
+Above script will create /etc/systemd/system/ollama.service
+and place binary inside /usr/bin/ and libs inside /usr/libs
+
+$ sudo systemctl restart ollama
+$ sudo systemctl status ollama
+● ollama.service - Ollama Service
+     Loaded: loaded (/etc/systemd/system/ollama.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2026-06-15 22:39:53 IST; 6s ago
+   Main PID: 134899 (ollama)
+      Tasks: 13 (limit: 9229)
+     Memory: 19.8M
+        CPU: 663ms
+     CGroup: /system.slice/ollama.service
+             └─134899 /usr/local/bin/ollama serve
+      </code></pre>
+
+      <h3 id="download">Download qwen(Model) and run in Ollama</h3>
+      <table>
+        <tr>
+          <td><pre><code class="language-css">
+$ ollama run qwen2.5:1.5b
+pulling manifest
+pulling 183715c43589: 100% ▕██████████▏ 986 MB
+pulling 66b9ea09bd5b: 100% ▕██████████   68 B
+pulling eb4402837c78: 100% ▕█████████ 1.5 KB
+pulling 832dd9e00a68: 100% ▕█████████▏  11 KB
+pulling 377ac4d7aeef: 100% ▕███████ 487 B
+verifying sha256 digest
+writing manifest
+success
+&gt;&gt;&gt; hello
+Hello! How can I assist you today?
+/exit
+$
+      </code></pre></td>
+      <td>
+        Check Model is running?<br>
+        <pre><code class="language-css">
+$ curl http://localhost:11434/api/generate -d '{
+  "model": "qwen2.5:1.5b",
+  "prompt": "Hi",
+  "stream": false
+}'
+
+$ ollama ps
+NAME            ID              SIZE      PROCESSOR    CONTEXT    UNTIL
+qwen2.5:1.5b    65ec06548149    1.2 GB    100% CPU     4096       4 minutes from now
+        </code></pre>
+      </td>
+        </tr>
+      </table>
+
+
+      <h3 id="hit">Hit AI Model (qwen's) REST APIs</h3>
+      <p>
+        Input: "indarpur unfollowed for 2 weaks" (with a typo on 'weeks').<br />
+        Output: The model interpreted the command ("Return JSON only."),
+        extracted the semantic meaning of misspelled input phrase, corrected the
+        spelling error, mapped it to key-value variables, and wrapped it cleanly
+        in a markdown code block.<br>
+        <pre><code>
+{
+  "status": "Unfollowed",
+  "duration": "2 weeks"
+}
+        </code></pre>
+      </p>
+      <pre><code class="language-css">
+$ cat test.json
+{
+  "model":"qwen2.5:1.5b",
+  "messages":[
+    {
+      "role":"system",
+      "content":"Return JSON only."
+    },
+    {
+      "role":"user",
+      "content":"indarpur unfollowed for 2 weaks"
+    }
+  ],
+  "temperature":0,
+  "stream":false
+}
+
+$ curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d @test.json
+{"id":"chatcmpl-421","object":"chat.completion","created":1781543972,"model":"qwen2.5:1.5b","system_fingerprint":"fp_ollama","choices":[{"index":0,"message":{"role":"assistant","content":"```json\n{\n  \"status\": \"Unfollowed\",\n  \"duration\": \"2 weeks\"\n}\n```"},"finish_reason":"stop"}],"usage":{"prompt_tokens":28,"completion_tokens":24,"total_tokens":52}}
+      </code></pre>
+
+      <h3 id="logs">Qwen Logs</h3>
+      <pre><code class="language-css">
+//Since Ollama is running inside a systemd service unit, logs are managed natively by journald.
+
+$ journalctl -u ollama.service -f
+Jun 15 22:49:31 Amit ollama[134899]: slot update_slots: id  0 | task 22 | cached n_tokens = 3, memory_seq_rm [3, end)
+Jun 15 22:49:31 Amit ollama[134899]: slot init_sampler: id  0 | task 22 | init sampler, took 0.01 ms, tokens: text = 28, total = 28
+Jun 15 22:49:31 Amit ollama[134899]: srv  log_server_r: done request: POST /completion 127.0.0.1 200
+Jun 15 22:49:32 Amit ollama[134899]: slot print_timing: id  0 | task 22 | prompt eval time =     405.33 ms /    25 tokens (   16.21 ms per token,    61.68 tokens per second)
+Jun 15 22:49:32 Amit ollama[134899]: slot print_timing: id  0 | task 22 |        eval time =     786.05 ms /    24 tokens (   32.75 ms per token,    30.53 tokens per second)
+Jun 15 22:49:32 Amit ollama[134899]: slot print_timing: id  0 | task 22 |       total time =    1191.39 ms /    49 tokens
+Jun 15 22:49:32 Amit ollama[134899]: slot print_timing: id  0 | task 22 |    graphs reused =         41
+Jun 15 22:49:32 Amit ollama[134899]: slot      release: id  0 | task 22 | stop processing: n_tokens = 51, truncated = 0
+Jun 15 22:49:32 Amit ollama[134899]: srv  update_slots: all slots are idle
+Jun 15 22:49:32 Amit ollama[134899]: [GIN] 2026/06/15 - 22:49:32 | 200 |  1.409126234s |       127.0.0.1 | POST     "/v1/chat/completions"
+
+// Increase logs level
+$ sudo vim /etc/systemd/system/ollama.service
+Environment="OLLAMA_HOST=0.0.0.0"
+Environment="OLLAMA_DEBUG=1"
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart ollama
+      </code></pre>
 
       <h2 id="usecases">Use Cases</h2>
       <h3 id="voicesearch">CRM Voice Search feature (Speak donot Write)</h3>
