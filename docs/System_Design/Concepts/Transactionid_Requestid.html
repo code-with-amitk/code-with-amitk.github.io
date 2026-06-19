@@ -30,10 +30,8 @@
     <aside class="sidebar">
       <a href="#why">Why</a>
       <a href="#term">Terminology</a>
-      <ul>
-        <li><a href="#trid">Transaction Id (For session)</a></li>
-        <li><a href="#reqid">Request Id</a></li>
-      </ul>
+      <a href="#trid">Transaction Id (For session)</a>
+      <a href="#reqid">Request Id</a>
     </aside>
 
     <main style="margin-left: 200px">
@@ -76,7 +74,7 @@
         <b>TenantId:</b> The numeric tenant identifier
       </p>
 
-      <h3 id="session">Transaction Id (1 trid for 1 session)</h3>
+      <h2 id="session">Transaction Id (1 trid for 1 session)</h2>
       <p>
         Session = lifetime of one login<br />
         Suppose there is a backend application written for CRM(Customer
@@ -93,7 +91,7 @@ User opens app
      ▼
 POST /login  ──►    Server validates correct username, password
      |              Server generates JWT (access token) + refresh token
-     |            ► JWT contains a new trid (UUID generated at login)
+     |              JWT contains a new trid (UUID generated at login)
      │
      ▼
 GET  /Restendpoint1 viewallleads  ──► Bearer JWT sent in header
@@ -128,18 +126,114 @@ User closes app / JWT finally expires / user logs in again
         stateless API. No extra mechanism is needed.
       </p>
 
-      <h3 id="reqid">Request Id</h3>
+      <h2 id="reqid">Request Id (1 per HTTP Request)</h2>
       <pre><code class="language-css">
 trid  ────────────────────────────────────────────────────────────────────────────────────────►  (login session)
               reqid-1       reqid-2          reqid-3        reqid-4
 restendpoints [/login  ]   [/viewallleads]  [/AddAlead]   [/token/refresh]
 </code></pre>
       <p>
+        Every REST endpoint hit/API call will create a new request id<br />
         - Filter by `trid` → see every log line for one user's entire
         session.<br />
         - Filter by `reqid` → zoom into one specific API call.<br />
         - Filter by `tenantid` → see everything for one company.
       </p>
+
+      <h3>Where trid and reqid are stored?</h3>
+      <p>
+        <a href="/Languages/Programming/Go/">What is go Context?</a><br />
+        For dumping trid and reqid in the logs, we need to generate these
+        upfront, per HTTP request(reqid) and keep trid (per HTTP session).
+      </p>
+
+      <h4>Storing Place-1. trid, reqid stored in *http.Request.Context</h4>
+      <pre><code class="language-css">
+// Go HTTP Server
+main.go
+func main() {
+  // Initialize logger = *zap.SugaredLogger
+
+  // Define REST endpoints
+    loginHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    rest_endpoints.HandleLogin(logger)
+  })
+  router.Handle("/login").Methods("POST")
+  ...... Other REST Endpoints ......
+
+  a := Inject_Trid_Reqid(logger)
+  handler := c.Handler(a(router))
+  err = http.ListenAndServe("0.0.0.0:8080", handler)
+}
+
+func Inject_Trid_Reqid(base *zap.SugaredLogger) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			reqid := newID()
+			trid := newID()
+
+			enriched := base.With(
+				"trid", trid,
+				"reqid", reqid,
+				"tenantid", 0,
+			)
+
+			w.Header().Set("X-Request-Id", reqid)
+
+			ctx := logging.InjectLogger(r.Context(), enriched)  // Store trid, reqid
+			ctx = logging.InjectReqid(ctx, reqid)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
+}
+
+func InjectLogger(ctx context.Context, l *zap.SugaredLogger) context.Context {
+	return context.WithValue(ctx, loggerKey, l)
+}
+      </code></pre>
+
+      <h4>Storing Place-2. trid also stored in JWT claims struct</h4>
+      <p>
+        Since trid need to persist across multiple sessions, this need to passed
+        to client, which will again send to server in JWT token and would be
+        printed in logs
+      </p>
+      <pre><code class="language-css">
+type JWTClaim struct {
+ 	Email                string `json:"email"`     // Email of person having token
+ 	TenantID             int64  `json:"tenant_id"`
+ 	Trid                 string `json:"trid"` // Session/transaction ID, generated at login, carried across token refreshes
+ 	jwt.RegisteredClaims        // Embed standard claims
+ }
+      </code></pre>
+
+      <h3>Priting the trid, reqid in Logs from Context</h3>
+      <p>
+        **any call** on `enriched` (or on a logger retrieved via
+        `LoggerFromContext`) automatically emits `trid`, `reqid`
+      </p>
+      <pre><code class="language-css">
+
+enriched.Info("any message")
+// → {"level":"info", ..., "trid":"3f8a1c2e9b047d56", "reqid":"a72e4019cf8b3d1e", "tenantid":0, "msg":"any message"}
+
+// Singleton Pattern
+// extract a logger from the context (if present)
+// Since we have stored trid, reqid into logger, it will return
+func LoggerFromContext(ctx context.Context, fallback *zap.SugaredLogger) *zap.SugaredLogger {
+	if l, ok := ctx.Value(loggerKey).(*zap.SugaredLogger); ok && l != nil {
+		return l
+	}
+	return fallback
+}
+
+
+func HandleLogin(db *sql.DB, logger *zap.SugaredLogger, w http.ResponseWriter, r *http.Request) {
+	logger = LoggerFromContext(r.Context(), logger)
+	logger.Info(utils.GetFunctionName())
+
+}
+      </code></pre>
     </main>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
