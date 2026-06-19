@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Context in Go</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What</a>
+      <a href="#how">Context by Go runtime</a>
+      <a href="#problems">Problems without Context</a>
+      <ul>
+        <li><a href="#dboperations">1. Database Operations</a></li>
+        <li><a href="#waiting">2. Server keeps waiting</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Context?</h2>
+      <p>
+        In Go, context.Context is an
+        <a href="/Languages/Programming/Go/">interface</a> that carries
+        deadlines, cancellation signals, and request-scoped values across API
+        boundaries and between goroutines.<br />
+        <b>Usage of Context Interface:</b><br />
+        1. Cancel work when a client disconnects or a timeout expires<br />
+        2. Set deadlines for operations (e.g:
+        <a href="#dboperations">DB query must finish in 5 seconds</a>)<br />
+        3. Pass request-scoped data (e.g., user IDs, authentication tokens)
+        through a call chain
+      </p>
+
+      <h2 id="how">How Context is provided in Go?</h2>
+      <p>
+        http.Server creates request with context (r.Context()). You can:<br />
+        - Ignore it: and find <a href="#problems">problems listed here</a><br />
+        - Or can handle and pass to the function (as shown below)
+      </p>
+      <pre><code class="language-css">
+func AddLead(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+    a := r.Context()
+    createLead(db, a)       // You can pass context downstream
+}
+func createLead(db *sql.DB, ctx context.Context) {
+    query := `
+    INSERT INTO leads (name, email, phone, whatsapp)
+    VALUES ($1, $2, $3, $4,)
+    RETURNING id;`
+
+    // Add timeout: query must finish in 5 seconds
+    ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+    defer cancel()
+
+    // Do DB query with context
+    err := db.QueryRowContext(ctx, query, ...).Scan(&id)
+}
+      </code></pre>
+
+      <h2 id="problems">Problems without Context</h2>
+      <h3 id="dboperations">Database Operations</h3>
+      <p>
+        <b>1. DB write path without Context can hang when:</b><br />
+        - DB is slow (network issue, lock): INSERT Query blocks for minutes,
+        your HTTP handlerblocks, frontend client waits<br />
+        - Frontend Client disconnects: and now work needed to be done still DB
+        INSERT Query still runs, wastes DB connection, CPU<br />
+        - DB server crashes: INSERT/SELECT Query hangs forever, no timeout<br />
+        - Server gets 1000 requests: 1000 DB connections are opened and blocked,
+        server becomes unresponsive
+      </p>
+      <table>
+        <tr>
+          <th>Problematic Code</th>
+          <th>Solution</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+func AddLead(db *sql.DB) (int, error) {
+    query := `INSERT INTO leads ... RETURNING id;`
+    err := db.QueryRow(query, ...).Scan(&id)  // ← NO CONTEXT
+    .. 
+}
+                </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+func AddLead(db *sql.DB, ctx context.Context) (int, error) {
+    query := `INSERT INTO leads ... RETURNING id;`
+    
+    // Add timeout: query must finish in 5 seconds
+    ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+    defer cancel()
+    
+    // Pass context to DB call
+    err := db.QueryRowContext(ctx, query, ...).Scan(&id)
+    return id, err
+}
+</code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        <b>2. DB Read path with Context can hang</b><br />
+        - When DB is slow (network issue, lock) due to no timeout set on DB read
+        path<br />
+        - DB server crashes: SELECT Query hangs forever, no timeout<br />
+      </p>
+
+      <h3 id="waiting">2. Server keeps waiting, while client disconnected</h3>
+      <p>
+        HTTP Client connects and then disconnects (within 5 seconds)<br />
+        Go's `http.Server` spawns 1 Go Routine per request to handle every
+        client. request. Without Context Http Server will waiting for 180+
+        seconds, when at 180 seconds TCP keepalive timer fires(if set) then it
+        close the connection. This is server resource wastage.
+      </p>
+      <pre><code class="language-css">
+// WITHOUT context timeout
+client → HTTP request → server starts DB query → client waits 5s → client timeouts → 
+server STILL runs DB query for 175 more seconds → wastes DB connection, CPU
+
+// WITH context timeout:
+client → HTTP request → server sets 5s timeout → client waits 5s → client timeouts → 
+server's DB query is CANCELLED immediately → frees DB connection, CPU
+      </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

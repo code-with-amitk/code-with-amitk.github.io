@@ -34,9 +34,15 @@
       <p>
         Generally, RAG is a
         <a href="/Machine Learning/Terms.html#llm">LLM(Large Language Model)</a>
-        which can fetch data from external source(eg: vector database, SQL Db,
-        Graph DB, Web Search engines) & feed to AI generation process.<br>
-        <a href="/Machine Learning/Terms.html#em">Embedding Model</a>
+        which can fetch data from external source(eg:
+        <a
+          href="/System_Design/Concepts/Databases/Vector_Database/Introduction.html"
+          >vector database</a
+        >, SQL Db, Graph DB, Web Search engines) & feed to AI generation
+        process.<br />
+        <b>Purpose of RAG?</b> To give more Context to LLM models to predict better<br>
+        <a href="/Machine Learning/Terms.html#vector">What is vector?</a><br>
+        <a href="/Machine Learning/Terms.html#em">What is Embedding Model?</a>
       </p>
 
       <h2>RAG Pipeline</h2>
@@ -54,7 +60,7 @@ pdf          |  |smaller pieces |               |
              |        |chunks                   |
              |--------|-------------------------|
                      \/                   
-                     [Embedding Model]---->vectors----->|---------|
+                     [Embedding Model]----&gt;vectors-----&gt;|---------|
                                                         |Vector DB|
                                                         |---------|
 
@@ -69,7 +75,7 @@ pdf          |  |smaller pieces |               |
                      |------------- LLM -----------------|
                      | LLM synthesizes an answer based   |
 User Query +         | only on the provided external data|
-Retrived prompt -->  | which reduces Hallucination       |
+Retrived prompt --&gt;  | which reduces Hallucination       |
                      |-----------------------------------|
       </code></pre>
           </td>
@@ -99,9 +105,10 @@ Retrived prompt -->  | which reduces Hallucination       |
       </table>
 
       <h2 id="flow">RAG Flow</h2>
-      <img 
-            src="//www.plantuml.com/plantuml/png/NOyxJmCn48Jx_HMhgw28w2E48XvKIHCUlHEFm98VXzS-2B-UzTtf87JUcKypuuqKaqiDdiWSIyfiR72HZKmFEgGltgDaXm6PUcNTqVKc5aPeLFSG3h3MnJVU9GlVdJ63FOpGAyRi-zkE42rhw1dc_PIrtUwwUSQB83Uj4asBLZVQkEP7mFBUVB9DnneGYrnOKymbnLJ0IKSgHdSPHizdH4bPhgPw6RiRHmYQrzQjUPWzgatoNZkU6lTHaK-azqB-awzNgqdVG_eK1V9dWmAals4vnV8EST_gjWSuB_IoPYwflr6qKRC6_mC0"
-            alt="RAG" >
+      <img
+        src="//www.plantuml.com/plantuml/png/NOyxJmCn48Jx_HMhgw28w2E48XvKIHCUlHEFm98VXzS-2B-UzTtf87JUcKypuuqKaqiDdiWSIyfiR72HZKmFEgGltgDaXm6PUcNTqVKc5aPeLFSG3h3MnJVU9GlVdJ63FOpGAyRi-zkE42rhw1dc_PIrtUwwUSQB83Uj4asBLZVQkEP7mFBUVB9DnneGYrnOKymbnLJ0IKSgHdSPHizdH4bPhgPw6RiRHmYQrzQjUPWzgatoNZkU6lTHaK-azqB-awzNgqdVG_eK1V9dWmAals4vnV8EST_gjWSuB_IoPYwflr6qKRC6_mC0"
+        alt="RAG"
+      />
             <pre class="puml" visibility: hidden>
 @startuml
 
