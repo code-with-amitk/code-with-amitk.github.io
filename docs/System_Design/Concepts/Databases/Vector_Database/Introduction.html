@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Vector Databases</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="what">What</a>
+      <a href="#how">How data is stored</a>
+      <ul>
+        <li><a href="#batch">VDBs does batch insertions</a></li>
+      </ul>
+      <a href="why">Why VDB over SQL/NoSQL</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Vector Database?</h2>
+      <p>
+        Vector DB stores High-dimensional
+        <a href="/Machine Learning/Terms.html#tensor">Tensors</a> (Arrays of
+        floats) + Metadata. These are used in AI/ML Operations for data storage
+        and retrieval<br />
+        These work on concept of similarity search instead of exact match.
+        <a href="/System_Design/Concepts/Databases/SQL_NoSQL_Vector.html"
+          >SQL vs NoSQL vs Vector Databases</a
+        >
+      </p>
+
+      <h2 id="how">How data is stored in a Vector Database?</h2>
+      <p>
+        let's say we have 3 log entries.<br />
+        1. This is the Raw Data
+      </p>
+      <pre><code class="language-css">
+Log_A: "John uploaded financial report to Gmail."
+Log_B: "Sarah downloaded malicious payload from unknown domain."
+Log_C: "Service account accessed internal S3 bucket."
+            </code></pre>
+
+      <p>
+        2. The Transformation (Neural Net Forward Pass)<br />
+        You pass these through an embedding model. Let's pretend the output is a
+        3-dimensional tensor (in reality, it's 768 or 1536 dimensions).
+      </p>
+      <pre><code class="language-css">
+Log_A becomes → Tensor A: [0.95, 0.20, 0.05]
+Log_B becomes → Tensor B: [0.10, 0.90, 0.85]
+Log_C becomes → Tensor C: [0.80, 0.15, 0.10]
+      </code></pre>
+
+      <p>
+        3. Storage inside the Vector DB<br />
+        Inside the VDB, the data is not stored as rows in a table. It is stored
+        as Nodes in a graph (if using HNSW)<br />
+        VDB draws edges between these vectors. It notices that Vector A (0.95)
+        and Vector C (0.80) are mathematically close, so it makes them neighbors
+        in a graph. Vector B (0.90, 0.85) is far away on the other side of the
+        graph.
+      </p>
+      <pre><code class="language-css">
+// Query to INSERT data into vector DB
+# You compute the tensor first
+vector = embedding_model.encode("John uploaded...") 
+# Then you call the API to insert
+index.upsert(
+    vectors=[("chunk_42", vector, {"user": "John", "timestamp": "..."})]
+)
+
+{
+  "id": "chunk_42",
+  "vector": [0.95, 0.20, 0.05],   // The actual Tensor
+  "metadata": {                    // The payload (this IS like NoSQL/SQL)
+      "source_log": "proxy_server_01",
+      "timestamp": "2026-06-19T14:03:00Z",
+      "user": "John",
+      "action": "BLOCKED"
+  },
+  "text": "John uploaded financial report to Gmail." // Original text for LLM
+}
+      </code></pre>
+
+      <h3 id="batch">VDBs does batch insertions</h3>
+      <p>
+        <b>SQL:</b> When SQL receives an INSERT, it appends the row to disk and
+        updates a B-Tree (cheap).<br />
+        <b>VDB:</b> When the VDB receives an upsert, it has to rebalance the
+        graph index (HNSW). It inserts this new vector into the graph,
+        calculates its nearest neighbors, and draws new edges between them. This
+        is computationally heavier and is why VDBs often batch insertions
+      </p>
+
+      <h2 id="why">Why is a VDB needed even with SQL/NoSQL existing</h2>
+      <p>
+        Imagine you have 1 million security logs in your SQL database.<br />
+        A user asks: "Find logs that look semantically like this new threat:
+        'exfiltration via encrypted tunnel'."<br /><br />
+
+        <b>Using SQL:</b>
+      </p>
+      <pre><code class="language-css">
+Select * from table where LIKE '%exfiltration%' OR LIKE '%encrypted%'
+-&gt; No results. Word "Data Leak" or "TLS bypass" are not present in DB
+
+OR
+
+pull all 1 million tensors out of storage into RAM.
+compute a Dot Product between the Query Tensor and each of the 1 million tensors.
+O(n) complexity.    // Too Slow
+      </code></pre>
+
+      <p>
+        <b>Using VDB:</b><br />
+        - It has pre-built the HNSW graph<br />
+        - It starts at a random entry point and greedily hops across the graph
+        toward the query tensor.<br />
+        - It only calculates ~100 dot products. O(log n) complexity. It finds
+        the Top-5 matches in ~10 milliseconds
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

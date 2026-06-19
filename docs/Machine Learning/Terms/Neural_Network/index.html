@@ -30,25 +30,31 @@
 
     <div style="margin-left: 200px">
       <h2 id="neuralnetwork">Neural Network</h2>
-      <dl>
+      <p>
         This is brain-inspired AI model which uses interconnected nodes
         <a href="#neuron">neurons</a> in layers to finds patterns in input data,
         then learn from examples to make predictions<br />
         It contains an input layer, one or more hidden layers, and an output
         layer.
-      </dl>
-
+      </p>
+      <pre><code>
+        |-------------|                                  |-------------|
+        |             |         |--------------|         |             |
+        | Input Layer |--------&gt;| Hidden Layer|---------&gt;| Output Layer|
+        |             |         |--------------|         |             |
+        |-------------|                                  |-------------|
+      </code></pre>
       <h2 id="neuron">Neuron / y=wx+b</h2>
-      <dl>
+      <p>
         A neuron is the basic unit within a layer. It takes input, performs a
         computation, and produces an output. Each neuron has
-        <a href="/Machine Learning/Terms.html"
-          >weight, bias, activation function</a
-        ><br />
+        <b>weight, bias, activation function</b><br />
+        <b>Weight, Bias</b> are the numbers found within the nodes of neural
+        networks and instruct the node about how to interact with the data<br />
         A neuron is a single computational unit (node) within a layer, taking
         inputs, multiplying by weights, adding a bias, and applying an
         activation function
-      </dl>
+      </p>
       <table>
         <tr>
           <td>

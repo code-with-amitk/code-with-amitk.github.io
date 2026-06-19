@@ -36,12 +36,12 @@
       <a href="#me">Message Exchange</a>
       <a href="#parsing">MCP parsing in SWG</a>
       <a href="#requestex">Common MCP Request Examples</a>
-      <a href="#present">What would surely present in MCP Request</a>
+      <a href="#questions">Questions</a>
     </aside>
 
     <article style="margin-left: 200px">
       <h2 id="mcp">MCP(Model Context Protocol)</h2>
-      <dl>
+      <p>
         <b>What?</b> It is the opensource standard way how AI agents(like claude
         CLI) interacts & gets information from outside world(eg: github, google
         drive, postgres db reader etc)<br />
@@ -56,16 +56,17 @@
 
         <b>MCP is Opensource/Vendor Agnostic:</b> That means any agent can use
         MCP to interact with MCP server and access tools/services
-        <br />
+      </p>
         <pre><code>
 Claude-MCP-Client ---------|
                           MCP-Server &lt;--&gt; postgres-DB-reader
 Cursor-MCP-Client ---------|
         </code></pre>
-        <br />
 
-        <b>Message Format:</b> JSON-RPC with specific feilds (eg: methodm
-        params, id etc)<br />
+        <p>
+        <b>MCP Message Format:</b> MCP always sends JSON-RPC with specific feilds (eg: method,
+        params, id etc)
+        </p>
         <pre><code class="language-css">
 POST /mcp/v1/tools/call HTTP/1.1
 Host: mcpserver.com
@@ -85,10 +86,12 @@ User-Agent: AI-Assistant-Client/1.0
   "id": 42
 }
         </code></pre>
-        <br />
+        
+        <p>
         <b>How MCP Client Authenticate to Server?</b> if human user want to
         access any service then they provide password, but for AI agent
         authenticate using OAuth.
+        </p>
         <pre><code class="language-css">
   Machine-1                  Machine-2                   Machine-3
 Client(claude cli)          (Auth Server)             (Resource Server)
@@ -103,60 +106,19 @@ Client(claude cli)          (Auth Server)             (Resource Server)
 
                --- GET google.com Authorization Header: JWT --&gt;
         </code></pre>
-        <br />
 
-        <b
-          >Can existing tools(old postgres DB reader) talk over MCP directly, or
-          do they need an update?</b
-        ><br />
-        &ensp; They would need to be updated since every MCP server need to
-        expose some new endpoint eg: tools/list, execute_query.<br />
-        &ensp; <u>Endpoint execute_query:</u> MCP server provides a
-        endpoint(execute_query) which accepts the JSON-RPC payload, translates
-        it into an actual SQL query, executes it against the database, and
-        reformats the tabular SQL rows back into clean text/JSON for the AI
-        model.<br />
-
-        <b
-          >Why couldn't we use an existing RPC protocol (like gRPC or
-          JSON-RPC)?</b
-        ><br />
-        &ensp; MCP is just AI specific way of getting information over existing
-        RPC protocols.<br />
-        &ensp; AI agent converts generic prompts to REST endpoint calls(eg:
-        code-review) and use these endpoints to perform the tasks
-      </dl>
-      <pre><code class="language-css">
-  Machine-1                             Machine-2
-Client(claude cli)                    Server(Postgres Connector)
-      </code></pre>
 
       <h2><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">MCP Authorization</a></h2>
-      <dl>
+      <p>
         OAuth for HTTP/SSE client,server.<br>
         None for STDIO
-      </dl>
+      </p>
 
       <h2 id="me">Message Exchange</h2>
-      <dl>
+      <p>
         <a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#session-management">Packet Exchange</a>
-      </dl>
-      <h3>Fields in Header</h3>
-      <dl>
-        <b>Session Id (non mandatory):</b> <br>
-        - Client can send MCP-Session-Id in initialization message, by including it in HTTP 
-        header, if server support Session Id, it will return in Initialization response and client should use
-        it in all subsequent HTTP requests.<br>
-        - if server does not support MCP-Session-Id, it should respond without MCP-Session-Id with HTTP 400 Bad response<br>
+      </p>
 
-        <b>Protocol Version Header (non mandatory):</b><br>
-        - If using HTTP, the client MUST include the MCP-Protocol-Version: protocol-version HTTP header on all subsequent requests to the MCP server.
-        MCP server to respond based on the MCP protocol version. For example: MCP-Protocol-Version: 2025-11-25<br>
-        - if protocol version is not sent, server SHOULD assume protocol version 2025-03-26. If the server receives a request with an invalid or 
-        unsupported MCP-Protocol-Version, it MUST respond with 400 Bad Request.<br>
-        <font color="blue">We can use these(MCP-Session-Id, MCP-Protocol-Version) as strong hints, but not sufficient to detect MCP traffic</font>
-
-      </dl>
       <table>
         <tr>
           <td>
@@ -178,7 +140,7 @@ Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: ap
 note over Server: Server advertises its capabilities
 Server -> Client: POST /jsonrpc\nHost: mcp-client.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\n Response (id=1)\n{\n  "jsonrpc": "2.0",\n  "id": 1,\n  "result": {\n    "protocolVersion": "2024-11-05",\n    "capabilities": {\n      "tools": {"listChanged": false},\n      "resources": {"listChanged": false},\n      "prompts": {"listChanged": false}\n    },\n    "serverInfo": {"name": "Srv", "version": "0.1.0"}\n  }\n}
 
-note over Client: Client says Initialized
+note over Client: Client saves Server's Capabilites\nClient responds Initialized
 Client -> Server: POST /jsonrpc\nHost: mcp-server.example.com \nContent-Type: application/json\nMCP-Protocol-Version: 2025-11-25\nMCP-Session-Id: uuid\nnotifications/initialized\n{\n  "jsonrpc": "2.0",\n  "method": "notifications/initialized"\n}
 
 == Tools & Resource Discovery (id=2) ==
@@ -198,7 +160,7 @@ Server --> Client: POST /jsonrpc\nHost: mcp-client.example.com\nMCP-Protocol-Ver
 @enduml
       </pre>
             <img
-              src="//www.plantuml.com/plantuml/png/pLRDRjiy4BphAHOwVFYAHev_wejH5odSGmoag14BxQ7kWQOsDXEAL4NAY5lutKkATEbKiA6aHP1Bn92xm-NCpi8NIfDILpcFDDCSuUDa1XFEKEXaZkK6IvZZzme5HVZ0oAeaUHGL9eDHLX2X8Gu9CH3bbyqG1sP3_3AAncEOI26GQYQ5sTLL0UDnv13WRVBEHuxWCardC80lP0kNH6HgJUumSeSspbywWlHg3cbb83cWqcJ9cLfZLjyq5KmpmjaF313mFyl6lLVsKY4rWhHu7ij_uNrcDZLJg81fypnIa2NZ1WlLljA3GcUVvYcStoefoe8knALK1YcdHQBgW0xUaxpWsA4oXuKmhzUMw7HRu0X8KN16YIMZHbW8mrioAwMMLFBaCvRA78sWt-qFarulwGzTn1oLFKYcsGYgYcKB0ImyrZrn8NwQROXzPV48udwd6v_Lcomp__VSEaUzbfaz3nW-p4XAScMEQYYxuKlpbTaaKziRMrjtQ99S50sCXMHxK4gfwvtOoAGdQo9MQ6--8LpXpeNjVgFKL4_5ZQmp1CdHtfUYql4Pn9jGGhVJCo-hyysVNHIatQlalq0UIdjOQEH3GcyTbzQLzbpINgCgf52F5hP4LN7zxzJJKlBZwlbqTw-iIefjOar9UT6-9vod6ZqnBpTjMwBXTaMswc1KP2_Mua9gTkEXr3aB5PziYE3ke_cn9SWEpDGA3F_1jHVGZ7z5BMVRklNwfyScKNVAGrmnfV-EnwVIr8B_ketFRREvLxKmLFzFBWD6V7hWcFxUi0mV4EEFalQJvfcOSGFZSQmqnaoO4r_tBWz69LbcZSf4KUavNMDEQX_hRL4Vo-KjKcqZ36-5dTH-Y12xjuntkzrP4nJfMZu1DGGeNJAnikWE_9iV6uUkc8gDT6JL_0nEUu6Pw3jKeDTOvxzmCr32kNjM2za7JJFiCOxzR7WWlzyZvQhAKMWliEqdgx6zm8_jTiPYGHZNYI_VNuyYkkalwguvT5ZePOttfjNzrsA-7i0OXd6pjIzGP5NEVm40"
+              src="//www.plantuml.com/plantuml/png/pLPDR-Cs4BthLmnqw0SQEVweBqPTf70ECP2YHYoqXxe7cfhOJ2XI5IaZQU7_lloWbyuADfJi8iWbOiYPn-5xCm--KfhKkYbvefdc2B_F5Z3Z38NEbbZli8Ob_jkWe0ZNZ6ngKYP9PJ8OPHKH6jAOa09HOTaEyM0s92oJP3g5cHG2gMPIc5tTL32T9Xu1Vib-3P4JkCdp1OpWB_8CDqGKQaiUCV67BiwdJ22_NKBU64WEg3HPSwQsMBYRve9fHZZx3oC4_C2AwU17UwcG6a5Ql80Lll1ROJOrKwY0QVCyKf4rumOBrQ7Ieq8NVonpk7nGKjGLNOaRgGnIIQjCkO0UFf6oujYZieILCA_NbkZykS89aAhYZ19BXaDO2SDRjgYbbbJox4-ibJcQmB0_76U3GJOS-uWbAdkGpOi9D0qhLW9OVAn_uahyRxOX3PMb4qY7lNvwuJPPOVuV-7M9UYiBUnunGfYHb9JA73aekn5A2vNP95FRpxQs_jWa-IWQ6Ol9zg2MKhkTrCYaPriYDcXllYTSuTw7xJ-ZEAhdubww345AjFVbg7Hw0Uakbj3l3SpBNBxviq-Yj0ULmXV8IscF2pqqL-ojqzBwqjvBsZjKbHJgrSBMg1gklvrwMaf-MhsGxk-LJKsnIwmfgQowzuIVgLPFBEjTrvPeJRiYEpmOrFT7quvg9K98xGGer96Z51_M2OJKx3v0gKiMApxRDz44JkQdbaVhgxdj0_WExeBESCqKjTG-kmuTddTNeXvLWBXbIdyTZs-bgGF_hjilRK_wLtMOk-6NN4QCzBmlcJ7OiG9V41EEikw6z4xCU5zv7IijDufsylV13E8yawAmyyn4rUWbtM99tBXhKv0zbki7fDf66DugQ-Z1QuZTMwVx_VwY3OfqAz-06WEKhfdOM7GF_azmb-Efc8kTz6GvVaRdPu6Pw4TKeBVeyZ_uC532kNzM1zb7xM4uO9puTV5I_h17warJej07WSrphCRsWk3ktGQBHM5y9txq-NejqQtvelwQumcBlQpnoRHw-5hCdqOmXN7QRkqh54LJyay0"
               alt="plantuml"
               style="width: 700px; height: 1500px"
             />
@@ -278,6 +240,21 @@ AI Client                 MCP Server
           <td>OAuth recent standard</td>
         </tr>
       </table>
+      <h3>Fields in Header</h3>
+      <p>
+        <b>Session Id (non mandatory):</b> <br>
+        - Client can send MCP-Session-Id in initialization message, by including it in HTTP 
+        header, if server support Session Id, it will return in Initialization response and client should use
+        it in all subsequent HTTP requests.<br>
+        - if server does not support MCP-Session-Id, it should respond without MCP-Session-Id with HTTP 400 Bad response<br>
+
+        <b>Protocol Version Header (non mandatory):</b><br>
+        - If using HTTP, the client MUST include the MCP-Protocol-Version: protocol-version HTTP header on all subsequent requests to the MCP server.
+        MCP server to respond based on the MCP protocol version. For example: MCP-Protocol-Version: 2025-11-25<br>
+        - if protocol version is not sent, server SHOULD assume protocol version 2025-03-26. If the server receives a request with an invalid or 
+        unsupported MCP-Protocol-Version, it MUST respond with 400 Bad Request.<br>
+        <font color="blue">We can use these(MCP-Session-Id, MCP-Protocol-Version) as strong hints, but not sufficient to detect MCP traffic</font>
+      </p>
 
       <h2 id="vs">MCP vs HTTP</h2>
       <table>
@@ -466,8 +443,31 @@ Authorization: Bearer token
         </tr>
       </table>
 
-      <h2 id="present">What would surely present in MCP Request</h2>
-      <dl>
+      <h2 id="questions">Questions</h2>
+        <p>
+        <b
+          >1. Can existing tools(old postgres DB reader) talk over MCP directly, or
+          do they need an update?</b
+        ><br />
+        &ensp; They would need to be updated since every MCP server need to
+        expose some new endpoint eg: tools/list, execute_query.<br />
+        &ensp; <u>Endpoint execute_query:</u> MCP server provides a
+        endpoint(execute_query) which accepts the JSON-RPC payload, translates
+        it into an actual SQL query, executes it against the database, and
+        reformats the tabular SQL rows back into clean text/JSON for the AI
+        model.<br /><br>
+
+        <b
+          >2. Why couldn't we use an existing RPC protocol (like gRPC or
+          JSON-RPC)?</b
+        ><br />
+        &ensp; MCP is just AI specific way of getting information over existing
+        RPC protocols.<br />
+        &ensp; AI agent converts generic prompts to REST endpoint calls(eg:
+        code-review) and use these endpoints to perform the tasks
+        <br><br>
+
+        <b>3. What would surely present in MCP Request</b><br>
         This is high probability that these fields would be present in MCP
         request:<br />
         &ensp; 1. Method / Operation type: tools/call, action:invoke, op:call<br />
@@ -475,7 +475,9 @@ Authorization: Bearer token
         &emsp; Capability Identifier(name in params)<br />
         &emsp; Sensitive Payload Data(URLs, SQL, file paths, prompts, shell
         commands, repo names)
-      </dl>
+
+      </p>
+
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>

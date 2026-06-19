@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+  <head>
+    <title>RAG</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">RAG?</a>
+      <a href="#pipeline">RAG Pipeline</a>
+      <a href="#flow">Flow</a>
+    </aside>
+
+    <div style="margin-left: 200px">
+      <h2 id="what">RAG / Retrieval-Augmented Generation</h2>
+      <p>
+        Generally, RAG is a
+        <a href="/Machine Learning/Terms.html#llm">LLM(Large Language Model)</a>
+        which can fetch data from external source(eg: vector database, SQL Db,
+        Graph DB, Web Search engines) & feed to AI generation process.<br>
+        <a href="/Machine Learning/Terms.html#em">Embedding Model</a>
+      </p>
+
+      <h2>RAG Pipeline</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code>
+1. Chunks are fed into vector DB
+             |---A. Retrieval Phase (Offline)--|
+             |                                  |
+Raw          |  |--- Chunker ---|               |
+documents&gt;  |- | break docs in |                |
+pdf          |  |smaller pieces |               |
+             |  |-----|---------|               |
+             |        |chunks                   |
+             |--------|-------------------------|
+                     \/                   
+                     [Embedding Model]---->vectors----->|---------|
+                                                        |Vector DB|
+                                                        |---------|
+
+2. User asks a question & information retrieved from Vector DB
+
+        |------B. Augmentation Phase --------|
+        | Combine chunks from vector DB      |
+        | into well crafted prompt           |
+        |------------------------------------|
+
+3. Feed prompt into LLM
+                     |------------- LLM -----------------|
+                     | LLM synthesizes an answer based   |
+User Query +         | only on the provided external data|
+Retrived prompt -->  | which reduces Hallucination       |
+                     |-----------------------------------|
+      </code></pre>
+          </td>
+          <td>
+            <b>1. The Retrieval Phase:</b> <br />
+            &ensp; Chunking: Raw documents are broken down into smaller,
+            readable pieces.<br />
+            &ensp; Embedding: These text chunks are converted into mathematical
+            representations (vectors) using an embedding model.<br />
+            &ensp; Vector Search: User asks a question, system searches vector
+            <br /><br />
+
+            <b>2. The Augmentation Phase:</b><br />
+            &ensp; Once the relevant information is retrieved, it isn't just
+            displayed. It is packaged.<br />
+            &ensp; The system takes the user’s original query and the retrieved
+            text chunks, combining them into a specifically crafted db
+            <br /><br />
+
+            <b>3. The Generation Phase</b><br />
+            &ensp; This combined prompt (the user's query + the retrieved
+            context) is fed into the LLM. <br />
+            &ensp;This forces the model to synthesize an answer based only on
+            the provided external data, which drastically reduces hallucinations
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="flow">RAG Flow</h2>
+      <img 
+            src="//www.plantuml.com/plantuml/png/NOyxJmCn48Jx_HMhgw28w2E48XvKIHCUlHEFm98VXzS-2B-UzTtf87JUcKypuuqKaqiDdiWSIyfiR72HZKmFEgGltgDaXm6PUcNTqVKc5aPeLFSG3h3MnJVU9GlVdJ63FOpGAyRi-zkE42rhw1dc_PIrtUwwUSQB83Uj4asBLZVQkEP7mFBUVB9DnneGYrnOKymbnLJ0IKSgHdSPHizdH4bPhgPw6RiRHmYQrzQjUPWzgatoNZkU6lTHaK-azqB-awzNgqdVG_eK1V9dWmAals4vnV8EST_gjWSuB_IoPYwflr6qKRC6_mC0"
+            alt="RAG" >
+            <pre class="puml" visibility: hidden>
+@startuml
+
+actor admin as admin
+box Retriever
+participant em as "Embedding Model"
+participant vdb as "Vector DB"
+end box
+participant llm as "LLM"
+actor User as u
+
+admin -> em: Feed Raw documents(data)
+note over em
+Create Tensors/Vectors
+end note
+em -> vdb: vectors
+
+u -> llm: Send query
+llm -> vdb: Send query
+llm <-- vdb: Responses
+note over llm
+LLM synthesizes
+these responses
+end note
+llm -> u: Response
+@enduml
+            </pre>
+    </div>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
