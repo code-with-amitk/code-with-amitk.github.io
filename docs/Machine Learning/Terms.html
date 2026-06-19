@@ -41,6 +41,7 @@
       <a href="#bias">Bias/Sampling Bias</a>
       <a href="#conda">Conda</a>
       <a href="#cntk">CNTK</a>
+      <a href="#em">Embedding Models</a>
       <a href="#fitting">Fitting</a>
       <ul>
         <li><a href="#overfitting">Overfitting</a></li>
@@ -64,6 +65,10 @@
       </ul>
       <a href="/Libraries/Python/TensorFlow">Tensorflow</a>
       <a href="#variance">Variance</a>
+      <a href="/Machine Learning/Terms/Neural_Network/index.html"
+        >Neural Network Weight</a
+      >
+      <br />
     </aside>
 
     <div style="margin-left: 200px">
@@ -107,11 +112,10 @@
       </table>
 
       <h3 id="ActivationFunction">Activation Function</h3>
-      <dl><strong>Relu?</strong></dl>
-      <dt>
-        Relu is operation carried on 2D Tensor. if value is less than 0, Take 0
-        else take the original value
-      </dt>
+      <p>
+        <strong>Relu:</strong> Relu is operation carried on 2D Tensor. if value
+        is less than 0, Take 0 else take the original value
+      </p>
       <pre><code class="language-css">
 #Means max(x,0)
 
@@ -141,35 +145,33 @@ print(b)
 
         </code></pre>
 
-      <dl>
+      <p>
         Adding activation function to a layer introduces non-linearity into the
         model, allowing it to learn more complex relationships between the input
-        and output data
-      </dl>
-      <dl>
+        and output data<br />
+
         Non-linear activation functions such as ReLU, Sigmoid, and Tanh can help
         the model to better fit the training data and make more accurate
         predictions on new data.
-      </dl>
+      </p>
 
       <h3 id="conda">Conda</h3>
-      <dl>
+      <p>
         <a href="https://docs.conda.io/projects/miniconda/en/latest/"
           >Miniconda</a
         >
         is the recommended approach for installing TensorFlow with GPU support
-      </dl>
-      <dl>
+        <br />
         It creates a separate environment to avoid changing any installed
         software in your system. This is also the easiest way to install the
         required software especially for the GPU setup.
-      </dl>
+      </p>
 
       <h3 id="opt">Optimizers</h3>
-      <dl>
+      <p>
         optimizer is an algorithm used to adjust the parameters of a model in
         order to minimize the <a href="#lossf">error or loss function</a>
-      </dl>
+      </p>
       <table>
         <tr>
           <th>Optimizer</th>
@@ -183,7 +185,7 @@ print(b)
             the magnitudes
           </td>
           <td>
-            <pre><code>
+            <pre><code class="language-css">
 from keras.optimizers import RMSprop
 optimizer = RMSprop(learning_rate=0.001, rho=0.9)
                     </code></pre>
@@ -196,7 +198,7 @@ optimizer = RMSprop(learning_rate=0.001, rho=0.9)
             loss
           </td>
           <td>
-            <pre><code>
+            <pre><code class="language-css">
 from keras.optimizers import SGD
 optimizer = SGD(learning_rate=0.01, momentum=0.9)
                 </code></pre>
@@ -205,9 +207,9 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
       </table>
 
       <h3 id="#orchestration">Orchestration</h3>
-      <dl>
+      <p>
         Monitoring and handling ML pipelines<br />
-        <b>Steps in Orchestration?</b>
+        <b>Steps in Orchestration?</b><br />
         &ensp; 1. Workflow Definition: Defining the sequence of steps (tasks)<br />
         &ensp; 2. Automation: Automatically triggering and running the
         pipeline<br />
@@ -215,28 +217,35 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         resources (CPUs, GPUs)<br />
         &ensp; 4. Monitoring and Logging: Tracking the execution status,
         performance metrics
-      </dl>
+      </p>
 
       <h3 id="bias">Bias/Sampling Bias</h3>
-      <dl>
+      <p>
         We should use a training data set that is representative of the cases we
         want model to predict.
-      </dl>
-      <dl>
+        <br />
         if the sample is too small, you will have sampling noise (i.e.,
         nonrepresentative data as a result of chance), but even very large
         samples can be nonrepresentative if the sampling method is flawed. This
         is called sampling bias.
-      </dl>
+      </p>
 
       <h3 id="cntk">CNTK</h3>
-      <dl>
+      <p>
         This is Microsoft Cognitive Toolkit (CNTK) backend, plugged with keras.
-      </dl>
+      </p>
+
+      <h3 id="em">Embedding Models</h3>
+      <p>
+        Embdedding models are used in
+        <a href="RAG/Introduction.html">RAG pipelines</a>. They take
+        unstructured data(eg: text) and breaks into
+        <a href="#tensor">vectors/tensors</a>
+      </p>
 
       <h3 id="fitting">Fitting</h3>
       <h4 id="overfitting">Overfitting</h4>
-      <dl>
+      <p>
         Means that the model performs well on the training data, but it does not
         generalize well(ie produces good results on real world/unseen data),
         This is because model memorizes the exact relationship in the sample
@@ -244,34 +253,42 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         <a href="ML_and_Types_Algorithms.html#fitting"
           >Overfitting Example on DecisionTreeRegressor</a
         >
-      </dl>
+      </p>
 
       <h4 id="underfitting">Underfitting</h4>
-      <dl>
+      <p>
         Does not produces good results on traning data and bad results on new
         data as well<br />
         <a href="ML_and_Types_Algorithms.html#fitting"
           >Underfitting Example on DecisionTreeRegressor</a
         >
-      </dl>
+      </p>
 
       <h3 id="llm">Large language model</h3>
-      <dd>
+      <p>
         This is a computational model that can do natural language processing
-        tasks such as <a href="#learningtypes">classification</a>.<br />
-        LLMs learns from LM by
-        <a href="#learningtypes">self-supervised and semi-supervised training</a
+        tasks such as
+        <a href="/Machine%20Learning/ML_and_Types_Algorithms.html"
+          >classification</a
         >.<br />
-        LLMs can be used for text generation, a form of generative AI, by taking
-        an input text
-      </dd>
+        LLM is not an executable(exe), or shared library(so file). It doesn’t
+        contain machine instructions (x86_64 or ARM)<br />
+        An LLM/AI model is a massive multidimensional array of numbers (a static
+        data file), coupled with a specific file structure metadata layout.
+        These numbers are called weights and biases.<br />
+        When a model "learns" during training, it isn't writing code. It is
+        adjusting millions or billions of floating-point numbers until those
+        numbers mathematically represent patterns in data. LLMs learns from by
+        <a href="/Machine%20Learning/ML_and_Types_Algorithms.html"
+          >self-supervised and semi-supervised training</a
+        >.<br />
 
-      <h4 id="llama">Llama (Large Language Model Meta AI)</h4>
-      <dd>
-        A <a href="#llm">LLMs</a> released by Meta AI starting in February 2023.
-      </dd>
+        Examples:<br />
+        - Opensource Models: Llama, Gemma, Phi, Llama 3.2, Qwen 2.5 3B <br />
+        - Closedsource Models: gpt(openai), Claude (Anthropic).<br />
+      </p>
 
-      <dl><strong>Llama Models</strong></dl>
+      <dl><strong>Llama(Meta's LLM) Models</strong></dl>
       <table>
         <tr>
           <th></th>
@@ -290,14 +307,32 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         </tr>
       </table>
 
+      <h4>LLM Model's Efficiency</h4>
+      <p>
+        <b>1. Parameters:</b>
+        The "1B", "3B", or "8B" stands for Billion Parameters(the number of
+        internal connections inside the AI's brain). More parameters usually
+        mean a smarter model, but it requires more memory.<br />
+        <b>2. Quantization:</b> Floating point numbers for
+        weights/calculations.<br />
+        <b>3. Speed (Tokens per Second):</b> Tokens are fractions of words (100
+        tokens $\approx$ 75 words).An efficient model running on a good GPU will
+        hit 40 to 100+ tokens per second, printing text faster than you can read
+        it. If it drops below 10-15 tokens/sec, it feels sluggish.<br />
+        <b>4. Resource Utilization(Fitting in VRAM):</b> Does the model fit
+        entirely inside your Graphics Card's memory (VRAM)? If it fits in VRAM,
+        it runs at lightning speed. If it overflows into your system RAM,
+        performance drops off a cliff.
+      </p>
+
       <h3 id="layer">Layer / class or Function</h3>
-      <dl>
+      <p>
         Layer processes input data(tensor) and produces an output(tensor) in
         specific format.
         <a href="/Machine Learning/Terms/Neural_Network/">Neural network</a> is
         created by cascading multiple layers.<br />
         Types of Layers:
-      </dl>
+      </p>
       <table>
         <tr>
           <th></th>
@@ -333,7 +368,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
       </table>
 
       <h3 id="#genai">E. Generative AI</h3>
-      <dd>
+      <p>
         Class of models that creates content from user input. For example,
         generative AI can create unique images, music etc<br />
         Example:<br />
@@ -343,20 +378,17 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         Text-to-code<br />
         Text-to-speech<br />
         Image and text-to-image
-      </dd>
+      </p>
 
       <h2 id="lossf">Loss Function</h2>
-      <dl>
+      <p>
         In Keras, a loss function is used during the training of a
         <a href="/Machine Learning/Terms/Neural_Network/">neural network</a>. It
         measures the difference between the model's predictions and the actual
         target values. The goal of training is to minimize this loss
-      </dl>
-      <code>
-        <pre>
-            Loss function = (Actual O/P) - (Expected output)
-        </pre>
-      </code>
+      </p>
+      <pre> Loss function = (Actual O/P) - (Expected output) </pre>
+
       <table>
         <tr>
           <th>Types</th>
@@ -397,11 +429,11 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
       </table>
 
       <dt id="to_categorical"><strong>to_categorical</strong></dt>
-      <dd>
+      <p>
         Function to convert labels into a one-hot encoded format.<br />
         One-hot encoding is converting categorical labels into a binary matrix
         (1s and 0s)
-      </dd>
+      </p>
       <pre><code class="language-css">
 from keras.utils import to_categorical
 train_labels = [0, 1, 2, 0, 1]
@@ -417,7 +449,7 @@ array([[1., 0., 0.],                //represents 0
         </code></pre>
 
       <h2 id="matplotlib">Matplotlib</h2>
-      <dd>
+      <p>
         Popular plotting library for Python that provides a variety of
         high-quality 2D and 3D plots and visualizations.<br />
         <u>Matplotlib.pyplot</u> is a collection of functions that make
@@ -425,16 +457,16 @@ array([[1., 0., 0.],                //represents 0
         <u>imshow(digit, cmap=plt.cm.binary)</u> is used to display images in
         digit array, cmap=colormap for mapping the data values to colors in the
         plot. plt.cm.binary = black and white colors.
-      </dd>
+      </p>
 
       <h2 id="metrics">Metrics</h2>
       <p>Metrics to monitor during training and testing</p>
 
       <h2 id="tensor">Tensor = n-D Matrix</h2>
-      <dd>
+      <p>
         This is matrix(as in maths). Multi-dimensional numpy arrays used to
         store numbers during computation.
-      </dd>
+      </p>
 
       <h4>Types of Tensors</h4>
       <table>

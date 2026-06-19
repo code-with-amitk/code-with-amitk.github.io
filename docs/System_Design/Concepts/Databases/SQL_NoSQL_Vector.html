@@ -1,0 +1,299 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SQL vs NoSQL</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#comp">SQL vs NoSQL vs Vector</a>
+    </aside>
+
+    <main>
+      <article style="margin-left: 200px">
+        <h3 id="comp">SQL vs NoSQL vs Vector</h3>
+        <p>
+          All databases can be categorized into 3 types: SQL, NoSQL, and Vector
+          for modern software engineering
+        </p>
+        <table>
+          <tr>
+            <th></th>
+            <th>SQL / Structured / Relational</th>
+            <th>NoSQL / unStructured / nonRelational</th>
+            <th>Vector</th>
+          </tr>
+          <tr>
+            <td>What</td>
+            <td>
+              Tables with fixed rows and columns<br /><br />
+              <i>SQL/NoSQL answers</i> "Does this exact value exist?"
+            </td>
+            <td>Documents, Key-Values, or Graphs</td>
+            <td>
+              Stores High-dimensional
+              <a href="/Machine Learning/Terms.html#tensor">Tensors</a> +
+              Metadata<br /><br />
+              <i>Vector DB answers</i> "What does this abstract meaning
+              resemble?"
+            </td>
+          </tr>
+          <tr>
+            <td>How Data is Stored Internally</td>
+            <td>
+              <a
+                href="https://github.com/code-with-amitk/Code-examples/tree/master/DS_Questions/Data_Structures/Trees/SelfBalancedBST"
+                >B-Trees</a
+              >
+              or
+              <a
+                href="https://github.com/code-with-amitk/Code-examples/tree/master/DS_Questions/Data_Structures/Hash_Tables"
+                >Hash Maps</a
+              >
+            </td>
+            <td>
+              <a
+                href="https://github.com/code-with-amitk/Code-examples/tree/master/DS_Questions/Data_Structures/Trees/SelfBalancedBST"
+                >B-Trees</a
+              >, LSM-Trees, or
+              <a
+                href="https://github.com/code-with-amitk/Code-examples/tree/master/DS_Questions/Data_Structures/Hash_Tables"
+                >Hash Maps</a
+              >.
+            </td>
+            <td>ANN Graphs (HNSW) or Inverted File Index (IVF)</td>
+          </tr>
+          <tr>
+            <td>Use Case</td>
+            <td>Financial transactions and core business logic</td>
+            <td>High-scale web apps and flexible data feeds</td>
+            <td>
+              AI memory,
+              <a href="/Machine Learning/RAG/Introduction.html">RAG</a>, and
+              semantic search
+            </td>
+          </tr>
+          <tr>
+            <td>How they work</td>
+            <td>
+              Data is split into separate tables and linked using
+              <br />relationships (foreign keys)
+            </td>
+            <td>
+              Instead of rigid tables, they store data using flexible <br />
+              models. This includes document stores (JSON files), key-value
+              <br />
+              dictionaries, or interconnected nodes (graphs).
+            </td>
+            <td>
+              Instead of searching for exact keywords or IDs, they store <br />
+              machine-learning generated numerical "embeddings" that capture
+              <br />
+              the conceptual meaning of text, images, or audio.
+            </td>
+          </tr>
+          <tr>
+            <td>Query Type</td>
+            <td>
+              Exact Match & Boolean logic<br />
+              <pre><code class="language-css">
+(WHERE age = 30 AND city = 'NYC')
+              </code></pre>
+            </td>
+            <td>
+              Exact Key lookup or range scans<br />
+              <pre><code class="language-css">
+(WHERE user_id = '123')
+                </code></pre>
+            </td>
+            <td>
+              Similarity Search<br />
+              <pre><code class="language-css">
+Find me the Top-5 vectors closest to this Query Tensor
+              </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>Math Used</td>
+            <td>Comparisons (&gt;, &lt;, =)</td>
+            <td>Hashing or Lexicographical comparisons</td>
+            <td>Dot Product, Cosine Similarity, or Euclidean (L2) Distance</td>
+          </tr>
+          <tr>
+            <td>Examples</td>
+            <td>Amazon(Aurora, RDS), MySQL, postgreSQL, mariaDB</td>
+            <td>
+              <li>Semistructured: Amazon (S3, dynamoDB), Apache Cassandra</li>
+              <li>Unstructured: Amazon S3, Apache CouchDB, MongoDB</li>
+            </td>
+            <td>Pinecone</td>
+          </tr>
+          <tr>
+            <td>Types</td>
+            <td>
+              - ORDBMS(Object RDBMS):RDBMS build on OOD.Eg:PostGreSQL<br />
+              - RDBMS: mySQL
+            </td>
+            <td>
+              a. KEY-VALUE DB: redis, Amazon dynamoDB, Voldemort, sled(rust)<br />
+              b. WIDE-COLUMN DB: Stores data as columns instead of rows. Eg:
+              Cassandra, HBase<br />
+              c. DOCUMENT DB: Data is stored in documents(XML, JSON, binary)
+              <br />
+              Eg: mongoDB, Amazon dynamoDB.<br />
+              d. GRAPH DB: Data is stored in form of graph.Eg: Neo4J,
+              HyperGraphDB
+            </td>
+          </tr>
+          <tr>
+            <td>Advantage</td>
+            <td>
+              Strict ACID compliance ensures that a financial transaction either
+              <br />
+              fully succeeds or cleanly fails without corrupting data.
+            </td>
+            <td>
+              1. Super low latency<br />
+              2. Data are unstructured, or you do not have any relational
+              data<br />
+              3. Store a massive amount of data<br />
+              4. Highly scalable horizontally<br />
+              5. Developers can change data structures on the fly
+            </td>
+            <td>
+              Execute incredibly fast mathematical calculations to <br />
+              find content based on concept similarity rather than exact words
+            </td>
+          </tr>
+          <tr>
+            <td>Disadvantage</td>
+            <td>Difficult to scale out horizontally across multiple servers</td>
+            <td>
+              Complex
+              <a
+                href="/System_Design/Concepts/Databases/Terms/Joins_Left_Right.html"
+                >Join operations</a
+              >
+              are not supported<br />
+              forcing developers to handle relationship logic inside application
+              code
+            </td>
+            <td>
+              These are specialized indexing tools and cannot handle typical<br />
+              transactional applications like user authentication or inventory
+              tracking
+            </td>
+          </tr>
+          <tr>
+            <td>Format</td>
+            <td>
+              Table(Records searched using primary key)
+              <pre><code class="language-css">
+//Books Table
+
+| book-id(pk) | title | author | genre | comments |
+                    </code></pre>
+            </td>
+            <td>
+              &lt;key, value&gt; or xml or json or objects<br />
+              Example: Book data stored in mongoDB in json format
+              <pre><code class="language-css">
+// Same as books table
+/////// entry-1 /////////
+{       
+    "_id": ObjectId("5f85e7a06921e55c279b15a0"), //Primary key
+    "title": "GumsRoad",
+    "author": {
+        "name": "Douglas Adams",
+        "birth_year": 1952
+    },
+    "genre": "Science Fiction",
+    "comments": [
+        {
+        "user": "Alice",
+        "text": "One of my favorites!"
+        },
+        {
+        "user": "Bob",
+        "text": "Hilarious and clever."
+        }
+    ]
+}
+////////// entry-2
+(Fields in json document can vary) /////////
+{
+    "_id": ObjectId("122312141241241"),     
+    "title": "HedgeHog",
+    "author": {
+        "name": "Douglas Adams",
+    },
+    "genre": "Adventure",
+}
+                    </code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>Huge Data Supoprt (~1TB)</td>
+            <td>No <a href="./SQL/SQL_Issues.html#why">Why?</a></td>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <td>Horizontal Scaling</td>
+            <td>
+              <a href="./SQL/SQL_Issues.html#horiscaling"
+                >Does not support Horizontal scaling efficiently</a
+              >
+            </td>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <td>Tech Support</td>
+            <td>Good, query-writing:simple</td>
+            <td>Poor, query-writing:complex</td>
+          </tr>
+          <tr>
+            <td>Schema</td>
+            <td>Fixed</td>
+            <td>Not fixed. We can have variable</td>
+          </tr>
+          <tr>
+            <td>Use Cases</td>
+            <td></td>
+            <td>
+              - Schema Flexibility: Allows Flexible schema<br />
+              - Data Locality: Documents in a NoSQL database often stores all
+              related information together. suitable case for Sharding<br />
+              - Horizontal Scaling Support: noSQL databases are designed to
+              scale Horizontal
+            </td>
+          </tr>
+        </table>
+      </article>
+    </main>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

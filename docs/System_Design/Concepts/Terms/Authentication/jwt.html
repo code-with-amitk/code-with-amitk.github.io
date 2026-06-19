@@ -60,7 +60,13 @@ jwt-token = header.payload.signature
 struct header_st = {"alg": "HS256", "typ": "JWT"}
 header = base64Encode(header_st)
 
-struct payload_st= {"email": email, "exp": timestamp_to_expiry, ..other..}
+struct payload_st(anything) = {
+		Email:    email,
+		TenantID: tenant,
+		IsOwner:  owner,
+		Trid:     trid,
+		ExpiresAt: string
+	}
 payload = base64Encode(payload_st)
 
 Signature = HMAC_SHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)

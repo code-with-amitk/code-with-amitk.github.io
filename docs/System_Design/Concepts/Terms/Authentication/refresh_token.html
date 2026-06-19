@@ -50,44 +50,40 @@
 
     <main style="margin-left: 200px">
       <h2 id="jwt">Why JWT Token</h2>
-      <dl>
+      <p>
         <b><a href="./jwt.html">JWT Token</a>?</b><br />
         &ensp; JWT token is assigned to a user when user Authenticates and then
         token is used as Bearer token in every request to access the REST
         endpoint.
-      </dl>
+      </p>
 
       <h2 id="issue">Issue with 1 Token System(ie only JWT Token)?</h2>
-      <dl>
+      <p>
         JWT Token is often associated with Password, ie whenever user entered
         correct password a new JWT token is provided to the user.<br />
         <u>Long JWT Token expiry(3 months):</u><br />
         &ensp; if JWT token expiry is kept for longer period and token is
         compromised. Malicious user can attack system for longer duration of
         time.<br />
+        &ensp; Long lived JWT tokens are hard to revoke and permanent key to
+        system for entire duration(eg: 90 days)<br>
         <u>Short JWT Token expiry(24 hours):</u><br />
         &ensp; if JWT token expiry is smaller (ie 1 day), then after every 1 day
         user has to enter his password again. <br />
 
-        <u>Solution:</u> Maintain 2 JWT tokens.<br />
+        <u>Solution:</u> Maintain 2 tokens.<br />
         &ensp; Short lived(24 hours): access token = JWT Token<br />
-        &ensp; Long lived(90 days): Refresh token
-      </dl>
+        &ensp; Long lived(90 days): uuid = Refresh token
+      </p>
 
-      <h2 id="refresh">Refresh Token</h2>
-      <dl>
-        <b>What?</b> refresh Token is not a JWT Token, its a unique
-        string(uuid)<br />
+      <h2 id="refresh">Refresh Token (uuid)</h2>
+      <p>
         <b>Advantages?</b><br />
-        &ensp; 1. It prevents long lived token from floating around on
-        internet<br />
-        &ensp; 2. Only short lived token(15 min or 1 hour life) token floats on
+        &ensp; 1. Only short lived token(15 min or 1 hour life) token floats on
         wire, it they are compromised then even, attack duration is reduced.<br />
-        &ensp; 3. User need not to enter password again and again in case JWT
-        token has expired and needs renewal. <br />
-        &ensp; 4. Long lived JWT tokens are hard to revoke and permanent key to
-        system for entire duration(eg: 90 days)
-      </dl>
+        &ensp; 2. User need not to enter password again and again in case JWT
+        token has expired and needs renewal.
+      </p>
 
       <h3 id="flow">Flow</h3>
       <dl>

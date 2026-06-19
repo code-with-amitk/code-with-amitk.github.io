@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Transaction, Requeset ID</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#why">Why</a>
+      <a href="#term">Terminology</a>
+      <ul>
+        <li><a href="#trid">Transaction Id (For session)</a></li>
+        <li><a href="#reqid">Request Id</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="why">Why TransactionId, RequestId in Logs</h2>
+      <p>
+        The current log stream mixes messages from all tenants and all
+        concurrent API calls with no way to isolate them. A single log line such
+        as:
+      </p>
+      <pre><code class="language-css">
+{"level":"info","time":"2026-06-17T18:28:39.525+0530","caller":"module_name/file_name.go:34","msg":"function_name() Log message"}
+    </code></pre>
+
+      <p>
+        Cannot answer:<br />
+        - Which tenant made this call? When system is multitenant<br />
+        - Is this from Tenant A's user hitting `/Rest-endpoint1` or Tenant B's
+        user hitting `/Rest-endpoint2`?<br />
+        - If two requests arrive simultaneously, which log lines belong to which
+        request?
+        <br /><br />
+
+        The goal is to add two fields — <b>trid</b> and <b>reqid</b>, to every
+        log line so that Kibana filters like `trid=abc123 AND tenantid=5` or
+        `reqid=xyz789` instantly isolate a specific flow.
+      </p>
+
+      <h2 id="term">Terminology</h2>
+      <p>
+        <b>trid (Transaction Id) / session identifier:</b> Scoped to one login
+        session (from login until JWT expiry or new login). All API calls made
+        with the same JWT share the same `trid`.
+        <br />
+
+        <b>reqid (Request identifier):</b> Scoped to one **HTTP request-response
+        cycle**. Every log line produced while handling a single API call shares
+        the same `reqid`
+        <br />
+
+        <b>TenantId:</b> The numeric tenant identifier
+      </p>
+
+      <h3 id="session">Transaction Id (1 trid for 1 session)</h3>
+      <p>
+        Session = lifetime of one login<br />
+        Suppose there is a backend application written for CRM(Customer
+        Relationship Management) system, which issues
+        <a href="/System_Design/Concepts/index.html">JWT access tokens</a> when
+        employee logs in using his username, password. JWT would be renewed by
+        <a href="/System_Design/Concepts/index.html">access token</a><br />
+        Session Lifetime = JWT Token Lifetime. That means whatever operations
+        which can be done using same JWT Token will fall in same session
+      </p>
+      <pre><code class="language-css">
+User opens app
+     │ provide username,password
+     ▼
+POST /login  ──►    Server validates correct username, password
+     |              Server generates JWT (access token) + refresh token
+     |            ► JWT contains a new trid (UUID generated at login)
+     │
+     ▼
+GET  /Restendpoint1 viewallleads  ──► Bearer JWT sent in header
+GET  /Restendpoint2 viewonlymyleads   ──► Bearer JWT sent in header     ◄─── same trid on all these
+POST /Restendpoint3 addlead       ──► Bearer JWT sent in header
+     │
+     ▼  (JWT expires after JWT_ACCESS_EXPIRY_HOURS, default 24 h)
+     │
+POST /token/refresh  ──► Old refresh token sent by mobile app to backend
+     |               ──► Server issues new JWT, carries forward the same trid
+     │
+     ▼
+...more calls...     ──► still same trid (session continues)
+     │
+     ▼
+User closes app / JWT finally expires / user logs in again
+     ──► Next login generates a brand-new trid
+      </code></pre>
+      <p>
+        `trid` is the session identifier. It persists across token refreshes so
+        a full user journey (login → work → refresh → more work → logout) is
+        traceable as one cohesive unit.
+      </p>
+
+      <h4>Why Session is not "until frontend app exits"?</h4>
+      <p>
+        The backend has no mechanism to detect that the frontend app has been
+        closed. <br />
+        Trying to detect this would require: WebSocket heartbeats, or An
+        explicit logout API call Neither is reliable.<br />
+        The JWT expiry model is already the correct session boundary for a
+        stateless API. No extra mechanism is needed.
+      </p>
+
+      <h3 id="reqid">Request Id</h3>
+      <pre><code class="language-css">
+trid  ────────────────────────────────────────────────────────────────────────────────────────►  (login session)
+              reqid-1       reqid-2          reqid-3        reqid-4
+restendpoints [/login  ]   [/viewallleads]  [/AddAlead]   [/token/refresh]
+</code></pre>
+      <p>
+        - Filter by `trid` → see every log line for one user's entire
+        session.<br />
+        - Filter by `reqid` → zoom into one specific API call.<br />
+        - Filter by `tenantid` → see everything for one company.
+      </p>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
