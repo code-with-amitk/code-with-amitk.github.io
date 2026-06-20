@@ -26,7 +26,11 @@
     <aside class="sidebar">
       <a href="#what">RAG?</a>
       <a href="#pipeline">RAG Pipeline</a>
-      <a href="#flow">Flow</a>
+      <a href="#flow">RAG Flow</a>
+      <a href="#code">Code</a>
+      <ul>
+        <li><a href="#ex1">User asking query from LLM</a></li>
+      </ul>
     </aside>
 
     <div style="margin-left: 200px">
@@ -49,41 +53,57 @@
       <table>
         <tr>
           <td>
-            <pre><code>
+            <pre><code class="language-css">
+/////////// Retrieval Phase ///////////////
 1. Chunks are fed into vector DB
-             |---A. Retrieval Phase (Offline)--|
+             |---A. Retrieval Phase (Offline) --|
              |                                  |
 Raw          |  |--- Chunker ---|               |
-documents&gt;  |- | break docs in |                |
+documents->  |- | break docs in |               |
 pdf          |  |smaller pieces |               |
              |  |-----|---------|               |
              |        |chunks                   |
              |--------|-------------------------|
                      \/                   
-                     [Embedding Model]----&gt;vectors-----&gt;|---------|
-                                                        |Vector DB|
-                                                        |---------|
+        [Embedding Model]--vectors--->|---------|
+                                      |Vector DB|-> index
+                                      |---------|
+[Node1 (score 0.92), Node2 (score 0.87), Node3 (score 0.76)]
 
-2. User asks a question & information retrieved from Vector DB
+/////////// Augmentation Phase ///////////////
+2. User asks a query & information retrieved from Vector DB
+User's Query: When Big Star Collectibles Started in?
 
+        index from vectorDB(Step1)
+          |
+          \/
         |------B. Augmentation Phase --------|
+User    | index + User's Query = Prompt      | 
+query-> |                                    |
         | Combine chunks from vector DB      |
-        | into well crafted prompt           |
+        | into well crafted prompt           |-> augmented_prompt
         |------------------------------------|
 
-3. Feed prompt into LLM
-                     |------------- LLM -----------------|
-                     | LLM synthesizes an answer based   |
-User Query +         | only on the provided external data|
-Retrived prompt --&gt;  | which reduces Hallucination       |
-                     |-----------------------------------|
+augmented_prompt=
+"Context: 
+[Node1][Node2][Node3] 
+Question: Big Star Collectibles Started in
+Answer:"
+
+/////////// Generation Phase ///////////////
+3. Feed augmented_prompt into LLM.
+With (user_query + vector), LLM hallucinations reduces drastically
+
+                     |-- LLM --|
+augmented_prompt --> | GPT5.0  | --> Reponse
+                     |---------|
       </code></pre>
           </td>
           <td>
             <b>1. The Retrieval Phase:</b> <br />
             &ensp; Chunking: Raw documents are broken down into smaller,
             readable pieces.<br />
-            &ensp; Embedding: These text chunks are converted into mathematical
+            &ensp; Embedding: These text chunks are converted into mathematical<br>
             representations (vectors) using an embedding model.<br />
             &ensp; Vector Search: User asks a question, system searches vector
             <br /><br />
@@ -91,14 +111,14 @@ Retrived prompt --&gt;  | which reduces Hallucination       |
             <b>2. The Augmentation Phase:</b><br />
             &ensp; Once the relevant information is retrieved, it isn't just
             displayed. It is packaged.<br />
-            &ensp; The system takes the user’s original query and the retrieved
+            &ensp; The system takes the user’s original query and the retrieved<br>
             text chunks, combining them into a specifically crafted db
             <br /><br />
 
             <b>3. The Generation Phase</b><br />
-            &ensp; This combined prompt (the user's query + the retrieved
+            &ensp; This combined prompt (the user's query + the retrieved<br>
             context) is fed into the LLM. <br />
-            &ensp;This forces the model to synthesize an answer based only on
+            &ensp;This forces the model to synthesize an answer based only on<br>
             the provided external data, which drastically reduces hallucinations
           </td>
         </tr>
@@ -106,18 +126,26 @@ Retrived prompt --&gt;  | which reduces Hallucination       |
 
       <h2 id="flow">RAG Flow</h2>
       <img
-        src="//www.plantuml.com/plantuml/png/NOyxJmCn48Jx_HMhgw28w2E48XvKIHCUlHEFm98VXzS-2B-UzTtf87JUcKypuuqKaqiDdiWSIyfiR72HZKmFEgGltgDaXm6PUcNTqVKc5aPeLFSG3h3MnJVU9GlVdJ63FOpGAyRi-zkE42rhw1dc_PIrtUwwUSQB83Uj4asBLZVQkEP7mFBUVB9DnneGYrnOKymbnLJ0IKSgHdSPHizdH4bPhgPw6RiRHmYQrzQjUPWzgatoNZkU6lTHaK-azqB-awzNgqdVG_eK1V9dWmAals4vnV8EST_gjWSuB_IoPYwflr6qKRC6_mC0"
-        alt="RAG"
+        src="//www.plantuml.com/plantuml/png/TP5FQnin4CNl-XI3Uqa8IUw6XgJk7m8E3KbRA1YCl7gnHQNHLgDrx7xwIhjgx6sRmyBgpMX-UlEk9UcOEk-KqaqAaRJnbabB_L6hiAC7f6YnHQJxZHRGcxbTRz9ihrcr-RPjRAiv4NovDtcAmPDpskkbPOFT1VmAnbXUoqLemThIWgrlGqpqEPzlRZ_yQLZmWbyET1SCt6I4s9hL_nbDY3YC_ORYvJ5_k2tbCdVGwFsxYG8RohvKR-wcMtSUd7IoWKS6lyEvy3pYH-dnZTCYUItI1XOyxZbj8FONueB9ibW3-jaXxfVWjMNyHVm4HXpXxYt_676S6tPvR35hhosm-9lFxmwS6kPNGInpEgM6EC-l27vA7m533_gPJ6Xwyt9YTDAdYaC2XP8ql9f5w7py0fOGvN9OeFICqgVWoxmSoPIsjQPKLxGeK-eoUzblGPNKgbeRBpaOI7cbtHP6lXg5pcjJ1UkQ3CoopNctATl-LtoRHJgPXIpjqjc1UbPHfyhWcDE3hig6fqV3wakpMehTz2LS2ayqrDGrs7JU_GO0"
+        alt="RAG" style="width:700px;height:350px;"
       />
             <pre class="puml" visibility: hidden>
 @startuml
 
-actor admin as admin
-box Retriever
-participant em as "Embedding Model"
-participant vdb as "Vector DB"
+actor admin as admin 
+box Retriever Phase #LightCyan
+participant em as "from llama_index.embeddings.openai \nimport OpenAIEmbedding\n\nEmbedding Model"
+participant vdb as "from llama_index.core \nimport VectorStoreIndex\n\nVector DB"
 end box
-participant llm as "LLM"
+
+box Augumentation Phase #LightYellow
+participant rs as "class ResponseSynthesizer\n inside query_engine"
+end box
+
+box Generation Phase #Pink
+participant llm as "llama_index.llms.openai \nimport OpenAI\n\nLLM"
+end box
+
 actor User as u
 
 admin -> em: Feed Raw documents(data)
@@ -126,16 +154,95 @@ Create Tensors/Vectors
 end note
 em -> vdb: vectors
 
-u -> llm: Send query
-llm -> vdb: Send query
-llm <-- vdb: Responses
-note over llm
-LLM synthesizes
-these responses
-end note
-llm -> u: Response
+
+u -> rs: user_query
+vdb -> rs: vectors/nodes
+activate rs
+rs --> rs: Create augumented_prompt \n augumented_prompt=\n  (Context+user_query+vectors)
+deactivate rs
+
+rs -> llm: augumented_query
+llm -> u: Response of query
+
 @enduml
             </pre>
+
+<h2 id="code">RAG Pipeline Code</h2>
+      <h3 id="ex1">User provides Context files. And asks query(When did the Big Star Collectibles Story Start?) from LLM</h3>
+      <pre><code class="language-css">
+// Set up environment
+import os
+import dotenv
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+from llama_index.llms.openai import OpenAI		#Import LLM
+from llama_index.core import Settings
+
+# Load GitHub Token and set env
+dotenv.load_dotenv()
+if not os.getenv("GITHUB_TOKEN"):
+    raise ValueError("GITHUB_TOKEN is not set")
+os.environ["OPENAI_API_KEY"] = os.getenv("GITHUB_TOKEN")
+os.environ["OPENAI_BASE_URL"] = "https://models.inference.ai.azure.com/"
+
+############## 1. Retrieval Phase Start #################
+## A. Setup Embedding Model. This is Neural Network	
+embed_model = OpenAIEmbedding(
+    model="text-embedding-3-small",
+    api_key=os.getenv("OPENAI_API_KEY"),
+    api_base=os.getenv("OPENAI_BASE_URL"),
+)
+Settings.embed_model = embed_model
+
+## B. Break documents into Chunks
+documents = SimpleDirectoryReader("../Big Star Collectibles").load_data()
+
+## C. Pass Chunked documents to Embedding model
+# And store Chunks into local vectorDB
+# def from_documents(documents, insert_batch_size=150): 
+#   embed_model = Settings.embed_model #embed_model from Global
+#   nodes = self._chunk_documents(documents) #chunks the documents into Nodes
+#   for batch in batches(nodes, batch_size=insert_batch_size):
+#       texts = [node.text for node in batch]
+#       embeddings = embed_model.get_text_embedding_batch(texts)          
+#       self._vector_store.add(embeddings, metadata=batch.metadata) #Store Tensors into the vector DB
+index = VectorStoreIndex.from_documents(documents, insert_batch_size=150)
+############## Retrieval Phase End #####################
+
+# Create LLM
+llm = OpenAI(
+    model="gpt-4o-mini",
+    api_key=os.getenv("OPENAI_API_KEY"),
+    api_base=os.getenv("OPENAI_BASE_URL"),
+)
+
+############## 2,3. Augumentation & Generation Phase Start #################
+# def query_engine(query_string: str):
+////// Augumentation Phase. Create augmented_prompt //////
+#    query_tensor = Settings.embed_model.get_text_embedding(user_query_string)
+#	 top_k_nodes = self._vector_store.similarity_search(
+#       query_tensor, 
+#       similarity_top_k=3
+#    )
+# top_k_nodes now contains the 3 most relevant text chunks (Nodes)
+# e.g., Node 1: "Big Star Collectibles was founded in 1988..."
+#       Node 2: "The company started as a small garage operation..."
+#       Node 3: "By 1990, they had moved to a larger warehouse..."
+#    vectordb_text = [Node1][Node2][Node3] 
+# augmented_prompt=
+#	"Context: 
+#	[Node1][Node2][Node3] 
+#	Question: Big Star Collectibles Started in
+#	Answer:"
+#
+#
+
+query_engine = index.as_query_engine(
+  llm=llm
+)
+query_engine.query("When did the Big Star Collectibles Story Start?")
+############## Augumentation & Generation Phase End #################
+      </code></pre>
     </div>
     <script src="/scripts/prism.js"></script>
   </body>
