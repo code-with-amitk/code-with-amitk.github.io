@@ -34,7 +34,9 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="closure">Closure = Lambda(C++)</h2>
+      <h2 id="closure">
+        Closure = <a href="/Languages/Programming/C++/">Lambda(C++)</a>
+      </h2>
       <dl>
         Closure is a function-like construct that can capture variables from the
         environment in which it is defined.
@@ -66,8 +68,12 @@
         <tr>
           <td>Can place break in closure?</td>
           <td>
-            No. You can do return. But rust does not allow break due to
-            ownership and borrow check rules
+            No. You can do return. But rust does <br />
+            not allow break due to
+            <a href="/Languages/Programming/Rust/"
+              >ownership and borrow check</a
+            >
+            rules
           </td>
           <td>Yes</td>
         </tr>
@@ -77,7 +83,8 @@
       <h4 id="move">Move Closure</h4>
       <dl>
         A move closure captures variables from its environment by taking
-        ownership of them (i.e., moving them). Example
+        <a href="/Languages/Programming/Rust/">ownership</a> of them (i.e.,
+        moving them). Example
       </dl>
       <pre><code class="language-css">
 fn main() {
@@ -92,8 +99,9 @@ fn main() {
 
       <h4 id="borrow">Borrow Closure</h4>
       <dl>
-        A borrow closure captures variables by borrowing them (i.e., creating
-        references to them)
+        A borrow closure captures variables by
+        <a href="/Languages/Programming/Rust/">borrowing</a> them (i.e.,
+        creating references to them)
       </dl>
     </article>
     <script src="/scripts/prism.js"></script>

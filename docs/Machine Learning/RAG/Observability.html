@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Observability to RAG Pipeline</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">RAG?</a>
+      <a href="#observe">RAG Observability</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">RAG / Retrieval-Augmented Generation</h2>
+      <p>
+        What is RAG? Why RAG is used? What is RAG Pipeline?
+        <a href="/Machine%20Learning/RAG/Introduction.html">here</a>
+      </p>
+
+      <h2 id="observe">RAG Observability</h2>
+      <p>
+        Observability means looking inside RAG pipeline what's happening(What
+        documents are read), how much time is taken in each layer of pipeline
+        etc.<br />
+        Observability is done using a tool named Arize Pheonix.<br />
+        Metrices shown on dashboard:<br />
+        &ensp; 1. Latency: p50(time RAG took to reach 50 percentile), p99(time
+        RAG took to reach 99 percentile)<br />
+        &ensp; 2. Number of tokens: to complete the call<br />
+        &ensp; 3. Prompts(system, user, assistant)<br />
+        &ensp; 4. Data at each step in process
+      </p>
+
+      <pre><code class="language-css">
+////////// Same as RAG pipeline created on RAG/Introduction.html /////////
+import os
+import dotenv
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, StorageContext, load_index_from_storage
+from llama_index.core import Settings
+
+dotenv.load_dotenv()
+if not os.getenv("GITHUB_TOKEN"):
+    raise ValueError("GITHUB_TOKEN is not set")
+os.environ["OPENAI_API_KEY"] = os.getenv("GITHUB_TOKEN")
+os.environ["OPENAI_BASE_URL"] = "https://models.inference.ai.azure.com/"
+
+llm = OpenAI(
+    model="gpt-4o-mini",
+    api_key=os.getenv("OPENAI_API_KEY"),
+    api_base=os.getenv("OPENAI_BASE_URL"),
+)
+
+embed_model = OpenAIEmbedding(
+    model="text-embedding-3-small",     # OR Change embedding model to "text-embedding-3-large"
+    api_key=os.getenv("OPENAI_API_KEY"),
+    api_base=os.getenv("OPENAI_BASE_URL"),
+)
+Settings.embed_model = embed_model
+
+# Load the local vectordb index, which is created
+# and saved earlier
+try:
+    storage_context = StorageContext.from_defaults(
+        persist_dir="../local_index"
+    )
+    index = load_index_from_storage(storage_context)
+except:
+    #Note: we have to reduce the batch size to stay within the token limits of the free service
+    documents = SimpleDirectoryReader("../Big Star Collectibles").load_data()
+    index = VectorStoreIndex.from_documents(documents, insert_batch_size=150)
+    index.storage_context.persist(persist_dir="../local_index")
+//////////////////////////////////////////////////
+
+import phoenix as px
+px.launch_app()       # Launch app on http://localhost:6006/
+
+from openinference.instrumentation.llama_index import LlamaIndexInstrumentor
+from phoenix.otel import register
+
+# Register Pheonix to llamaIndexIntrumentor
+# so that we can all the data that is run through
+# llamaIndex
+tracer_provider = register()
+LlamaIndexInstrumentor().instrument(tracer_provider=tracer_provider)
+
+# Pass augumented_query to LLM
+query_engine = index.as_query_engine(
+  llm=llm
+)
+
+# Ask question from LLM
+query_engine.query("When did the story for Big Star Collectibles Start?")
+Response(response='The story for Big Star Collectibles .............')
+
+query_engine.query("Who started Big Star Collectibles?")
+Response(response='Big Star Collectibles was started by Saura Chen.')
+      </code></pre>
+
+      <p>
+        After running the code above, visit http://localhost:6006/<br />
+        <img
+          src="/images/Machine_Learning/RAG/Pheonix1.png"
+          alt="RAG Observability"
+          style="width: 800px; height: 300px"
+        /><br />
+        Multiple Documents are read in RAG pipeline and that's shown in
+        Observability<br />
+
+        <img
+          src="/images/Machine_Learning/RAG/Pheonix2.png"
+          alt="RAG Observability"
+          style="width: 800px; height: 300px"
+        />
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

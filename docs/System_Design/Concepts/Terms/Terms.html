@@ -28,18 +28,37 @@
       </ul>
     </nav>
     <aside class="sidebar">
+      <a href="#cluster">Cluster</a>
+      <a href="#maintainable">Maintainable</a>
       <a href="#reliable">Reliable</a>
       <a href="#scalable">Scalable</a>
-      <a href="#maintainable">Maintainable</a>
     </aside>
 
     <main style="margin-left: 200px">
-      <h2 id="reliable">Reliable / Reliability</h2>
-      <dl>
+      <h3 id="cluster">Cluster</h3>
+      <p>
+        In system design Cluster is group of machines(running application
+        processes) working together as one system. 1 app server in
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/System-Design/Concepts/AWS/Terms/README.adoc"
+          >AZ1(Availability Zone)</a
+        >, other in AZ2 but working together as 1 system
+      </p>
+
+      <h3 id="maintainable">Maintainable / Maintainability</h3>
+      <p>
+        Over time, many different people will work on the system (engineering
+        and operations, both maintaining current behavior and adapting the
+        system to new use cases), and they should all be able to work on it
+        productively.
+      </p>
+
+      <h3 id="reliable">Reliable / Reliability</h3>
+      <p>
         System to continue to work correctly, even when things fail. When one
         component dies, the redundant component can take its place while. <br />
         What things can go wrong?
-      </dl>
+      </p>
       <table>
         <tr>
           <td>1. Hardware Failures</td>
@@ -61,21 +80,13 @@
         </tr>
       </table>
 
-      <h2 id="scalable">Scalable / Scalability</h2>
-      <dl>
+      <h3 id="scalable">Scalable / Scalability</h3>
+      <p>
         Means System behaves normally under increased load<br />
         <b>How to make system Scalable?</b><br />
         1. HPA (Horizontal Pod Autoscaling)<br />
         2. DB Scaling: Sharding/Partitioning DB
-      </dl>
-
-      <h2 id="maintainable">Maintainable / Maintainability</h2>
-      <dl>
-        Over time, many different people will work on the system (engineering
-        and operations, both maintaining current behavior and adapting the
-        system to new use cases), and they should all be able to work on it
-        productively.
-      </dl>
+      </p>
     </main>
   </body>
 </html>

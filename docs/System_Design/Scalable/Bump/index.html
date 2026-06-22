@@ -212,14 +212,9 @@ body {  //JSON
 
     <h2 id="hld">HLD</h2>
     <h4 id="kafkadesign">Design-1: Using Kafka to send events</h4>
-    <table>
-      <tr>
-        <td>
-          <div class="image-container">
-            <img src="//www.plantuml.com/plantuml/png/fLHHRnit37xdho2mXwM0woxDW6t6jZPr5ZTOqXYpEs10W89tuhc2PUacwUnwltwYvJleWBmKpKiaaT_7Z-PtV1iY-TZj3DJEHkyCtdnO8GLKDa3blk2TLPem_trthpUVu_n85gYEpkF7m5wIEs2hCAMV83SK2UTi8tje4xkkTKisuhqZzOuCsJgZJ3KANxVjYlq-noZ0lnrtZ7zIioLvsSfX15YbeZaxo6bSx9PZ_Jb7ctm4HP4g2eofLNlpJa9oKjL8_SSLZjhzXurnXtF3jrvBhf0EeBBgbLVBT3rUB--a1xbJgyD0jjHs2s1TP7Ifqrwu_4FZQehQMNGDGfCBHOTTI0bo5bI17ThAdGOyGy1GZ1FZx0QweEq6Dyvj3AD8Uewdq5YAN3lSSCJ5SZK80xZrpBXWrxzaqfVusB9TnHIC3zJYury0rrPvfzKCRfD-TN_ENtgtruhzt2IfyPIe7rSpc3lFVGusddPyS7vRgEtmvUzYoHdIparhjuDqaRTkXfVJrzEhwOyvnrGpVBzUBt7nn_h9ljfVlafTVEhrlic_qIUjVllfvr_0L0AXy1KG82cRpJZ3jMjrVI7fZRTgmBnuiWzXSo6J4zpbwwl9antnl80JGwBgn_XDP70c4RviwHakEFQMk5j2VXtLoy7lWuHBWYPXzPwnPR_J8SX8iWt53D2CE9IpN89xCutPpu-PN5YIIEULjXGvG3F2rSuFaG5NL1HZJyJYEdQAXz9boj_iTNF48VEPZsRun4_BR7uzVt_tOO6mqhRcmUy1o3CsdjCcij4SWSAMrGGFZ7L2aL98EAV4XuQEvLTQoXfPvRd93ZfbhCDG9rtevrsO9U-BRsI3p5AQHHRvXGJJkDv0VYthVPaUf_zDcnBQ5RD0aJBOiVozEtXmbJOisnsLfqC0mXsrUDfDaDQ5x5pd4KOx19hqf7I890EfE1wOxNaf5bkib_DhrdE-RPdRqpbL68Q9NQl4LCX9rX6lVaWPjHEsjocpsvd_0G00" 
-            alt="Amo App" class="zoomable-image" id="zoomableImage2" style="width:450px;height:350px;">
-          </div>
-          <pre class="puml" visibility: hidden>
+     <img src="//www.plantuml.com/plantuml/png/fLHHRnit37xdho2mXwM0woxDW6t6jZPr5ZTOqXYpEs10W89tuhc2PUacwUnwltwYvJleWBmKpKiaaT_7Z-PtV1iY-TZj3DJEHkyCtdnO8GLKDa3blk2TLPem_trthpUVu_n85gYEpkF7m5wIEs2hCAMV83SK2UTi8tje4xkkTKisuhqZzOuCsJgZJ3KANxVjYlq-noZ0lnrtZ7zIioLvsSfX15YbeZaxo6bSx9PZ_Jb7ctm4HP4g2eofLNlpJa9oKjL8_SSLZjhzXurnXtF3jrvBhf0EeBBgbLVBT3rUB--a1xbJgyD0jjHs2s1TP7Ifqrwu_4FZQehQMNGDGfCBHOTTI0bo5bI17ThAdGOyGy1GZ1FZx0QweEq6Dyvj3AD8Uewdq5YAN3lSSCJ5SZK80xZrpBXWrxzaqfVusB9TnHIC3zJYury0rrPvfzKCRfD-TN_ENtgtruhzt2IfyPIe7rSpc3lFVGusddPyS7vRgEtmvUzYoHdIparhjuDqaRTkXfVJrzEhwOyvnrGpVBzUBt7nn_h9ljfVlafTVEhrlic_qIUjVllfvr_0L0AXy1KG82cRpJZ3jMjrVI7fZRTgmBnuiWzXSo6J4zpbwwl9antnl80JGwBgn_XDP70c4RviwHakEFQMk5j2VXtLoy7lWuHBWYPXzPwnPR_J8SX8iWt53D2CE9IpN89xCutPpu-PN5YIIEULjXGvG3F2rSuFaG5NL1HZJyJYEdQAXz9boj_iTNF48VEPZsRun4_BR7uzVt_tOO6mqhRcmUy1o3CsdjCcij4SWSAMrGGFZ7L2aL98EAV4XuQEvLTQoXfPvRd93ZfbhCDG9rtevrsO9U-BRsI3p5AQHHRvXGJJkDv0VYthVPaUf_zDcnBQ5RD0aJBOiVozEtXmbJOisnsLfqC0mXsrUDfDaDQ5x5pd4KOx19hqf7I890EfE1wOxNaf5bkib_DhrdE-RPdRqpbL68Q9NQl4LCX9rX6lVaWPjHEsjocpsvd_0G00" 
+            alt="Amo App" style="width:1000px;height:800px;">
+<pre class="puml" visibility: hidden>
             @startuml
             control DNS as dns
             box India       #LightCyan
@@ -310,51 +305,39 @@ body {  //JSON
             sender <-> u: sender keep sending location updates every 30 seconds
             @enduml
           </pre>
-        </td>
-        <td>
-          <b><a href="/System_Design/Concepts/Terms/Authentication/jwt.html">User Authentication:</a></b> 
-            System authenticates user has permission to access friend's location or not<br><br>
+    <p>
+  <b><a href="/System_Design/Concepts/Terms/Authentication/jwt.html">User Authentication:</a></b> 
+            System authenticates user has permission to access friend's location or not<br>
           
             <b>Push notifications(Web sockets):</b> For lower latency and reduced resource usage. The server will push updates to the 
-          client only when there’s a significant change in location<br><br>
+          client only when there’s a significant change in location<br>
           
           <b>Fetch user locations through Google APIs:</b> Google APIs will collect GPS coordinates directly from the 
-          user's device via the user's permission.<br><br>
-          Friend is Offline: retry will happen. Fetcher might put same msg on kafka queue and service after x time.<br><br>
+          user's device via the user's permission.<br>
+          Friend is Offline: retry will happen. Fetcher might put same msg on kafka queue and service after x time.<br>
 
           <b>Reducing Latency:</b><br>
           &ensp; <a href="/Networking/Terms/Pooling_Websockets_Webhooks.html">Websockets</a> 
           can be used in place of pooling.<br>
           &ensp; Instead of Fetcher pushing data on kafka then sender sending the data, fetcher can directly send the data to user<br>
           &ensp; Replace Kafka with a lightweight event-driven architecture using WebSocket for real-time communication.
-          Kafka is overkill for a relatively low-volume messaging use case like this.<br><br>
+          Kafka is overkill for a relatively low-volume messaging use case like this.<br>
 
           <b>Fetching Location:</b> It not neccessary to use Google's API for location<br>
           &ensp; On Android we can use FusedLocationProviderClient API<br>
           &ensp; On iOS we can use CoreLocation API<br>
           &ensp; open-source or free geolocation services like OpenStreetMap or Here APIs for mapping and rendering user location.<br><br>
-
-        </td>
-      </tr>
-    </table>
+    </p>
 
     <h4 id="websocket">Design using WebSocket AppServer</h4>
-    <table>
-      <tr>
-        <td>
-          <div class="image-container">
-            <img src="//www.plantuml.com/plantuml/png/bLJVRy8s47w_l-BKFGmaIjLsqZQqhQLqKAJ-G0lTD0cfkiGNQk7OcUr0sLy_Eo4iaVOodiBTVTzzz-DyxpnPNnKACgEzDGeVNnCaXq8xICqNBhMGXCtlcsUv_VIp8scWp1kBxuvj3Aw0jS0GNaCUoHFEM7ksK0PscScIjCTdG-A15EciGQcqvxwObcN2TX-SqctqHl_1QMAo7Njip1SHHEwafE0-cjnHPnizPvzzdcBpvXj449IIOmmrwiU7w8fV8crbzvbkhLY5_yVfQkbgdc2WKhfp1rPIx-fAtnFijUPFLieSJisPMndfeuvp7j36CvfOOokk4Ho2cd1GvFr86Rs5oacznQqnMyKOnTGqaQ7BquhhgriRtBB7nIf1PJBoqcY0kMN61PlMqf1Uubl9El71wL-enBVV0APQM2F51EQLO_5yYbzPivU2xKm5gRuEb6_916R6SXiJwg223yRkEcehlFmbRjG4gJ3Zp1GG_aHRDS7hyStuTlnT4wFI2JwjrojS_BhUwAlzzLMeugFLUzVqw4EAdx__uKTGQOIG-nyGSlXJapRMZ673yBHYSI4ugoi0e2YkdT04rwQKsI3IvbQBC_Tmer_STb0vjf7_-kPsjD6zV4E04qdaQtPk4YRWssalLz1OU_aQvxSkk7i4US3AFMF9jf3EHQtUOCWVvmnvZqCOpLrmkoTzzfEn8OyiGQInGchox23luJ9ZMqyFrsQCEpkAsojz9RYdkmtvdQtCZ_z6_iSzd0-gVcPcqzdJydM1a4YTyNcL7P3bK0Z_LR7swWZaTYn6U63C0eg4GC8P1JvKT6JRMSMEB78TqN5ovxcDAjUED2v3TtZnoHi4-p2qxwupl4ZsDJwE_nxdBQJgqEEWGp_irbt1YqbblF2oH67f48h3Wagipn_2HSQNnbY4tfb27an2Ea-nCIdx0xE6PhRTX-8-V5Q5-WS0" 
-            alt="Amo App" class="zoomable-image" id="zoomableImage2" style="width:450px;height:350px;">
-          </div>
-        </td>
-        <td>
+    <img src="//www.plantuml.com/plantuml/png/bLJVRy8s47w_l-BKFGmaIjLsqZQqhQLqKAJ-G0lTD0cfkiGNQk7OcUr0sLy_Eo4iaVOodiBTVTzzz-DyxpnPNnKACgEzDGeVNnCaXq8xICqNBhMGXCtlcsUv_VIp8scWp1kBxuvj3Aw0jS0GNaCUoHFEM7ksK0PscScIjCTdG-A15EciGQcqvxwObcN2TX-SqctqHl_1QMAo7Njip1SHHEwafE0-cjnHPnizPvzzdcBpvXj449IIOmmrwiU7w8fV8crbzvbkhLY5_yVfQkbgdc2WKhfp1rPIx-fAtnFijUPFLieSJisPMndfeuvp7j36CvfOOokk4Ho2cd1GvFr86Rs5oacznQqnMyKOnTGqaQ7BquhhgriRtBB7nIf1PJBoqcY0kMN61PlMqf1Uubl9El71wL-enBVV0APQM2F51EQLO_5yYbzPivU2xKm5gRuEb6_916R6SXiJwg223yRkEcehlFmbRjG4gJ3Zp1GG_aHRDS7hyStuTlnT4wFI2JwjrojS_BhUwAlzzLMeugFLUzVqw4EAdx__uKTGQOIG-nyGSlXJapRMZ673yBHYSI4ugoi0e2YkdT04rwQKsI3IvbQBC_Tmer_STb0vjf7_-kPsjD6zV4E04qdaQtPk4YRWssalLz1OU_aQvxSkk7i4US3AFMF9jf3EHQtUOCWVvmnvZqCOpLrmkoTzzfEn8OyiGQInGchox23luJ9ZMqyFrsQCEpkAsojz9RYdkmtvdQtCZ_z6_iSzd0-gVcPcqzdJydM1a4YTyNcL7P3bK0Z_LR7swWZaTYn6U63C0eg4GC8P1JvKT6JRMSMEB78TqN5ovxcDAjUED2v3TtZnoHi4-p2qxwupl4ZsDJwE_nxdBQJgqEEWGp_irbt1YqbblF2oH67f48h3Wagipn_2HSQNnbY4tfb27an2Ea-nCIdx0xE6PhRTX-8-V5Q5-WS0" 
+            alt="Amo App" style="width:1000px;height:750px;">
+            <p>
           <b>Reduced Latency:</b><br>
           &ensp; In place of kafka, AppServer has became a Websocket server, which maintains connection open when client
           connects to server to get location of friend<br>
           &ensp; Removed Sender module, Now fetcher can directly send updates to AppServer.
-        </td>
-      </tr>
-    </table>
+            </p>
 
   </article>
   <script src="/scripts/prism.js"></script>

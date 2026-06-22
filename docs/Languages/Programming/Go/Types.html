@@ -31,6 +31,11 @@
         <li><a href="#aggregate">Aggregate</a></li>
         <li><a href="#reference">Reference</a></li>
         <li><a href="#interface">Interface</a></li>
+        <ul>
+          <li><a href="#restrictions">Restrictions</a></li>
+          <li><a href="#usecases">Use case</a></li>
+          <li><a href="#pollution">Interface Pollution</a></li>
+        </ul>
       </ul>
     </aside>
 
@@ -96,42 +101,104 @@ func (p Person) fun() string {  //Define function for struct
       </table>
 
       <h3 id="interface">4. Interface</h3>
-      <dl>
+      <p>
         Interface only declares the functions those should be implemented by
-        concrete types<br />
-        This is similar to
+        concrete types. Similar to
         <a
           href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime#pv"
           >Abstract Class C++98</a
         >,
         <a href="/Languages/Programming/C++/C++_11,14,17,20,23/index.html"
           >Concepts in C++20</a
-        ><br />
-        In C++, we design our class hierarchy first. In Go, you often design
-        your interfaces. These are Binded at Dynamic(ie runtime).<br />
-        In Go, the philosophy is to "accept interfaces, return structs."
-      </dl>
+        >. <br />
+        C++: A class must explicitly inherit from the abstract class (class Dog
+        : public Animal)<br />
+        Go follows <b>duck typing</b>(If it walks like a duck and quacks like a
+        duck, it's a duck), What it means is if type in Go implements all
+        methods of interface, it automatically implements the interface(no need
+        to provide implements or extends keyword)
+      </p>
       <pre><code class="language-css">
-// Interface declares functions to be implemented by concrete types
-type Speaker interface {
-    Speak() string
+package main
+import "fmt"
+
+// 1. Define the interface (The Contract)
+type Speaker interface {      &lt;&lt;&lt;&lt;&lt;&lt; See Keyword interface
+	Speak() string // Pure behavior, no implementation, no variables
 }
 
-// Concrete Struct A
-type Human struct{}
-func (h Human) Speak() string { return "Hello!" }
+// 2. Define a concrete type
+type Dog struct {
+	Name string // Structs hold the data
+}
 
-// Concrete Struct B
-type Dog struct{}
-func (d Dog) Speak() string { return "Woof!" }
+// 3. Implement the method (Implicitly!)
+// There is no mention of "Speaker" here. Go just figures it out.
+func (d Dog) Speak() string {
+	return "Woof!"
+}
 
-// This function doesn't care if it gets a Human or a Dog
-// accept interfaces, return structs
-func MakeItTalk(s Speaker) {
-    fmt.Println(s.Speak())
+type Robot struct{}
+
+func main() {
+	// A variable of interface type
+	var s Speaker
+
+	s = Dog{Name: "Buddy"} // Valid! Dog implements Speak()
+	fmt.Println(s.Speak())
+
+	// s = Robot{} 
+	// ^ UNCOMMENTING THIS WILL CAUSE A COMPILER ERROR:
+	// "cannot use Robot{} as Speaker value: Robot does not implement Speaker (missing method Speak)"
 }
             </code></pre>
-      <h4>Interface Pollution Problem</h4>
+
+      <h4 id="restrictions">Restrictions on Go Interfaces</h4>
+      <p>
+        1. Interface can have Methods only, variables, constants, or data fields
+        should not be present<br />
+        2. Cannot write the body ({ ... }) of a function inside an interface.<br />
+        3. Implementing type must match the method name, parameters, and return
+        types exactly
+      </p>
+
+      <h4 id="usecases">Use case of interface</h4>
+      <table>
+        <tr>
+          <th>Use Case</th>
+          <th>Explanation</th>
+        </tr>
+        <tr>
+          <td>
+            Multiple Structs, One Interface ie
+            <a
+              href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime"
+              >(Polymorphism)</a
+            >
+          </td>
+          <td>
+            Allowing different structs to be treated as the same type because
+            they all implement the same functions.<br />
+            Eg: A database interface. You might have a MySQL struct and a
+            MongoDB struct. Both implement a Save() function.<br />
+            <pre><code class="language-css">
+type Saver interface {
+    Save(data string) error
+}
+
+func DataProcessor(s Saver) { // Any database can be passed into this function
+    s.Save("important info")
+}
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Decoupling and Testing (Mocking)</td>
+          <td></td>
+        </tr>
+      </table>
+
+      <h4 id="pollution">Interface Pollution Problem</h4>
       <dl>
         Creating interfaces where they aren't actually needed. ie creating
         interface for every class<br />

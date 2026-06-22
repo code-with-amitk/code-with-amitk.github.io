@@ -42,6 +42,7 @@
         <li><a href="#hit">Hit Qwen RestAPIs</a></li>
         <li><a href="#logs">Qwen Logs</a></li>
       </ul>
+      <a href="#uninstall">UnInstall Ollama, Qwen</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -222,6 +223,36 @@ indarpur unfollowed for 2 weaks   //Spelling mistake. Area name mistake
       </p>
 
       <dl><b>Solution</b></dl>
+
+      <h2 id="uninstall">Uninstall Ollama and Qwen</h2>
+      <pre><code class="language-css">
+$ sudo systemctl status ollama
+[sudo] password for amit:
+● ollama.service - Ollama Service
+     Loaded: loaded (/etc/systemd/system/ollama.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2026-06-21 10:41:11 IST; 5min ago
+
+$ ollama list
+NAME            ID              SIZE      MODIFIED
+qwen2.5:1.5b    65ec06548149    986 MB    5 days ago
+
+$ ollama rm qwen2.5:1.5b
+ ollama list
+NAME    ID    SIZE    MODIFIED
+
+sudo rm -rf /usr/share/ollama/.ollama/models
+sudo systemctl stop ollama
+sudo systemctl disable ollama
+sudo rm /etc/systemd/system/ollama.service
+sudo systemctl daemon-reload
+
+sudo rm -f /usr/local/bin/ollama
+sudo rm -f /usr/bin/ollama
+sudo rm -rf /usr/share/ollama
+sudo userdel ollama
+sudo groupdel ollama
+
+      </code></pre>
     </article>
 
     <script src="/scripts/search.js"></script>

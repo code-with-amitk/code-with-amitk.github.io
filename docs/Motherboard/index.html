@@ -1,29 +1,3 @@
-<!--
-    <!DOCTYPE html> 
-        This is a document type declaration (DTD), which indicate the version of HTML.
-        It is the required initial tag for HTML5 documents. Browser follows appropriate rules and specifications for HTML5.
-
-    <html>
-        This is essential element in an HTML document.
-        It represents the root or top-level element of an HTML file & defines the beginning and end of the HTML content.
-
-    <head>
-        Provides metadata(As document title, character encoding, CSS stylesheets, JavaScript files, and other metadata).
-        Common elements in head section:
-        <title>: Specifies the title of the webpage that is displayed in the browser's title bar or tab.
-        <link rel="stylesheet" href="styles.css">: Links an external CSS stylesheet to apply styles to the HTML elements.
-
-    <body> 
-        This is a container element in an HTML document that contains the visible content of a webpage.
-        Can include text, headings, paragraphs, images, links, lists, tables, forms, and other HTML elements
-            <h1> heading
-            <p> paragraph
-            <img> image
-            <a> link
-    
-    <div>   (Division)
-        This is used to group and organize other HTML elements together
--->
 <!doctype html>
 <html>
   <head>
@@ -39,6 +13,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -68,7 +43,14 @@
           &ensp;
           <a href="Memory/Memory_Types.html">Memory Types(Registers, Caches)</a
           ><br />
-          &ensp; <a href="Memory/Processes.html">Processes</a><br /><br />
+          &ensp; Process<br />
+          &emsp;
+          <a href="Memory/Memory_layout_of_process.html"
+            >Process Space(CS, DS, SS ,HS), Process Table, Process States</a
+          ><br />
+          &emsp;
+          <a href="Memory/Processes.html">Swapper(pid=0), systemd(pid=1)</a
+          ><br />
 
           <b><a href="Terms/">Terms:</a></b> UART <br /><br />
 
