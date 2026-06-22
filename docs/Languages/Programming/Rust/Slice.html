@@ -38,7 +38,12 @@
       <h2 id="what">What is Slice</h2>
       <dl>
         Slice is somepart of larger data, it
-        <b><u>always borrow data(Hence RO)</u></b> from the sliced type.<br />
+        <b
+          ><u
+            >always <a href="References Borrowing/">borrow</a> data(Hence RO)</u
+          ></b
+        >
+        from the sliced type.<br />
         It gives you a view into a larger collection. Slice cannot grow<br />
         Slices always borrow from another object. Original object has to remain
         'alive' (in scope) for at least as long as slice is alive.

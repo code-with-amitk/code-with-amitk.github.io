@@ -37,16 +37,66 @@
       <h2 id="what">What is Context?</h2>
       <p>
         In Go, context.Context is an
-        <a href="/Languages/Programming/Go/">interface</a> that carries
+        <a href="/Languages/Programming/Go/">interface</a> which defined in
+        <a href="https://pkg.go.dev/context">package context</a> that carries
         deadlines, cancellation signals, and request-scoped values across API
-        boundaries and between goroutines.<br />
+        boundaries and between goroutines. <br />
+        Incoming requests to a HTTP server creates a Context, and outgoing calls
+        to servers accept a Context. The chain of function calls between them
+        MUST propagate the Context(This is developer's responsibility)<br />
         <b>Usage of Context Interface:</b><br />
-        1. Cancel work when a client disconnects or a timeout expires<br />
-        2. Set deadlines for operations (e.g:
+        1. Cancellation signals: Cancel work when a client disconnects or a
+        timeout expires<br />
+        2. Deadlines: Set deadlines for operations (e.g:
         <a href="#dboperations">DB query must finish in 5 seconds</a>)<br />
-        3. Pass request-scoped data (e.g., user IDs, authentication tokens)
-        through a call chain
+        3. Request-scoped values: Pass request-scoped data (e.g., user IDs,
+        authentication tokens) through a call chain
       </p>
+      <table>
+        <tr>
+          <td>
+            go provided Context Interface<br />
+            <pre><code class="language-css">
+go/pkg/mod/golang.org/toolchain@v0.0.1-go1.26.2.linux-amd64/src/context/context.go
+type emptyCtx struct{}
+
+//// Context Interface
+type Context interface {
+  Deadline() (deadline time.Time, ok bool)
+  Done() &lt;-chan struct{}
+  Value(key any) any
+}
+
+// Background is never canceled, has no values, deadline
+type backgroundCtx struct{ emptyCtx }
+func Background() Context {
+	return backgroundCtx{}
+}
+
+type CancelFunc func()
+func WithCancel(parent Context) (ctx Context, cancel CancelFunc) {
+	c := withCancel(parent)
+	return c, func() { c.cancel(true, Canceled, nil) }
+}
+
+func WithCancelCause(parent Context) (ctx Context, cancel CancelCauseFunc) {
+	c := withCancel(parent)
+	return c, func(cause error) { c.cancel(true, Canceled, cause) }
+}</code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+import (
+	"context"
+)
+func main() {
+  ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+}
+      </code></pre>
+          </td>
+        </tr>
+      </table>
 
       <h2 id="how">How Context is provided in Go?</h2>
       <p>

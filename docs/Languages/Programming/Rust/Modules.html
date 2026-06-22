@@ -117,13 +117,14 @@ crate
             </code></pre>
 
       <h3 id="struct">struct inside module</h3>
-      <pre>
-                1. To access structure has to declared public, but still all feilds of struct remains private.
-                2. To access any field, that feild has to be made public.
-                3. We need to define a implementation fo access fields in module_a::st since there is a private member.
-                4. Then we can access members using dotted notation.
-            </pre
-      >
+      <p>
+        1. To access structure has to declared public, but still all feilds of
+        struct remains private. <br />
+        2. To access any field, that feild has to be made public. <br />
+        3. We need to define a implementation fo access fields in module_a::st
+        since there is a private member. <br />
+        4. Then we can access members using dotted notation.
+      </p>
       <pre><code class="language-css">
 mod module_a {
     pub struct st{           //1
@@ -149,10 +150,11 @@ pub fn fun1 {
             </code></pre>
 
       <h3 id="enum">enum inside module</h3>
-      <pre>
-                Unlike structure in module, if enum is public all its variants are also public. We need to explicitly make every enum variant as public as in struct.
-            </pre
-      >
+      <p>
+        Unlike structure in module, if enum is public all its variants are also
+        public. We need to explicitly make every enum variant as public as in
+        struct.
+      </p>
       <pre><code class="language-css">
 mod module_a {
     pub enum color {
@@ -167,10 +169,10 @@ pub fn fun() {
             </code></pre>
 
       <h3 id="use">use keyword</h3>
-      <dl>
+      <p>
         Similar to type alias/using keyword in c++, use is used to bring Paths
         into Scope.
-      </dl>
+      </p>
       <pre><code class="language-css">
 mod module_a {
     pub mod module_b {
@@ -201,11 +203,13 @@ fn function2() -> IoResult<()> {
             </code></pre>
 
       <h4 id="pubuse">pub use / Reexporting</h4>
-      <pre>
-                After bringing a name into scope with the use keyword, the name available in the new scope is private, To use it we combine pub and use.
-This technique is called re-exporting because we’re bringing an item into scope but also making that item available for others to bring into their scope.
-            </pre
-      >
+      <p>
+        After bringing a name into scope with the use keyword, the name
+        available in the new scope is private, To use it we combine pub and use.
+        This technique is called re-exporting because we’re bringing an item
+        into scope but also making that item available for others to bring into
+        their scope.
+      </p>
       <pre><code class="language-css">
 mod module_a {
     pub mod module_b {

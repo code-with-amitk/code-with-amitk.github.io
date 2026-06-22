@@ -31,55 +31,63 @@
 
     <aside class="sidebar">
       <a href="#what">Channel?</a>
-      <ul>
-        <li><a href="#select">select (wait on many channels)</a></li>
-      </ul>
       <a href="#types">Types of Channels</a>
       <ul>
-        <li><a href="#buffered">Buffered / Bounded</a></li>
-        <li><a href="#unbuffered">Unbounded / Unbuffered</a></li>
+        <li><a href="#bufunbuf">Unbuffered, Buffered</a></li>
         <li><a href="#directional">Bidirectional / Directional</a></li>
       </ul>
+      <a href="#select">select (wait on many channels)</a>
       <a href="#internal">Internal Implementation</a>
       <a href="#fast">How Channels are Fast</a>
     </aside>
 
     <article style="margin-left: 200px">
       <h2 id="what">Go Channel(for IPC)</h2>
-      <dl>
+      <p>
         Go channels are used for synchronizing IPC between goroutines(Same as
         <a
           href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Threads#usks"
           >Rust Tasks = Green Threads</a
         >). Go routines are managed by Go runtime.<br />
+        <font color="red"
+          >NOTE: Channels are not needed if 2 or more goroutines are not
+          present. Channels are designed exclusively for inter-goroutine
+          communication and synchronization</font
+        ><br />
+        If you are doing everything sequentially inside the single main
+        goroutine, channel is unnecessary<br />
         we can send/recv data via channel with operator, &lt;- between
         goroutines. The data flows in the direction of the arrow.<br />
         channels are datastructures allocated on heap that reference both sender
         and receiver goroutines<br />
         <b>close():</b> Only sender can close a channel to indicate that no more
         values will be sent.
-      </dl>
+      </p>
       <table>
         <td>
+          <p>Write/Read on Channel</p>
           <pre><code class="language-css">
-// Create a channel
-ch := make(chan int)
+package main
+import "fmt"
 
-// Send/recv values on Channel
-ch &lt;- v            // Send v to channel ch.
-v := &lt;-ch          // Receive from ch, and assign value to v.
+func main() {
+  ch := make(chan int)  //Create a Channel
 
-// close the channel
-// Reciever can check if channel is closed?
-v, ok := &lt;-ch
-if ok == false {
-  // channel is closed
+	go func() {   // Start goroutine
+		v := 1      // Local variable int
+		ch &lt;- v  //Write v on channel
+	}()
+
+	v, ok := &lt;-ch    // Read from channel
+	if !ok {
+		fmt.Println("Closed")
+	} else {
+		fmt.Println("Received first value:", v)
+	}
 }
 
-// Reading all values from channel until it is closed
-for v := range ch {
-  fmt.Println(v)
-}
+$ go run
+Received first value: 1
         </code></pre>
         </td>
         <td>
@@ -92,128 +100,264 @@ ch := make(chan int, 100)
         </td>
       </table>
 
-      <h3 id="select">select(wait on multiple channels)</h3>
-      <dl>
-        Channels need not to be closed because channels are not files; you don't
-        need to close them
-      </dl>
-      <h4>Code</h4>
-      <dl>
-        <b>1. Write/Read data on channels</b>
-      </dl>
+      <h2 id="types">Types of Channels</h2>
+      <h3 id="bufunbuf">Unbuffered, Buffered</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th id="unbuffered">Unbuffered / Unbounded</th>
+          <th id="buffered">Buffered / Bounded</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            Like a hand-to-hand pass. The sender must wait until the receiver
+            does not read the value from channel. If no one is there to take it,
+            the sender BLOCKS/DEADLOCK.
+          </td>
+          <td>
+            Like a mailbox with a fixed slot capacity. The sender can drop off
+            letters and leave immediately, as long as the mailbox isn't full.
+            The receiver can pick them up later.
+          </td>
+        </tr>
+        <tr>
+          <td>Code</td>
+          <td>
+            <pre><code class="language-css">
+package main
+import "fmt"
+import "time"
+
+func main() {
+    ch := make(chan int) // Unbuffered
+
+    go func() {
+        fmt.Println("Sender: Attempting to send...")
+        ch *lt;- 42 // Blocks here until main goroutine reads it
+        fmt.Println("Sender: Sent successfully!")
+    }()
+
+    time.Sleep(2 * time.Second)
+    fmt.Println("In main before channel read")
+    v := &lt;-ch 
+    time.Sleep(2 * time.Second)
+    fmt.Println("Receiver: Got", v)
+}
+
+$ go run
+Sender: Attempting to send...
+In main before channel read
+Sender: Sent successfully!
+Receiver: Got 42
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+package main
+import "fmt"
+
+func main() {
+    // Buffered channel that can hold up to 2 items
+    ch := make(chan int, 2) 
+
+    // We can send 2 items sequentially without any background goroutine!
+    ch &lt;- 10 
+    ch &lt;- 20 
+    fmt.Println("Sent 10 and 20 to buffer without blocking.")
+
+    // ch &lt;- 30 // UNCOMMENTING THIS WOULD BLOCK (Buffer is full!)
+
+    fmt.Println(&lt;-ch) // Reads 10
+    fmt.Println(&lt;-ch) // Reads 20
+}
+
+$ go run
+Sent 10 and 20 to buffer without blocking.
+10
+20
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Can Deadlock</td>
+          <td>
+            Yes. <br />
+            Easier in unbuffered. <b>Conditions for deadlock:</b><br />
+            1. Sender goroutine sent data on channel and reciever goroutine is
+            not present to read from it<br />
+            <pre><code class="language-css">
+package main
+func main() {
+    ch := make(chan int) 
+
+    v := 1
+    // DeadLock Main goroutine blocks forever because nobody is reading.
+    ch &lt;- v
+}
+            </code></pre>
+            <br />
+            2. Receiving without a concurrent sender. reading from channel where
+            no writer<br />
+            <pre><code class="language-css">
+package main
+import "fmt"
+
+func main() {
+  ch := make(chan int) 
+
+  // DeadLock Main goroutine blocks forever because nobody is writing.
+	v, ok := &lt;-ch    // Read from channel
+	if !ok {
+		fmt.Println("Closed")
+	} else {
+		fmt.Println("Received first value:", v)
+	}
+}
+            </code></pre>
+          </td>
+          <td>
+            Yes<br />
+            <b>Conditions for deadlock:</b><br />
+            1. Overfilling the buffer: Sending more items than the buffer's
+            capacity without anyone reading them<br />
+            <pre><code class="language-css">
+func main() {
+    // Capacity = 1
+    ch := make(chan int, 1)
+    ch &lt;- 10 // Fine, fills the buffer.
+    ch &lt;- 20 // Deadlock Buffer is full, main goroutine blocks forever.
+}
+            </code></pre>
+            <br />
+            2. Reading from an empty buffer: Trying to read from an empty
+            buffered channel when no other goroutines are alive to write to it.
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="directional">2. Bidirectional / Directional</h3>
+      <p>
+        Directional vs. Undirectional is completely different from
+        <a href="#bufunbuf">Buffered vs. Unbuffered.</a><br />
+        Buffered/Unbuffered defines how the channel behaves internally
+        (capacity/blocking rules).<br />
+        Directional/Bidirectional defines who is allowed to read or write to it
+        (type safety).<br />
+        By default, all channels you create are bidirectional (you can read and
+        write). However, you can restrict them in function signatures to prevent
+        bugs (e.g., preventing a function that should only read from
+        accidentally writing).
+      </p>
+
+      <h4>Bidirectional</h4>
+      <p>
+        The <a href="#bufunbuf">unbuffered and buffered</a> channels above are
+        bidirectional ie allows flow in both directions
+      </p>
+
+      <h4>Directional Channels</h4>
+      <p>
+        <u>1. Write-Only Channel:</u> chan&lt;- int. Look at where the arrow is
+        pointing. It points into the chan. You are taking an integer (int) and
+        pushing it into the channel (chan). You are writing(send) data to chan.
+        ch &lt;- 10.<br />
+
+        <u>2. Read-Only Channel:</u> &lt;-chan int. Look at where the arrow is
+        pointing now. It points away from the chan. Data is flowing out of the
+        channel (chan). You can only read (receive) data from it. val := &lt;-ch
+      </p>
+
+      <table>
+        <tr>
+          <th></th>
+          <th>Write Only (chan &lt;- int)</th>
+          <th>Read Only (&lt;-chan int)</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>Reads not allowed on channel</td>
+          <td>Writes not allowed on channel</td>
+        </tr>
+        <tr>
+          <td>Code</td>
+          <td>
+            <pre><code class="language-css">
+package main
+func main() {
+    // Write only Channel
+    ch := make(chan&lt;-int) 
+
+    // reading from WO Channel
+    // invalid operation: cannot receive from send-only channel
+    v := &lt;-ch
+}
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+package main
+func main() {
+    // Read only Channel
+    ch := make(&lt;-chan int) 
+
+    // Writing from RO Channel
+    // invalid operation: cannot send to receive-only channel
+    ch &lt;- 1
+}
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="select">wait on multiple channels. select</h2>
       <pre><code class="language-css">
 package main
-import (
-	"fmt"
-)
+
+import "fmt"
+
 func main() {
-  // 1. Declare 3 unbuffered channels ch1,ch2,done 
 	ch1 := make(chan int)
 	ch2 := make(chan int)
-	done := make(chan int)
 
-  // 2. go routine. Send data on channels
 	go func() {
 		ch1 &lt;- 1
 		ch2 &lt;- 2
-		close(done)
+		// 1. Must close channels when finished sending
+		close(ch1)
+	    close(ch2)
 	}()
 
-  // 3. Keep waiting on channels
 	for {
 		select {
-		case v1, ok := &lt;-ch1:  // Recieve data on ch1
+		case v1, ok := &lt;-ch1:
 			if ok {
 				fmt.Println("ch1:", v1)
+			} else {
+				// 2. Setting a channel to nil disables this case in a select block
+				ch1 = nil 
 			}
-		case v2, ok := &lt;-ch2:  // Recieve data on ch2
+		case v2, ok := &lt;-ch2:
 			if ok {
-        fmt.Println("ch2:", v2)
+				fmt.Println("ch2:", v2)
+			} else {
+				ch2 = nil
 			}
-		case &lt;-done:           // Receive data on done
-      fmt.Println("Bye!")
-      return
-    default:
-      // Print this, when no channel is ready
-      fmt.Println("No case ready")
-    }
-  }
+		}
+
+		// 3. If both channels are nil, break out of the infinite loop safely
+		if ch1 == nil && ch2 == nil {
+			break
+		}
+	}
+	
+	fmt.Println("Done!")
 }
-$ go run main.go
+$ go run
 ch1: 1
 ch2: 2
-Bye!
+Done!
       </code></pre>
-
-      <h2 id="types">Types of Channels</h2>
-      <table>
-        <tr>
-          <th></th>
-          <th id="buffered">Buffered / Bounded</th>
-          <th id="unbuffered">Unbuffered / Unbounded</th>
-        </tr>
-        <tr>
-          <td>What</td>
-          <td>
-            When buffer length is provided a buffered channel is created<br />
-            <pre><code class="language-css">
-ch := make(chan int, 100)
-        </code></pre>
-          </td>
-          <td>
-            Channel created without any size<br />
-            <pre><code class="language-css">
-ch := make(chan int)
-        </code></pre>
-          </td>
-        </tr>
-        <tr>
-          <td>No reciever</td>
-          <td>No issue</td>
-          <td>
-            Memory Leak in <a href="/Languages/Programming/Go/">goroutine</a>
-          </td>
-        </tr>
-      </table>
-
-      <h3 id="buffered">1.</h3>
-      <dl>
-        . Send to a buffered channel block only when the buffer is full.
-        Receives block when the buffer is empty.
-      </dl>
-
-      <h3 id="directional">Bidirectional / Directional</h3>
-      <dl>
-        In Go, all channels start as bidirectional, but you can use directional
-        types to enforce API safety and prevent bugs.
-      </dl>
-
-      <table>
-        <tr>
-          <th></th>
-          <th>1. Bidirectional</th>
-          <th>2. Directional (Recieve only)</th>
-          <th>3. Directional (Send only)</th>
-        </tr>
-        <tr>
-          <td>What</td>
-          <td>Can both send and receive data</td>
-          <td>Data can only read data from it</td>
-          <td>Data can only put data into it</td>
-        </tr>
-        <tr>
-          <td>Format</td>
-          <td>(chan T)</td>
-          <td>&lt;-chan T</td>
-          <td>chan&lt;- T</td>
-        </tr>
-      </table>
-      <dl>
-        <b>Why use directional Channels?</b><br />
-        &ensp; 1. Safety: If we have a function that only processes results, we
-        should use directional(RO) channel &lt;-chan T. Using bidirectional may
-        accidently send data on the channel
-      </dl>
 
       <h2 id="internal">Internal Implementation of Channels</h2>
       <dl>

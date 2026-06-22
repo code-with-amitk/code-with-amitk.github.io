@@ -1,0 +1,270 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Signal Handling</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">Signal?</a>
+      <a href="#examples">Signal Examples</a>
+      <a href="#mask">Signal Mask</a>
+      <a href="#catch">Catching Signals</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="what">Signals</h2>
+      <p>
+        This is
+        <a href="/Operating%20System/index.html">Software Interrupt</a> to
+        processor. For Example: Cntl^C, sends SIGINT to running process. Process
+        should handle this. All signals start from SIG.
+      </p>
+
+      <h2 id="examples">Signal Examples</h2>
+      <table>
+        <tr>
+          <th>Signal</th>
+          <th>Signal Number</th>
+          <th>Details</th>
+        </tr>
+        <tr>
+          <td>SIGHUP</td>
+          <td>1</td>
+          <td>Hang Up<br />When terminal controlling the process is closed</td>
+        </tr>
+        <tr>
+          <td>SIGINT</td>
+          <td>2</td>
+          <td>
+            keyboard Interrupt(Cntrl C)<br />
+            Can be caught?Yes If not caught, Terminate the process. Used for
+            graceful termination
+          </td>
+        </tr>
+        <tr>
+          <td>SIGQUIT</td>
+          <td>3</td>
+          <td>
+            Keyboard Quit Cntl +\ OR Cntl Z<br />
+            Can be caught? Yes Similar to SIGINT but Generates core dump on
+            termination, cleans up resources
+          </td>
+        </tr>
+        <tr>
+          <td>SIGBUS</td>
+          <td></td>
+          <td>
+            signal is sent to a process when it causes a bus error(access memory
+            that he CPU cannot physically address: an invalid address for the
+            address bus)
+          </td>
+        </tr>
+        <tr>
+          <td>SIGTRAP</td>
+          <td>5</td>
+          <td>
+            Breakpoint<br />
+            Debuggers register and handle this signal.This is sent to debugger
+            process when trap() occurs, for example, when a particular function
+            is executed, or when a particular variable changes value
+          </td>
+        </tr>
+        <tr>
+          <td>SIGABRT</td>
+          <td>6</td>
+          <td>
+            Abort current process abort() system call<br />
+            <pre><code class="language-css">
+$ kill  -SIGABRT  pid
+void main(){
+    abort();    //Generates SIGABRT
+} 
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>SIGKILL</td>
+          <td>9</td>
+          <td>
+            This CANNOT be caught. Will always terminate the process. Terminates
+            immediately, does not allows process to do clean up<br />
+            <pre><code class="language-css">
+kill -9 pid     OR    
+kill -SIGKILL pid
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>SIGSEGV(Segmentation fault)</td>
+          <td>11</td>
+          <td>
+            Program accessed a memory location that was not assigned.<br />
+            <pre><code class="language-css">
+kill -9 pid     OR    
+kill -SIGKILL pid
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>SIGALRM</td>
+          <td>14</td>
+          <td>
+            Alarm clock<br />
+            <pre><code class="language-css">
+fun(){  printf("Hi");  }
+void main(){
+     signal(SIGALRM, fun); 
+     alarm(1);    //alarm(t) generates SIGALRM after t sec.
+} 
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>SIGTERM</td>
+          <td>15</td>
+          <td>
+            If not caught, Terminate the process. Used for graceful termination.
+            <br />
+            <pre><code class="language-css">
+fun(){  printf("Hi");  }
+void main(){
+     signal(SIGALRM, fun); 
+     alarm(1);    //alarm(t) generates SIGALRM after t sec.
+} 
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>SIGCHLD</td>
+          <td>17</td>
+          <td>
+            Child Process has stopped or Exited. It can be caught.<br />
+            When child dies it send SIGCHLD to parent.
+            <br />
+            <pre><code class="language-css">
+void signalHandler(int signal){
+    if(signal == SIGCHLD){
+        printf("Child Dead");
+    }
+}
+main() {
+     signal(SIGCHLD,signalHandler);
+     if(fork() == 0){    //Child Process
+        sleep(5);
+        printf("Child dying")
+    }
+} 
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>SIGCONT</td>
+          <td>18</td>
+          <td>
+            Continue the suspended process. It cannot be caught<br />
+            Resume the stopped/suspended process. It always resumes the process.
+          </td>
+        </tr>
+        <tr>
+          <td>SIGSTOP</td>
+          <td>19</td>
+          <td>
+            Suspend the process donot Kill kill -STOP pid<br />
+            It cannot be caught<br />
+          </td>
+        </tr>
+        <tr>
+          <td>SIGPIPE</td>
+          <td></td>
+          <td>
+            Scenario-1: When process attempts to write to a pipe whose Read-end
+            is closed.<br />
+            <pre><code class="language-css">
+Parent                                    Child
+            Write-end    Read-end
+                |-parent pipe--|
+                |-child pipe---|
+</code></pre>
+            <br />
+            Scenario-2: Attempt to write to socket what is no longer open for
+            reading.
+          </td>
+        </tr>
+        <tr>
+          <td>SIGUSR1, SIGUSR2</td>
+          <td></td>
+          <td>
+            User Defined Signals. They donot have any special meaning as
+            SIGTERM, SIGKILL etc. <br />
+            Kernel will never send SIGUSR to process. Meaning of signal can be
+            set up by user as per need of application.
+          </td>
+        </tr>
+        <tr>
+          <td>SIGWINCH</td>
+          <td></td>
+          <td>
+            Signals Window Change sent automatically when a terminal detects a
+            change in it's windows size to allow for a redraw.
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="mask">Signal Mask</h2>
+      <p>
+        Collection of Signals blocked is called SM of process. sigprocmask() API
+        is used to define Signal mask but in Single Threaded App. use
+        pthread_sigmask() instead of sigprocmask()
+      </p>
+
+      <h2 id="catch">Catching Signals</h2>
+      <pre><code class="language-css">
+// This program will not terminate on Cntrl^C.
+
+#include &lt;signal.h&gt;
+#include &lt;iostream&gt;
+
+void SIGINT_Handler(int signalNumber){
+  std::cout &lt;&lt; "Got Cntrl^C\n";
+  return;
+}
+
+int main(){
+  struct sigaction stAction;
+  stAction.sa_flags = 0;
+  sigemptyset (&stAction.sa_mask);
+  
+  //Adding Handler for SIGINT
+  stAction.sa_handler = SIGINT_Handler;
+  sigaction (SIGINT, &stAction, NULL);
+  
+  while(1);
+}
+      </code></pre>
+    </main>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

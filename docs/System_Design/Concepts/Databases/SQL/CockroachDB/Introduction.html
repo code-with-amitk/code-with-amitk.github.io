@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CockroachDB</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">CockroachDB</a>
+      <a href="#arch">Architecture</a>
+      <a href="#br">Build & Run CockroachDB from source</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is CockroachDB</h2>
+      <p>
+        CockroachDB is a SQL Database<br /><br />
+
+        <b>What Problem it solves?</b><br />
+        Traditional relational databases (e.g. PostgreSQL, MySQL) are strong on
+        SQL and ACID transactions but are hard to scale horizontally and do not
+        survive datacenter failures without significant operational overhead.
+        NoSQL databases (e.g. Cassandra, DynamoDB) scale well but sacrifice ACID
+        transactions and familiar SQL semantics. CockroachDB is designed to give
+        you <b>both</b>:<br />
+        &ensp; Horizontal scalability(Add nodes to grow storage and throughput
+        linearly)<br />
+        &ensp; Survivability(Tolerates disk, node, rack, and datacenter failures
+        automatically)<br /><br />
+
+        <b>When to choose CockroachDB</b><br />
+        - Applications that need
+        <b>PostgreSQL semantics at scale</b> (multi-region, high
+        availability)<br />
+        - Systems where <b>zero-downtime rolling upgrades</b> are mandatory<br />
+        - Workloads requiring <b>strong ACID guarantees</b> that span multiple
+        rows/tables<br />
+        - Scenarios where <b>geo-partitioning</b> or
+        <b>locality-aware placement</b>
+        is needed
+      </p>
+
+      <h2 id="arch">Architecture</h2>
+      <pre><code class="language-css">
+                 Application
+                     |   /\
+                     \/   |
+&lt;----------------CockroachDB Cluster--------------------------------------------&gt;
+
+--AWSRegion:Mumbai. AZ-1-     --AWSRegion:NYC. AZ-2-     --AWSRegion:Japan. AZ-3-
+| EC2(CockroachDB node)|    | EC2(CockroachDB node) |    |EC2(CockroachDB node) |
+------------------------       ---------------------      ------------------------
+      </code></pre>
+
+       <img 
+            src="//www.plantuml.com/plantuml/png/ZPBDJkCm4CVlVeeH5q2YekcngqM4akrMf8LD0YjMlRZngB5mxQmz1lhsQwUBI7hYDjBy_XyQ-zeHj-HtYf4aXJ0pzOirl6vkR-1MEh9ouma5bBzoI6tTICAQl4N8tlckLSWOhybOU7HeWJlmh0r-ifOjrmGdKPRpFTgJk7HgkBrxWfcI6CQrxj9Ar08jg4-5u6nZtWTLbaOR9QcHDGI3CgJZq3RzawprMciZC0mFkDaexDnqSWnEFi3949mSW_e3r4DGir0POaN6j244yueswWyGI0TpCzASv2j2NYv7P141zLPg1DTrxv_SEtGWwR01mOc3ZoTfZ15TKimO92MiQgIBEOtV1adlK9r9JzMJUJOhihJAe4flyYp6MdV6f835geA7Oh5CYsUuovulcEOxXB8g5glv-JV65gioAwg8tVzNHU0Ss5EQFsPdfwcIDPv6CbKMkTZ3pCH_GjZlxs5q1KvDeSpoR5P15_AZk5-kTMSAltzcHGPIV4zwfPqAjz9X8Y33mjlJlaNuwz7kUzvEZQwSu5_o3bniefFf70ciUOCtIGsizGlkfv6-J8wE7HPmM8pPZhSj2Y03p7AznSlnHJ8UVrQv3fFVgNy0"
+            alt="Architecture" >
+            <pre class="puml" visibility: hidden>
+@startuml
+title CockroachDB Distributed SQL Architecture Example
+
+actor User as u
+participant "SQL Layer" as sl
+participant "KV Client \n DistSender layer" as sda
+box Distributed Monolithic KV Store
+participant "AZ1\n\nnode1\nPebble" as n1
+participant "AZ2\n\nnode2\nPebble" as n2
+participant "AZn\n\nnoden\nPebble" as nn
+end box 
+
+note over n2
+Pebble is Go-native LSM-tree engine store
+CockroachDB uses it store data underhood
+end note
+
+note over n1
+This is huge distributed store
+end note
+
+
+note over u
+CREATE TABLE users(
+id INT PRIMARY KEY,
+name STRING);
+
+INSERT INTO users(name) 
+VALUE('Alice');
+
+Already Completed
+end note
+
+u -> sl: SELECT name FROM\nusers WHERE id=1
+note over sl
+Convert to
+KV type query
+end note
+
+sl->sda: SELECT name FROM\nusers WHERE id=1
+sda -> n1:Get row with \nkey:user/1
+
+note over n1
+key user/10
+mapped to 
+range/0,100
+end note
+@enduml
+            </pre>
+
+      <h2 id="br">Build & Run CockroachDB from source</h2>
+      <h3>Build from source</h3>
+      <pre><code class="language-css">
+curl -Lo /tmp/bazelisk \
+  https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
+chmod +x /tmp/bazelisk
+sudo mv /tmp/bazelisk /usr/local/bin/bazel
+bazel version
+dpkg -l ccache 2>/dev/null | grep -q "^ii" && sudo apt remove --purge ccache -y || echo "ccache not installed, OK"
+
+# ── Step 3: Install crlfmt (Go code formatter used by CockroachDB) ──────────
+go install github.com/cockroachdb/crlfmt@latest
+
+# ── Step 4: Run the environment doctor ──────────────────────────────────────
+# dev doctor checks Go version, Bazelisk, and other prerequisites and tells you
+# exactly what is missing. Fix anything it reports before building.
+cd ~/cockroach
+./dev doctor
+
+# ── Step 5: Build the binary ────────────────────────────────────────────────
+# "short" builds cockroach without the web UI — much faster, good for backend work.
+# Output: ./cockroach and ./cockroach-short in the repo root.
+./dev build short
+      </code></pre>
+
+      <h3 id="run">Run Cockroachdb</h3>
+      <pre><code class="language-css">
+# ── Foreground (logs print to terminal + log files) ──────
+# Print WARNING+ to stderr (default — minimal noise)
+./cockroach start-single-node --insecure --listen-addr=localhost:26257 --logtostderr=WARNING
+
+# Print INFO+ to stderr (recommended during development)  ****DO THIS****
+./cockroach start-single-node --insecure --listen-addr=localhost:26257--logtostderr=INFO
+
+# ── Background (returns immediately; logs only go to files) ──────────────────
+./cockroach start-single-node --insecure --listen-addr=localhost:26257 --background
+
+# ── Foreground with all INFO logs also printed to stderr ─────────────────────
+# Best option for development: you see everything as it happens in the terminal.
+./cockroach start-single-node --insecure --listen-addr=localhost:26257 \
+  --logtostderr=INFO
+      </code></pre>
+
+      <h3 id="log">Log Files</h3>
+      <p>
+        CockroachDB splits logs across multiple files by **log channel**. All files are in
+`cockroach-data/logs/`. 
+      </p>
+      <pre><code>
+# Follow the main log (startup messages, node events, errors)
+tail -f cockroach-data/logs/cockroach.log
+
+| File (symlink) | Channel | What it contains |
+|---|---|---|
+| `cockroach.log` | DEV + OPS | Main server log — startup, node events, most errors |
+| `cockroach-health.log` | HEALTH | Periodic health samples, liveness heartbeats |
+| `cockroach-pebble.log` | STORAGE | Pebble (storage engine) internal events |
+| `cockroach-kv-exec.log` | KV_EXEC | KV-layer execution events |
+| `cockroach-kv-distribution.log` | KV_DISTRIBUTION | Range leases, rebalancing, Raft |
+| `cockroach-sql-schema.log` | SQL_SCHEMA | DDL events (CREATE TABLE, ALTER TABLE, etc.) |
+| `cockroach-stderr.log` | — | Anything written to stderr |
+      </code></pre>
+
+      <h3 id="codechange">Doing code change</h3>
+      <pre><code>
+// Add log line 
+pkg/cli/cli.go
+	ctx := context.Background()
+	log.Ops.Shoutf(ctx, severity.INFO, "Amit cli::Main()")
+
+// Rebuild
+./dev build short
+
+// Start again
+./cockroach start-single-node --insecure --listen-addr=localhost:26257 --logtostderr=INFO
+      </code></pre>
+
+      <h3 id="code">Code walk</h3>
+      <pre><code class="language-css">
+cli.Main()  //pkg/cmd/cockroach/main.go
+  doMain()  //pkg/cli/cli.go
+    Run() 
+      runStart() //pkg/cli/start.go
+        runStartInternal()  //pkg/cli/start.go
+      </code></pre>
+
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

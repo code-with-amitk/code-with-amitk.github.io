@@ -12,7 +12,8 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="#">Our team</a></li>
                 <li><a href="#">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>    
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/Languages/Programming/Rust/">Back</a></li>
             <li>
                 <form>
                     <input type="search" name="q" placeholder="Search site" />
@@ -35,14 +36,14 @@
 
         <article style="margin-left:200px;">
             <h2 id="what">What is Borrowing, Reference (&)</h2>
-            <dl>
-                In reference & Borrowing ownership of the value is not taken.<br>
+            <p>
+                Both in reference and Borrowing ownership of the value is not taken.<br>
                 References are always created using &<br>
-                Rust track lifetimes of all references to ensure they live long enough<br>
+                Rust track <a href="/Languages/Programming/Rust/lifetime.html">lifetimes</a> of all references to ensure they live long enough<br>
                 <b>Wrt to C++:</b><br>
                 &ensp; Safer avoids Crashes/Dangling References.<br>
                 &ensp; no new copies are created, achieved by passing the reference of a variable.
-            </dl>
+            </p>
 
             <h4>Reference vs Borrowing</h4>
             <table>
@@ -55,7 +56,7 @@
                     <td>Definition</td>
                     <td>
                         A reference is just a pointer storing address of variable.<br>
-                        References are immutable.
+                        References are immutable.<br>
                         <pre><code class="language-css">
 fn main() {
     let a = 10;
@@ -68,7 +69,7 @@ $ cargo run
                         </code></pre>
                     </td>
                     <td>
-                        Borrowed value can be changed.
+                        Borrowed value can be changed.<br>
                         <pre><code class="language-css">
 fn main() {
     let mut a = 10;

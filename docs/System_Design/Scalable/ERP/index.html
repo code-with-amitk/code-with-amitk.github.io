@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ERP</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">ERP</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">ERP (Enterprise Resource Planning)</h2>
+      <h3>Present day ERP(eg: SAP, Oracle)</h3>
+      <p>
+        Think of a massive global company—like Nike. To run that business every
+        day, they have to do 1000's of things at the same time: buy raw
+        materials, pay factory workers, track warehouse inventory, ship
+        products, process customer payments, pay taxes, and calculate their
+        monthly profits. (ERP) is just a fancy name for the master software that
+        connects all of these moving parts into one single system. It is the
+        "brain" of a corporation.<br />
+        <b>What Present Day ERP does?</b><br />
+        <u>1. Not real time.</u> If a company sells a million shoes today, the
+        accounting department might not see the official financial data until
+        days or weeks later.<br />
+        <u>2. Month end nightmare:</u> At the end of every month, 100s of human
+        accountants has to manually check bank statements against warehouse
+        receipts(shoes sold) and spreadsheets to make sure the numbers match.
+        This is called reconciliation, and it takes weeks of tedious, manual
+        work. Then it appears in books.
+      </p>
+      <pre><code class="language-css">
+Transaction Happens ➔ Days/Weeks Pass ➔ Human Manual Data Entry ➔ Accountant Fixes Errors ➔ Financial Report Ready next month
+      </code></pre>
+
+      <h3>
+        <a href="">Dualentry</a>'s AI-powered ERP & Automated Accounting
+        Platform
+      </h3>
+      <p>
+        <u>1. Real time:</u> Instead of humans doing data entry and fixing
+        spreadsheet errors, DualEntry uses AI to automate the entire process in
+        real time.<br />
+        &ensp; <i>Instant Accountant</i>: The moment a transaction happens (Nike
+        sold 1000 shoes), DualEntry's AI instantly logs it, converts the
+        currency, and updates the company's financial books within
+        milliseconds.<br />
+        &ensp; <i>Auto-Categorization:</i> If a company spends $5,000 on Amazon
+        Web Services, the AI instantly recognizes it as an "Engineering
+        Infrastructure Expense" and puts it in the right bucket without a human
+        needing to look at it.<br />
+        <i>Real-Time Fraud and Error Checking:</i> Because their system handles
+        up to 40 billion transactions a month, their AI constantly screens the
+        data to instantly flag duplicates, weird billing errors, or internal
+        fraud before the money even leaves the bank.
+      </p>
+      <pre><code class="language-css">
+Transaction Happens ➔ AI instantly processes, categorizes, and checks it for errors ➔ Live Financial Dashboard (Instantly updated)
+    </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

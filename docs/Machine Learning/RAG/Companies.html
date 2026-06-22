@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Observability to RAG Pipeline</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar"></aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Companies in RAG Application Space</h2>
+      <p>RAG space can be divided into 6 areas.</p>
+
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Companies in that area</th>
+        </tr>
+        <tr>
+          <td>Data Storage (vector storage)</td>
+          <td>Pinecone, Zilliz, MongoDB</td>
+        </tr>
+        <tr>
+          <td>Data Movement</td>
+          <td>Databricks, Snowflake, Airbyte</td>
+        </tr>
+        <tr>
+          <td>Inference</td>
+          <td>
+            First Party: Companies having their own LLMs. eg: openAI, Meta,
+            Anthropic<br />
+            3rd Party: Serve other LLMs. eg: Predibase, Tensorwave, GMI Cloud
+          </td>
+        </tr>
+        <tr>
+          <td>Observability</td>
+          <td>Arize, Comet, Galileo</td>
+        </tr>
+        <tr>
+          <td>Orchestration</td>
+          <td>
+            1st wave: Langchain, LlamaIndex, Langflow<br />
+            2nd Wave: BAML, Pixeltable
+          </td>
+        </tr>
+        <tr>
+          <td>Deployment</td>
+          <td>GCP, Azure, AWS</td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
