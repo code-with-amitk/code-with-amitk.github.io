@@ -1,52 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>Wasm Rust</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css">
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Our team</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>    
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Wasm Rust</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#what">Wasm</a>
-            <a href="#wasm-bindgen">Wasm-bindgen</a>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Wasm</a>
+      <a href="#wasm-bindgen">Wasm-bindgen</a>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h2 id="what">Wasm (WebAssembly)</h2>
-            <dl>
-                low-level bytecode format that allows developers to write portable, high-performance code for the web
-                <br><br>
+    <article style="margin-left: 200px">
+      <h2 id="what">Wasm (WebAssembly)</h2>
+      <dl>
+        low-level bytecode format that allows developers to write portable,
+        high-performance code for the web
+        <br /><br />
 
-                <b>Advantages:</b><br>
-                1. Compiled: Wasm is a compiled language, meaning it's faster and more efficient than interpreted languages like JavaScript<br>
-                2. Wasm can be compiled from multiple high-level languages, such as C, C++, and Rust, and run on any platform with a Wasm runtime<br>
-                3. Open standard: Wasm is an open standard that aims to support any language on any operating system
-            </dl>
+        <b>Advantages:</b><br />
+        1. Compiled: Wasm is a compiled language, meaning it's faster and more
+        efficient than interpreted languages like JavaScript<br />
+        2. Wasm can be compiled from multiple high-level languages, such as C,
+        C++, and Rust, and run on any platform with a Wasm runtime<br />
+        3. Open standard: Wasm is an open standard that aims to support any
+        language on any operating system
+      </dl>
 
-            <h2 id="wasm-bindgen">Wasm-bindgen</h2>
-            <dl>
-                Library that allows for high-level interactions between JavaScript and Wasm modules<br>
-                Wasm-bindgen makes it easier to leverage the strengths of Rust within a web environment
-            </dl>
+      <h2 id="wasm-bindgen">Wasm-bindgen</h2>
+      <dl>
+        Library that allows for high-level interactions between JavaScript and
+        Wasm modules<br />
+        Wasm-bindgen makes it easier to leverage the strengths of Rust within a
+        web environment
+      </dl>
+    </article>
 
-        </article>
-
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

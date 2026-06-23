@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloom Filter</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Data_Structures/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Bloom Filter</a>
+      <ul>
+        <li><a href="#ex">Example (5 Billion Phone Numbers)</a></li>
+        <li><a href="#un">Unbounded Growth</a></li>
+      </ul>
+      <a href="#comp">Comparison with HashSet</a>
+      <a href="#code">Code</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Bloom Filter</h2>
+      <p>
+        This is space-efficient, probabilistic data structure used to test
+        whether an element is a member of a set or not. This is same to
+        HashTable, but wrt HashTable it consumes very less space.<br />
+        BF stores information in bit array.
+      </p>
+
+      <h3 id="ex">Example (5 Billion Phone Numbers)</h3>
+      <p>
+        Suppose there is a use case to find a phone number from 1 billion phone
+        numbers.<br />
+        Digits(0-9). 1 digit = 4 bits. 10 digits(Phone number)=40 bits. 1 phone
+        number=5 bytes. 1 Billion Numbers=5 Billion bytes
+      </p>
+      <h4>Storing in HashSet</h4>
+      <p>
+        To store 1 billion phone numbers in HashSet amount of RAM required is
+        more than 5GB. Since HashSet also stores some extra bookkeeping
+        information(hash bucket info, load factor slack, pointers/links).<br />
+        RAM required to store 1 Billion Phone numbers is 5GB+
+      </p>
+      <h4>Storing 5 Billion Entries in bloom filter</h4>
+      <p>
+        <u>Size of bit array, Hash functions</u><br />
+        &ensp; A Bloom filter does not take 1 bit per item. It will not take an
+        bit array of size 1 billion if there are 1 billion phone numbers<br />
+        &ensp; It will take bit array of size m, k hash functions per item, n
+        expected inserted items.<br />
+        &ensp; The size of m depends on: how many items you expect and what
+        false-positive rate you can tolerate.
+      </p>
+      <pre><code class="language-css">
+standard sizing formula for Bit array
+        m = -(n * ln(p)) / (ln(2)^2)
+
+Optimal number of hash functions:
+    k = (m / n) * ln(2)
+
+1. Take a bit array of size m
+        Bit array:  0 0 0 0 0 0 0 ... 0
+        Index:      0 1 2 3 4 5 6     m
+
+2. Take k hash functions, Each key is passed through all Hash functions
+   k bit array indexes are generated 
+    Phone          Hash Function    Index in bit array
+9876543210 ---&gt; [Hash fun 1]--&gt; 0
+9876543210 ---&gt; [Hash fun 2]--&gt; 4
+9876543210 ---&gt; [Hash fun 3]--&gt; 6
+
+3. Insert 1s at indexes
+        Bit array:  1 0 0 0 1 0 1 ... 0
+        Index:      0 1 2 3 4 5 6     m
+
+9999999999 ---&gt; [Hash fun 1]--&gt; 0     // same bit
+9999999999 ---&gt; [Hash fun 2]--&gt; 2
+9999999999 ---&gt; [Hash fun 3]--&gt; 5
+
+4. Finding key in Bit set. Again pass number through hash functions.
+   if all indexes genereated have 1 then key is present probably(False positive)
+    </code></pre>
+
+      <h3 id="un">Unbounded Growth</h3>
+      <p>
+        What if input keeps growing to 1 trillion? 1 Billion entries per second.
+        3.6 Trillion entries for 1 hour. 2.5x10<sup>15</sup> entries per month.
+        & We want to store data for 1 month<br />
+
+        A standard Bloom filter is fixed-size. It does not keep allocating
+        bigger arrays automatically. It does not overwrite existing entries. It
+        just keeps setting more bits in the same array.<br />
+
+        So for unbounded growth, you typically use one of these approaches:<br />
+        1. Create a new bigger Bloom filter and start writing future items
+        there<br />
+        2. Use scalable Bloom filters: a chain of Bloom filters, each larger
+        than the previous<br />
+        3. Use time windows: one filter per minute/hour/day, depending on your
+        use case<br />
+        4. Use counting Bloom filters if you need deletion
+      </p>
+
+      <h2 id="comp">Comparison with HashSet</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>hashtable</th>
+          <th>Bloom Filter</th>
+        </tr>
+        <tr>
+          <td>Space Complexity</td>
+          <td>O(n) — grows linearly with entries</td>
+          <td>O(1) — constant, fixed size</td>
+        </tr>
+        <tr>
+          <td>What's stored</td>
+          <td>Actual keys + metadata + pointers</td>
+          <td>Only bits (0/1)</td>
+        </tr>
+        <tr>
+          <td>False positives</td>
+          <td>
+            0% (Means if item is present, It will say yes(with 100% accuracy))
+          </td>
+          <td>1%(if present(may be or maybe not but only 1%))</td>
+        </tr>
+        <tr>
+          <td>False negatives</td>
+          <td>
+            0%(Means if item is not present it says no(with 100% accuracy))
+          </td>
+          <td>0%(same)</td>
+        </tr>
+        <tr>
+          <td>Time Complexity</td>
+          <td>O(1)</td>
+          <td>O(k). Number of bits in bit array</td>
+        </tr>
+        <tr>
+          <td>Can resize?</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+      </table>
+
+      <h2 id="code">Code Implementation</h2>
+      <pre><code class="language-css">
+package main
+
+import (
+	"encoding/binary"
+	"fmt"
+	"hash/fnv"
+)
+
+type BloomFilter struct {
+	bits []uint64
+	m    uint64
+	k    uint64
+}
+
+func NewBloomFilter(m uint64, k uint64) *BloomFilter {
+	words := (m + 63) / 64
+	return &BloomFilter{
+		bits: make([]uint64, words),
+		m:    m,
+		k:    k,
+	}
+}
+
+func (bf *BloomFilter) setBit(pos uint64) {
+	word := pos / 64
+	offset := pos % 64
+	bf.bits[word] |= 1 &lt;&lt; offset
+}
+
+func (bf *BloomFilter) getBit(pos uint64) bool {
+	word := pos / 64
+	offset := pos % 64
+	return (bf.bits[word] & (1 &lt;&lt; offset)) != 0
+}
+
+func hash64(data string) uint64 {
+	h := fnv.New64a()
+	_, _ = h.Write([]byte(data))
+	return h.Sum64()
+}
+
+func (bf *BloomFilter) Add(item string) {
+	h1 := hash64(item)
+	h2 := hash64("salt:" + item)
+
+	for i := uint64(0); i &lt; bf.k; i++ {
+		pos := (h1 + i*h2) % bf.m
+		bf.setBit(pos)
+	}
+}
+
+func (bf *BloomFilter) MightContain(item string) bool {
+	h1 := hash64(item)
+	h2 := hash64("salt:" + item)
+
+	for i := uint64(0); i &lt; bf.k; i++ {
+		pos := (h1 + i*h2) % bf.m
+		if !bf.getBit(pos) {
+			return false
+		}
+	}
+	return true
+}
+
+func main() {
+	bf := NewBloomFilter(1000, 4)
+
+	phones := []string{
+		"9876543210",
+		"1000000000",
+		"9999999999",
+	}
+
+	for _, p := range phones[:2] {
+		bf.Add(p)
+	}
+
+	fmt.Println("9876543210:", bf.MightContain("9876543210")) // true
+	fmt.Println("1000000000:", bf.MightContain("1000000000")) // true
+	fmt.Println("9999999999:", bf.MightContain("9999999999")) // maybe false
+	fmt.Println("1234567890:", bf.MightContain("1234567890")) // probably false
+}
+      </code></pre>
+    </article>
+
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

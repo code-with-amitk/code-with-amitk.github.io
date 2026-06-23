@@ -1,64 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <title>Trait Rust</title>
-        <link rel="stylesheet" href="/css/styles.css"/>
-        <link rel="stylesheet" href="/css/prism.css">
-        <!-- Add any necessary CSS and JavaScript files -->
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Our team</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>    
-            <li>
-                <form>
-                    <input type="search" name="q" placeholder="Search site" />
-                    <input type="submit" value="Go!" />
-                </form>
-            </li>
-            </ul>
-        </nav>
+  <head>
+    <title>Trait Rust</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-        <aside class="sidebar">    <!--See .sidebar in styles.css-->
-            <a href="#what">What</a>
-            <a href="#dec">Declaration & Definition</a>
-            <ul>
-                <li><a href="#user">User Defined Traits</a></li>
-                <ul>
-                    <li><a href="#arg">Traits as fun arg</a></li>
-                    <li><a href="#ret">Returning trait from fun</a></li>
-                </ul>
-                <li><a href="Rust Provided Triats/">Rust Lib provided Traits</a></li>
-            </ul>
-            <a href="#bound">Trait Bound</a>
-            <ul>
-                <li><a href="#usingplus">Using +</a></li>
-                <li><a href="#usingwhere">Using where</a></li>
-            </ul>
-            <b><a href="Rust Provided Triats/">Rust Lib provided Traits</a></b>
-        </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">What</a>
+      <a href="#dec">Declaration & Definition</a>
+      <ul>
+        <li><a href="#user">User Defined Traits</a></li>
+        <ul>
+          <li><a href="#arg">Traits as fun arg</a></li>
+          <li><a href="#ret">Returning trait from fun</a></li>
+        </ul>
+        <li><a href="Rust Provided Triats/">Rust Lib provided Traits</a></li>
+      </ul>
+      <a href="#bound">Trait Bound</a>
+      <ul>
+        <li><a href="#usingplus">Using +</a></li>
+        <li><a href="#usingwhere">Using where</a></li>
+      </ul>
+      <b><a href="Rust Provided Triats/">Rust Lib provided Traits</a></b>
+    </aside>
 
-        <article style="margin-left:200px;">
-            <h2 id="triat">What is Triat in Rust</h2>
-            <dl>
-                Interface/class in Rust(declared with keyword trait) having Virtual Functions(not pure Virtual) declared or defined 
-                inside it. These functions are implemented(overridden) on type.
-            </dl>
+    <article style="margin-left: 200px">
+      <h2 id="triat">What is Triat in Rust</h2>
+      <p>
+        Interface/class in Rust(declared with keyword trait) having Virtual
+        Functions(not pure Virtual) declared or defined inside it. These
+        functions are implemented(overridden) on type.
+      </p>
 
-            <h2 id="dec">Declaration & Definition</h2>
-            <dl>
-                Trait is implemented for particular types. Eg: add_to_db() function is overridden for Employee, Contractor Type.
-            </dl>
-            <h3><a href="Rust Provided Triats/">Rust Lib provided Traits</a></h3>
-            <h3 id="user">User Defined Triats</h3>
-            <table>
-                <tr>
-                    <td>
-                        <b>Trait Declaration</b>
-                        <pre><code class="language-css">
+      <h2 id="dec">Declaration & Definition</h2>
+      <dl>
+        Trait is implemented for particular types. Eg: add_to_db() function is
+        overridden for Employee, Contractor Type.
+      </dl>
+      <h3><a href="Rust Provided Triats/">Rust Lib provided Traits</a></h3>
+      <h3 id="user">User Defined Triats</h3>
+      <table>
+        <tr>
+          <td>
+            <b>Trait Declaration</b>
+            <pre><code class="language-css">
 pub trait T {
     // No need to add pub in front of function
     // Trait methods are public by default
@@ -71,19 +75,19 @@ pub trait T {
 	}
 }
                         </code></pre>
-                    </td>
-                    <td>
-                        <b>Type on which trait is defined</b>
-                        <pre><code class="language-css">
+          </td>
+          <td>
+            <b>Type on which trait is defined</b>
+            <pre><code class="language-css">
 pub struct S {
     pub x: i32,
     pub y: i32,
 }
                         </code></pre>
-                    </td>
-                    <td>
-                        <b>Trait Definition</b>
-                        <pre><code class="language-css">
+          </td>
+          <td>
+            <b>Trait Definition</b>
+            <pre><code class="language-css">
 //impl triat for type
 impl T for S {
     fn add(&self) {
@@ -98,12 +102,12 @@ fn main() {
     a.add();
 }
                         </code></pre>
-                    </td>
-                </tr>
-            </table>
+          </td>
+        </tr>
+      </table>
 
-            <h4 id="arg">Passing trait as argument to function</h4>
-            <pre><code class="language-css">
+      <h4 id="arg">Passing trait as argument to function</h4>
+      <pre><code class="language-css">
 // trait T defined above
 pub fn fun(t: &impl T) {
     t.test();
@@ -119,8 +123,8 @@ $ cargo run
 test()
             </code></pre>
 
-            <h4 id="ret">Returning trait from function</h4>
-            <pre><code class="language-css">
+      <h4 id="ret">Returning trait from function</h4>
+      <pre><code class="language-css">
 // trait T defined above
 // This function can return struct of type S also
 pub fn ret_trait() -> impl T {
@@ -131,12 +135,12 @@ pub fn ret_trait() -> impl T {
 }
             </code></pre>
 
-            <h2 id="bound">Trait Bound</h2>
-            <dl>
-                These are generic functions(templates) but must implement one or more traits,
-                 which ensures that the type provides certain behavior or methods
-            </dl>
-            <pre><code class="language-css">
+      <h2 id="bound">Trait Bound</h2>
+      <dl>
+        These are generic functions(templates) but must implement one or more
+        traits, which ensures that the type provides certain behavior or methods
+      </dl>
+      <pre><code class="language-css">
 // Trait(T) is defined above
             //&lt; type: TraitName> (var: type)
 pub fn fun1 &lt;t: T> (item: &t) {
@@ -146,16 +150,18 @@ $ cargo run
 test()
             </code></pre>
 
-            <h4 id="usingplus">Using + //Friend Function</h4>
-            <dl>There can be a function which takes 2 or more traits(virtual function).</dl>
-            <pre><code class="language-css">
+      <h4 id="usingplus">Using + //Friend Function</h4>
+      <dl>
+        There can be a function which takes 2 or more traits(virtual function).
+      </dl>
+      <pre><code class="language-css">
 pub fn test &lt;T: Trait1 + Trait2> (param: &T) {
 OR
 pub fn test (param: &(impl Trait1 + Trait2) {
             </code></pre>
 
-            <h4 id="usingwhere">Using where clause //Friend Function</h4>
-            <pre><code class="language-css">
+      <h4 id="usingwhere">Using where clause //Friend Function</h4>
+      <pre><code class="language-css">
 pub fn test &lt;T: Trait1 + Triat2, U: Triat2 + Triat2>(t: &T, u: &U) -> i32 {
 OR
 pub fn test &lt;T, U>(t: &T, u: &U) -> i32
@@ -163,9 +169,8 @@ pub fn test &lt;T, U>(t: &T, u: &U) -> i32
             U: Triat2 + Triat3
 {
             </code></pre>
+    </article>
 
-        </article>
-
-        <script src="/scripts/prism.js"></script>
-    </body>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
