@@ -1,41 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Install Database</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
-       </li>
-    </ul>
-</nav>
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
-    <a href="#postgres">Installing Postgres</a>
-    <a href="#createuser">Create user, Login with User</a>
-  </aside>
+    <aside class="sidebar">
+      <a href="#postgres">Installing Postgres</a>
+      <a href="#createuser">Create user, Login with User</a>
+    </aside>
 
-  <article style="margin-left:200px;">
-    <h2 id="postgres">Installing Postgres</h2>
+    <article style="margin-left: 200px">
+      <h2 id="postgres">Installing Postgres</h2>
       <table>
         <tr>
           <th>Linux</th>
           <th>Windows</th>
         </tr>
         <tr>
-          <td><pre><code class="language-css">
+          <td>
+            <pre><code class="language-css">
 $ sudo apt install postgresql postgresql-contrib
 $ sudo apt install libpq-dev
 $ psql --version
@@ -43,25 +51,34 @@ $ sudo service postgresql status
 $ sudo netstat -plunt |grep postgres    //Check port
 tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      255/postgres        
 $
-          </code></pre></td>
-          <td><a href="https://www.w3schools.com/postgresql/postgresql_install.php">Install Postgres on Windows</a></td>
+          </code></pre>
+          </td>
+          <td>
+            <a
+              href="https://www.w3schools.com/postgresql/postgresql_install.php"
+              >Install Postgres on Windows</a
+            >
+          </td>
         </tr>
       </table>
 
-    <h2 id="createuser">Create user, Login with User</h2>
-    <dl>
-      When installing postgres on Windows/Linux, Installation scripts creates a local user=postgres, but inside postgres there is a
-      seperate user called postgres.<br>
-      Purpose of Local postgres user is to login postgres DB, then change the password of DB(internal's postgres user). Since all
-      database operations are carried using DB's internal postgres user.
-    </dl>
+      <h2 id="createuser">Create user, Login with User</h2>
+      <dl>
+        When installing postgres on Windows/Linux, Installation scripts creates
+        a local user=postgres, but inside postgres there is a seperate user
+        called postgres.<br />
+        Purpose of Local postgres user is to login postgres DB, then change the
+        password of DB(internal's postgres user). Since all database operations
+        are carried using DB's internal postgres user.
+      </dl>
       <table>
         <tr>
           <th>Linux</th>
           <th>Windows</th>
         </tr>
         <tr>
-          <td><pre><code class="language-css">
+          <td>
+            <pre><code class="language-css">
 # cat /etc/passwd|grep postgres
 postgres:x:105:109:PostgreSQL administrator,,,:/var/lib/postgresql:/bin/bash
 
@@ -90,7 +107,8 @@ postgres=# \q
 $ psql -U postgres -W
 Password: &lt;NEW PASSWORD>
 
-          </code></pre></td>
+          </code></pre>
+          </td>
           <td>
             <pre><code class="language-css">
 // Port provided at time of installation
@@ -118,5 +136,5 @@ postgres=#
     </article>
 
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>

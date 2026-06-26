@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Cargo.toml</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Cargo.toml</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Cargo.toml</h2>
+      <p>
+        Cargo.toml is the manifest and configuration file for a Rust project. It
+        acts as a project's control center, defining its name, version, and
+        external libraries(dependencies). <b>Example Cargo.toml:</b>
+      </p>
+      <pre><code class="language-css">
+[package]
+name = "linked_list"        // name of program
+version = "0.1.0"           // current version
+edition = "2024"            //  Rust edition in your code
+
+// Lists the external libraries (crates) needed by project
+// Cargo automatically fetches these packages from crates.io and compiles them
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+reqwest = "0.12"
+
+[dev-dependencies]          // Libraries required only for running tests
+
+[build-dependencies]    // Crates required for your build scripts (e.g., build.rs)
+
+[features]  // compile-time flags to enable conditional compilation
+
+// section to manage different crates from 1 location
+[workspace]
+      </code></pre>
+
+      <h2>Sections on Cargo.toml</h2>
+      <h3>workspace</h3>
+      <p>
+        <b>[workspace]</b>: header in root Cargo.toml, we define that directory
+        as the "root" of a multi-crate project.<br />
+        <b>[members]</b>: which subdirectories contain the crates that belong to
+        this workspace. When you run a command like cargo build from the root,
+        Cargo looks at these members and builds them together<br />
+        <b>resolver = "2"</b>: This is Feature Resolver version. This came in
+        Rust 2021. It fixed feature bloat issues in Rust<br />
+        <b>{ workspace = true }</b>: Workspace inheritance. Don't look for a
+        version number here. Go to the root Cargo.toml, find the tokio version
+        and features are defined there.
+      </p>
+      <pre><code>
+Project Structure
+ |- Cargo.toml      //main
+ |- crates
+        |- module1
+            |- Cargo.toml
+            |- src/main.rs
+        |- module2
+            |- Cargo.toml
+            |- src
+                |- module21
+                |- main.rs
+      </code></pre>
+      <table>
+        <tr>
+          <th>Cargo.toml //Root</th>
+          <th>module1/Cargo.toml</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+Cargo.toml
+[workspace]
+resolver = "2"
+members = [
+    "crates/module1",
+    "crates/module1"
+]
+
+# ── Project-wide dependency versions (single source of truth) ─────
+[workspace.dependencies]
+tokio       = { version = "1",    features = ["full"] }
+tokio-util  = { version = "0.7",  features = ["rt"] }
+...
+
+# ── Internal crate cross-references ──
+module1 = { path = "crates/module1 }
+module2 = { path = "crates/module2" }
+      </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+module1/Cargo.toml
+[package]
+name        = "module1"
+version     = "0.1.0"
+edition     = "2021"
+description = ".."
+
+[[bin]]
+name = "module1"
+path = "src/main.rs"
+
+# ── Workspace Inheritance ─────
+[dependencies]
+module2      = { workspace = true }
+
+tokio         = { workspace = true }
+tokio-util    = { workspace = true }
+..
+
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <title>PgBouncer</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">PgBouncer</a>
+      <a href="#code">Code</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">PgBouncer (Connection Pooler)</h2>
+      <p>
+        PgBouncer connection pooler for PostgreSQL. It sits between your
+        application and the database to manage and reuse database connections,
+        reducing memory overhead, lowering query latency, and preventing the
+        database server from crashing during high-traffic spikes<br />
+        <b>Why its needed?</b> Postgres spawns a new backend process and
+        allocates significant memory (around 10 MB) for every single client
+        connection. if 100s of users connect and sit idle database server will
+        quickly run out of resources or slow down significantly<br />
+        <b>How it works?</b><br />
+        &ensp; Now PgBouncer will be postgres server to application and will be
+        client to postgres server<br />
+        &ensp; When a user sends a request, PgBouncer assigns them an idle,
+        pre-existing connection from its pool, eliminating the time-consuming
+        overhead of setting up a brand new connection from scratch
+      </p>
+
+      <h2 class="code">Code</h2>
+      <table>
+        <tr>
+          <th>Without PgBouncer</th>
+          <th>With PgBouncer</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+DB_HOST=localhost
+DB_PORT=5432            &lt;&lt;&lt;&lt;&lt;&lt; Application talk to PostgreSQL database directly
+DB_USER=postgres
+DB_PASSWORD=mysecretpassword
+DB_NAME=company_db
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+DB_HOST=localhost
+DB_PORT=6432            &lt;&lt;&lt;&lt;&lt;&lt;  Pointing to PgBouncer instead of Postgres
+DB_USER=postgres
+DB_PASSWORD=mysecretpassword
+DB_NAME=company_db
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <pre><code class="language-css">
+package main
+import (
+	"database/sql"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	_ "://github.com"
+)
+func main() {
+	// 1. Grab environment variables
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+
+	// 2. Build the connection string
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", 
+		host, port, user, password, dbname)
+
+	// 3. Open the connection pool
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("Error opening database: %v", err)
+	}
+	defer db.Close()
+
+	// Test the connection
+	if err := db.Ping(); err != nil {
+		log.Fatalf("Database unreachable: %v", err)
+	}
+
+	fmt.Println("Successfully connected to the target database interface!")
+}
+      </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

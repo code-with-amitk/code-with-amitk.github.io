@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <title>cargo doc</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">cargo doc</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="what">cargo doc</h3>
+      <p>
+        Documentation comments use three slashes, ///.We place documentation
+        comments just before the item we want to document.<br />
+        Crate Comments //! describes the purpose of my_crate
+      </p>
+      <pre><code class="language-css">
+//! # My Crate
+//!
+//! `my_crate` is a collection of utilities to make performing certain calculations more convenient.
+
+pub struct test {   //Adding description to struct fields
+    /// a text
+    a: String,
+    /// b text
+    b: String,
+}
+
+struct Solution{}
+
+impl Solution {
+/// add()
+/// # Examples
+/// ```
+/// let a = 5, b=4;
+/// let answer = Solution::add(a, b);
+///
+/// assert_eq!(9, answer);
+/// ```
+    fn add(a:i32, b:i32)-&lt;i32{
+        a + b
+    }
+}
+
+fn main() {
+    println!("Hi");
+}
+
+$ cargo doc
+    Documentation in target\doc
+$ cargo doc --open                //Will open Front page of create root  
+$ cargo test add()                //This will run test case in documentation
+            </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

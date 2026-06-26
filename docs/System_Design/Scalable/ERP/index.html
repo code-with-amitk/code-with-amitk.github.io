@@ -44,7 +44,8 @@
         monthly profits. (ERP) is just a fancy name for the master software that
         connects all of these moving parts into one single system. It is the
         "brain" of a corporation.<br />
-        <b>What Present Day ERP does?</b><br />
+
+        <b>Problems in Present Day ERP?</b><br />
         <u>1. Not real time.</u> If a company sells a million shoes today, the
         accounting department might not see the official financial data until
         days or weeks later.<br />
@@ -59,8 +60,8 @@ Transaction Happens ➔ Days/Weeks Pass ➔ Human Manual Data Entry ➔ Accounta
       </code></pre>
 
       <h3>
-        <a href="">Dualentry</a>'s AI-powered ERP & Automated Accounting
-        Platform
+        <a href="">Dualentry</a>'s Solution: AI-powered ERP & Automated
+        Accounting Platform
       </h3>
       <p>
         <u>1. Real time:</u> Instead of humans doing data entry and fixing
@@ -82,6 +83,215 @@ Transaction Happens ➔ Days/Weeks Pass ➔ Human Manual Data Entry ➔ Accounta
       <pre><code class="language-css">
 Transaction Happens ➔ AI instantly processes, categorizes, and checks it for errors ➔ Live Financial Dashboard (Instantly updated)
     </code></pre>
+      <p>
+        <b>How dualentry achieves it?</b> Using Financial Engine(handling
+        billions of transactions).
+      </p>
+
+      <h2>DualEntry's Financial Engine (System Design)</h2>
+      <p>
+        <b>What it does?</b><br />
+        1. All financial institutions(Commercial Banks(Chase, HSBC, DBS),
+        Payment Processors(Stripe, Adyen, Razorpay), ERP Systems(SAP, Oracle
+        NetSuite), E-commerce Platforms(Shopify, WooCommerce), Crypto
+        Exchanges(Binance, Coinbase), Internal Accounting(Manual journal
+        uploads)) send the transaction information(debit,credit) to this
+        Engine.<br />
+        2. This enginer writes the information to immutable ledger<br />
+        3. AI instantly reads the ledger and sends the updates to whereever
+        required<br />
+        This ledger is Distributed, with Async Raft Consensus in Rust.
+      </p>
+      <pre><code class="language-css">
+        Bank/Stripe/Coinbase
+              |
+              | transaction(debit/credit)
+              |
+  |-----------\/----Data center US-East-------------------------------|
+  |     |------------------|                                          |
+  |     | L4 Load Balancer |                                          |
+  |     |------------------|                                          |
+  |         \/                                                        |
+  | |---Ingestion Pod1-------------------|      |--Ingestion Pod2--|     |
+  | | HTTPS Termination                  |      |------------------|     |
+  | | HMAC check using feed secret       |                               |
+  | | Idempotency key derived   ~10µs    |                               |
+  | |                                    |                               |
+  | | ~200µs                             |                               |
+  | | 3. Is Bank retrying old transaction|                               |
+  | |if idempotency_key present(old trxn)|                               |
+  | |                                    |
+  | |if idempotency_key not present in   |
+  | | in Bloom Filter, that means        |                               |       |-- Redis cluster --|
+  | | new transaction -----Save idempotency_key to Redis SetNx  ------------>    | 3 primary shards  |
+  | |                                    |                               |       | 3 replicas        |
+  | | 4. Kernel to user space json copied|                                       |---------|---------|
+  | | Zero copy in User space            |                                                 |idempotency_key
+  | | Only 1 copy present, ref is passed |                                                 \/
+  | |                                    |                                                 (idempotency_key)PostgresDB Table
+  | | ~50µs                              |
+  | | 5. Decrypt JSON Sent from Bank     |                                            
+  | | JSON parsed to StripeWebhookPayload|
+  | | Normalized to LedgerIngestRequest  |
+  | | Store in Postgres DB               |                                      (This is Immutable Ledger)
+  | |                      ----- INSERT INTO LedgerIngestRequest{} ------------> journal_events Postgres TABLE
+  | | ~2–5ms                             |                                                |
+  | | 6. Insert 2 rows in entries table  |                                                |postgres write to WAL
+  | |                    |                                                                       |----> (pg_data/pg_wal/) --> REPLICA
+  | | (entry_1, transaction_id, acc_stripe_revenue, credit, 49.99, USD)   
+  | | (entry_2, transaction_id, acc_accounts_receivable,   debit,  49.99, USD)   
+  | |              |--------------------- INSERT INTO entries -----------------> entries POSTGRES TABLE
+  | |                                                                                         
+  | |
+  | | Save to immutable Ledger                                                                         
+Bank --------\
+Stripe ----------------------------------&gt;   Financial Engine maintains
+                                        /     [Immutable Distributed ledger]
+Shopify -------------------------------/             |
+Coinbase -----------------------------/              \/
+                                                    AI Engine read -----&gt; Accounts/Book-kepping
+      </code></pre>
+
+      <h2>End to End Flow</h2>
+      <h3>1. Bank Send data over webhook</h3>
+      <p>
+        Suppose a Customer(David) purchased Amazon prime at 100 USD, this detial
+        is sent by Stripe/Bank to Financial engine.
+      </p>
+      <pre><code class="language-css">
+POST /v1/feeds/feed_stripe_001/events
+Headers:
+  Content-Type: application/json
+  X-Webhook-Signature: hmac-sha256=XXXX &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+  X-Idempotency-Key: stripe_pi_3N8abc_completed
+Body (raw JSON from Stripe):
+{
+  "id":           "pi_3N8abc123",
+  "object":       "payment_intent",
+  "amount":       100,
+  "currency":     "usd",
+  "status":       "succeeded",
+  "created":      1719069000,
+  "metadata":     { "customer_id": "David", "invoice_id": "inv_456" },
+  "charges": {
+    "data": [{
+      "id":          "ch_3N8def456",
+      "amount":      100,
+      "description": "Amazon Prime"
+    }]
+  }
+}
+      </code></pre>
+
+      <h3>2. Data reaches Ingetion layer via L4 Loadbalancer</h3>
+
+      <h4>1. hmac-sha256=XXXX is verified against feed secret.</h4>
+      <p>
+        <u>1a. How feed secret is exhanged?</u><br />
+        &ensp; When bank registers with platform 32 byte hashed uuid is sent to
+        bank<br />
+        &ensp; uuid is stored in Feeds Table after AES encryption<br />
+
+        <u>1b. What about reissue of feed secret?</u><br />
+        &ensp; Feed secert have lifetime, after its sent to bank.
+      </p>
+
+      <h4>2. Idempotency key is derived.</h4>
+      <p>
+        Idempotency means where applying it multiple times yields the same
+        result as applying it just once<br />
+        idempotency_key = UUID_v5(SHA256("feed_stripe_001|pi_3N8abc123|100"))
+      </p>
+
+      <h4>3. Is bank retrying the same transaction again?</h4>
+      <p>
+        <u
+          >if idempotency_key is present in
+          <a
+            href="/Data_Structures/Probabalistic_Data_Structures/Bloom_Filter.html"
+            >Bloom Filter</a
+          >?</u
+        ><br />
+        &ensp; Yes, that means this is repeated old transaction<br />
+        &ensp; Stripe retries up to 72h, most banks retry for 24h &ensp; if bank
+        is retrying, we already have the entry in ledger (journal_entry), we
+        will not repeat the process again and send 200 OK to client<br /><br />
+
+        <u>if idempotency_key is not present in bloom filter?</u><br />
+        &ensp; It means its a 1st time transaction and idempotency_key is sent
+        to Redis cluster for storage (TTL = 24h).
+      </p>
+      <pre><code>
+******Full idempotency key lifecycle********
+
+FIRST ARRIVAL (new event):
+1. Bloom filter: key NOT found in local bitset → continue
+2. Redis SETNX `idempotency:7a3f...` "1" EX 86400 → returns 1 (key set, proceed)
+3. INSERT into Postgres `idempotency_keys` (response_body = NULL for now)
+4. Journal write succeeds → UPDATE `idempotency_keys` SET response_body = '{"event_seq":...}'
+5. Return HTTP 200 with event_seq
+
+RETRY (same event 5 minutes later — bank resends):
+1. Bloom filter: key IS in bitset → skip Redis entirely (50ns exit, no network)
+    (OR if Bloom was cleared on pod restart → continue to Redis)
+2. Redis GET `idempotency:7a3f...` → returns "1" (exists) → duplicate detected
+3. SELECT response_body FROM `idempotency_keys` WHERE idempotency_key = '7a3f...'
+4. Return cached HTTP 200 (identical to original response)
+
+RETRY AFTER 24h TTL (Redis key expired, but Postgres row permanent):
+1. Bloom: miss (cleared on restart or TTL)
+2. Redis: miss (TTL expired) → SETNX succeeds → proceeds to write path
+3. INSERT into journal_events → UNIQUE VIOLATION on idempotency_key FK
+4. Postgres `idempotency_keys` row still exists → SELECT cached response → return 200
+  (The Postgres UNIQUE constraint is the permanent last-resort safety net)
+      </code></pre>
+
+      <h4>4. Json copied from kernel buffers to User Space</h4>
+      <p>Data is written to journal_events table.</p>
+      <pre><code class="language-css">
+• JSON parsed to StripeWebhookPayload
+• Normalized to LedgerIngestRequest:
+LedgerIngestRequest {
+  idempotency_key: UUID("7a3f..."),
+  tenant_id:       UUID("tenant_acme_corp"),
+  feed_id:         "feed_stripe_001",
+  occurred_at:     2026-06-22T18:16:40Z,
+  entries: [
+    Entry { account_id: "acc_stripe_revenue", direction: Credit, amount: $49.99 USD },
+    Entry { account_id: "acc_accounts_receivable", direction: Debit,  amount: $49.99 USD }
+  ],
+  metadata: { "stripe_charge_id": "ch_3N8def456", "customer_id": "cus_XYZ" }
+}
+      </code></pre>
+
+      <h4>6. Create transaction entry into Entries Table</h4>
+      <p>Create 2 rows into transaction table, 1 for credit and 1 for debit.</p>
+
+      <h5>Same Bank to same Bank transfer (Stripe -&gt; Stripe)</h5>
+      <pre><code>
+Debit  acc_receivable  +49.99 USD  (t=0)
+Credit acc_revenue     +49.99 USD  (t=0)
+      </code></pre>
+
+      <h5>Bank1 to Bank2 transfer (Stripe -&gt; DBS)</h5>
+      <pre><code>
+BankA and BankB are separate institutions. They DO NOT send us a joint event.
+BankA's feed sends event at t=0: debit customer account -49.99 USD.
+BankB's feed sends event at t+30min (or T+1 day for ACH): credit recipient +49.99 USD.
+These become TWO SEPARATE TRANSACTIONS in our journal:
+
+Txn 1 (from BankA at t=0):
+  "ach_trace_number": "021000021234567" 
+  Debit  bankA_customer_account  +49.99 USD
+  Credit suspense_transit_account +49.99 USD   ← clearing/transit account
+
+Txn 2 (from BankB at t+30min):
+  "ach_trace_number": "021000021234567" 
+  Debit  suspense_transit_account +49.99 USD   ← clears the suspense
+  Credit bankB_recipient_account  +49.99 USD
+
+Each individual transaction is still balanced (Σdebits == Σcredits) in itself.
+      </code></pre>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>

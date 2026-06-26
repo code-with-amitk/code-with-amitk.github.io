@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <title>cargo clippy</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">cargo clippy</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="what">cargo clippy</h3>
+      <p>
+        cargo clippy(smart compiler) is a tool to catch:<br />
+        - Linting issues<br />
+        - rust idiomatic, efficient, and maintainable code<br />
+        - It doesn't just check for bugs; it suggests better ways to write
+        logic<br />
+        - warns about performance pitfalls<br />
+        - Common mistakes and improve your Rust code<br />
+        - adhere to the community-standard Rust style
+        <br /><br />
+
+        <a href="">cargo build/run</a> is standard Rust compiler (rustc) focuses
+        on ensuring your code is valid and safe
+      </p>
+      <pre><code class="language-css">
+fn main() {
+    let my_vec = vec![1, 2, 3];
+    for i in 0..my_vec.len() {
+        println!("{}", my_vec[i]);
+    }
+}
+      </code></pre>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+$ cargo clippy
+
+Standard Error
+
+warning: the loop variable `i` is only used to index `my_vec`
+help: consider using an iterator
+3 -     for i in 0..my_vec.len() {
+3 +     for &lt;item&gt; in &my_vec {
+  |
+
+warning: useless use of `vec!`
+2 |     let my_vec = vec![1, 2, 3];
+help: you can use an array directly: `[1, 2, 3]`
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cargo build
+no issues
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

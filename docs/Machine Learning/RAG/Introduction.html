@@ -60,7 +60,7 @@
              |                                  |
 Raw          |  |--- Chunker ---|               |
 documents->  |- | break docs in |               |
-pdf          |  |smaller pieces |               |
+logs         |  |smaller pieces |               |
              |  |-----|---------|               |
              |        |chunks                   |
              |--------|-------------------------|
@@ -72,7 +72,7 @@ pdf          |  |smaller pieces |               |
 
 /////////// Augmentation Phase ///////////////
 2. User asks a query & information retrieved from Vector DB
-User's Query: When Big Star Collectibles Started in?
+User's Query: Show firewall policies blocking outbound traffic?
 
         index from vectorDB(Step1)
           |
@@ -87,7 +87,7 @@ query-> |                                    |
 augmented_prompt=
 "Context: 
 [Node1][Node2][Node3] 
-Question: Big Star Collectibles Started in
+Question: Show firewall policies blocking outbound traffic
 Answer:"
 
 /////////// Generation Phase ///////////////
@@ -168,9 +168,21 @@ llm -> u: Response of query
             </pre>
 
 <h2 id="code">RAG Pipeline Code</h2>
-      <h3 id="ex1">User provides Context files. And asks query(When did the Big Star Collectibles Story Start?) from LLM</h3>
+      <h3 id="ex1">Security log analysis.</h3>
+      <p>
+        We have log files(eg: VPN, firewall).<br>
+        RAG pipeline will read log files and provide answers to Administrator questions.
+      </p>
       <pre><code class="language-css">
-// Set up environment
+./logs/vpn.log
+2025-05-01 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4
+2025-05-01 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4
+
+./logs/firewall.log
+2025-05-01 FIREWALL_DENY src=10.1.1.5 dst=8.8.8.8 policy=OUTBOUND_BLOCK
+2025-05-01 FIREWALL_DENY src=10.1.1.6 dst=1.1.1.1 policy=OUTBOUND_BLOCK
+
+$ cat python.py
 import os
 import dotenv
 from llama_index.embeddings.openai import OpenAIEmbedding
@@ -195,7 +207,7 @@ embed_model = OpenAIEmbedding(
 Settings.embed_model = embed_model
 
 ## B. Break documents into Chunks
-documents = SimpleDirectoryReader("../Big Star Collectibles").load_data()
+documents = SimpleDirectoryReader("./logs").load_data()
 
 ## C. Pass Chunked documents to Embedding model
 # And store Chunks into local vectorDB
@@ -240,7 +252,24 @@ llm = OpenAI(
 query_engine = index.as_query_engine(
   llm=llm
 )
-query_engine.query("When did the Big Star Collectibles Story Start?")
+response = query_engine.query("Show firewall policies blocking outbound traffic")
+print(response)
+Response=
+The firewall policies blocking outbound traffic are as follows:
+
+1. Policy: OUTBOUND_BLOCK
+   - Source: 10.1.1.5
+   - Destination: 8.8.8.8
+
+2. Policy: OUTBOUND_BLOCK
+   - Source: 10.1.1.6
+   - Destination: 1.1.1.1
+
+response = query_engine.query("Why is john.doe unable to connect to VPN?")
+print(response)
+Response=
+john.doe is unable to connect to the VPN due to repeated login failures, as 
+indicated by the log entries showing two instances of VPN_LOGIN_FAILED for the user.
 ############## Augumentation & Generation Phase End #################
       </code></pre>
     </div>

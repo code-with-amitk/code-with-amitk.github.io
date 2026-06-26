@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Golang Atomics</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Threads_Processes_IPC/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Atomics?</a>
+      <a href="#code">Code</a>
+      <a href="#how">How Atomics Work?</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Go Atomics</h2>
+      <p>
+        Similar to
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/Terms/README.adoc#atomic"
+          >C++ Atomics</a
+        >, Go Atomic operations provide safe, lock-free updates to shared
+        variables across multiple goroutines. Use CPU-level hardware
+        instructions instead of heavy OS locks.<br />
+        Provided by sync/atomic package.
+      </p>
+      <table>
+        <tr>
+          <th></th>
+          <th>With Atomic</th>
+          <th>Without Atomic</th>
+        </tr>
+        <tr>
+          <td>Thread-safe</td>
+          <td>Standard Go types are thread safe</td>
+          <td>Not thread safe</td>
+        </tr>
+        <tr>
+          <td>functions to work on data</td>
+          <td>Add(), Load(), Store(), Swap()</td>
+          <td></td>
+        </tr>
+      </table>
+
+      <h2>Code</h2>
+      <p></p>
+      <table>
+        <tr>
+          <th>Code with Atomic (Correct value)</th>
+          <th>Code without Atomic</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+package main
+import (
+	"fmt"
+	"sync"
+	"sync/atomic"
+)
+func main() {
+	var counter atomic.Uint64   ///////// Atomic variable
+	var wg sync.WaitGroup
+
+	// Launch 100 goroutines concurrently
+	for i := 0; i &lt; 100; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for j := 0; j &lt; 1000; j++ {
+				// Atomically increment the counter
+				counter.Add(1)
+			}
+		}()
+	}
+	wg.Wait()
+	// Safely load and print the atomic value
+	fmt.Printf("Expected: %d, Actual: %d\n", 100000, counter.Load())
+}
+
+$ go run
+Expected: 100000, Actual: 100000
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+package main
+import (
+	"fmt"
+	"sync"
+)
+func main() {
+	var counter int64
+	var wg sync.WaitGroup
+
+	for i := 0; i &lt; 100; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for j := 0; j &lt; 1000; j++ {
+				// Race Condition: 
+        // Multiple goroutines may read and write simultaneously
+				counter++
+			}
+		}()
+	}
+	wg.Wait()
+	// Will print a random number less than 100000
+	fmt.Printf("Expected: %d, Actual: %d\n", 100000, counter)
+}
+
+$ go run
+Expected: 100000, Actual: 86879
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="how">How Atomic Works at the CPU Hardware Level?</h2>
+      <p>
+        1st check memory layouts of
+        <a href="/Motherboard/Memory/Memory_layout_of_process.html">Process</a>
+        and
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/Threads/README.md#memory-layout-of-threads"
+          >Thread</a
+        >.<br />
+        Atomic variables are allocated on common area(DS or HS). <br />
+        Atomic forces the CPU hardware to line up the requests so they execute
+        one by one at the hardware level.<br />
+        Go compiler translates that function into special atomic CPU
+        instructions (like LOCK XADD or CMPXCHG on x86 processors)
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
