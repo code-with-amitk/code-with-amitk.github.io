@@ -1,71 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Stored Procedures Introduction</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
-       </li>
-    </ul>
-</nav>
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
-    <a href="#what">Stored Procedure?</a>
-    <a href="#ex">Examples</a>
-    <ul>
-      <li><a href="#ex1">Transfer funds</a></li>
-    </ul>
-    <a href="#commands">Commands</a>
-    <ul>
-      <li><a href="#list">List Stored Procedure</a></li>
-      <li><a href="#drop">Drop Stored Procedure</a></li>
-    </ul>
-    <a href="#vs">Stored Procedures vs Function</a>
-    <a href="../Functions/Introduction.html#code" target="_blank">Call Function/Procedure from C++</a>
-  </aside>
+    <aside class="sidebar">
+      <a href="#what">Stored Procedure?</a>
+      <a href="#ex">Examples</a>
+      <ul>
+        <li><a href="#ex1">Transfer funds</a></li>
+      </ul>
+      <a href="#commands">Commands</a>
+      <ul>
+        <li><a href="#list">List Stored Procedure</a></li>
+        <li><a href="#drop">Drop Stored Procedure</a></li>
+      </ul>
+      <a href="#vs">Stored Procedures vs Function</a>
+      <a href="../Functions/Introduction.html#code" target="_blank"
+        >Call Function/Procedure from C++</a
+      >
+    </aside>
 
-    <article style="margin-left:200px;">
+    <article style="margin-left: 200px">
       <h2 id="what">Stored Procedure</h2>
       <dl>
-        <b>Stored Procedure</b><br>
-        &ensp; User defined functions stored in database which contains set of SQL statements<br>
-        &ensp; It can accept parameters, return values, and can be used to perform various operations such as data manipulation, validation, and business logic implementation.<br>
-        &ensp; Written in SQL or a procedural language supported by the database management system (DBMS).<br>
+        <b>Stored Procedure</b><br />
+        &ensp; User defined functions stored in database which contains set of
+        SQL statements<br />
+        &ensp; It can accept parameters, return values, and can be used to
+        perform various operations such as data manipulation, validation, and
+        business logic implementation.<br />
+        &ensp; Written in SQL or a procedural language supported by the database
+        management system (DBMS).<br />
 
-        <b>Advantages:</b><br>
-        &ensp; 1. Performance: Stored procedures can reduce network traffic and improve performance by executing multiple SQL statements in a single call.<br>
-        &ensp; 2. Security: They can restrict direct access to tables and provide a controlled interface for data access.<br>
-        &ensp; 3. Reusability: Stored procedures can be reused across different applications and users.<br>
-        &ensp; 4. Maintainability: Changes to business logic can be made in the stored procedure without affecting the application code.<br>
-        &ensp; 5. Transaction Management: They can handle complex transactions and ensure data integrity.<br>
-        &ensp; 6. Code Organization: Stored procedures help in organizing code and separating business logic from application code.<br>
-        &ensp; 7. Error Handling: They can include error handling mechanisms to manage exceptions and errors.<br>
-        &ensp; 8. Version Control: Changes to stored procedures can be versioned and tracked, making it easier to manage changes over time.<br>
-        &ensp; 9. Scalability: Stored procedures can be optimized for performance, making them suitable for large-scale applications.
+        <b>Advantages:</b><br />
+        &ensp; 1. Performance: Stored procedures can reduce network traffic and
+        improve performance by executing multiple SQL statements in a single
+        call.<br />
+        &ensp; 2. Security: They can restrict direct access to tables and
+        provide a controlled interface for data access.<br />
+        &ensp; 3. Reusability: Stored procedures can be reused across different
+        applications and users.<br />
+        &ensp; 4. Maintainability: Changes to business logic can be made in the
+        stored procedure without affecting the application code.<br />
+        &ensp; 5. Transaction Management: They can handle complex transactions
+        and ensure data integrity.<br />
+        &ensp; 6. Code Organization: Stored procedures help in organizing code
+        and separating business logic from application code.<br />
+        &ensp; 7. Error Handling: They can include error handling mechanisms to
+        manage exceptions and errors.<br />
+        &ensp; 8. Version Control: Changes to stored procedures can be versioned
+        and tracked, making it easier to manage changes over time.<br />
+        &ensp; 9. Scalability: Stored procedures can be optimized for
+        performance, making them suitable for large-scale applications.
       </dl>
 
       <h2 id="ex">Examples</h2>
       <h3 id="ex1">Transfer Funds from account1 to account2</h3>
       <dl>
-        1. Suppose we have 2 accounts, Raj and Hari, and we want to transfer funds from Raj to Hari.<br>
-        2. We can create a function = stored procedure that takes the account numbers(or name) and the amount to be transferred as parameters.<br>
-        3. The stored procedure will then perform the following steps:<br>
-        &emsp; a. Check if the source account has sufficient balance.<br>
-        &emsp; b. Deduct the amount from the source account.<br>
-        &emsp; c. Add the amount to the destination account.<br>
+        1. Suppose we have 2 accounts, Raj and Hari, and we want to transfer
+        funds from Raj to Hari.<br />
+        2. We can create a function = stored procedure that takes the account
+        numbers(or name) and the amount to be transferred as parameters.<br />
+        3. The stored procedure will then perform the following steps:<br />
+        &emsp; a. Check if the source account has sufficient balance.<br />
+        &emsp; b. Deduct the amount from the source account.<br />
+        &emsp; c. Add the amount to the destination account.<br />
       </dl>
       <pre><code class="language-css">
 // Install postgres on Windows
@@ -174,12 +199,19 @@ crm=# drop procedure transfer(integer, integer, dec);
         </tr>
         <tr>
           <td>Usage Context</td>
-          <td>Need read-only operations (no transaction control needed) eg:(SELECT, WHERE clauses)</td>
-          <td>Perform operations that <b>modify data and need transaction control</b></td>
+          <td>
+            Need read-only operations (no transaction control needed)
+            eg:(SELECT, WHERE clauses)
+          </td>
+          <td>
+            Perform operations that
+            <b>modify data and need transaction control</b>
+          </td>
         </tr>
         <tr>
           <td>Code Example</td>
-          <td><pre><code class="language-css">
+          <td>
+            <pre><code class="language-css">
 CREATE OR REPLACE FUNCTION get_employee_count()
 RETURNS integer AS $$
 BEGIN
@@ -189,8 +221,10 @@ $$ LANGUAGE plpgsql;
 
 -- Call as:
 SELECT get_employee_count();
-          </code></pre></td>
-          <td><pre><code class="language-css">
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
 CREATE OR REPLACE PROCEDURE raise_salary(dept_id integer, percentage numeric)
 AS $$
 BEGIN
@@ -204,12 +238,13 @@ $$ LANGUAGE plpgsql;
 
 -- Call as:
 CALL raise_salary(10, 5); -- Give 5% raise to dept 10
-          </code></pre></td>
+          </code></pre>
+          </td>
         </tr>
       </table>
     </article>
 
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>

@@ -45,37 +45,72 @@
         Dataframes
       </dl>
       <h3 id="series">1. Series</h3>
-      <dl>
-        a one-dimensional labeled array holding data of any type such as
+      <p>
+        A one-dimensional labeled array holding data of any type such as
         integers, strings, Python objects etc.
-      </dl>
-      <pre><code class="language-css">
-s = pd.Series()          // Empty series
-print(series,'\n')          #Series([], dtype: float64) 
+      </p>
+      <table>
+        <tr>
+          <th>Internally</th>
+          <th>Examples</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+struct Series {
+    Index index_array; // Stores ['Alice', 'Bob', 'Charlie']
+    Data  values_array; // Stores [85, 92.01, "test"]
+}
+          </code></pre>
+            <br />
+            Series is composed of a data array and an index array.<br />
+            They are managed as two separate, parallel arrays.<br /><br />
 
-series = pd.Series(5)          //Single value 5
-print(series,'\n')          #0    5
-                            #dtype: int64 
+            <b>The Index Array:</b> This is an object that handles labels,
+            lookups, and alignment.<br />
+            <b>The Values Array:</b> If all data is the same type (e.g., all
+            integers), <br />this is a contiguous, high-performance block of
+            <br />memory (like a C array). When you mix types, it becomes an
+            array of references to Python objects.
+          </td>
+          <td>
+            <pre><code class="language-css">
+import pandas as pd
 
-series = pd.Series([1, 2, 3])   //Array [1,2,3]
-print(series,'\n')            #0    1
-                              #1    2
-                              #2    3
-                              #dtype: int64  
+s = pd.Series()
+print(series,'\n')
+Series([], dtype: float64)    //Output
 
-s = pd.Series([1, 2, 3], index=['a', 'b', 'c'])
-print(s,'\n')                                     # a    1
-                                                  # b    2
-                                                  # c    3
-                                                  # dtype: int64
+series = pd.Series(5)
+print(series,'\n')
+0    5            //Output
+dtype: int64 
+
+scores = pd.Series([85, 92, 78], index=['Alice', 'Bob', 'Charlie'])
+print(scores)
+Alice      85     //Output
+Bob        92
+Charlie    78
+dtype: int64
+
+series = pd.Series([85, 92.01, "test"], index=['Alice', 'Bob', 'Charlie'])
+print(series)
+Alice         85    //Output
+Bob        92.01
+Charlie     test
+dtype: object
 
 # Setting index using Dictionary
 s = pd.Series({'a':1, 'b':2, 'c':3})
-print(s,'\n')                                     # a    1
-                                                  # b    2
-                                                  # c    3
-                                                  # dtype: int64
-      </code></pre>
+print(s,'\n')
+a    1            //Output
+b    2
+c    3
+dtype: int64
+          </code></pre>
+          </td>
+        </tr>
+      </table>
 
       <h3>2. Dataframes</h3>
       <dl>
@@ -83,15 +118,27 @@ print(s,'\n')                                     # a    1
         array or a table with rows and columns.(Eg: csv file)
       </dl>
       <pre><code class="language-css">
-df = pd.DataFrame()
-print(df)                       #Empty DataFrame
-                                # Columns: []
-                                # Index: []
+df = pd.DataFrame()         #Empty DataFrame
+print(df)
+Columns: []
+Index: []
 
-df = pd.DataFrame([5, 6])       
-print(df)                       #0
-                                #0  5
-                                #1  6
+df = pd.DataFrame([5, 6])
+print(df)
+   0
+0  5
+1  6
+
+data = {
+    'Age': [20, 21, 19],
+    'Score': [85, 92, 78]
+}
+df = pd.DataFrame(data, index=['Alice', 'Bob', 'Charlie'])
+print (df)
+         Age  Score         //Output
+Alice     20     85
+Bob       21     92
+Charlie   19     78
                                 
 df = pd.DataFrame({'c1': [1, 2], 'c2': [3, 4]},               //taking dictionary as argument
                   index=['r1', 'r2'])
