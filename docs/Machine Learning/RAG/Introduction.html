@@ -54,24 +54,19 @@
         <tr>
           <td>
             <pre><code class="language-css">
-/////////// Retrieval Phase ///////////////
-1. Chunks are fed into vector DB
-             |---A. Retrieval Phase (Offline) --|
-             |                                  |
-Raw          |  |--- Chunker ---|               |
-documents->  |- | break docs in |               |
-logs         |  |smaller pieces |               |
-             |  |-----|---------|               |
-             |        |chunks                   |
-             |--------|-------------------------|
-                     \/                   
-        [Embedding Model]--vectors--->|---------|
-                                      |Vector DB|-> index
-                                      |---------|
-[Node1 (score 0.92), Node2 (score 0.87), Node3 (score 0.76)]
+1. [Retrieval Phase] Chunks are fed into vector DB
+             |-------------------- A. Retrieval Phase (Offline) --------------|
+             |                                                                |
+Raw          |  |--- Chunker ---|                                             |
+documents->  |- | break docs in |--chunks->[Embedding]-vectors--> [vectorDB]  |
+logs         |  |smaller pieces |          [  Model  ]                 |      |
+             |  |---------------|                                      \/     |
+             |                                                       index    |
+             |----------------------------------------------------------------|
 
-/////////// Augmentation Phase ///////////////
-2. User asks a query & information retrieved from Vector DB
+             [Node1 (score 0.92), Node2 (score 0.87), Node3 (score 0.76)]
+
+2. [Augmentation Phase] User asks a query & information retrieved from Vector DB
 User's Query: Show firewall policies blocking outbound traffic?
 
         index from vectorDB(Step1)
@@ -80,7 +75,7 @@ User's Query: Show firewall policies blocking outbound traffic?
         |------B. Augmentation Phase --------|
 User    | index + User's Query = Prompt      | 
 query-> |                                    |
-        | Combine chunks from vector DB      |
+        | Combine index vector DB            |
         | into well crafted prompt           |-> augmented_prompt
         |------------------------------------|
 
@@ -90,12 +85,11 @@ augmented_prompt=
 Question: Show firewall policies blocking outbound traffic
 Answer:"
 
-/////////// Generation Phase ///////////////
-3. Feed augmented_prompt into LLM.
+3. [Generation Phase] Feed augmented_prompt into LLM.
 With (user_query + vector), LLM hallucinations reduces drastically
 
                      |-- LLM --|
-augmented_prompt --> | GPT5.0  | --> Reponse
+augmented_prompt --> | GPT5.0  | --> Reponse (less hallucinations)
                      |---------|
       </code></pre>
           </td>
@@ -168,7 +162,7 @@ llm -> u: Response of query
             </pre>
 
 <h2 id="code">RAG Pipeline Code</h2>
-      <h3 id="ex1">Security log analysis.</h3>
+      <h3 id="ex1">User queries from security logs</h3>
       <p>
         We have log files(eg: VPN, firewall).<br>
         RAG pipeline will read log files and provide answers to Administrator questions.
@@ -182,7 +176,7 @@ llm -> u: Response of query
 2025-05-01 FIREWALL_DENY src=10.1.1.5 dst=8.8.8.8 policy=OUTBOUND_BLOCK
 2025-05-01 FIREWALL_DENY src=10.1.1.6 dst=1.1.1.1 policy=OUTBOUND_BLOCK
 
-$ cat python.py
+$ cat rag_pipeline.py
 import os
 import dotenv
 from llama_index.embeddings.openai import OpenAIEmbedding
@@ -237,14 +231,14 @@ llm = OpenAI(
 #       similarity_top_k=3
 #    )
 # top_k_nodes now contains the 3 most relevant text chunks (Nodes)
-# e.g., Node 1: "Big Star Collectibles was founded in 1988..."
-#       Node 2: "The company started as a small garage operation..."
-#       Node 3: "By 1990, they had moved to a larger warehouse..."
+# e.g., Node 1: "2025-05-01 08:22:47 VPN_LOGIN_FAILED user=eve.hacker ip=203.0.113.7"
+#       Node 2: "2025-05-01 08:30:55 VPN_LOGIN_SUCCESS user=carol.white ip=192.168.1.52"
+#       Node 3: "2025-05-01 09:01:08 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4"
 #    vectordb_text = [Node1][Node2][Node3] 
 # augmented_prompt=
 #	"Context: 
 #	[Node1][Node2][Node3] 
-#	Question: Big Star Collectibles Started in
+#	Question: failed vpn logins for 2 hours after 2025-05-01 09:01:08
 #	Answer:"
 #
 #

@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Kubernets</title>
+    <title>Kubernets Introduction</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
@@ -31,12 +31,13 @@
 
     <aside class="sidebar">
       <!-- Sidebar -->
-      <a href="#what">Kubernets?</a>
+      <a href="#what">what is Kubernets?</a>
+      <a href="#how">How Kubernets helps in scaling</a>
     </aside>
 
     <main style="margin-left: 200px">
       <h3 id="#what">Kubernets</h3>
-      <dl>
+      <p>
         Kubernetes is Container Orchestrator<br />
         <b>Orhestration</b> means managing the lifecycles of containers. These
         are GUI/tools to automate following tasks:<br />
@@ -45,14 +46,21 @@
         - Movement of containers from one host to another<br />
         - Load balancing<br />
         - Health monitoring
-        <br />
-        <u>Examples of Container Orhestrators</u><br />
-        - Kubernets<br />
-        - Docker swarm<br />
-        - Nomad <br />
-        - AWS EKS<br />
-        - GCP Kubernets Engine
-      </dl>
+      </p>
+
+      <h3 id="how">How Kubernetes helps in scaling?</h3>
+      <p>
+        Kubernetes scales your application by replicating your application
+        container across multiple instances called Pod. When traffic increases,
+        Kubernetes deploys more Pods (scaling out). When traffic decreases, it
+        removes Pods (scaling in).
+      </p>
+      <pre><code>
+            [ Load Balancer / Service ]
+                    /     |     \
+                  v      v      v
+            [ Pod 1 ] [ Pod 2 ] [ Pod 3 ]
+</code></pre>
     </main>
   </body>
 </html>

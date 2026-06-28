@@ -52,7 +52,7 @@
       <tr>
         <td>Accept request header</td>
         <td>
-          MIME types HTTP client is able to understand.
+          MIME types HTTP client is able to understand.<br>
           <pre><code class="language-css">
 Accept: text/html
 
@@ -69,7 +69,7 @@ Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8
       <tr>
         <td>Authorization request header</td>
         <td>
-          Provide credentials that authenticate a user agent with a server, allowing access to a protected resource
+          Provide credentials that authenticate a user agent with a server, allowing access to a protected resource<br>
           <pre><code class="language-css">
 Authorization: Basic <credentials>
 
@@ -91,7 +91,7 @@ opaque="<opaque>"
       <tr>
         <td>Accept-Language</td>
         <td>
-          natural language and locale that the client prefers
+          natural language and locale that the client prefers<br>
           <pre><code class="language-css">
 Accept-Language: en-US,en;q=0.5
           </code></pre>
@@ -100,7 +100,7 @@ Accept-Language: en-US,en;q=0.5
       <tr>
         <td>Referer</td>
         <td>
-          Absolute or partial address from which a resource has been requested
+          Absolute or partial address from which a resource has been requested<br>
           <pre><code class="language-css">
 Referer: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 Referer: https://example.com/page?q=123
@@ -113,21 +113,21 @@ Referer: https://example.com/
         <td>
           whether the network connection stays open after the current transaction finishes<br>
           If the value sent is keep-alive, the connection is persistent and not closed, allowing for subsequent 
-          requests to the same server to be done.
+          requests to the same server to be done.<br>
           <pre><code class="language-css">
 Connection: keep-alive
-Connection: close    
+Connection: close
           </code></pre>
         </td>
       </tr>
       <tr>
         <td>Upgrade-Insecure-Requests</td>
         <td>
-          sends a signal to the server expressing the client's preference for an encrypted and authenticated response
+          sends a signal to the server expressing the client's preference for an encrypted and authenticated response<br>
           <pre><code class="language-css">
 GET / HTTP/1.1
 Host: example.com
-Upgrade-Insecure-Requests: 1      
+Upgrade-Insecure-Requests: 1
           </code></pre>
         </td>
       </tr>

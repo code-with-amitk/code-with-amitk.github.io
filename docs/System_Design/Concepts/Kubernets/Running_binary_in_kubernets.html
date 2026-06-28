@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Running Binary in Kubernetes</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#how">Running binary in Kubernets</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h3 id="#what">Running binary in Kubernets</h3>
+      <p>
+        You cannot run a raw binary directly on Kubernetes. These steps must be
+        followed:<br />
+
+        1. Package your binary into a container image (using Dockerfile)<br />
+        2. Create kubernets config files:<br />
+        2a. Define deployment: You create a Kubernetes configuration file
+        specifying how many Pod copies (replicas) you want<br />
+        2b. Route traffic: Create a Kubernetes Service. This acts as an internal
+        load balancer that automatically routes incoming traffic across all
+        running Pods.
+      </p>
+    </main>
+  </body>
+</html>

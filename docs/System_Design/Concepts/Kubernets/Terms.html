@@ -33,23 +33,25 @@
 
     <aside class="sidebar">
         <a href="#aag">Ambassador API Gateway</a>
-        <a href="#namespace">Namespace?</a>
+        <a href="#auth">Authorization in kubernets</a>
+        <ul>
+            <li>1. service Tokens</li>
+            <li>2. Istio Authorization Policy</li>
+        </ul>
+        <a href="#namespace">Namespace</a>
+        <a href="#pvc">PVC(Persistant Volume Claims)</a>
         <a href="#ports">Ports</a>
         <ul>
           <li><a href="#containerport">ContainerPort</a></li>
           <li><a href="#hostport">HostPort</a></li>
           <li><a href="#nodeport">Nodeport</a></li>
         </ul>
-        <a href="#auth">Authorization in kubernets</a>
-        <ul>
-            <li><ahref="">1. service Tokens</ahref></li>
-            <li><ahref="">2. Istio Authorization Policy</ahref></li>
-        </ul>
+        <a href="#service">Service</a>
     </aside>
 
     <main style="margin-left: 200px">
       <h3 id="aag">Ambassador API Gateway</h3>
-        <dl>
+        <p>
             This is Kubernetes-native API Gateway for controlling and managing traffic between microservices 
             within a Kubernetes cluster. Built on top of Envoy Proxy.<br>
             It integrates with Kubernetes Service objects to route traffic to the appropriate microservices 
@@ -57,32 +59,58 @@
             Advatanges:<br>
             1. Supports Multiple Protocols: HTTP/1.1, HTTP/2, WebSocket, gRPC, and OpenAPI/Swagger<br>
             2. Other Functions: traffic splitting, load balancing, rate limiting, and authentication.
-        </dl>
+        </p>
+
+      <h3 id="auth">Authorization in kubernets</h3>
+      <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>1. Service Token</td>
+            <td>
+                Each pod has a associated service account. Each service account has a service token. 
+                This service account token is mounted as a file in the pod's filesystem. The default path is 
+                `/var/run/secrets/kubernetes.io/serviceaccount/token`.<br>
+                <b>Usage of service token?</b> if service want to communicate/access resources of other services, 
+                then this service will present the service token to API-server and API server will authorize the service.<br>
+                 API server will check &lt;&lt;a-role,Role,Role Binding&gt;&gt; of service(whether service is allowed to access 
+                    other service or not).<br>
+                <b>Can be used Only within cluster</b>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Containers/Kubernets/Terms/istio#istio-authorizationpolicy">
+                2. Istio Authorization Poliy</a></td>
+            <td>Can be used across cluster</td>
+        </tr>
+      </table>
 
       <h3 id="namespace">Namespace</h3>
-      <dl>
+      <p>
         Namespace divides cluster into smaller units to isolate services,volumes
         and manage.<br />
         Namespace contains pods.<br />
         3 predefined namespaces: Default, Kube-system(resources created by
         kubernets), Kube-public(reserved for future)
+      </p>
         <pre><code class="language-css">
 $ kubectl create namespace test                       //Creating new namespace
 $ kubectl --namespace=test  run ngnix --image=nginx   //Deploy namespace
-            </code></pre>
-      </dl>
+        </code></pre>
 
       <h3 id="ports">Ports</h3>
       <h4 id="containerport">ContainerPort</h4>
-      <dl>
+      <p>
         Port on which application inside container is listening
-      </dl>
+      </p>
 
       <h4 id="hostport">HostPort</h4>
-      <dl>
+      <p>
         If you want to directly map a host machine port → container port, you can use hostPort<br>
         Its use is discouraged since only 1 application can take host's port, harder to scale, not load balanced<br>
-      </dl>
+      </p>
 
       <h4 id="nodeport">Nodeport</h4>
       <pre><code>
@@ -93,12 +121,12 @@ Client reaches host(http://1.2.3.4:8080) and traffic goes to container's(8080)
             |                                                                 |
             |-----------------------------------------------------------------|
       </code></pre>
-      <dl>
+      <p>
         nodePort is mapped to targetPort internally.<br />
         Why NodePort? 2 Applications can use same internal ports. Eg: App1 uses
         8080 & App2 uses 8080. When traffic arrives kubernets will send traffic to 
         both containers.
-      </dl>
+      </p>
         <pre><code class="language-css">
 $ cat templates/deployment.yaml
 spec:
@@ -126,35 +154,49 @@ spec:
 // Create firewall rule to send any packet coming to 8080 on this host → redirect to port 30080 
 $ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 30080
             </code></pre>
-      </dl>
 
-      <h3 id="auth">Authorization in kubernets</h3>
+      <h3 id="pvc">PVC(Persistant Volume Claims)</h3>
+      <p>Types of PVC</p>
       <table>
         <tr>
-            <th>Name</th>
-            <th>Description</th>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
         <tr>
-            <td>1. Service Token</td>
-            <td>
-                Each pod has a associated service account. Each service account has a service token. 
-                This service account token is mounted as a file in the pod's filesystem. The default path is 
-                `/var/run/secrets/kubernetes.io/serviceaccount/token`.<br>
-                <b>Usage of service token?</b> if service want to communicate/access resources of other services, 
-                then this service will present the service token to API-server and API server will authorize the service.<br>
-                 API server will check <<a-role,Role,Role Binding>> of service(whether service is allowed to access 
-                    other service or not).<br>
-                <b>Can be used Only within cluster</b>
-            </td>
+          <td>Config PVC</td>
+          <td>
+            Store configuration files for the container(json, yaml, config).
+            mounted at /etc/process-name inside container.
+            Multiple pods can read
+          </td>
         </tr>
         <tr>
-            <td><a href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Containers/Kubernets/Terms/istio#istio-authorizationpolicy">
-                2. Istio Authorization Poliy</a></td>
-            <td>Can be used across cluster</td>
+          <td>Data PVC</td>
+          <td>
+            Store application data,logs,database.
+            Mounted at /var/lib/process-name inside container.
+            Only 1 pod can write
+          </td>
+        </tr>
+        <tr>
+          <td>Shared-Data PVC</td>
+          <td>
+            To transfer files between containers.
+            Mounted at /shared/data inside container.
+            All containers can read/write
+          </td>
         </tr>
       </table>
-    </main>
 
+      <h3 id="service">Service</h3>
+      <p>
+        This is kubernets Networking objects<br>
+        Service is Networking abstraction which provides stable network access to pods.<br>
+        service does not run inside containers, these are k8s objects. Each service routes the traffic to 1 or more POD<br>
+        Service provides: Load balancing, service discovery, stable endpoints
+      </p>
+
+    </main>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
   </body>

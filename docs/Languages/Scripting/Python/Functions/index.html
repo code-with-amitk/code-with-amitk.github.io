@@ -194,7 +194,8 @@ After calling the function.
                             <td>@staticmethod</td>
                             <td>
                                 A static method is a method that belongs to a class rather than 
-                                an instance of the class. It doesn't receive any implicit first argument (no self or cls)
+                                an instance of the class. It doesn't receive any implicit first 
+                                argument (no self or cls)<br>
                                 <pre><code class="language-css">
 class Calculator:
     @staticmethod
@@ -236,7 +237,7 @@ Employee.change_company("Tech Corp")
                             <td>@property</td>
                             <td>
                                 Allows you to define methods that can be accessed like attributes, 
-                                providing getter, setter, and deleter functionality.
+                                providing getter, setter, and deleter functionality.<br>
                                 <pre><code class="language-css">
 class Circle:
     def __init__(self, radius):
@@ -271,7 +272,7 @@ print(circle.area)    # Computed property
             <tr>
                 <td id="enumerate">enumerate() function</td>
                 <td>
-                    This is used to iterate over an iterable (Eg: list, tuple, or string). It returns a tuple(index, value of each item)
+                    This is used to iterate over an iterable (Eg: list, tuple, or string). It returns a tuple(index, value of each item)<br>
                     <pre><code class="language-css">
 # enumerate(iterable, start=0(optional))
 
@@ -308,7 +309,7 @@ print(mulFive(2))    # output => 10
             <tr>
                 <td id="generator">Generator</td>
                 <td>
-                    Generator returns an iterator object which can be iterated over.
+                    Generator returns an iterator object which can be iterated over.<br>
                     <pre><code class="language-css">
 def simple_generator(n):
     for i in range(n):
@@ -324,7 +325,7 @@ for num in gen:
 2
 3
 4
-                    </code></pre>
+                    </code></pre><br>
                     <b>How yeild works here?</b>
                     The yield keyword is crucial in creating generators. When yield is encountered:<br>
                     &ensp; The function's execution is paused<br>

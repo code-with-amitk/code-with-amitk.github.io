@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <title>RAGAS</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <form>
+          <input type="search" name="q" placeholder="Search site" />
+          <input type="submit" value="Go!" />
+        </form>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">RAGAS</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">RAGAS(Retrieval Augmented Generation Assessment)</h2>
+      <p>
+        Open-source framework designed to evaluate
+        <a href="/Machine Learning/"
+          >Retrieval-Augmented Generation (RAG) pipelines</a
+        >. RAGAS uses an LLM-based approach to score different stages of the RAG
+        workflow, helping you understand where your pipeline is succeeding or
+        failing
+      </p>
+
+      <h2 id="metrics">Metrics of RAGAS</h2>
+      <p>
+        RAGAS breaks down evaluation into components that address the two main
+        stages of a RAG pipeline: Retrieval (finding the right data) and
+        Generation (creating the answer).
+      </p>
+      <table>
+        <tr>
+          <th>Metrics Name</th>
+          <th>Stage</th>
+          <th>Explanation</th>
+        </tr>
+        <tr>
+          <td>1. Context Precision</td>
+          <td>Retrieval</td>
+          <td>
+            Measures if the most relevant information is ranked highly in the
+            search results.
+          </td>
+        </tr>
+        <tr>
+          <td>2 . Context Recall</td>
+          <td>Retrieval</td>
+          <td>
+            Measures if the system retrieved all the information required to
+            answer the query.
+          </td>
+        </tr>
+        <tr>
+          <td>3. Faithfulness</td>
+          <td>Generation</td>
+          <td>
+            Measures if the generated answer is derived only from the retrieved
+            context (prevents hallucinations).
+          </td>
+        </tr>
+        <tr>
+          <td>4. Answer Relevancy</td>
+          <td>Generation</td>
+          <td>
+            Measures how closely the generated answer addresses the user's
+            original query.
+          </td>
+        </tr>
+      </table>
+    </article>
+  </body>
+</html>
