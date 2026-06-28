@@ -1,56 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Unittest or Pyunit</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Frameworks/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">   <!-- Sidebar -->
-        <a href="#what">Unittest</a>
-        <a href="#">Examples</a>
-        <ul>
-            <li><a href="#ex1">Simple Test</a></li>
-            <li><a href="#ex2">Writing Mock object</a></li>
-        </ul>
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">Unittest</a>
+      <a href="#">Examples</a>
+      <ul>
+        <li><a href="#ex1">Simple Test</a></li>
+        <li><a href="#ex2">Writing Mock object</a></li>
+      </ul>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="what">Pyunit or Unitest</h2>
-        <dl>
-            Used to test a unit of source code
-            <br><br>
+    <article style="margin-left: 200px">
+      <h2 id="what">Pyunit or Unitest</h2>
+      <dl>
+        Used to test a unit of source code
+        <br /><br />
 
-            <b>Features:</b><br>
-            &ensp; 1. PyUnit is very simple yet very flexible<br>
-            &ensp; 2. Test report formats generated: XML, unittest xml reports<br>
-            &ensp; 3. Supports fixtures, test cases, test suites and test runners for automation of testing
-            <br><br>
+        <b>Features:</b><br />
+        &ensp; 1. PyUnit is very simple yet very flexible<br />
+        &ensp; 2. Test report formats generated: XML, unittest xml reports<br />
+        &ensp; 3. Supports fixtures, test cases, test suites and test runners
+        for automation of testing
+        <br /><br />
 
-            <b>How Code is tested?</b><br>
-            &ensp; 1. Create the class which need to be tested<br>
-            &ensp; 2. Create seperate module(which import above class)  & calls its functions for testing.
-        </dl>
+        <b>How Code is tested?</b><br />
+        &ensp; 1. Create the class which need to be tested<br />
+        &ensp; 2. Create seperate module(which import above class) & calls its
+        functions for testing.
+      </dl>
 
-        <h2 id="examples">Examples</h2>
-        <h3 id="ex1">Ex1: Simple Test</h3>
-            <pre><code class="language-css">
+      <h2 id="examples">Examples</h2>
+      <h3 id="ex1">Ex1: Simple Test</h3>
+      <pre><code class="language-css">
 # car.py        # Class to test
 class car:
     name = ""
@@ -119,15 +124,17 @@ Ran 2 tests in 0.009s
 OK
                 </code></pre>
 
-        <h3 id="ex2">Ex2: Writing Mock object</h3>
-        <dl>
-            <b>How it works?</b><br>
-            1. We create mock object.<br>
-            2. Assign mock object a function call which need to be mocked. For example:<br>
-            &ensp; <u>requests.get():</u> We will mock this API, since this can take n/w delay which is not needed while testing<br>
-            3. Write assert() and compare return value from mock.
-        </dl>
-        <pre><code class="language-css">
+      <h3 id="ex2">Ex2: Writing Mock object</h3>
+      <dl>
+        <b>How it works?</b><br />
+        1. We create mock object.<br />
+        2. Assign mock object a function call which need to be mocked. For
+        example:<br />
+        &ensp; <u>requests.get():</u> We will mock this API, since this can take
+        n/w delay which is not needed while testing<br />
+        3. Write assert() and compare return value from mock.
+      </dl>
+      <pre><code class="language-css">
 // File to be tested
 # weather.py
 import requests
@@ -189,8 +196,7 @@ Ran 2 tests in 0.003s
 
 OK
         </code></pre>
-
     </article>
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>

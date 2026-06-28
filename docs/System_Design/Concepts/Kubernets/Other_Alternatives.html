@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Kubernets Alternatives</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#alternatives">Alternatives to kubernets</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="alternatives">Kubernets Alternatives</h2>
+      <p>
+        <b>Lightweight Container Orchestrators</b><br />
+        1. Docker Swarm: Built directly into Docker. It is much easier to learn
+        and perfect for small-to-medium setups.<br />
+        2. HashiCorp Nomad: A flexible orchestrator that can run containers, raw
+        binaries, and virtual machines without requiring containerization.
+        <br /><br />
+
+        <b>Cloud-Native Managed Services (Serverless/CaaS)</b><br />
+        1. AWS ECS (Elastic Container Service): A powerful, AWS-native
+        alternative that is less complex than Kubernetes.<br />
+        2. Google Cloud Run / AWS Fargate: Serverless container platforms where
+        you provide the container, and the cloud provider handles 100% of the
+        scaling and infrastructure.<br />
+        3. HashiCorp Nomad: Runs containers and raw binaries without Kubernetes
+        complexity.Platform-as-a-Service<br />
+
+        <b>(PaaS)</b><br />
+        1. Render / Railway / Fly.io: Great for hosting applications directly
+        from your GitHub repository with automatic scaling and zero
+        infrastructure management.
+      </p>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

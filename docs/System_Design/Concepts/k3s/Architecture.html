@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>K3s</title>
@@ -15,6 +15,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -35,16 +36,26 @@
       <a href="#arch">Architecture</a>
       <ul>
         <li><a href="#diff">k3s vs Kubernets</a></li>
+      </ul>
     </aside>
 
     <main style="margin-left: 200px">
       <h2 id="what">What</h2>
-      <dl>
-        K3s is a lightweight
-        <a href="../" target="_blank">Kubernetes</a> distribution designed for
-        resource-constrained environments, such as edge computing, IoT, or
-        single-node clusters.
-      </dl>
+      <p>
+        K3s is a fully compliant, lightweight version of Kubernetes created by
+        Rancher K3s is a lightweight
+        <a href="/System_Design/Concepts/">Kubernetes</a>. <br /><br />
+
+        <b>When to choose k3s over kubernets</b><br />
+        Resource constraints: You are running on low-memory or low-CPU
+        hardware.<br />
+        Edge computing: You are deploying on IoT devices, Raspberry Pis, or
+        remote cell towers.<br />
+        Single-node clusters: You only need a simple, one-server setup.<br />
+        Local development: You want a fast-booting cluster on your laptop.CI/CD
+        pipelines: You need to spin up and tear down temporary clusters quickly
+        for testing.
+      </p>
 
       <h2 id="arch">K3s Architecture</h2>
       <dl>
@@ -52,10 +63,12 @@
         (also called agent nodes), similar to
         <a href="../" target="_blank">Kubernetes</a>. <br />
         However, it simplifies the architecture by removing some components and
-        using lightweight alternatives.<br><br>
+        using lightweight alternatives.<br /><br />
 
-        <b>Read differences below and Check <a href="../" target="_blank">kubernets Architecture</a></b>
-        
+        <b
+          >Read differences below and Check
+          <a href="../" target="_blank">kubernets Architecture</a></b
+        >
       </dl>
 
       <h3 id="diff">Difference in k3s and Kubernets Architecture</h3>

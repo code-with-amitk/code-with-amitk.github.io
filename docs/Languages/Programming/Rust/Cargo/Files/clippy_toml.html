@@ -36,6 +36,27 @@
         opinionated. This file lets you dial the strictness up or down to match
         your project's needs.
       </p>
+      <pre><code class="language-css">
+cargo.clippy
+
+# Minimum Rust version for API suggestions
+# Clippy will stop suggesting modern features that were introduced in Rust 1.76
+msrv = "1.75"
+
+# Enforce a maximum cognitive complexity per function
+# This measures how "hard" a function is to read (based on if, else, match, and loop nesting). 
+# If a function is too complex (score &gt; 25), Clippy will warn you that it's time to refactor.
+cognitive-complexity-threshold = 25
+
+# Prevents stack overflows by warning if you try to allocate a large struct/enum on the stack. 
+# You have set this to 512 bytes, meaning anything larger should probably be boxed (on the heap).
+too-large-for-stack = 512
+
+# A stylistic check. It encourages you to use 'a' (a char) instead of "a" (a string) 
+# when possible, as chars are more efficient.
+single-char-add-str = true
+
+      </code></pre>
     </article>
 
     <script src="/scripts/prism.js"></script>

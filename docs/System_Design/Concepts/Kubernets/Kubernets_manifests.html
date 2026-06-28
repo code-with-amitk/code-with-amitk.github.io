@@ -1,0 +1,369 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Kubernets Manifests</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Kubernets Manifest</a>
+      <a href="#">Manifest Types</a>
+      <ul>
+        <li><a href="#deployment">1. deployment.yaml</a></li>
+        <li><a href="#services">2. service.yaml</a></li>
+        <li><a href="#hpa">3. hpa.yaml (Horizontal Pod Autoscaler)</a></li>
+        <li><a href="#namespace">4. namespace.yaml</a></li>
+        <li><a href="#configmap">5. configmap.yaml</a></li>
+        <li><a href="#secrets">6. secrets.yaml</a></li>
+        <li><a href="#servicemonitor">7. servicemonitor.yaml</a></li>
+        <li><a href="#clusterrole">8. ClusterRole</a></li>
+        <li><a href="#job">9. Job</a></li>
+        <li><a href="#rbac">10. RBAC</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="#what">Kubernets Manifests</h2>
+      <p>
+        Kubernetes Manifests are physical YAML file which are used to create
+        Kubernetes Objects.
+        <br /><br />
+
+        <b>Kubernets Object</b><br />
+        The Object is the actual active entity running inside the cluster after
+        you submit the manifest using a command like "kubectl apply -f
+        file.yaml"
+        <br /><br />
+
+        <b>Required Manifests</b><br />
+        - Only deployment.yaml and service.yaml are mandatory to deploy and
+        access your container.<br />
+        - Rest are optional tools used to handle scaling, security,
+        configuration, and monitoring.
+      </p>
+
+      <h2 id="types">Kubernets Manifest Types</h2>
+      <h3 id="deployment">1. deployment.yaml (Mandatory)</h3>
+      <p>
+        Manages application's lifecycle, defines which Docker image to run, and
+        ensures the specified number of Pod replicas remain healthy.
+      </p>
+      <pre><code class="language-css">
+apiVersion: apps/v1               #(Required) Which version of the Kubernetes API you're using to create this object
+kind: Deployment                  #(Required) What kind of object you want to create
+metadata:                         #(Required) Data that helps uniquely identify the object
+  name: {{ .Values.image.app }}   #Taken from values.yaml
+spec:                             #(Required) What state you desire for the object
+  replicas: 3                     # Run 3 identical copies of your app
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+      - name: app-container
+        image: myregistry/web-app:v1
+        ports:
+        - containerPort: 8080      # Internal port your app listens on
+
+$ kubectl apply -f test.yaml
+      </code></pre>
+
+      <h3 id="service">2. service.yaml (Mandatory)</h3>
+      <p>
+        Thi is needed if your app needs to receive traffic<br />
+        Purpose: Provides a fixed IP address and DNS name to route network
+        traffic to your constantly changing Pods
+      </p>
+      <pre><code class="language-css">
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  selector:
+    app: web-app                  # Routes traffic to pods matching this label
+  ports:
+  - protocol: TCP
+    port: 80                      # External port exposed to users
+    targetPort: 8080              # Internal port inside your container
+    nodePort: 30080               # Fixed external NodePort
+  type: ClusterIP                 # Internal routing (change to LoadBalancer for public)
+      </code></pre>
+      <p>
+        Every service is assigned a CLUSTER-IP, via which pod behind service can
+        be reached.<br />
+        CLUSTER-IP: Kubernetes assigns an internal virtual IP (the ClusterIP).
+        when any pod inside the cluster sends a packet to that ClusterIP, the
+        packet gets NATed and load-balanced to one of the backend pods
+      </p>
+      <pre><code class="language-css">
+$ kubectl get services -o wide
+NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORTS(s)        AGE   SELECTOR
+pod1-service      NodePort    10.43.200.121   &lt;none&gt;     8080:30102/TCP   4h5m  app=pod1
+      </code></pre>
+      <p>
+        <b><a href="./Terms.html#nodeport">NodePort</a> is build on Services</b>
+        Read about <a href="./Terms.html#nodeport">NodePort</a> 1st.
+      </p>
+      <pre><code class="language-css">
+A ClusterIP service is created (e.g., 10.96.1.20:80)
+kube-proxy adds iptables rules on each node:  &lt;NodeIP&gt;:30080 → 10.96.1.20:80 → PodIP:8080
+Packet Flow: 
+
+External client → NodeIP:30080 → ClusterIP:80 → PodIP:8080
+
+That’s why kubectl get svc still shows a ClusterIP — it always exists; NodePort is built on top of it.
+      </code></pre>
+
+      <h3 id="hpa">3. hpa.yaml (Horizontal Pod Autoscaler) (Optional)</h3>
+      <p>
+        Scales the number of Pod replicas up or down automatically based on
+        real-time CPU or memory usage metrics.
+      </p>
+      <pre><code class="language-css">
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: app-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70    # Add pods if average CPU exceeds 70%
+      </code></pre>
+
+      <h3 id="namespace">4. namespace.yaml (Optional)</h3>
+      <p>
+        Creates an isolated virtual workspace folder inside your cluster to
+        organize resources and separate environments (e.g., production vs
+        staging)
+      </p>
+      <pre><code class="language-css">
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production-env
+      </code></pre>
+
+      <h3 id="configmap">
+        5. configmap-config.yaml & configmap-policy.yaml (Optional)
+      </h3>
+      <p>
+        Stores non-sensitive settings (like configuration files, environment
+        paths, or feature flags) so you do not have to bake them into your
+        Docker image.
+      </p>
+      <pre><code class="language-css">
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  DB_HOST: "database.internal.net"
+  LOG_LEVEL: "debug"
+      </code></pre>
+
+      <h3 id="secret">6. secret-ca.yaml (Optional)</h3>
+      <p>
+        Stores sensitive information securely (like SSL certificates, API
+        tokens, or passwords) using Base64 encryption, preventing secrets from
+        being written in plain text.
+      </p>
+      <pre><code class="language-css">
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret-ca
+type: Opaque
+data:
+  ca.crt: dGhpcyBpcyBhIGZha2U=     # Base64 encoded string of your certificate
+      </code></pre>
+
+      <h3 id="servicemonitor">
+        7. servicemonitor.yaml (Optional) (Requires Prometheus installed)
+      </h3>
+      <p>
+        This is a Custom Resource (CRD) from the Prometheus system. It tells
+        Prometheus how and where to scrape performance metrics from your
+        application service.
+      </p>
+      <pre><code class="language-css">
+apiVersion: ://coreos.com
+kind: ServiceMonitor
+metadata:
+  name: app-monitor
+spec:
+  selector:
+    matchLabels:
+      app: web-app
+  endpoints:
+  - port: metrics-port
+    interval: 15s
+        </code></pre>
+
+      <h3 id="clusterRole">8. ClusterRole (Optional)</h3>
+      <p>
+        Defines set of permissions or access control rules for resources across
+        an entire Kubernetes cluster. it applies to all namespaces in the
+        cluster.
+      </p>
+      <pre><code class="language-css">
+$ test.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:                       //Metadata of clusterRole
+    name: my-cluster-role
+    annotations:                  //Annotations: any number of key-value pairs, and can be used to provide additional context
+    my-annotation: "example"
+    namespace:     "test"
+rules:
+- apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+              </code></pre>
+
+      <h3 id="job">9. Job</h3>
+      <p>
+        This object runs a specific task to completion. will create 1 or more
+        pods and execute continously until job completes.
+      </p>
+      <pre><code class="language-css">
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: pi                #Name of Job
+spec:
+    template:
+    spec:
+        serviceAccountName: "Test"    // Name of ServiceAccount that should be used by the pod that is created to run the Job
+        containers:                   //Container configuration for job
+        - name: pi                    // Container name to be created by this Job
+        image: perl:5.34.0
+        env:                        //environment variables to set for the container.
+            - name: DATABASE_HOST     //this env variable is set using a SecretKeyRef
+            valueFrom:
+                secretKeyRef:
+                name: {{ .Release.Name }}-test-db
+                key: host
+        restartPolicy: Never
+    backoffLimit: 4
+                </code></pre>
+
+      <h3 id="rbac">10. RBAC (Role-based Access Control)</h3>
+      <p>
+        refers to the authorization mechanism that allows one Kubernetes service
+        or workload to access another service or resource within a cluster based
+        on predefined roles and permissions(eg: configmaps, secrets etc). The
+        RBAC API declares 4 kinds of Kubernetes object
+      </p>
+      <table>
+        <tr>
+          <td>a. Role & RoleBindings</td>
+          <td>
+            Defines who (subjects) can perform actions/verbs(create, get, update
+            etc) on which resources(eg: pods, deployments, services). Roles
+            specify the permissions, and RoleBindings associate these roles with
+            service accounts, users, or groups<br />
+            <pre><code class="language-css">
+apiVersion: rbac.authorization.k8s.io/v1    //API version of RBAC being defined
+kind: Role
+rules:
+    - apiGroups:                //Rule1: Grant Permission to create Tokenreviews is granted in group(authentication.k8s.io)
+        - authentication.k8s.io
+    verbs:
+        - create
+    resources:
+        - tokenreviews
+
+    - apiGroups:                //Rule2: Grant Permission to get jobs in group(batch)
+        - batch
+    verbs:
+        - get
+    resources:
+        - jobs
+
+    - apiGroups: ["coordination.k8s.io"]    //Rule3: Grant Permission to perform actions in group(coordination.k8s.io)
+    resources: ["leases"]
+    verbs: ["get", "watch", "list", "delete", "update", "create", "patch"]
+                        </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>b. RoleBinding</td>
+          <td>
+            Grants the permissions defined in a role to Subjects. Subjects can
+            be user or set of users. Example: user:jane can read pods in default
+            namespace<br />
+            <pre><code class="language-css">
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+    name: read-pods
+    namespace: default
+subjects:
+- kind: User
+    name: jane            #can read pods in default namespace
+    apiGroup: rbac.authorization.k8s.io
+roleRef:                                  # "roleRef" specifies the binding to a Role / ClusterRole
+    kind: Role                              # this must be Role or ClusterRole
+    name: pod-reader                        # You need to already have a Role named "pod-reader" in that namespace.
+    apiGroup: rbac.authorization.k8s.io
+                        </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>c. CapabilityMapping</td>
+          <td>
+            1. Give capabilities to a process running within linux container,
+            Eg(process to modify n/w config, mouting file system, accessing h/w
+            devices etc)<br />
+            2. TAMS capability mapping When mapping-a is enabled, service can
+            call method1,2. When mapping-b is enabled, service can call
+            method3,4.
+          </td>
+        </tr>
+      </table>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
