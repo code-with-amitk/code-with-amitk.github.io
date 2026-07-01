@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Distributed Systems</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">Distributed System</a>
+      <a href="#types">Types of Distributed Systems</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="what">Distributed System?</h2>
+      <p>
+        A system whose components(hardward or software) are located on different
+        networked computers, but appears to its users as a 1 system giving 1
+        system view ie end users does not notice that he is dealing with
+        processes, data and control are dispersed across the nodes.<br />
+        All transactions in distributed systems Follow
+        <a href="">ACID</a> properties.
+      </p>
+
+      <h2 id="types">Types of Distributed Systems</h2>
+      <h3>1. High Performance Distributed Computing</h3>
+
+      <h3>2. Cluster Computing</h3>
+      <p>
+        Simple computers connected on high-speed network, does parallel
+        processing of task. Eg: Hadoop.
+      </p>
+
+      <h3>3. Grid Computing</h3>
+      <p>
+        Nodes can be anything. Databases, High end machines(super computers),
+        normal processor, sensors, telescopes etc.
+      </p>
+
+      <h3>4. Edge Computing</h3>
+      <p>
+        Computing done near to the data source. How does this help? If
+        computation is done near data source it will be faster and has low
+        latency.
+      </p>
+
+      <h3>5. HPC(High Performance Computing)</h3>
+      <p>
+        Process data and perform complex calculations at high speeds. HPC
+        systems can perform quadrillions of calculations/sec. Eg: supercomputer.
+        HPC has 3 main components: Compute, Network, Storage
+      </p>
+
+      <h3>6. Cloud Computing</h3>
+      <p>
+        Customer upload tasks to a data center and charged on a per-resource
+        basis.
+        <br />
+        <b>Advantages of cloud computing wrt onprem</b><br />
+        1. Trade upfront expense for variable expense: if you are setting up an
+        Datacenter, upfront expenses include physical servers & other resources.
+        With AWS no need to purchase Datacenter Hardware, Pay for on
+        demand/usage. No upfront payment<br />
+        2. Stop spending money to run & maintain data centers: Donot spend time
+        on datacenter's research(if you are not datacenter company). Focus on
+        your application, make application better than your competitors. Delight
+        your customer with new innovations.<br />
+        3. Stop guessing capacity: if we are building our own datacenter we need
+        to guess how much would be the cost(Eg: for 10M users for 3 years) &
+        purchased HW accordingly. Overestimation: And then turns out we have
+        only 1M users. Underestimation: if we got 100M users, we need to scale
+        our infra it may take 2-3 months(loss of business). At AWS we don’t need
+        to predict users, autoscale up/down. Amazon EC2 instances will spun
+        up/down within 5 min as users increases.<br />
+        4. Benefit from massive economies of scale: Lower pay-as-you-go prices.
+        AWS is building Huge datacenters around the globe and buys hardware at
+        cheaper costs. AWS is expert in setting datacenters for max productivity
+        & least cost. While if we setup our own datacenter we might buy H/W at
+        higher prices & setup might not be correct costing high.<br />
+        5. Increase speed and agility: Suppose a new multithreaded code
+        developer wrote and he wants to test it High-end intel Xeon processor
+        need to be purchased might take 2-3 months(if code is not good) whole
+        cost is wasted. With AWS, Get high end EC2 instance in few clicks check
+        your code and delete instance.<br />
+        6. Go global in minutes: Suppose you have your datacenters in US, now
+        got new customer base in Germany. You need to setup DC in germany or
+        customers see high latency. If you setup datacenter at your own it can
+        take months to years but with AWS it takes minutes.
+      </p>
+
+      <h4>Types of cloud computing</h4>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>what</th>
+          <th>Examples</th>
+        </tr>
+        <tr>
+          <td>SaaS(Software as Service) for CUSTOMERS</td>
+          <td>
+            Host S/W on cloud VM. SaaS is accessed using a thin client or by
+            browser. All services on cloud
+          </td>
+          <td>Gmail, Salesforce, Office 365</td>
+        </tr>
+        <tr>
+          <td>PaaS(Platform as Service) for DEVELOPERS</td>
+          <td>
+            Provide Dashboard. upload button is provided you can upload your
+            website. Write your code, Cloud provider will take care of it
+          </td>
+          <td>GAE(Google App engine), Heroku, AWS(Elastic Bean stawk)</td>
+        </tr>
+        <tr>
+          <td id="ipaas">iPaaS<br />(Integration Platform as a Service)</td>
+          <td>
+            cloud-based software model that allows businesses to connect
+            disparate applications, databases, and services together without
+            writing custom code for every single application<br />
+            <b>Why Enterprises Need It?</b><br />
+            &ensp; With the explosion of SaaS (Software as a Service)
+            applications, companies often struggle with fragmented, siloed
+            data.<br />
+            &ensp; Traditional integration methods—like building custom
+            point-to-point code are expensive, hard to scale, and difficult to
+            maintain data, build automated workflows
+            <br /><br />
+
+            <b>How it Works?</b><br />
+            <ul style="list-style-type: circle">
+              <li>
+                iPaaS platforms provide ready-made connectors/APIs for popular
+                apps (like Salesforce, Workday, or SAP) to link to systems
+              </li>
+              <li>
+                Most platforms offer visual, drag-and-drop tools to map out how
+                data should flow between systems(which configures APIs
+                underhood)
+              </li>
+              <li>
+                Single dashboard for IT teams to monitor, manage, and secure all
+                integrations
+              </li>
+            </ul>
+          </td>
+          <td>
+            1. Mulesoft Anypoint Platform(Owned by Salesforce): focuses on heavy
+            API connectivity and complex enterprise integrations<br />
+            2. Boomi(by Dell)<br />
+            3. Informatica Intelligent Data Management Cloud( Informatica IDMC
+            )<br />
+            4. Zapier<br />
+            5. Make: offers a highly visual, drag-and-drop canvas for designing
+            multi-step, logic-heavy workflows<br />
+            6. AWS AppFabric: connects multiple SaaS applications <br />
+            7. Google Cloud Integration Connectors:<br />
+            8. Microsoft Azure Integration Services<br /><br />
+            9. <b>Jitterbit:</b><br />
+            - This is fully-fledged, enterprise-grade iPaaS operates at unified
+            platform (called Jitterbit Harmony)<br />
+            - Provides low code integrations, API management<br />
+            <u>Advantages of AWS Appfabric, Microsoft, Google Solutions:</u>
+            Jitterbit is an all-in-one, while others are locked in their
+            enviornments.<br /><br />
+
+            <u>Competetors to Jitterbit</u><br />
+            - MuleSoft (Anypoint Platform): More connectors, more expensive<br />
+            - Boomi: Has larger market share and a massive crowdsourced
+            data-mapping intelligence network called Boomi Suggest.<br /><br />
+
+            <u>Where Jitterbit Lags (Product Limitations)?</u><br />
+            - Documentation: Wrt Mulesoft, Bhoomi, Jitterbit has less
+            documentation or overly theoretical for highly niche, custom edge
+            cases.<br />
+            - Steep Learning Curve: fully mastering its scripting variables and
+            advanced JavaScript need steep learning.
+          </td>
+        </tr>
+        <tr>
+          <td>IaaS<br />(Infrastructure as Service) for ADMINS, Developers</td>
+          <td>
+            Provide VM. Cloud provider will give access to OS of server/VM, user
+            can install/remove/do anything on Server. Highest control
+          </td>
+          <td>EC2, Azure VMs</td>
+        </tr>
+        <tr>
+          <td>CaaS(Container as a Service)</td>
+          <td>Creating kubernets clusters.</td>
+          <td>GKE(Google Kubernets Engine)</td>
+        </tr>
+        <tr>
+          <td>FaaS(Function as a Service) OR Cloud Functions</td>
+          <td>Writing application for IoT, mobile backends</td>
+          <td></td>
+        </tr>
+      </table>
+    </main>
+  </body>
+</html>

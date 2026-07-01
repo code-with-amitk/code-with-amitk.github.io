@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Benchmark RAG with RAGAS</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <form>
+          <input type="search" name="q" placeholder="Search site" />
+          <input type="submit" value="Go!" />
+        </form>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">RAGAS</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">RAGAS(Retrieval Augmented Generation Assessment)</h2>
+      <p>
+        RAGAS create infra to evalute
+        <a href="/Machine Learning/">RAG pipeline</a> because output from RAG is
+        inputted to RAGAS pipeline
+      </p>
+      <table>
+        <tr>
+          <th>RAG Pipeline</th>
+          <th>RAGAS Evaluation</th>
+        </tr>
+        <tr>
+          <td>
+            Check detials of each stage on
+            <a href="/Machine%20Learning/RAG/Introduction.html#code"
+              >RAG Pipeline Code</a
+            ><br />
+            <pre><code class="language-css">
+llm = OpenAI(model="gpt-4o-mini",)
+
+--------- Retrieval Phase ----
+langchain_embeddings = LangchainOpenAIEmbeddings(
+    model="text-embedding-3-small",
+    api_key=api_key,
+    base_url=base_url,
+)
+embeddings = LangchainEmbeddingsWrapper(langchain_embeddings)
+
+---------Augumentation Phase---------
+query_engine = index.as_query_engine(llm=llm, similarity_top_k=top_k)
+
+--------Retrieval Phase-------------
+//user_question = "Show firewall policies blocking outbound traffic"
+rag_response = query_engine.query(user_question)
+            </code></pre>
+          </td>
+          <td>
+            RAGAS for testing RAG<br />
+            <pre><code class="language-css">
+// 1. Create LLM Client for ragas
+ragas_llm_client = OpenAI(api_key=api_key, base_url=base_url)
+
+// 2. Create embeddings
+ragas_langchain_embeddings = LangchainOpenAIEmbeddings(..)
+
+// 3. Wrap LLM client into llm factory
+llm = llm_factory("gpt-4o-mini", client=ragas_llm_client)
+
+// 4. Configuration for RAGAS
+// max_workers: how many concurrent threads are used for parallel tasks
+// max_retries: how many times the system should attempt to call the API
+// max_wait: maximum time the system should wait between retries or for an API response before marking the task as failed.
+run_config = RunConfig(max_workers=max_workers, max_retries=5, max_wait=120)
+
+// 5. Evaluate RAG pipeline
+from ragas import evaluate
+ragas_result = evaluate(
+  dataset = rag_response,
+  metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
+  llm=ragas_llm,
+  embeddings=ragas_embeddings,
+  run_config=ragas_run_config,
+  raise_exceptions=False,
+)
+
+************ ragas_result *************
+1,          //id
+What destination IP was blocked when source 10.1.1.5 attempted outbound traffic at 2025-05-01 08:02:11?,			//question
+8.8.8.8. The firewall log shows: 2025-05-01 08:02:11 FIREWALL_DENY src=10.1.1.5 dst=8.8.8.8 policy=OUTBOUND_BLOCK.,	//ground_truth
+The destination IP that was blocked when source 10.1.1.5 attempted outbound traffic at the specified time was 8.8.8.8.,//answer
+easy,								//difficulty
+single-event lookup,				//category
+1.0,								//faithfulness
+,									//answer_relevancy
+0.9999999999,						//context_precision
+1.0									//context_recall
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
