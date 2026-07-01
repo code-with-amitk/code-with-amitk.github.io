@@ -33,7 +33,7 @@
       </ul>
     </aside>
 
-    <div style="margin-left: 200px">
+    <article style="margin-left: 200px">
       <h2 id="what">RAG / Retrieval-Augmented Generation</h2>
       <p>
         Generally, RAG is a
@@ -58,7 +58,7 @@
              |-------------------- A. Retrieval Phase (Offline) --------------|
              |                                                                |
 Raw          |  |--- Chunker ---|                                             |
-documents->  |- | break docs in |--chunks->[Embedding]-vectors--> [vectorDB]  |
+documents →  |- | break docs in |--chunks →[Embedding]-vectors → [vectorDB]   |
 logs         |  |smaller pieces |          [  Model  ]                 |      |
              |  |---------------|                                      \/     |
              |                                                       index    |
@@ -69,27 +69,26 @@ logs         |  |smaller pieces |          [  Model  ]                 |      |
 2. [Augmentation Phase] User asks a query & information retrieved from Vector DB
 User's Query: Show firewall policies blocking outbound traffic?
 
-        index from vectorDB(Step1)
-          |
-          \/
-        |------B. Augmentation Phase --------|
-User    | index + User's Query = Prompt      | 
-query-> |                                    |
-        | Combine index vector DB            |
-        | into well crafted prompt           |-> augmented_prompt
-        |------------------------------------|
+ index from vectordb
+     \/
+   search vector index
+     \/
+   get top-k chunk texts [Node1][Node2][Node3]..[Nodek]
+     |
+     -----------------------→ augumented_prompt &lt;------ User's Query
+                                                      (Why is john.doe unable to connect to VPN?)
 
 augmented_prompt=
 "Context: 
 [Node1][Node2][Node3] 
-Question: Show firewall policies blocking outbound traffic
+Question: Why is john.doe unable to connect to VPN
 Answer:"
 
 3. [Generation Phase] Feed augmented_prompt into LLM.
 With (user_query + vector), LLM hallucinations reduces drastically
 
                      |-- LLM --|
-augmented_prompt --> | GPT5.0  | --> Reponse (less hallucinations)
+augmented_prompt --→ | GPT5.0  | --→ Reponse (less hallucinations)
                      |---------|
       </code></pre>
           </td>
@@ -105,8 +104,8 @@ augmented_prompt --> | GPT5.0  | --> Reponse (less hallucinations)
             <b>2. The Augmentation Phase:</b><br />
             &ensp; Once the relevant information is retrieved, it isn't just
             displayed. It is packaged.<br />
-            &ensp; The system takes the user’s original query and the retrieved<br>
-            text chunks, combining them into a specifically crafted db
+            &ensp; The system takes the user’s original query and the retrieved
+            text chunks
             <br /><br />
 
             <b>3. The Generation Phase</b><br />
@@ -167,7 +166,10 @@ llm -> u: Response of query
         We have log files(eg: VPN, firewall).<br>
         RAG pipeline will read log files and provide answers to Administrator questions.
       </p>
-      <pre><code class="language-css">
+      <table>
+        <tr>
+          <td>
+<pre><code class="language-css">
 ./logs/vpn.log
 2025-05-01 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4
 2025-05-01 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4
@@ -175,6 +177,13 @@ llm -> u: Response of query
 ./logs/firewall.log
 2025-05-01 FIREWALL_DENY src=10.1.1.5 dst=8.8.8.8 policy=OUTBOUND_BLOCK
 2025-05-01 FIREWALL_DENY src=10.1.1.6 dst=1.1.1.1 policy=OUTBOUND_BLOCK
+
+┌─────────────┐     ┌──────────────────┐     ┌────────────────┐
+│  RETRIEVAL  │ ──► │   AUGMENTATION   │ ──► │  GENERATION    │
+│  (indexing  │     │  (build prompt   │     │  (LLM writes   │
+│   + search) │     │   with context)  │     │   the answer)  │
+└─────────────┘     └──────────────────┘     └────────────────┘
+     setup               as_query_engine           .query()
 
 $ cat rag_pipeline.py
 import os
@@ -192,6 +201,33 @@ os.environ["OPENAI_API_KEY"] = os.getenv("GITHUB_TOKEN")
 os.environ["OPENAI_BASE_URL"] = "https://models.inference.ai.azure.com/"
 
 ############## 1. Retrieval Phase Start #################
+#                            |------ Chunking ------------------|
+# documents (2 log files) -> |Split sentence into small pieces  |
+#                            | (1 doc = 1 Node)                 |
+#                            |----------------------------------|
+#                                            \/
+#                            |-------- Embedding ---------------|
+#                            |For each chunk (batch of 150):    |
+#                            | Create float vector/chunk        |
+#                            |----------------------------------|
+#                                           \/
+#                            |-- vector db (in memory default) -| 
+#                            |Stores: (embedding, text, meta)   |
+#                            |stored in RAM(default) not disk   |
+#                            |----------------------------------|
+#                                           \/
+#                                         index  ← searchable index object
+#VectorStoreIndex (variable: index)
+#    │
+#    ├── docstore          → stores Node objects (chunk text + metadata)
+#    │     e.g. Node 0: "2025-05-01 08:01:05 VPN_LOGIN_FAILED user=john.doe..."
+#    │     e.g. Node 1: "2025-05-01 08:02:11 FIREWALL_DENY src=10.1.1.5..."
+#    │
+#    ├── vector_store      → stores embedding vectors for each node
+#    │     e.g. [0.012, -0.034, 0.891, ...]  (1536 floats per chunk)
+#    │
+#    └── index_struct      → maps node IDs → vector store locations
+#
 ## A. Setup Embedding Model. This is Neural Network	
 embed_model = OpenAIEmbedding(
     model="text-embedding-3-small",
@@ -203,14 +239,12 @@ Settings.embed_model = embed_model
 ## B. Break documents into Chunks
 documents = SimpleDirectoryReader("./logs").load_data()
 
-## C. Pass Chunked documents to Embedding model
-# And store Chunks into local vectorDB
+## C. Chunking, embedding, local vector store
 # def from_documents(documents, insert_batch_size=150): 
-#   embed_model = Settings.embed_model #embed_model from Global
 #   nodes = self._chunk_documents(documents) #chunks the documents into Nodes
 #   for batch in batches(nodes, batch_size=insert_batch_size):
 #       texts = [node.text for node in batch]
-#       embeddings = embed_model.get_text_embedding_batch(texts)          
+#       embeddings = Settings.embed_model.get_text_embedding_batch(texts)
 #       self._vector_store.add(embeddings, metadata=batch.metadata) #Store Tensors into the vector DB
 index = VectorStoreIndex.from_documents(documents, insert_batch_size=150)
 ############## Retrieval Phase End #####################
@@ -222,30 +256,26 @@ llm = OpenAI(
     api_base=os.getenv("OPENAI_BASE_URL"),
 )
 
-############## 2,3. Augumentation & Generation Phase Start #################
-# def query_engine(query_string: str):
-////// Augumentation Phase. Create augmented_prompt //////
-#    query_tensor = Settings.embed_model.get_text_embedding(user_query_string)
-#	 top_k_nodes = self._vector_store.similarity_search(
-#       query_tensor, 
-#       similarity_top_k=3
-#    )
-# top_k_nodes now contains the 3 most relevant text chunks (Nodes)
-# e.g., Node 1: "2025-05-01 08:22:47 VPN_LOGIN_FAILED user=eve.hacker ip=203.0.113.7"
-#       Node 2: "2025-05-01 08:30:55 VPN_LOGIN_SUCCESS user=carol.white ip=192.168.1.52"
-#       Node 3: "2025-05-01 09:01:08 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4"
-#    vectordb_text = [Node1][Node2][Node3] 
-# augmented_prompt=
-#	"Context: 
-#	[Node1][Node2][Node3] 
-#	Question: failed vpn logins for 2 hours after 2025-05-01 09:01:08
-#	Answer:"
-#
-#
+############## 2. Augumentation Phase Start #################
+# index from vectordb
+#     \/
+#   search vector index
+#     \/
+#   get top-k chunk texts [Node1][Node2][Node3]..[Nodek]
+#     |
+#     |
+#     -----------------------→ LLM &lt;------ User's Query
+#                                             (Why is john.doe unable to connect to VPN?)
+#   
+# venv/lib/python3.10/site-packages/llama_index/core/indices/base.py
+# def as_query_engine(self, llm: Optional[LLMType] = None, **kwargs: Any)
+#     RetrieverQueryEngine(kwargs) 
 
 query_engine = index.as_query_engine(
   llm=llm
 )
+
+############## 3. Generation Phase Start #################
 response = query_engine.query("Show firewall policies blocking outbound traffic")
 print(response)
 Response=
@@ -266,7 +296,88 @@ john.doe is unable to connect to the VPN due to repeated login failures, as
 indicated by the log entries showing two instances of VPN_LOGIN_FAILED for the user.
 ############## Augumentation & Generation Phase End #################
       </code></pre>
-    </div>
+          </td>
+          <td>
+            Actual Code<br>
+            <pre><code class="language-css">
+import os
+import dotenv
+from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.llms.openai import OpenAI
+
+def configure_environment() -> None:
+    """Load credentials and configure OpenAI-compatible API access."""
+    dotenv.load_dotenv()
+    if not os.getenv("GITHUB_TOKEN"):
+        raise ValueError("GITHUB_TOKEN is not set")
+    os.environ["OPENAI_API_KEY"] = os.getenv("GITHUB_TOKEN")
+    os.environ["OPENAI_BASE_URL"] = "https://models.inference.ai.azure.com/"
+
+def main() -> None:
+    configure_environment()
+
+    ######## 1. Retrieval Phase ############
+    embed_model = OpenAIEmbedding(
+        model="text-embedding-3-small",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        api_base=os.getenv("OPENAI_BASE_URL"),
+    )
+    Settings.embed_model = embed_model
+
+    documents = SimpleDirectoryReader(logs_dir).load_data()
+    index = VectorStoreIndex.from_documents(documents, insert_batch_size=150)
+    ######## Retrieval Phase End ############
+
+    llm = OpenAI(
+        model="gpt-4o-mini",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        api_base=os.getenv("OPENAI_BASE_URL"),
+    )
+
+    ######## 2. Augumentation Phase ############
+    query_engine = index.as_query_engine(llm=llm, similarity_top_k=3)
+    ######## Augumentation Phase End ############
+
+    demo_questions = [
+        "Show firewall policies blocking outbound traffic",
+        "Why is john.doe unable to connect to VPN?",
+    ]
+
+    ######## 3. Generation Phase ############
+    for q in demo_questions:
+        response = query_engine.query(query_engine, q)
+        contexts = [node.node.get_content() for node in response.source_nodes]
+        print(f"\nQuestion: {response['question']}")
+        print(f"Answer: {response['answer']}")
+        print(f"Retrieved {len(response['contexts'])} context chunk(s)")
+
+if __name__ == "__main__":
+    main()
+
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+      
+      <p>
+      <b>Nodes created during chunking step</b><br>
+      <pre><code class="language-css">
+--- Node 1 ---
+Chunk Text:  22.11.4 dst=10.1.1.20 policy=INBOUND_BLOCK
+2025-05-01 11:41:55 FIREWALL_DENY src=10.1.1.6 dst=4.2.2.2 policy=OUTBOUND_BLOCK
+2025-05-01 11:55:22 FIREWALL_DENY src=172.16.0.9 dst=198.51.100.5 policy=POR
+Metadata:  {'file_path': '/home/amit/RAG_Pipeline_Evaluation_Workbench/logs/firewall.log', 'file_name': 'firewall.log', 'file_size': 2363, 'creation_date': '2026-06-25', 'last_modified_date': '2026-06-25'}
+--------------------------------
+--- Node 2 ---
+Chunk Text:  2025-05-01 08:01:05 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4
+2025-05-01 08:03:44 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4
+2025-05-01 08:06:12 VPN_LOGIN_FAILED user=john.doe ip=185.22.11.4
+20
+Metadata:  {'file_path': '/home/amit/RAG_Pipeline_Evaluation_Workbench/logs/vpn.log', 'file_name': 'vpn.log', 'file_size': 1906, 'creation_date': '2026-06-25', 'last_modified_date': '2026-06-25'}
+      </code></pre>
+      </p>
+    </article>
     <script src="/scripts/prism.js"></script>
   </body>
 </html>
