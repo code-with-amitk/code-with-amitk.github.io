@@ -1,0 +1,7 @@
+<svg width="220" height="90" viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pro5.ai badge">
+  <rect width="220" height="90" rx="16" fill="#0f172a"/>
+  <circle cx="58" cy="45" r="24" fill="#2563eb"/>
+  <path d="M44 45l10 10 20-24" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="96" y="42" font-size="24" font-family="Arial, sans-serif" font-weight="700" fill="#ffffff">Pro5</text>
+  <text x="96" y="66" font-size="16" font-family="Arial, sans-serif" fill="#94a3b8">Top 5%</text>
+</svg>
