@@ -42,13 +42,13 @@
 
     <article style="margin-left: 200px">
       <h3 id="what">What is Go routine(Thread)</h3>
-      <dl>
-        A goroutine is a lightweight thread managed by the Go runtime.<br />
-        Memory allocation on stack, heap is very less wrt OS Threads.
+      <p>
+        A goroutine is a lightweight thread managed by the Go runtime. Memory
+        allocation on stack, heap is very less wrt OS Threads.
         <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
           >Goroutine vs OS Threads</a
         >
-      </dl>
+      </p>
 
       <h3 id="gocode">Code</h3>
       <h4 id="hello">Hello World</h4>
@@ -207,13 +207,19 @@ All workers finished
       </dl>
 
       <h4 id="semaphore">1. Semaphore based bounded goroutines</h4>
-      <dl>
+      <p>
         Use a
         <a href="/Threads_Processes_IPC/IPC/Golang/channels.html#buffered"
           >buffered channel</a
         >
         with limit on number of values it can hold.
-      </dl>
+      </p>
+
+      <h2>Max number of goroutines</h2>
+      <p>
+        Maximum limits depends on system's hardware resources and
+        configurations.
+      </p>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>

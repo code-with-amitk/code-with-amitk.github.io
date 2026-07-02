@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <title>User, Kernel Space Threads</title>
+    <!--<link rel="stylesheet" href="/css/styles.css"/>-->
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Threads_Processes_IPC/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#vs">User vs kernel Space threads</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="vs">User Space vs Kernel Space Threads</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>User Space threads</th>
+          <th>Kernel Space threads</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            A user-space thread is any thread whose scheduling is primarily
+            handled in user space instead of Kernel Space. Kernel does
+            <font color="red"><b>not</b></font> know these threads exist.<br />
+
+            The runtime may schedule User threads over:<br />
+            - one kernel thread (M:1)<br />
+            - several kernel threads (M:N)<br />
+            - or even dedicate one kernel thread per task (less common).
+            <br />
+            <table>
+              <tr>
+                <td>
+                  User Space Threads<br />
+                  <pre><code class="language-css">
+User Threads
+UT1
+UT2
+UT3
+UT4
+  |
+  v
+Kernel Thread (1)
+                </code></pre>
+                </td>
+                <td>
+                  Green Threads <br />
+                  <pre><code class="language-css">
+Green Thread 1
+Green Thread 2
+Green Thread 3
+       |
+       v
+ One Kernel Thread
+      </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>Threads created and scheduled inside kernel space.</td>
+        </tr>
+        <tr>
+          <td>Can we create more<br />threads than CPU cores?</td>
+          <td>
+            Yes.<br />
+            User space threads are not aware about CPU cores.
+          </td>
+          <td>
+            Yes. On 64 cored machine, 1000's of kernel threads can be created,
+            context switching will happen between them.<br />
+            At any instant 64 threads can run simultaneously. Remaining threads
+            stay in the runnable queue.
+          </td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>
+            C++20 Coroutines, boost::fibers<br />
+            Rust: tokio::spawn()<br />
+            Golang: go routines
+          </td>
+          <td>
+            C++: pthread_create(), std::thread class
+            <br />
+            Rust: std::thread::spawn()<br />
+            <pre><code class="language-css">
+pthread_create()
+      |
+      v
+glibc
+      |
+      v
+clone() system call
+      |
+      v
+Kernel creates thread
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Speed</td>
+          <td>
+            Fast. No context switch, trap instruction, memory cache flush
+            needed.
+          </td>
+          <td>
+            Slow.
+            <a
+              href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms#context-switch"
+              >Context switch</a
+            >, trap instruction, memory cache flush needed
+          </td>
+        </tr>
+        <tr>
+          <td>Disadvantages</td>
+          <td>
+            if User space thread blocks on kernel call, whole process will block
+          </td>
+          <td></td>
+        </tr>
+      </table>
+
+      <h2 id="user">User Space threads</h2>
+
+      <h3 id="green">Green Threads</h3>
+      <p>
+        Green threads are user space threads but Created and scheduled entirely
+        by a language runtime<br />
+        Name came from Green Team at Sun microsystems who implemented them in
+        java
+      </p>
+      <h4>go routines(M:N model)</h4>
+      <p>Goroutines are user-space threads, but not classical green threads.</p>
+      <pre><code class="language-css">
+10000 Goroutines
+        |
+Go Scheduler
+        |
+        v
+200 Kernel Threads
+        |
+        v
+CPU cores
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
