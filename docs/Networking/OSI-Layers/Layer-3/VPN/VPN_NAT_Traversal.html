@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>VPN NAT Traversal</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">VPN NAT</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">VPN NAT Traversal</h2>
+      <h4>
+        Problem in IPSec-ESP packet crossing
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Networking/OSI-Layers/Layer-3/Routing"
+          >NAT</a
+        >
+        GW
+      </h4>
+      <p>
+        NAT router doing
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/blob/master/Networking/OSI-Layers/Layer-3/Routing/NAT"
+          >PAT</a
+        >
+        when recieves a IPSec packet. It cannot find UDP-Header(to get port
+        number from it).
+      </p>
+      <pre><code class="language-css">
+                              |------ encrypted --------------|
+| New-IP-Header | ESP-Header | old-IP-header | TCP/UDP | App |
+                              |                               |
+                    ||
+                    \/
+                  [NAT(PAT) Router] 
+            Cannot find Port number.. Drop
+      </code></pre>
+
+      <h4>Solution: NAT-T(NAT Traversal)</h4>
+      <p>Add extra UDP Header over ESP with port=4500(identifying NAT-T)</p>
+      <pre><code class="language-css">
+                                                   |------ encrypted --------------|
+| New-IP-Header | UDP-header port=4500| ESP-Header | old-IP-header | TCP/UDP | App |
+                                                   |                               |
+                    ||
+                    \/
+                  [NAT(PAT) Router] 
+              Successfully done NAT
+                          ------------ pkt-----------&lt;  VPN-GW
+                                                    Finds UDP-port=4500(ok NAT-T)
+      </code></pre>
+    </article>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

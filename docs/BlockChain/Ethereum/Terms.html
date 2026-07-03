@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Ethereum Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/BlockChain/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="#gas">Gas Fee</a>
+      <a href="#currency">Currency(wei, guei)</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="gas">Gas Fee</h3>
+      <p>Gas is the fee you pay to the network to process a transaction.</p>
+
+      <h3 id="currency">Ethereum Currency(ether, gwei, wei)</h3>
+      <p>
+        Any transaction on Ethereum network require a fee to be paid in
+        Ether(ETH). <br />
+        Wei is the smallest possible unit of Ether (ETH) on the Ethereum
+        network. It works just like a "cent" for the U.S. Dollar
+      </p>
+      <pre><code class="language-css">
+1 ether = 1,000,000,000,000,000,000 (or 10¹⁸) wei   // Smallest unit of ether
+
+1 ether = 1,000,000,000 (or 10⁹) gwei   // Used for paying gas fees
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

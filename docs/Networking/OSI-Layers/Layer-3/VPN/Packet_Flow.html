@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>IPSec Packet Flow</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#inbound">Inbound Packet</a>
+      <a href="#outbound">Outbound Packet</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="inbound">Inbound Packet Flow: IPSec pkt comes in from n/w</h2>
+      <pre><code class="language-css">
+if(proto == IPPROTO_AH | IPPROTO_ESP){
+    //Check SPI & Get matching SA
+    if(SA == transport){
+        //Decrypt Send to N/w Layer
+    }else{
+        //Remove Outer IP Header
+        //Decrypt.    send to N/W
+    }
+} 
+      </code></pre>
+
+      <h2 id="outbound">Outbound: IPSec pkt comes on interface to be routed</h2>
+      <pre><code class="language-css">
+if(proto == IPPROTO_AH | IPPROTO_ESP){
+    //Check SPI & Get matching SA
+    if(SA == transport){
+        //Decrypt Send to N/w Layer
+    }else{
+        //Remove Outer IP Header
+        //Decrypt.    send to N/W
+    }
+} 
+      </code></pre>
+    </article>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

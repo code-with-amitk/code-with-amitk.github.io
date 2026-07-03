@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Lambda Expression</title>
@@ -13,7 +13,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../">Back</a></li>
+        <li><a href="/Languages/Programming/C++/">Back</a></li>
         <li>
           <form>
             <input type="search" name="q" placeholder="Search site" />
@@ -40,19 +40,19 @@
 
     <article style="margin-left: 200px">
       <h2 id="what">What is Lambda / Closure Function</h2>
-      <dl>
+      <p>
         A unnamed function that does not have a name, defined inside other
-        function. <br />
-        <b>Lambda usecases?</b><br />
-        &ensp; 1. If some logic/function need to be called again and again, then
-        function call is not good(<a
-          href="/Motherboard/Memory/Processes.html"
-          target="_blank"
-          >stack</a
-        >
-        creation/destroy). Store in variable(pointer).<br />
-        &ensp; 2. save stack creation/deletion, jump instruction time
-      </dl>
+        function. <br /><br />
+
+        <b>Why Closures Are Needed?</b><br />
+        1. Variable is kept alive between function calls without using global
+        variables. Global variables are risky because any part of your program
+        can accidentally change them<br />
+        2. (Only C++) If some logic/function need to be called again and again,
+        then function is allocated on
+        <a href="/Motherboard" target="_blank">stack</a>. This save stacks
+        creation/deletion, jump instruction time
+      </p>
 
       <h2 id="syntax">Syntax of Lambda</h2>
       <pre><code class="language-css">

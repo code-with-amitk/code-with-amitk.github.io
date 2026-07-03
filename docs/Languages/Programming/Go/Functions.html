@@ -29,7 +29,7 @@
       <a href="#multiple">Multiple Returns</a>
       <a href="#naked">Naked Return</a>
       <a href="#values">Function as values</a>
-      <a href="#closure">Closure</a>
+      <a href="#closure">Closure = lambda</a>
       <a href="#range">range()</a>
     </aside>
 
@@ -122,20 +122,28 @@ test := func(x, y float64) float64 {
 fmt.Println(test(5, 12))		//17
             </code></pre>
 
-      <h4 id="closure">Closure Function = Lambda C++</h4>
-      <dl>A function that references variables from outside its body.</dl>
+      <h4 id="closure">
+        Closure Function =
+        <a href="/Languages/Programming/C++/">Lambda C++</a> = Anonymous
+      </h4>
+      <p>
+        This function can reference variables from outside its body<br />
+        <a href="/Languages/Programming/C++/">Why to use Clousure</a>
+      </p>
       <pre><code class="language-css">
-func add() func(int) int {
-    sum := 10
-    return func(x int) int {
-            sum += x
-            return sum
-    }
-}
+package main
+import "fmt"
+
 func main() {
-        a := add()
-        fmt.Println(a(9))
+	counter := 1
+	test := func() {
+		counter++
+	}
+	test()
+	fmt.Println(counter)
 }
+$ go run
+2
             </code></pre>
 
       <h4 id="range">range()</h4>
