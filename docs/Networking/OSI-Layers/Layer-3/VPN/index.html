@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>VPN</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/Layer-3/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">VPN</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">VPN (Virtual Private Network)</h2>
+      <p>
+        VPN creates secure/encrypted tunnels over less secure network like
+        internet.
+        <br />
+
+        <b>Functions of a VPN</b><br />
+        1. Data Encryption: MIM, ISP, or network administrators cannot see what
+        you are browsing.<br />
+        2. IP Masking: Adds a extra header over actual IP header, routers
+        inbetween cannot see for whom packet is destinated<br />
+        3. Bypassing Geo-Restrictions: It lets you connect to servers in other
+        countries, allowing you to bypass regional content blocks.
+      </p>
+    </article>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

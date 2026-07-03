@@ -32,36 +32,66 @@
 
     <article style="margin-left: 200px">
       <h2 id="defer">Defer</h2>
-      <dl>
-        defer statement defers execution of a function until the surrounding
-        function returns.
-      </dl>
-      <pre><code class="language-css">
+      <p>
+        defer (statement/function)<br />
+        Run the statement/function after defer when the current function exits.
+      </p>
+      <table>
+        <td>
+          <pre><code class="language-css">
 package main
 import "fmt"
-func main() {
-        defer fmt.Println("world")
-        fmt.Println("hello")
+func test() {
+    fmt.Println("A")
+
+    defer fmt.Println("B")
+
+    fmt.Println("C")
 }
-# /usr/local/go/bin/go build defer-statement.go
-# ./defer-statement
-hello
-world
+# go run main.go
+A
+C
+B   // see defer statement executed after function exits
             </code></pre>
-      <dl>
+        </td>
+        <td>
+          defer helpful in preventing deadlocks.<br />
+          <pre><code class="language-css">
+// Deadlocking example
+func test() {
+  mu.Lock()
+  if somethingWrong {
+      return
+  }
+  mu.Unlock()   //the mutex never unlocks. Everything deadlocks.
+}
+
+// Correct example
+func test() {
+  mu.Lock()
+  defer mu.Unlock()   //mutex will be unlocked defintely when function exits.
+  if somethingWrong {
+      return
+  }
+}
+          </code></pre>
+        </td>
+      </table>
+
+      <p>
         <a href="/Threads_Processes_IPC/Threads/Creation/GoRoutines.html"
           >defer in goroutines example</a
         >
-      </dl>
+      </p>
 
       <h2 id="if">if statement</h2>
-      <dl>
+      <p>
         a. Expression not surrounded by parentheses ( ) but the braces { } are
         required.<br />
         b. if statement can start with Short statement to execute before
         condition.<br />
         c. Variables declared in if statement are also avaiable in else block.
-      </dl>
+      </p>
       <pre><code class="language-css">
 package main
 import (

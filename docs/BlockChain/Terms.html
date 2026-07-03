@@ -29,12 +29,13 @@
       </ul>
     </nav>
     <!-- Sidebar -->
-    <div class="sidebar">
+    <aside class="sidebar">
       <a href="#BlockchainAddress">BlockchainAddress (Sender or Receiver)</a>
       <a href="#block">Block</a>
       <ul>
         <li><a href="#genesis">Genesis Block</a></li>
       </ul>
+      <a href="#custodian">Custodian</a>
       <a href="#transaction">Transaction</a>
       <a href="#pow">POW(Proof of Work)</a>
       <a href="#pos">POS(Proof of Stake)</a>
@@ -44,7 +45,7 @@
       <a href="#solidity">Solidity</a>
       <a href="#wallet">Wallet</a>
       <a href="#web3">Web3</a>
-    </div>
+    </aside>
 
     <article style="margin-left: 200px">
       <h3 id="BlockchainAddress">BlockchainAddress (Sender or Receiver)</h3>
@@ -87,8 +88,8 @@ K --> |SHA256| --256bit--> |RIPEMD160| --> 160bit(Address)
         prev block
       </dl>
       <pre><code class="language-css">
-Header/Metadata => |block number | timestamp (when the block was created) | block hash | nonce |
-Data/Payload =>  |Sender address | Recipient address | amount of transaction | fee |
+Header/Metadata =&lt; |block number | timestamp (when the block was created) | block hash | nonce |
+Data/Payload =&lt;  |Sender address | Recipient address | amount of transaction | fee |
 
 struct block {
     struct block_header* bh;
@@ -100,6 +101,36 @@ struct block {
     struct other_attribute* oa;
 }
         </code></pre>
+
+      <h3 id="custodian">Custodian = web security proxy for Assets</h3>
+      <p>
+        Custodian Sits between user and the Blockchain/Vault and enforces
+        policies same as netskope proxy ie provides AUTHORIZATION<br />
+        Custodian is a person/entity who holds private keys of user. In
+        blockchain user has his private keys with which he can access his funds.
+        if he looses his private keys he is blocked and cannot access his
+        funds.<br />
+        Custodians, exchanges, and institutional wallets do not let end-user
+        devices talk directly to an Ethereum node when moving funds. Outgoing
+        transactions pass through policy-controlled signing infrastructure<br />
+
+        <b>Roles of Custodian</b><br />
+        1. Authorization & Execution<br />
+        2. Transaction Validation, Executes/Rejects transaction based on
+        rules<br />
+        3. Asset Security(Save user keys)
+        <br />
+
+        <b>custodian vs netskope proxy</b><br />
+        1. Just like NetSkope has rules like "Employees cannot upload files to
+        personal Dropbox," a Custodian has rules like "Users cannot send more
+        than 10 BTC to an unknown address without manual review."<br />
+        2. Because the Custodian is the one performing the action, they are
+        legally required to keep a perfect record (the Audit log) of every
+        decision made. In a NetSkope environment, this is "Compliance Logging."
+        In a Custodial environment, this is "Transaction Finality & Legal
+        Proof."
+      </p>
 
       <h3 id="transaction">Transaction</h3>
       <dl>
@@ -232,8 +263,8 @@ Reward distributed to both
         private key has control over the Bitcoin at that address.
       </dl>
 
-      <h2 id="web3">Web3</h2>
-      <dl>
+      <h3 id="web3">Web3</h3>
+      <p>
         <b>Web1.0:</b> 1991-2004. Most sites were static. Most were consumers<br />
         <b>Web2.0:</b> Users have started producing content using forums, social
         media. 2004 - Till Date<br />
@@ -241,7 +272,7 @@ Reward distributed to both
         decentralization, increased user control over data, ownership via
         blockchain.<br />
         <b>Aim:</b> shift power from large corporation to users
-      </dl>
+      </p>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>

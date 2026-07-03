@@ -43,9 +43,9 @@
     <article style="margin-left: 200px">
       <h3 id="what">What is Go routine(Thread)</h3>
       <p>
-        A goroutine is a lightweight thread managed by the Go runtime. Memory
-        allocation on stack, heap is very less wrt OS Threads.
-        <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
+        A goroutine is a lightweight thread managed by the Go runtime.<br />
+        Memory allocation on stack, heap is very less wrt OS Threads.
+        <a href="/Threads_Processes_IPC/Threads/Green_vs_OS_threads.html"
           >Goroutine vs OS Threads</a
         >
       </p>
@@ -143,14 +143,9 @@ All workers finished
             &emsp; goroutine finishes (defer make wg.Done() to called after
             function finishes), and counter is decremented<br />
             &emsp; wg.Wait() method in main waits until counter=0
-            <br /><br />
+            <br />
 
-            <b>defer</b><br />
-            - keyword in Go schedules a function call to be executed just before
-            the surrounding function returns.<br />
-            - ie wg.Done() would be called when surrounding function finishes<br />
-            - defer wg.Done() is called reliably, even in case of errors or
-            unexpected goroutine termination.
+            <a href="/Languages/Programming/Go/">defer?</a>
           </td>
         </tr>
       </table>
