@@ -1,0 +1,433 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Django</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Frameworks/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">Django</a>
+      <a href="#create">Create, Run Django Project</a>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#app">App</a></li>
+        <li><a href="#views">Views</a></li>
+        <li><a href="#urls">URLs (Router)</a></li>
+        <li><a href="#templates">Templates</a></li>
+      </ul>
+      <a href="#database">Database</a>
+      <ul>
+        <li><a href="#models">Models=Tables</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Django</h2>
+      <p>
+        Django is primarily a web development framework<br />
+        designed to help developers build secure, scalable, and database-driven
+        web applications quickly using Python<br />
+        <b>Features:</b><br />
+        1. It provides all the necessary components for building a backend or
+        full-stack application.<br />
+        2. Includes an Object-Relational Mapper (ORM) for databases, user
+        authentication, URL routing<br />
+        3. Automatic admin panel<br />
+        4. extends Python’s built-in unittest module for testing
+      </p>
+
+      <h2 id="create">Create, Run Django Project</h2>
+      <pre><code class="language-css">
+// Create python venv
+$ python3 -m venv .venv && source .venv/bin/activate && python --version && which python && pip --version
+Python 3.10.12
+
+// Install Django
+$ python -m pip install Django
+
+// Create Project
+$ django-admin startproject my_tennis_club
+$ ls
+my_tennis_club
+    manage.py
+    my_tennis_club/
+        __init__.py
+        asgi.py
+        settings.py
+        urls.py
+        wsgi.py
+
+// Run the project
+$ cd my_tennis_club
+$ python manage.py runserver
+Starting development server at http://127.0.0.1:8000/
+      </code></pre>
+
+      <h2 id="terms">Terms</h2>
+      <h3 id="app">App</h3>
+      <p>
+        An app is a web application that has a specific meaning in django
+        project, like a home page, a contact form, or a members database.<br />
+        django project has to be stopped while creating an app<br />
+        Create app inside django project, representing tennis club members:
+      </p>
+      <pre><code class="language-css">
+(.venv) my_tennis_club$ python manage.py startapp members
+$ ls -ltr
+total 12
+-rwxr-xr-x 1 amit amit  665 Jul  4 10:11 manage.py
+drwxr-xr-x 3 amit amit 4096 Jul  4 10:12 test_proj
+-rw-r--r-- 1 amit amit    0 Jul  4 10:12 db.sqlite3
+drwxr-xr-x 3 amit amit 4096 Jul  4 10:15 test_app
+$ ls my_tennis_club/
+__init__.py  admin.py  apps.py  migrations  models.py  tests.py  views.py
+      </code></pre>
+
+      <h3 id="views">Views</h3>
+      <p>
+        Django views are Python functions that take http requests and return
+        http response
+      </p>
+      <pre><code class="language-css">
+$ cat members/views.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def members(request):
+    return HttpResponse("Hello world!")
+      </code></pre>
+
+      <h3 id="urls">URLs (Router)</h3>
+      <p>
+        These files defines the path. URL -> project urls.py -> app urls.py ->
+        view function -> response.
+      </p>
+      <img
+        src="/images/frameworks/python/django/urls.png"
+        alt="url"
+        style="width: 300px; height: 200px"
+      /><br />
+      <table>
+        <tr>
+          <td>
+            Top/Project Level Router<br />
+            <pre><code class="language-css">
+$ cat my_tennis_club/my_tennis_club/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('', include('members.urls')),    # Include App(members) urls
+    path('admin/', admin.site.urls),
+]
+      </code></pre>
+          </td>
+          <td>
+            App Level Router<br />
+            <pre><code class="language-css">
+$ cat my_tennis_club/members/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('members/', views.members, name='members'),  # path /members goto views
+]
+      </code></pre>
+          </td>
+          <td>
+            View is the responder<br />
+            <pre><code class="language-css">
+$ cat my_tennis_club/members/views.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def members(request):
+    return HttpResponse("Hello world!")
+          </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="templates">Templates</h3>
+      <p>
+        In Django, the result should be in HTML, and it should be created in a
+        template. Create a templates folder inside the members folder, and
+        create a HTML file named myfirst.html
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+my_tennis_club
+    manage.py
+    my_tennis_club/
+    members/
+        templates/
+            myfirst.html
+      </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ cat my_tennis_club/members/templates/myfirst.html
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h1&gt;Hello World! &lt;/h1&gt;
+&lt;p &gt;Welcome to my first Django project! &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <p>Modify the view and route</p>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+$ my_tennis_club/members/views.py
+
+from django.http import HttpResponse
+from django.template import loader
+def members(request):
+  template = loader.get_template('myfirst.html')  &lt;&lt;&lt;&lt;&lt;&lt;
+  return HttpResponse(template.render())
+
+      </code></pre>
+          </td>
+          <td>
+            Change the settings<br />
+            <pre><code class="language-css">
+$ my_tennis_club/my_tennis_club/settings.py
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'members'                             &lt;&lt;&lt;&lt;&lt;&lt;
+]
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  ..
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ python manage.py runserver
+
+Open 127.0.0.1:8000/members/
+            </code></pre>
+            <br />
+            <img
+              src="/images/frameworks/python/django/urls.png"
+              alt="url"
+              style="width: 300px; height: 200px"
+            />
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="database">Database</h2>
+      <p>
+        When we created the Django project, we got an empty SQLite database. It
+        was created in the root folder, and has the filename db.sqlite3.
+      </p>
+      <pre><code class="language-css">
+$ sqlite3 db.sqlite3
+SQLite version 3.37.2 2022-01-06 13:25:41
+Enter ".help" for usage hints.
+sqlite&gt; .tables                          &lt; These are default created tables
+auth_group                  auth_user_user_permissions
+auth_group_permissions      django_admin_log
+auth_permission             django_content_type
+auth_user                   django_migrations
+auth_user_groups            django_session
+        </code></pre>
+
+      <h3 id="models">Model = Table</h3>
+      <p>
+        By default, all Models created in the Django project will be created as
+        tables in this database. Models = Tables in DB<br />
+        <b>Creating a Model = Table</b>
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+$ vim my_tennis_club/members/models.py
+from django.db import models
+
+class Member(models.Model):           #class name = Table Name
+  firstname = models.CharField(max_length=255)
+  lastname = models.CharField(max_length=255)
+        </code></pre>
+          </td>
+          <td>
+            makemigrations: Create Migration Script
+            <pre><code class="language-css">
+my_tennis_club$ python manage.py makemigrations members
+Migrations for 'members':
+  members/migrations/0001_initial.py
+    + Create model Member
+
+my_tennis_club$ cat members/migrations/0001_initial.py
+from django.db import migrations, models
+class Migration(migrations.Migration):
+    initial = True
+    dependencies = [
+    ]
+    operations = [
+        migrations.CreateModel(
+            name='Member',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('firstname', models.CharField(max_length=255)),
+                ('lastname', models.CharField(max_length=255)),
+            ],
+        ),
+    ]
+        </code></pre>
+          </td>
+          <td>
+            migrate: Run Migration script. Create Table.
+            <pre><code class="language-css">
+my_tennis_club$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, members, sessions
+Running migrations:
+  Applying members.0001_initial... OK
+  </code></pre>
+          </td>
+          <td>
+            View Table.
+            <pre><code class="language-css">
+python manage.py sqlmigrate members 0001
+
+BEGIN;
+--
+-- Create model Member
+--
+CREATE TABLE "members_member" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "firstname" varchar(255) NOT NULL, "lastname" varchar(255) NOT NULL);
+COMMIT;
+  </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <p><b>Insert, Update, Delete data in Table</b></p>
+      <table>
+        <tr>
+          <td>
+            Insert<br />
+            <pre><code class="language-css">
+$ python manage.py shell
+
+Python 3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from members.models import Member
+>>> Member.objects.all()
+&lt;QuerySet []&gt;
+
+>>> member = Member(firstname='Emil', lastname='Refsnes')
+>>> member.save()
+>>> Member.objects.all().values()
+&lt;QuerySet [{'id': 1, 'firstname': 'Emil', 'lastname': 'Refsnes'}]&gt;
+
+</code></pre>
+          </td>
+          <td>
+            Update<br />
+            <pre><code class="language-css">
+>>> Member.objects.all().values()
+&lt;QuerySet [{'id': 1, 'firstname': 'Emil', 'lastname': 'Refsnes'}]&gt;
+>>> x = Member.objects.all()[0]
+>>> x.firstname
+'Emil'
+
+>>> x.firstname = "Stalikken"
+>>> x.save()
+
+>>> Member.objects.all().values()
+&lt;QuerySet [{'id': 1, 'firstname': 'Stalikken', 'lastname': 'Refsnes'}]&gt;
+            </code></pre>
+          </td>
+          <td>
+            Delete<br />
+            <pre><code class="language-css">
+>>> x = Member.objects.all()[0]
+>>> x.firstname
+'Stalikken'
+>>> x.lastname
+'Refsnes'
+
+>>> x.delete()
+(1, {'members.Member': 1})
+>>> Member.objects.all().values()
+&lt;QuerySet []&gt;
+>>>
+</code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <p><b>Update Model:</b> Add 2 new fields</p>
+      <pre><code class="language-css">
+$ vim members/models.py
+from django.db import models
+
+class Member(models.Model):
+  firstname = models.CharField(max_length=255)
+  lastname = models.CharField(max_length=255)
+  phone = models.IntegerField(null=True)
+  joined_date = models.DateField(null=True)
+
+$ python manage.py makemigrations members
+Migrations for 'members':
+  members/migrations/0002_member_joined_date_member_phone.py
+    + Add field joined_date to member
+    + Add field phone to member
+
+// Apply 0002_member_joined_date_member_phone.py
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, members, sessions
+Running migrations:
+  Applying members.0002_member_joined_date_member_phone... OK
+  </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

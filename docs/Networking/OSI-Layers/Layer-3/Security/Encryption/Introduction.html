@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Encryption</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Encryption</a>
+      <a href="#types">Types of Encryption</a>
+      <a href="#how">How safe is 128, 256 bit Keys</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Secrecy / Confidentiality / Encryption / Cryptography</h2>
+      <p>Conversion of Data/Plain-text into unreadable/cipher text.</p>
+
+      <h2 id="types">Types of Encryption</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Symmetric / Secret Key / 1 key</th>
+          <th>Assymetric /2 key / Public,Pvt Key pair (DH, RSA)</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            Only 1 key is shared between sender & receiver<br />
+            <pre><code class="language-css">
+            \/  Key-1                       \/ Key-1
+Data &gt; | Encryptor | &gt; cipher Text  &gt; | Decryptor | &gt; Data
+          </code></pre>
+          </td>
+          <td>
+            Public key(encrypt), Private key(decrypt). Data encrypted with
+            Public can only be decrypted using Pvt key.<br />
+            Both are mathematically linked. Public Key are published on website
+            publicly.<br />
+            <pre><code class="language-css">
+Alice create [Pub_A, Pvt_A] and kept public key on http://alice.com
+
+                         Bob  &lt;--read Alice public key-- http://alice.com
+                        Pub_A
+                         \/
+message(plain text) &gt; |Encrypt| &gt; XXX
+
+                                                                 Alice
+                                                              own Pvt_A
+                                                                  \/
+                                     ---sent to Alice---&gt; XXX &gt;|Decrypt| &gt; message
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Algorithms</td>
+          <td>
+            DES(Broken in 1999), 3-DES(Broken), AES(Key sizes: 128, 192, 256,
+            384), RC4
+          </td>
+          <td>
+            RSA (Ronald Rivest, Adi Shamir, Len Adleman), Diffe-Helman,
+            Crammer-shoup, El-Gamal
+          </td>
+        </tr>
+        <tr>
+          <td>Speed</td>
+          <td>Faster(Since encryption process is less complicated)</td>
+          <td>
+            Slow. Big Calculations are required to Generate a public-Pvt Key
+            Pair
+          </td>
+        </tr>
+        <tr>
+          <td>Key Size</td>
+          <td>AES-128, 192, 256</td>
+          <td>
+            RSA:1024,2048 This is not Key, but sizes of prime number which is
+            used to derive the Pvt key.<br />
+            Check <a href="./Asymmetric.html">DH Algo</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Usage</td>
+          <td></td>
+          <td>
+            To exchange keys for symmetric algorithms, once the keys are
+            established symmetric key algorithms used to encrypt data
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="how">How safe is 128, 256 bit Keys</h2>
+      <p>
+        The longer the key, higher work to be done by breaking algo.<br />
+        - Email: 64-bit keys will do<br />
+        - Commercial applications: 128 bits<br />
+        - Govt org: 256 bits<br /><br />
+
+        Number of Unique keys:
+      </p>
+      <pre><code class="language-css">
+- 2   No of unique keys: 2pow2 = 4
+- 3   No of unique keys: 2<sup>3</sup> = 8
+- 32  No of unique keys: 2<sup>32</sup> = 4,294,967,296    (4 billion)
+- 64  No of unique keys: 2<sup>64</sup>  = 18 x 10<sup>18</sup> keys (18 Quintillion)
+- 128 No of unique keys: 2<sup>128</sup> = 34 x 10<sup>36</sup> keys (18 x 10<sup>18</sup> Quintillion)
+- 256 No of unique keys: 2<sup>256</sup> =
+
+How Long Hacker(having super Computer) need to crack key?
+  1 super computer can perform 1017 FLOPS (a hundred quadrillion FLOPS floating point operations per second)
+  Per Year = 3600(hour) x 24 x 30 x 12 = 31,104,000 x 1017 = 31,104,00 Quintillion Operations.
+  340,282,366,920,938,463,463 / 31,104,000 = 109,401,481,134,561 (approx) = 109 Trillion
+  109 Trillion super computers working parallelly for 1 year can produce all combinations of 128 bit key
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
