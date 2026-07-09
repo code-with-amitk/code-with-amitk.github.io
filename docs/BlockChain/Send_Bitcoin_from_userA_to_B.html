@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Send Crypto</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/BlockChain/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="#what">What</a>
+    </div>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Send Crypto from user A to user B</h2>
+      <p>
+        1. User B is already on Etherum blockchain and has address (0x3333..)<br />
+        2. User A joins recently installs Metamask wallet (as chrome extension).
+        Provide a password(password) and logs in.
+      </p>
+      <img
+        src="/images/Blockchain/MetaMask_Install.png"
+        alt="metamask"
+        style="width: 300px; height: 250px"
+      />
+
+      <p>
+        3. Wallet generates public addresses for different blockchains for user
+        A Etherum(0x22254747426B6BE571a27d13432D76C3876E1849), Bitcoin(..)<br />
+        &ensp; Check how Metamask Wallet calculates these
+        <a href="./Terms.html#BlockchainAddress">20 byte blockchain addresses</a
+        >?
+      </p>
+      <img
+        src="/images/Blockchain/WalletAddresses.png"
+        alt="metamask"
+        style="width: 300px; height: 250px"
+      />
+
+      <p>
+        4. Now User A enters User B's Blockchain address(0x333..) and Ether to
+        transfer and broadcasts the message to blockchain.<br />
+        &ensp; <a href="./Ethereum/Terms.html">Gas</a> is amount charged for
+        sending. <a href="Terms.html">Nonce</a> is random number.
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+From: 0x222..
+To: 0x3333..
+ETH: 1
+Gas: .02
+Nonce: 15
+
+struct Transaction {
+	string from;
+	string to;
+	float amount;
+	float gas;
+	int64 nonce;
+}
+
+Transaction trxn = {0x222.., 0x3333.., 1, 0.02, 15}
+
+trxn --> [Keccak256-hash] --> 0xhhh --> [Sign-ECSDA]  --> DigitalSignature
+
+Message
+{
+  trxn,
+  DigitalSignature
+}
+      </code></pre>
+          </td>
+          <td>
+            <img
+              src="/images/Blockchain/SendETH.png"
+              alt="metamask"
+              style="width: 300px; height: 250px"
+            />
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

@@ -1,69 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Signing</title>
-  <link rel="stylesheet" href="/css/styles.css"/>
-  <link rel="stylesheet" href="/css/prism.css"/>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Signing</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
 
-
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
+          </form>
         </li>
-    </ul>
-  </nav>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">    <!--See .sidebar in styles.css-->
-    <a href="#signing">Signing</a>
-    <a href="#algo">Algos fr DS</a>
-  </aside>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#signing">Signing</a>
+      <a href="#algo">Algos fr DS</a>
+    </aside>
 
-  <article style="margin-left:200px;">
-    <h2 id="signing">What is Signing / Digital Signatures</h2>
-    <dl>
-      This is Hash encrypted by PVT-KEY.
-      <br><br>
+    <article style="margin-left: 200px">
+      <h2 id="signing">What is Signing / Digital Signatures</h2>
+      <p>
+        This is NOT Hash encrypted by PVT-KEY.<br />
+        it is a another hash value which is generated using SIGNING FUNCTION
+      </p>
 
-      <b>Digital Signature Provides:</b><br>
-      - Integrity<br>
-      - Nonrepudiation(only sender has pvt key and no one else)<br>
-      - Authentication
-    </dl>
-    <pre><code class="language-css">
-      message > |Hash(MD5)| > |Encrypt| >    Digital-Signature    >     |Decrypt| > Hash
-                                /\                                         /\
-                              Pvt-key                                  Public-key
+      <pre><code class="language-css">
+h = hash (sha256(message))
+d = Private key
+e = public key
+n = public exponent
+
+Signature(S) = (h pow(d))mod n  //Sender sends S
+
+h = (S pow(e))mod n   //Reciever calculate hash
+      </code></pre>
+      <br />
+
+      <pre><code class="language-css">
+Sender
+message > [sha256] -> hash(h1)
+                        \/
+              [SigningFunction(RSA)] > Digital-Signature
+                        /\
+                      Pvt-key
+
+          Sender ---------- h1, Digital-Signature ------> Reciever
+
+                                                DS --> [VerifyFunction] --> h2
+                                                            /\
+                                                            publickey
+
+                                                        if (h1 == h2)
+                                                          Integrity verified
+
+// Sender
+SigningFunction(messageToBeSigned, PvtKey, PublicExponent) {
+  return digitalSignature=Hash
+}
+
+// Receiver
+VerifyFunction (RecieveddigitalSignature, PublicKey, PublicExponent) {
+  return Hash
+}
     </code></pre>
 
-    <h2 id="algo">Algorithms for Generating DS</h2>
-    <dl>
-      <b>1. DSA(DIGITAL SIGNATURE ALGO):</b>
-      Based on the algebraic properties of the modular exponentiations, together with the discrete logarithm problem<br>
+      <h2 id="algo">Algorithms for Generating DS</h2>
+      <h3>1. DSA(DIGITAL SIGNATURE ALGO)</h3>
+      <p>
+        Based on the algebraic properties of the modular exponentiations,
+        together with the discrete logarithm problem<br />
+      </p>
 
-      <b>2. ECDSA(ECLIPTIC CURVE DSA):</b>
-      Variant of DSA which uses ECC. Suppose Alice wants to sends signed message to Bob.
-    </dl>
-    <pre><code class="language-css">
-      Step-1: Both agree on Curve parameters.(CURVE,G,n)
-        CURVE: equation to be used. ECC(y2 = x3 + ax +b) Alice and bob chooses curve(y2 = x3 + 7)
-        G(Base point): (x0,y0) on chosen curve (y2 = x3 + 7)
-        n(Prime No): Multiplier of G. n X G = O. O is identity element.
-      Step-2-n: Alice calculates Key using ECC, encypts Hash of message using ECC and sends.
+      <h3>2. RSA</h3>
+      <img
+        src="/images/Security/RSA_Digital_Signature_Signing_Algo.png"
+        alt="trie"
+        style="width: 700px; height: 500px"
+      />
+
+      <h3>2. ECDSA(ECLIPTIC CURVE DSA)</h3>
+      <p>
+        Variant of DSA which uses ECC. Suppose Alice wants to sends signed
+        message to Bob.
+      </p>
+
+      <pre><code class="language-css">
+Step-1: Both agree on Curve parameters.(CURVE,G,n)
+  CURVE: equation to be used. ECC(y2 = x3 + ax +b) Alice and bob chooses curve(y2 = x3 + 7)
+  G(Base point): (x0,y0) on chosen curve (y2 = x3 + 7)
+  n(Prime No): Multiplier of G. n X G = O. O is identity element.
+
+Step-2-n: Alice Signs message and sends Signature (r,s) //Since ECDSA sends pair as public key
     </code></pre>
-  </article>
+    </article>
 
-  <script src="/scripts/prism.js"></script>
-  <script src="/scripts/common.js"></script>
-</body>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
 </html>

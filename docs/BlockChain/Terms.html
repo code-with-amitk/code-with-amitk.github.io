@@ -48,18 +48,34 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h3 id="BlockchainAddress">BlockchainAddress (Sender or Receiver)</h3>
-      <dl>
-        Public, Private key pair is calculated for user. Public key of user is
-        treated as User Address<br />
-        Bitcoin address of node is calculated using Hash of Public key.
-        Public/Pvt keys generated using secp256k1 ECC Algorithm.<br />
-        Hash is generated using RIPEMD160 + SHA256.
-      </dl>
+      <h3 id="BlockchainAddress">Sender/Receiver Bitcoin Address</h3>
+      <p>
+        Bitcoin uses ECDSA for key generation.
+        <a
+          href="/Networking/OSI-Layers/Layer-3/Security/Encryption/Asymmetric.html"
+          >ECDSA</a
+        >
+        is Asymmetric key algorithm<br />
+        Check
+        <a
+          href="/Networking/OSI-Layers/Layer-3/Security/Encryption/Asymmetric.html"
+          >DH</a
+        >
+        Asymmtric Key exchange algorithm where user creates a Pvt key, then
+        using algorithm steps public key is generated which is exchanged with
+        the peer.<br />
+        Sender Address/Wallet Address is Last 20 bytes of this hashed public key
+        of user
+      </p>
       <pre><code class="language-css">
-K(public key) = k(pvt key) * G(constant)
-K --> |SHA256| --256bit--> |RIPEMD160| --> 160bit(Address)
-160bit(Address) --> |Encode(Base58 Check)| --> Bitcoin Address      //Base58-Check(RIPEMD160(SHA256(K)))
+		  Asymetric Key Algo 
+input -> [ECDSA (secp256k1)] -> Private Key (256 bits)
+                                 Public Key	-> [Keccak-256 Hash] -> Hash
+                                                                    \/
+                                                    Last 20 bytes(is wallet address)
+
+  Wallet/User Address = Last 20bytes(160bits of above Hash)
+                      = 0x20954747426B6BE571a27d13432D76C3876E1849
         </code></pre>
 
       <h3 id="block">Block</h3>
@@ -133,13 +149,13 @@ struct block {
       </p>
 
       <h3 id="transaction">Transaction</h3>
-      <dl>
+      <p>
         1 block can store 1 or multiple transactions. Whenever a transaction(s)
         happens on blockchain, a block is created and stored on chain.
         Transactions are used to record various activities, such as
         cryptocurrency transfers, smart contract executions, and other changes
         to the blockchain’s state.
-      </dl>
+      </p>
 
       <h3 id="pow">POW(Proof of Work)</h3>
       <dl>

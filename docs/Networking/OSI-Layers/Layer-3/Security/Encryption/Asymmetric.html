@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>ASymmetric key Encryption</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#types">Types</a>
+      <ul>
+        <li><a href="#dh">1. Diffe-Helman</a></li>
+        <ul>
+          <li><a href="#keysize">Key size</a></li>
+        </ul>
+        <li><a href="#rsa">2. RSA</a></li>
+        <li><a href="#ec">3. Elliptic Curve</a></li>
+        <ul>
+          <li><a href="#ecdh">3.1 ECDH</a></li>
+          <li><a href="#secp256k1">3.2 secp256k1</a></li>
+        </ul>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">ASymmetric key Encryption</h2>
+      <p>What is <a href="./Introduction.html">asymmetric key encrption</a></p>
+
+      <h2 id="types">Types of Asymmetric key Encryption</h2>
+      <h3 id="dh">1. DH(Diffe-Helman)</h3>
+      <p>
+        Once both parties derive the shared secret key(ssk), DH Pvt, public keys
+        are dropped(to prevent derivation of ssk by hacker if DH keys are
+        compromised in future)
+      </p>
+      <table>
+        <tr>
+          <td>
+            Understand Deeply<br />
+            <pre><code class="language-css">
+//DH Keys sizes
+Group  | No of Bits |  Combinations  | Strong
+-------|------------|----------------|----------
+   1   |   768      | 2^768          |
+   2   |   1024     |                |
+   5   |   1536     |                | Strongest
+
+Prime number=p, Generator=g  are sent publicly
+p(Always used in mod), g(everything is raised to power of g)
+Modulus Operation: 19mod7 = 19%7 = 5
+
+//Algorithm
+   Host-A                                             Host B
+        ----------Prime=p=7, Generator=g=5------->
+    Choose Private-key                              Choose private-key
+    a=4                                             b=6
+
+We can generate pvt key using:
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+  Dervive Public-Key:
+  gPow(a)modp                                       gPow(b)modp
+  5pow(4)mod7                                       5pow(6)mod7
+  625mod7 = 2                                       15625mod7=1
+        -------My Public Key = 2----------------->
+        <------My Public Key = 1------------------
+
+  Derive Shared Secret Key(ssk)
+  ssk=(Public Key)pow(a) mod(p)               ssk=(Public Key)pow(b) mod(p)
+  1pow(4)mod7 = 1                             2pow(6)mod(7) = 64mod7=1
+  A,B have ssk=1, which is stored secretly to derive AES symmetric key
+  ssk is Never sent on network
+
+  This completes DH Key exchange, now DH Pvt, public keys are dropped
+  (to prevent derivation of ssk by hacker if DH keys are compromised in future)
+      </code></pre>
+          </td>
+          <td>
+            <img
+              src="/images/Security/DH_Key_Exchange.png"
+              alt="DH"
+              style="width: 600px; height: 500px"
+            />
+          </td>
+        </tr>
+      </table>
+
+      <h4 id="keydh">Key size in DH</h4>
+      <p>
+        key size = Size of Prime number. Small number is used for easy
+        calculation, in practice large sizes are choosen<br />
+        1024, 2048(standard minumum), 3072(strong), 4096(max) bits
+      </p>
+
+      <h3 id="rsa">2. RSA (Ronald Rivest, Adi Shamir, Len Adleman)</h3>
+      <pre><code class="language-css">
+A. Pre-calculate Public, pvt key
+  1. Choose 2 numbers p(1024 bit),q(1024 bit). {p=3,q=11}
+  2. Find n = p`*`q, z =(p-1)(q-1) {n=33, z=20}
+  3. Choose a number d relatively prime to z. {d=7} //7 and 20 has no common factor
+  4. Find e. So that e × d = 1 mod(z)
+    e x 7 = 1 mod(20)
+    e = mod(20)/7 = 3 (approx)
+
+Public Key = (e,n). Private Key = (d,n)
+
+B. Divide Plain-text into blocks input=10101111. {block1=1010 block2=1111}
+C. Encrypt: cipher text© = Block-of-plain-texte (mod n)
+  C = P^3 mod(33)
+
+D. Decrypt: Plain text(P) = Cd (mod n)
+          P = C^7 mod(33)
+
+Public Key (n,  e)        Private Key (n, d) or 5-value
+                Host-A                                                  Host-B
+                        -----Prime-1=53, Prime-2=59------>    //In real calculations P & Q are large numbers (64 bytes)
+                                                                   Modulus(n)=P*Q=64x64=128 bytes=1024 bit
+                                                                   Phy(n)=(P-1)(Q-1)=3016
+                                                                   Exponent(e)=coprime of Phy
+            Public-key calculated                    Public-key= n&e
+                                                                   Pvt key=2 (Phy(n) + 1)/e
+
+                                                                    encryption of data: data pow(e)mod(n)
+                        <---cipher-text------             89 pow(3)mod(3127)    //if data=89
+        Decryption of data
+        (cipher Text)pow(Pvt Key) mod(n)
+           (1394) pow(2011) mod(3127) = 89
+      </code></pre>
+
+      <h3 id="ec">3. Elliptic Curve</h3>
+      <p>
+        Public, Pvt keys are calculated using elliptic curve(y<sup>2</sup> =
+        x<sup>3</sup> + ax + b) over Galois field.<br />
+        Galois field: Field containing finite number of elements rather than
+        real numbers.<br />
+
+        <b>Advantage of ECC?</b> Smaller keys in ECC provides equivalent
+        security to larger non-ECC based algos.<br />
+
+        <b>Applications of ECC?</b><br />
+
+        Calculating keys for following: Key agreement, Digital Signature,
+        Pseudo-random generators.<br />
+
+        ECCs can be used after combining with Symmetric encryption schemes.
+      </p>
+
+      <p>
+        <b>DH vs ECC keys:</b> ECC provides the same cryptographic security as
+        DH with significantly smaller key sizes. ECC achieves identical
+        protection with DH on
+      </p>
+      <table>
+        <tr>
+          <th>DH Key Size (Bits)</th>
+          <th>ECC Key Size (Bits)</th>
+        </tr>
+        <tr>
+          <td>1024</td>
+          <td>160–192</td>
+        </tr>
+        <tr>
+          <td>2048</td>
+          <td>224</td>
+        </tr>
+        <tr>
+          <td>3072</td>
+          <td>256</td>
+        </tr>
+        <tr>
+          <td>7680</td>
+          <td>384</td>
+        </tr>
+      </table>
+
+      <h4 id="ecdh">3.1 (ECDH) Ecliptic Curve based Diffie Hellman</h4>
+      <p>
+        Allows two parties, each having an elliptic-curve public–private key
+        pair, to establish a shared secret over an insecure channel.<br />
+        This shared secret maybe used directly as key or derive another key.<br />
+        The key, or the derived key, can then be used to encrypt subsequent
+        communications using a symmetric-key cipher.
+      </p>
+      <img
+        src="/images/Security/ECDH_Key_Exchange.png"
+        alt="ECDH"
+        style="width: 800px; height: 500px"
+      />
+
+      <h4 id="secp256k1">
+        3.2 secp256k1 ECC Algorithm (Used in Bitcoin/Ethereum/Blockchain)
+      </h4>
+      <p>
+        Private Key: This is just a random number between (1 & (2<sup>256</sup>
+        = 10<sup>77</sup>)). But should be generated using good source of
+        randomness(called entropy).<br />
+        K(Public Key) = k(pvt Key) * G(constant called Generator point). //G is
+        same for all users
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Symmetric key Encryption</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Types</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Symmetric key Encryption</h2>
+      <p>What is <a href="./Introduction.html">symmetric key encrption</a></p>
+
+      <h2 id="types">Types of Symmetric key Encryption</h2>
+      <h3 id="aes">AES / Rijndael</h3>
+      <p>
+        There are 10 rounds for 128-bit keys, 12 rounds for 192-bit keys and 14
+        rounds for 256-bit keys.
+      </p>
+      <pre><code class="language-css">
+#define LENGTH 16                     //Input,Output in bytes. 16x8=128
+#define NROWS 4                         //For internal use
+#define NCOLS 4                          //For algo's internal use
+#define ROUNDS 10                     //number of iterations/stages
+typedef unsigned char byte;           /// unsigned 8-bit integer
+
+AES(byte plaintext[LENGTH], byte ciphertext[LENGTH], byte key[LENGTH]) {
+  int r;
+  byte state[4][4];                                     // current state
+  struct {byte k[4][4];} rk[10 + 1];          // round keys
+  expand key(key, rk);                             // construct the round keys
+  copy plaintext to state(state, plaintext); // init current state
+  xor roundkey into state(state, rk[0]);     // XOR key into state
+  for (r = 1; r &lt= ROUNDS; r++) {
+  substitute(state);                             // apply S-box to each byte
+  rotate rows(state);                          // rotate row i by i bytes
+  if (r &lt ROUNDS) mix columns(state); // mix function
+    xor roundkey into state(state, rk[r]); / XOR key into state
+  }
+  copy state to ciphertext(ciphertext, state); / return result
+}
+
+//Encryption using openssl
+# openssl enc -aes-256-cbc -in message.txt -out message.bin
+      </code></pre>
+
+      <h3 id="des">DES</h3>
+
+      <h2 id="vs">Comparison</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>DES</th>
+          <th>AES</th>
+        </tr>
+        <tr>
+          <td>KeySize(bits)</td>
+          <td>
+            DES(1990). Broken in 1999. Keysize = 56 bits<br />
+            3DES. Broken. keysize = 56*3=168
+          </td>
+          <td>128,192,256</td>
+        </tr>
+        <tr>
+          <td>InputSize(bits)</td>
+          <td>DES. Inputsize = 64</td>
+          <td>128,192,256(block-size)</td>
+        </tr>
+        <tr>
+          <td>Rounds/Stages</td>
+          <td>19</td>
+          <td>
+            (128 bit key has 10 rounds)<br />(192 bit key has 12 rounds)<br />(256
+            bit key has 14)
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
