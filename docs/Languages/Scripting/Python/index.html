@@ -1,61 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Python</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        
-    </aside>
+    <aside class="sidebar"><!--See .sidebar in styles.css--></aside>
 
-    <article style="margin-left:200px;">
-        <dl>
-            <a href="Introduction.html">Introduction</a><br>
-            - What is Python?<br>
-            - Python is dynamic typed language<br>
-            <a href="Terms_Concepts.html">Terms / Concepts</a><br>
-            - Global Interpreter Lock?</a><br>
-            - Memory Management<br>
-            - PEP 8<br>
-            <a href="Control_Flow.html">Control Flow</a><br>
-            - if, for, match=switch, range()<br>
-            <a href="Functions/">Functions</a><br>
-            - Call by Value, Call by Reference<br>
-            - Function passed as Object, argument<br>
-            - Variable number of arguments to Function<br>
-            - Types of Functions<br>
-            &ensp; - kwargs<br>
-            &ensp; - decorator (@staticmethod, @classmethod, @property)<br>
-            &ensp; - enumerate()<br>
-            &ensp; - lambda / Anonymous function<br>
-            &ensp; - generator & yeild<br>
-            <a href="Containers/">Containers</a><br>
-            - Seqeunce Containers (List, Tuples, Strings)<br>
-            - Mapping Types (Dictionaries, NamedTuple, OrderedDict)<br>
-            - Set Types (Sets, FrozenSets)<br>
-            - Advanced Container Types (Deque, Counters)<br>
-            
-
+    <article style="margin-left: 200px">
+      <p>
+        <a href="Introduction.html">Introduction:</a> What is Python?<br />
+        <a href="Terms_Concepts.html">Terms / Concepts:</a>
+        Global Interpreter Lock, Memory Management, PEP 8<br />
+        <a href="Control_Flow.html">Control Flow:</a> if, for, match=switch,
+        range()<br />
+        <a href="Functions/">Functions:</a><br />
+        &ensp; Call by Value, Call by Reference, Function passed as Object,
+        argument, Variable number of arguments to Function, Types of
+        Functions<br />
+        &ensp; kwargs, decorator (@staticmethod, @classmethod, @property),
+        enumerate()<br />
+        &ensp; lambda / Anonymous function, generator & yeild<br />
+        <a href="Containers/">Containers</a><br />
+        - Seqeunce Containers (List, Tuples, Strings)<br />
+        - Mapping Types (Dictionaries, NamedTuple, OrderedDict)<br />
+        - Set Types (Sets, FrozenSets)<br />
+        - Advanced Container Types (Deque, Counters)<br />
+        <a href="SQLAlchemy/">SQLAlchemy:</a><br />
+        &ensp; What is SQLAlchemy? (Core, ORM), Install<br />
+        &ensp; Terms: Engine, Model, Session<br />
+        &ensp; How to Use: Create Table, CRUD, With FastAPI<br />
+        &ensp; Async SQLAlchemy: create_async_engine(), async_sessionmaker(),
+        Check Database Status<br />
+      </p>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
-</body>
+  </body>
 </html>

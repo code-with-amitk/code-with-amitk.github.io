@@ -15,7 +15,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../../index.html">Back</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -36,6 +36,8 @@
       <a href="#why">Why Cookie</a>
       <a>Terms</a>
       <ul>
+        <li><a href="#session-cookie">Session Cookie</a></li>
+        <li><a href="#domain-cookie">Domain Cookie</a></li>
         <li><a href="#stolen">Stolen Cookie</a></li>
         <li><a href="#surrogate">Cookie Surrogate</a></li>
       </ul>
@@ -45,28 +47,26 @@
       <h2 id="what">
         HTTP Cookie / Web cookie / Internet cookie / browser cookie
       </h2>
-      <dl><strong>What is Cookie</strong></dl>
-      <dd>
+      <p><strong>What is Cookie</strong><br>
         Web Server asks web browser to store some information on user’s PC.
         Information is stored in a file(called Cookie) created by Web browser &
         placed on the user’s computer.
-      </dd>
+      </p>
       <pre><code class="language-css">
-      Example:
-      * _Path:_ "C:\Users\user_name\AppData\Local\Google\Chrome\User Data\Default\Network\Cookie(SQL Lite DB)"
-      * _In Browser:_ Right-click on your browser window > Inspect > Applications tab > Cookies > Check installed cookies
-      # cat "C:\Users\user_name\AppData\Local\Google\Chrome\User Data\Default\Network\Cookie"
-      cookie_name      cookie_value				domain			valid_timestamp			cookie_len	cookie_priority
-      cookie_1	lwyMCcUDlsziLcAF/AOF3W1gCBO1aeb291	.google.com	/	2024-10-09T14:58:52.469Z	51			High
+Example:
+* _Path:_ "C:\Users\user_name\AppData\Local\Google\Chrome\User Data\Default\Network\Cookie(SQL Lite DB)"
+* _In Browser:_ Right-click on your browser window > Inspect > Applications tab > Cookies > Check installed cookies
+# cat "C:\Users\user_name\AppData\Local\Google\Chrome\User Data\Default\Network\Cookie"
+cookie_name      cookie_value				domain			valid_timestamp			cookie_len	cookie_priority
+cookie_1	lwyMCcUDlsziLcAF/AOF3W1gCBO1aeb291	.google.com	/	2024-10-09T14:58:52.469Z	51			High
     </code></pre>
 
-      <dl id="why"><strong>Why Cookie needed</strong></dl>
-      <dd>
+      <p id="why"><strong>Why Cookie needed</strong><br>
         To track the user’s browsing activity(clicking particular buttons,
         recording which pages were visited in the past, User Preferences)<br />
         Saving info user entered in forms: names, addresses, passwords(stored as
         hashed), and payment card numbers.
-      </dd>
+      </p>
       <pre><code class="language-css">
       Web Browser                                   Web server
       -- GET /sample_page.html HTTP/2.0 ->
@@ -83,6 +83,48 @@ in Cookie file
     </code></pre>
 
       <h2>Cookie Terms</h2>
+      <h4 id="session-cookie">Session Cookie / nspatoken / UTKN(Universal Token)</h4>
+      <p>
+        A session cookie represents "This browser is already authenticated and no need to authenticate again."
+        Sessions cookie does not have Expires or Max-Age attribute.<br>
+        Browser sends it on the next request to the same site so that authentication is not needed again.<br>
+        A session cookie It lasts only until the user closes the browser tab or window<br>
+        nspatoken is name given by Netskope to session cookie.
+        <br>Example: UAIC = x8jhsa72h21j
+      </p>
+      <pre><code class="language-css">
+# Auth Service sets a session cookie after successful SAML login
+HTTP/1.1 302 Found
+Location: https://google.com
+Set-Cookie: session_id=abc123xyz; Path=/; HttpOnly; Secure; SameSite=Lax
+
+# No Expires or Max-Age → session cookie (cleared when browser closes)
+
+# Browser sends it on the next request to the same site
+GET / HTTP/1.1
+Host: auth.company.com
+Cookie: session_id=abc123xyz
+      </code></pre>
+
+      <h4 id="domain-cookie">Domain Cookie</h4>
+      <p>
+        Domain cookie means Cookie valid for one domain.<br>
+        Example: Domain=.test.com. So it remains valid for all subdomains of test.com. Eg:
+        auth.test.com, proxy.test.com, mail.test.com
+        </p>
+
+      <pre><code class="language-css">
+# Domain cookie — shared across all *.company.com subdomains
+Set-Cookie: auth_token=eyJhbG...; Domain=.company.com; Path=/; Secure; HttpOnly
+
+# Sent to auth.company.com, proxy.company.com, app.company.com
+# NOT sent to evil.com or company.com.evil.com
+
+# Host-only cookie (no Domain attribute) — only for the setting host
+Set-Cookie: prefs=dark; Path=/
+# Only sent back to the exact host that issued it, e.g. www.example.org
+      </code></pre>
+
       <h4 id="stolen">Stolen Cookie</h4>
       <dl>
         If hacker steals and installs your cookies into their web browser,

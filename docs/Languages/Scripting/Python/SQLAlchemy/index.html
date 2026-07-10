@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SQLAlchemy</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Scripting/Python/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">SQLAlchemy</a>
+      <a href="#install">Install</a>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#engine">Engine</a></li>
+        <li><a href="#model">Model</a></li>
+        <li><a href="#session">Session</a></li>
+      </ul>
+      <a href="#usage">How to Use</a>
+      <ul>
+        <li><a href="#create-table">Create Table</a></li>
+        <li><a href="#crud">CRUD</a></li>
+        <li><a href="#fastapi">With FastAPI</a></li>
+      </ul>
+      <a href="#async">Async SQLAlchemy</a>
+      <ul>
+        <li><a href="#async-engine">create_async_engine()</a></li>
+        <li><a href="#async-sessionmaker">async_sessionmaker()</a></li>
+        <li><a href="#check-db">Check Database Status</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">SQLAlchemy</h2>
+      <p>
+        SQLAlchemy is the most widely used Python library for working with
+        relational databases. It has two main parts:<br />
+        1. <b>SQLAlchemy Core</b> — a SQL expression language for writing database
+        queries in Python.<br />
+        2. <b>SQLAlchemy ORM</b> — maps Python classes to database tables so you
+        can read and write rows as Python objects instead of raw SQL.<br /><br />
+        Unlike <a href="/Frameworks/">Django</a>, which ships with its own ORM,
+        <a href="/Frameworks/">FastAPI</a> has no built-in database layer.
+        SQLAlchemy is the common choice for FastAPI projects.<br />
+        <b>Supported databases:</b> SQLite, PostgreSQL, MySQL, MariaDB, Oracle,
+        and others.
+      </p>
+
+      <h2 id="install">Install</h2>
+      <pre><code class="language-css">
+$ pip install sqlalchemy
+
+# For PostgreSQL
+$ pip install psycopg2-binary
+
+# For MySQL
+$ pip install pymysql
+      </code></pre>
+
+      <h2 id="terms">Terms</h2>
+      <h3 id="engine">Engine</h3>
+      <p>
+        The Engine is the starting point — it manages the connection to the
+        database. You create it once with a database URL and reuse it across
+        the app.
+      </p>
+      <pre><code class="language-css">
+from sqlalchemy import create_engine
+
+# SQLite (file-based, good for development)
+engine = create_engine("sqlite:///./app.db", echo=True)
+
+# PostgreSQL
+# engine = create_engine("postgresql://user:password@localhost/mydb")
+      </code></pre>
+
+      <h3 id="model">Model</h3>
+      <p>
+        A Model is a Python class that represents a database table. Each class
+        attribute maps to a column. SQLAlchemy ORM uses a declarative base class
+        to register models.
+      </p>
+      <pre><code class="language-css">
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+class Base(DeclarativeBase):
+    pass
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column()
+    email: Mapped[str] = mapped_column(unique=True)
+      </code></pre>
+
+      <h3 id="session">Session</h3>
+      <p>
+        A Session is a workspace for database operations. You add, query, update,
+        and delete objects through a session, then call <code>commit()</code> to
+        save changes or <code>rollback()</code> to undo them.
+      </p>
+      <pre><code class="language-css">
+from sqlalchemy.orm import Session
+
+with Session(engine) as session:
+    user = User(name="Amit", email="amit@example.com")
+    session.add(user)
+    session.commit()
+      </code></pre>
+
+      <h2 id="usage">How to Use</h2>
+      <h3 id="create-table">Create Table</h3>
+      <p>
+        After defining models, create the tables in the database with
+        <code>Base.metadata.create_all()</code>.
+      </p>
+      <pre><code class="language-css">
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
+
+class Base(DeclarativeBase):
+    pass
+
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column()
+    email: Mapped[str] = mapped_column(unique=True)
+
+engine = create_engine("sqlite:///./app.db")
+Base.metadata.create_all(engine)   # Creates the users table
+      </code></pre>
+
+      <h3 id="crud">CRUD</h3>
+      <p><b>Create, Read, Update, Delete</b> — the four basic database operations:</p>
+      <pre><code class="language-css">
+from sqlalchemy.orm import Session
+from sqlalchemy import select
+
+with Session(engine) as session:
+    # Create
+    user = User(name="Amit", email="amit@example.com")
+    session.add(user)
+    session.commit()
+
+    # Read
+    users = session.scalars(select(User)).all()
+    one_user = session.get(User, 1)          # by primary key
+
+    # Update
+    user = session.get(User, 1)
+    user.name = "Amit Kumar"
+    session.commit()
+
+    # Delete
+    session.delete(user)
+    session.commit()
+      </code></pre>
+
+      <h3 id="fastapi">With FastAPI</h3>
+      <p>
+        In a FastAPI app, create the engine once and provide a database session
+        per request using dependency injection:
+      </p>
+      <pre><code class="language-css">
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+
+app = FastAPI()
+
+def get_db():
+    db = Session(engine)
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.get("/users/{user_id}")
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    return db.get(User, user_id)
+
+@app.post("/users/")
+def create_user(name: str, email: str, db: Session = Depends(get_db)):
+    user = User(name=name, email=email)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+      </code></pre>
+
+      <h2 id="async">Async SQLAlchemy</h2>
+      <p>
+        For async frameworks like FastAPI, SQLAlchemy provides async versions of
+        the engine and session. Database I/O runs with <code>await</code> so
+        other requests are not blocked while waiting for the database.<br />
+        Install an async driver for your database:
+      </p>
+      <pre><code class="language-css">
+# PostgreSQL
+$ pip install asyncpg
+
+# SQLite
+$ pip install aiosqlite
+      </code></pre>
+
+      <h3 id="async-engine">create_async_engine()</h3>
+      <p>
+        <code>create_async_engine()</code> is the async equivalent of
+        <code>create_engine()</code>. It creates an <b>AsyncEngine</b> that
+        manages non-blocking connections to the database.<br />
+        Use an async database URL (note the driver suffix
+        <code>+asyncpg</code> or <code>+aiosqlite</code>):
+      </p>
+      <pre><code class="language-css">
+from sqlalchemy.ext.asyncio import create_async_engine
+
+# PostgreSQL (async)
+engine = create_async_engine(
+    "postgresql+asyncpg://user:password@localhost/mydb",
+    echo=True,
+)
+
+# SQLite (async)
+# engine = create_async_engine("sqlite+aiosqlite:///./app.db")
+      </code></pre>
+
+      <h3 id="async-sessionmaker">async_sessionmaker()</h3>
+      <p>
+        <code>async_sessionmaker()</code> is the async equivalent of
+        <code>sessionmaker()</code>. It is a factory that produces
+        <b>AsyncSession</b> objects — use it with
+        <code>async with</code> and <code>await</code> for ORM operations:
+      </p>
+      <pre><code class="language-css">
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+
+engine = create_async_engine("postgresql+asyncpg://user:password@localhost/mydb")
+
+AsyncSessionLocal = async_sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
+
+async def get_users():
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(User))
+        return result.scalars().all()
+      </code></pre>
+
+      <h3 id="check-db">Check Database Status</h3>
+      <p>
+        A common health-check pattern: open a connection, run a lightweight
+        query (<code>SELECT 1</code>), and return <code>True</code> if the
+        database responds or <code>False</code> if anything fails (network down,
+        wrong credentials, database not running):
+      </p>
+      <pre><code class="language-css">
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
+
+engine = create_async_engine("postgresql+asyncpg://user:password@localhost/mydb")
+
+async def check_database() -> bool:
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        return True
+    except Exception:
+        return False
+
+# Usage (e.g. FastAPI startup or /health endpoint)
+# is_ok = await check_database()
+      </code></pre>
+      <p>
+        <b>How it works:</b><br />
+        1. <code>engine.connect()</code> — opens an async connection from the pool.<br />
+        2. <code>text("SELECT 1")</code> — runs a minimal query that every SQL
+        database supports.<br />
+        3. <code>await conn.execute(...)</code> — sends the query and waits for a
+        response without blocking the event loop.<br />
+        4. Returns <code>False</code> on any exception (connection refused, timeout,
+        auth error, etc.).
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

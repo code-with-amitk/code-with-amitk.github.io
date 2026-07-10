@@ -24,10 +24,10 @@
 
     <aside class="sidebar">    <!--See .sidebar in styles.css-->
         <a href="#valref">Value, Reference</a>
-        <a href="#fun">Function passing</a>
+        <a href="#pass">Function passing</a>
         <a href="#var">Variable no of args</a>
         <a href="#types">Types of Functions</a>
-        <a href="#args"><a href="#types">Types of Functions</a>
+        <a href="#args">Function Arguments</a>
         <ul>
             <li><a href="#decorator">Decorator</a></li>
             <li><a href="#enumerate">enumerate()</a></li>
@@ -164,10 +164,15 @@ fun(a='g', b=1.9, f="test")
             <tr>
                 <td id="decorator">Decorator</td>
                 <td>
-                    Decorator is a design pattern that allows you to modify or extend the behavior of a 
-                    function or class without permanently changing its source code.<br>
-                    Decorators wrap around a function to enhance or modify its behavior
-                    Python builtin decorators: @staticmethod, @classmethod, and @property
+                    A decorator is a design pattern that allows you to modify or extend the
+                    behavior of a function or class without permanently changing its source
+                    code.<br>
+                    Decorators wrap around a function to enhance or modify its behavior.<br>
+                    Python built-in decorators: <code>@staticmethod</code>,
+                    <code>@classmethod</code>, and <code>@property</code>.<br>
+                    Framework decorators (e.g. <code>@app.get</code> in
+                    <a href="/Frameworks/Python/FastAPI/">FastAPI</a>) register a function
+                    as a route handler for a given HTTP method and path.<br>
                     <pre><code class="language-css">
 def sonu(fun_arg):
     def wrapper():
@@ -176,8 +181,8 @@ def sonu(fun_arg):
         print("After calling the function.")
     return wrapper
 
-# Decorator=sonu is called before fun() & fun() is passed as argument to sonu
-@sonu       #This is Decocator
+# sonu is called before fun(); fun() is passed as argument to sonu
+@sonu       # This is a decorator
 def fun():
     print("Hello, World!")
 
@@ -187,6 +192,19 @@ fun()
 Before calling the function.
 Hello, World!
 After calling the function.
+                    </code></pre>
+
+                    <p>Decorators can also accept arguments (e.g. path or HTTP method):</p>
+                    <pre><code class="language-css">
+def route(path):
+    def decorator(func):
+        func._route = path   # attach metadata to the function
+        return func
+    return decorator
+
+@route("/hello")
+def hello():
+    return "Hello, World!"
                     </code></pre>
 
                     <table>

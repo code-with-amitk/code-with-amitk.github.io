@@ -1,106 +1,234 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
+    <meta charset="UTF-8" />
     <title>SAML</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-    <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Our team</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <style>
+      .mermaid-wrap {
+        width: 100%;
+        max-width: 1100px;
+        overflow-x: auto;
+      }
+      .mermaid-wrap .mermaid svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto !important;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Markup/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What is SAML</a>
-        <a href="#work">How SAML works</a>
-        <ul>
-            <li><a href="#assertion">SAML Assertion</a></li>
-        </ul>
+    <aside class="sidebar">
+      <a href="#what">What is SAML</a>
+      <a href="#why">Why is SAML used?</a>
+      <a href="#flow">SAML Flow</a>
+      <a href="#after-login">After Login</a>
+      <a href="#response">SAML Response</a>
+      <a href="#assertion">SAML Assertion</a>
+      <a href="#auth-service">Authentication Service</a>
+      <a href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Authentication.html"
+        >HTTP Authentication</a
+      >
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="what">What is SAML</h2>
-        <dl>
-            Security based XML protocol for user authentication, limited user authorization. 
-            More advanced authorization is suggested to use XACML.<br>
-            SAML helps in achieving SSO(Single Sign On). SAML usses SOAP 1.1. It uses 
-            [HTTP](Networking/OSI-Layers/Layer-7/Protocols) underlying.
-        </dl>
-        <h4>Usage of SAML</h4>
-        <dl>
-            XML Digital Signature for authentication and Integrity.
-            XML Encryption: Uses encrypted name identifiers, encrypted attributes, and encrypted assertions
-        </dl>
+    <article style="margin-left: 200px">
+      <h2 id="what">What is SAML(Security Assertion Markup Language)</h2>
+      <p>
+        This is an XML-based standard for exchanging authentication and
+        authorization data between an Identity Provider (IdP) and a service.<br />
+        SAML is <b>not</b> used to access Google directly. It is used only to
+        authenticate the user before the proxy allows internet access. Instead
+        of maintaining usernames and passwords for every customer, the proxy
+        trusts the customer's existing Identity Provider (IdP), such as
+        <b>Okta</b> or <b>Azure AD</b>.
+      </p>
 
-        <h2 id="work">How SAML works</h2>
-        <dl>
-            SSO authentication process involves these 3 parties:<br>
+      <h2 id="why">Why is SAML used?</h2>
+      <p>
+        Suppose <b>Bob</b> works for <b>acme-corp</b><br />
+        When Bob first opens <code>https://google.com</code>, the proxy does not
+        know:<br />
+        &ensp; Who the user is, ie who is Bob<br />
+        &ensp; Which groups the user(Bob) belongs to<br />
+        &ensp; Whether the user(Bob) is authorized to use the internet
+        <br />
+        Instead of asking Bob for credentials itself, the proxy redirects him to
+        the corporate IdP.
+        <br />
+        The IdP is already trusted by Acme Corp and knows Bob's identity,
+        password, MFA status, and group memberships.
+      </p>
 
-            <b>a. Principal/Subject:</b> Identity/Human which need to be authenticated<br>
-            <b>b. Identity Provider(IdP):</b> Authenticates the principal. Methods: Username/password, Multifactor auth, AD, ldap, radius etc.<br>
-            <b>c. Service Provider(SP):</b> cloud-hosted application or service the user wants to use. Eg: Gmail, AWS S3 etc.<br>
-            3 types of SAML Queries: Authentication query, Attribute query, Authorization decision query
-        </dl>
-        
-        <h4>Message Exchange</h4>
-        <pre><code class="language-css">
-Principal/User                SP(service Provider)
----Give access to cloud service-->                        IdP(Identity Provider)
-                                    -----SAML Request------>
-                                    <-----SAML Response-----
+      <h2 id="flow">SAML Flow</h2>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '11px'}, 'sequence': {'actorMargin': 30, 'messageMargin': 15, 'boxMargin': 5, 'useMaxWidth': true}}}%%
+sequenceDiagram
+    autonumber
+    actor Bob as Bob
+    participant Browser
+    participant FP as Forward Proxy
+    participant Auth as Authentication Service
+    participant IdP as Okta / Azure AD
 
-<-------------------  Login   ----------------------------------
---------------------  Password  ------------------------------->
-    
-                                    <----- SAML Assertion --------
-<------- Given Access ---- Access
-------------------------------------Access Service ----------------------------> Cloud-Service
-        </code></pre>
+    Bob->>Browser: Open https://google.com
+    Browser->>FP: HTTP Request
+    FP->>FP: User unknown — no session cookie
+    FP-->>Browser: 302 Redirect to Auth Service
+    Browser->>Auth: GET /login
+    Auth-->>Browser: Redirect to IdP
+    Browser->>IdP: GET Login Page
+    IdP-->>Browser: Login Form
+    Bob->>Browser: Username, Password, MFA
+    Browser->>IdP: POST Credentials
+    IdP->>IdP: Verify credentials & MFA
+    IdP->>IdP: Create SAML Response
+    IdP-->>Browser: SAML Response
+    Browser->>Auth: POST SAML Response
+    Auth->>Auth: Verify Signature on SAML response<br>Verify Expiry & Audience<br>Verify not replayed
+    Auth->>Auth: Extract User + Groups
+    Auth->>FP: Create Session
+    FP->>FP: Generate Session cookie
+    FP-->>Browser: Set Session Cookie
+    FP-->>Browser: Redirect to google.com
+    Browser->>FP: Request with nspatoken
+    FP-->>Browser: Allow Internet Access
+        </pre>
+      </div>
 
-        <h4>SAML Request, Response Example</h4>
-        <pre><code class="language-css">
-SP(service provider)                                         Identity Provider
-samlp:AuthnRequest 
-    xmlns:samlp="urn:oasis:names:tc:SAML:2.0"
-    ID ="asknalskn"		//Identifier(generated by SP)
-    IssueInstant="2017-02-02:12:56"	//SP can accept response before this time
-    Destination="http://test.sp.com"	//URL of SP
-    AssertionConsumerServiceURL=".."	//Where response should goto when user is authenticated
-    Issuer=".."			//
-samlp:AuthnRequest			               ------------------------>
+      <h2 id="after-login">What happens after login?</h2>
+      <p>Bob enters:</p>
+      <pre><code class="language-css">
+Username : bob@acme.com
+Password : ********
+MFA      : Approved
+      </code></pre>
+      <p>The IdP verifies the credentials.</p>
+      <p>
+        If authentication succeeds, the IdP creates a <b>SAML Response</b> and
+        sends it back to the Authentication Service.
+      </p>
 
-SP(service provider)                                         Identity Provider
-                                                    ID="requestID"
-                                                    Destination=""				//Assertion consumer service
-                                                    saml2:Assertion xmlns:saml2=".."//Multiple signed assertions
-                                                    saml2:Condtions NotBefore="2017-02-02" Not-After=""//Validity windows for response
-            <-----------------------                ...
-        </code></pre>
+      <h2 id="response">What is a SAML Response?</h2>
+      <p>
+        A <b>SAML Response</b> is an XML document sent by the IdP after
+        successful authentication.<br />
+        It contains:<br />
+        &ensp; Authentication status<br />
+        &ensp; One SAML Assertion<br />
+        &ensp; Digital Signature<br />
+        &ensp; Timestamp<br />
+        &ensp; Audience (who should trust it)<br />
 
-        <h4 id="assertion">SAML Assertion</h4>
-        <dl>
-            Message that tells a service provider that a user is signed in.<br>
-            It contains all information, Eg: source of assertion, time issued.<br>
-            There are 3 kinds of assertion:<br>
-            <b>1. Authentication statements:</b> assert to the service provider that the principal did indeed authenticate with the identity provider<br>
-            <b>2. Attribute statements:</b> principal is associated with certain attributes (name/value pairs).<br>
-            <b>3. Authorization decision statements:</b> principal is permitted to perform action A on resource R given evidence E.
-        </dl>
+        Think of it as a secure envelope sent from the IdP to the Authentication
+        Service.
+      </p>
+      <pre><code class="language-css">
+SAML Response
+│
+├── Status = Success
+├── Assertion
+├── Signature
+└── Issue Time
+      </code></pre>
 
+      <h2 id="assertion">What is a SAML Assertion?</h2>
+      <p>
+        The <b>Assertion</b> is the most important part of the SAML Response.<br />
+        It is the IdP saying:
+        <i
+          >"I have authenticated this user, and here are the user's identity and
+          attributes."</i
+        ><br />
+        It contains the actual user information (called <b>claims</b>)<br />
+        For Bob, the assertion may contain:
+      </p>
+      <pre><code class="language-css">
+&lt;Assertion&gt;
+
+  User = bob@acme.com
+  Name = Bob Smith
+  Tenant = acme-corp
+  Groups =
+      Engineering
+      VPNUsers
+      Developers
+  Authenticated = true
+  LoginTime = 10:30 AM
+  Expiry = 11:30 AM
+
+&lt;/Assertion&gt;
+      </code></pre>
+      <p>
+        The real assertion is XML, but conceptually it contains the above
+        information.
+      </p>
+
+      <h2 id="auth-service">What does the Authentication Service do?</h2>
+      <p>
+        It does <b>not</b> trust the assertion blindly. It performs several
+        validations:<br />
+        &ensp; Verify the IdP's digital signature.<br />
+        &ensp; Verify that the assertion has not expired.<br />
+        &ensp; Verify the audience is this Authentication Service.<br />
+        &ensp; Verify the assertion has not been replayed.<br />
+        &ensp; Extract user attributes.<br />
+      </p>
+      <p>
+        After successful validation:<br />
+        &ensp; User = bob@acme.com<br />
+        &ensp; Groups = Engineering, Developers<br />
+        &ensp; Tenant = acme-corp<br />
+      </p>
+      <pre><code class="language-css">
+User   = bob@acme.com
+Groups = Engineering, Developers
+Tenant = acme-corp
+      </code></pre>
+      <p>
+        The Authentication Service then creates an authenticated session and
+        issues the
+        <a
+          href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP Cookie.html#session-cookie"
+          >Session Cookie</a
+        >
+        which is used to authenticate the user on subsequent requests.
+      </p>
     </article>
-    <script src="/scripts/prism.js"></script>
 
-</body>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: false,
+        sequence: {
+          useMaxWidth: true,
+          actorMargin: 20,
+          messageMargin: 25,
+          boxMargin: 5,
+        },
+        themeVariables: {
+          fontSize: "11px",
+        },
+      });
+      await mermaid.run({ querySelector: ".mermaid" });
+    </script>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTTP Authentication</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <style>
+      .mermaid-wrap {
+        width: 100%;
+        max-width: 1100px;
+        overflow-x: auto;
+      }
+      .mermaid-wrap .mermaid svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">HTTP Authentication</a>
+      <a href="#flow">Authentication Flow</a>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#proxy">Proxy</a></li>
+        <li><a href="#saml">SAML IdP</a></li>
+        <li><a href="#jwt">JWT</a></li>
+        <li>
+          <a href="HTTP Cookie.html#session-cookie">Session Cookie</a>
+        </li>
+        <li>
+          <a href="HTTP Cookie.html#domain-cookie">Domain Cookie</a>
+        </li>
+      </ul>
+      <a href="/Languages/Markup/SAML/">SAML Response, Assertion</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">HTTP Authentication</h2>
+      <p>
+        In enterprise networks, a <b>Forward proxy</b> often sits between users and the
+        internet. Before allowing outbound traffic, the proxy checks whether the
+        user is authenticated. If not, the browser is redirected through an
+        <b>Auth Service</b> and a <b>SAML Identity Provider (IdP)</b> to verify
+        credentials, then receives a token or cookie for later requests.
+      </p>
+
+      <h2 id="flow">Authentication Flow</h2>
+      <div class="mermaid-wrap">
+      <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '16px'}, 'sequence': {'actorMargin': 70, 'messageMargin': 55, 'boxMargin': 30, 'useMaxWidth': true}}}%%
+sequenceDiagram
+    autonumber
+
+    actor User
+
+    participant Browser
+    participant PAC
+    participant FP as Netskope Forward Proxy<br/>eproxy-acme-corp.goskope.com:8081
+    participant Auth
+    participant IdP
+    participant Policy as Policy Engine
+    participant Google
+
+    User->>Browser: Open browser
+    Browser->>PAC: Download PAC file
+    PAC-->>Browser: FindProxyForURL() <br/>Send every HTTP to eproxy-acme-corp.goskope.com:8081
+
+    User->>Browser: Open https://google.com
+
+    Browser->>FP: CONNECT google.com<br>eproxy-acme-corp.goskope.com:8081
+
+    FP->>FP: Resolve tenant_id from proxy FQDN<br/>FQDN=eproxy-acme-corp is sent in HTTP Host Header<br>FQDN→tenant_id 1001 resolved<br>eproxy-acme-corp.goskope.com→1001<br>eproxy-contoso.goskope.com→2005<br>eproxy-xyz.goskope.com→3050
+    FP->>FP: Check session cookie. MISSING
+    FP-->>Browser: 302 Redirect to Auth Service
+
+    Browser->>Auth: GET /login
+    Auth-->>Browser: Redirect to IdP
+
+    Browser->>IdP: GET Login Page
+    IdP-->>Browser: Login Form
+
+    User->>Browser: Enter credentials
+    Browser->>IdP: POST Credentials
+
+    IdP->>IdP: Authenticate User
+
+    IdP-->>Browser: SAML Response
+
+    Browser->>Auth: POST SAML Assertion
+
+    Auth->>Auth: Validate Assertion
+    Auth->>FP: Create Session
+
+    FP->>FP: Cache Session
+    FP->>FP: Generate Session Cookie<br>Session cookie is called UTKN(universal token)<br>nspatoken is name given by Netskope
+
+    FP-->>Browser: Set Session-Cookie=XXX
+    FP-->>Browser: Redirect google.com
+
+    Browser->>FP: CONNECT google.com<br>Session Cookie=XXX 
+    FP->>FP: Resolve tenant_id from proxy FQDN<br/>FQDN=eproxy-acme-corp is sent in HTTP Host Header<br>FQDN→tenant_id 1001 resolved<br>eproxy-acme-corp.goskope.com→1001<br>eproxy-contoso.goskope.com→2005<br>eproxy-xyz.goskope.com→3050
+    
+    FP->>FP: User from cookie → bob@acme.com<br/>groups from SAML session
+    
+    FP->>Policy: Evaluate Policy<br>tenant=1001,domain=google.com<br>method=CONNECT
+
+    Policy-->>FP: ALLOW
+
+    FP->>Google: Establish upstream TLS Connection
+    Google-->>FP: TLS + HTTPS Response
+    FP-->>Browser: Forward Response
+    Browser-->>User: Google search page
+
+    User->>Browser: Open github.com
+
+    Browser->>FP: CONNECT github.com:443<br>SessionCookie=XXX
+    FP->>FP: tenant_id 1001 (FQDN) + bob@acme.com (cookie)
+    FP->>Policy: Evaluate Policy
+
+    Policy-->>FP: ALLOW/BLOCK
+
+    FP-->>Browser: Response
+      </pre>
+      </div>
+
+      <h3 id="terms">Terms</h3>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td id="proxy">Proxy</td>
+          <td>
+            Intercepts HTTP/HTTPS traffic. Checks whether the user has a valid
+            session or JWT before forwarding the request to the internet.
+          </td>
+        </tr>
+        <tr>
+          <td>Auth Service</td>
+          <td>
+            Handles login, generates a <b>State ID</b> (CSRF protection),
+            validates the SAML response, creates a JWT, and sets a cookie on the
+            browser.
+          </td>
+        </tr>
+        <tr>
+          <td id="saml">SAML IdP</td>
+          <td>
+            Identity Provider — validates username/password (or MFA) and returns
+            a signed SAML assertion proving the user’s identity and group
+            membership.
+          </td>
+        </tr>
+        <tr>
+          <td>State ID</td>
+          <td>
+            Random value tied to the login attempt. Prevents replay and CSRF
+            attacks by ensuring the SAML response matches the original login
+            request.
+          </td>
+        </tr>
+        <tr>
+          <td id="jwt">JWT</td>
+          <td>
+            JSON Web Token created by the Auth Service after successful login.
+            Contains user identity and groups. The proxy sends this to the Auth
+            Service on each request for validation.
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: false,
+        sequence: {
+          useMaxWidth: true,
+          actorMargin: 50,
+          messageMargin: 35,
+          boxMargin: 10,
+        },
+        themeVariables: {
+          fontSize: "14px",
+        },
+      });
+      await mermaid.run({ querySelector: ".mermaid" });
+    </script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

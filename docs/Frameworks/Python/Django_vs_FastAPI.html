@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Django vs FastAPI</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Frameworks/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#overview">Overview</a>
+      <a href="#comp">Comparison</a>
+      <a href="#when">When to Use</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">Django vs FastAPI</h2>
+      <p>
+        Both are popular Python web frameworks, but they target different
+        problems. Django is a full-stack framework for building complete web
+        applications. FastAPI is a lean API framework optimized for building
+        RESTful services and microservices with automatic validation and docs.
+      </p>
+
+      <h2 id="comp">Comparison</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Django</th>
+          <th>FastAPI</th>
+        </tr>
+        <tr>
+          <td>Type</td>
+          <td>Full-stack web framework</td>
+          <td>API-first framework</td>
+        </tr>
+        <tr>
+          <td>Primary use case</td>
+          <td>Server-rendered sites, admin panels, CRUD apps</td>
+          <td>REST APIs, microservices, async I/O workloads</td>
+        </tr>
+        <tr>
+          <td>ORM</td>
+          <td>Built-in Django ORM</td>
+          <td>None built-in (SQLAlchemy, Tortoise, etc.)</td>
+        </tr>
+        <tr>
+          <td>Admin panel</td>
+          <td>Built-in automatic admin</td>
+          <td>Not included</td>
+        </tr>
+        <tr>
+          <td>Templates</td>
+          <td>Built-in template engine</td>
+          <td>Not included (returns JSON by default)</td>
+        </tr>
+        <tr>
+          <td>Validation</td>
+          <td>Forms, serializers (DRF), manual checks</td>
+          <td>Automatic via Pydantic type hints</td>
+        </tr>
+        <tr>
+          <td>API documentation</td>
+          <td>Requires Django REST Framework or third-party tools</td>
+          <td>Auto-generated Swagger UI and ReDoc</td>
+        </tr>
+        <tr>
+          <td>Async support</td>
+          <td>Added in Django 3+ (views, ORM still evolving)</td>
+          <td>Native async/await from the start</td>
+        </tr>
+        <tr>
+          <td>Performance</td>
+          <td>Good for traditional web apps</td>
+          <td>Very fast — Starlette + Uvicorn ASGI stack</td>
+        </tr>
+        <tr>
+          <td>Learning curve</td>
+          <td>Steeper — many built-in concepts (apps, migrations, settings)</td>
+          <td>Lower for API-only projects</td>
+        </tr>
+        <tr>
+          <td>Testing</td>
+          <td>Extends Python unittest</td>
+          <td>Works with pytest; TestClient for HTTP tests</td>
+        </tr>
+        <tr>
+          <td>Run command</td>
+          <td><code>python manage.py runserver</code></td>
+          <td><code>fastapi dev main.py</code></td>
+        </tr>
+      </table>
+
+      <h2 id="when">When to Use</h2>
+      <table>
+        <tr>
+          <th>Choose Django when…</th>
+          <th>Choose FastAPI when…</th>
+        </tr>
+        <tr>
+          <td>
+            You need a full website with HTML pages, user auth, and an admin
+            panel.<br />
+            You want batteries-included tooling (ORM, migrations, forms).<br />
+            You are building a monolithic web application.
+          </td>
+          <td>
+            You are building a REST or GraphQL API consumed by a frontend or
+            mobile app.<br />
+            You need high throughput, async endpoints, or microservices.<br />
+            You want automatic OpenAPI docs and request validation out of the
+            box.
+          </td>
+        </tr>
+      </table>
+
+      <h3>Minimal Hello World</h3>
+      <table>
+        <tr>
+          <td>
+            Django<br />
+            <pre><code class="language-css">
+# views.py
+from django.http import JsonResponse
+
+def hello(request):
+    return JsonResponse({"message": "Hello World"})
+            </code></pre>
+          </td>
+          <td>
+            FastAPI<br />
+            <pre><code class="language-css">
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def hello():
+    return {"message": "Hello World"}
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
