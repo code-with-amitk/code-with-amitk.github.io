@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <title>FastAPI Terms</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Frameworks/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#uvicorn">Uvicorn</a>
+      <ul>
+        <li><a href="#asgi">ASGI</a></li>
+      </ul>
+      <a href="#routes">Routes</a>
+      <a href="#models">Pydantic Models</a>
+      <a href="#docs">Auto Docs</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="uvicorn">Uvicorn</h2>
+      <p>
+        Uvicorn is a lightning-fast ASGI (Asynchronous Server Gateway Interface)
+        server for Python. FastAPI is a web framework; Uvicorn is the server that
+        actually runs the app and handles incoming HTTP requests.<br />
+        When you run <code>fastapi dev main.py</code>, the FastAPI CLI starts
+        Uvicorn under the hood. You can also run Uvicorn directly:
+      </p>
+      <pre><code class="language-css">
+$ uvicorn main:app --reload
+INFO:     Uvicorn running on http://127.0.0.1:8000
+
+# main   = Python file (main.py)
+# app    = FastAPI instance inside that file
+# --reload = restart server on code changes (development only)
+      </code></pre>
+
+      <h3 id="asgi">ASGI (Asynchronous Server Gateway Interface)</h3>
+      <p>
+        ASGI is a standard interface between a Python web server and a Python web
+        application. It is the async successor to WSGI (Web Server Gateway
+        Interface), which only supports synchronous request/response handling.<br />
+        <b>What it does:</b> Defines how a server (e.g. Uvicorn) passes HTTP
+        requests, WebSocket connections, and other events to an app (e.g. FastAPI),
+        and how the app sends responses back.<br />
+        <b>When it is used:</b><br />
+        1. Building async APIs with <code>async def</code> route handlers.<br />
+        2. Handling WebSockets (chat, live updates, streaming).<br />
+        3. Long-running or concurrent I/O (database calls, external API requests)
+        without blocking other requests.<br />
+        4. Frameworks like FastAPI, Starlette, and Django (async views) that run
+        on ASGI servers such as Uvicorn, Hypercorn, or Daphne.
+      </p>
+
+      <h2 id="routes">Routes</h2>
+      <p>
+        Routes are Python functions decorated with HTTP method
+        <a href="/Languages/Scripting/Python/Functions/index.html#decorator">decorators</a>
+        such as <code>@app.get</code>, <code>@app.post</code>, etc. FastAPI maps the
+        URL path and HTTP verb to the function.
+      </p>
+      <pre><code class="language-css">
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: str | None = None):
+    return {"item_id": item_id, "q": q}
+      </code></pre>
+
+      <h2 id="models">Pydantic Models</h2>
+      <p>
+        Pydantic models define the shape of request and response data. FastAPI
+        validates incoming JSON against the model and serializes responses
+        automatically.
+      </p>
+      <pre><code class="language-css">
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    price: float
+    in_stock: bool = True
+
+@app.post("/items/")
+def create_item(item: Item):
+    return item
+      </code></pre>
+
+      <h2 id="docs">Auto Docs</h2>
+      <p>
+        FastAPI generates OpenAPI schema from your type hints and route
+        definitions. Visit these URLs while the server is running:
+      </p>
+      <pre><code class="language-css">
+http://127.0.0.1:8000/docs — Swagger UI
+http://127.0.0.1:8000/redoc — ReDoc
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
