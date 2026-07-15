@@ -30,7 +30,10 @@
         <li><a href="#read_csv">read_csv(), .columns</a></li>
         <li><a href="#describe">describe()</a></li>
         <li><a href="#head">head()</a></li>
+        <li><a href="#drop">drop()</a></li>
         <li><a href="#dropna">dropna()</a></li>
+        <li><a href="#train_test_split">train_test_split()</a></li>
+        <li><a href="#select_dtypes">select_dtypes()</a></li>
       </ul>
     </aside>
 
@@ -104,6 +107,12 @@ max        70.0  117.000000  175.000000  479.000000
       <h4 id="head">head()</h4>
       <dl>head returns 1st n rows from dataframe, default is 5</dl>
 
+      <h4 id="drop">drop()</h4>
+      <p>Drop specified labels from rows or columns</p>
+      <pre><code class="language-css">
+DataFrame.drop(labels=None, axis=0, index=None, columns=None, level=None, inplace=False, errors='raise')
+      </code></pre>
+
       <h4 id="dropna">dropna</h4>
       <dl>Drop the empty rows from dataframe</dl>
       <pre><code class="language-css">
@@ -147,6 +156,26 @@ print(df[features])
 1      60.0    117
 2      60.0    103
       </code></pre>
+
+      <h4 id="train_test_split">train_test_split()</h4>
+      <pre><code class="language-css">
+  sklearn.model_selection.train_test_split(*arrays, test_size=None, 
+    train_size=None, 
+    random_state=None, 
+    shuffle=True, 
+    stratify=None)
+        </code></pre>
+
+      <h4 id="select_dtypes">select_dtypes()</h4>
+      <pre><code class="language-css">
+// select_dtypes() filter columns based on their data type.
+DataFrame.select_dtypes(include=None, exclude=None)
+
+//exclude=['object']: Give me every column except those labeled as object.
+X = melb_predictors.select_dtypes(exclude=['object'])
+      </code></pre>
+
+      <p>What is <a href="/Machine Learning/Terms.html">dtype</a><br /></p>
     </article>
     <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>

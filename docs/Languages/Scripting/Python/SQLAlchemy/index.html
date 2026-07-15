@@ -50,8 +50,8 @@
       <p>
         SQLAlchemy is the most widely used Python library for working with
         relational databases. It has two main parts:<br />
-        1. <b>SQLAlchemy Core</b> — a SQL expression language for writing database
-        queries in Python.<br />
+        1. <b>SQLAlchemy Core</b> — a SQL expression language for writing
+        database queries in Python.<br />
         2. <b>SQLAlchemy ORM</b> — maps Python classes to database tables so you
         can read and write rows as Python objects instead of raw SQL.<br /><br />
         Unlike <a href="/Frameworks/">Django</a>, which ships with its own ORM,
@@ -76,8 +76,8 @@ $ pip install pymysql
       <h3 id="engine">Engine</h3>
       <p>
         The Engine is the starting point — it manages the connection to the
-        database. You create it once with a database URL and reuse it across
-        the app.
+        database. You create it once with a database URL and reuse it across the
+        app.
       </p>
       <pre><code class="language-css">
 from sqlalchemy import create_engine
@@ -111,9 +111,10 @@ class User(Base):
 
       <h3 id="session">Session</h3>
       <p>
-        A Session is a workspace for database operations. You add, query, update,
-        and delete objects through a session, then call <code>commit()</code> to
-        save changes or <code>rollback()</code> to undo them.
+        A Session is a workspace for database operations. You add, query,
+        update, and delete objects through a session, then call
+        <code>commit()</code> to save changes or <code>rollback()</code> to undo
+        them.
       </p>
       <pre><code class="language-css">
 from sqlalchemy.orm import Session
@@ -124,7 +125,7 @@ with Session(engine) as session:
     session.commit()
       </code></pre>
 
-      <h2 id="usage">How to Use</h2>
+      <h2 id="usage">How to Use (ORM Model)</h2>
       <h3 id="create-table">Create Table</h3>
       <p>
         After defining models, create the tables in the database with
@@ -148,7 +149,10 @@ Base.metadata.create_all(engine)   # Creates the users table
       </code></pre>
 
       <h3 id="crud">CRUD</h3>
-      <p><b>Create, Read, Update, Delete</b> — the four basic database operations:</p>
+      <p>
+        <b>Create, Read, Update, Delete</b> — the four basic database
+        operations:
+      </p>
       <pre><code class="language-css">
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -244,8 +248,8 @@ engine = create_async_engine(
       <p>
         <code>async_sessionmaker()</code> is the async equivalent of
         <code>sessionmaker()</code>. It is a factory that produces
-        <b>AsyncSession</b> objects — use it with
-        <code>async with</code> and <code>await</code> for ORM operations:
+        <b>AsyncSession</b> objects — use it with <code>async with</code> and
+        <code>await</code> for ORM operations:
       </p>
       <pre><code class="language-css">
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
@@ -290,13 +294,14 @@ async def check_database() -> bool:
       </code></pre>
       <p>
         <b>How it works:</b><br />
-        1. <code>engine.connect()</code> — opens an async connection from the pool.<br />
+        1. <code>engine.connect()</code> — opens an async connection from the
+        pool.<br />
         2. <code>text("SELECT 1")</code> — runs a minimal query that every SQL
         database supports.<br />
-        3. <code>await conn.execute(...)</code> — sends the query and waits for a
-        response without blocking the event loop.<br />
-        4. Returns <code>False</code> on any exception (connection refused, timeout,
-        auth error, etc.).
+        3. <code>await conn.execute(...)</code> — sends the query and waits for
+        a response without blocking the event loop.<br />
+        4. Returns <code>False</code> on any exception (connection refused,
+        timeout, auth error, etc.).
       </p>
     </article>
     <script src="/scripts/prism.js"></script>

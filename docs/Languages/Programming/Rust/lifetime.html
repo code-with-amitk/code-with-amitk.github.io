@@ -36,8 +36,10 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">What is lifetime</h2>
+      <h2 id="what">Lifetime ('a)</h2>
       <p>
+        'a is a Lifetime. It is <b>not a type, but a label</b> that describes
+        how long a reference is valid. <br />
         A lifetime in Rust is the duration during which a
         <a href="References Borrowing/index.html">reference</a> is valid<br />
         Lifetime is only associated with references, it ensures memory safety
@@ -73,9 +75,12 @@ $ cargo build
 3 | fn longest(x:& str, y:& str) -&gt; & str 
     |              -----    -----    ^ expected named lifetime parameter
                         </code></pre>
+            <br />
             <b>Why compliation error?</b><br />
-            The return type &str of function longest() is a borrowed value, but
-            Rust doesn't know whether it's borrowed from x or y
+            The return type (&str) from function longest() is a borrowed value,
+            but Rust doesn't know whether it's borrowed from x or y.<br />
+            Compiler does not know that the returned reference will remain valid
+            as long as the any inputs are valid.
           </td>
           <td>
             <b>Lifetime?</b><br />
@@ -88,10 +93,10 @@ fn longest &lt;'a&gt; (x: &'a str, y: &'a str) -&gt; &'a str {
                         </code></pre>
             <br />
             <b>How this worked?</b><br />
-            This says: "Both x and y live at least as long as lifetime 'a, and
-            the return value also lives at least as long as 'a."<br />
-            Without this annotation, Rust can't guarantee the returned reference
-            won't outlive one of the inputs.
+            This says: "Both x and y live at least as long as returned lifetime
+            'a"<br />
+            The returned reference will live at least as long as the shortest of
+            the 2 input references
           </td>
         </tr>
       </table>
