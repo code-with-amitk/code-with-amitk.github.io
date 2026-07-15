@@ -92,7 +92,7 @@ Duration  Pulse  Maxpulse  Calories
           </td>
         </table>
         &emsp; - Split the data ie seperate
-        traning('Duration','Pulse','Maxpulse') and prediction data(Calories)
+        traning('Duration','Pulse','Maxpulse') and prediction data(Calories)<br />
         <pre><code class="language-css">
 X = Data, y = prediction
 
@@ -101,6 +101,7 @@ X = Data, y = prediction
 data -|- train_y (prediction for 1)
       |- val_y (prediction for 2)
         </code></pre>
+        <br />
         &ensp; 2. Feed model with traning and prediction data<br />
         &ensp; 3. Now model is ready for predictions, feed the model with real
         world data. get predictions<br />
@@ -195,7 +196,7 @@ print("Random Forest MAE:",                                     //11
           </td>
           <td>
             1. import pandas (We will convert data from csv to
-            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+            <a href="/Machine Learning/Libraries/Pandas/Introduction.html"
               >dataframe using pandas</a
             >.)<br />
             2. Use
@@ -203,19 +204,20 @@ print("Random Forest MAE:",                                     //11
               >DecisionTreeRegressor</a
             >, <a href="../ML_and_Types_Algorithms.html#dtr">Random Forest</a>
             from
-            <a href="/Libraries/Python/Machine_Learning/scikit-learn"
-              >Scikit Learn</a
+            <a href="/Machine Learning/Libraries/scikit-learn/">Scikit Learn</a
             ><br />
             2. Import train_test_split to split the data into 2 sets<br />
             2. import mean_absolute_error for calculating
             <a href="#validation">MEA</a> later in code<br />
 
             3.
-            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+            <a
+              href="/Machine Learning/Libraries/Pandas/Read_Write_Data_from_file.html"
               >read_csv() (From Pandas)</a
             >: Read csv data into dataframe using <br /><br />
             4.
-            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+            <a
+              href="/Machine Learning/Libraries/Pandas/Read_Write_Data_from_file.html"
               >dropna() (From Pandas)</a
             >: Clean the data by removing empty rows<br /><br />
 
@@ -225,21 +227,21 @@ print("Random Forest MAE:",                                     //11
             6. Prediction data: 'Calories'<br /><br />
 
             7. Create
-            <a href="/Libraries/Python/Machine_Learning/scikit-learn"
+            <a href="/Machine Learning/Libraries/scikit-learn/"
               >DecisionTreeRegressor</a
             >,
-            <a href="/Libraries/Python/Machine_Learning/scikit-learn"
+            <a href="/Machine Learning/Libraries/scikit-learn/"
               >RandomForestRegressor</a
             >
             models <br />
             8.
-            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+            <a href="/Machine Learning/Libraries/scikit-learn/index.html"
               >fit() (From scikit-learn)</a
             >
             Feed the training and prediction data to model. Supervised
             learning<br />
             9.
-            <a href="/Libraries/Python/Machine_Learning/Pandas/index.html"
+            <a href="/Machine Learning/Libraries/scikit-learn"
               >predict(on Training data 2) (From scikit-learn)</a
             >
             Output of model. Predict the calories based on traninig data. You
@@ -252,7 +254,7 @@ print("Random Forest MAE:",                                     //11
             <b>Output:</b>
             <font color="red"
               >MAE of Random Forest is Far less than Decision Tree</font
-            >
+            ><br />
             <pre><code class="language-css">
 ---------- Splitting Data ----------
 Raw data

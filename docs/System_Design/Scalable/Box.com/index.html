@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Box System Design</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <style>
+      .mermaid-wrap {
+        width: 100%;
+        max-width: 1100px;
+        overflow-x: auto;
+      }
+      .mermaid-wrap .mermaid svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#hld">Box HLD</a>
+      <a href="#upload">10 GB Upload</a>
+      <ul>
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#solution">Solution: Pre-signed URL</a></li>
+        <li><a href="#presigned-how">How Pre-signed URLs Work</a></li>
+        <li><a href="#metadata">Metadata Storage</a></li>
+        <li>
+          <a href="#app-server-usecases">What Application Server should do</a>
+        </li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="hld">Box HLD</h2>
+      <p>
+        Box.com is a cloud file storage and collaboration platform. Users
+        upload, share, and manage files through a web or mobile client. At
+        scale, the system must separate <b>metadata control</b> (who owns the
+        file, folder path, permissions) from <b>blob storage</b> (the actual
+        file bytes on disk/object store).
+      </p>
+
+      <h3 id="upload">10 GB Upload</h3>
+
+      <h4 id="problem">Problem: 10 GB upload through the Application Server</h4>
+      <p>
+        In an early design, when a user uploaded a <b>10 GB</b> file to Box.com,
+        the entire file passed through the <b>Application Server</b>
+        before reaching object storage:
+      </p>
+      <pre><code class="language-css">
+Client  ──(10 GB file bytes)──►  Application Server  ──►  Object Storage (S3)
+      </code></pre>
+      <p>
+        <b>PROBLEMS with above design:</b><br />
+
+        <b>1. Memory pressure, OOMs</b> — buffering 10 GB stream in RAM per
+        upload exhausts server memory; many concurrent uploads can cause OOM
+        (out-of-memory) crashes.<br />
+        <b>2. Thread / worker exhaustion</b> — Each large upload occupies a
+        worker for the full upload duration. New requests wait or time out.<br />
+        <b>3. Network saturation/Bandwidth bottleneck</b> — App server NIC
+        becomes the choke point; egress/ingress limits are hit before object
+        storage limits are.<br />
+        <b>4. Single point of failure</b> — If the app server crashes
+        mid-upload, the entire 10 GB transfer must restart from zero.<br />
+        <b>5. Scaling cost:</b> To handle file bytes you must scale out fat app
+        servers, which is expensive<br />
+        <b>6. Timeout errors</b> — Load balancers, proxies, and HTTP gateways
+        often have 60–120 second idle timeouts — far shorter than a multi-GB
+        upload requires.
+      </p>
+
+      <p>
+        <b>Key insight:</b> the Application Server should handle
+        <i>authorization and metadata</i>, not act as a file transfer proxy for
+        multi-gigabyte blobs.
+      </p>
+
+      <h4 id="solution">
+        Solution: Pre-signed URL (Direct Upload to Object Storage)
+      </h4>
+      <p>
+        Instead of streaming file bytes through the Application Server, Box.com
+        uses a <b>pre-signed URL</b> so the client uploads directly to object
+        storage (e.g. Amazon S3). The Application Server only issues a
+        time-limited, signed permission to upload to a specific path.<br />
+        Reference:
+        <a
+          href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html"
+          >AWS S3 — Sharing objects with presigned URLs</a
+        >. The same pattern applies to uploads: the server signs a
+        <code>PUT</code> URL; the client uses it without holding the app server
+        connection open.
+      </p>
+      <pre><code class="language-css">
+# Before (slow)
+Browser/Client ──10 GB──► App Server ──10 GB──► S3(Object Store)
+
+# After (pre-signed URL)
+Browser/Client ──POST /upload (metadata only)──► App Server
+App Server ──returns pre-signed PUT URL──► Browser/Client
+Browser/Client ──10 GB PUT (direct)──────────────► S3
+Browser/Client ──POST /upload/complete───────────► App Server (update metadata)
+      </code></pre>
+      <p>
+        <b>Why this solves the 10 GB problem:</b><br />
+        1. App server handles a small JSON request (~KB), not 10 GB of bytes.<br />
+        2. Upload bandwidth goes directly from client → object storage
+        (optimized for large transfers, multipart upload, CDN edge).<br />
+        3. App server workers are freed in milliseconds; they can serve
+        thousands of other users while the 10 GB upload runs in the
+        background<br />
+        4. Object storage supports <b>multipart upload</b> — the client splits
+        10 GB into chunks, retries failed parts, and resumes without restarting
+        the whole file<br />
+        5. Pre-signed URLs expire (e.g. 1 hour), limiting exposure if the URL is
+        leaked.
+      </p>
+
+      <h4 id="presigned-how">How do Pre-signed URLs work? (Box.com upload)</h4>
+      <p>
+        A pre-signed URL embeds temporary security credentials in the query
+        string (access key, signature, expiry). Object storage validates the
+        signature and expiry before accepting the upload — no separate auth call
+        needed during transfer.
+      </p>
+      <pre><code class="language-css">
+# Example pre-signed PUT URL (conceptual)
+https://box-uploads.s3.amazonaws.com/acme-corp/user42/report.zip
+  ?X-Amz-Algorithm=AWS4-HMAC-SHA256
+  &amp;X-Amz-Credential=...
+  &amp;X-Amz-Date=20260412T120000Z
+  &amp;X-Amz-Expires=3600
+  &amp;X-Amz-SignedHeaders=host
+  &amp;X-Amz-Signature=abc123...
+
+# Client uploads directly:
+PUT https://box-uploads.s3.amazonaws.com/acme-corp/user42/report.zip?...signature...
+Content-Type: application/zip
+Body: &lt;10 GB file bytes&gt;
+      </code></pre>
+
+      <p>
+        <b>Sequence Diagram: 10 GB Upload (Q4-report.zip)</b><br />
+        Example: Bob (<code>user_42</code>) uploads
+        <b>Q4-report.zip</b> (10 GB) to folder
+        <code>folder_reports</code>.<br />
+        Application Server generates <code>file_id = f_8a3b2c1d</code> and a
+        pre-signed PUT URL. Client uploads directly to S3 — app server handles
+        only metadata (~KB).
+      </p>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+sequenceDiagram
+    autonumber
+    actor Bob
+    participant Client as Browser
+    participant App as Application Server
+    participant DB as Metadata DB
+    participant S3 as Object Storage (S3)
+
+    Bob->>Client: Select Q4-report.zip (10 GB)
+    Client->>App: POST /upload<br/>filename=Q4-report.zip<br/>size=10737418240<br/>folder_id=folder_reports<br/>user_id=user_42
+
+    App->>App: Authenticate user_42<br/>Check quota & folder_reports permission
+
+    App->>App: Generate file_id=f_8a3b2c1d<br/>storage_key=acme-corp/user42/f_8a3b2c1d
+
+    App->>DB: INSERT metadata<br/>file_id=f_8a3b2c1d<br/>filename=Q4-report.zip<br/>size_bytes=10737418240<br/>status=pending
+
+    App->>S3: generate_presigned_url(PUT)<br/>bucket=box-uploads<br/>key=acme-corp/user42/f_8a3b2c1d<br/>expires=3600s
+
+    S3-->>App: presigned PUT URL
+
+    App-->>Client: 200 OK<br/>file_id=f_8a3b2c1d<br/>presigned_url=https://box-uploads.s3.amazonaws.com<br/>/acme-corp/user42/f_8a3b2c1d<br/>?X-Amz-Signature=abc123...
+
+    Note over Client,S3: Browser directly uploads 10 GB file to S3(Object Store)
+
+    Client->>S3: PUT Q4-report.zip (10 GB)<br/>multipart upload<br/>using presigned URL
+
+    S3-->>Client: 200 OK<br/>etag=9f86d081884c7d659a2feaa0c55ad015
+
+    Note over Client: Browser updates the Metadata<br>to App server
+    Client->>App: POST /upload/complete<br/>file_id=f_8a3b2c1d<br/>etag=9f86d081...<br/>size=10737418240
+
+    Note over App: App server checks<br>Is file present?
+    App->>S3: HEAD acme-corp/user42/f_8a3b2c1d<br/>verify object exists
+
+    S3-->>App: 200 OK size=10737418240
+
+    Note over App: App server updates<br>metadata in DB
+    App->>DB: UPDATE metadata<br/>status=complete<br/>etag=9f86d081...<br/>uploaded_at=2026-04-12T12:45:00Z
+
+    App-->>Client: 200 OK<br/>Q4-report.zip ready in folder_reports
+
+    Client-->>Bob: Upload complete — file visible in Box
+        </pre>
+      </div>
+      <p>
+        <b>Step-by-step (Box.com file upload):</b><br />
+        1. <b>Client</b> sends upload request to Box Application Server:
+        filename, size (10 GB), folder ID, content-type<br />
+        2. <b>Application Server</b> authenticates the user, checks quota and
+        folder permissions, generates a unique <code>file_id</code> and storage
+        key (e.g. <code>s3://bucket/tenant/user/file_id</code>).<br />
+        3. <b>Application Server</b> calls object storage SDK to generate a
+        pre-signed <code>PUT</code> URL (valid for e.g. 60 minutes).<br />
+        4. <b>Application Server</b> writes a <b>pending</b> metadata record to
+        the database and returns the pre-signed URL + <code>file_id</code> to
+        the client.<br />
+        5. <b>Client</b> uploads 10 GB <b>directly to S3</b> using the
+        pre-signed URL (optionally multipart). App server is not involved.<br />
+        6. <b>Client</b> (or S3 event) notifies Application Server:
+        <code>POST /upload/complete { file_id, etag, size }</code>.<br />
+        7. <b>Application Server</b> verifies the object exists in S3, updates
+        metadata status to <code>complete</code>, and the file appears in the
+        user's Box folder.
+      </p>
+
+      <h4 id="metadata">
+        How metadata is stored and used by the Application Server
+      </h4>
+      <p>
+        The Application Server owns the <b>metadata database</b>. It never
+        stores the 10 GB blob — only information <i>about</i> the file:
+      </p>
+      <pre><code class="language-css">
+# Metadata record (stored in DB by Application Server)
+{
+  "file_id":       "f_8a3b2c1d",      &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+  "user_id":       "user_42",
+  "tenant_id":     "acme-corp",
+  "folder_id":     "folder_reports",
+  "filename":      "Q4-report.zip",   &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+  "size_bytes":    10737418240,
+  "content_type":  "application/zip",
+  "storage_key":   "s3://box-uploads/acme-corp/user42/f_8a3b2c1d",
+  "status":        "pending | complete | failed",
+  "etag":          "d41d8cd98f00b204e9800998ecf8427e",
+  "created_at":    "2026-04-12T12:00:00Z",
+  "uploaded_at":   "2026-04-12T12:45:00Z",
+  "permissions":   ["owner: user_42", "shared_with: team_eng"]
+}
+      </code></pre>
+
+      <p>
+        <b>How metadata is used:</b><br />
+        1. List Folder: Query DB by <code>folder_id</code> — returns filenames,
+        sizes, dates. No object storage read needed.<br />
+        2. Share file: App server updates <code>permissions</code> in DB;
+        generates a pre-signed <code>GET</code> URL for download when share link
+        is opened.<br />
+        3. Search: Index filename, owner, tags from metadata; full-text search
+        does not scan S3.<br />
+        4. Quota enforcement: Sum <code>size_bytes</code> per
+        <code>user_id</code> before issuing upload URL; reject if over limit.<br />
+        5. Upload complete: Flip <code>status</code> from
+        <code>pending</code> to <code>complete</code>; store
+        <code>etag</code> for integrity checks.<br />
+        6. Delete file: Mark metadata deleted (soft delete); async job removes
+        blob from S3 using <code>storage_key</code>.
+      </p>
+
+      <h4 id="app-server-usecases">What Application Server should do</h4>
+      <p>
+        The Application Server is a <b>control plane</b>, not a data plane for
+        large files:<br />
+        1. <b>Authentication & authorization</b> — verify user identity, folder
+        access, sharing rules.<br />
+        2. <b>Issue pre-signed URLs</b> — generate time-limited PUT/GET URLs for
+        upload and download.<br />
+        3. <b>CRUD metadata</b> — create, read, update, delete file and folder
+        records in the database.<br />
+        4. <b>Sharing & collaboration</b> — manage share links, team folders,
+        access control lists.<br />
+        5. <b>Search & indexing</b> — query and index file metadata for fast
+        folder listing and search.<br />
+        6. <b>Quota & billing</b> — track storage used per user/tenant; enforce
+        limits before upload.<br />
+        7. <b>Upload lifecycle</b> — track pending → complete → failed states;
+        handle completion callbacks.<br />
+        8. <b>Audit & compliance</b> — log who uploaded, downloaded, or shared
+        which file and when.<br />
+        9. <b>Notifications</b> — notify collaborators when a file upload
+        completes or is shared.
+      </p>
+    </article>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: false,
+        sequence: {
+          useMaxWidth: true,
+          actorMargin: 45,
+          messageMargin: 30,
+          boxMargin: 8,
+        },
+        themeVariables: {
+          fontSize: "13px",
+        },
+      });
+      await mermaid.run({ querySelector: ".mermaid" });
+    </script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
