@@ -249,6 +249,11 @@ a:hover {
   display: none;
 }
 
+/* Shown by scripts/search.js after a search runs */
+.search-results.is-open {
+  display: block;
+}
+
 .search-results li {
   padding: 0.5rem;
   border-bottom: 1px solid #eee;

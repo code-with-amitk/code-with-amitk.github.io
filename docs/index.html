@@ -150,6 +150,7 @@
           <li><a href="#">Our team</a></li>
           <li><a href="#">Projects</a></li>
           <li><a href="/contact.html">Contact</a></li>
+          <!-- Search enabled on home only for now (see _templates/base.html) -->
           <li class="search-item">
             <form id="searchForm">
               <input
@@ -163,7 +164,7 @@
             </form>
           </li>
         </ul>
-        <ul class="search-results" id="searchResults"></ul>
+        <ul class="search-results" id="searchResults" aria-live="polite"></ul>
       </nav>
     </header>
 

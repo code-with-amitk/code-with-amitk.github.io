@@ -3,9 +3,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("searchInput");
     const searchResults = document.getElementById("searchResults");
 
+    // Requires both the form and a results container (see _templates/base.html).
     if (!searchForm || !searchResults) return;
 
     let searchIndex = [];
+
+    function showResults() {
+        searchResults.classList.add("is-open");
+    }
+
+    function setResultsMessage(html) {
+        searchResults.innerHTML = html;
+        showResults();
+    }
 
     // Resolve site base URL from the script src so fetch works on GitHub Pages (any base path)
     function getSearchIndexUrl() {
@@ -29,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(`✅ Loaded ${searchIndex.length} pages into search index`);
         } catch (error) {
             console.error("Error loading search index:", error);
-            searchResults.innerHTML = "<li>Search service unavailable.</li>";
+            setResultsMessage("<li>Search service unavailable.</li>");
         }
     }
 
@@ -41,16 +51,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const query = (searchInput && searchInput.value.trim()) ? searchInput.value.trim().toLowerCase() : "";
 
             if (!query) {
-                searchResults.innerHTML = "<li>Please enter a keyword to search.</li>";
+                setResultsMessage("<li>Please enter a keyword to search.</li>");
                 return;
             }
 
             if (searchIndex.length === 0) {
-                searchResults.innerHTML = "<li>Search index not loaded. Try again.</li>";
+                setResultsMessage("<li>Search index not loaded. Try again.</li>");
                 return;
             }
 
-            // Match whole query as phrase, or any word in title, url, excerpt
+            // Match every word against title, url, and excerpt
             const words = query.split(/\s+/).filter(Boolean);
             const results = searchIndex.filter((page) => {
                 const searchableText = (
@@ -70,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (results.length === 0) {
             const escaped = query.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-            searchResults.innerHTML = "<li>No results found for '<strong>" + escaped + "</strong>'</li>";
+            setResultsMessage("<li>No results found for '<strong>" + escaped + "</strong>'</li>");
             return;
         }
 
@@ -102,5 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             searchResults.appendChild(listItem);
         });
+
+        showResults();
     }
 });
