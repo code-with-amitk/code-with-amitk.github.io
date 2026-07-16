@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <title>scikit-learn Functions</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#fit">fit()</a>
+      <a href="#predict">predict()</a>
+      <a href="#mean_absolute_error">mean_absolute_error()</a>
+      <a href="#RandomForestRegressor">RandomForestRegressor()</a>
+      <a href="#SimpleImputer">SimpleImputer()</a>
+      <a href="#train_test_split">train_test_split</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="fit">fit(X_training_questions, y_training_answers)</h3>
+      <p>
+        To understand what fit() does look at train_test_split() below<br />
+        train_test_split() splits the data into training(question, answer).
+        Validation(question, answer)<br />
+        Now model has to be trained on training(question, answer). fit() does
+        the same.<br />
+        It takes your training data (X_train) and matches them to your target
+        values (y_train). It looks for patterns, and trains the model
+      </p>
+      <pre><code class="language-css">fit(X_traning_questions, y_training_answers, sample_weight=None)</code></pre>
+
+      <h3 id="mean_absolute_error">
+        mean_absolute_error(y_validation_answers, predictions)
+      </h3>
+      <p>
+        This is the "grading" step. It tells exactly how wrong our model's
+        predictions from <a href="#predict">predict()</a>
+        were, on average, compared to the actual real-world prices.
+      </p>
+      <pre><code class="language-css">mean_absolute_error(y_validation_answers, predictions)
+        Lower MAE(better is the model) means model is near to the prediction
+      </code></pre>
+
+      <h3 id="predict">predict(X_validation_questions)</h3>
+      <p>
+        Once the model has learned the patterns, it is time to test its
+        knowledge.<br />
+        predict takes validation input and provides validation output
+      </p>
+      <pre><code class="language-css">prediction = model.predict(X_validation_questions)
+        // prediction has to compared against y_validation_answers
+      </code></pre>
+
+      <h3 id="RandomForestRegressor">RandomForestRegressor()</h3>
+      <p>
+        RandomForestRegressor is a type of
+        <a href="/Machine%20Learning/ML_and_Types_Algorithms.html#reg"
+          >Regression</a
+        >
+        model
+      </p>
+      <pre><code class="language-css">
+RandomForestRegressor(n_estimators=100, *, criterion='squared_error', max_depth=None, 
+                    min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, 
+                    max_features=1.0, max_leaf_nodes=None, min_impurity_decrease=0.0, 
+                    bootstrap=True, oob_score=False, n_jobs=None, random_state=None, 
+                    verbose=0, warm_start=False, ccp_alpha=0.0, max_samples=None, 
+                    monotonic_cst=None)
+      </code></pre>
+
+      <h3 id="SimpleImputer">SimpleImputer()</h3>
+      <p>
+        Create an imputer to fill missing values.<br />
+        By default, SimpleImputer replaces missing numeric values with the mean
+        of that column. Example: <br />
+        If Rooms has values [2, 3, NaN, 4], the NaN may be replaced by 3.0
+      </p>
+      <pre><code class="language-css">my_imputer = SimpleImputer()
+        </code></pre>
+
+      <h3 id="train_test_split">train_test_split()</h3>
+      <p>
+        Divide the data into two distinct sets:<br />
+        - Data1: training your model<br />
+        - Data2 evaluating its performance.<br />
+        <b>Why this is important?</b> you should never evaluate your model on
+        the same data it used to learn doing so leads to "overfitting" (the
+        model simply memorizing the answers instead of learning patterns).
+      </p>
+      <pre><code class="language-css">
+# Split the incoming data into 
+#  |- Training question, answers: X_train, y_train (Practice Questions and Answers)
+#  |- Validation questions, answers: X_valid, y_valid. Once model is trained the check how its working(Final questions and answers)
+
+// X_training_questions, X_validation_questions
+// y_training_answers, y_validation_answers
+X_train, X_test, y_train, y_test = train_test_split(*arrays, test_size=None, 
+                  train_size=None, random_state=None, 
+                  shuffle=True, stratify=None)
+
+# 80% of the rows go into training, 20% go into validation.
+X_train, X_valid, y_train, y_valid = train_test_split(
+    X_dataframe_without_objects, y_dataframe_price, train_size=0.8, test_size=0.2, random_state=0
+)
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

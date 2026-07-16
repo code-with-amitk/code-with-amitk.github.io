@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- EXTEND: set the page title -->
+    <title>PAGE_TITLE</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- EXTEND: optional page-specific <style> or extra <link>s -->
+  </head>
+
+  <body>
+    <!--
+      Base layout for docs pages (static HTML — copy this file, then fill EXTEND spots).
+
+      How to inherit:
+        1. Copy _templates/base.html to your new page path.
+        2. Set PAGE_TITLE.
+        3. Set BACK_HREF.
+        4. Fill sidebar TOC links.
+        5. Fill article content.
+        6. Keep scripts at the bottom.
+
+      Search (optional — currently enabled only on /index.html):
+        - Markup below already includes #searchForm, #searchInput, #searchResults.
+        - To enable search on a page later, add:
+            <script src="/scripts/search.js"></script>
+          after the other scripts (and keep the #searchResults list in the navbar).
+    -->
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <!-- EXTEND: Back link for this section -->
+        <li><a href="BACK_HREF">Back</a></li>
+        <li class="search-item">
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+              aria-label="Search site"
+            />
+            <button type="submit" class="search-button">Go!</button>
+          </form>
+        </li>
+      </ul>
+      <!-- Required for search.js; leave in place even if search.js is not loaded yet -->
+      <ul class="search-results" id="searchResults"></ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- EXTEND: section TOC / related links -->
+      <a href="#section-1">Section 1</a>
+      <a href="#section-2">Section 2</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <!-- EXTEND: page body -->
+      <h2 id="section-1">Section 1</h2>
+      <p>Content goes here.</p>
+
+      <h2 id="section-2">Section 2</h2>
+      <p>Content goes here.</p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+    <!-- Search: uncomment (or add) when enabling search on this page:
+    <script src="/scripts/search.js"></script>
+    -->
+  </body>
+</html>

@@ -1,130 +1,361 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
+    <meta charset="UTF-8" />
     <title>OAuth</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <!-- Add any necessary CSS and JavaScript files -->
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form id="searchForm">
-                <input type="search" id="searchInput" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+    <style>
+      .note {
+        color: #555;
+        font-size: 0.95em;
+      }
+      .warn {
+        color: #a33;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#what">What</a>
-        <a href="#oauth">OAuth in Fortinet Authenticator</a>
+    <aside class="sidebar">
+      <a href="#what">What is OAuth</a>
+      <a href="#example">Office SSO Example</a>
+      <a href="#flow-explained">Flow Explained</a>
+      <a href="#token">Access Token</a>
+      <a href="#terms">Terms</a>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h3 id="what">What is OAuth(Open Authorization)</h3>
-            <p> 
-                - Standard protocol for token-based authentication and authorization. <br>
-                - It allows a client (such as an application or user) to obtain limited access to a resource on behalf of a 
-                resource owner (such as a user) without exposing the resource owner's credentials.<br>
-                - OAuth 2.0 is the current version of the OAuth protocol.
-            </p>
-        <dl id ="oauth"><strong>OAuth in 
-            <a href="/Networking/Networking_Devices/Gateway/Fortinet.html#fortiAuthenticator">Fortinet Authenticator</a></strong></dl>
-        <dt><a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/administration-guide/75999/oauth-service"
-        >Fortinet Authenticator OAuth Configuration document</a>
-        <br>
-        <strong>Terms:</strong>
-            <table>
-                <tr>
-                    <th>Term</th>
-                    <th>Meaning</th>
-                </tr>
-                <tr>
-                    <td>Relying Party</td>
-                    <td>OAuth clients that have been issued credentials for requesting OAuth tokens from the FortiAuthenticator</td>
-                </tr>
-                <tr>
-                    <td>Client type</td>
-                    <td>
-                        - Confidential: client ID, user credentials, and the client secret to obtain an OAuth token<br>
-                        - Public: client ID & user credentials to obtain an OAuth token
-                    </td>
-                </tr>
-                <tr>
-                    <td>Authorization grant types</td>
-                    <td>
-                        - Password-based: Authentication and authorization is API-based.<br>
-                        - Authorization code: Authentication and authorization is initiated by the relying party, but the end-user provides their credentials through their browser on the FortiAuthenticator login portal.<br>
-                        - Authorization code with PKCE: FortiAuthenticator applies modifications to the standard Authorization code
-                    </td>
-                </tr>
-                <tr>
-                    <td>Client ID</td>
-                    <td>A generated value is provided by default</td>
-                </tr>
-                <tr>
-                    <td>Client secret</td>
-                    <td>A generated value is provided by default</td>
-                </tr>
-                <tr>
-                    <td>Policy</td>
-                    <td><a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/administration-guide/271141/policies">
-                        Policy Page</a></td>
-                </tr>
-                <tr>
-                    <td>Access token expiry</td>
-                    <td> length of time for which OAuth access tokens issued by this application are valid</td>
-                </tr>
-                <tr>
-                    <td>Redirect URIs</td>
-                    <td>(URI) that the OAuth service is authorized to redirect end-users to after authentication</td>
-                </tr>
-                <tr>
-                    <td>Refresh token expiry</td>
-                    <td>time in days/weeks/months the refresh token issued is valid upon authorization (default = 1 day)</td>
-                </tr>
-                <tr>
-                    <td>Relying Party Scopes</td>
-                    <td>Add scopes for the relying party</td>
-                </tr>
-                <tr>
-                    <td>Claims</td>
-                    <td><a href="https://docs.fortinet.com/document/fortiauthenticator/6.6.0/administration-guide/796040/relying-party#Claims">
-                        Cliams</a>
-                    </td>
-                </tr>
-            </table>
+    <article style="margin-left: 200px">
+      <h2 id="what">OAuth (Open Authorization)?</h2>
+      <p>
+        OAuth is an <b>authorization</b> framework. Recent version: 2.0<br />
+        Allows user's authorization to third-party application without sharing
+        their password<br />
+        User receives an <b>access token</b> from an
+        <b>Authorization Server</b> and Service presents this token to a
+        <b>Resource Server</b> to access the resource.<br />
+        <br />
+        <font color="red"
+          ><b>OAuth:</b> For Authorization<br />
+          <b>Okta(Company using OAuth):</b> For Authentication</font
+        >
+      </p>
+
+      <h2 id="example">Simple Authentication Example — Office Laptop SSO</h2>
+      <p>
+        - You open the browser(jira.compamy.com). IP is resolved using DNS<br />
+        - HTTP GET(without session cookie) reaches Jira origin server on
+        cloud.<br />
+        - On Okta login page, You enter your
+        <b>corporate username and password</b>, then the <b>MFA code</b> from
+        your authenticator app<br />
+        - Okta(Company) validates(user,password,MFA) and sends you back to
+        <code>jira.company.com</code><br />
+        - Okta provides <b>authorization code</b>. Browser exchanges that code
+        with Jira to open session.<br />
+        - We can open <code>confluence.company.com</code> in another tab, it
+        uses same <b>authorization code</b> to access page. This is
+        <b>Single Sign-On (SSO)</b>.
+        <br />
+
+        Each corporate service (Jira, Confluence, Box, Slack) has its own
+        <b>OAuth Client</b> registered in Okta. Below: DNS resolves
+        <code>jira.company.com</code>, the browser hits the
+        <b>Jira Origin Server</b>
+        with no session, Okta handles login + MFA, then Jira serves content from
+        its cloud.
+      </p>
+      <div class="mermaid-wrap mermaid-compact">
         <pre class="mermaid">
-            sequenceDiagram
-                participant FortiAuthenticator-WebInterface
-                participant FortiAuthenticator
-                participant Client
+%%{init: {'themeVariables': {'fontSize': '11px'}, 'sequence': {'actorMargin': 30, 'messageMargin': 22, 'boxMargin': 8, 'useMaxWidth': false}}}%%
+sequenceDiagram
+    autonumber
 
-                note over FortiAuthenticator-WebInterface: Configure OAuth in Web Interface
-                note over FortiAuthenticator-WebInterface: Authentication > OAuth Service > General><br>Set Authorization code expiry(1-56000sec)<br>Auto-generated client secret length(16 - 256, default = 128)<br>>Save
-                note over FortiAuthenticator-WebInterface: Configure Relying Party params
+    actor User
+    participant Browser
+    participant DNS as DNS Resolver
 
-                FortiAuthenticator-WebInterface ->> FortiAuthenticator: client_id, client-secret
-                FortiAuthenticator ->> Client: client_id, client-secret
-                Client ->> FortiAuthenticator: Authenticate (client_id, secret)
-                FortiAuthenticator ->> Client: ok
-                Client ->> FortiAuthenticator: Provide oauth token (client_id, secret, Auth_Grant_type)
-                FortiAuthenticator ->> Client: Oauth Token(with expiry, other info)
-                note over Client: Client includes OAuth token in REST API calls
-                Client ->> FortiAuthenticator: GET /api/resource HTTP/1.1 Host:abc.com<br> Authorization: Bearer asssssasa..
-                
+    box Jira Cloud (Atlassian)
+        participant JiraClient as OAuth Client<br/>(registered in Okta)
+        participant JiraOrigin as Origin Server<br/>jira.company.com
+    end
 
+    box Okta Cloud (Cloud 2)
+        participant Okta as Okta<br/>(Authorization Server / IdP)
+    end
+
+    User->>Browser: Open jira.company.com
+    Browser->>DNS: Resolve jira.company.com
+    DNS-->>Browser: A record → IP of Jira origin
+
+    Browser->>JiraOrigin: GET / (no jira session cookie)
+
+    JiraOrigin->>JiraClient: No valid session — start OAuth login
+    JiraClient-->>Browser: 302 Redirect to Okta
+
+    Note over Browser,Okta: Authorization Request (browser redirect)
+    Browser->>Okta: GET /oauth2/v1/authorize?<br/>response_type=code<br/>&client_id=jira-client-id<br/>&redirect_uri=https://jira.company.com/callback<br/>&scope=openid profile email<br/>&state=xyz789
+
+    Okta-->>Browser: 200 HTML Login Page
+    User->>Browser: Enter username + password
+    Browser->>Okta: POST /login (username, password)
+    Okta-->>Browser: 200 MFA challenge page
+    User->>Browser: Enter MFA code from authenticator app<br/>(or tap Approve on push notification)
+    Browser->>Okta: POST /mfa/verify (OTP or push approval)
+
+    Okta->>Okta: Authenticate user<br/>Create Okta SSO session cookie<br/>Unique String=ssssss
+
+    Okta-->>Browser: Session Cookie=ssss(expiry ~3-4 hour)
+    Note over Browser: OKTA Session Cookie set in Browser<br/>So other Okta apps(Eg: Box.com) skip re-login (SSO)
+
+    Note over JiraOrigin: redirect to<br>Oauth Jira Client
+    Okta-->>Browser: 302 Redirect<br/>Location: https://jira.company.com/callback?<br/>Authorization code for JIRA=aaaaaaa(expiry ~1min)<br/>&state=xyz789
+
+    Browser->>JiraClient: GET /https://jira.company.com/callback?code=aaaaaaa&state=xyz789
+
+    JiraClient->>Okta: POST /oauth2/v1/token<br/><br/>grant_type=authorization_code<br/>&code=aaaaaaa<br/>&redirect_uri=https://jira.company.com/callback
+
+    Okta-->>JiraClient: 200 OK application/json<br/>{<br/> "access_token": "xxx",<br/> "token_type": "Bearer",<br/> "expires_in": 3600,<br/> "scope": "openid profile email",<br/> "JWT_token": "iii",<br/> "refresh_token": "rrr"<br/>}<br> JWT_Token:{"email": "you@company.com",<br>"name": "Jane Doe",<br>"groups": ["engineering", "jira-users"],<br>"exp": 1721123456}
+
+    JiraClient->>JiraClient: Validate JWT_Token (OIDC)<br/>Extract email, name, groups<br>JWT_Token:{"email": "you@company.com",<br>"name": "Jane Doe",<br>"groups": ["engineering", "jira-users"]}<br/>Create jira.company.com session cookie
+
+    JiraClient-->>Browser: Set-Jira-Session-Cookie=jssssss<br/>302 Redirect /jira/dashboard
+    Note over Browser: Jira session Cookie set in Browser
+
+    Browser->>JiraOrigin: GET /jira/dashboard<br/>Cookie: JSESSIONID=jssssss
+    JiraOrigin->>JiraOrigin: Validate session<br/>Load boards, projects, tickets
+    JiraOrigin-->>Browser: 200 OK HTML (Jira home page)
+    Browser-->>User: Content served from jira.company.com origin
         </pre>
-        <img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/e55a4531-63cb-11ee-8e6d-fa163e15d75b/images/a83b9b96afe0b06be87f5623665dfe02_14965_Configure%20OIDC%20Claim_new.png" style="width:100%;height:100%;">
+      </div>
+
+      <h3 id="flow-explained">Flow Explained</h3>
+      <p>
+        1. User opens Jira <code>https://jira.company.com</code> Browser gets
+        Jira's IP address. The browser connects to the Jira server.<br />
+        2. Since session cookie is sent in request, Jira concludes: "This user
+        is not logged into Jira."<br />
+        3. Jira redirects the browser to Okta(Company) to authenticate(HTTP 302
+        Redirect)<br />
+        4. user provides is Username Password MFA<br />
+        5. Okta(Company) verifies and creates SSO Session cookie=sssssss, which
+        is set in browser<br />
+        6. Okta creates an short lived(~1 minutes) authorization code=aaaaa,
+        which is sent to browser, browser uses same authroization code in HTTP
+        GET to to Okta client. Okta client presents, same code(aaaaa) to Okta
+        server in return of which okta server provides 3 tokens:<br />
+        &ensp; a. Refresh token: lets Jira obtain new access tokens without
+        asking the user to log in again<br />
+        &ensp; b. Access token: allows Jira to call Okta APIs if needed<br />
+        &ensp; c. ID Token/JWT token: information about the user (name, email,
+        groups)<br />
+        7. Jira reads the ID Token Jira verifies the ID Token and extracts
+        information such as: User ID Email Name Groups This tells Jira exactly
+        who has logged in.
+      </p>
+
+      <pre><code class="language-json">{"iss": "https://company.okta.com",
+  "sub": "00u1abc...",
+  "email": "you@company.com",
+  "name": "Jane Doe",
+  "groups": ["engineering", "jira-users"],
+  "exp": 1721123456}</code></pre>
+      <p>
+        8. Jira now creates its own session cookie and stores session in its
+        database or cache.<br />
+        9. Jira sends its session cookie to the browser, which is used by it to
+        on subsequent requests.
+      </p>
+
+      <p>
+        So the step
+        <em>"Validate ID Token — extract email, name, groups"</em> happens on
+        the <b>Jira OAuth Client server</b> after it receives the token response
+        from Okta. It:
+      </p>
+
+      <h2 id="token">How the OAuth Access Token Is Used</h2>
+      <table>
+        <tr>
+          <th>Question</th>
+          <th>Answer</th>
+        </tr>
+        <tr>
+          <td>Who generates the token?</td>
+          <td>
+            The <b>Authorization Server</b> (e.g. Okta, FortiAuthenticator)
+            generates and signs the access token after the user consents and
+            credentials are verified.
+          </td>
+        </tr>
+        <tr>
+          <td>What is inside it?</td>
+          <td>
+            Usually a signed JWT containing claims such as
+            <code>iss</code> (issuer = Okta URL), <code>sub</code> (user ID),
+            <code>aud</code> (intended API audience), <code>exp</code> (expiry),
+            <code>scope</code> (granted permissions, e.g.
+            <code>read:jira-work</code>), and optionally custom claims (groups,
+            tenant ID).
+          </td>
+        </tr>
+        <tr>
+          <td>How is it sent?</td>
+          <td>
+            In the HTTP <code>Authorization</code> header:
+            <code>Authorization: Bearer &lt;access_token&gt;</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Is it an "authentication token"?</td>
+          <td>
+            The <b>access token</b> proves authorization to call an API. For
+            login identity, OIDC's <b>ID Token</b> is the authentication token —
+            the app validates it to know <em>who</em> logged in.
+          </td>
+        </tr>
+        <tr>
+          <td>Who validates it?</td>
+          <td>
+            The <b>Resource Server</b> (API) validates signature, expiry,
+            audience, and scopes — either locally using the IdP's public keys
+            (JWKS) or via Okta's <code>/introspect</code> endpoint.
+          </td>
+        </tr>
+      </table>
+
+      <h3>Example token response (generated by Okta)</h3>
+      <pre><code class="language-json">{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJhbGciOiJSUzI1NiIs...",
+  "scope": "openid profile email read:jira-work",
+  "id_token": "eyJhbGciOiJSUzI1NiIs...",
+  "refresh_token": "eyJhbGciOiJSUzI1NiIs..."
+}</code></pre>
+
+      <h3>
+        Example API request — Jira calls Atlassian API with the access token
+      </h3>
+      <pre><code class="language-http">GET /rest/api/3/issue/PROJ-101 HTTP/1.1
+Host: jira.company.com
+Authorization: Bearer eyJhbGciOiJSUzI1NiIs...
+Accept: application/json</code></pre>
+
+      <h2 id="terms">Standard OAuth 2.0 / OIDC Terms</h2>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Meaning</th>
+          <th>Correct?</th>
+        </tr>
+        <tr>
+          <td>Resource Owner</td>
+          <td>The user who owns the data (e.g. the employee)</td>
+          <td>Standard RFC term</td>
+        </tr>
+        <tr>
+          <td>Client</td>
+          <td>
+            The application requesting access (web app, mobile app, service)
+          </td>
+          <td>Standard RFC term</td>
+        </tr>
+        <tr>
+          <td>Authorization Server</td>
+          <td>
+            Issues tokens after authenticating the user (Okta,
+            FortiAuthenticator)
+          </td>
+          <td>Standard RFC term</td>
+        </tr>
+        <tr>
+          <td>Resource Server</td>
+          <td>The API that accepts access tokens and returns protected data</td>
+          <td>Standard RFC term</td>
+        </tr>
+        <tr>
+          <td>Relying Party (RP)</td>
+          <td>
+            OIDC term for the app that relies on the IdP for login — same role
+            as OAuth Client
+          </td>
+          <td>OIDC term; valid but vendor docs sometimes use it differently</td>
+        </tr>
+        <tr>
+          <td>Client ID</td>
+          <td>Public identifier for the registered OAuth client</td>
+          <td>Correct</td>
+        </tr>
+        <tr>
+          <td>Client Secret</td>
+          <td>
+            Confidential credential for server-side clients only; never exposed
+            in browser
+          </td>
+          <td>Correct</td>
+        </tr>
+        <tr>
+          <td>Redirect URI</td>
+          <td>
+            Pre-registered callback URL where the Authorization Server sends the
+            user after login
+          </td>
+          <td>Correct</td>
+        </tr>
+        <tr>
+          <td>Scope</td>
+          <td>
+            Space-separated list of permissions requested (e.g.
+            <code>openid email read:jira-work</code>)
+          </td>
+          <td>Correct</td>
+        </tr>
+        <tr>
+          <td>Claims</td>
+          <td>
+            Name/value pairs about the user or token (email, groups,
+            <code>sub</code>)
+          </td>
+          <td>Correct (OIDC)</td>
+        </tr>
+        <tr>
+          <td>Access Token</td>
+          <td>Short-lived credential for API access</td>
+          <td>Correct</td>
+        </tr>
+        <tr>
+          <td>Refresh Token</td>
+          <td>
+            Long-lived token used to obtain new access tokens without re-login
+          </td>
+          <td>Correct</td>
+        </tr>
+      </table>
     </article>
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    </script>
-</body>
+
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

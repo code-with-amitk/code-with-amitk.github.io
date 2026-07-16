@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Markup/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#read-from">Read HTML From</a>
+      <a href="#tags">Tags</a>
+      <ul>
+        <li><a href="#style">style</a></li>
+        <li><a href="#attributes">Attributes</a></li>
+        <li><a href="#boolean-attributes">boolean attributes</a></li>
+        <li><a href="#title-attr">title</a></li>
+      </ul>
+      <a href="#formatting">Formatting elements</a>
+      <a href="#css">Cascading Style Sheets (CSS)</a>
+      <ul>
+        <li><a href="#css-inline">1. Inline</a></li>
+        <li><a href="#css-internal">2. Internal</a></li>
+        <li><a href="#css-external">3. External</a></li>
+      </ul>
+      <a href="#anatomy">Anatomy of an HTML document</a>
+      <a href="#debugging">Debugging HTML page errors</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="read-from">Read HTML From</h2>
+      <p>
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Document_and_website_structure"
+          >MDN: Document and website structure</a
+        ><br />
+        Above is
+        <b>most useful/meaningful/lovable documentation</b> i have ever found
+      </p>
+
+      <h2 id="tags">Tags</h2>
+      <div class="table-container">
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>desc</th>
+          </tr>
+          <tr>
+            <td>&lt;a&gt; (Anchors)</td>
+            <td>
+              Text is inside &lt;a&gt; and link/webaddress inside href(Hypertext
+              Reference).<br />
+              <pre><code class="language-html">
+&lt;a href="https://www.mozilla.org/en-US/"&gt;the Mozilla homepage&lt;/a&gt;
+
+Image Link:
+&lt;a href="https://developer.mozilla.org/en-US/"&gt;
+  &lt;img src="mdn_logo.svg" alt="MDN Web Docs" /&gt;
+&lt;/a&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>abbr (Abbreviations)</td>
+            <td>
+              <code>&lt;abbr&gt;HTML&lt;/abbr&gt;</code>, Hypertext Markup
+              Language
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;address&gt;</td>
+            <td>
+              marking up contact details — &lt;address&gt;. This wraps around
+              your contact details<br />
+              <pre><code class="language-html">&lt;address&gt;
+  &lt;p&gt;
+    Chris Mills&lt;br /&gt;
+    Manchester&lt;br /&gt;
+    The Grim North&lt;br /&gt;
+    UK
+  &lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;Tel: 01234 567 890&lt;/li&gt;
+    &lt;li&gt;Email: me@grim-north.co.uk&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/address&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>alt</td>
+            <td>
+              <code>alt="Girl with a jacket"</code>. specifies an alternate text
+              for an image
+            </td>
+          </tr>
+          <tr>
+            <td>Attributes</td>
+            <td>
+              provide additional information about HTML elements. Specified in
+              the start tag. comes in key=value pair
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;article&gt;</td>
+            <td>
+              Encloses a block of related content that makes sense on its own
+              without the rest of the page (e.g., a single blog post).
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;aside&gt;</td>
+            <td>
+              Contains content that is not directly related to the main content
+              but can provide additional information
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;blockquote cite="url"&gt;</td>
+            <td>
+              This tells content is taken from url<br />
+              <pre><code class="language-html">&lt;p&gt;
+  &lt;blockquote cite="http://www.worldwildlife.org/who/index.html"&gt;
+    Below content is taken from this url
+    For 50 years, WWF has been protecting the future of nature. The world's
+    leading conservation organization, WWF works in 100 countries and is
+    supported by 1.2 million members in the United States and close to 5
+    million globally.
+  &lt;/blockquote&gt;
+&lt;/p&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;body&gt;&lt;/body&gt;</td>
+            <td>
+              The &lt;body&gt; element. This contains all the content that
+              displays on the page, including text, images, videos, games,
+              playable audio tracks, or whatever else.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;br&gt;</td>
+            <td>line break, Newline</td>
+          </tr>
+          <tr>
+            <td>class</td>
+            <td>Used to specify a class for an HTML element.</td>
+          </tr>
+          <tr>
+            <td>&lt;code&gt;</td>
+            <td>For marking up generic pieces of computer code.</td>
+          </tr>
+          <tr>
+            <td>combobox</td>
+            <td>
+              used for building forms in HTML. It is formed with select element
+              and input type=”text” element.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;dl&gt; (description lists)</td>
+            <td>
+              set of items and their associated descriptions, such as terms and
+              definitions, or questions and answers<br />
+              <pre><code class="language-html">&lt;dl&gt;
+  &lt;dt&gt;soliloquy&lt;/dt&gt; Description Term
+  &lt;dd&gt;
+    Description Definition
+    In drama, where a character speaks to themselves, representing their inner
+    thoughts or feelings and in the process relaying them to the audience (but
+    not to other characters.)
+  &lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>doctype</td>
+            <td>
+              The doctype. The doctype is a historical artifact that needs to be
+              included for everything else to work right.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;div&gt;</td>
+            <td>
+              Is a block level non-semantic element, which you should only use
+              if you can’t think of a better semantic block element to use, or
+              don’t want to add any specific meaning. For example, imagine a
+              shopping cart widget that you could choose to pull up at any point
+              during your time on an e-commerce site. Now this widget is not
+              &lt;aside&gt;, as it doesn’t necessarily relate to the main
+              content. This widget is also not &lt;section&gt;, as it isn’t part
+              of the main content of the page. So a &lt;div&gt; is fine in this
+              case.<br /><br />
+              <b>Warning:</b> Divs are so convenient to use that it’s easy to
+              use them too much. As they carry no semantic value, they just
+              clutter your HTML code. Take care to use them only when there is
+              no better semantic solution and try to reduce their usage to the
+              minimum otherwise you’ll have a hard time updating and maintaining
+              your documents.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;footer&gt;</td>
+            <td>
+              The footer is also sometimes used for SEO purposes, by providing
+              links for quick access to popular content.<br />
+              <pre><code class="language-html">&lt;body&gt;
+  ..
+  &lt;footer&gt;
+    &lt;p&gt;©Copyright 2050 by nobody. All rights reversed.&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;hr&gt;</td>
+            <td>Horizontal line. used to separate content. Add a line</td>
+          </tr>
+          <tr>
+            <td>h1,h2,h3,h4,h5,h6: Headings</td>
+            <td>
+              Search engines use the headings to index the structure and content
+              of your web pages
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;header&gt;</td>
+            <td>
+              Usually a big strip across the top with a big heading, logo, and
+              perhaps a tagline. This usually stays the same from one webpage to
+              another.<br />
+              <pre><code class="language-html">&lt;body&gt;
+  &lt;header style="display: flex; align-items: center"&gt;
+    &lt;h1&gt;Birdwatching&lt;/h1&gt;
+    &lt;img src="dove.png" alt="a simple dove logo" /&gt;
+  &lt;/header&gt;
+&lt;/body&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;head&gt;&lt;/head&gt;</td>
+            <td>
+              Includes keywords and a page description that would appear in
+              search results, CSS to style content, character set declarations,
+              and more.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;html&gt;&lt;/html&gt;</td>
+            <td>
+              html element. This element wraps all the content on the page. It
+              is also known as the root element
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;img&gt;</td>
+            <td>
+              Embed image into page. Search engines also read image filenames
+              and count them towards SEO. Therefore, you should give your image
+              a descriptive filename; dinosaur.jpg is better than img835.png.<br />
+              <pre><code class="language-html">&lt;img
+  src="images/dinosaur.jpg"
+  alt="The head and torso of a dinosaur skeleton. it has a large head with long sharp teeth"
+  width="400"
+  height="341"
+  title="A T-Rex on display in the Manchester University Museum"
+/&gt;</code></pre>
+              Why use alt at all?<br />
+              - The user is visually impaired, and is using a screen reader to
+              read the web out to them.<br />
+              - The browser doesn’t support the image type. Some people still
+              use text-only browsers, such as Lynx, which displays the alt text
+              of images.<br />
+              - Search engines match alt text with search queries.<br />
+              - Users have turned off images to reduce data transfer volume and
+              distractions. This is especially common on mobile phones
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;input&gt;</td>
+            <td>
+              used to create interactive controls for web forms. It can take
+              various types, each defining a specific kind of user input<br />
+              <pre><code class="language-html">
+&lt;form class="guess-form"&gt;
+  &lt;label for="guessField"&gt;Enter a guess: &lt;/label&gt;
+  &lt;input type="number" min="1" max="100" required id="guessField" class="guessField" /&gt;
+  &lt;input type="submit" value="Submit guess" class="guessSubmit" /&gt;
+&lt;/form&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>label</td>
+            <td>
+              defines a label for several elements. provide a usability
+              improvement for mouse users
+            </td>
+          </tr>
+          <tr>
+            <td>lang</td>
+            <td>
+              lang attribute inside the &lt;html&gt; tag, to declare the
+              language of the Web page. To assist search engines and browsers
+            </td>
+          </tr>
+          <tr>
+            <td>link</td>
+            <td>
+              The &lt;link&gt; element should always go inside the head of your
+              document. This takes two attributes,
+              <code>rel="stylesheet"</code>, which indicates that it is the
+              document’s stylesheet, and <code>href</code>, which contains the
+              path to the stylesheet file
+            </td>
+          </tr>
+          <tr>
+            <td>list (&lt;ul&gt; unordered list)</td>
+            <td>
+              &lt;ul&gt; this wraps around all the list items. Then &lt;li&gt;
+              wraps around each item<br />
+              <pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;milk&lt;/li&gt;
+  &lt;li&gt;eggs&lt;/li&gt;
+  &lt;li&gt;bread&lt;/li&gt;
+  &lt;li&gt;hummus&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;main&gt;</td>
+            <td>
+              main content of page. Use &lt;main&gt; only once per page, and put
+              it directly inside &lt;body&gt;. Ideally this shouldn’t be nested
+              within other elements.
+            </td>
+          </tr>
+          <tr>
+            <td>list (&lt;ol&gt; ordered list)</td>
+            <td>
+              This is just same as list, but all elements are ordered<br />
+              <pre><code class="language-html">&lt;ol&gt;
+  &lt;li&gt;get up&lt;/li&gt;
+  &lt;li&gt;fresh&lt;/li&gt;
+  &lt;li&gt;excercise&lt;/li&gt;
+  &lt;li&gt;breakfast&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;meta&gt;</td>
+            <td>
+              This element represents metadata.<br />
+              <pre><code class="language-html">&lt;meta charset="utf-8" /&gt;
+&lt;meta name="author" content="Chris Mills" /&gt;
+&lt;meta name="description" content="...." /&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;nav&gt;</td>
+            <td>
+              Contains the main navigation functionality for the page. Secondary
+              links, etc., would not go in the navigation.
+            </td>
+          </tr>
+          <tr>
+            <td>p</td>
+            <td>Paragraph. Starts with newline &amp; is block of text.</td>
+          </tr>
+          <tr>
+            <td>&lt;pre&gt;</td>
+            <td>
+              Defines preformatted text. text inside a &lt;pre&gt; element is
+              displayed in a fixed-width font (usually Courier), and it
+              preserves both spaces and line breaks
+            </td>
+          </tr>
+          <tr>
+            <td>span</td>
+            <td>
+              We use it to wrap content when we want to apply CSS to it. Text
+              inside span looks like h1.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;time datetime="2016-01-20"&gt;</td>
+            <td>
+              can be written in different formats<br />
+              <pre><code class="language-html">&lt;time datetime="2016-01-20"&gt;20 January 2016&lt;/time&gt;
+
+&lt;span style="font-size: 32px; margin: 21px 0; display: block;"&gt;
+  Is this a top level heading?
+&lt;/span&gt;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>script</td>
+            <td>
+              &lt;script&gt; element should also go into the head, and should
+              include a src attribute containing the path to the JavaScript you
+              want to load
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;span&gt;</td>
+            <td>
+              When we cannot find a better semantic text element to wrap the
+              content, then use span. Should be used preferably with a suitable
+              class attribute, to provide some kind of label for them so they
+              can be easily targeted.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;title&gt;&lt;/title&gt;</td>
+            <td>
+              The &lt;title&gt; element. This sets the title of the page, which
+              is the title that appears in the browser tab the page is loaded
+              in.
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <h3 id="style">style</h3>
+      <p>
+        To add color, font, size, and more.
+        <a href="https://www.w3schools.com/html/html_styles.asp"
+          >W3Schools HTML Styles</a
+        >
+      </p>
+      <pre><code class="language-html">&lt;p style="color:red;font-size:300%;"&gt; .. &lt;/p&gt;
+&lt;body style="background-color:powderblue;"&gt;		//Background of page</code></pre>
+
+      <h3 id="attributes">Attributes of element</h3>
+      <p>
+        Attributes contain extra information about the element that won’t appear
+        in the content. Example img tag can have following attributes:<br />
+        1. src (required): Tells the location of the image.<br />
+        2. alt: specifies a text description of the image<br />
+        3. width: specifies the width of the image etc
+      </p>
+
+      <h4 id="boolean-attributes">boolean attributes</h4>
+      <p>
+        Attributes written without values. Boolean attributes can only have one
+        value, which is generally the same as the attribute name. Example:<br />
+        disabled: assign to form input elements. (You use this to disable the
+        form input elements so the user can’t make entries)
+      </p>
+      <pre><code class="language-html">&lt;!-- using the disabled attribute prevents the end user from entering text into the input box --&gt;
+&lt;input type="text" disabled /&gt;</code></pre>
+
+      <h3 id="title-attr">title</h3>
+      <p>
+        Defines some extra information about an element. The value of the title
+        attribute will be displayed as a tooltip when you mouse over the element
+      </p>
+      <pre><code class="language-html">&lt;p title="I'm a tooltip"&gt;This is a paragraph.&lt;/p&gt;</code></pre>
+
+      <h2 id="formatting">Formatting elements</h2>
+      <div class="table-container">
+        <table>
+          <tr>
+            <th>Tag</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>&lt;b&gt;</td>
+            <td>Bold text</td>
+          </tr>
+          <tr>
+            <td>&lt;strong&gt;</td>
+            <td>Important text</td>
+          </tr>
+          <tr>
+            <td>&lt;i&gt;</td>
+            <td>Italic text</td>
+          </tr>
+          <tr>
+            <td>&lt;em&gt;</td>
+            <td>Emphasized text</td>
+          </tr>
+          <tr>
+            <td>&lt;mark&gt;</td>
+            <td>Marked text</td>
+          </tr>
+          <tr>
+            <td>&lt;small&gt;</td>
+            <td>Smaller text</td>
+          </tr>
+          <tr>
+            <td>&lt;del&gt;</td>
+            <td>Deleted text</td>
+          </tr>
+          <tr>
+            <td>&lt;ins&gt;</td>
+            <td>Inserted text</td>
+          </tr>
+          <tr>
+            <td>&lt;sub&gt;</td>
+            <td>Subscript text</td>
+          </tr>
+          <tr>
+            <td>&lt;sup&gt;</td>
+            <td>Superscript text</td>
+          </tr>
+        </table>
+      </div>
+
+      <h2 id="css">Cascading Style Sheets (CSS)</h2>
+      <p>
+        Used to format the layout of a webpage. With CSS, you can control the
+        color, font, the size of text, the spacing between elements CSS can be
+        added to HTML documents in 3 ways:
+      </p>
+
+      <h3 id="css-inline">1. Inline</h3>
+      <p>using the style attribute inside HTML elements</p>
+      <pre><code class="language-html">&lt;h1 style="color:blue;"&gt;A Blue Heading&lt;/h1&gt;
+&lt;p style="color:red;"&gt;A red paragraph.&lt;/p&gt;</code></pre>
+
+      <h3 id="css-internal">2. Internal</h3>
+      <p>
+        using <code>&lt;style&gt;</code> element in the
+        <code>&lt;head&gt;</code> section. Example:
+      </p>
+      <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+body {background-color: powderblue;}
+h1   {color: blue;}
+p    {color: red;}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;</code></pre>
+
+      <h3 id="css-external">
+        3. External (<code>&lt;link&gt;</code> in <code>&lt;head&gt;</code>)
+      </h3>
+      <p>
+        An external style sheet is used to define the style for many HTML
+        pages.<br />
+        To use an external style sheet, add a <code>&lt;link&gt;</code> to it in
+        the <code>&lt;head&gt;</code> section of each HTML page
+      </p>
+      <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;link rel="stylesheet" href="styles.css" /&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;h1&gt;This is a heading&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <p>styles.css</p>
+      <pre><code class="language-css">body {
+  background-color: powderblue;
+}
+h1 {
+  color: blue;
+}
+p {
+  color: red;
+  border: 2px solid powderblue; /* CSS border property defines a border around an HTML element */
+  padding: 30px; /* defines a padding (space) between the text and the border */
+  margin: 50px; /* defines a margin (space) outside the border */
+}</code></pre>
+
+      <h2 id="anatomy">Anatomy of an HTML document</h2>
+      <p>See description of tags above</p>
+      <pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang="en-US"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;My test page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;This is my page&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h2 id="debugging">Debugging HTML page errors</h2>
+      <p>
+        1. Feed your page address into
+        <a href="https://validator.w3.org/">Markup Validation Service</a>. This
+        webpage takes an HTML document as an input, goes through it, and gives
+        you a report to tell you what is wrong with your HTML. <br />2.
+        Inspector. Press F12 on page.
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Markup/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#css">CSS</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="css-extra">CSS (extra)</h2>
+      <p>To style the documents. Source notes from CSS.adoc.</p>
+
+      <h3>How CSS Works?</h3>
+      <p>
+        1. Convert HTML to DOM<br />
+        2. Fetch resources in HTML (images, links, videos)<br />
+        3. Browser parses CSS<br />
+        4. Render tree laid out in structure<br />
+        5. Page is displayed visually<br />
+      </p>
+
+      <h3>Methods of applying CSS to a document</h3>
+      <p>
+        <b>1. External stylesheet:</b> External css file styling all HTML
+        documents. Reference using HTML &lt;link&gt; element.
+        <br />
+        <b>2. Internal stylesheet:</b> An internal stylesheet resides within an
+        HTML document. To create an internal stylesheet, you place CSS inside a
+        &lt;style&gt; element contained inside the HTML.
+        <br />
+        <b>3. Inline styles (Avoid this):</b> CSS declarations that affect a
+        single HTML element, contained within a style attribute
+      </p>
+      <pre><code class="language-html">&lt;h1 style="color: blue;background-color: yellow;border: 1px solid black;"&gt;
+  Hello World!
+&lt;/h1&gt;</code></pre>
+
+      <h3>Attributes/Properties</h3>
+      <div class="table-container">
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>desc</th>
+          </tr>
+          <tr>
+            <td>@rules (at-rules)</td>
+            <td>
+              provide instruction for what CSS should perform or how it should
+              behave<br />
+              <pre><code class="language-css">body {
+  background-color: pink;
+}
+
+@media (min-width: 30em) {
+  body {
+    background-color: blue;
+  }
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>link / visited / hover</td>
+            <td>
+              styles unvisited links pink and visited links green; style when
+              the user hovers over it<br />
+              <pre><code class="language-css">a:link {
+  color: pink;
+}
+a:visited {
+  color: green;
+}
+a:hover {
+  text-decoration: none;
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>calc()</td>
+            <td>
+              do simple math within CSS:<br />
+              <pre><code class="language-css">.outer {
+  border: 5px solid black;
+}
+
+.box {
+  padding: 10px;
+  width: calc(90% - 30px);
+  background-color: rebeccapurple;
+  color: white;
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>class</td>
+            <td>
+              To select a subset of the elements without changing the others,
+              you can add a class to your HTML element<br />
+              <pre><code class="language-css">.special {
+  color: orange;
+  font-weight: bold;
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>list-style-type</td>
+            <td>
+              To remove bullets from html doc<br />
+              <pre><code class="language-css">li {
+  list-style-type: none;
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>selectors</td>
+            <td>
+              A CSS selector is the first part of a CSS Rule. It is a pattern of
+              elements and other terms that tell the browser which HTML elements
+              should be selected to have the CSS property values inside the rule
+              applied to them.<br />
+              <pre><code class="language-css">h1
+a:link
+.manythings
+#onething
+*
+.box p
+.box p:first-child
+h1, h2, .intro</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>shorthand</td>
+            <td>
+              font, background, padding, border, and margin are called shorthand
+              properties. This is because shorthand properties set several
+              values in a single line.<br />
+              <pre><code class="language-css">/* In 4-value shorthands like padding and margin, the values are applied
+   in the order top, right, bottom, left (clockwise from the top). */
+padding: 10px 15px 15px 5px;
+
+/* equivalent to these four lines of code: */
+padding-top: 10px;
+padding-right: 15px;
+padding-bottom: 15px;
+padding-left: 5px;</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>transform()</td>
+            <td>
+              various values for transform, such as rotate()<br />
+              <pre><code class="language-css">.box {
+  margin: 30px;
+  width: 100px;
+  height: 100px;
+  background-color: rebeccapurple;
+  transform: rotate(0.8turn);
+}</code></pre>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

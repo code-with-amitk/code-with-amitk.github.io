@@ -5,18 +5,7 @@
     <title>HTTP Authentication</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
-    <style>
-      .mermaid-wrap {
-        width: 100%;
-        max-width: 1100px;
-        overflow-x: auto;
-      }
-      .mermaid-wrap .mermaid svg {
-        width: 100%;
-        max-width: 100%;
-        height: auto !important;
-      }
-    </style>
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
   <body>
@@ -196,22 +185,7 @@ sequenceDiagram
       </table>
     </article>
 
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
-      mermaid.initialize({
-        startOnLoad: false,
-        sequence: {
-          useMaxWidth: true,
-          actorMargin: 50,
-          messageMargin: 35,
-          boxMargin: 10,
-        },
-        themeVariables: {
-          fontSize: "14px",
-        },
-      });
-      await mermaid.run({ querySelector: ".mermaid" });
-    </script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
     <script src="/scripts/prism.js"></script>
   </body>
 </html>
