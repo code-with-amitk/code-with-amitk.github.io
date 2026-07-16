@@ -25,53 +25,32 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="#rw">Functions for RW from file</a>
-      <ul>
-        <li><a href="#read_csv">read_csv(), .columns</a></li>
-        <li><a href="#describe">describe()</a></li>
-        <li><a href="#head">head()</a></li>
-        <li><a href="#drop">drop()</a></li>
-        <li><a href="#dropna">dropna()</a></li>
-        <li><a href="#train_test_split">train_test_split()</a></li>
-        <li><a href="#select_dtypes">select_dtypes()</a></li>
-      </ul>
+      <a href="#DataFrame">DataFrame() constructor</a>
+      <a href="#describe">describe()</a>
+      <a href="#drop">drop()</a>
+      <a href="#dropna">dropna()</a>
+      <a href="#head">head()</a>
+      <a href="#read_csv">read_csv(), .columns</a>
+      <a href="#select_dtypes">select_dtypes()</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="rw">Functions for RW from File</h2>
-      <h4>data.csv</h4>
-      <dl>We will feed this data to pandas</dl>
+      <h3 id="DataFrame">DataFrame() constructor</h3>
+      <p>
+        <a
+          href="/Machine%20Learning/Libraries/Pandas/Introduction.html#Dataframes"
+          >Dataframe</a
+        >
+        is a 2-D Array.<br />
+        pd.DataFrame() constructor is the foundational tool in pandas used to
+        create or reconstruct a DataFrame object
+      </p>
+
       <pre><code class="language-css">
-# data.csv 
-Duration,   Pulse,  Maxpulse,   Calories
-60,         110,    130,        409.1
-60,         117,    145,        479.0
-60,         103,    135,        340.0
-,         109,    175,        282.4
+DataFrame(data=None, index=None, columns=None, dtype=None, copy=None)
       </code></pre>
 
-      <h4 id="read_csv">read_csv(), .columns</h4>
-      <dl>
-        <b>read_csv():</b> read and create a dataframe<br />
-        <b>.columns:</b> list the coloumn header in the dataframe
-      </dl>
-      <pre><code class="language-css">
-$ test.py
-import pandas as pd
-df = pd.read_csv('data.csv')    #read in data frame
-print(df.to_string())
-print(df.columns)
-
-   Duration  Pulse  Maxpulse  Calories
-0      60.0    110       130     409.1
-1      60.0    117       145     479.0
-2      60.0    103       135     340.0
-3       NaN    109       175     282.4
-
-Index(['Duration', 'Pulse', 'Maxpulse', 'Calories'], dtype='object')
-      </code></pre>
-
-      <h4 id="describe">describe()</h4>
+      <h3 id="describe">describe()</h3>
       <dl>
         describe(): Returns 8 values for each coloumn<br />
         &ensp; count: The number of non-null values. (For Duration coloumn,
@@ -88,7 +67,13 @@ Index(['Duration', 'Pulse', 'Maxpulse', 'Calories'], dtype='object')
         &ensp; 75%: The 75th percentile (third quartile).<br />
         &ensp; max: The maximum value. (For duration coloumn, max val=70)
       </dl>
-      <pre><code class="language-css">
+      <pre><code class="language-css"># data.csv 
+Duration,   Pulse,  Maxpulse,   Calories
+60,         110,    130,        409.1
+60,         117,    145,        479.0
+60,         103,    135,        340.0
+,         109,    175,        282.4
+
 import pandas as pd
 df = pd.read_csv('data.csv')
 print(df.describe())
@@ -104,19 +89,20 @@ min        50.0  103.000000  130.000000  282.400000
 max        70.0  117.000000  175.000000  479.000000
       </code></pre>
 
-      <h4 id="head">head()</h4>
-      <dl>head returns 1st n rows from dataframe, default is 5</dl>
-
-      <h4 id="drop">drop()</h4>
+      <h3 id="drop">drop()</h3>
       <p>Drop specified labels from rows or columns</p>
-      <pre><code class="language-css">
-DataFrame.drop(labels=None, axis=0, index=None, columns=None, level=None, inplace=False, errors='raise')
+      <pre><code class="language-css">DataFrame.drop(labels=None, axis=0, index=None, columns=None, level=None, inplace=False, errors='raise')
       </code></pre>
 
-      <h4 id="dropna">dropna</h4>
-      <dl>Drop the empty rows from dataframe</dl>
-      <pre><code class="language-css">
-import pandas as pd
+      <h3 id="dropna">dropna</h3>
+      <dl>
+        Drop the empty rows from
+        <a
+          href="/Machine%20Learning/Libraries/Pandas/Introduction.html#Dataframes"
+          >Dataframe</a
+        >
+      </dl>
+      <pre><code class="language-css">import pandas as pd
 df = pd.read_csv('data.csv')
 print("Before drop\n", df.to_string())
 df = df.dropna(axis=0)
@@ -134,6 +120,45 @@ After drop
 0      60.0    110       130     409.1
 1      60.0    117       145     479.0
 2      60.0    103       135     340.0
+      </code></pre>
+
+      <h3 id="head">head()</h3>
+      <dl>head returns 1st n rows from dataframe, default is 5</dl>
+
+      <h3 id="read_csv">read_csv(), .columns</h3>
+      <p>
+        <b>read_csv():</b> read the CSV file and create a
+        <a
+          href="/Machine%20Learning/Libraries/Pandas/Introduction.html#Dataframes"
+          >Dataframe</a
+        >
+        from it<br />
+        <b>.columns:</b> list the coloumn header in the
+        <a
+          href="/Machine%20Learning/Libraries/Pandas/Introduction.html#Dataframes"
+          >Dataframe</a
+        >
+      </p>
+      <pre><code class="language-css"># data.csv 
+Duration,   Pulse,  Maxpulse,   Calories
+60,         110,    130,        409.1
+60,         117,    145,        479.0
+60,         103,    135,        340.0
+,         109,    175,        282.4
+
+$ test.py
+import pandas as pd
+df = pd.read_csv('data.csv')    #read in data frame
+print(df.to_string())
+print(df.columns)
+
+   Duration  Pulse  Maxpulse  Calories
+0      60.0    110       130     409.1
+1      60.0    117       145     479.0
+2      60.0    103       135     340.0
+3       NaN    109       175     282.4
+
+Index(['Duration', 'Pulse', 'Maxpulse', 'Calories'], dtype='object')
       </code></pre>
 
       <h4>Features</h4>
@@ -157,23 +182,13 @@ print(df[features])
 2      60.0    103
       </code></pre>
 
-      <h4 id="train_test_split">train_test_split()</h4>
-      <pre><code class="language-css">
-  sklearn.model_selection.train_test_split(*arrays, test_size=None, 
-    train_size=None, 
-    random_state=None, 
-    shuffle=True, 
-    stratify=None)
-        </code></pre>
-
-      <h4 id="select_dtypes">select_dtypes()</h4>
+      <h3 id="select_dtypes">select_dtypes()</h3>
       <pre><code class="language-css">
 // select_dtypes() filter columns based on their data type.
 DataFrame.select_dtypes(include=None, exclude=None)
 
 //exclude=['object']: Give me every column except those labeled as object.
-X = melb_predictors.select_dtypes(exclude=['object'])
-      </code></pre>
+X = melb_predictors.select_dtypes(exclude=['object'])</code></pre>
 
       <p>What is <a href="/Machine Learning/Terms.html">dtype</a><br /></p>
     </article>

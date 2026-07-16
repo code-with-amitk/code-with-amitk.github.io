@@ -5,18 +5,7 @@
     <title>SAML</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
-    <style>
-      .mermaid-wrap {
-        width: 100%;
-        max-width: 1100px;
-        overflow-x: auto;
-      }
-      .mermaid-wrap .mermaid svg {
-        width: 100%;
-        max-width: 100%;
-        height: auto !important;
-      }
-    </style>
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
   <body>
     <nav class="navbar">
@@ -213,22 +202,7 @@ Tenant = acme-corp
       </p>
     </article>
 
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.esm.min.mjs";
-      mermaid.initialize({
-        startOnLoad: false,
-        sequence: {
-          useMaxWidth: true,
-          actorMargin: 20,
-          messageMargin: 25,
-          boxMargin: 5,
-        },
-        themeVariables: {
-          fontSize: "11px",
-        },
-      });
-      await mermaid.run({ querySelector: ".mermaid" });
-    </script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
     <script src="/scripts/prism.js"></script>
   </body>
 </html>

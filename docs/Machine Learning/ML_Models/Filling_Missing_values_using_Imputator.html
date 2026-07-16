@@ -36,43 +36,53 @@
       <table>
         <tr>
           <td>
-            <a href="/Machine Learning/Libraries/Pandas/Introduction.html"
-              >pandas</a
-            >,
+            pandas:<br />
+            &ensp;
             <a href="/Machine Learning/Libraries/Pandas/Introduction.html"
               >Pandas Dataframe</a
-            >, <a href="/Machine Learning/Libraries/scikit-learn/">sklearn</a>,
+            ><br />
+            &ensp;
             <a href="/Machine Learning/Libraries/Pandas/Functions.html"
-              >read_csv()</a
-            >, <a href="/Machine Learning/Terms.html">axis</a>,
-            <a href="/Machine Learning/Libraries/Pandas/Functions.html"
-              >select_dtypes()</a
+              >Functions:</a
             >
+            read_csv(), select_dtypes()
+            <br />
+
+            scikit-learn:<br />
+            &ensp;
+            <a href="/Machine Learning/Libraries/scikit-learn/">sklearn?</a>
+            <br />
+            &ensp;
+            <a href="/Machine Learning/Libraries/scikit-learn/Functions.html"
+              >Functions:</a
+            >
+            train_test_split(), RandomForestRegressor()<br />
+
+            Terms: <a href="/Machine Learning/Terms.html">axis</a>
           </td>
         </tr>
         <tr>
           <td>
             <pre><code class="language-css">
+# melb_data.csv
+'Suburb', 'Price', 'Address', 'Rooms', 'Type', 'Method', 'SellerG', 'Date', ...
+1480000, 1035000, 1465000, 850000, 1600000, ...
+
+# test.py
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.impute import SimpleImputer
 
-# Load the dataset from CSV(melb_data.csv) into a pandas DataFrame. CSV file can have 10~100 coloumns
-# Example data rows (simplified):
-# Suburb,Rooms,Price,Type
-# Abbotsford,2,1480000,h
-# Abbotsford,3,1035000,h
+# Machine Learning\Libraries\Pandas\Functions.html\read_csv
 data_frame = pd.read_csv('../input/melbourne-housing-snapshot/melb_data.csv')
 
 # Copy Price Coloumn into y, that is what we want to predict(house prices).
-# [1480000, 1035000, 1465000, 850000, 1600000, ...]
 y_dataframe_price = data_frame.Price
 
 # Drop the Price column from the dataset.
 # melb_predictors contains all columns except Price. Eg:
-# ['Suburb', 'Address', 'Rooms', 'Type', 'Method', 'SellerG', 'Date', ...]
 melb_predictors = data_frame.drop(['Price'], axis=1)
 
 # From melb_predictors data_frame. Remove the coloumns which are Objects
@@ -80,34 +90,17 @@ melb_predictors = data_frame.drop(['Price'], axis=1)
 # ['Rooms', 'Distance', 'Bedroom2', 'Bathroom', 'Car', 'Landsize', 'BuildingArea', 'YearBuilt', ...]
 X_dataframe_without_objects = melb_predictors.select_dtypes(exclude=['object'])
 
-# Split the data into training and validation sets.
-# 80% of the rows go into training, 20% go into validation.
-# X_train: training features
-# X_valid: validation features
-# y_train: training target values
-# y_valid: validation target values
-#
-# Example:
-# If there are 10,000 rows total:
-# X_train -> 8,000 rows
-# X_valid -> 2,000 rows
-# y_train -> 8,000 price values
-# y_valid -> 2,000 price values
+
+# Machine Learning\Libraries\scikit-learn\Functions.html#train_test_split
 X_train, X_valid, y_train, y_valid = train_test_split(
     X_dataframe_without_objects, y_dataframe_price, train_size=0.8, test_size=0.2, random_state=0
 )
 
-# Create an imputer to fill missing values.
-# By default, SimpleImputer replaces missing numeric values with the mean of that column.
-# Example:
-# If Rooms has values [2, 3, NaN, 4], the NaN may be replaced by 3.0
+# # Machine Learning\Libraries\scikit-learn\Functions.html#SimpleImputer
 my_imputer = SimpleImputer()
 
-# Fit the imputer on the training data and transform the training data.
-# fit_transform does two things:
-# 1. Learns the replacement values from X_train
-# 2. Replaces missing values in X_train
-#
+# Fill missing values in training question and answer
+# Replaces missing values in X_train
 # Example output idea:
 # If X_train had:
 # Rooms  Distance
@@ -120,10 +113,6 @@ my_imputer = SimpleImputer()
 # 2.5    7.2
 # 3.0    6.1
 imputed_X_train = pd.DataFrame(my_imputer.fit_transform(X_train))
-
-# Transform the validation data using the same learned values.
-# Important: we do NOT fit again on validation data.
-# We only use the training statistics learned above.
 imputed_X_valid = pd.DataFrame(my_imputer.transform(X_valid))
 
 # Restore the original column names.
@@ -133,29 +122,18 @@ imputed_X_valid.columns = X_valid.columns
 
 # Function to train and evaluate a model.
 def score_dataset(X_train, X_valid, y_train, y_valid):
-    # Create a Random Forest Regressor.
-    # n_estimators=10 means the model uses 10 decision trees.
-    model = RandomForestRegressor(n_estimators=10, random_state=0)
+    # Create a Random Forest Regressor. n_estimators=10 means the model uses 10 decision trees.
+    randomforest_model = RandomForestRegressor(n_estimators=10, random_state=0)
 
-    # model.fit() trains the model.
-    # What it does:
-    # - Looks at each feature column in X_train
-    # - Learns patterns between features and house prices in y_train
-    # - Builds decision trees that can later predict prices for new data
-    #
-    # Example:
-    # If a row has Rooms=3, Bathroom=2, Distance=5.2,
-    # the model learns how such combinations relate to Price.
-    model.fit(X_train, y_train)
+    # Machine Learning\Libraries\scikit-learn\Functions.html#fit
+    randomforest_model.fit(X_train, y_train)
 
-    # Predict house prices for the validation set.
-    preds = model.predict(X_valid)
+    # Machine Learning\Libraries\scikit-learn\Functions.html#predict
+    preds = randomforest_model.predict(X_valid)
 
-    # Compare predictions with actual validation prices.
+    # Machine Learning\Libraries\scikit-learn\Functions.html#mean_absolute_error
     return mean_absolute_error(y_valid, preds)
 
-# Print the MAE for the imputation approach.
-# Lower MAE means better predictions.
 print("MAE from Approach 2 (Imputation):")
 print(score_dataset(imputed_X_train, imputed_X_valid, y_train, y_valid))
       </code></pre>

@@ -1,220 +1,426 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title>Rate Limiter</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <meta charset="UTF-8" />
+    <title>Distributed Rate Limiter</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
+          </form>
         </li>
-    </ul>
-  </nav>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
-    <a href="#what">What</a>
-    <a href="#req">Requirements</a>
-    <a href="#hld">HLD</a>
-    <ul>
-      <li><a href="#rla">Rate Limiting Algorithms</a></li>
-      <li><a href="#implement_req1">Req1</a></li>
-      <li><a href="#implement_req2">Req2</a></li>
-    </ul>
-    <a href="#issues">Issues</a>
-    <ul>
-      <li><a href="#racecondition">Race Condition</a></li>
-      <li><a href="#synchronizationissue">Synchronization issue</a></li>
-    </ul>
-  </aside>
+    <aside class="sidebar">
+      <a href="#req">Requirements</a>
+      <a href="#hld">HLD</a>
+      <ul>
+        <li><a href="#placement">Placement &amp; topology</a></li>
+        <li><a href="#why-not-global">Why not on Global LB</a></li>
+        <li><a href="#block">Block Diagram</a></li>
+        <li><a href="#flow">Request flow</a></li>
+        <li><a href="#sequence">Sequence Diagram</a></li>
+      </ul>
+      <a href="#lld">LLD</a>
+      <ul>
+        <li><a href="#algo">Algorithm</a></li>
+        <li><a href="#redis">Regional vs Global Redis</a></li>
+        <li><a href="#multiregion">Multi-region sync</a></li>
+      </ul>
+    </aside>
 
-  <main>
-    <article style="margin-left:200px;">
-        <h2 id="what">What is Rate Limiter</h2>
-        <dl>
-          Restricts number of incoming <b>HTTP Requests/REST API calls</b> from client to server, which can overload the server.<br>
-          Eg: Only 2 HTTP Posts/sec, 10 accounts creation allowed from same IP address, 300 tweets/3 hours.
-        </dl>
-        <dl>
-        <b>AWS API gateway</b> is a fully managed service that supports rate limiting, SSL termination, 
-        authentication, IP whitelisting, servicing static content, etc
-        </dl>
+    <main>
+      <article style="margin-left: 200px">
+        <h2>What is DRL(distributed rate limiter)</h2>
+        <p>
+          DRL decides whether a client (user, IP, or API key) will proceed to
+          origin/application server, using rate limiting counters. Eg: 100 HTTP
+          req/sec. if 101 arrives with in second, 429(too many requests) should
+          be returned to client
+        </p>
 
-        <dl><strong>Benefits of RL</strong></dl>
-        <dd>
-          Prevent resource starvation caused by Denial of Service (DoS) attack<br>
-          Limiting excess requests means fewer servers(Cost reduction)<br>
-        </dd>
+        <h2 id="req">Requirements</h2>
+        <p>
+          <b>1. DRL run in multiple regions</b>
+          Since DRL runs in several regions(US, India etc) atomic counters to be
+          shared across regions so the limit is enforced for the fleet — not per
+          machine.<br />
 
-        <h2>1. Requirements</h2>
-        <h3>Functional</h3>
-        <dd>CRUD(Create=POST, Read=GET, Update=PUT, Delete=DELETE)</dd>
-        <dl id="req1">1. Limit excessive requets (Criteria: UserId, IP Address etc)</dl>
-        <dl id="req2">2. Inform user when his request is dropped</dl>
+          <b>2. System must be scalable:</b> Adding rate-limiter nodes should
+          not crash the system.<br />
 
-        <h3>Non Functional</h3>
-        <dd>
-          S<sup>3</sup>:(Scalable,Secure,SOA), L<sup>3</sup>:(Latency, Load, Logging), 
-          A<sup>3</sup>:(Accurate, Available, Authenticated), C<sup>2</sup>:(Cache),
-          R<sup>2</sup>:(Reliable, Redundant) F<sup>2</sup>:(fast, Fault Tolerant)
-        </dd>
-        <dl id="nonfuncreq1">1. Latency should be Low. ie dropped user should be quickly informed</dl>
-        <dl id="nonfuncreq2">2. Low Memory usage</dl>
-        <dl id="nonfuncreq3">3. Highly Reliable. (ie fault Tolerant)</dl>
+          <b>3. Thread-safe</b>: Concurrent checks from many threads/pods must
+          update counters atomically so two simultaneous requests cannot both
+          pass when only one token remains.<br />
 
-        <h2 id="hld">2. HLD</h2>
-        <dl>
-        Rate limiting can be implemented using different algorithms, and each of them has distinct pros and cons.
-        </dl>
+          <b>4. Low-latency</b>: Rate limiting counters are checked hot path so
+          least latency.
+        </p>
 
-        <h3 id="rla">Rate Limiting Algorithms</h3>
-        <table>
-          <tr>
-            <th>Name</th>
-            <th>Used By</th>
-            <th>Description</th>
-          </tr>
-          <tr>
-            <td>Token Bucket</td>
-            <td>Amazon, Stripe</td>
-            <td>
-              - <a href="https://github.com/code-with-amitk/pvt-research/blob/master/Projects/Clear2Pay/README.adoc#2-implement-token-bucket-algorithms">Description</a><br>
-              - Advatanges: Easy to implement, Memory Efficient, Allows a burst of traffic for short periods, ie requests can go until tokens are present then request stop for some time<br>
-              - Disdvatanges: Two parameters in the algorithm are bucket size and token refill rate, which might be challenging to tune.
-            </td>
-          </tr>
-          <tr>
-            <td>Leaky Bucket</td>
-            <td>Shopify</td>
-            <td>
-              - <a href="https://github.com/code-with-amitk/pvt-research/blob/master/Projects/Clear2Pay/README.adoc#2-leaky-bucket-queuefifo">Description</a><br>
-              - Advatanges: Memory efficient given the limited queue size, Requests are processed at a fixed rate(smoothens the bursty traffic)<br>
-              - Disdvatanges:  There are two parameters in the algorithm. It might not be easy to tune them properly
-            </td>
-          </tr>
-        </table>
+        <h2 id="hld">High Level Design</h2>
 
-        <h4 id="implement_req1">
-          <a href="#req1">Req1. Limit excessive requets (Criteria: UserId, IP Address etc)</a>
-        </h4>
-        <dl>
-          Rate limiting is done using above Rate limiting algorithms<br>
-          Ratelimiting HW will store the rules on the disk. Workers frequently pull rules from the disk and store them in the cache<br>
-        </dl>
+        <h3 id="placement">
+          Where the limiter sits: Global LB → Regional LB → AZ LB → Rate Limiter
+        </h3>
+        <p>
+          Cloud topology stacks as
+          <b>Region → Availability Zones (AZs) → data centers</b>. Traffic
+          passes through three load-balancing layers before it reaches the
+          distributed rate limiter. The <b>global load balancer</b> (DNS,
+          geo-DNS, or anycast) receives customer traffic and picks the nearest
+          healthy <b>region</b> — for example sending a Mumbai customer toward
+          <code>ap-south-1</code> and a New York customer toward
+          <code>us-east-1</code>. Inside that region a <b>regional load
+          balancer</b> spreads connections across AZs in the region. Inside
+          each AZ an <b>availability-zone load balancer</b> picks a healthy
+          gateway pod in that AZ. Only <b>after</b> this third hop does the
+          request hit the <b>API Gateway + distributed rate limiter</b>, which
+          runs the token-bucket check against <b>regional Redis</b> and then
+          forwards allowed calls to backend services.
+        </p>
+        <p>
+          The limiter is therefore not a single box at the global edge, the
+          region edge, or the AZ edge. It is a <b>fleet of stateless gateway
+          pods</b> deployed in every AZ, each performing the same check against
+          the same regional Redis cluster (replicated multi-AZ inside the
+          region for HA). Global and regional LBs only route; they do not hold
+          token counters. The AZ LB only picks a pod; the pod owns the
+          application-level decision.
+        </p>
+        <p>
+          For a SaaS provider such as <b>Netscope</b>, inbound traffic is not
+          anonymous web browsing — it is authenticated API traffic from
+          enterprise customers using Netscope services. That distinction
+          matters for placement: the global LB sees hostnames, IPs, and TLS
+          handshakes, but the rate-limit key is usually an <b>API key, tenant
+          id, or OAuth subject</b> extracted only after TLS termination and
+          gateway parsing inside the chosen region. The distributed rate
+          limiter belongs at that application edge, immediately after the AZ LB
+          has delivered the request to a gateway pod.
+        </p>
 
-        <h5 id="counters">Counters</h5>
-        <dt>
-          To keep track of how many requests are sent from the same user, IP address, etc. If the counter is
-          larger than the limit, the request is disallowed<br>
+        <h3 id="why-not-global">Why the limiter does not sit on the Global LB</h3>
+        <p>
+          Putting distributed rate limiting on the global load balancer is
+          tempting because that is the first Netscope-owned hop after the
+          customer. In practice the global tier is the wrong place for
+          per-customer token buckets.
+        </p>
+        <p>
+          The global LB’s job is <b>geo routing and health</b>: steer traffic
+          to a region, fail over when a region is down. It is typically
+          implemented as DNS latency routing, anycast to regional PoPs, or a
+          thin GSLB — not as a full programmable HTTP proxy fleet that can run
+          Lua scripts and maintain millions of live counters. Even when a CDN
+          or WAF sits in front, that layer enforces coarse IP-level or
+          volumetric rules; it does not replace per-tenant API quotas backed
+          by shared atomic state.
+        </p>
+        <p>
+          A token-bucket check needs a <b>nearby Redis round-trip</b> on every
+          request (or a local lease refreshed from Redis). If the check ran at
+          the global tier, every API call from India and the US would converge
+          on <b>one global Redis</b> or on cross-region writes. That adds
+          100–300&nbsp;ms RTT, turns Redis into a worldwide single point of
+          failure, and creates race conditions when two regions increment the
+          same counter concurrently. Rate limiting is latency-sensitive; the
+          global hop is latency-insensitive routing. Keeping counters
+          <b>regional</b> keeps the hot path inside one AZ-to-Redis RTT
+          (sub‑millisecond to a few ms).
+        </p>
+        <p>
+          Identity also arrives too late at the global tier. Netscope customers
+          present <code>X-API-Key</code>, JWT bearer tokens, or mTLS client
+          certs. The global LB may terminate TLS at a regional PoP, but
+          authoritative authentication, tenant lookup, and route selection
+          happen on the <b>API Gateway</b> after regional and AZ load
+          balancing. Without that identity the limiter cannot choose the correct
+          bucket (<code>tenant_acme</code> vs <code>tenant_globex</code>).
+          Moving rate limiting to the gateway — after AZ LB — keeps routing
+          dumb and policy smart.
+        </p>
+        <p>
+          A <b>lightweight global guard</b> can still exist above regions:
+          block obvious DDoS by IP, cap connections per PoP, or apply a very
+          coarse per-ASN ceiling. That is abuse protection, not the
+          distributed per-API-key limiter described here. The fine-grained,
+          thread-safe, scalable limiter runs regionally on the gateway fleet
+          after the AZ load balancer.
+        </p>
+        <p>
+          The <b>API Gateway</b> remains the natural enforcement point. It
+          terminates TLS (or receives it from an upstream PoP), authenticates
+          the Netscope customer, loads the tenant’s rule from config, calls
+          regional Redis atomically, returns <code>429</code> or forwards to
+          the correct backend microservice. A dedicated rate-limit sidecar is
+          optional; the gateway is still the layer that orchestrates the check.
+        </p>
 
-          <br>
-          <b><u>For 1 million users:</u></b> <br>
-          &ensp; 5 million counters. if each user is rate limited on 5 parameters<br>
-          <pre><code class="language-css">
-Userid      TCP SYN Rcvd/sec(Connect req)   HTTP GET Rcvd
-  1                10                           5
-  5                1000                         5000      //Pumping huge traffic
-          </code></pre>
-          
-          <br>
-          <b><u>Where to store counters?</u></b> REDIS<br>
-          Option-1: File on Hard Disk (slow)<br>
-          Option-2: inmemory store = Redis
-        </dt>
+        <h3 id="block">Block Diagram</h3>
+        <p>
+          Two regions (US and India). Each region has regional Redis for live
+          token buckets and talks to a shared global Redis (or config store)
+          for rules and tenant metadata. The limiter runs on gateway pods
+          <b>after</b> the AZ load balancer in each region.
+        </p>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+flowchart TB
+    C[Netscope customers<br/>API / service traffic] --> GLB[Global Load Balancer<br/>geo / health → pick region]
 
-        <h5 id="rules">Rate Limiting Rules</h5>
-        <dl>
-          Requests allowed in particular category. <br>
-          Rules are stored on the disk. Workers frequently pull rules from the disk and store them in the cache
-        </dl>
+    GLB --> RLB_US[Regional LB — US]
+    GLB --> RLB_IN[Regional LB — India]
+
+    subgraph US["Region: US"]
+      RLB_US --> AZLB_US[AZ Load Balancers<br/>per availability zone]
+      AZLB_US --> GW_US[API Gateway + Rate Limiter<br/>pods in each AZ]
+      GW_US --> REDIS_US[(Regional Redis<br/>live token buckets)]
+      GW_US --> BE_US[Netscope backend services]
+    end
+
+    subgraph IN["Region: India"]
+      RLB_IN --> AZLB_IN[AZ Load Balancers<br/>per availability zone]
+      AZLB_IN --> GW_IN[API Gateway + Rate Limiter<br/>pods in each AZ]
+      GW_IN --> REDIS_IN[(Regional Redis<br/>live token buckets)]
+      GW_IN --> BE_IN[Netscope backend services]
+    end
+
+    REDIS_GLOBAL[(Global Redis / Config Store<br/>rules, tenant limits, API keys)] -.->|read rules, sync config| GW_US
+    REDIS_GLOBAL -.->|read rules, sync config| GW_IN
+          </pre>
+        </div>
         <pre><code class="language-css">
-Examples:
+Customer API traffic
+        │
+        ▼
+Global LB          → pick region only (US or India); no token-bucket logic
+        │
+        ▼
+Regional LB        → spread across AZs inside the region
+        │
+        ▼
+AZ LB              → pick healthy gateway pod in that AZ
+        │
+        ▼
+API Gateway + DRL  → auth, load rule, atomic check on REGIONAL Redis, 200 or 429
+        │                    │
+        ▼                    ▼
+Backend services     Regional Redis (hot counters)
 
-domain: messaging
-descriptors:
-  - key: message_type
-    Value: marketing                //Only 5 marketing messages/day.
-    rate_limit:
-      unit: day
-      requests_per_unit: 5
-
-domain: auth
-descriptors:
-  - key: auth_type
-    Value: login                 // Only 5 login requests/minute
-    rate_limit:
-      unit: minute
-      requests_per_unit: 5      
+Global Redis       → rules + tenant config (cold/slow-changing); NOT every INCR
         </code></pre>
 
-        <h5>Architecture & Flow</h5>
-        <table>
-          <tr>
-            <td>
-              <img src="/images/rate_limiter/architecture.PNG" alt="trie" style="width:500px;height:300px;">
-            </td>
-            <td>
-              <b>Flow:</b><br>
-              1. Client sends a request to the server, the request is sent to the rate limiter middleware first.<br>
-              2. Rate limiter middleware loads <a href="#rules">rules from the cache</a>. It fetches 
-              <a href="#counters">counters</a> and last request timestamp from Redis cache.<br>
-              3. Based on the response, the rate limiter decides <br>
-              &ensp; Forward to API Server, if not rate limited<br>
-              &ensp; Returns 429 too many requests, if the request is rate limited    
-            </td>
-          </tr>
-        </table>
-        
+        <h3 id="flow">Request flow across layers</h3>
+        <p>
+          A Netscope customer in Mumbai sends an authenticated API call. The
+          global load balancer resolves the hostname and routes the connection
+          to the India region — it does not decrement any token. The regional
+          load balancer in India chooses an AZ (for example <code>ap-south-1a</code>
+          or <code>ap-south-1b</code>). The AZ load balancer inside that zone
+          selects a healthy API Gateway pod. That pod terminates TLS if needed,
+          validates the API key, fetches the tenant rule (100 req/min, burst 20)
+          from cache or global config, and runs the token-bucket Lua script
+          against <b>India regional Redis</b>. If tokens remain, the gateway
+          forwards to the correct Netscope microservice and returns the
+          response; if not, it responds with <code>429 Too Many Requests</code>
+          and the backend is never contacted. A US customer follows the same
+          ladder inside the US region with US regional Redis. Global and
+          regional LBs add no Redis calls; only the gateway on the hot path
+          touches regional counters.
+        </p>
 
-        <h4 id="implement_req2">
-          <a href="#req2">Req2. Inform user when his request is dropped</a>
-        </h4>
-        <dl>
-          User is informed using <a href="/Networking/OSI-Layers/Layer-7/HTTP/#methods">HTTP Response headers</a><br>
-          - X-Ratelimit-Remaining: The remaining number of allowed requests within the window.<br>
-          - X-Ratelimit-Limit: It indicates how many calls the client can make per time window.<br>
-          - X-Ratelimit-Retry-After: The number of seconds to wait until you can make a request again without being throttled
-        </dl>
+        <h3 id="sequence">Sequence Diagram</h3>
+        <p>
+          End-to-end path for one API call after the customer has reached
+          Netscope’s edge. Rate limiting begins only at the gateway pod, post
+          AZ load balancer.
+        </p>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 36, 'messageMargin': 24, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+sequenceDiagram
+    autonumber
+    actor Customer
+    participant GLB as Global LB
+    participant RLB as Regional LB
+    participant AZLB as AZ LB
+    participant GW as API Gateway + Rate Limiter
+    participant GRedis as Global Redis<br/>(rules)
+    participant RRedis as Regional Redis<br/>(counters)
+    participant API as Netscope API
 
-        <h2 id="issues">Issues</h2>
-        <h3 id="racecondition">1. Race condition</h3>
-        <dl><strong>Race Condition in reading counter from Redis</strong></dl>
-        <dl>
-          • Read the counter value from Redis.<br>
-          • Check if ( counter + 1 ) exceeds the threshold.<br>
-          • If not, increment the counter value by 1 in Redis.<br>
-          - Assume the counter value in Redis is 3. If two requests concurrently read the counter value
-          before either of them writes the value back, each will increment the counter by one and write
-          it back without checking the other thread. <br>
-          - Both requests (threads) believe they have the
-            correct counter value 4. However, the correct counter value should be 5.
-        </dl>
-        
-        <img src="/images/rate_limiter/redis_race_condition.PNG" alt="trie" style="width:400px;height:200px;">
+    Customer->>GLB: HTTPS API request<br/>X-API-Key=tenant_acme
+    Note over GLB: Geo + health only<br/>no rate-limit check
+    GLB->>RLB: Route to India region
 
-        <dl><strong>How to avoid Race Condition?</strong></dl>
-        <dl>
-          Lua script and sorted sets data structure in Redis
-        </dl>
+    RLB->>AZLB: Spread to AZ ap-south-1b
+    AZLB->>GW: Forward to gateway pod
 
-        <h3 id="synchronizationissue">2. Synchronization issue</h3>
-        <dl>
+    GW->>GW: TLS + validate API key<br/>tenant_acme identified
 
-        </dl>
+    GW->>GRedis: GET rule:tenant_acme<br/>(cached on gateway; rare miss)
 
-    </article>
-  </main>
+    GRedis-->>GW: rate=100/min, burst=20
 
-  <script src="/scripts/prism.js"></script>
-</body>
+    GW->>RRedis: EVAL token_bucket.lua<br/>bucket:api:tenant_acme
+
+    alt tokens remaining
+        RRedis-->>GW: allowed=true, remaining=17
+        GW->>API: Forward allowed request
+        API-->>GW: 200 OK + body
+        GW-->>Customer: 200 OK<br/>X-RateLimit-Remaining: 17
+    else bucket empty
+        RRedis-->>GW: allowed=false, retry_after=12s
+        GW-->>Customer: 429 Too Many Requests<br/>Retry-After: 12
+    end
+          </pre>
+        </div>
+
+        <h2 id="lld">Low Level Design</h2>
+
+        <h3 id="algo">Algorithm: token bucket (preferred)</h3>
+        <p>
+          Common algorithms are fixed/sliding window counters, leaky bucket, and
+          token bucket. Fixed windows are simple but allow boundary bursts (2×
+          limit at the minute edge). Sliding windows are fairer but need more
+          state or approximations. Leaky bucket smooths egress to a constant
+          drain rate and is excellent for shaping outbound queues, but it is
+          awkward for “allow this HTTP request now or return 429” because it
+          tends to queue rather than admit bursts. <b>Token bucket</b> is the
+          best default for an API edge: tokens refill at a steady rate, a
+          capacity (burst) allows short spikes, and each request consumes one
+          token — if none remain, deny immediately. That matches how clients and
+          gateways behave.
+        </p>
+        <p>
+          The algorithm runs in two cooperating places. The
+          <b>authoritative step</b> is an <b>atomic Lua script on Redis</b> (or
+          equivalent Redis module): read <code>tokens</code> and
+          <code>last_refill</code>, refill based on elapsed time, clamp to
+          capacity, try to consume one token, write back, return allow/deny.
+          That keeps the check thread-safe across all gateway pods in the
+          region. Optionally each gateway keeps a <b>local lease</b> of a few
+          tokens in memory so most requests skip Redis; when the lease is empty
+          the pod reserves another small batch from Redis. The lease is an
+          optimization for QPS; correctness still comes from Redis atomicity.
+        </p>
+        <pre><code class="language-css">
+# Token bucket state (per rule + subject key) — stored in Redis HASH
+bucket:{rule_id}:{subject} → {
+  tokens:      FLOAT,     # current tokens
+  last_refill: TIMESTAMP, # last refill (ms)
+}
+
+# Rule parameters (often from config; may be cached on gateway)
+rule:{rule_id} → {
+  rate:     FLOAT,   # tokens added per second (e.g. 100/60 ≈ 1.67)
+  capacity: INT,     # burst size (max tokens)
+  key_by:   "api_key" | "user_id" | "ip" | "user_id+route"
+}
+        </code></pre>
+
+        <h3 id="redis">Regional Redis vs Global Redis</h3>
+        <p>
+          The design uses <b>two Redis tiers</b> with different jobs. They are
+          not duplicates of the same data; splitting them keeps the request path
+          fast and the policy layer consistent worldwide.
+        </p>
+        <p>
+          <b>Regional Redis</b> holds the <b>live token-bucket state</b> for
+          traffic handled in that region. Every allowed or denied API call
+          updates keys such as <code>bucket:api:tenant_acme</code> with fields
+          <code>tokens</code> and <code>last_refill</code> through an atomic Lua
+          script. All gateway pods in the US region read and write the US
+          regional cluster; all pods in India use the India cluster. Sharding
+          inside the cluster is by <code>hash(rule_id + tenant)</code>. This
+          store is optimized for <b>high write QPS, sub‑ms latency, and
+          thread-safe increments</b> — it is the heart of the distributed rate
+          limiter. Counters are <b>not</b> replicated to other regions on each
+          request; that would defeat the purpose of regional placement.
+        </p>
+        <p>
+          <b>Global Redis</b> (often paired with a config DB or control plane)
+          holds <b>slow-changing policy and identity metadata</b>: which tenants
+          exist, their contracted limits (<code>100 req/min</code> vs
+          <code>10,000 req/min</code>), burst size, which header defines the
+          subject, per-route overrides, blocklists, and feature flags. Gateways
+          pull or subscribe to these rules at startup and on change; they cache
+          them in memory so the hot path rarely calls global Redis. Global Redis
+          may also store <b>optional aggregate counters</b> for billing or
+          offline quota reconciliation, but not per-request token decrements
+          across continents. When an admin changes a tenant’s limit in the
+          Netscope console, the update lands in global Redis/config and fans
+          out to all regional gateways; existing regional bucket keys can be
+          reset or left to drain naturally.
+        </p>
+        <pre><code class="language-css">
+# REGIONAL Redis (US cluster) — updated on every API request
+bucket:api:tenant_acme     → { tokens: 17.3, last_refill: 1710000000123 }
+bucket:api:tenant_globex   → { tokens: 0.0,  last_refill: 1710000000456 }
+
+# GLOBAL Redis — updated when policy changes, not per HTTP call
+rule:api_default           → { rate: 1.67/s, capacity: 20, key_by: "api_key" }
+rule:tenant_acme           → { rate: 100/min, capacity: 50, plan: "enterprise" }
+tenant:tenant_acme         → { api_key_hash: "…", status: "active", home_region: "us" }
+        </code></pre>
+        <p>
+          In short: <b>regional Redis answers “may this request proceed right
+          now?”</b> with atomic counters close to the gateway.
+          <b>Global Redis answers “what is this tenant allowed under their
+          contract?”</b> and keeps that answer consistent in every region.
+          Splitting policy (global) from counters (regional) is why the limiter
+          lives after the AZ load balancer with regional Redis, while the global
+          load balancer stays a routing-only tier that never touches token
+          buckets.
+        </p>
+
+        <h3 id="multiregion">How the two tiers behave across US and India</h3>
+        <p>
+          Each region runs its own <b>regional Redis Cluster</b>, stretched
+          across AZs for failover. Global Redis is typically deployed in one
+          primary region with read replicas or active-active config replication
+          so gateways in US and India see the same rule set within seconds.
+          A tenant pinned to India by the global LB accrues and spends tokens
+          only in India regional Redis. The same tenant hitting the US PoP
+          accrues a separate regional counter unless sticky routing sends them
+          to one home region. For a hard worldwide ceiling, operators either
+          split quota per region (500 + 500 of 1000), route that tenant to a
+          single home region, or run an async aggregator on global Redis —
+          never a synchronous cross-region INCR on every API call.
+        </p>
+        <p>
+          Inside one region, thread-safety comes from Lua atomicity on the
+          correct Redis shard; scalability comes from horizontal gateway pods
+          behind AZ LBs plus sharded regional Redis. The API Gateway
+          orchestrates TLS, auth, rule lookup (global/cache), counter update
+          (regional), and routing to Netscope backends — whether the Lua call
+          is in-process or via a sidecar, the placement after the AZ load
+          balancer stays the same.
+        </p>
+      </article>
+    </main>
+
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
