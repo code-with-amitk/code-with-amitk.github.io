@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+  <head>
+    <title>FastAPI Project</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Frameworks/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#project">Project</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="project">Project</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+|- app
+	|- models
+		|- __init__.py
+		|- base.py
+		|- entities.py
+		|- enums.py
+	|- modules
+		|- abuse
+			|- service.py
+		|- admin
+			|- router.py
+		|- auth
+			|- router.py
+		|- communication
+			|- handlers.py
+			|- sms.py
+			|- voice.py
+		|- landing
+			|- router.py
+		|- owner
+			|- router.py
+		|- tags
+			|- router.py
+	|- services
+		|- auth.py
+		|- phone.py
+		|- short_id.py
+		|- tags.py
+		|- validation.py
+	|- shared
+		|- database.py
+		|- deps.py
+		|- kafka_client.py
+		|- logging.py
+		|- redis_client.py
+	|- __init__.py
+	|- config.py
+	|- main.py
+|- migrations
+	|- versions
+	|- en.py
+|- scripts
+	|- bulk_generate_qr.py
+	|- phone_activation_demo.py
+|- tests
+	|- conftest.py
+	|- test_integration.py
+	|- test_utils.py
+|- alembic.ini
+|- requirements.txt
+|- ptest.ini
+        </code></pre>
+          </td>
+          <td>
+            <b>Dockerfile</b><br />
+            <pre><code class="language-css">FROM python:3.11-slim
+...
+COPY backend ./backend
+COPY frontend ./frontend
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "backend"]
+
+// Start app.main:app
+            </code></pre>
+            <br />
+            <b>Entry Point</b><br />
+            <pre><code class="language-css"># cat backend/app/main.py
+from app.modules.admin.router import router as admin_router
+from app.modules.auth.router import router as auth_router
+from app.modules.landing.router import router as landing_router
+from app.modules.owner.router import router as owner_router
+from app.modules.tags.router import router as tags_router
+
+def create_app() -&gt; FastAPI:
+    application.include_router(landing_router)
+    application.include_router(tags_router)
+    application.include_router(auth_router)
+    application.include_router(admin_router)
+    application.include_router(owner_router)
+    return application
+
+app = create_app()
+</code></pre>
+          </td>
+          <td>
+            <b>Rest Endpoints Testing<code>http://127.0.0.1:8000/docs</code></b
+            ><br /><br />
+            backend/app/modules/landing/router.py<br />
+            <code>/s/{short_id}</code><br />
+            <code>/s/{short_id}/chat</code><br />
+            <code>/s/{short_id}/call</code><br />
+            <code>/activate/{short_id}</code><br />
+            <pre><code class="language-css">@router.get("/s/{short_id}", response_class=HTMLResponse)
+async def scan_landing(request: Request, short_id: str, db: AsyncSession = Depends(get_db)):
+
+@router.post("/s/{short_id}/chat", response_class=HTMLResponse)
+async def submit_chat()
+
+@router.post("/s/{short_id}/call", response_class=HTMLResponse)
+async def submit_call()
+
+@router.get("/activate/{short_id}", response_class=HTMLResponse)
+async def activate_start()
+</code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

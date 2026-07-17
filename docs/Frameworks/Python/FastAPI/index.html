@@ -25,6 +25,7 @@
     <aside class="sidebar">
       <a href="#what">FastAPI</a>
       <a href="#create">Create, Run FastAPI Project</a>
+      <a href="#inbuilt">Inbuilt Rest Endpoints</a>
       <a href="Terms.html">Terms</a>
       <a href="../Django_vs_FastAPI.html">Django vs FastAPI</a>
     </aside>
@@ -34,10 +35,11 @@
       <p>
         FastAPI is a modern, high-performance Python web framework for building
         APIs.<br />
-        It is built on Starlette and Pydantic(specialized libraries to provide its high-performance web capabilities and 
-        data management), and uses Python type hints for
-        validation and automatic OpenAPI documentation.<br />
-        Starlette (Web Network) + Pydantic (Data Validation) + Automatic Documentation & Tools<br>
+        It is built on Starlette and Pydantic(specialized libraries to provide
+        its high-performance web capabilities and data management), and uses
+        Python type hints for validation and automatic OpenAPI documentation.<br />
+        Starlette (Web Network) + Pydantic (Data Validation) + Automatic
+        Documentation & Tools<br />
         <b>Features:</b><br />
         1. Fast to run — comparable to Node.js and Go for API workloads.<br />
         2. Automatic request/response validation via Pydantic models.<br />
@@ -46,28 +48,87 @@
         4. Native async/await support for I/O-bound endpoints.
       </p>
 
-      <h2 id="create">Create, Run FastAPI Project</h2>
+      <h2>Install</h2>
       <pre><code class="language-css">
-// Create python venv
-$ python3 -m venv .venv && source .venv/bin/activate
+# In venv
+pip3 install fastapi
+pip3 install uvicorn    # Install ASGI server called uvicorn to run FastAPI app
+      </code></pre>
 
-// Install FastAPI and ASGI server
-$ pip install "fastapi[standard]"
-
-// Create main.py
-$ cat main.py
+      <h2 id="create">Create, Run FastAPI Project</h2>
+      <p>
+        <a href="Terms.html">uvicorn</a>
+      </p>
+      <table>
+        <tr>
+          <td>
+            <b>Start Uvicorn from Command line</b><br />
+            <pre><code class="language-css"># cat main.py
 from fastapi import FastAPI
 
+app = FastAPI()                   # Create Object of FastAPI class
+
+@app.get("/")                     # get() for REST endpoint
+async def index():
+   resp_json = {"message": "Hello World"}
+   return resp_json
+
+// Run the project
+# uvicorn main:app --reload --port 8001
+Uvicorn running on http://127.0.0.1:8001          &lt;&lt; Open browser
+      </code></pre>
+          </td>
+          <td>
+            <b>Starting Uvicorn Server Programmatically</b><br />
+            <pre><code class="language-css"># cat test.py
+import uvicorn
+from fastapi import FastAPI
 app = FastAPI()
 
 @app.get("/")
-def read_root():
-    return {"message": "Hello World"}
+async def index():
+   return {"message": "Hello World"}
 
-// Run the project
-$ fastapi dev main.py
-INFO:     Uvicorn running on http://127.0.0.1:8000
-      </code></pre>
+if __name__ == "__main__":
+   uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+
+# python test.py
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="inbuilt">Inbuilt Rest Endpoints</h2>
+      <h3 id="docs">docs</h3>
+      <p>
+        No need to write documentation. Just open
+        <code>http://127.0.0.1:8001/docs</code> to get information of all REST
+        endpoints exposed by app.<br />
+        FastAPI uses Swagger UI to produce this documentation.
+      </p>
+      <table>
+        <tr>
+          <td>
+            <code>http://127.0.0.1:8001/docs</code><br />
+            <img
+              src="/images/frameworks/python/FastAPI/openapi_doc.jpg"
+              alt="fastapi docs"
+              style="width: 500px; height: 500px"
+            />
+          </td>
+          <td>
+            Click on 'try it out' &gt; 'Execute' &gt; Curl command internally
+            executed<br />
+            The request URL, the response headers, and the JSON format of the
+            servers response.<br />
+            <img
+              src="/images/frameworks/python/FastAPI/openapi_execute.jpg"
+              alt="fastapi docs execute"
+              style="width: 500px; height: 500px"
+            />
+          </td>
+        </tr>
+      </table>
     </article>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
