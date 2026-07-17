@@ -243,10 +243,12 @@ a:hover {
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-top: 0.5rem;
-  max-height: 300px;
+  margin-top: 0.35rem;
+  max-height: 28rem;
   overflow-y: auto;
   display: none;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Shown by scripts/search.js after a search runs */
@@ -255,8 +257,10 @@ a:hover {
 }
 
 .search-results li {
-  padding: 0.5rem;
+  padding: 0.35rem 0.6rem;
   border-bottom: 1px solid #eee;
+  margin: 0;
+  line-height: 1.25;
 }
 
 .search-results li:last-child {
@@ -265,6 +269,17 @@ a:hover {
 
 .search-results li:hover {
   background-color: #f5f5f5;
+}
+
+.search-results-summary {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  color: #666;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 .main-content {
   flex: 1;
@@ -661,35 +676,38 @@ aside {
 }
 
 #searchResults {
-  margin-top: 20px;
+  margin-top: 0.35rem;
   list-style: none;
   padding: 0;
 }
 
 #searchResults li {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid #eee;
   background: white;
-  margin-bottom: 8px;
-  border-radius: 4px;
+  margin-bottom: 0;
+  border-radius: 0;
 }
 
 #searchResults li:hover {
-  background: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #f5f5f5;
+  box-shadow: none;
 }
 
 .search-result-item {
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
 .search-result-title {
-  color: royalblue;
-  font-weight: 600;
+  color: #1a0dab;
+  font-weight: 500;
   text-decoration: none;
-  margin-bottom: 4px;
-  font-size: 1.1rem;
+  margin: 0;
+  font-size: 0.875rem;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .search-result-title:hover {
@@ -698,12 +716,13 @@ aside {
 
 .search-result-url {
   color: #006621;
-  font-size: 0.9rem;
-  margin-bottom: 4px;
+  font-size: 0.75rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .search-result-excerpt {
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.4;
+  display: none;
 }

@@ -1,66 +1,72 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <title>Load Balancer</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-    <link rel="stylesheet" href="/css/mermaid.css"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li><a href="/System_Design/Concepts/">Back</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
+          </form>
         </li>
-    </ul>
-  </nav>
-  <aside class="sidebar">
-    <a href="#what">What</a>
-    <a href="#block">Block Diagram</a>
-    <a href="#adv">Advantages of LB</a>
-    <ul>
-      <li><a href="#failover">1. Failover</a></li>
-    </ul>
-    <a href="#types">Types of LB</a>
-    <a href="#places">Places where LB can be kept</a>
-    <a href="#schedulingalgo">Scheduling Algorithms</a>
-    <a href="#layer3">Layer 3 Load Balancer</a>
-    <a href="#decision">How LB Routes Traffic</a>
-    <a href="#capacity">Capacity &amp; Hardware</a>
-    <a href="#scaling">Scaling the LB Itself</a>
-    <a href="#ha">Primary &amp; Secondary LB</a>
-    <a href="#stickiness">Session Stickiness</a>
-  </aside>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">What</a>
+      <a href="#block">Block Diagram</a>
+      <a href="#adv">Advantages of LB</a>
+      <a href="#types">Types of LB</a>
+      <a href="#places">Places where LB can be kept</a>
+      <a href="#schedulingalgo">Scheduling Algorithms</a>
+      <a href="#layer3">Layer 3 Load Balancer</a>
+      <a href="#decision">How LB Routes Traffic</a>
+      <a href="#capacity">Capacity &amp; Hardware</a>
+      <a href="#scaling">Scaling the LB Itself</a>
+      <a href="#ha">Primary &amp; Secondary LB</a>
+      <a href="#stickiness">Session Stickiness</a>
+    </aside>
 
-  <main>
-    <article style="margin-left:200px">
-      <h2 id="what">What is Load Balancer?</h2>
-      <p>
-        A load balancer evenly distributes incoming traffic among web servers or workers
-        defined in a load-balanced pool. Users connect to the <b>public IP / VIP</b> of the
-        load balancer; backend servers are reachable over <span style="color:red">private IP</span>
-        from the load balancer only. Examples: Nginx, HAProxy, Amazon ELB/ALB/NLB, F5, Cloudflare.
-      </p>
+    <main>
+      <article style="margin-left: 200px">
+        <h2 id="what">What is Load Balancer?</h2>
+        <p>
+          A load balancer evenly distributes incoming traffic among web servers
+          or workers defined in a load-balanced pool. Users connect to the
+          <b>public IP / VIP</b> of the load balancer; backend servers are
+          reachable over <span style="color: red">private IP</span>
+          from the load balancer only. Examples: Nginx, HAProxy, Amazon
+          ELB/ALB/NLB, F5, Cloudflare.
+        </p>
 
-      <h2 id="block">Block Diagram — Load Balancer Placement</h2>
-      <p>
-        The client never talks to individual web servers directly. DNS resolves the domain to
-        the load balancer's virtual IP (VIP). The LB terminates or forwards the connection,
-        picks a healthy backend from its pool, and rewrites the destination address before
-        forwarding on the private network.
-      </p>
-      <div class="mermaid-wrap">
-        <pre class="mermaid">
+        <h2 id="block">Block Diagram — Load Balancer Placement</h2>
+        <p>
+          The client never talks to individual web servers directly. DNS
+          resolves the domain to the load balancer's virtual IP (VIP). The LB
+          terminates or forwards the connection, picks a healthy backend from
+          its pool, and rewrites the destination address before forwarding on
+          the private network.
+        </p>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
 flowchart TB
     subgraph Internet
       C[Client / Browser<br/>DNS: example.com → 1.2.3.4]
@@ -84,230 +90,199 @@ flowchart TB
       Cache --> DB[(DB farm)]
     end
         </pre>
-      </div>
-      <pre><code class="language-css">
-Client                    Load Balancer (VIP)              Backend pool (private)
-  │                              │                                │
-  │  TCP dst=1.2.3.4:443           │                                │
-  ├─────────────────────────────►│  lookup backend table          │
-  │                              │  pick WS1 or WS2               │
-  │                              ├───────────────────────────────►│  TCP dst=10.0.1.10:8080
-  │                              │                                │
-  │◄─────────────────────────────┤◄───────────────────────────────┤  response (via LB or DSR)
-      </code></pre>
+        </div>
 
-      <h2 id="adv">Advantages of LB</h2>
-      <h4 id="failover">1. Failover</h4>
-      <p>
-        If Web-Server1 goes offline, all the traffic will be routed to Web-Server2. This
-        prevents the website from going offline. If traffic grows rapidly and two servers are
-        not enough, new web servers can be added to the pool without changing the public VIP
-        the clients use.
-      </p>
+        <h2 id="adv">Advantages of LB</h2>
+        <h4 id="failover">1. Failover</h4>
+        <p>
+          If Web-Server1 goes offline, all the traffic will be routed to
+          Web-Server2. This prevents the website from going offline. If traffic
+          grows rapidly and two servers are not enough, new web servers can be
+          added to the pool without changing the public VIP the clients use.
+        </p>
 
-      <h2 id="types">Types of LB</h2>
-      <table>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>ALB / Layer-7 / Application LB / Reverse Proxy</td>
-          <td>
-            LB inspects Layer-7 application data (HTTP/HTTPS headers, URL path, cookies) and
-            routes based on that content.
-          </td>
-        </tr>
-        <tr>
-          <td>Layer 4 LB / Transport Layer LB</td>
-          <td>
-            Operates at the transport layer (TCP, UDP, TLS). Packet is routed based on
-            source/destination IP and ports without parsing application payload.<br><br>
-            <b>Problem: Small Sized HTTP Response via LB</b><br>
-            <u>Issue:</u> Incoming request passes via LB and response is also sent via LB.
-            If the response is small (2&nbsp;MB) and the LB is serving larger requests, this
-            small response has to wait unnecessarily.<br>
-            <u>Solution — DSR (Direct Server Return):</u> backends answer directly to the
-            clients without passing the response back through the LB.
-          </td>
-        </tr>
-        <tr>
-          <td>Layer 3 LB / NLB (Network LB) / VPN LB</td>
-          <td>
-            Routing decision is made from network-layer headers (source and destination IP).
-            See the dedicated <a href="#layer3">Layer 3 section</a> below.
-          </td>
-        </tr>
-        <tr>
-          <td>IPVS (IP Virtual Server)</td>
-          <td>
-            Linux kernel feature that acts as a Layer-4 load balancer — a built-in tool within
-            the Linux kernel for high-speed packet forwarding.
-          </td>
-        </tr>
-      </table>
+        <h2 id="places">Places where LB can be kept</h2>
+        <table>
+          <tr>
+            <th>Place</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>Between Client (browser) and Web server</td>
+            <td>LB sends each request to a free / least-loaded web server.</td>
+          </tr>
+          <tr>
+            <td>Between App-servers and cache</td>
+            <td>Hundreds of cache servers may need load balancing.</td>
+          </tr>
+          <tr>
+            <td>Between cache and DB servers</td>
+            <td>Read replicas or sharded DB nodes can sit behind an LB.</td>
+          </tr>
+        </table>
 
-      <h2 id="places">Places where LB can be kept</h2>
-      <table>
-        <tr>
-          <th>Place</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>Between Client (browser) and Web server</td>
-          <td>LB sends each request to a free / least-loaded web server.</td>
-        </tr>
-        <tr>
-          <td>Between App-servers and cache</td>
-          <td>Hundreds of cache servers may need load balancing.</td>
-        </tr>
-        <tr>
-          <td>Between cache and DB servers</td>
-          <td>Read replicas or sharded DB nodes can sit behind an LB.</td>
-        </tr>
-      </table>
+        <h2 id="schedulingalgo">Scheduling Algorithms for LB</h2>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>1. Round Robin</td>
+            <td>Send request one after the other in rotation.</td>
+          </tr>
+          <tr>
+            <td>2. Least Connections</td>
+            <td>
+              Sends requests to the server with the lowest number of active
+              connections.
+            </td>
+          </tr>
+          <tr>
+            <td>3. Least time</td>
+            <td>
+              Sends requests to the server selected by a formula combining
+              fastest response time and fewest active connections.
+            </td>
+          </tr>
+          <tr>
+            <td>4. Hash</td>
+            <td>
+              Distributes requests based on a key you define, such as client IP
+              or request URL.
+            </td>
+          </tr>
+          <tr>
+            <td>5. IP HASH (HTTP only)</td>
+            <td>
+              Distributes requests based on the first three octets of the client
+              IP address.
+            </td>
+          </tr>
+          <tr>
+            <td>6. Random with 2 Choices</td>
+            <td>
+              Picks two servers at random and sends the request to the one with
+              fewer active connections.
+            </td>
+          </tr>
+          <tr>
+            <td>7. DNS Round Robin with Load Balancing</td>
+            <td>
+              Assign multiple IPs (IP1, IP2, IP3) to one domain. DNS responds
+              with one IP in rotation; each returned IP moves to the end of the
+              list so traffic is spread evenly.
+            </td>
+          </tr>
+          <tr>
+            <td>8. Sub domain DNS Delegation with Round Robin</td>
+            <td>
+              Multiple subdomains (hr.example.com, payroll.example.com) have
+              their own nameservers; the primary nameserver forwards queries to
+              the correct subdomain NS.
+            </td>
+          </tr>
+          <tr>
+            <td>9. Client side random load balancing</td>
+            <td>
+              Deliver a list of server IPs to the client; the client randomly
+              picks one per connection. Assumes all clients generate similar
+              load.
+            </td>
+          </tr>
+          <tr>
+            <td>10. Server side load balancers</td>
+            <td>
+              LB listens on a port, forwards the request to all backend servers,
+              and whichever responds first serves the client.
+            </td>
+          </tr>
+          <tr>
+            <td>11. IP ADDRESS based</td>
+            <td>
+              If the client IP is in range x–y, forward to backend-1; if in
+              range a–c, forward to backend-2, and so on.
+            </td>
+          </tr>
+          <tr>
+            <td>12. Layer 5 Aware</td>
+            <td>
+              Inspects Layer-5 session data (e.g. HTTP headers) to decide which
+              backend receives the packet.
+            </td>
+          </tr>
+        </table>
 
-      <h2 id="schedulingalgo">Scheduling Algorithms for LB</h2>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>1. Round Robin</td>
-          <td>Send request one after the other in rotation.</td>
-        </tr>
-        <tr>
-          <td>2. Least Connections</td>
-          <td>Sends requests to the server with the lowest number of active connections.</td>
-        </tr>
-        <tr>
-          <td>3. Least time</td>
-          <td>Sends requests to the server selected by a formula combining fastest response time and fewest active connections.</td>
-        </tr>
-        <tr>
-          <td>4. Hash</td>
-          <td>Distributes requests based on a key you define, such as client IP or request URL.</td>
-        </tr>
-        <tr>
-          <td>5. IP HASH (HTTP only)</td>
-          <td>Distributes requests based on the first three octets of the client IP address.</td>
-        </tr>
-        <tr>
-          <td>6. Random with 2 Choices</td>
-          <td>Picks two servers at random and sends the request to the one with fewer active connections.</td>
-        </tr>
-        <tr>
-          <td>7. DNS Round Robin with Load Balancing</td>
-          <td>
-            Assign multiple IPs (IP1, IP2, IP3) to one domain. DNS responds with one IP in
-            rotation; each returned IP moves to the end of the list so traffic is spread evenly.
-          </td>
-        </tr>
-        <tr>
-          <td>8. Sub domain DNS Delegation with Round Robin</td>
-          <td>
-            Multiple subdomains (hr.example.com, payroll.example.com) have their own
-            nameservers; the primary nameserver forwards queries to the correct subdomain NS.
-          </td>
-        </tr>
-        <tr>
-          <td>9. Client side random load balancing</td>
-          <td>
-            Deliver a list of server IPs to the client; the client randomly picks one per
-            connection. Assumes all clients generate similar load.
-          </td>
-        </tr>
-        <tr>
-          <td>10. Server side load balancers</td>
-          <td>
-            LB listens on a port, forwards the request to all backend servers, and whichever
-            responds first serves the client.
-          </td>
-        </tr>
-        <tr>
-          <td>11. IP ADDRESS based</td>
-          <td>
-            If the client IP is in range x–y, forward to backend-1; if in range a–c, forward
-            to backend-2, and so on.
-          </td>
-        </tr>
-        <tr>
-          <td>12. Layer 5 Aware</td>
-          <td>
-            Inspects Layer-5 session data (e.g. HTTP headers) to decide which backend receives
-            the packet.
-          </td>
-        </tr>
-      </table>
+        <h1 id="types">Types of LB</h1>
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>ALB / Layer-7 / Application LB / Reverse Proxy</td>
+            <td>
+              LB inspects Layer-7 application data (HTTP/HTTPS headers, URL
+              path, cookies) and routes based on that content.
+            </td>
+          </tr>
+          <tr>
+            <td>Layer 4 LB / Transport Layer LB</td>
+            <td>
+              Operates at the transport layer (TCP, UDP, TLS). Packet is routed
+              based on source/destination IP and ports without parsing
+              application payload.<br /><br />
+              <b>Problem: Small Sized HTTP Response via LB</b><br />
+              <u>Issue:</u> Incoming request passes via LB and response is also
+              sent via LB. If the response is small (2&nbsp;MB) and the LB is
+              serving larger requests, this small response has to wait
+              unnecessarily.<br />
+              <u>Solution — DSR (Direct Server Return):</u> backends answer
+              directly to the clients without passing the response back through
+              the LB.
+            </td>
+          </tr>
+          <tr>
+            <td>Layer 3 LB / NLB (Network LB) / VPN LB</td>
+            <td>
+              Routing decision is made from network-layer headers (source and
+              destination IP). See the dedicated
+              <a href="#layer3">Layer 3 section</a> below.
+            </td>
+          </tr>
+          <tr>
+            <td>IPVS (IP Virtual Server)</td>
+            <td>
+              Linux kernel feature that acts as a Layer-4 load balancer — a
+              built-in tool within the Linux kernel for high-speed packet
+              forwarding.
+            </td>
+          </tr>
+        </table>
 
-      <h2 id="layer3">Layer 3 Load Balancer — How It Works</h2>
-      <p>
-        A Layer-3 (network-layer) load balancer makes routing decisions using <b>IP headers
-        only</b>. It does not inspect TCP ports in depth (that is Layer 4) and never parses
-        HTTP (Layer 7). It is commonly used for NLB, VPN concentrators, and anycast edge
-        routers that steer flows before transport termination.
-      </p>
+        <h2 id="layer3">
+          Layer 3 Load Balancer (NLB, VPN concentrators, anycast edge routers)
+        </h2>
+        <p>
+          A Layer-3 (network-layer) load balancer makes routing decisions using
+          <b>IP headers only</b>. It does not inspect TCP ports in depth (that
+          is Layer 4) and never parses HTTP (Layer 7). It is commonly used for
+          NLB, VPN concentrators, and anycast edge routers that steer flows
+          before transport termination.
+        </p>
 
-      <h3>OSI layers and what each packet carries</h3>
-      <table>
-        <tr>
-          <th>Layer</th>
-          <th>Name</th>
-          <th>PDU</th>
-          <th>Key fields the LB may read</th>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td>Application</td>
-          <td>Data</td>
-          <td>HTTP method, URL, Host header, cookies, JWT</td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>Presentation</td>
-          <td>Data</td>
-          <td>TLS cipher suite, encoding (usually handled inside L7 LB after decrypt)</td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>Session</td>
-          <td>Data</td>
-          <td>Session tokens, RPC call IDs</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>Transport</td>
-          <td>Segment (TCP) / Datagram (UDP)</td>
-          <td><b>Source port</b>, <b>destination port</b>, sequence/ack numbers, flags (SYN, ACK)</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Network</td>
-          <td>Packet</td>
-          <td><b>Source IP</b>, <b>destination IP</b>, TTL, protocol (TCP=6, UDP=17), DSCP/QoS</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Data Link</td>
-          <td>Frame</td>
-          <td>Source MAC, destination MAC — used locally to reach the next hop NIC</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Physical</td>
-          <td>Bits</td>
-          <td>Electrical/optical signal on the wire — LB NIC receives bits, ASIC/NIC parses upward</td>
-        </tr>
-      </table>
-
-      <h3>On-the-fly decision at Layer 3</h3>
-      <p>
-        When an IP packet arrives at a Layer-3 LB, the NIC delivers the frame to the forwarding
-        engine. The engine reads the IPv4/IPv6 header:
-      </p>
-      <pre><code class="language-css">
-IPv4 header (simplified)
+        <h3>How It Works:</h3>
+        <p>
+          When an IP packet arrives at a Layer-3 LB, the NIC delivers the frame
+          to the forwarding engine. The engine reads the IPv4/IPv6 header.
+          Because only fixed-size headers are touched, Layer-3 LBs can forward
+          millions of packets per second using hardware ASICs or kernel bypass
+          (DPDK, XDP). They maintain a
+          <b>flow table</b> keyed by (src IP, dst VIP) or full 5-tuple once TCP
+          is involved at Layer 4, but pure L3 steering often uses destination-IP
+          hashing alone.
+        </p>
+        <pre><code class="language-css">IPv4 header (simplified)
   src IP  = 203.0.113.50   (client)
   dst IP  = 1.2.3.4        (VIP owned by LB)
   protocol = TCP (6)
@@ -317,231 +292,370 @@ LB lookup (microseconds):
   2. Run scheduling algorithm (e.g. weighted round-robin on backend list)
   3. Pick backend B2 with real IP 10.0.1.11
   4. Rewrite packet: dst IP = 10.0.1.11, decrement TTL, fix checksum
-  5. Forward on private interface — no HTTP parsing required
-      </code></pre>
-      <p>
-        Because only fixed-size headers are touched, Layer-3 LBs can forward millions of packets
-        per second using hardware ASICs or kernel bypass (DPDK, XDP). They maintain a
-        <b>flow table</b> keyed by (src IP, dst VIP) or full 5-tuple once TCP is involved at
-        Layer 4, but pure L3 steering often uses destination-IP hashing alone.
-      </p>
+  5. Forward on private interface — no HTTP parsing required</code></pre>
 
-      <h2 id="decision">How the Load Balancer Routes Traffic (Decision Path)</h2>
-      <p>
-        Consider an HTTP request arriving at a Layer-7 load balancer with two web servers
-        behind it. The LB must pick WS1 or WS2 in well under a millisecond. It does not query
-        a database on every request — it keeps hot-path state in memory.
-      </p>
+        <h3 id="decision">
+          How L3 Load Balancer Routes Traffic (Decision Path)
+        </h3>
+        <p>
+          Consider an HTTP request arriving at a Layer-7 load balancer with two
+          web servers(WS1, WS2) behind it. The LB must pick WS1 or WS2 in well
+          under a millisecond.
+          <font color="red"
+            >LB does not query a database on every request — it keeps hot-path
+            state in memory.</font
+          >
+          <b>Steps:</b><br />
+          1. Client completes TCP handshake with the LB VIP (SYN → SYN-ACK →
+          ACK). LB stores every HTTP Client information in
+          <b>connection tracking table</b>.
+        </p>
+        <table>
+          <tr>
+            <td>
+              <pre><code class="language-css">struct FiveTuple {    //
+    string srcIP;                   // Src IP of HTTPS Client which connects to LB
+    string dstIP;                   // Dst IP to which HTTPS Client want to connect. LB IP
+    uint16_t srcPort;               // Src Port
+    uint16_t dstPort;               // Dst Port
+    uint8_t protocol;
+    bool operator==(const FiveTuple& other) const {
+        return srcIP == other.srcIP &&
+               dstIP == other.dstIP &&
+               srcPort == other.srcPort &&
+               dstPort == other.dstPort &&
+               protocol == other.protocol;
+    }
+};
+struct ConnectionState {
+    int backendId;
+    string translatedIP;
+    uint16_t translatedPort;
+    chrono::steady_clock::time_point lastAccess;
+};
+unordered_map &lt;FiveTuple, ConnectionState&gt; connectionTable;</code></pre>
+            </td>
+            <td>
+              <pre><code class="language-css">
+HashTable
+            Key                       |   Value       
+ src=1.1.1.1,dst=LBIP,                |   backendId=1           // WS1=1, WS2=2
+ sport=2012,dport=2323, Protocol=HTTPS|   translatedIP=2.2.2.2  
+                                      |   translatedPort=5000
+                                      |   lastAccess=
+            </code></pre>
+            </td>
+          </tr>
+        </table>
 
-      <h3>Step-by-step for one HTTP GET</h3>
-      <ol>
-        <li>Client completes TCP handshake with the LB VIP (SYN → SYN-ACK → ACK).</li>
-        <li>LB allocates a row in the <b>connection tracking table</b> keyed by 5-tuple:
-          (client IP, client port, VIP, VIP port, protocol).</li>
-        <li>TLS termination (if HTTPS): LB decrypts using session keys cached in an
-          <b>SSL session cache</b> to avoid full handshakes on repeat clients.</li>
-        <li>LB parses the HTTP request line and headers (Host, Cookie, URL path).</li>
-        <li>LB consults in-memory structures (below), selects WS2, records the mapping in
-          the connection table.</li>
-        <li>LB opens (or reuses from a <b>connection pool</b>) a TCP connection to WS2
-          10.0.1.11:8080 and forwards the HTTP request.</li>
-        <li>Response travels back through the LB to the client; connection table entry is
-          updated or removed when the connection closes.</li>
-      </ol>
+        <p>
+          - TLS termination (if HTTPS): LB decrypts using session keys cached in
+          an <b>SSL session cache</b><br />
 
-      <h3>In-memory data structures a modern LB maintains</h3>
-      <table>
-        <tr>
-          <th>Structure</th>
-          <th>Purpose</th>
-          <th>Typical access</th>
-        </tr>
-        <tr>
-          <td><b>Backend pool / service table</b></td>
-          <td>List of {real IP, port, weight, max conn, AZ, tags}. Health state UP/DOWN/DRAIN.</td>
-          <td>Hash map or array — O(1) by server id</td>
-        </tr>
-        <tr>
-          <td><b>Connection tracking table</b></td>
-          <td>Maps client 5-tuple → chosen backend + NAT state. Required for return traffic.</td>
-          <td>Hash table — millions of entries, LRU eviction</td>
-        </tr>
-        <tr>
-          <td><b>Active connection counters</b></td>
-          <td>Per-backend atomic counters for Least-Connections scheduling.</td>
-          <td>Array indexed by backend id</td>
-        </tr>
-        <tr>
-          <td><b>Round-robin cursor</b></td>
-          <td>Single integer advanced on each new flow.</td>
-          <td>O(1)</td>
-        </tr>
-        <tr>
-          <td><b>Consistent hash ring</b></td>
-          <td>Maps hash(client IP or cookie) → backend for sticky or sharded routing.</td>
-          <td>O(log n) or O(1) with vnodes</td>
-        </tr>
-        <tr>
-          <td><b>Stickiness table</b></td>
-          <td>session id / cookie value → backend id with TTL.</td>
-          <td>Hash map + TTL heap</td>
-        </tr>
-        <tr>
-          <td><b>Health-check cache</b></td>
-          <td>Last probe result and timestamp per backend (HTTP GET /health every N seconds).</td>
-          <td>Updated by background threads, read lock-free on hot path</td>
-        </tr>
-        <tr>
-          <td><b>Routing rules (L7)</b></td>
-          <td>Prefix tree or regex list: <code>/api/* → api-pool</code>, <code>Host: admin.* → admin-pool</code>.</td>
-          <td>Longest-prefix match / compiled regex</td>
-        </tr>
-        <tr>
-          <td><b>TLS session cache</b></td>
-          <td>Session tickets and resumption IDs to skip full crypto on repeat handshakes.</td>
-          <td>Shared memory zone (nginx) or LRU cache</td>
-        </tr>
-        <tr>
-          <td><b>Upstream connection pool</b></td>
-          <td>Idle keep-alive sockets to backends to avoid TCP setup per request.</td>
-          <td>Per-backend queues</td>
-        </tr>
-      </table>
+          - LB parses the HTTP request line and headers (Host, Cookie, URL
+          path).<br />
 
-      <h3>Why modern load balancers are fast</h3>
-      <ul>
-        <li><b>No disk on the hot path</b> — every lookup is RAM-only.</li>
-        <li><b>Kernel bypass</b> — DPDK, XDP/eBPF, or hardware ASICs process packets in user space or NIC firmware, avoiding syscalls per packet.</li>
-        <li><b>Fixed-size header parsing</b> — L4/L3 never allocate buffers for HTTP bodies.</li>
-        <li><b>Lock-free or sharded counters</b> — each CPU core owns a slice of the connection table to avoid mutex contention.</li>
-        <li><b>Batching</b> — NIC interrupt coalescing and batch syscall (<code>recvmmsg</code>/<code>sendmmsg</code>) amortize overhead.</li>
-        <li><b>Pre-warmed backend connections</b> — HTTP keep-alive and TLS session resumption remove repeated handshakes.</li>
-        <li><b>Health checks off the request path</b> — probe results are cached; the forwarding thread only reads a boolean flag.</li>
-      </ul>
+          - LB consults in-memory structures (below), selects WS2, records the
+          mapping in the connection table.
+        </p>
+        <pre><code class="language-css">
+struct BackendServer {
+    int backendId;
+    string ip;          // Real IP of web server
+    int port;           // Real Port of web server
+    int weight;
+    int maxConnections;
+    string availabilityZone;
+    vector &lt;string&gt; tags;
+    enum class HealthState {UP, DOWN, DRAIN} health_state;
+};
+unordered_map &lt;int, BackendServer&gt; backendPool;
 
-      <h2 id="capacity">Capacity — Hardware Specs and Load Metrics</h2>
-      <p>
-        Throughput depends on LB tier (software on VM vs hardware appliance vs cloud managed),
-        packet size, TLS or not, and connection churn. Below is a representative sizing table
-        for planning — always validate with your vendor's benchmark under your traffic mix.
-      </p>
-      <table>
-        <tr>
-          <th>Profile</th>
-          <th>Hardware / form factor</th>
-          <th>Typical sustained load</th>
-        </tr>
-        <tr>
-          <td>Small software LB (1 vCPU VM, nginx/HAProxy)</td>
-          <td>1 vCPU, 2&nbsp;GB RAM, 1&nbsp;Gbps NIC</td>
-          <td>~5k–20k req/s (small HTTP), ~10k concurrent connections</td>
-        </tr>
-        <tr>
-          <td>Mid-tier software LB (8 vCPU, DPDK)</td>
-          <td>8 vCPU, 16&nbsp;GB RAM, 10&nbsp;Gbps NIC</td>
-          <td>~100k–500k L4 connections/s, ~1–3&nbsp;M concurrent flows</td>
-        </tr>
-        <tr>
-          <td>Hardware ADC (F5, A10 class)</td>
-          <td>Dual CPU, 32–64&nbsp;GB RAM, FPGA/ASIC assist, 40–100&nbsp;Gbps</td>
-          <td>~1–10&nbsp;M concurrent connections, multi‑million L7 req/s with SSL offload</td>
-        </tr>
-        <tr>
-          <td>Cloud NLB / ALB (managed)</td>
-          <td>Hyperscaler auto-scaled data plane (opaque)</td>
-          <td>Scales to millions of req/s; limits published per account/region (e.g. ALB pre-warming for sudden spikes)</td>
-        </tr>
-      </table>
+        </code></pre>
+        <p>
+          - LB opens (or reuses from a <b>connection pool</b>) a TCP connection
+          to WS2 10.0.1.11:8080 and forwards the HTTP request.<br />
+          - Response travels back through the LB to the client; connection table
+          entry is updated or removed when the connection closes.
+        </p>
 
-      <h3>Load metrics to watch</h3>
-      <table>
-        <tr>
-          <th>Metric</th>
-          <th>What it tells you</th>
-        </tr>
-        <tr>
-          <td>Requests or connections per second</td>
-          <td>Headroom vs licensed / tested maximum</td>
-        </tr>
-        <tr>
-          <td>Concurrent connections</td>
-          <td>Memory pressure on connection table (each flow ≈ hundreds of bytes–KB)</td>
-        </tr>
-        <tr>
-          <td>P99 latency at LB</td>
-          <td>Queueing inside LB when CPU or NIC is saturated</td>
-        </tr>
-        <tr>
-          <td>CPU utilization per core</td>
-          <td>TLS and L7 parsing are CPU-heavy; imbalance suggests sharding needed</td>
-        </tr>
-        <tr>
-          <td>NIC bandwidth (Gbps) and PPS</td>
-          <td>Small-packet DDoS or microservice chatter can hit PPS limit before bandwidth cap</td>
-        </tr>
-        <tr>
-          <td>SSL handshakes per second</td>
-          <td>Often the first bottleneck unless session resumption is high</td>
-        </tr>
-        <tr>
-          <td>Backend healthy count</td>
-          <td>Traffic concentrates on fewer nodes when health checks fail</td>
-        </tr>
-      </table>
+        <h3>In-memory data structures a modern LB maintains</h3>
+        <table>
+          <tr>
+            <th>Structure</th>
+            <th>Purpose</th>
+            <th>Typical access</th>
+          </tr>
+          <tr>
+            <td><b>Backend pool / service table</b></td>
+            <td>
+              List of {real IP, port, weight, max conn, AZ, tags}. Health state
+              UP/DOWN/DRAIN.
+            </td>
+            <td>Hash map or array — O(1) by server id</td>
+          </tr>
+          <tr>
+            <td><b>Connection tracking table</b></td>
+            <td>
+              Maps client 5-tuple → chosen backend + NAT state. Required for
+              return traffic.
+            </td>
+            <td>Hash table — millions of entries, LRU eviction</td>
+          </tr>
+          <tr>
+            <td><b>Active connection counters</b></td>
+            <td>
+              Per-backend atomic counters for Least-Connections scheduling.
+            </td>
+            <td>Array indexed by backend id</td>
+          </tr>
+          <tr>
+            <td><b>Round-robin cursor</b></td>
+            <td>Single integer advanced on each new flow.</td>
+            <td>O(1)</td>
+          </tr>
+          <tr>
+            <td><b>Consistent hash ring</b></td>
+            <td>
+              Maps hash(client IP or cookie) → backend for sticky or sharded
+              routing.
+            </td>
+            <td>O(log n) or O(1) with vnodes</td>
+          </tr>
+          <tr>
+            <td><b>Stickiness table</b></td>
+            <td>session id / cookie value → backend id with TTL.</td>
+            <td>Hash map + TTL heap</td>
+          </tr>
+          <tr>
+            <td><b>Health-check cache</b></td>
+            <td>
+              Last probe result and timestamp per backend (HTTP GET /health
+              every N seconds).
+            </td>
+            <td>Updated by background threads, read lock-free on hot path</td>
+          </tr>
+          <tr>
+            <td><b>Routing rules (L7)</b></td>
+            <td>
+              Prefix tree or regex list: <code>/api/* → api-pool</code>,
+              <code>Host: admin.* → admin-pool</code>.
+            </td>
+            <td>Longest-prefix match / compiled regex</td>
+          </tr>
+          <tr>
+            <td><b>TLS session cache</b></td>
+            <td>
+              Session tickets and resumption IDs to skip full crypto on repeat
+              handshakes.
+            </td>
+            <td>Shared memory zone (nginx) or LRU cache</td>
+          </tr>
+          <tr>
+            <td><b>Upstream connection pool</b></td>
+            <td>
+              Idle keep-alive sockets to backends to avoid TCP setup per
+              request.
+            </td>
+            <td>Per-backend queues</td>
+          </tr>
+        </table>
 
-      <h2 id="scaling">Scaling the Load Balancer Itself</h2>
-      <p>
-        <b>Important distinction:</b> scaling <em>backend web servers</em> (adding WS3, WS4 to
-        the pool) is separate from scaling the <em>load balancer tier</em>. When LB capacity is
-        exhausted, you do not magically spawn a new LB instance from a single hardware box —
-        you add redundancy and capacity through architecture.
-      </p>
+        <h3>Why modern load balancers are fast</h3>
+        <ul>
+          <li><b>No disk on the hot path</b> — every lookup is RAM-only.</li>
+          <li>
+            <b>Kernel bypass</b> — DPDK, XDP/eBPF, or hardware ASICs process
+            packets in user space or NIC firmware, avoiding syscalls per packet.
+          </li>
+          <li>
+            <b>Fixed-size header parsing</b> — L4/L3 never allocate buffers for
+            HTTP bodies.
+          </li>
+          <li>
+            <b>Lock-free or sharded counters</b> — each CPU core owns a slice of
+            the connection table to avoid mutex contention.
+          </li>
+          <li>
+            <b>Batching</b> — NIC interrupt coalescing and batch syscall
+            (<code>recvmmsg</code>/<code>sendmmsg</code>) amortize overhead.
+          </li>
+          <li>
+            <b>Pre-warmed backend connections</b> — HTTP keep-alive and TLS
+            session resumption remove repeated handshakes.
+          </li>
+          <li>
+            <b>Health checks off the request path</b> — probe results are
+            cached; the forwarding thread only reads a boolean flag.
+          </li>
+        </ul>
 
-      <h3>What gets provisioned when load grows?</h3>
-      <table>
-        <tr>
-          <th>Deployment style</th>
-          <th>How LB capacity is added</th>
-          <th>Pod vs standalone?</th>
-        </tr>
-        <tr>
-          <td>Software LB (nginx, HAProxy, Envoy) on Kubernetes</td>
-          <td>Horizontal Pod Autoscaler increases <b>replica count</b> of the LB Deployment; each pod shares the VIP via kube-proxy, MetalLB, or an external cloud LB.</td>
-          <td><b>New pods</b> in the same cluster — not new physical machines unless the cluster itself scales nodes.</td>
-        </tr>
-        <tr>
-          <td>Software LB on VMs</td>
-          <td>Add another VM running the same LB software; place both behind <b>ECMP</b>, DNS round-robin, or anycast VIP.</td>
-          <td><b>New standalone VM</b> provisioned (second LB instance).</td>
-        </tr>
-        <tr>
-          <td>Hardware ADC (F5, Citrix)</td>
-          <td>Add a second physical appliance in active/standby or active/active cluster; license and sync config.</td>
-          <td><b>New standalone machine</b> — dedicated appliance, not a pod.</td>
-        </tr>
-        <tr>
-          <td>Cloud managed (AWS ALB/NLB, GCP LB)</td>
-          <td>Provider auto-scales opaque data-plane nodes; you may request pre-warming for sharp spikes. No pod you manage.</td>
-          <td>Internal scaling is hidden; you do not create pods yourself.</td>
-        </tr>
-      </table>
-      <p>
-        Backends scale out independently: auto-scaling groups or Kubernetes HPA add application
-        pods/VMs and register them in the LB's backend pool via service discovery (Consul,
-        Kubernetes Endpoints, cloud target groups). The LB configuration picks up new backends
-        from its pool table — it does not "birth" them itself.
-      </p>
+        <h2 id="capacity">Capacity — Hardware Specs and Load Metrics</h2>
+        <p>
+          Throughput depends on LB tier (software on VM vs hardware appliance vs
+          cloud managed), packet size, TLS or not, and connection churn. Below
+          is a representative sizing table for planning — always validate with
+          your vendor's benchmark under your traffic mix.
+        </p>
+        <table>
+          <tr>
+            <th>Profile</th>
+            <th>Hardware / form factor</th>
+            <th>Typical sustained load</th>
+          </tr>
+          <tr>
+            <td>Small software LB (1 vCPU VM, nginx/HAProxy)</td>
+            <td>1 vCPU, 2&nbsp;GB RAM, 1&nbsp;Gbps NIC</td>
+            <td>~5k–20k req/s (small HTTP), ~10k concurrent connections</td>
+          </tr>
+          <tr>
+            <td>Mid-tier software LB (8 vCPU, DPDK)</td>
+            <td>8 vCPU, 16&nbsp;GB RAM, 10&nbsp;Gbps NIC</td>
+            <td>~100k–500k L4 connections/s, ~1–3&nbsp;M concurrent flows</td>
+          </tr>
+          <tr>
+            <td>Hardware ADC (F5, A10 class)</td>
+            <td>
+              Dual CPU, 32–64&nbsp;GB RAM, FPGA/ASIC assist, 40–100&nbsp;Gbps
+            </td>
+            <td>
+              ~1–10&nbsp;M concurrent connections, multi‑million L7 req/s with
+              SSL offload
+            </td>
+          </tr>
+          <tr>
+            <td>Cloud NLB / ALB (managed)</td>
+            <td>Hyperscaler auto-scaled data plane (opaque)</td>
+            <td>
+              Scales to millions of req/s; limits published per account/region
+              (e.g. ALB pre-warming for sudden spikes)
+            </td>
+          </tr>
+        </table>
 
-      <h2 id="ha">Primary and Secondary Load Balancer — Communication</h2>
-      <p>
-        Production systems almost never run a single LB. Two (or more) instances share a
-        <b>Virtual IP (VIP)</b> or anycast address so clients see one entry point while
-        operators get redundancy.
-      </p>
+        <h3>Load metrics to watch</h3>
+        <table>
+          <tr>
+            <th>Metric</th>
+            <th>What it tells you</th>
+          </tr>
+          <tr>
+            <td>Requests or connections per second</td>
+            <td>Headroom vs licensed / tested maximum</td>
+          </tr>
+          <tr>
+            <td>Concurrent connections</td>
+            <td>
+              Memory pressure on connection table (each flow ≈ hundreds of
+              bytes–KB)
+            </td>
+          </tr>
+          <tr>
+            <td>P99 latency at LB</td>
+            <td>Queueing inside LB when CPU or NIC is saturated</td>
+          </tr>
+          <tr>
+            <td>CPU utilization per core</td>
+            <td>
+              TLS and L7 parsing are CPU-heavy; imbalance suggests sharding
+              needed
+            </td>
+          </tr>
+          <tr>
+            <td>NIC bandwidth (Gbps) and PPS</td>
+            <td>
+              Small-packet DDoS or microservice chatter can hit PPS limit before
+              bandwidth cap
+            </td>
+          </tr>
+          <tr>
+            <td>SSL handshakes per second</td>
+            <td>
+              Often the first bottleneck unless session resumption is high
+            </td>
+          </tr>
+          <tr>
+            <td>Backend healthy count</td>
+            <td>Traffic concentrates on fewer nodes when health checks fail</td>
+          </tr>
+        </table>
 
-      <h3>Active / Standby (Primary + Secondary)</h3>
-      <div class="mermaid-wrap">
-        <pre class="mermaid">
+        <h2 id="scaling">Scaling the Load Balancer Itself</h2>
+        <p>
+          <b>Important distinction:</b> scaling
+          <em>backend web servers</em> (adding WS3, WS4 to the pool) is separate
+          from scaling the <em>load balancer tier</em>. When LB capacity is
+          exhausted, you do not magically spawn a new LB instance from a single
+          hardware box — you add redundancy and capacity through architecture.
+        </p>
+
+        <h3>What gets provisioned when load grows?</h3>
+        <table>
+          <tr>
+            <th>Deployment style</th>
+            <th>How LB capacity is added</th>
+            <th>Pod vs standalone?</th>
+          </tr>
+          <tr>
+            <td>Software LB (nginx, HAProxy, Envoy) on Kubernetes</td>
+            <td>
+              Horizontal Pod Autoscaler increases <b>replica count</b> of the LB
+              Deployment; each pod shares the VIP via kube-proxy, MetalLB, or an
+              external cloud LB.
+            </td>
+            <td>
+              <b>New pods</b> in the same cluster — not new physical machines
+              unless the cluster itself scales nodes.
+            </td>
+          </tr>
+          <tr>
+            <td>Software LB on VMs</td>
+            <td>
+              Add another VM running the same LB software; place both behind
+              <b>ECMP</b>, DNS round-robin, or anycast VIP.
+            </td>
+            <td><b>New standalone VM</b> provisioned (second LB instance).</td>
+          </tr>
+          <tr>
+            <td>Hardware ADC (F5, Citrix)</td>
+            <td>
+              Add a second physical appliance in active/standby or active/active
+              cluster; license and sync config.
+            </td>
+            <td>
+              <b>New standalone machine</b> — dedicated appliance, not a pod.
+            </td>
+          </tr>
+          <tr>
+            <td>Cloud managed (AWS ALB/NLB, GCP LB)</td>
+            <td>
+              Provider auto-scales opaque data-plane nodes; you may request
+              pre-warming for sharp spikes. No pod you manage.
+            </td>
+            <td>
+              Internal scaling is hidden; you do not create pods yourself.
+            </td>
+          </tr>
+        </table>
+        <p>
+          Backends scale out independently: auto-scaling groups or Kubernetes
+          HPA add application pods/VMs and register them in the LB's backend
+          pool via service discovery (Consul, Kubernetes Endpoints, cloud target
+          groups). The LB configuration picks up new backends from its pool
+          table — it does not "birth" them itself.
+        </p>
+
+        <h2 id="ha">Primary and Secondary Load Balancer — Communication</h2>
+        <p>
+          Production systems almost never run a single LB. Two (or more)
+          instances share a
+          <b>Virtual IP (VIP)</b> or anycast address so clients see one entry
+          point while operators get redundancy.
+        </p>
+
+        <h3>Active / Standby (Primary + Secondary)</h3>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
 flowchart LR
     C[Clients] --> VIP[VIP 1.2.3.4]
 
@@ -553,106 +667,168 @@ flowchart LR
 
     P <-->|VRRP/keepalived heartbeats<br/>config sync| S
         </pre>
-      </div>
-      <ul>
-        <li><b>VIP ownership</b> — protocols like VRRP (keepalived) or cloud failover APIs assign the VIP to the primary. Heartbeats flow over a dedicated link; if the primary stops responding, the secondary gratuitously announces the VIP via ARP/NDP.</li>
-        <li><b>Config sync</b> — primary pushes nginx/HAProxy config, certificates, and routing rules to secondary (rsync, git ops, or vendor cluster sync). Both must have identical backend pools.</li>
-        <li><b>Connection state</b> — by default the standby has an empty connection table. Existing TCP sessions break on failover unless <b>connection sync</b> (HAProxy peers, F5 mirroring) replicates the 5-tuple table in real time — expensive and often limited to short flows.</li>
-        <li><b>Split-brain prevention</b> — quorum witness, STONITH, or cloud API ensures only one node holds the VIP.</li>
-      </ul>
+        </div>
+        <ul>
+          <li>
+            <b>VIP ownership</b> — protocols like VRRP (keepalived) or cloud
+            failover APIs assign the VIP to the primary. Heartbeats flow over a
+            dedicated link; if the primary stops responding, the secondary
+            gratuitously announces the VIP via ARP/NDP.
+          </li>
+          <li>
+            <b>Config sync</b> — primary pushes nginx/HAProxy config,
+            certificates, and routing rules to secondary (rsync, git ops, or
+            vendor cluster sync). Both must have identical backend pools.
+          </li>
+          <li>
+            <b>Connection state</b> — by default the standby has an empty
+            connection table. Existing TCP sessions break on failover unless
+            <b>connection sync</b> (HAProxy peers, F5 mirroring) replicates the
+            5-tuple table in real time — expensive and often limited to short
+            flows.
+          </li>
+          <li>
+            <b>Split-brain prevention</b> — quorum witness, STONITH, or cloud
+            API ensures only one node holds the VIP.
+          </li>
+        </ul>
 
-      <h3>Active / Active</h3>
-      <p>
-        Both LBs serve traffic simultaneously. Clients reach either node via:
-      </p>
-      <ul>
-        <li><b>DNS round-robin / anycast</b> — same VIP announced from multiple PoPs; BGP anycast routes each client to the nearest healthy LB.</li>
-        <li><b>ECMP</b> — top-of-rack switches hash flows across multiple LB NICs.</li>
-      </ul>
-      <p>
-        Each node maintains its own connection table. Stickiness must use a deterministic
-        algorithm (source-IP hash or cookie) so the same client tends to hit the same node,
-        or stickiness is abandoned in favor of stateless backends.
-      </p>
+        <h3>Active / Active</h3>
+        <p>
+          Both LBs serve traffic simultaneously. Clients reach either node via:
+        </p>
+        <ul>
+          <li>
+            <b>DNS round-robin / anycast</b> — same VIP announced from multiple
+            PoPs; BGP anycast routes each client to the nearest healthy LB.
+          </li>
+          <li>
+            <b>ECMP</b> — top-of-rack switches hash flows across multiple LB
+            NICs.
+          </li>
+        </ul>
+        <p>
+          Each node maintains its own connection table. Stickiness must use a
+          deterministic algorithm (source-IP hash or cookie) so the same client
+          tends to hit the same node, or stickiness is abandoned in favor of
+          stateless backends.
+        </p>
 
-      <h2 id="stickiness">Session Stickiness (Persistence)</h2>
-      <p>
-        Session stickiness forces requests from the same client (or session) to reach the
-        <b>same backend</b> across multiple requests, even when the LB would otherwise round-robin.
-      </p>
+        <h2 id="stickiness">Session Stickiness (Persistence)</h2>
+        <p>
+          Session stickiness forces requests from the same client (or session)
+          to reach the
+          <b>same backend</b> across multiple requests, even when the LB would
+          otherwise round-robin.
+        </p>
 
-      <h3>When stickiness helps</h3>
-      <table>
-        <tr>
-          <th>Scenario</th>
-          <th>Why stickiness matters</th>
-        </tr>
-        <tr>
-          <td>Shopping cart / in-memory session</td>
-          <td>Server stores cart in local RAM; without stickiness the cart appears empty on another node.</td>
-        </tr>
-        <tr>
-          <td>WebSocket or SSE long-lived connection</td>
-          <td>Connection is pinned to one backend for its lifetime anyway; stickiness ensures reconnect lands on a node that can resume (or use shared store).</td>
-        </tr>
-        <tr>
-          <td>Legacy apps without shared session store</td>
-          <td>Avoids rewriting the app to use Redis for sessions.</td>
-        </tr>
-        <tr>
-          <td>File upload chunked across requests</td>
-          <td>Chunks must land on the same worker holding partial state.</td>
-        </tr>
-      </table>
+        <h3>When stickiness helps</h3>
+        <table>
+          <tr>
+            <th>Scenario</th>
+            <th>Why stickiness matters</th>
+          </tr>
+          <tr>
+            <td>Shopping cart / in-memory session</td>
+            <td>
+              Server stores cart in local RAM; without stickiness the cart
+              appears empty on another node.
+            </td>
+          </tr>
+          <tr>
+            <td>WebSocket or SSE long-lived connection</td>
+            <td>
+              Connection is pinned to one backend for its lifetime anyway;
+              stickiness ensures reconnect lands on a node that can resume (or
+              use shared store).
+            </td>
+          </tr>
+          <tr>
+            <td>Legacy apps without shared session store</td>
+            <td>Avoids rewriting the app to use Redis for sessions.</td>
+          </tr>
+          <tr>
+            <td>File upload chunked across requests</td>
+            <td>Chunks must land on the same worker holding partial state.</td>
+          </tr>
+        </table>
 
-      <h3>When stickiness hurts or is unnecessary</h3>
-      <ul>
-        <li><b>Stateless REST / gRPC APIs</b> with JWT and shared DB — stickiness adds imbalance when one client hogs a hot server.</li>
-        <li><b>Mobile clients behind carrier NAT</b> — thousands of users share one public IP; source-IP stickiness overloads one backend.</li>
-        <li><b>Backend drain / deploy</b> — sticky sessions resist graceful shutdown unless the LB supports slow drain and cookie refresh.</li>
-      </ul>
+        <h3>When stickiness hurts or is unnecessary</h3>
+        <ul>
+          <li>
+            <b>Stateless REST / gRPC APIs</b> with JWT and shared DB —
+            stickiness adds imbalance when one client hogs a hot server.
+          </li>
+          <li>
+            <b>Mobile clients behind carrier NAT</b> — thousands of users share
+            one public IP; source-IP stickiness overloads one backend.
+          </li>
+          <li>
+            <b>Backend drain / deploy</b> — sticky sessions resist graceful
+            shutdown unless the LB supports slow drain and cookie refresh.
+          </li>
+        </ul>
 
-      <h3>Internal logic — common mechanisms</h3>
-      <table>
-        <tr>
-          <th>Method</th>
-          <th>How it works internally</th>
-        </tr>
-        <tr>
-          <td><b>Insert cookie (LB-generated)</b></td>
-          <td>On first response LB sets <code>Set-Cookie: SERVERID=ws2; HttpOnly</code>. On later requests LB reads the cookie, looks up <code>ws2</code> in the backend table, bypasses round-robin. Stored in stickiness hash map with TTL.</td>
-        </tr>
-        <tr>
-          <td><b>Application cookie (passive)</b></td>
-          <td>LB hashes an existing cookie (e.g. <code>JSESSIONID</code>) with consistent hashing → backend id. No new cookie needed; works if the app already sets one.</td>
-        </tr>
-        <tr>
-          <td><b>Source IP hash</b></td>
-          <td><code>backend = hash(client_ip) mod N</code>. Stateless, fast, but poor distribution behind NAT.</td>
-        </tr>
-        <tr>
-          <td><b>TLS session ID / ticket</b></td>
-          <td>Hash of SSL session id maps to the node that terminated the first handshake — mainly for reconnect optimization.</td>
-        </tr>
-        <tr>
-          <td><b>Header-based</b></td>
-          <td>Route by <code>X-User-Id</code> or tenant id hash — useful in multi-tenant SaaS.</td>
-        </tr>
-      </table>
+        <h3>Internal logic — common mechanisms</h3>
+        <table>
+          <tr>
+            <th>Method</th>
+            <th>How it works internally</th>
+          </tr>
+          <tr>
+            <td><b>Insert cookie (LB-generated)</b></td>
+            <td>
+              On first response LB sets
+              <code>Set-Cookie: SERVERID=ws2; HttpOnly</code>. On later requests
+              LB reads the cookie, looks up <code>ws2</code> in the backend
+              table, bypasses round-robin. Stored in stickiness hash map with
+              TTL.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Application cookie (passive)</b></td>
+            <td>
+              LB hashes an existing cookie (e.g. <code>JSESSIONID</code>) with
+              consistent hashing → backend id. No new cookie needed; works if
+              the app already sets one.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Source IP hash</b></td>
+            <td>
+              <code>backend = hash(client_ip) mod N</code>. Stateless, fast, but
+              poor distribution behind NAT.
+            </td>
+          </tr>
+          <tr>
+            <td><b>TLS session ID / ticket</b></td>
+            <td>
+              Hash of SSL session id maps to the node that terminated the first
+              handshake — mainly for reconnect optimization.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Header-based</b></td>
+            <td>
+              Route by <code>X-User-Id</code> or tenant id hash — useful in
+              multi-tenant SaaS.
+            </td>
+          </tr>
+        </table>
 
-      <h3>Stickiness + multiple LB nodes</h3>
-      <p>
-        In active/active, an inserted cookie must be honored by <b>all</b> LB instances (same
-        cookie name → same backend mapping algorithm). If only the primary knows the table,
-        failover breaks sessions. Best practice: make backends stateless with a shared session
-        store (Redis) and treat stickiness as an optimization, not correctness.
-      </p>
+        <h3>Stickiness + multiple LB nodes</h3>
+        <p>
+          In active/active, an inserted cookie must be honored by <b>all</b> LB
+          instances (same cookie name → same backend mapping algorithm). If only
+          the primary knows the table, failover breaks sessions. Best practice:
+          make backends stateless with a shared session store (Redis) and treat
+          stickiness as an optimization, not correctness.
+        </p>
+      </article>
+    </main>
 
-    </article>
-  </main>
-
-  <script src="/scripts/common.js"></script>
-  <script type="module" src="/scripts/mermaid-init.js"></script>
-  <script src="/scripts/prism.js"></script>
-</body>
+    <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>
