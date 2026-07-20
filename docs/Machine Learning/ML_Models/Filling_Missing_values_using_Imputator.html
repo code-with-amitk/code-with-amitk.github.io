@@ -81,13 +81,10 @@ data_frame = pd.read_csv('../input/melbourne-housing-snapshot/melb_data.csv')
 # Copy Price Coloumn into y, that is what we want to predict(house prices).
 y_dataframe_price = data_frame.Price
 
-# Drop the Price column from the dataset.
-# melb_predictors contains all columns except Price. Eg:
+# Machine Learning\Libraries\Pandas\Functions.html#drop
 melb_predictors = data_frame.drop(['Price'], axis=1)
 
-# From melb_predictors data_frame. Remove the coloumns which are Objects
-# Example keep numerical, floats, strings etc columns
-# ['Rooms', 'Distance', 'Bedroom2', 'Bathroom', 'Car', 'Landsize', 'BuildingArea', 'YearBuilt', ...]
+# Machine Learning\Libraries\Pandas\Functions.html#select_dtypes
 X_dataframe_without_objects = melb_predictors.select_dtypes(exclude=['object'])
 
 
@@ -99,19 +96,7 @@ X_train, X_valid, y_train, y_valid = train_test_split(
 # # Machine Learning\Libraries\scikit-learn\Functions.html#SimpleImputer
 my_imputer = SimpleImputer()
 
-# Fill missing values in training question and answer
-# Replaces missing values in X_train
-# Example output idea:
-# If X_train had:
-# Rooms  Distance
-# 2      5.0
-# NaN    7.2
-# 3      NaN
-# Then after imputation:
-# Rooms  Distance
-# 2.0    5.0
-# 2.5    7.2
-# 3.0    6.1
+# Machine Learning\Libraries\scikit-learn\Functions.html#SimpleImputer
 imputed_X_train = pd.DataFrame(my_imputer.fit_transform(X_train))
 imputed_X_valid = pd.DataFrame(my_imputer.transform(X_valid))
 

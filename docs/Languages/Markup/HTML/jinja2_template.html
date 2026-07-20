@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML jinja2</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Markup/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#cond">{% if cond %}</a>
+      <a href="#print">{{ ... }}</a>
+      <a href="#code">Code Example</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="cond">{% if cond %}</h2>
+      <p>
+        This is not HTML. It's Jinja2 template logic.<br />
+        It means "If the variable cond exists and is not empty, render the
+        following HTML."
+      </p>
+      <pre><code class="language-css">
+if cond=None  || cond="" 
+        then it becomes false
+else
+        true
+      </code></pre>
+
+      <h2 id="print">{{ ... }}</h2>
+      <p>Print value inside</p>
+
+      <h2>Code Example</h2>
+      <table>
+        <tr>
+          <td>
+            Script to render page.html using base.html<br />
+            <pre><code class="language-css">cat app.py
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+@app.get("/")
+def home(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="page.html",
+        context={}
+    )
+          </code></pre>
+          </td>
+          <td>
+            base.html (template)<br />
+            <pre><code class="language-css">cat templates/base.html
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;
+      {% block title %}
+        My Website
+      {% endblock %}
+    &lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;My Website Header&lt;/h2&gt;
+    &lt;hr&gt;
+      {% block content %}
+      {% endblock %}
+    &lt;hr&gt;
+    &lt;p&gt;© 2026 My Website&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </td>
+          <td>
+            Page extending the template<br />
+            <pre><code class="language-css">cat templates/page.html
+{% extends "base.html" %}
+
+{% block title %}
+Home Page
+{% endblock %}
+
+{% block content %}
+<h1>Welcome!</h1>
+<p>Hello from Jinja2.</p>
+{% endblock %}
+
+          </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+$ uvicorn app:app --reload --port 8089
+
+http://127.0.0.1:8089
+
+My Website Header
+Welcome!
+Hello from Jinja2.
+
+© 2026 My Website
+              </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

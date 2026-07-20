@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Components System Design</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#apigw">API Gateway</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h2 id="apigw">API Gateway</h2>
+      <p>
+        Single entry point. Handles TLS termination, authentication, rate
+        limiting, request routing, and load balancing
+      </p>
+    </main>
+  </body>
+</html>

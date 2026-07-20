@@ -92,7 +92,21 @@ RandomForestRegressor(n_estimators=100, *, criterion='squared_error', max_depth=
         of that column. Example: <br />
         If Rooms has values [2, 3, NaN, 4], the NaN may be replaced by 3.0
       </p>
-      <pre><code class="language-css">my_imputer = SimpleImputer()
+      <pre><code class="language-css">my_imputer = sklearn.impute.SimpleImputer()
+
+# If X_train had:
+# Rooms  Distance
+# 2      5.0
+# NaN    7.2
+# 3      NaN
+
+imputed_X_train = pd.DataFrame(my_imputer.fit_transform(X_train))
+
+# Then after imputation:
+# Rooms  Distance
+# 2.0    5.0
+# 2.5    7.2
+# 3.0    6.1      //Replaces missing values in X_train with average
         </code></pre>
 
       <h3 id="train_test_split">train_test_split()</h3>
