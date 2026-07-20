@@ -35,8 +35,7 @@
       <a href="#req">Requirements</a>
       <a href="#hld">HLD</a>
       <ul>
-        <li><a href="#placement">Placement &amp; topology</a></li>
-        <li><a href="#why-not-global">Why not on Global LB</a></li>
+        <li><a href="#where">Where the limiter sits</a></li>
         <li><a href="#block">Block Diagram</a></li>
         <li><a href="#flow">Request flow</a></li>
         <li><a href="#sequence">Sequence Diagram</a></li>
@@ -79,108 +78,30 @@
 
         <h2 id="hld">High Level Design</h2>
 
-        <h3 id="placement">
-          Where the limiter sits: Global LB → Regional LB → AZ LB → Rate Limiter
+        <h3 id="where">
+          Where the limiter sits. Global LB → Regional LB → AZ LB → Rate Limiter
         </h3>
         <p>
-          Cloud topology stacks as
-          <b>Region → Availability Zones (AZs) → data centers</b>. Traffic
-          passes through three load-balancing layers before it reaches the
-          distributed rate limiter. The <b>global load balancer</b> (DNS,
-          geo-DNS, or anycast) receives customer traffic and picks the nearest
-          healthy <b>region</b> — for example sending a Mumbai customer toward
-          <code>ap-south-1</code> and a New York customer toward
-          <code>us-east-1</code>. Inside that region a <b>regional load
-          balancer</b> spreads connections across AZs in the region. Inside
-          each AZ an <b>availability-zone load balancer</b> picks a healthy
-          gateway pod in that AZ. Only <b>after</b> this third hop does the
-          request hit the <b>API Gateway + distributed rate limiter</b>, which
-          runs the token-bucket check against <b>regional Redis</b> and then
-          forwards allowed calls to backend services.
-        </p>
-        <p>
-          The limiter is therefore not a single box at the global edge, the
-          region edge, or the AZ edge. It is a <b>fleet of stateless gateway
-          pods</b> deployed in every AZ, each performing the same check against
-          the same regional Redis cluster (replicated multi-AZ inside the
-          region for HA). Global and regional LBs only route; they do not hold
-          token counters. The AZ LB only picks a pod; the pod owns the
-          application-level decision.
-        </p>
-        <p>
-          For a SaaS provider such as <b>Netscope</b>, inbound traffic is not
-          anonymous web browsing — it is authenticated API traffic from
-          enterprise customers using Netscope services. That distinction
-          matters for placement: the global LB sees hostnames, IPs, and TLS
-          handshakes, but the rate-limit key is usually an <b>API key, tenant
-          id, or OAuth subject</b> extracted only after TLS termination and
-          gateway parsing inside the chosen region. The distributed rate
-          limiter belongs at that application edge, immediately after the AZ LB
-          has delivered the request to a gateway pod.
-        </p>
+          It sits behind AZ LB<br />
+          <b>Why RL does not sit behind Global LB?</b><br />
+          - The global LB’s job is <b>geo routing and health</b>: steer traffic
+          to a region, fail over when a region is down.<br />
+          - Token-bucket check(at RL) needs a <b>nearby Redis round-trip</b> on
+          every request, if Redis fails it will be worldwide single point of
+          failure<br />
 
-        <h3 id="why-not-global">Why the limiter does not sit on the Global LB</h3>
-        <p>
-          Putting distributed rate limiting on the global load balancer is
-          tempting because that is the first Netscope-owned hop after the
-          customer. In practice the global tier is the wrong place for
-          per-customer token buckets.
-        </p>
-        <p>
-          The global LB’s job is <b>geo routing and health</b>: steer traffic
-          to a region, fail over when a region is down. It is typically
-          implemented as DNS latency routing, anycast to regional PoPs, or a
-          thin GSLB — not as a full programmable HTTP proxy fleet that can run
-          Lua scripts and maintain millions of live counters. Even when a CDN
-          or WAF sits in front, that layer enforces coarse IP-level or
-          volumetric rules; it does not replace per-tenant API quotas backed
-          by shared atomic state.
-        </p>
-        <p>
-          A token-bucket check needs a <b>nearby Redis round-trip</b> on every
-          request (or a local lease refreshed from Redis). If the check ran at
-          the global tier, every API call from India and the US would converge
-          on <b>one global Redis</b> or on cross-region writes. That adds
-          100–300&nbsp;ms RTT, turns Redis into a worldwide single point of
-          failure, and creates race conditions when two regions increment the
-          same counter concurrently. Rate limiting is latency-sensitive; the
-          global hop is latency-insensitive routing. Keeping counters
-          <b>regional</b> keeps the hot path inside one AZ-to-Redis RTT
-          (sub‑millisecond to a few ms).
-        </p>
-        <p>
-          Identity also arrives too late at the global tier. Netscope customers
+          - Identity check cannot be done at Global level. Netscope customers
           present <code>X-API-Key</code>, JWT bearer tokens, or mTLS client
-          certs. The global LB may terminate TLS at a regional PoP, but
-          authoritative authentication, tenant lookup, and route selection
-          happen on the <b>API Gateway</b> after regional and AZ load
-          balancing. Without that identity the limiter cannot choose the correct
-          bucket (<code>tenant_acme</code> vs <code>tenant_globex</code>).
-          Moving rate limiting to the gateway — after AZ LB — keeps routing
-          dumb and policy smart.
-        </p>
-        <p>
-          A <b>lightweight global guard</b> can still exist above regions:
-          block obvious DDoS by IP, cap connections per PoP, or apply a very
-          coarse per-ASN ceiling. That is abuse protection, not the
-          distributed per-API-key limiter described here. The fine-grained,
-          thread-safe, scalable limiter runs regionally on the gateway fleet
-          after the AZ load balancer.
-        </p>
-        <p>
-          The <b>API Gateway</b> remains the natural enforcement point. It
-          terminates TLS (or receives it from an upstream PoP), authenticates
-          the Netscope customer, loads the tenant’s rule from config, calls
-          regional Redis atomically, returns <code>429</code> or forwards to
-          the correct backend microservice. A dedicated rate-limit sidecar is
-          optional; the gateway is still the layer that orchestrates the check.
+          certs. TLS Termination happen on the <b>API Gateway</b> which cannot
+          be placed before global LB. <br />
+          - A <b>lightweight global guard</b> can still exist above regions
         </p>
 
         <h3 id="block">Block Diagram</h3>
         <p>
           Two regions (US and India). Each region has regional Redis for live
-          token buckets and talks to a shared global Redis (or config store)
-          for rules and tenant metadata. The limiter runs on gateway pods
+          token buckets and talks to a shared global Redis (or config store) for
+          rules and tenant metadata. The limiter runs on gateway pods
           <b>after</b> the AZ load balancer in each region.
         </p>
         <div class="mermaid-wrap">
@@ -209,40 +130,21 @@ flowchart TB
     REDIS_GLOBAL -.->|read rules, sync config| GW_IN
           </pre>
         </div>
-        <pre><code class="language-css">
-Customer API traffic
-        │
-        ▼
-Global LB          → pick region only (US or India); no token-bucket logic
-        │
-        ▼
-Regional LB        → spread across AZs inside the region
-        │
-        ▼
-AZ LB              → pick healthy gateway pod in that AZ
-        │
-        ▼
-API Gateway + DRL  → auth, load rule, atomic check on REGIONAL Redis, 200 or 429
-        │                    │
-        ▼                    ▼
-Backend services     Regional Redis (hot counters)
-
-Global Redis       → rules + tenant config (cold/slow-changing); NOT every INCR
-        </code></pre>
 
         <h3 id="flow">Request flow across layers</h3>
         <p>
           A Netscope customer in Mumbai sends an authenticated API call. The
           global load balancer resolves the hostname and routes the connection
           to the India region — it does not decrement any token. The regional
-          load balancer in India chooses an AZ (for example <code>ap-south-1a</code>
-          or <code>ap-south-1b</code>). The AZ load balancer inside that zone
-          selects a healthy API Gateway pod. That pod terminates TLS if needed,
-          validates the API key, fetches the tenant rule (100 req/min, burst 20)
-          from cache or global config, and runs the token-bucket Lua script
-          against <b>India regional Redis</b>. If tokens remain, the gateway
-          forwards to the correct Netscope microservice and returns the
-          response; if not, it responds with <code>429 Too Many Requests</code>
+          load balancer in India chooses an AZ (for example
+          <code>ap-south-1a</code> or <code>ap-south-1b</code>). The AZ load
+          balancer inside that zone selects a healthy API Gateway pod. That pod
+          terminates TLS if needed, validates the API key, fetches the tenant
+          rule (100 req/min, burst 20) from cache or global config, and runs the
+          token-bucket Lua script against <b>India regional Redis</b>. If tokens
+          remain, the gateway forwards to the correct Netscope microservice and
+          returns the response; if not, it responds with
+          <code>429 Too Many Requests</code>
           and the backend is never contacted. A US customer follows the same
           ladder inside the US region with US regional Redis. Global and
           regional LBs add no Redis calls; only the gateway on the hot path
@@ -252,8 +154,8 @@ Global Redis       → rules + tenant config (cold/slow-changing); NOT every INC
         <h3 id="sequence">Sequence Diagram</h3>
         <p>
           End-to-end path for one API call after the customer has reached
-          Netscope’s edge. Rate limiting begins only at the gateway pod, post
-          AZ load balancer.
+          Netscope’s edge. Rate limiting begins only at the gateway pod, post AZ
+          load balancer.
         </p>
         <div class="mermaid-wrap">
           <pre class="mermaid">
@@ -353,10 +255,11 @@ rule:{rule_id} → {
           script. All gateway pods in the US region read and write the US
           regional cluster; all pods in India use the India cluster. Sharding
           inside the cluster is by <code>hash(rule_id + tenant)</code>. This
-          store is optimized for <b>high write QPS, sub‑ms latency, and
-          thread-safe increments</b> — it is the heart of the distributed rate
-          limiter. Counters are <b>not</b> replicated to other regions on each
-          request; that would defeat the purpose of regional placement.
+          store is optimized for
+          <b>high write QPS, sub‑ms latency, and thread-safe increments</b> — it
+          is the heart of the distributed rate limiter. Counters are
+          <b>not</b> replicated to other regions on each request; that would
+          defeat the purpose of regional placement.
         </p>
         <p>
           <b>Global Redis</b> (often paired with a config DB or control plane)
@@ -369,9 +272,9 @@ rule:{rule_id} → {
           may also store <b>optional aggregate counters</b> for billing or
           offline quota reconciliation, but not per-request token decrements
           across continents. When an admin changes a tenant’s limit in the
-          Netscope console, the update lands in global Redis/config and fans
-          out to all regional gateways; existing regional bucket keys can be
-          reset or left to drain naturally.
+          Netscope console, the update lands in global Redis/config and fans out
+          to all regional gateways; existing regional bucket keys can be reset
+          or left to drain naturally.
         </p>
         <pre><code class="language-css">
 # REGIONAL Redis (US cluster) — updated on every API request
@@ -384,14 +287,17 @@ rule:tenant_acme           → { rate: 100/min, capacity: 50, plan: "enterprise"
 tenant:tenant_acme         → { api_key_hash: "…", status: "active", home_region: "us" }
         </code></pre>
         <p>
-          In short: <b>regional Redis answers “may this request proceed right
-          now?”</b> with atomic counters close to the gateway.
-          <b>Global Redis answers “what is this tenant allowed under their
-          contract?”</b> and keeps that answer consistent in every region.
-          Splitting policy (global) from counters (regional) is why the limiter
-          lives after the AZ load balancer with regional Redis, while the global
-          load balancer stays a routing-only tier that never touches token
-          buckets.
+          In short:
+          <b>regional Redis answers “may this request proceed right now?”</b>
+          with atomic counters close to the gateway.
+          <b
+            >Global Redis answers “what is this tenant allowed under their
+            contract?”</b
+          >
+          and keeps that answer consistent in every region. Splitting policy
+          (global) from counters (regional) is why the limiter lives after the
+          AZ load balancer with regional Redis, while the global load balancer
+          stays a routing-only tier that never touches token buckets.
         </p>
 
         <h3 id="multiregion">How the two tiers behave across US and India</h3>
@@ -399,23 +305,23 @@ tenant:tenant_acme         → { api_key_hash: "…", status: "active", home_reg
           Each region runs its own <b>regional Redis Cluster</b>, stretched
           across AZs for failover. Global Redis is typically deployed in one
           primary region with read replicas or active-active config replication
-          so gateways in US and India see the same rule set within seconds.
-          A tenant pinned to India by the global LB accrues and spends tokens
-          only in India regional Redis. The same tenant hitting the US PoP
-          accrues a separate regional counter unless sticky routing sends them
-          to one home region. For a hard worldwide ceiling, operators either
-          split quota per region (500 + 500 of 1000), route that tenant to a
-          single home region, or run an async aggregator on global Redis —
-          never a synchronous cross-region INCR on every API call.
+          so gateways in US and India see the same rule set within seconds. A
+          tenant pinned to India by the global LB accrues and spends tokens only
+          in India regional Redis. The same tenant hitting the US PoP accrues a
+          separate regional counter unless sticky routing sends them to one home
+          region. For a hard worldwide ceiling, operators either split quota per
+          region (500 + 500 of 1000), route that tenant to a single home region,
+          or run an async aggregator on global Redis — never a synchronous
+          cross-region INCR on every API call.
         </p>
         <p>
           Inside one region, thread-safety comes from Lua atomicity on the
           correct Redis shard; scalability comes from horizontal gateway pods
           behind AZ LBs plus sharded regional Redis. The API Gateway
           orchestrates TLS, auth, rule lookup (global/cache), counter update
-          (regional), and routing to Netscope backends — whether the Lua call
-          is in-process or via a sidecar, the placement after the AZ load
-          balancer stays the same.
+          (regional), and routing to Netscope backends — whether the Lua call is
+          in-process or via a sidecar, the placement after the AZ load balancer
+          stays the same.
         </p>
       </article>
     </main>

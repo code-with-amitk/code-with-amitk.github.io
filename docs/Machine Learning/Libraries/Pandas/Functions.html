@@ -26,12 +26,15 @@
 
     <aside class="sidebar">
       <a href="#DataFrame">DataFrame() constructor</a>
+      <a href="#any">any()</a>
       <a href="#describe">describe()</a>
-      <a href="#drop">drop()</a>
-      <a href="#dropna">dropna()</a>
+      <a href="#drop">drop() and dropna()</a>
       <a href="#head">head()</a>
+      <a href="#isNull">isNull()</a>
       <a href="#read_csv">read_csv(), .columns</a>
       <a href="#select_dtypes">select_dtypes()</a>
+      <a href="#shape">shape()</a>
+      <a href="#sum">sum()</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -42,13 +45,32 @@
           >Dataframe</a
         >
         is a 2-D Array.<br />
-        pd.DataFrame() constructor is the foundational tool in pandas used to
-        create or reconstruct a DataFrame object
+        Used to create or reconstruct a DataFrame object
       </p>
 
-      <pre><code class="language-css">
-DataFrame(data=None, index=None, columns=None, dtype=None, copy=None)
+      <pre><code class="language-css">DataFrame(data=None, index=None, columns=None, dtype=None, copy=None)
       </code></pre>
+
+      <h3 id="any">any()</h3>
+      <p>
+        check if at least one value in a series or along an axis evaluates to
+        True.
+      </p>
+      <pre><code class="language-css"># data.csv
+Duration,Pulse,Maxpulse,Calories
+45,       117,    148,  406.0
+60,       102,    127,  300.5
+60,       110,    136,
+45,       104,     134, 253.3
+
+import pandas as pd
+df = pd.read_csv('data.csv')
+all_cols = [col for col in df.columns] 
+print(all_cols)       # [Duration,Pulse,Maxpulse,Calories]
+
+cols_with_missing = [col for col in df.columns if df[col].isnull().any()]
+print(cols_with_missing)  # [Calories]
+</code></pre>
 
       <h3 id="describe">describe()</h3>
       <dl>
@@ -89,41 +111,104 @@ min        50.0  103.000000  130.000000  282.400000
 max        70.0  117.000000  175.000000  479.000000
       </code></pre>
 
-      <h3 id="drop">drop()</h3>
-      <p>Drop specified labels from rows or columns</p>
-      <pre><code class="language-css">DataFrame.drop(labels=None, axis=0, index=None, columns=None, level=None, inplace=False, errors='raise')
-      </code></pre>
+      <h3 id="drop">drop() and dropna()</h3>
+      <p>
+        dropna(): Cleans out missing data (NaN/None). DataFrame with NA entries
+        dropped from it or None if inplace=True.<br />
+        drop(): Deletes explicit rows or columns by name.
+      </p>
+      <table>
+        <tr>
+          <th>drop()</th>
+          <th>dropna()</th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+# Drops the column named 'Age'
+df_dropped = df.drop(columns=['Age']) 
 
-      <h3 id="dropna">dropna</h3>
-      <dl>
-        Drop the empty rows from
-        <a
-          href="/Machine%20Learning/Libraries/Pandas/Introduction.html#Dataframes"
-          >Dataframe</a
-        >
-      </dl>
-      <pre><code class="language-css">import pandas as pd
+# Drops the row with index label 2
+df_dropped = df.drop(index=2) 
+
+Example:
+data_frame = 
+       Duration       Pulse    Maxpulse    Calories
+count       3.0    4.000000    4.000000    4.000000
+mean       60.0  109.750000  146.250000  377.625000
+std        10.0    5.737305   20.155644   85.148904
+min        50.0  103.000000  130.000000  282.400000
+25%        55.0  107.500000  133.750000  325.600000
+50%        60.0  109.500000  140.000000  374.550000
+75%        65.0  111.750000  152.500000  426.575000
+max        70.0  117.000000  175.000000  479.000000
+
+// Pulse col will be removed
+d = data_frame.drop(['Pulse'], axis=1)
+          </code></pre>
+          </td>
+          <td>
+            <b>dropna() Arguments:</b><br />
+            inplace=true. Donot create a new copy. Instead replace original(move
+            constructor)<br /><br />
+            <table>
+              <tr>
+                <td>
+                  <pre><code class="language-css">
+data.csv
+Duration,Pulse,Maxpulse,Calories
+45,       117,  148,    406.0
+60,       102,  127,    300.5
+60,       110,  136,
+45,       104,  134,    253.3
+                  </code></pre>
+                </td>
+                <td>
+                  Drop all rows with NaN<br />
+                  <pre><code class="language-css">import pandas as pd
 df = pd.read_csv('data.csv')
-print("Before drop\n", df.to_string())
-df = df.dropna(axis=0)
-print("After drop\n", df.to_string())
+print(df.dropna())  # OR df.dropna(axis=0)
 
-Before drop
-    Duration  Pulse  Maxpulse  Calories
-0      60.0    110       130     409.1
-1      60.0    117       145     479.0
-2      60.0    103       135     340.0
-3       NaN    109       175     282.4
-
-After drop
-    Duration  Pulse  Maxpulse  Calories
-0      60.0    110       130     409.1
-1      60.0    117       145     479.0
-2      60.0    103       135     340.0
-      </code></pre>
+   Duration  Pulse  Maxpulse  Calories
+0        45    117       148     406.0
+1        60    102       127     300.5
+3        45    104       134     253.3
+                  </code></pre>
+                </td>
+                <td>
+                  subset=[]. Only drop if this col has NaN<br />
+                  <pre><code class="language-css">print(df.dropna(axis=0,subset=['Pulse']))
+Duration,Pulse,Maxpulse,Calories
+45,       117,  148,    406.0
+60,       102,  127,    300.5
+60,       110,  136,    NaN
+45,       104,  134,    253.3
+                  </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
 
       <h3 id="head">head()</h3>
       <dl>head returns 1st n rows from dataframe, default is 5</dl>
+
+      <h3 id="#isNull">isNull</h3>
+      <p>
+        Creates a dataframe with 1 or 0. if value is present, take it as 0, if
+        NaN or None take it as 1
+      </p>
+      <pre><code class="language-css">X_train
+rollno  marks
+5       NaN
+NaN     NaN
+10      20
+
+t = (X_train.isnull())
+rollno = [0, 1, 0]
+marks =  [1, 1, 0]
+      </code></pre>
 
       <h3 id="read_csv">read_csv(), .columns</h3>
       <p>
@@ -191,6 +276,25 @@ DataFrame.select_dtypes(include=None, exclude=None)
 X = melb_predictors.select_dtypes(exclude=['object'])</code></pre>
 
       <p>What is <a href="/Machine Learning/Terms.html">dtype</a><br /></p>
+
+      <h3 id="shape">shape()</h3>
+      <p>Find row, coloumn count of datafram read</p>
+      <pre><code class="language-css">import pandas as pd
+X_full = pd.read_csv('train.csv', index_col='Id')
+rows, cols = X_full.shape
+print(f"Rows: {rows}, Columns: {cols}")   //Rows: 1460, Columns: 80
+      </code></pre>
+
+      <h3 id="#sum">sum()</h3>
+      <p>Calculate total sum</p>
+      <pre><code class="language-css">
+Feature A: [False, True, False]
+Feature B: [True, True, False]
+
+.sum() calculates:
+Feature A: 0 + 1 + 0 = 1
+Feature B: 1 + 1 + 0 = 2
+      </code></pre>
     </article>
     <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>

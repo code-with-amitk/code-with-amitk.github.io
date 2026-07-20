@@ -31,68 +31,129 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="#hld">Box HLD</a>
+      <a href="#what">Box</a>
+      <a href="#Requirements">Requirements</a>
+      <a href="#hld">HLD</a>
       <a href="#upload">10 GB Upload</a>
       <ul>
-        <li><a href="#problem">Problem</a></li>
-        <li><a href="#solution">Solution: Pre-signed URL</a></li>
-        <li><a href="#presigned-how">How Pre-signed URLs Work</a></li>
-        <li><a href="#metadata">Metadata Storage</a></li>
-        <li>
-          <a href="#app-server-usecases">What Application Server should do</a>
-        </li>
+        <li><a href="#block">Block Diagram</a></li>
+        <li><a href="#">Flow Diagram(10 GB Upload)</a></li>
+        <ul>
+          <li><a href="#presigned">Pre-signed URL</a></li>
+          <li><a href="#problem">Earlier Problem</a></li>
+        </ul>
       </ul>
+      <a href="#delta">Delta Update</a>
+      <a href="#app-server-usecases">What Application Server should do</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="hld">Box HLD</h2>
+      <h2 id="what">What is Box</h2>
       <p>
         Box.com is a cloud file storage and collaboration platform. Users
-        upload, share, and manage files through a web or mobile client. At
-        scale, the system must separate <b>metadata control</b> (who owns the
-        file, folder path, permissions) from <b>blob storage</b> (the actual
-        file bytes on disk/object store).
+        upload, share, and manage files through a web or mobile client.
       </p>
 
-      <h3 id="upload">10 GB Upload</h3>
-
-      <h4 id="problem">Problem: 10 GB upload through the Application Server</h4>
+      <h2 id="ap">
+        Box is AP from
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Terms#cap-theorem-consistency-availability-partition-tolerance"
+          >CAP</a
+        >
+      </h2>
       <p>
-        In an early design, when a user uploaded a <b>10 GB</b> file to Box.com,
-        the entire file passed through the <b>Application Server</b>
-        before reaching object storage:
+        Strong Consistency is hard to achieve. <br />
+        User-A in US writes and within 1 sec, User B in India find same data.<br />
+        <b>Availablity:</b> Required. users can continue uploading, downloading,
+        and editing files even if all replicas are not immediately identical
       </p>
-      <pre><code class="language-css">
-Client  ──(10 GB file bytes)──►  Application Server  ──►  Object Storage (S3)
-      </code></pre>
+
+      <h2 id="Requirements">Requirements</h2>
       <p>
-        <b>PROBLEMS with above design:</b><br />
-
-        <b>1. Memory pressure, OOMs</b> — buffering 10 GB stream in RAM per
-        upload exhausts server memory; many concurrent uploads can cause OOM
-        (out-of-memory) crashes.<br />
-        <b>2. Thread / worker exhaustion</b> — Each large upload occupies a
-        worker for the full upload duration. New requests wait or time out.<br />
-        <b>3. Network saturation/Bandwidth bottleneck</b> — App server NIC
-        becomes the choke point; egress/ingress limits are hit before object
-        storage limits are.<br />
-        <b>4. Single point of failure</b> — If the app server crashes
-        mid-upload, the entire 10 GB transfer must restart from zero.<br />
-        <b>5. Scaling cost:</b> To handle file bytes you must scale out fat app
-        servers, which is expensive<br />
-        <b>6. Timeout errors</b> — Load balancers, proxies, and HTTP gateways
-        often have 60–120 second idle timeouts — far shorter than a multi-GB
-        upload requires.
+        <b>Functional:</b><br />
+        - User can upload/download file of any size<br />
+        - Users can modify existing files (partial updates, overwrite,
+        append)<br />
+        - Users can share files and folders with other users with
+        permissions.<br />
+        <b>Non Functional:</b><br />
+        - Highly Available 99.99% (System is there for RW)<br />
+        - Eventual Consistent<br />
+        - Latency low<br />
+        - Scalability: Support billions of files and petabytes of storage.
       </p>
 
-      <p>
-        <b>Key insight:</b> the Application Server should handle
-        <i>authorization and metadata</i>, not act as a file transfer proxy for
-        multi-gigabyte blobs.
-      </p>
+      <h2 id="hld">HLD</h2>
+      <h3 id="block">Block Diagram</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+flowchart LR
 
-      <h4 id="solution">
-        Solution: Pre-signed URL (Direct Upload to Object Storage)
+Client["Web / Mobile Client"]
+
+subgraph Edge
+API["API Gateway"]
+end
+
+subgraph Control_Plane
+
+APP["Application Service"]
+
+META["Metadata Service"]
+
+AUTH["Auth Service"]
+
+NOTIFY["Notification Service"]
+
+CACHE["Redis Cache"]
+
+WORKER["Async Workers"]
+
+end
+
+subgraph Data
+
+DB[(Metadata DB)]
+
+S3[(Object Storage)]
+
+MQ["Kafka / SQS"]
+
+end
+
+Client --> API
+
+API --> AUTH
+API --> APP
+
+APP --> META
+
+META --> CACHE
+
+CACHE --> DB
+
+APP --> S3
+
+S3 --> MQ
+
+MQ --> WORKER
+
+WORKER --> META
+
+WORKER --> NOTIFY
+
+META --> DB
+</pre
+        >
+      </div>
+
+      <h3 id="flow">Flow Diagram(10 GB Upload)</h3>
+      <h4>
+        <a href="#earlier">Design-1. upload through the Application Server</a>
+      </h4>
+      <h4 id="presigned">
+        Design-2: Using Pre-signed URL (Direct Upload to Object Storage)
       </h4>
       <p>
         Instead of streaming file bytes through the Application Server, Box.com
@@ -118,22 +179,7 @@ Browser/Client ──10 GB PUT (direct)─────────────�
 Browser/Client ──POST /upload/complete───────────► App Server (update metadata)
       </code></pre>
       <p>
-        <b>Why this solves the 10 GB problem:</b><br />
-        1. App server handles a small JSON request (~KB), not 10 GB of bytes.<br />
-        2. Upload bandwidth goes directly from client → object storage
-        (optimized for large transfers, multipart upload, CDN edge).<br />
-        3. App server workers are freed in milliseconds; they can serve
-        thousands of other users while the 10 GB upload runs in the
-        background<br />
-        4. Object storage supports <b>multipart upload</b> — the client splits
-        10 GB into chunks, retries failed parts, and resumes without restarting
-        the whole file<br />
-        5. Pre-signed URLs expire (e.g. 1 hour), limiting exposure if the URL is
-        leaked.
-      </p>
-
-      <h4 id="presigned-how">How do Pre-signed URLs work? (Box.com upload)</h4>
-      <p>
+        <b>How do Pre-signed URLs work? (Box.com upload)</b><br />
         A pre-signed URL embeds temporary security credentials in the query
         string (access key, signature, expiry). Object storage validates the
         signature and expiry before accepting the upload — no separate auth call
@@ -156,87 +202,7 @@ Body: &lt;10 GB file bytes&gt;
       </code></pre>
 
       <p>
-        <b>Sequence Diagram: 10 GB Upload (Q4-report.zip)</b><br />
-        Example: Bob (<code>user_42</code>) uploads
-        <b>Q4-report.zip</b> (10 GB) to folder
-        <code>folder_reports</code>.<br />
-        Application Server generates <code>file_id = f_8a3b2c1d</code> and a
-        pre-signed PUT URL. Client uploads directly to S3 — app server handles
-        only metadata (~KB).
-      </p>
-      <div class="mermaid-wrap">
-        <pre class="mermaid">
-%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
-sequenceDiagram
-    autonumber
-    actor Bob
-    participant Client as Browser
-    participant App as Application Server
-    participant DB as Metadata DB
-    participant S3 as Object Storage (S3)
-
-    Bob->>Client: Select Q4-report.zip (10 GB)
-    Client->>App: POST /upload<br/>filename=Q4-report.zip<br/>size=10737418240<br/>folder_id=folder_reports<br/>user_id=user_42
-
-    App->>App: Authenticate user_42<br/>Check quota & folder_reports permission
-
-    App->>App: Generate file_id=f_8a3b2c1d<br/>storage_key=acme-corp/user42/f_8a3b2c1d
-
-    App->>DB: INSERT metadata<br/>file_id=f_8a3b2c1d<br/>filename=Q4-report.zip<br/>size_bytes=10737418240<br/>status=pending
-
-    App->>S3: generate_presigned_url(PUT)<br/>bucket=box-uploads<br/>key=acme-corp/user42/f_8a3b2c1d<br/>expires=3600s
-
-    S3-->>App: presigned PUT URL
-
-    App-->>Client: 200 OK<br/>file_id=f_8a3b2c1d<br/>presigned_url=https://box-uploads.s3.amazonaws.com<br/>/acme-corp/user42/f_8a3b2c1d<br/>?X-Amz-Signature=abc123...
-
-    Note over Client,S3: Browser directly uploads 10 GB file to S3(Object Store)
-
-    Client->>S3: PUT Q4-report.zip (10 GB)<br/>multipart upload<br/>using presigned URL
-
-    S3-->>Client: 200 OK<br/>etag=9f86d081884c7d659a2feaa0c55ad015
-
-    Note over Client: Browser updates the Metadata<br>to App server
-    Client->>App: POST /upload/complete<br/>file_id=f_8a3b2c1d<br/>etag=9f86d081...<br/>size=10737418240
-
-    Note over App: App server checks<br>Is file present?
-    App->>S3: HEAD acme-corp/user42/f_8a3b2c1d<br/>verify object exists
-
-    S3-->>App: 200 OK size=10737418240
-
-    Note over App: App server updates<br>metadata in DB
-    App->>DB: UPDATE metadata<br/>status=complete<br/>etag=9f86d081...<br/>uploaded_at=2026-04-12T12:45:00Z
-
-    App-->>Client: 200 OK<br/>Q4-report.zip ready in folder_reports
-
-    Client-->>Bob: Upload complete — file visible in Box
-        </pre>
-      </div>
-      <p>
-        <b>Step-by-step (Box.com file upload):</b><br />
-        1. <b>Client</b> sends upload request to Box Application Server:
-        filename, size (10 GB), folder ID, content-type<br />
-        2. <b>Application Server</b> authenticates the user, checks quota and
-        folder permissions, generates a unique <code>file_id</code> and storage
-        key (e.g. <code>s3://bucket/tenant/user/file_id</code>).<br />
-        3. <b>Application Server</b> calls object storage SDK to generate a
-        pre-signed <code>PUT</code> URL (valid for e.g. 60 minutes).<br />
-        4. <b>Application Server</b> writes a <b>pending</b> metadata record to
-        the database and returns the pre-signed URL + <code>file_id</code> to
-        the client.<br />
-        5. <b>Client</b> uploads 10 GB <b>directly to S3</b> using the
-        pre-signed URL (optionally multipart). App server is not involved.<br />
-        6. <b>Client</b> (or S3 event) notifies Application Server:
-        <code>POST /upload/complete { file_id, etag, size }</code>.<br />
-        7. <b>Application Server</b> verifies the object exists in S3, updates
-        metadata status to <code>complete</code>, and the file appears in the
-        user's Box folder.
-      </p>
-
-      <h4 id="metadata">
-        How metadata is stored and used by the Application Server
-      </h4>
-      <p>
+        <b>How metadata is stored and used by the Application Server?</b>
         The Application Server owns the <b>metadata database</b>. It never
         stores the 10 GB blob — only information <i>about</i> the file:
       </p>
@@ -260,24 +226,197 @@ sequenceDiagram
       </code></pre>
 
       <p>
-        <b>How metadata is used:</b><br />
-        1. List Folder: Query DB by <code>folder_id</code> — returns filenames,
-        sizes, dates. No object storage read needed.<br />
-        2. Share file: App server updates <code>permissions</code> in DB;
-        generates a pre-signed <code>GET</code> URL for download when share link
-        is opened.<br />
-        3. Search: Index filename, owner, tags from metadata; full-text search
-        does not scan S3.<br />
-        4. Quota enforcement: Sum <code>size_bytes</code> per
-        <code>user_id</code> before issuing upload URL; reject if over limit.<br />
-        5. Upload complete: Flip <code>status</code> from
-        <code>pending</code> to <code>complete</code>; store
-        <code>etag</code> for integrity checks.<br />
-        6. Delete file: Mark metadata deleted (soft delete); async job removes
-        blob from S3 using <code>storage_key</code>.
+        <b>Sequence Diagram: 10 GB Upload (Q4-report.zip)</b><br />
+        Example: Bob (<code>user_42</code>) uploads
+        <b>Q4-report.zip</b> (10 GB) to folder
+        <code>folder_reports</code>.<br />
+        Application Server generates <code>file_id = f_8a3b2c1d</code> and a
+        pre-signed PUT URL. Client uploads directly to S3 — app server handles
+        only metadata (~KB).<br />
+        <b>Step-by-step (Box.com file upload):</b><br />
+        1. <b>Client</b> sends upload request to Box Application Server:
+        filename, size (10 GB), folder ID, content-type. Actual file is not
+        uploaded to App Server(only Meta data is sent)<br />
+        2. <b>Application Server</b> authenticates the user, checks quota and
+        folder permissions, generates a unique <code>file_id</code> and storage
+        key (e.g. <code>s3://bucket/tenant/user/file_id</code>).<br />
+        3. <b>Application Server</b> calls object storage SDK to generate a
+        pre-signed <code>PUT</code> URL (valid for e.g. 60 minutes).<br />
+        4. <b>Application Server</b> writes a <b>pending</b> metadata record to
+        the database and returns the pre-signed URL + <code>file_id</code> to
+        the client.<br />
+        5. <b>Client</b> uploads 10 GB <b>directly to S3</b> using the
+        pre-signed URL (optionally multipart). App server is not involved.<br />
+        6. <b>Client</b> (or S3 event) notifies Application Server:
+        <code>POST /upload/complete { file_id, etag, size }</code>.<br />
+        7. <b>Application Server</b> verifies the object exists in S3, updates
+        metadata status to <code>complete</code>, and the file appears in the
+        user's Box folder.
+      </p>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+sequenceDiagram
+    autonumber
+    participant CDN as CDN
+    actor Bob
+    participant Browser as Browser
+    participant App as Application Server
+    participant DB as Metadata DB
+    participant S3 as Object Storage (S3)
+
+    Bob->>Browser: Open https://box.com
+    Browser->>CDN: https://box.com
+    CDN->>Browser: box.js, images, HTML
+    Note over Browser: js mentions to Send Metadata to AppServer<br> Then upload to pre-signed url
+    Bob->>Browser: Select report.zip (10 GB)
+    Note over Browser: javascript calculates Metadata<br>{filename=report, size=10GB, filetype=zip, folder}<br><br>See box.js below
+
+    Note over Browser, App: File Need not travel on Network to App Server
+    Browser->>App: POST /upload<br/>filename=Q4-report<br/>MetaData={filename=report, size=10GB, filetype=zip, folder}<br/>user_id=user_42
+
+    App->>App: Authenticate user_42<br/>Check quota & folder_reports permission
+
+    App->>App: Generate file_id=f_8a3b2c1d<br/>storage_key=acme-corp/user42/f_8a3b2c1d
+
+    App->>DB: INSERT metadata<br/>file_id=f_8a3b2c1d<br/>filename=Q4-report.zip<br/>size_bytes=10737418240<br/>status=pending
+
+    App->>S3: generate_presigned_url(PUT)<br/>bucket=box-uploads<br/>key=acme-corp/user42/f_8a3b2c1d<br/>expires=3600s
+
+    S3-->>App: presigned PUT URL
+
+    App-->>Browser: 200 OK<br/>file_id=f_8a3b2c1d<br/>presigned_url=https://box-uploads.s3.amazonaws.com<br/>/acme-corp/user42/f_8a3b2c1d<br/>?X-Amz-Signature=abc123...
+
+    Note over Browser,S3: Browser directly uploads 10 GB file to S3(Object Store)
+
+    Browser->>S3: PUT Q4-report.zip (10 GB)<br/>multipart upload<br/>using presigned URL
+
+    S3-->>Browser: 200 OK<br/>etag=9f86d081884c7d659a2feaa0c55ad015
+
+    Note over Browser: Browser updates the Metadata<br>to App server
+    Browser->>App: POST /upload/complete<br/>file_id=f_8a3b2c1d<br/>etag=9f86d081...<br/>size=10737418240
+
+    Note over App: App server checks<br>Is file present?
+    App->>S3: HEAD acme-corp/user42/f_8a3b2c1d<br/>verify object exists
+
+    S3-->>App: 200 OK size=10737418240
+
+    Note over App: App server updates<br>metadata in DB
+    App->>DB: UPDATE metadata<br/>status=complete<br/>etag=9f86d081...<br/>uploaded_at=2026-04-12T12:45:00Z
+
+    App-->>Browser: 200 OK<br/>Q4-report.zip ready in folder_reports
+
+    Browser-->>Bob: Upload complete — file visible in Box
+        </pre>
+      </div>
+      <pre><code>
+// box.js
+
+const response = await fetch("/upload", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        filename: file.name,
+        size: file.size,
+        contentType: file.type
+    })
+});
+
+// Server returns pre-signed URL
+const { uploadUrl } = await response.json();
+
+// Step 2: Upload file directly to S3
+await fetch(uploadUrl, {
+    method: "PUT",
+    body: file,
+    headers: {
+        "Content-Type": file.type
+    }
+});
+      </code></pre>
+
+      <h4 id="earlier">
+        Design-1: 10 GB upload through the Application Server
+      </h4>
+      <p>
+        <b>Problems</b><br />
+        In an early design, when a user uploaded a <b>10 GB</b> file to Box.com,
+        the entire file passed through the <b>Application Server</b> before
+        reaching object storage. That has these issues:<br />
+        <b>1. Memory pressure, OOMs</b> — buffering 10 GB stream in RAM per
+        upload exhausts server memory; many concurrent uploads can cause OOM
+        (out-of-memory) crashes.<br />
+        <b>2. Thread / worker exhaustion</b> — Each large upload occupies a
+        worker for the full upload duration. New requests wait or time out.<br />
+        <b>3. Network saturation/Bandwidth bottleneck</b> — App server NIC
+        becomes the choke point; egress/ingress limits are hit before object
+        storage limits are.<br />
+        <b>4. Single point of failure</b> — If the app server crashes
+        mid-upload, the entire 10 GB transfer must restart from zero.<br />
+        <b>5. Scaling cost:</b> To handle file bytes you must scale out fat app
+        servers, which is expensive<br />
+        <b>6. Timeout errors</b> — Load balancers, proxies, and HTTP gateways
+        often have 60–120 second idle timeouts — far shorter than a multi-GB
+        upload requires.
+      </p>
+      <pre><code class="language-css">Client  ──(10 GB file bytes)──►  Application Server  ──►  Object Storage (S3)</code></pre>
+
+      <p>
+        <b>Solution: Pre-signed URL (Direct Upload to Object Storage)</b><br />
+        1. App server handles a small JSON request (~KB), not 10 GB of bytes.<br />
+        2. Upload bandwidth goes directly from client → object storage
+        (optimized for large transfers, multipart upload, CDN edge).<br />
+        3. App server workers are freed in milliseconds; they can serve
+        thousands of other users while the 10 GB upload runs in the
+        background<br />
+        4. Object storage supports <b>multipart upload</b> — the client splits
+        10 GB into chunks, retries failed parts, and resumes without restarting
+        the whole file<br />
+        5. Pre-signed URLs expire (e.g. 1 hour), limiting exposure if the URL is
+        leaked.
       </p>
 
-      <h4 id="app-server-usecases">What Application Server should do</h4>
+      <h2 id="delta">Delta Update</h2>
+      <p>
+        <b>Use case:</b> File is uploaded using presigned URL, Owner adds a
+        text="test" on line number 10, page number 10. How this delta update
+        flows from the Browser to the box server and how this gets replicated to
+        all the read replicas.
+      </p>
+
+      <h3>Offset Calcuation</h3>
+      <p>
+        Offests is bytes from the beginning of the file, not the word or line
+        number<br />
+        If we want to modify line 10 the editor scans the file until it reaches
+        the 10th newline (\n) and computes something like: Line 10 starts at
+        byte 7432<br />
+      </p>
+      <pre><code class="language-css">
+hello.txt   //10 KB
+
+Byte Offset
+0      H
+1      e
+2      l
+3      l
+4      o
+5      \n
+6      A
+7      B
+8      C
+
+PATCH /file         //Send
+{
+    offset:7432,
+    length:15,
+    data:"New sentence"
+}
+      </code></pre>
+
+      <h2 id="app-server-usecases">What Application Server should do</h2>
       <p>
         The Application Server is a <b>control plane</b>, not a data plane for
         large files:<br />

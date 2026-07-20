@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Food Delivery App System Design</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#req">Requrirements</a>
+      <a href="#hld">HLD</a>
+      <ul>
+        <li><a href="#bd">Block Diagram</a></li>
+        <li><a href="#flow">Flow</a></li>
+        <li><a href="#kafka">Kafka Topics</a></li>
+      </ul>
+      <a href="#db">DB Schema</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="req">Requrirements</h2>
+      <p>
+        <b>Functional Requirements:</b><br />
+        1. Customers can search/browse restaurants and menus (by location,
+        cuisine), place an order, and track it in real time until delivery.<br />
+        2. Restaurants can receive/accept orders, and delivery partners can be
+        assigned and matched to orders based on proximity.<br />
+
+        <b>Non-Functional Requirements:</b><br />
+        1. High Availability: No single point of failure; system stays up during
+        node/AZ failures (target 99.99%).<br />
+        2. Low Latency: Search, order placement, and live location updates
+        respond in tens-to-low-hundreds of ms.<br />
+        3. Scalability: Handle spiky traffic (lunch/dinner peaks) and horizontal
+        growth in users, restaurants, and cities.
+      </p>
+
+      <h2 id="hld">HLD</h2>
+      <h3 id="bd">Block Diagram</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+          flowchart LR
+
+subgraph Client
+A[Mobile App]
+end
+
+subgraph Edge
+B[API Gateway]
+end
+
+subgraph Core Services
+C[Order Service]
+D[Payment Service]
+E[Restaurant Service]
+F[Rider Service]
+G[Notification Service]
+H[Location Service]
+end
+
+subgraph External
+I[Payment Gateway]
+J[Kafka]
+K[Push Notification]
+end
+
+subgraph Databases
+L[(Order DB)]
+M[(Payment DB)]
+N[(Restaurant DB)]
+O[(Rider DB)]
+P[(Location Redis)]
+Q[(Notification DB)]
+end
+
+A -->|HTTPS| B
+B --> C
+
+C -->|HTTP Create Payment| D
+D -->|HTTPS| I
+I --> D
+D -->|Payment Success| C
+
+C -->|Publish OrderCreated| J
+
+J --> E
+J --> F
+J --> G
+
+E -->|RestaurantAccepted/FoodPreparing/FoodReady| J
+
+F -->|RiderAssigned/PickedUp| J
+
+H --> P
+H --> G
+
+J --> C
+
+G --> K
+K --> A
+
+C --> L
+D --> M
+E --> N
+F --> O
+H --> P
+G --> Q
+                  </pre
+        >
+      </div>
+
+      <h3 id="flow">Flow Diagram</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+
+participant App
+participant API as API Gateway
+participant Order as Order service
+participant Payment as Payment service
+participant Gateway
+participant Kafka
+participant Restaurant as Restaurant service
+participant Rider as Rider service
+participant Notify as Notify service
+participant Location as Location service
+
+App->>API: POST /orders
+
+API->>Order: Create Order
+
+Order->>Order: Save Order(PAYMENT_PENDING)
+
+Order->>Payment: HTTP Create Payment(orderId, amount)
+
+Payment->>Gateway: Charge Customer
+
+Gateway-->>Payment: Payment Success
+
+Payment-->>Order: Payment Success
+
+Order->>Order: Update PAYMENT_SUCCESS
+
+Order->>Kafka: Publish OrderCreated
+
+Kafka->>Restaurant: OrderCreated
+
+Restaurant->>Restaurant: Validate Inventory
+
+Restaurant->>Kafka: RestaurantAccepted
+
+Kafka->>Order: RestaurantAccepted
+
+Order->>Order: Status=ACCEPTED
+
+Restaurant->>Kafka: FoodPreparing
+
+Kafka->>Order: FoodPreparing
+
+Order->>Order: Status=PREPARING
+
+Kafka->>Rider: OrderCreated
+
+Rider->>Rider: Find Nearest Rider
+
+Rider->>Kafka: RiderAssigned
+
+Kafka->>Order: RiderAssigned
+
+Order->>Order: Save RiderId
+
+Kafka->>Notify: RiderAssigned
+
+Notify->>App: Push Notification
+
+Restaurant->>Kafka: FoodReady
+
+Kafka->>Order: FoodReady
+
+Order->>Order: Status=READY
+
+Kafka->>Rider: FoodReady
+
+Rider->>Restaurant: Pickup
+
+Rider->>Kafka: PickedUp
+
+Kafka->>Order: PickedUp
+
+Order->>Order: Status=PICKED_UP
+
+Location->>Notify: Rider GPS Updates
+
+Notify->>App: Live Rider Location
+
+Rider->>Kafka: Delivered
+
+Kafka->>Order: Delivered
+
+Order->>Order: Status=DELIVERED
+
+Kafka->>Notify: Delivered
+
+Notify->>App: Order Delivered
+          </pre
+        >
+      </div>
+
+      <h3 id="kafka">Kafka Topics</h3>
+      <pre><code>OrderCreated
+RestaurantAccepted
+FoodPreparing
+FoodReady
+RiderAssigned
+PickedUp
+Delivered
+Cancelled
+PaymentFailed
+      </code></pre>
+
+      <h2 id="db">DB Schema</h2>
+      <pre><code>
+Order Database
+orders table
+-----------------------------
+order_id (PK)
+customer_id
+restaurant_id
+payment_status
+order_status
+total_mount
+rider_id
+delivery_address
+created_at
+updated_at
+
+order_items
+--------------------------
+id (PK)
+order_id (FK)
+menu_item_id
+quantity
+price
+special_instruction
+
+PAYMENT DATABASE
+payments table
+--------------------------
+payment_id
+order_id
+customer_id
+amount
+gateway
+gateway_transaction_id
+status
+created_at
+
+RESTURANTS DATABASE
+restaurants table
+-------------------
+restaurant_id
+name
+address
+rating
+latitude
+longitude
+
+menu_items table
+-----------------------
+menu_item_id
+restaurant_id
+name
+price
+available
+category
+
+inventory table
+--------------------
+menu_item_id
+available_quantity
+reserved_quantity
+
+RIDER DATABASE
+riders table
+-----------------------
+rider_id
+name
+phone
+rating
+vehicle
+status
+current_latitude
+current_longitude
+
+rider_assignments table
+---------------------
+order_id
+rider_id
+assigned_at
+pickup_time
+delivery_time
+
+NOTIFICATION DB
+notifications table
+----------------------
+notification_id
+customer_id
+order_id
+title
+body
+status
+created_at
+
+LOCATION DATABASE
+GEOADD riders
+rider_id
+latitude
+longitude
+      </code></pre>
+    </article>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>

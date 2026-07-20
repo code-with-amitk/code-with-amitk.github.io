@@ -4,6 +4,7 @@
     <title>Facebook News Feed</title>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="/css/prism.css"/>
+        <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
 <body>
@@ -13,6 +14,7 @@
       <li><a href="#">Our team</a></li>
       <li><a href="#">Projects</a></li>
       <li><a href="/contact.html">Contact</a></li>
+      <li><a href="/System_Design/Scalable/">Back</a></li>
       <li>
         <form id="searchForm">
             <input type="search" id="searchInput" name="q" placeholder="Search site" />
@@ -27,84 +29,63 @@
     <a href="#boe">Back of Envelope</a>
     <a href="#api">API Design</a>
     <a href="#db">DB Schema</a>
-    <ul>
-      <li><a href="#sql">SQL DB</a></li>
-      <ul>
-        <li><a href="#problemsind1">Problems in Above design</a></li>
-        <ul>
-          <li><a href="#redis">Sol1=Redis</a></li>
-          <li><a href="#neoj4">Sol2=neoj4</a></li>
-        </ul>
-      </ul>
-    </ul>
     <a href="#hld">HLD</a>
     <ul>
-      <li><a href="#auth">Authenticate User to Facebook</a></li>
-      <li><a href="#post">POST Message</a></li>
-      <li><a href="#get">GET Newsfeed</a></li>
-      <ul>
-        <li><a href="#push">Push Model</a></li>
-        <li><a href="#pull">Pull Model</a></li>
-        <li><a href="#newsfeedarch">Newfeed Architecture</a></li>
-      </ul>
+      <li><a href="#bd">Block Diagram</a></li>
+      <li><a href="#upload">Post Upload</a></li>
+      <li><a href="#normal">Normal Feed Read</a></li>
+      <li><a href="#celeb">Celebrity Sequence</a></li>
     </ul>
   </aside>
 
   <article style="margin-left:200px;">
     <h2 id="req">Requirements (CRUD)</h2>
-    <h4>Functional</h4>
-    <dl id="func-req">
-      1. User can Read the feed.<br>
-      2. User can Create the feed(images, text, videos)
-    </dl>
-    <h4>Non Functional</h4>
-    <dl>
-      1. Update the feed<br>
-      2. Delete the item from feed<br>
-      3. News feed keep on extending when it gets over
-    </dl>
+    <p>
+      <b>Functional:</b>Create Post
+Upload Photo/Video,
+Edit Post,
+Delete Post,
+Read Feed,
+Infinite Scroll,
+Like,
+Comment,
+Share,
+Follow/Unfollow,
+Notifications<br>
+    <b>Non Functional:</b>
+    High Availability
+Eventual Consistency
+Low Latency (less than 200 ms feed generation target)
+    </p>
 
     <h2 id="boe">Back of Envelope</h2>
-    <pre>
-      World Population      | InternetUsers(60%)    | FB Users(80-85% of Internet users) | Active FB Users(20%)
-      ----------------------|-----------------------|------------------------------------|--------------------
-      7 Billion //Year 2020 | 7 x 0.6 = 4.2 Billion |    4.2 x 0.8 = 3.5 Billion         | 3.5 x .2 = 700 Million
-    </pre>
-    <h4 id="traffic">Traffic Estimates (Incoming Requests/sec)</h4>
-    <pre>
+    <pre><code>World Population      | InternetUsers(60%)    | FB Users(80-85% of Internet users) | Active FB Users(20%)
+----------------------|-----------------------|------------------------------------|--------------------
+7 Billion //Year 2020 | 7 x 0.6 = 4.2 Billion |    4.2 x 0.8 = 3.5 Billion         | 3.5 x .2 = 700 Million</code></pre>
+    <p>
+    <b>Traffic Estimates (Incoming Requests/sec)</b>
       700 Million pulling their new feed 5 times a day. Total New feed requests = 700 x 5 = 3500 Million requests/day.
-      3500/24x60x60 = Around 39,000 Requests/sec.
-    </pre>
-    <h4 id="storage">Storage Estimates</h4>
-    <pre>
-      <b>Cache/CDN</b>
+      3500/24x60x60 = Around 39,000 Requests/sec.<br>
+
+    <b>Storage Estimates</b><br>
+      <u>Cache/CDN</u>
       Suppose We want to keep 500 posts/user on CDN for quick fetch.
       Total posts to be stored. 500 x 700 Million = 350 Billion.
       Let's assume on average each posts is 1 KB in size. Total bytes = 350 TB
       Assuming 1 server can cache is 100GB. Total servers needed = 350 TB / 100 GB = 3500 Machines needed in total
-    </pre>
+    </p>
 
     <h2 id="api">API Design</h2>
-      <h4 id="#func-req">1. Create Record</h4>
       <pre><code class="language-css">
-POST https://url/v1/post_feed
-header {
-    Authorization: {Bearer "API_KEY_TOKEN"},
-}
-body {
-    heading, description, picture_url, video_url
-}
-      </code></pre>
+// POST MESSAGE(Image+Text+Video)
+POST https://url/v1/post
+header { Authorization: {Bearer "API_KEY_TOKEN"},}
+body {text, picture_url, video_url}
 
-      <h4 id="#func-req">2. Reading the Feed</h4>
-      <pre><code class="language-css">
-GET HTTP/2 https://url/v1/read_feed
-header {
-    Authorization: {Bearer "API_KEY_TOKEN"},
-}
-body {
-    to be filled
-}
+// READ FEED
+GET HTTP/2 https://url/v1/feed
+header { Authorization: {Bearer "API_KEY_TOKEN"},}
+body {to be filled}
       </code></pre>
 
       <h2 id="db">DB Schema</h2>
@@ -115,88 +96,335 @@ body {
       </pre>
 
       <pre><code class="language-css">
-User Table                                                    Password Table
-| username | user_id(pk) | created_at | enabled |             | user_id(pk) | password_hash | created_at | expiry_at |
+| username | user_id(pk) | created_at | enabled |             //User Table 
+
+| user_id(pk) | password_hash | created_at | expiry_at |      //Password Table
 
 Comments Table: Comment can have text,video,image,@,#,likes,shares
-| comment_id (pk) | text_id(fk) | user_id (fk) | media-id(fk) | created_at | like_id(fk) | share_id(fk) | ...
-      id1                t1           u1            m1              -             l1          s1
+| comment_id (pk) | text_id(fk) | user_id (fk) | media-id(fk) | created_at | like_id(fk) | share_id(fk) |
 
-Text Table                                likes Table                                               Media Table (Photo, text, video)
-| key=text_id (pk) | value=text url |     | key=like_id (pk) | value=file url storing all likes |   | key=text_id (pk) | value=text url |
-        t1              hello                   l1                (user2, user3, user4 ..)
+| key=like_id (pk) | value=file url storing all likes |       //likes Table 
 
->> Friends & Friends of Friends stored in Graph DB
+| key=text_id (pk) | value=text url |   //Text Table  
       </code></pre>
-
-      <h5 id="problemsind1">Problems in Above design (likes table)</h5>
-      <dl>1. Race Condition, when number of likes on comment grows in Millions</dl>
-      <dd>We will keep appending userid's on in same file (ie same row). if new like comes in DB has to read entire line
-        then add userid at end and update table.<br>
-        This can cause race condition (if 100's of users try to like same comment at same time).
-      </dd>
-
-      <h6 id="redis">Solution-1 (Key-Value DB: Redis)</h6>
-      <dl>
-        Seperate row for each like. Key-Value DBs can handle huge datasets with fast lookups<br>
-        Precomputing the number of likes.
-      </dl>
-      <pre><code class="language-css">
-likes Table
-SADD comment_id1 user1
-SADD comment_id1 user2
-SADD comment_id1 user3
-SADD comment_id2 user2
-SREM comment_id1 user2   # Unlike
-SCARD comment:id1:likes        # Get like count
-      </code></pre>
-
-      <h6 id="neoj4"><a href="/System_Design/Concepts/Databases/Graph%20DB/">Solution-2 (Graph DB(neoj4))</a></h6>
-      <dl>
-        In a graph database, you can model User and Comment as nodes and the LIKES relationship as an edge.<br>
-        Likes = Number of edges
-      </dl>
-      <pre><code class="language-css">
-        user-1    ----authored-->     comment-1
-                                        /\
-        user2 ----------liked------------|
-      </code></pre>
+      <p>
+        Relationship Friends & Friends of Friends stored in TAO(Graph DB)
+      </p>
 
       <h2 id="hld">HLD</h2>
-      <h4 id="auth"><a href="/System_Design/Concepts/Terms/Authentication/jwt.html">JWT based authentication to facebook.com</a></h2>
-      <h4 id="post">POST Message</h4>
-      <dl>
-        The system limits the number of posts a user can make within a certain period, vital to prevent spam and abusive content
-      </dl>
-      <img
-      src="//www.plantuml.com/plantuml/png/LP51Qm8n48Nl-HN1SxjYsvFGebRQFGXAjPJ2WamsOpSO9o4PnVRNDmcqkgUTUM--USDc4Xa27mzM-FGrhV50B5zcK-ybH0dU2-NESlgnxWqi7EXP7h2gfoTiZU64eS2nvpr3ss7MsrpqhDS0lfkNXLe992rJg10TEKRfohfqZtYFkJfoXvHGODIYXXDAXH0mRDdjaGgTkJuUnVJ26KStuWsIkJ07muQ-hgYSTFiahHhBUhDPoTLolP4xQ54vjwzQTnYUHiCTecweggeQGME8gMee9pWsFoNWSNHt_z1GwuYHUClV7Y-THMgeyBFb_BF0Z6SU3sgqrWs4LVa4YDSd_7aGirV-uVXVB6tMjRg84oITNlON"
-      alt="post comment" style="width:400px;height:300px;">
-      <code class="puml" visibility: hidden>
-        @startuml
-        participant FBApp as app
-        box AWS
-        participant LoadB as lb
-        participant AppServer as as
-        participant Cache as cache
-        participant GraphDB as db
-        end box
-        
-        hnote over app 
-        User authenticated
-        Have bearer_token
-        end note
-        
-        hnote over as
-        Authentication,
-        Rate Limiting
-        end note
-        
-        app -> lb: HTTP POST facebook.com/v1/feed\n...Headers...\nAuthotization=1234\ncontent_type\ncontent_len\n\n...BODY...\ntext:"Hello"
-        lb -> as: HTTP POST "Hello"
-        as -> cache: "Hello"
-        cache -> db: "Hello"
-        @enduml
-      </code>
+      <h3 id="bd">Block Diagram</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+flowchart LR
+
+%%=========================
+%% USER
+%%=========================
+
+U([User])
+
+%%=========================
+%% EDGE
+%%=========================
+
+DNS[Authoritative DNS]
+
+CDN[CloudFront CDN]
+
+WAF[WAF + Shield]
+
+APIGW[API Gateway]
+
+%%=========================
+%% SERVICES
+%%=========================
+subgraph Kubernets Pod
+POSTLB[Post Service LB]
+POST[Post Service]
+POST1[Post Service]
+end
+
+subgraph Kubernets Pod
+FEEDLB[Feed Service LB]
+FEED[Feed Service]
+FEED1[Feed Service]
+end
+
+subgraph Kubernets Pod
+USERLB[User Service LB]
+USERSVC[User Service]
+USERSVC1[User Service]
+end
+
+RANK[Ranking Service]
+
+FANOUT[Fanout Service]
+
+MEDIA[Media Service]
+
+%%=========================
+%% CACHE
+%%=========================
+
+POSTCACHE[(Redis Post Cache)]
+
+FEEDCACHE[(Redis Feed Cache)]
+
+TAOCACHE[(TAO Cache)]
+
+%%=========================
+%% DATABASES
+%%=========================
+
+POSTDB[(Post DB)]
+
+POSTREPLICA[(Post Replica)]
+
+TAO[(TAO/MySQL)]
+
+TAOREPLICA[(TAO Replica)]
+
+OBJECT[(Object Storage)]
+
+%%=========================
+%% KAFKA
+%%=========================
+
+KAFKA[(Kafka)]
+
+%%=========================
+%% FLOW
+%%=========================
+
+U --> DNS
+
+DNS --> CDN
+
+CDN --> WAF
+
+WAF --> APIGW
+
+APIGW -->|POST /api/v1/posts| POSTLB
+APIGW -->|GET /api/v1/feed| FEEDLB
+APIGW -->|GET /api/v1/user| USERLB
+
+POSTLB -->|Load balance| POST
+
+FEEDLB -->|Load balance| FEED
+USERLB -->|Load balance| USERSVC
+
+POST -->|store image| OBJECT
+
+POST --> POSTCACHE
+
+POST --> POSTDB
+
+POSTDB --> POSTREPLICA
+
+POST --> KAFKA
+
+KAFKA --> FANOUT
+
+FANOUT --> FEEDCACHE
+
+FANOUT --> TAOCACHE
+
+TAOCACHE --> TAO
+
+TAO --> TAOREPLICA
+
+FEED --> FEEDCACHE
+
+FEED --> RANK
+
+RANK --> TAOCACHE
+
+%%=========================
+%% COLORS
+%%=========================
+
+classDef edge fill:#dbeafe,stroke:#1d4ed8,color:#000;
+
+classDef service fill:#d1fae5,stroke:#059669,color:#000;
+
+classDef cache fill:#fef3c7,stroke:#d97706,color:#000;
+
+classDef db fill:#fce7f3,stroke:#be185d,color:#000;
+
+classDef kafka fill:#fee2e2,stroke:#dc2626,color:#000;
+
+class DNS,CDN,WAF,APIGW edge
+
+class POSTLB,FEEDLB,USERLB,POST,FEED,USERSVC,RANK,FANOUT,MEDIA service
+
+class POSTCACHE,FEEDCACHE,TAOCACHE cache
+
+class POSTDB,POSTREPLICA,TAO,TAOREPLICA,OBJECT db
+
+class KAFKA kafka
+</pre>
+      </div>
+
+      <h3 id="upload">Post Upload</h3>
+      <p>
+        <a href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Databases/NOSQL/Graph_DB/Facebook_TAO">TAO Database</a> used for storing relationships
+      </p>
+            <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+
+actor User
+
+participant CDN
+
+participant APIGW as API Gateway
+box rgb(230,230,255) Kubernets Pod
+participant PSLB as Post Service LB
+participant POST as Post Service
+end
+
+participant OBJ as Object Storage
+participant DB as Post DB
+participant KAFKA as Kafka
+participant FAN as Fanout Service
+participant TAO
+participant FC as Feed Cache
+
+rect rgb(220,240,255)
+User->>CDN: HTTPS POST /api/v1/posts\nJWT + multipart/form-data
+CDN->>APIGW: Forward (dynamic request)
+APIGW->>PSLB: Route POST /posts
+PSLB->>POST: Forward to healthy instance
+end
+
+rect rgb(220,255,220)
+POST->>OBJ: PUT media object
+OBJ-->>POST: mediaURL
+
+POST->>DB: INSERT post(authorId, caption, mediaURL)
+
+DB-->>POST: postId
+
+POST->>KAFKA: Publish PostCreated(postId)
+
+POST-->>User: HTTP 201 Created\n{postId}
+end
+
+rect rgb(255,235,220)
+KAFKA->>FAN: Consume PostCreated
+
+FAN->>TAO: GetFollowerIds(authorId)
+
+TAO-->>FAN: followerIds
+
+FAN->>FC: Update followers' feed cache
+end
+</pre>
+      </div>
+
+      <h3 id="normal">Normal Feed Read</h3>
+      <p>
+        <a href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Databases/NOSQL/Graph_DB/Facebook_TAO">TAO Database</a> used for storing relationships
+      </p>
+            <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+
+actor User
+
+participant CDN
+participant APIGW as API Gateway
+
+box rgb(230,230,255) Kubernets Pod
+participant FSLB as Feed Service LB
+participant FEED as Feed Service
+end
+
+participant CACHE as Feed Cache
+participant DB as Feed DB
+participant RANK as Ranking Service
+participant TAO
+
+rect rgb(220,240,255)
+
+User->>CDN: HTTPS GET /api/v1/feed?page=1
+
+CDN->>APIGW: Forward request
+
+APIGW->>FSLB: Route /feed
+
+FSLB->>FEED: Forward request
+
+end
+
+rect rgb(220,255,220)
+
+FEED->>CACHE: GET feed:user123
+
+alt Cache Hit
+
+CACHE-->>FEED: Candidate Post IDs
+
+else Cache Miss
+
+FEED->>DB: SELECT feed entries
+
+DB-->>FEED: Candidate Post IDs
+
+FEED->>CACHE: Store feed
+
+end
+
+end
+
+rect rgb(255,250,220)
+
+FEED->>RANK: Rank(candidatePosts)
+
+RANK->>TAO: Fetch friend affinity
+
+TAO-->>RANK: Social features
+
+RANK-->>FEED: Ranked posts
+
+FEED-->>User: HTTP 200\nJSON Feed Response
+
+end
+</pre>
+      </div>
+
+      <h3 id="celeb">Celebrity Sequence</h3>
+                  <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+
+actor Celebrity
+
+participant PostService
+participant PostDB
+participant Kafka
+participant FeedService
+
+Celebrity->>PostService: POST /posts
+
+PostService->>PostDB: Save Post
+
+PostService->>Kafka: Publish PostCreated
+
+PostService-->>Celebrity: 201 Created
+
+Note over Kafka: No fanout to 400M followers
+
+User->>FeedService: GET /feed
+
+FeedService->>PostDB: Fetch celebrity posts
+
+FeedService->>FeedService: Merge with cached feed
+
+FeedService-->>User: Ranked feed
+</pre>
+      </div>
 
       <h4 id="get">GET Newsfeed</h4>
       <table>
@@ -306,6 +534,7 @@ SCARD comment:id1:likes        # Get like count
       </code>
 
   </article>
+  <script type="module" src="/scripts/mermaid-init.js"></script>
   <script src="/scripts/prism.js"></script>
   <script src="/scripts/common.js"></script>
 </body>
