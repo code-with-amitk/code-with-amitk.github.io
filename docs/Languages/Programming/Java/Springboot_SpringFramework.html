@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Java Programming — Spring Framework &amp; Spring Boot</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Java/Springboot_SpringFramework.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#spring-boot">Spring Boot</a>
+      <a href="#spring-framework">Spring Framework</a>
+      <a href="#vs">Spring Framework vs Spring Boot</a>
+      <a href="Terms.html">Terms</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="spring-boot">Spring Boot</h2>
+      <p>
+        Spring Boot is an extension of the
+        <a href="#spring-framework">Spring Framework</a> designed to cut through
+        complexities of spring framework.<br />
+        Similar to fastAPI, its very easy and fast to run web application
+      </p>
+      <pre><code class="language-css">
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@SpringBootApplication // 1. Tells Spring Boot this is the main configuration class
+@RestController        // 2. Tells Spring this class will handle web requests
+public class HelloApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(HelloApplication.class, args);  // 3. Launches the embedded tomcat HTTP server and starts the app instantly!
+    }
+
+    @GetMapping("/hello")                       // 4. REST Endpoint "/hello"
+    public String sayHello(@RequestParam(value = "name", defaultValue = "World") String name) {
+        return String.format("Hello, %s!", name);
+    }
+}
+      </code></pre>
+      <p>
+        <a href="Terms.html#spring-boot-application">@SpringBootApplication</a>
+        combines configuration, <a href="Terms.html#auto-configuration">auto-configuration</a>,
+        and <a href="Terms.html#component-scan">component scan</a>.
+        <a href="Terms.html#spring-mvc">@RestController</a> is part of Spring MVC.
+        Running <code>main()</code> starts an
+        <a href="Terms.html#embedded-server-war">embedded Tomcat</a> server.
+      </p>
+
+      <h2 id="spring-framework">Spring Framework</h2>
+      <p>
+        To achieve the exact same web endpoint using the pure Spring Framework
+        (without Spring Boot), you have to configure everything manually that
+        Spring Boot usually does under the hood.<br />
+        1. Manually configure a Spring
+        <a href="Terms.html#ioc">IoC container</a> (using XML files or Java
+        <a href="Terms.html#configuration">@Configuration</a> classes).<br />
+        2. Set up a
+        <a href="Terms.html#dispatcherservlet">DispatcherServlet</a> (Spring's
+        front controller that intercepts web requests).<br />
+        3. Deploy your application to an external
+        <a href="Terms.html#servlet-container">Servlet Container</a> / Web Server
+        (like Apache Tomcat, Jetty, or WildFly) because pure Spring doesn't ship
+        with an <a href="Terms.html#embedded-server-war">embedded server</a>.
+      </p>
+      <table>
+        <tr>
+          <td>
+            The Controller (Same as Spring Boot)<br />
+            <pre><code class="language-css">import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+
+    @GetMapping("/hello")
+    public String sayHello(@RequestParam(value = "name", defaultValue = "World") String name) {
+        return String.format("Hello, %s!", name);
+    }
+}
+          </code></pre>
+          </td>
+          <td>
+            Web Configuration (Replacing Spring Boot's
+            <a href="Terms.html#auto-configuration">Auto-Config</a>)<br />
+            <pre><code class="language-css">import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+@Configuration
+@EnableWebMvc // Equivalent to Spring Boot's auto-configuration for web
+@ComponentScan(basePackages = "com.example") // Tells Spring where to scan for controllers
+public class WebConfig {
+    // Additional manual bean definitions would go here if needed
+}
+          </code></pre>
+            Uses <a href="Terms.html#configuration">@Configuration</a>,
+            <a href="Terms.html#component-scan">@ComponentScan</a>, and
+            <a href="Terms.html#auto-configuration">auto-configuration</a>
+            equivalents.
+          </td>
+          <td>
+            Initializing the
+            <a href="Terms.html#servlet-container">Servlet Container</a>
+            (Replacing main and Embedded Tomcat)<br />
+            <pre><code class="language-css">import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+
+public class MyWebAppInitializer implements WebApplicationInitializer {
+
+    @Override
+    public void onStartup(ServletContext container) throws ServletException {
+        // 1. Create the Spring application context
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(WebConfig.class);
+        context.refresh();
+
+        // 2. Create and register Spring's DispatcherServlet manually
+        DispatcherServlet servlet = new DispatcherServlet(context);
+        ServletRegistration.Dynamic appServlet = container.addServlet("app", servlet);
+        
+        appServlet.setLoadOnStartup(1);
+        appServlet.addMapping("/"); // Map all incoming traffic to the DispatcherServlet
+    }
+}
+            </code></pre>
+            Implements
+            <a href="Terms.html#web-application-initializer">WebApplicationInitializer</a>,
+            creates an
+            <a href="Terms.html#application-context">ApplicationContext</a>, and
+            registers the
+            <a href="Terms.html#dispatcherservlet">DispatcherServlet</a>.
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="vs">Spring Framework vs Spring Boot</h2>
+      <table>
+        <tr>
+          <th>Aspect</th>
+          <th>Spring Framework</th>
+          <th>Spring Boot</th>
+        </tr>
+        <tr>
+          <td><b>What it is</b></td>
+          <td>
+            Core framework:
+            <a href="Terms.html#ioc">IoC container</a>,
+            <a href="Terms.html#di">DI</a>,
+            <a href="Terms.html#spring-mvc">Spring MVC</a>, Data,
+            <a href="Terms.html#spring-security">Security</a>,
+            <a href="Terms.html#aop">AOP</a>, and other modules. The foundation
+            everything else builds on.
+          </td>
+          <td>
+            Extension on top of Spring Framework. Adds
+            <a href="Terms.html#auto-configuration">auto-configuration</a>,
+            <a href="Terms.html#starters">starters</a>,
+            <a href="Terms.html#embedded-server-war">embedded servers</a>, and
+            production-ready defaults.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Configuration</b></td>
+          <td>
+            Manual: XML, <a href="Terms.html#configuration">@Configuration</a>
+            classes,
+            <a href="Terms.html#web-application-initializer">WebApplicationInitializer</a>,
+            explicit <a href="Terms.html#bean">bean</a> definitions, servlet
+            setup.
+          </td>
+          <td>
+            <a href="Terms.html#convention-over-configuration">Convention over configuration</a>.
+            <a href="Terms.html#spring-boot-application">@SpringBootApplication</a>
+            + <a href="Terms.html#application-properties">application.yml</a>;
+            override only what you need.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Web server</b></td>
+          <td>
+            No embedded server. Package as
+            <a href="Terms.html#embedded-server-war">WAR</a> and deploy to
+            external Tomcat, Jetty, or WildFly
+            (<a href="Terms.html#servlet-container">servlet container</a>).
+          </td>
+          <td>
+            Embedded Tomcat/Jetty/Undertow included. Run as executable JAR with
+            <code>java -jar app.jar</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Dependencies</b></td>
+          <td>
+            You pick and align JAR versions yourself (Spring, Hibernate,
+            Jackson, servlet API, etc.) — easy to get conflicts.
+          </td>
+          <td>
+            <a href="Terms.html#starters">Starters</a> (e.g.
+            <code>spring-boot-starter-web</code>) pull in tested, compatible
+            versions via the Boot <a href="Terms.html#bom">BOM</a>.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Boilerplate to run “Hello World” REST</b></td>
+          <td>
+            Controller + web config +
+            <a href="Terms.html#dispatcherservlet">DispatcherServlet</a>
+            registration + external server install/deploy (see examples above).
+          </td>
+          <td>
+            One class with
+            <a href="Terms.html#spring-boot-application">@SpringBootApplication</a>,
+            <code>@RestController</code>, and <code>main()</code> — server
+            starts on run.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Database setup</b></td>
+          <td>
+            Manually define
+            <a href="Terms.html#datasource-entitymanager">DataSource</a>,
+            <a href="Terms.html#datasource-entitymanager">EntityManagerFactory</a>,
+            transaction manager, and
+            <a href="Terms.html#spring-data-jpa">JPA</a> properties as
+            <a href="Terms.html#bean">beans</a>.
+          </td>
+          <td>
+            Add <code>spring-boot-starter-data-jpa</code>
+            (<a href="Terms.html#starters">starter</a>) + JDBC URL in
+            <a href="Terms.html#application-properties">application.properties</a>;
+            Boot <a href="Terms.html#auto-configuration">auto-configures</a> the
+            rest.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Operations / production</b></td>
+          <td>
+            You add monitoring, health checks, and metrics yourself or via
+            separate libraries.
+          </td>
+          <td>
+            <a href="Terms.html#actuator">Spring Boot Actuator</a> —
+            <code>/health</code>, metrics, info;
+            <a href="Terms.html#profiles">profiles</a> for dev/test/prod out of
+            the box.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Flexibility vs speed</b></td>
+          <td>
+            Maximum control over every
+            <a href="Terms.html#bean">bean</a> and servlet detail. More setup
+            work.
+          </td>
+          <td>
+            Sensible defaults; less control until you exclude
+            <a href="Terms.html#auto-configuration">auto-config</a> or define
+            custom beans. Much faster to start.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Typical use today</b></td>
+          <td>
+            Legacy <a href="Terms.html#embedded-server-war">WAR</a> apps,
+            fine-grained control, integrating Spring into an existing non-Boot
+            codebase.
+          </td>
+          <td>
+            New REST APIs, microservices, cloud/Kubernetes deployments, and most
+            greenfield Java backends.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Learning curve</b></td>
+          <td>
+            Must understand servlets,
+            <a href="Terms.html#application-context">application context</a>, and
+            manual wiring before the app runs.
+          </td>
+          <td>
+            Easier entry; still need to learn Spring concepts
+            (<a href="Terms.html#bean">beans</a>,
+            <a href="Terms.html#di">DI</a>,
+            <a href="Terms.html#spring-mvc">MVC</a>) but skip low-level server
+            plumbing initially.
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        See <a href="Terms.html">Terms.html</a> for full definitions of every
+        linked concept above.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

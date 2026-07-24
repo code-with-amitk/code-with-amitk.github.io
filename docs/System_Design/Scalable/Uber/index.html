@@ -1,125 +1,400 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Uber System Design</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Scalable/Uber" />
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Uber"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
+          </form>
         </li>
-    </ul>
-  </nav>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
+    <aside class="sidebar">
       <a href="#req">Requirements</a>
       <a href="#boe">BOE</a>
+      <a href="#hld">HLD</a>
+      <ul>
+        <li><a href="#block">Block Diagram</a></li>
+        <li><a href="#driver">Driver Location updat</a></li>
+        <li><a href="#user">User searches Nearby Drivers</a></li>
+        <li><a href="#kafka">kafka Messages</a></li>
+      </ul>
       <a href="#api">API Design</a>
       <ul>
         <li><a href="#api_user">User APIs</a></li>
         <li><a href="#api_driver">Driver APIs</a></li>
       </ul>
       <a href="#hld">HLD</a>
-  </aside>
+    </aside>
 
-  <article style="margin-left:200px;">
-    <h2 id="req">Requirements</h2>
-    <h4>Functional</h4>
-    <dl>There would be 2 entities(User & driver) which will use this system</dl>
-    <h5>User Requirements:</h5>
-    <dt>1. User can create his profile on system.
-    <dt id="req_read_user">2. [READ] User should be able to see near by cabs on real time.</dt>
-    <dt id="req_create_user">3. [Create] User can book the cab</dt>
-    <dt id="req_delete_user">4. [Delete] User can Cancel the ride after successful booking.</dt>
-    <dt id="req_update_user">5. [Update] User can modify the ride</dt>
+    <article style="margin-left: 200px">
+      <h2>Uber</h2>
+      <p>
+        <b>AP(Avilable, Partition Tolerant)</b>. eventual consistent is
+        fine.read heavy system<br />
+        There are 2 entities in system:<br />
+        - Driver(who updates his location(lat,long) in system).<br />
+        - User(Customer) who gets nearby(within 10 lm radius) drivers based on
+        his location(lat,lon)
+      </p>
+      <h2 id="req">Requirements</h2>
+      <p>
+        <b>Functional:</b><br />
+        &ensp; User(Customer)/Driver should be able to create profile<br />
+        &ensp; Driver should be able to add/update their location<br />
+        &ensp; User should be able to check rides, make booking, cancel
+        booking<br />
+        &ensp; User should be able to pay
+        <br />
+        <b>Non-Functional:</b> Available, Fault tolerant, Scalable <br /><br />
 
-    <h5>Driver's Requirements:</h5>
-    <dt>
-      1. [Create] Driver can create his profile on system.<br>
-      2. [Update] Location of driver is updated on real time.<br>
-      3. [READ] Driver gets notification of near users asking for booking.<br>
-      4. [Delete] Driver can cancel ride after booking.
-    </dt>
+        All requirements are around CRUD(create, read, update, delete)
+      </p>
 
-    <h2 id="boe">BOE</h2>
-    <dt>
-      Assumed. Users(300 Million) Drivers(1M). DAU(1M), DA Drivers(500k). Daily rides(1M)<br>
-      Drivers update their location every 5 seconds.
-    </dt>
-    <br>
+      <h2 id="boe">BOE</h2>
+      <p>
+        Assumed. Users(300 Million) Drivers(1M). DAU(1M), DA Drivers(500k).
+        Daily rides(1M) Drivers update their location every 5 seconds.<br />
 
-    <table>
-      <tr>
-        <td>QPS (Queries Per Second)</td>
-        <td>
-          User Queries: 1M / 86400 = 12 queries per second<br>
-          Driver does not do queries, but updates are pushed to driver when driver is not on trip.
-        </td>
-      </tr>
-      <tr>
-        <td>Bandwidth Estimates</td>
-        <td>
-          1 User Requests for cab location size = 90 bytes. 12 x 90 = 1080 bytes/sec<br>
-          <a href="https://github.com/code-with-amitk/Code-examples/tree/master/Networking/OSI-Layers#hs">TCP, IP, DL Header sizes</a>
-          <pre><code class="language-css">
+        <b>QPS (Queries Per Second)</b><br />
+        &ensp; User Queries: 1M / 86400 = 12 queries per second<br />
+        &ensp; Driver does not do queries, but updates are pushed to driver when
+        driver is not on trip.<br />
+
+        <b>Bandwidth Estimates</b><br />
+        1 User Requests for cab location size = 90 bytes. 12 x 90 = 1080
+        bytes/sec
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Networking/OSI-Layers#hs"
+          >TCP, IP, DL Header sizes</a
+        >.
+      </p>
+      <pre><code class="language-css">
 |App Hdr + (userlong, lat, userId, preference)|Transport TCP(src,dst port)|NW(src, dst IP)| DL Hdr(src, dst MAC) |
   20bytes         17bytes                       20 bytes                    20 bytes         14 bytes             => 90bytes 
           </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Storage Estimates</td>
-        <td>
-          Not Huge. We need to store user's & drivers rides 
-        </td>
-      </tr>
-    </table>
 
-    <h2 id="api">APIs (<a href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html">CRUD</a>)</h2>
-    <h4 id="api_user">User APIs</h4>
-    <dl>
-    <a href="/Networking/OSI-Layers/Layer-7/REST%20API">REST API? <br>REST API Versioning(v1,v2)</a>
-    </dl>
-    <table>
-      <tr>
-        <th><h4><a href="#req_create_user">1. User Creates a booking</a></h4></th>
-        <th><h4><a href="#req_read_user">2. User gets all nearby cabs</a></h4></th>
-        <th><h4><a href="#req_delete_user">4. User can cancel the ride</a></h4></th>
-      </tr>
-      <tr>
-        <td>
-          <pre><code class="language-css">
+      <h2 id="hld">HLD</h2>
+      <h3>
+        <a
+          href="/System_Design/Scalable/yelpProximityServer_nearbyRecommendationSystem/#bhld"
+          >QuadTree</a
+        >
+      </h3>
+      <p>
+        QuadTree to store driver location(lat, long) and to effectively user App
+        query nearby 10km radius drivers.
+
+        <br />
+        We will extend
+        <a
+          href="/System_Design/Scalable/yelpProximityServer_nearbyRecommendationSystem/#ull"
+          >quadtree design</a
+        >
+        of yelp here<br />
+
+        <b>Frequent Updates on quadtree:</b><br />
+
+        Difference b/w Uber & yelp is there would be more frequent updates on
+        quadtree wrt yelp. Since Drivers update their location(driver_id, lat,
+        long) every 5 seconds, Will we update quadtree on every update?<br />
+        <b>No.</b> We will create a local datastructure(Hash Table), which will
+        store info of drivers and will send the information after 10-15 seconds.
+        This will reduce frequent updates on system.
+      </p>
+      <pre><code class="language-css">
+      Hash Table:
+      key=driver_id(3 bytes), value={lat(8bytes), long(8bytes)} //19 bytes
+    
+      500k driver. 10Mbytes of storage
+    </code></pre>
+
+      <h3 id="block">System Blocks</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+flowchart LR
+
+%% Clients
+Customer["Customer App"]
+Driver["Driver App"]
+
+GLB["Global Load Balancer"]
+RLB["Regional Load Balancer"]
+AZLB["AZ Load Balancer"]
+
+APIGW["API Gateway"]
+UserService["User Service"]
+RideService["Ride Service"]
+LocationService["Location Service"]
+PaymentService["Payment Service"]
+UserDB[(User DB)]
+RideDB[(Ride DB)]
+PaymentDB[(Payment DB)]
+LocationCache["Redis Cache"]
+QuadTree["QuadTree / Geospatial Index"]
+Kafka["Kafka"]
+MatchingService["Ride Matching Service"]
+NotificationService["Notification Service"]
+AnalyticsService["Analytics Service"]
+SurgePricing["Surge Pricing Service"]
+
+
+%% Entry
+Customer --> GLB
+Driver --> GLB
+
+GLB --> RLB
+RLB --> AZLB
+AZLB --> APIGW
+
+%% Core Services
+APIGW --> UserService
+APIGW --> RideService
+APIGW --> LocationService
+APIGW --> PaymentService
+
+%% Databases
+UserService --> UserDB
+RideService --> RideDB
+PaymentService --> PaymentDB
+
+%% Location
+LocationService --> LocationCache
+LocationService --> QuadTree
+
+%% Async
+LocationService --> Kafka
+RideService --> Kafka
+
+Kafka --> MatchingService
+Kafka --> NotificationService
+Kafka --> AnalyticsService
+Kafka --> SurgePricing
+
+%% Notifications
+NotificationService --> Customer
+NotificationService --> Driver
+</pre
+        >
+      </div>
+
+      <h3 id="driver">Driver Location update</h3>
+      <table style="width: 100%; border-collapse: collapse">
+        <tr>
+          <td style="width: 50%">
+            <div class="mermaid-wrap">
+              <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+sequenceDiagram
+autonumber
+
+participant Driver
+participant API
+participant LocationService
+participant RedisCache
+participant QuadTree
+participant Kafka
+participant NotificationService
+
+Driver->>API: POST /location(lat,lng)
+Note over API: REST endpoint aware<br>/location -> locationSvc <br>/neearbydrivers -> RideSvc
+
+API->>LocationService: Update Driver Location(lat,lng)
+Note over LocationService: Cache Check<br>if prev location same as present
+
+LocationService->>RedisCache: Check Previous Driver Location
+
+alt Cache Miss or Location Changed
+    RedisCache-->>LocationService: Update Required
+    LocationService->>QuadTree: Update Driver Position
+    LocationService->>RedisCache: Update Latest Location
+    LocationService->>Kafka: Publish driver-location-updated
+else Same Location
+    RedisCache-->>LocationService: Ignore Update
+end
+
+Kafka-->>NotificationService: driver-location-updated
+
+NotificationService-->>Driver: Optional Push/WebSocket
+
+LocationService-->>API: Success
+API-->>Driver: 200 OK
+
+</pre>
+            </div>
+          </td>
+          <td>
+            1. Driver sends its location(latitude,longitude) to an API gateway
+            every 5 minutes. The API gateway is aware about the REST Endpoint
+            and it sends the location to the location service.<br />
+            3. The location service checks the cache that if this driver's
+            location is same as previous. If not, it will not update.<br />
+            5. Updated driver location in Quadtree. if quadtree node becomes
+            heavy in Quadtree that is broken into sub quadtrees
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="user">User/Customer/Rider searches Nearby Drivers</h3>
+      <table style="width: 100%; border-collapse: collapse">
+        <tr>
+          <td style="width: 50%">
+            <div class="mermaid-wrap">
+              <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
+sequenceDiagram
+autonumber
+
+participant Rider as Rider/User/Customer
+participant API
+participant RideService
+participant LocationService
+participant Redis
+participant QuadTree
+participant UserDB
+
+Rider->>API: GET /nearbyDrivers<br>My location(lat,lng)
+Note over API: REST endpoint aware<br>/location -> locationSvc <br>/neearbydrivers -> RideSvc
+
+API->>RideService: 10km Nearby Drivers<br> to location(lat,lng)
+
+RideService->>UserDB: Validate Customer
+UserDB-->>RideService: OK
+RideService->>LocationService: Find Nearby Drivers
+
+LocationService->>Redis: Radius Lookup
+alt Cache Hit
+    Redis-->>LocationService: Driver List
+else Cache Miss
+    Redis-->>LocationService: Miss
+    LocationService->>QuadTree: Radius Search(10 km)
+    QuadTree-->>LocationService: Driver List
+    LocationService->>Redis: Cache Result
+end
+LocationService->>QuadTree: Radius Search(10 km)
+
+QuadTree-->>LocationService: Driver List
+
+LocationService-->>RideService: Nearby Drivers
+Note over RideService: No Kafka message is needed because<br> Rider is waiting for an immediate response
+
+RideService-->>API: Driver List
+
+API-->>Rider: Driver Locations
+        </pre>
+            </div>
+          </td>
+          <td>
+            The Notification Service does not participate in the synchronous
+            "find nearby drivers" API because its a Kafka client and rider is
+            waiting for an immediate response, we will not bank on kafka for
+            sending notifications
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="kafka">kafka Messages</h3>
+      <table>
+        <tr>
+          <td>
+            <b>topic= driver-location-updated</b><br />
+            <pre><code> Message:
+{
+  "eventId": "uuid",
+  "driverId": "D123",
+  "latitude": 37.7749,
+  "longitude": -122.4194,
+  "heading": 90,
+  "speed": 42,
+  "status": "AVAILABLE",
+  "timestamp": 1753185000
+}
+          </code></pre>
+          </td>
+          <td>
+            Consumers: Notification Service, Analytics Service, Surge Pricing
+            Service, Ride Matching Service (optional, depending on architecture)
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="api">
+        APIs (<a
+          href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html"
+          >CRUD</a
+        >)
+      </h2>
+      <h4 id="api_user">User APIs</h4>
+      <dl>
+        <a href="/Networking/OSI-Layers/Layer-7/REST%20API"
+          >REST API? <br />REST API Versioning(v1,v2)</a
+        >
+      </dl>
+      <table>
+        <tr>
+          <th>
+            <h4><a href="#req_create_user">1. User Creates a booking</a></h4>
+          </th>
+          <th>
+            <h4><a href="#req_read_user">2. User gets all nearby cabs</a></h4>
+          </th>
+          <th>
+            <h4><a href="#req_delete_user">4. User can cancel the ride</a></h4>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
 curl -X POST -H "Content-Type: application/json" 
 -d '{"user_id": "", "driver_id": "", "to": "", 
 "from": "", "initial_price": "", "duration": "", }' 
 http://127.0.0.1:8080/v1/booking/create -vvv
           </code></pre>
-        </td>
-        <td><pre><code class="language-css">
+          </td>
+          <td>
+            <pre><code class="language-css">
 curl -X GET -H "Content-Type: application/json" 
 -d '{"user_id": "", "long": "", "lat": ""}' 
 http://127.0.0.1:8080/v1/booking/read -vvv
-        </code></pre></td>
-        <td><pre><code class="language-css">
+        </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
 curl -X DELETE -H "Content-Type: application/json" 
 -d '{"user_id": "", "booking_id": ""}' 
 http://127.0.0.1:8080/v1/booking/cancel -vvv
-          </code></pre></td>
-      </tr>
-      <tr>
-        <td><pre><code class="language-css">
+          </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="language-css">
 POST https://url/v1/booking/create   //url=uber.com
 header {
   Authorization: {Bearer "API_KEY_TOKEN"},
@@ -137,8 +412,10 @@ body {  //JSON
 "user_id": "", "driver_id": "", "to": "", 
 "from": "", "initial_price": "", "duration": "", 
 }
-        </code></pre></td>
-        <td><pre><code class="language-css">
+        </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
 // All free cabs near user
 GET https://url/v1/get_cabs
 header {
@@ -150,7 +427,10 @@ body {  //JSON
   "lat": ""
 }
         </code></pre>
-        <td><pre><code class="language-css">
+          </td>
+
+          <td>
+            <pre><code class="language-css">
 // User cancels the ride
 GET https://url/v1/cancel_cab
 header {
@@ -162,29 +442,11 @@ body {  //JSON
   "booking_id": ""
 }
           </code></pre>
-        </td>
-      </tr>
-    </table>
-
-    <h2 id="hld">HLD</h2>
-    <dl>
-      We will extend <a href="/System_Design/Scalable/yelpProximityServer_nearbyRecommendationSystem/#ull">quadtree design</a> of yelp here
-    </dl>
-    <dl><b>Frequent Updates on quadtree:</b></dl>
-    <dd>
-      Difference b/w Uber & yelp is there would be more frequent updates on quadtree wrt yelp.
-      Since Drivers update their location(driver_id, lat, long) every 5 seconds, Will we update quadtree on every update?<br>
-      <b>No.</b> We will create a local datastructure(Hash Table), which will store info of drivers and will send the information
-      after 10-15 seconds. This will reduce frequent updates on system.
-    </dd>
-    <pre><code class="language-css">
-      Hash Table:
-      key=driver_id(3 bytes), value={lat(8bytes), long(8bytes)} //19 bytes
-    
-      500k driver. 10Mbytes of storage
-    </code></pre>
-  </article>
-
-  <script src="/scripts/prism.js"></script>
-</body>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

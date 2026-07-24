@@ -2,8 +2,12 @@
 <html>
   <head>
     <title>Machine Learning Types</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/ML_and_Types_Algorithms.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/ML_and_Types_Algorithms.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
 
@@ -50,9 +54,9 @@
           </ul>
         </li>
       </ul>
-      <a href="#uslmodels">Unsupervised Learning Model</a>
+      <a href="#un">Unsupervised Learning Model</a>
       <ul>
-        <li><a href="#">Model 1</a></li>
+        <li><a href="clustering">Clustering</a></li>
       </ul>
     </aside>
 
@@ -60,10 +64,9 @@
       <h2 id="what">Machine Learning and ML Model?</h2>
       <p>
         ML is the process of training a
-        <a href="/Machine%20Learning/ML_Models/Ollama.html#models"
-          >Machine Learning model</a
-        >, to make useful predictions or generate content (like text, images,
-        audio, or video) from data.
+        <a href="/Machine Learning/Terms.html">ML Model</a>, to make useful
+        predictions or generate content (like text, images, audio, or video)
+        from data.
       </p>
 
       <h2 id="types">Types of Machine Learning</h2>
@@ -114,38 +117,10 @@
         </tr>
         <tr>
           <td>Types</td>
-          <td>
-            <b>1. Classification (give yes/no):</b><br />
-            <u>Example</u><br />
-            &ensp; a. Spam Filterning: Algo is trained with many example emails
-            along with their class (spam or ham). Each email has a label.<br />
-            <u>Types of classification models:</u><br />
-            &ensp; &ensp; 1. Binary classification: Model output a value from a
-            class that contains only two values, for example rain or no rain<br />
-            &ensp; &ensp; 2. Multiclass classification: Output a value from a
-            class that contains more than 2 values. Eg: rain, hail, snow, or
-            sleet<br /><br />
-
-            <b>2. Regression: (give % or numeric value):</b><br />
-            Predict whether based on inputs, Predict price of car provided with
-            some inputs(mileage, age, brand, etc.)<br /><br />
-
-            <b>3. Logistic Regression (yes/no with %):</b><br />
-            Mix of classfication & Regression. Example: 20% of chances being a
-            spam.
-          </td>
+          <td></td>
           <td>
             <b>1. Clustering:</b><br />
-            The model finds data points that demarcate natural groupings.<br />
-            <img
-              src="/images/Machine_Learning/clustering-01.png"
-              alt="Clustering"
-              style="width: 250px; height: 150px"
-            />
-            <br />Algorithms used:<br />
-            &ensp; k-Means<br />
-            &ensp; Hierarchical Cluster Analysis (HCA)<br />
-            &ensp; Expectation Maximization<br />
+
             <b>2. Visualization and dimensionality reduction</b><br />
             With unlabelled data this algorithm provides ouput which can be
             plotted on 2-D, 3-D plane. Algorithms used:<br />
@@ -165,14 +140,7 @@
         </tr>
         <tr>
           <td>Algorithms</td>
-          <td>
-            k-Nearest Neighbors<br />
-            Linear Regression<br />
-            Logistic Regression<br />
-            Support Vector Machines (SVMs)<br />
-            Decision Trees & Random Forests<br />
-            Neural networks
-          </td>
+          <td></td>
           <td>
             Clustering: k-Means, Hierarchical Cluster Analysis (HCA),
             Expectation Maximization<br />
@@ -186,17 +154,81 @@
         </tr>
       </table>
 
-      <h2 id="slmodels">Supervised Learning Models</h2>
-      <dl>
-        Machine Learning model is a Algorithm, which makes predictions after
-        getting trained on data<br />
-        <b>Supervised Learning:</b><br />
-        &ensp; <u>Regression:</u> Decision Tree Regressor<br />
-        &ensp; <u>Classification:</u> Decision Tree Classifier<br />
-      </dl>
+      <h1 id="slmodels">1. Supervised Learning Models</h1>
+      <p>
+        Algorithms: k-Nearest Neighbors, Linear Regression, Logistic Regression,
+        Support Vector Machines (SVMs), Decision Trees & Random Forests, Neural
+        networks
+      </p>
+      <h2>1.1 Regression (Gives % or numeric value)</h2>
+      <p>
+        Examples: Predict whether based on inputs, Predict price of car provided
+        with some inputs(mileage, age, brand, etc.)Decision Tree Regressor<br />
+        Logistic Regression: Mix of classfication & Regression. Example: 20% of
+        chances being a spam.
+      </p>
 
-      <h3 id="reg">Regression</h3>
-      <h4 id="dtr">Decision Tree Regressor</h4>
+      <h3 id="lr">1.1.1 Linear Regression</h3>
+      <p>
+        linear regression finds the relationship between
+        <a href="/Machine Learning/Terms.html">features</a> and a
+        <a href="/Machine Learning/Terms.html">label</a>
+      </p>
+      <table>
+        <tr>
+          <td>
+            <b>In Mathematics</b><br />
+            y = mx + b. m(slope)=y2-y1/x2-x1. b(y intercept)<br />
+            <img
+              src="/images/Machine_Learning/Learning/linear_regression.png"
+              alt="Linear Regression"
+              style="width: 200px; height: 200px"
+            /><br />
+            <pre><code class="language-css">
+m(slope) = y2-y1 / x2-x1
+         = 5-0 / 0 - 7 = -5/7
+
+b is y intercept. ie point where line intersect y axis = 5
+
+Equation: y = -5/7x + 5.
+            = 7y + 5x = 35   //(0,5) (7,0) both satify the equation
+      </code></pre>
+          </td>
+          <td>
+            <b>In Machine Learning</b>(Model with 1 feature(x))<br />
+            <pre><code class="language-css">
+y = wx + b
+    w(weight), b(Bias)
+                </code></pre>
+            <br />
+            <img
+              src="/images/Machine_Learning/Learning/linear_regression1.png"
+              alt="Linear Regression"
+              style="width: 200px; height: 150px"
+            />
+          </td>
+          <td>
+            <b>In Machine Learning</b>(Model with many features)<br />
+            <pre><code class="language-css">
+y = w1x1 + w2x2 + w3x3 ..+ b
+    w(weight), b(Bias)
+                </code></pre>
+            <br />
+            <img
+              src="/images/Machine_Learning/Learning/linear_regression_many_features.png"
+              alt="Linear Regression"
+              style="width: 400px; height: 150px"
+            />
+          </td>
+        </tr>
+      </table>
+
+      <h4>Loss in Linear Regression</h4>
+      <p>
+        Understanding <a href="Terms.html">Loss in linear regression</a>.<br />
+      </p>
+
+      <h4 id="dtr">1.1.2 Decision Tree</h4>
       <dl>
         This is Binary Tree(not balanced) which works in flowchart-like manner
         where each internal node represents a "test" on an attribute, each
@@ -259,7 +291,7 @@
         sweet spot between 2
       </dl>
 
-      <h4 id="ranforr">Random Forest Regressor</h4>
+      <h4 id="ranforr">1.1.2 Random Forest</h4>
       <dl>
         <b>Problems with Decision Tree:</b>
         &ensp; Overfitting(Deep tree with lot of leaves) or underfitting(very
@@ -273,8 +305,42 @@
         works well with default params
       </dl>
 
-      <h3 id="classifiers">Classifiers</h3>
-      <h4 id="dtc">Decision Tree Classifier</h4>
+      <h3>1.2 Classification (Gives yes/no or enums)</h3>
+      <p>Example: predict if an email is spam or if a photo contains a cat</p>
+
+      <h4>1.2.1 Binary classification (true or false)</h4>
+      <p>
+        models output a value from a class that contains only two values, for
+        example, a model that outputs either rain or no rain
+      </p>
+
+      <h4>1.2.2 Multiclass classification (enums)</h4>
+      <p>
+        models output a value from a class that contains more than two values,
+        for example, a model that can output either rain, hail, snow, or sleet.
+      </p>
+
+      <h2 id="un">2. Unsupervised Learning</h2>
+      <h3 id="clustering">2.1 Clustering</h3>
+      <p>
+        Clustering differs from classification because the categories aren't
+        defined by you. For example, an unsupervised model might cluster a
+        weather dataset based on temperature.<br />
+        Algorithms used: k-Means, Hierarchical Cluster Analysis (HCA),
+        Expectation Maximization
+      </p>
+      <table>
+        <tr>
+          <td>
+            <img
+              src="https://developers.google.com/static/machine-learning/intro-to-ml/images/clustering-04.png"
+              alt="trie"
+              style="width: 500px; height: 150px"
+            />
+          </td>
+        </tr>
+      </table>
     </article>
+    <script src="/scripts/prism.js"></script>
   </body>
 </html>
