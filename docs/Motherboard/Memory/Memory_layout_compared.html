@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Memory Layout Compared — C++ and Java</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_compared.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li>
+          <a href="/Motherboard/Memory/Memory_layout_of_process.html">Back</a>
+        </li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#layout">Memory Layout</a>
+      <ul>
+        <li><a href="#cpp">C++</a></li>
+        <li><a href="#java">Java</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="layout">Memory Layout of a Process</h2>
+
+      <h3 id="cpp">C++</h3>
+      <pre><code>
+PROCESS MEMORY LAYOUT
+                                                    Heap
+                                                    /\
+    High Memory Address                              |      |         Data Segment        |
+    ┌────────────┬──────────────┬──────────────┬─────|──────┬──────────────┬──────────────┬──────────────┐
+    │   Kernel   │    Stack     │ Shared Libs  │    Pointer | BSS          │ .data        │ Text / Code  │
+    │   space    │ grows -->    │              │ to Heap    │ Uninitialized│ Initialized  │  Read Only   │
+    |            |              |              |            |              | &lt;-RW-&gt;&lt;-RO-&gt; |              |
+    └────────────┴──────────────┴──────────────┴────────────┴──────────────┴──────────────┴──────────────┘
+                                                                                                     0x00000000
+                                                                                                    Low Memory Address
+
+THREAD MEMORY LAYOUT
+-----------------------------Process Memory layout---------------------------
+-------Process Stack-----------------
+[ Thread1_Stack Thread2_Stack        ][ ptr-to-heap ][Data Segment][Code Segment]
+                
+            </code></pre>
+
+      <h3 id="java">Java</h3>
+      <p>
+        A Java program runs inside the <strong>JVM</strong> (one OS process).
+        The diagram below shows the main <em>JVM runtime data areas</em> in the
+        same horizontal style as the C++ layout: higher/native address regions
+        on the left, toward executable and off-heap areas on the right. All Java
+        threads share the <strong>heap</strong> and <strong>metaspace</strong>;
+        each thread has its own stacks and program counter.
+      </p>
+
+      <pre><code>
+OS
+├── JVM Process 1
+│    ├── Main Thread
+│    ├── User Thread 1
+│    ├── User Thread 2
+│    ├── GC Thread
+│    ├── JIT Compiler Thread
+│    └── Cleaner Thread
+├── JVM Process 2
+└── JVM Process 3
+
+MEMORY LAYOUT OF 1 JVM PROCESS
+main.java(main thread)
+  |- thread1
+  |- thread2
+<-------------------------------------------------------------- 1 JVM PROCESS ------------------------------------------------------------------------------------>
+┬─────────────────────┬──────────────────────┬──────────────────────────────────────────────┬─────────────────────────────────────────────────────────────────────────────┬──────────────────────┬─────────────────────────────────┐
+│    Thread Stacks    │   Shared Libraries   │                  Metaspace                   │     Heap  (all Objects allocated here) [GARBAGE COLLECTOR run here ONLY]    │      Code Cache      │ Direct Memory Allocation        │
+│ main thread stack   │      JVM + JNI       │ ┌────────────────┬─────────────────────────┐ │ ┌────────────────────────────────────┬────────────────────────────────────┐ │   TEXT SEGMENT(C++)  │ Eg: ByteBuffer.allocateDirect() │
+│ thread1_stack       │    libjvm.so         │ │Class Structures│ Runtime Constant Pool   │ │ │ Young Generation                   │ Old Generation (Tenured)           │ │ Generated at runtime │  or NIO/mapped-file             │
+│ thread2_stack       │                      │ └────────────────┴─────────────────────────┘ │ │ ┌──────────┬──────────┬──────────┐ │                                    │ │                      │                                 │
+│ gc_thread           │                      │                                              │ │ │   Eden   │Survivor0 │Survivor1 │ │                                    │ │ JIT Native Code (RX) │   Not garbage collected         |
+│ compiler threads    │                      │                                              │ │ └──────────┴──────────┴──────────┘ │                                    │ │                      │                                 │
+┴─────────────────────┴──────────────────────┴──────────────────────────────────────────────┴─────────────────────────────────────────────────────────────────────────────┴──────────────────────┴─────────────────────────────────┘
+      
+
+┬───────────────────────┬───────────────────────────┬─
+|   JVM Process 1       |     JVM Process 2         | ...
+|hello.java(main thread)| test.java(main thread)    |
+|   thread1             |                           |
+|   thread2             |                           |
+|   gc thread           |                           |
+┴───────────────────────┴───────────────────────────┴─
+
+    </code></pre>
+      <p>
+        <b>Metaspace.</b> Native memory (outside the Java object heap) that
+        stores class metadata: class definitions, method bytecode, field/method
+        tables, and the runtime constant pool. It grows as classes are loaded.
+        Since Java 8 it replaced PermGen (which was inside the heap in older
+        JVMs). Static field values that are object references point into the
+        heap; the class structure itself lives in metaspace.
+      </p>
+
+      <p>
+        <b
+          >Heap <font color="red">All Objects live here</font>— Eden, survivor
+          spaces, and old generation.</b
+        >
+        The heap is shared by all Java threads.<br />
+        &ensp; <strong>Eden:</strong> New objects are allocated in here. When
+        Eden fills, a minor garbage collection copies live objects into one of
+        two <strong>survivor</strong> spaces (S0/S1).<br />
+
+        &ensp; <strong>Old generation</strong> (tenured). if further space is
+        needed(from S0/S1) objects are copied old generation.<br />
+        Generational layout is a JVM optimization; logically it is still one
+        heap, just like the C++ heap is one region even though
+        <code>malloc</code> arenas exist internally.
+        <br />
+
+        <b>Why generations?</b> Most objects are short-lived. Collecting Eden
+        often (cheap, small) is faster than scanning the entire heap every time.
+      </p>
+
+      <p>
+        <b>Code cache.</b> Memory holding machine code generated by the JIT
+        compiler from hot bytecode. It is executable (like the C++
+        <code>.text</code> segment) but created at runtime, not loaded fully
+        from disk upfront. Bytecode itself is stored as part of class metadata
+        in metaspace; only optimized native translations go here.
+      </p>
+
+      <p>
+        <b>Direct memory (off-heap).</b> Native buffers allocated outside the
+        Java heap — for example <code>ByteBuffer.allocateDirect()</code> and
+        some NIO/mapped-file uses. It is still inside the same JVM OS process
+        but not garbage-collected with ordinary objects. Limited by
+        <code>-XX:MaxDirectMemorySize</code>.
+      </p>
+
+      <p>
+        <b><font color="red">Memory management. Garbage Collector</font></b
+        ><br />
+        &ensp; <b>C++</b> relies on scope, destructors, smart pointers, or
+        manual <code>delete</code>. <br />
+        &ensp; <b>Java:</b> Garbage collector frees heap objects; we do not free
+        individual objects. Metaspace and direct memory have their own lifecycle
+        rules.
+      </p>
+    </article>
+
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

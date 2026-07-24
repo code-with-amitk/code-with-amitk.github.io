@@ -1,0 +1,336 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Spring Framework &amp; Spring Boot — Terms</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Java/Terms.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="Springboot_SpringFramework.html">Spring Boot &amp; Framework</a>
+      <a href="#configuration">@Configuration</a>
+      <a href="#spring-boot-application">@SpringBootApplication</a>
+      <a href="#aop">AOP</a>
+      <a href="#application-properties">application.properties / yml</a>
+      <a href="#application-context">ApplicationContext</a>
+      <a href="#auto-configuration">Auto-configuration</a>
+      <a href="#bean">Bean</a>
+      <a href="#bom">BOM</a>
+      <a href="#component-scan">Component scan</a>
+      <a href="#convention-over-configuration">Convention over configuration</a>
+      <a href="#datasource-entitymanager">DataSource / EntityManagerFactory</a>
+      <a href="#di">Dependency Injection</a>
+      <a href="#dispatcherservlet">DispatcherServlet</a>
+      <a href="#embedded-server-war">Embedded server vs WAR</a>
+      <a href="#Hibernate">Hibernate</a>
+      <a href="#ioc">IoC</a>
+      <a href="#profiles">Profiles</a>
+      <a href="#servlet-container">Servlet container</a>
+      <a href="#actuator">Spring Boot Actuator</a>
+      <a href="#spring-data-jpa">Spring Data / JPA</a>
+      <a href="#spring-mvc">Spring MVC</a>
+      <a href="#spring-security">Spring Security</a>
+      <a href="#starters">Starters</a>
+      <a href="#web-application-initializer">WebApplicationInitializer</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2>Spring terms</h2>
+      <p>
+        Brief definitions for concepts used on the
+        <a href="Springboot_SpringFramework.html"
+          >Spring Boot &amp; Spring Framework</a
+        >
+        page. Terms are listed in alphabetical order.
+      </p>
+
+      <h3 id="configuration">@Configuration</h3>
+      <p>
+        Marks a Java class that defines <a href="#bean">beans</a> with
+        <code>@Bean</code> methods or imports other config. Replaces much of the
+        old XML configuration in modern Spring apps.
+      </p>
+
+      <h3 id="spring-boot-application">@SpringBootApplication</h3>
+      <p>
+        Single annotation on your main class. Combines
+        <a href="#configuration">@Configuration</a>,
+        <code>@EnableAutoConfiguration</code>, and
+        <a href="#component-scan">component scan</a> — entry point for a Boot
+        app.
+      </p>
+
+      <h3 id="aop">AOP (Aspect-Oriented Programming)</h3>
+      <p>
+        A technique that lets you separate "cross-cutting concerns"—tasks that
+        apply to multiple parts of your app (like logging, security, or
+        transaction management)—so you don't have to rewrite the same code
+        everywhere.
+      </p>
+
+      <h3 id="application-properties">
+        application.properties / application.yml
+      </h3>
+      <p>
+        External config files for datasource URLs, server port, logging, and
+        feature flags. Boot reads them at startup; no recompile to change
+        settings.
+      </p>
+
+      <h3 id="application-context">ApplicationContext</h3>
+      <p>
+        The main Spring <strong>IoC container</strong> implementation. It loads
+        configuration, creates beans, injects dependencies, and publishes
+        lifecycle events. <code>AnnotationConfigApplicationContext</code> and
+        <code>AnnotationConfigWebApplicationContext</code> are common variants.
+      </p>
+
+      <h3 id="auto-configuration">Auto-configuration</h3>
+      <p>
+        Spring Boot feature: if certain libraries are on the classpath (e.g.
+        JPA, embedded Tomcat), Boot creates sensible default beans without you
+        writing config. Override with your own beans or properties when needed.
+      </p>
+
+      <h3 id="bean">Bean</h3>
+      <p>
+        Bean is just a standard Java object that is managed by the Spring
+        container (IoC container).<br />
+        Created once (or per scope), wired with dependencies, and destroyed when
+        the context shuts down. Classes become beans via
+        <code>@Component</code>, <code>@Service</code>,
+        <code>@Repository</code>, or <code>@Configuration</code>.
+      </p>
+
+      <h3 id="bom">BOM (Bill of Materials)</h3>
+      <p>
+        A version list Spring Boot publishes so all
+        <a href="#starters">starter</a> dependencies use compatible versions of
+        Spring, <a href="#Hibernate">Hibernate</a>, Jackson, etc. Avoids
+        dependency conflicts.
+      </p>
+
+      <h3 id="component-scan">Component scan</h3>
+      <p>
+        Tells Spring which packages to search for <code>@Component</code>,
+        controllers, and services. Spring Boot enables scan from the package of
+        <a href="#spring-boot-application">@SpringBootApplication</a>.
+        <code>@ComponentScan(basePackages = "com.example")</code> sets the root
+        package explicitly.
+      </p>
+
+      <h3 id="convention-over-configuration">Convention over configuration</h3>
+      <p>
+        Design idea behind Boot: assume sensible defaults (embedded server on
+        port 8080, JSON via Jackson) so you only configure exceptions, not every
+        detail.
+      </p>
+
+      <h3 id="datasource-entitymanager">DataSource and EntityManagerFactory</h3>
+      <p>
+        Beans plain Spring must define manually: <code>DataSource</code> is the
+        JDBC connection pool; <code>EntityManagerFactory</code> is
+        Hibernate/JPA’s engine for mapping entities to the database. Boot
+        creates both when <a href="#spring-data-jpa">JPA</a> is on the
+        classpath.
+      </p>
+
+      <h3 id="di">Dependency Injection (DI)</h3>
+      <p>
+        The actual mechanism used to achieve IoC. Instead of an object creating
+        the other objects it relies on (its "dependencies") using the new
+        keyword, Spring injects (passes) them into the object automatically.<br />
+        If
+        <code>OrderService</code> needs <code>OrderRepository</code>, Spring
+        injects the repository into the service (usually via constructor). This
+        makes code easier to test and change.
+      </p>
+
+      <h3 id="dispatcherservlet">DispatcherServlet</h3>
+      <p>
+        Servlet that receives all incoming HTTP traffic, finds the matching
+        controller method, runs it, and returns the response. Spring Boot
+        registers it automatically; plain Spring requires manual setup in
+        <a href="#web-application-initializer">WebApplicationInitializer</a>.
+      </p>
+
+      <h3 id="embedded-server-war">Embedded server vs WAR</h3>
+      <p>
+        Spring Boot embeds Tomcat/Jetty inside your JAR — run with
+        <code>java -jar</code>. Plain Spring often packages a
+        <strong>WAR</strong> (Web Application Archive) and deploys it to an
+        external <a href="#servlet-container">servlet container</a>.
+      </p>
+
+      <h3 id="Hibernate">Hibernate</h3>
+      <p>
+        Object-Relational Mapping (ORM) framework for Java for storing/updating
+        data into Database<br />
+        Without Hibernate, you have to write long, tedious, and error-prone SQL
+        queries manually inside your Java code using standard JDBC.
+      </p>
+      <table>
+        <tr>
+          <td>
+            Example Storing data into Users Table<br />
+            With Hibernate<br />
+            <pre><code class="language-css">
+import javax.persistence.*;
+
+@Entity                     // Tells Hibernate this class maps to a DB table
+@Table(name = "users")      // Name of the DB table
+public class User {
+
+    @Id                     // Primary key
+    @GeneratedValue        // Auto-increment the ID
+    private Long id;
+
+    private String name;
+    private String email;
+
+    // Constructors, Getters, and Setters...
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+}
+            </code></pre>
+          </td>
+          <td>
+            Without Hibernate(Raw JDBC)<br />
+            <pre><code class="language-css">
+String sql = "INSERT INTO users (name, email) VALUES (?, ?)";   //manually construct SQL strings
+PreparedStatement stmt = connection.prepareStatement(sql);
+stmt.setString(1, "Alice");
+stmt.setString(2, "alice@example.com");
+stmt.executeUpdate(); // Lots of boilerplate code!
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+      <p><b>ORMs in Other Languages</b></p>
+      <table>
+        <tr>
+          <th>Language</th>
+          <th>ORM</th>
+        </tr>
+        <tr>
+          <td>Java</td>
+          <td>Hibernate</td>
+        </tr>
+        <tr>
+          <td>Rust</td>
+          <td>Diesel / SeaORM</td>
+        </tr>
+        <tr>
+          <td>C++</td>
+          <td>ODB / Wt::Dbo</td>
+        </tr>
+        <tr>
+          <td>Go</td>
+          <td>GORM / Ent</td>
+        </tr>
+      </table>
+
+      <h3 id="ioc">IoC (Inversion of Control)</h3>
+      <p>
+        A design principle where you give up control of creating and managing
+        your objects, handing that responsibility over to a framework (like
+        Spring). <br />
+        The Spring runtime creates and manages objects for you instead of your
+        code calling <code>new</code> everywhere. You describe components; the
+        container builds the object graph at startup.
+      </p>
+
+      <h3 id="profiles">Profiles (dev, test, prod)</h3>
+      <p>
+        Named config sets activated with <code>spring.profiles.active</code>.
+        Lets one codebase use H2 in dev and PostgreSQL in production.
+      </p>
+
+      <h3 id="servlet-container">Servlet container</h3>
+      <p>
+        A web server that runs Java servlets — e.g. Apache Tomcat, Jetty, or
+        WildFly. Plain Spring apps deploy a WAR here; Spring Boot bundles an
+        embedded container inside the JAR.
+      </p>
+
+      <h3 id="actuator">Spring Boot Actuator</h3>
+      <p>
+        Production endpoints such as <code>/actuator/health</code> and metrics
+        for monitoring, Kubernetes probes, and ops dashboards — included via
+        <code>spring-boot-starter-actuator</code>.
+      </p>
+
+      <h3 id="spring-data-jpa">Spring Data / JPA</h3>
+      <p>
+        Modules for database access. JPA maps Java classes to tables; Spring
+        Data adds repository interfaces so you get CRUD methods without writing
+        SQL for simple cases.
+      </p>
+
+      <h3 id="spring-mvc">Spring MVC (Model-View-Controller)</h3>
+      <p>
+        A design pattern (and Spring module) used to build web applications by
+        splitting your code into three distinct roles:<br />
+
+        1. Model (DB): The data and business logic (e.g., your database user
+        profile).<br />
+
+        2. View (UI): What the user actually sees (e.g., an HTML page, JSON
+        response, or React frontend).<br />
+
+        3. Controller: Application server between model and view.<br />
+        The web module that maps HTTP requests to Java methods.
+        <code>@Controller</code> / <code>@RestController</code> handle URLs;
+        responses can be HTML views or JSON. Works with the
+        <a href="#dispatcherservlet">DispatcherServlet</a> as the front
+        controller.
+      </p>
+
+      <h3 id="spring-security">Spring Security</h3>
+      <p>
+        Authentication (who you are) and authorization (what you may do).
+        Filters run before controllers; integrates with login forms, JWT,
+        OAuth2, and method-level rules.
+      </p>
+
+      <h3 id="starters">Starters</h3>
+      <p>
+        Maven/Gradle dependencies that bundle related libraries (e.g.
+        <code>spring-boot-starter-web</code> = Spring MVC + Jackson + embedded
+        Tomcat). One dependency instead of listing many JARs.
+      </p>
+
+      <h3 id="web-application-initializer">WebApplicationInitializer</h3>
+      <p>
+        Interface used in plain Spring (no Boot) to bootstrap a web app when
+        deployed as a WAR. You create the
+        <a href="#application-context">ApplicationContext</a>, register the
+        <a href="#dispatcherservlet">DispatcherServlet</a>, and map it to URL
+        paths — work Boot does automatically.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

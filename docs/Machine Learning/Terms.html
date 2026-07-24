@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Machine Learning Terms</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/Terms.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/Terms.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -43,17 +46,22 @@
       <a href="#bias">Bias/Sampling Bias</a>
       <a href="#conda">Conda</a>
       <a href="#cntk">CNTK</a>
+      <a href="#Dataset">Dataset</a>
       <a href="#em">Embedding Models</a>
+      <a href="#Feature">Feature</a>
       <a href="#fitting">Fitting</a>
       <ul>
         <li><a href="#overfitting">Overfitting</a></li>
         <li><a href="#underfitting">Underfitting</a></li>
       </ul>
+      <a href="#Inference">Inference</a>
       <a href="#opt">Optimizer, stochastic gradient descent (SGD)</a>
       <a href="#orchestration">Orchestration</a>
+      <a href="#outlier">outlier</a>
       <a href="#llm">LLM</a>
+      <a href="#Label">Label</a>
       <a href="#layer">Layer</a>
-      <a href="#lossf">Loss function</a>
+      <a href="#loss">Loss</a>
       <a href="#matplotlib">Matplotlib</a>
       <a href="#metrics">Metrics</a>
       <a href="/Machine Learning/Terms/Neural_Network/index.html"
@@ -67,6 +75,7 @@
         <li><a href="#tensroreshape">Tensor Reshaping</a></li>
       </ul>
       <a href="/Libraries/Python/TensorFlow">Tensorflow</a>
+      <a href="#Training">Training</a>
       <a href="#variance">Variance</a>
       <a href="/Machine Learning/Terms/Neural_Network/index.html"
         >Neural Network Weight</a
@@ -180,10 +189,42 @@ print(b)
         required software especially for the GPU setup.
       </p>
 
+      <h3 id="Dataset">Dataset</h3>
+      <p>
+        Datasets are made up of individual entries that contain features and a
+        label. Example: Xcel sheet having data is a dataset<br />
+        <b>Diversity</b> indicates the range those examples cover. Good datasets
+        are both large and highly diverse. Datasets can be large and diverse, or
+        large but not diverse, or small but highly diverse. In other words, a
+        large dataset doesn't guarantee sufficient diversity, and a dataset that
+        is highly diverse doesn't guarantee sufficient examples.
+      </p>
+      <table>
+        <tr>
+          <td>
+            Labelled Dataset<br />
+            <img
+              src="https://developers.google.com/static/machine-learning/intro-to-ml/images/labeled_example.png"
+              alt="Feature"
+              style="width: 500px; height: 200px"
+            />
+          </td>
+          <td>
+            Unabelled Dataset: contain features, but no label. After you create
+            a model, the model predicts the label from the features<br />
+            <img
+              src="https://developers.google.com/static/machine-learning/intro-to-ml/images/unlabeled_example.png"
+              alt="Feature"
+              style="width: 500px; height: 200px"
+            />
+          </td>
+        </tr>
+      </table>
+
       <h3 id="opt">Optimizers</h3>
       <p>
         optimizer is an algorithm used to adjust the parameters of a model in
-        order to minimize the <a href="#lossf">error or loss function</a>
+        order to minimize the <a href="#loss">error or loss function</a>
       </p>
       <table>
         <tr>
@@ -219,7 +260,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         </tr>
       </table>
 
-      <h3 id="#orchestration">Orchestration</h3>
+      <h3 id="orchestration">Orchestration</h3>
       <p>
         Monitoring and handling ML pipelines<br />
         <b>Steps in Orchestration?</b><br />
@@ -230,6 +271,17 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         resources (CPUs, GPUs)<br />
         &ensp; 4. Monitoring and Logging: Tracking the execution status,
         performance metrics
+      </p>
+
+      <h3 id="outlier">Outlier</h3>
+      <p>
+        Most <a href="#Feature">feature</a> values in a
+        <a href="#Dataset">dataset</a> typically fall within a distinct range.
+        For example, cars are normally between 2000 and 5000 kg and get between
+        8 to 50 km/liter. But a 8,000 kg car, or a car that gets 100 km/liter,
+        is outside the typical range and would be considered an outlier.<br />
+        An outlier can also refer to how far off a model's predictions are from
+        the real values.
       </p>
 
       <h3 id="bias">Bias/Sampling Bias</h3>
@@ -256,6 +308,17 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         <a href="#tensor">vectors/tensors</a>
       </p>
 
+      <h3 id="Feature">Feature</h3>
+      <p>
+        Features are the values that a supervised model uses to predict the
+        <a href="#Label">label</a>.
+      </p>
+      <img
+        src="https://developers.google.com/static/machine-learning/intro-to-ml/images/labeled_example.png"
+        alt="Feature"
+        style="width: 500px; height: 200px"
+      />
+
       <h3 id="fitting">Fitting</h3>
       <h4 id="overfitting">Overfitting</h4>
       <p>
@@ -277,7 +340,23 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         >
       </p>
 
-      <h3 id="llm">Large language model</h3>
+      <h3 id="Inference">Inference / Prediction</h3>
+      <p>
+        Once we're satisfied with the results from evaluating the model (ie
+        <a href="#Training">training</a> is done), we can use the model to make
+        predictions, called inferences, on unlabeled examples.
+      </p>
+      <h3 id="Label">Label</h3>
+      <p>
+        The label is the "answer," or the value we want the model to predict.
+      </p>
+      <img
+        src="https://developers.google.com/static/machine-learning/intro-to-ml/images/labeled_example.png"
+        alt="Feature"
+        style="width: 500px; height: 200px"
+      />
+
+      <h3 id="llm">Large language model / Model</h3>
       <p>
         This is a computational model that can do natural language processing
         tasks such as
@@ -393,73 +472,31 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         Image and text-to-image
       </p>
 
-      <h2 id="lossf">Loss Function</h2>
+      <h2 id="loss">Loss</h2>
       <p>
-        In Keras, a loss function is used during the training of a
-        <a href="/Machine Learning/Terms/Neural_Network/">neural network</a>. It
-        measures the difference between the model's predictions and the actual
-        target values. The goal of training is to minimize this loss
+        difference between the predicted and actual values. Loss focuses on the
+        distance between the values, not the direction. For example, if a model
+        predicts 2, but the actual value is 5, we don't care that the loss is
+        negative (2 – 5= –3). Instead, we care that the distance between the
+        values is 3.
       </p>
-      <pre> Loss function = (Actual O/P) - (Expected output) </pre>
 
-      <table>
-        <tr>
-          <th>Types</th>
-          <th>What</th>
-          <th>Example</th>
-        </tr>
-        <tr>
-          <td>1. categorical_crossentropy</td>
-          <td>
-            used in multi-class classification problems when the target variable
-            is one-hot encoded
-          </td>
-          <td>
-            model.compile(optimizer='adam', loss='categorical_crossentropy',
-            metrics=['accuracy'])
-          </td>
-        </tr>
-        <tr>
-          <td>2. Binary Crossentropy (binary_crossentropy)</td>
-          <td>
-            Used for binary classification problems, where the target variable
-            is binary (0 or 1)
-          </td>
-          <td>
-            model.compile(optimizer='adam', loss='binary_crossentropy',
-            metrics=['accuracy'])
-          </td>
-        </tr>
-
-        <tr>
-          <td>3. Mean Squared Error (mean_squared_error or mse)</td>
-          <td>
-            Measures the average squared difference between the true and
-            predicted values
-          </td>
-          <td>model.compile(optimizer='adam', loss='mean_squared_error')</td>
-        </tr>
-      </table>
-
-      <dt id="to_categorical"><strong>to_categorical</strong></dt>
+      <h3>Losses in Linear Regression</h3>
       <p>
-        Function to convert labels into a one-hot encoded format.<br />
-        One-hot encoding is converting categorical labels into a binary matrix
-        (1s and 0s)
+        In <a href="ML_and_Types_Algorithms.html">linear regression</a>, there
+        are five main types of loss, which are outlined below. <br />
+        Loss metrics like MAE and RMSE may be preferable to L2 loss or MSE in
+        some use cases because they tend to be more human-interpretable
       </p>
-      <pre><code class="language-css">
-from keras.utils import to_categorical
-train_labels = [0, 1, 2, 0, 1]
-train_labels_one_hot = to_categorical(train_labels) # Convert to one-hot encoding
-print(train_labels_one_hot)
-
-array([[1., 0., 0.],                //represents 0
-       [0., 1., 0.],                #1
-       [0., 0., 1.],                #2
-       [1., 0., 0.],                #0
-       [0., 1., 0.]], dtype=float32)#1
-
-        </code></pre>
+      <img
+        src="/images/Machine_Learning/Learning/loss_linear_regression.png"
+        alt="Linear Regression Loss"
+      />
+      <p>
+        MSE moves the model more toward the <a href="#outliers">outliers</a>,
+        which is not correct. Now Model is treating outliers as correct values.
+        MAE does not.
+      </p>
 
       <h2 id="matplotlib">Matplotlib</h2>
       <p>
@@ -725,7 +762,18 @@ array([[ 0, 1, 2],
             Data type of data present in tensor. Eg: float32, uint8, float64<br />
             String tensors don’t exist in Numpy (or in most other libraries),
             because tensors are preallocated contiguous memory segments, and
-            strings, being variable length
+            strings, being variable length<br />
+            <pre><code>
+// dtype = Object means string
+
+test.csv
+Type	Rooms
+A     1
+B     3
+F     2
+s = (X_train.dtypes == 'object')
+print(object_cols)    # A,B,F
+            </code></pre>
           </td>
         </tr>
         <tr>
@@ -752,6 +800,22 @@ Dimension/Axis   Array
           </td>
         </tr>
       </table>
+
+      <h3 id="Training">Training</h3>
+      <p>
+        Before a model can make predictions, it must be trained. To train a
+        model, we give the model a <a href="#Dataset">dataset</a> with labeled
+        examples. The model's goal is to work out the best solution for
+        predicting the labels from the features.<br />
+        The model finds the best solution by comparing its predicted value to
+        the label's actual value. Based on the difference between the predicted
+        and actual values—defined as the loss—the model gradually updates its
+        solution<br />
+        In other words, the model learns the mathematical relationship between
+        the <a href="#Feature">features</a> and the
+        <a href="#Label">Label</a> so that it can make the best predictions on
+        unseen data.
+      </p>
 
       <h3 id="variance">Variance</h3>
       <dl>

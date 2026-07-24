@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Spring Framework &amp; Spring Boot — Terms</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Java/ORM/Hibernate.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#Hibernate">Hibernate</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h3 id="Hibernate">Hibernate</h3>
+      <p>
+        Object-Relational Mapping (ORM) framework for Java for storing/updating
+        data into Database<br />
+        Without Hibernate, you have to write long, tedious, and error-prone SQL
+        queries manually inside your Java code using standard JDBC.
+      </p>
+      <table>
+        <tr>
+          <td>
+            Example Storing data into Users Table<br />
+            With Hibernate<br />
+            <pre><code class="language-css">
+import javax.persistence.*;
+
+@Entity                     // Tells Hibernate this class maps to a DB table
+@Table(name = "users")      // Name of the DB table
+public class User {
+
+    @Id                     // Primary key
+    @GeneratedValue        // Auto-increment the ID
+    private Long id;
+
+    private String name;
+    private String email;
+
+    // Constructors, Getters, and Setters...
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+}
+            </code></pre>
+          </td>
+          <td>
+            Without Hibernate(Raw JDBC)<br />
+            <pre><code class="language-css">
+String sql = "INSERT INTO users (name, email) VALUES (?, ?)";   //manually construct SQL strings
+PreparedStatement stmt = connection.prepareStatement(sql);
+stmt.setString(1, "Alice");
+stmt.setString(2, "alice@example.com");
+stmt.executeUpdate(); // Lots of boilerplate code!
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+      <p><b>ORMs in Other Languages</b></p>
+      <table>
+        <tr>
+          <th>Language</th>
+          <th>ORM</th>
+        </tr>
+        <tr>
+          <td>Java</td>
+          <td>Hibernate</td>
+        </tr>
+        <tr>
+          <td>Rust</td>
+          <td>Diesel / SeaORM</td>
+        </tr>
+        <tr>
+          <td>C++</td>
+          <td>ODB / Wt::Dbo</td>
+        </tr>
+        <tr>
+          <td>Go</td>
+          <td>GORM / Ent</td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

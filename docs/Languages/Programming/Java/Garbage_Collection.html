@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Java Garbage Collection</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Java/Garbage_Collection.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Java/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="Springboot_SpringFramework.html">Spring Boot &amp; Framework</a>
+      <a href="Terms.html">Spring terms</a>
+      <a href="/Motherboard/Memory/Memory_layout_compared.html#java"
+        >Java heap layout</a
+      >
+      <a href="#what">What is Java garbage collection??</a>
+      <a href="#how">How garbage collector work</a>
+      <ul>
+        <li><a href="#example">Small example</a></li>
+        <li><a href="#when-gc-runs">When GC runs</a></li>
+        <li><a href="#stw">Stop-the-world pause</a></li>
+        <li><a href="#concurrent-mark">Concurrent mark phase</a></li>
+      </ul>
+      <a href="#memory-leaks">Can Java have memory leaks?</a>
+      <a href="#allocation-rate">Allocation rate</a>
+      <a href="#collectors">Major &amp; modern GCs</a>
+      <ul>
+        <li><a href="#g1">G1 GC Garbage Collector</a></li>
+        <li><a href="#banking">Why banks choose G1</a></li>
+        <ul>
+          <li><a href="#how">How G1 works</a></li>
+        </ul>
+      </ul>
+      <a href="#promotion">Promotion &amp; Promotion failure</a>
+      <a href="#params">JVM parameters</a>
+      <a href="#monitor">Monitor GC metrics</a>
+      <a href="#tune">Tune / demo GC</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is Java garbage collection?</h2>
+      <p>
+        In Java we create objects with <code>new</code>; and donot need to call
+        delete. The <strong>garbage collector (GC)</strong> in a JVM subsystem
+        that finds objects no longer reachable from running code and reclaims
+        their heap memory automatically.
+        <br />
+        Object is alive(not garbage collected) if a chain of references exists
+        from GC roots(thread stacks, static fields, JNI handles, etc) to that
+        object. Everything else is garbage.<br />
+        <a href="/Motherboard/Memory/Memory_layout_compared.html#java"
+          >GC runs inside the JVM</a
+        >
+        process on the
+        <a href="/Motherboard/Memory/Memory_layout_compared.html#java">heap</a>
+        Stack frames and metaspace are managed separately; GC focuses on object
+        instances in the heap.<br />
+
+        See
+        <a href="/Motherboard/Memory/Memory_layout_compared.html#java"
+          >Heap Area(Eden, S0, S1)</a
+        >
+      </p>
+
+      <h3 id="heap">Heap &amp; generations</h3>
+      <p>
+        GC runs on the JVM <strong>heap</strong>: young generation (Eden,
+        Survivor S0/S1) and old generation (tenured). See
+        <a href="/Motherboard/Memory/Memory_layout_compared.html#java"
+          >Java memory layout</a
+        >
+        for the full diagram.
+      </p>
+
+      <h2 id="how">How the garbage collector works (high level)</h2>
+
+      <p>
+        Different collectors implement these steps differently (parallel
+        threads, concurrent marking, region-based collection). All share the
+        goal: free memory for new allocations while keeping pauses acceptable.
+      </p>
+
+      <h3 id="example">Small example — Eden and minor GC</h3>
+      <table>
+        <tr>
+          <td>
+            <b>Java Garbage Collection</b><br />
+            <pre><code class="language-java">public class GcDemo {
+public static void main(String[] args) {
+
+    for (int i = 0; i < 100000; i++) {
+        String temp = "order-" + i;     //  Each iteration allocates String in Eden
+    }
+
+    // All 100k strings are garbage
+  }
+}
+
+Iteration             Eden (Size=3)
+0                       (empty)
+1        temp -----&gt; "order-1"
+
+                       "order-1"   // unreachable, No Reference. garbage. Still Memory Occupied
+2        temp -----&gt; "order-2"
+
+                       "order-1"   // garbage
+                       "order-2"   // garbage
+3        temp -----&gt; "order-3"
+
+4    Eden is Full. JVM Need Space. JVM Pause. Runs Minor GC.
+         temp -----&gt; "order-4  // Everything else cleaned
+      </code></pre>
+          </td>
+          <td>
+            <b>C++ Memory Free</b><br />
+            <pre><code class="language-css">
+int main() {
+    {
+        std::string temp = "hello";
+    }
+}
+
+Create
+↓
+Scope ends
+↓
+Destructor
+↓
+Memory freed
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="when-gc-runs">When exactly does GC run?</h3>
+      <p>
+        Eden fills up <font color="red">OR</font><br />
+        Heap usage crosses thresholds (memory Pressure)
+        <font color="red">OR</font><br />
+        Allocation rate is high <font color="red">OR</font><br />
+        JVM decides it's worthwhile <font color="red">OR</font><br />
+        Sometimes when System.gc() is requested (only a hint; the JVM may ignore
+        it)<br />
+      </p>
+
+      <h3 id="stw">Stop-the-world (STW) pause (millisec)</h3>
+      <p>
+        Means all application threads that use the heap are halted while the GC
+        performs work (copying, marking roots, compaction). During STW your code
+        does not run — API latency spikes if the pause is long.
+        <br />
+        Modern GCs cannot eliminate the STW compltely, even they collected
+        garbage parallel to execution.<br />
+      </p>
+      <h3 id="concurrent-mark">Concurrent mark phase</h3>
+      <p>
+        &ensp; In collectors like <strong>G1 or ZGC</strong>, in concurrent mark
+        phase GC walks the heap to identify live objects while application
+        threads mostly keep running. Only brief STW checkpoints bracket this
+        phase (initial mark, remark in G1).<br />
+        &ensp; <u>Concurrent mark phase duration</u> depends on: 1. Heap
+        size(more regions/pages to scan), 2. Live set size(more live objects →
+        longer mark).
+      </p>
+
+      <h2 id="memory-leaks">Can Java have memory leaks?</h2>
+      <p>
+        C++ have new() and delete(), and if we forget to delete() there can be
+        memory leak, but Java does not have delete() so when memory leak can
+        happen in Java?
+      </p>
+      <h4>
+        1. Objects kept on getting allocated and their References not released
+      </h4>
+      <pre><code class="language-css">
+static List &gt;byte[]&lt; cache = new ArrayList&gt;&lt;();
+while (true) {
+    cache.add(new byte[1024 * 1024]); // 1 MB each
+}
+
+The list keeps references forever, so GC cannot free the arrays. Eventually you'll get:
+  java.lang.OutOfMemoryError: Java heap space
+      </code></pre>
+
+      <h3 id="allocation-rate">Allocation rate vs GC reclaim rate</h3>
+      <pre><code class="language-css">
+Allocation rate &gt; GC reclaim rate
+        ↓
+Heap fills up
+        ↓
+Frequent GC
+        ↓
+Long GC pauses
+        ↓
+OutOfMemoryError
+      </code></pre>
+
+      <h2 id="collectors">Major and modern garbage collectors</h2>
+      <table>
+        <tr>
+          <th>Collector</th>
+          <th>Era</th>
+          <th>Style</th>
+          <th>Typical use</th>
+        </tr>
+        <tr>
+          <td><b>Serial GC</b></td>
+          <td>Classic</td>
+          <td>Single-threaded, stop-the-world</td>
+          <td>Small heaps, client apps</td>
+        </tr>
+        <tr>
+          <td><b>Parallel GC</b> (Throughput)</td>
+          <td>Classic</td>
+          <td>Multi-threaded STW, maximize throughput</td>
+          <td>Batch jobs, Java 8 default on server</td>
+        </tr>
+        <tr>
+          <td><b>CMS</b></td>
+          <td>Older enterprise</td>
+          <td>Concurrent old-gen marking (deprecated)</td>
+          <td>Legacy systems (removed in modern JDKs)</td>
+        </tr>
+        <tr>
+          <td><b>G1 GC</b></td>
+          <td>Modern default</td>
+          <td>Region-based, predictable pause target</td>
+          <td>Java 9+ default; enterprise services</td>
+        </tr>
+        <tr>
+          <td><b>ZGC</b></td>
+          <td>Modern low-latency</td>
+          <td>Concurrent, sub-ms pauses (typical goal)</td>
+          <td>Large heaps, latency-sensitive apps</td>
+        </tr>
+        <tr>
+          <td><b>Shenandoah</b></td>
+          <td>Modern low-latency</td>
+          <td>Concurrent compaction</td>
+          <td>Similar niche to ZGC (OpenJDK / some vendors)</td>
+        </tr>
+      </table>
+
+      <h3 id="g1">Example — G1 GC (Garbage-First)</h3>
+      <p>
+        G1 divides the heap into equal-sized regions (1–32 MB). Eden, survivors,
+        and old gen are logical sets of regions — not one fixed contiguous
+        block.<br />
+      </p>
+      <h3 id="banking">Why banks choose G1</h3>
+      <p>
+        <b>Banks choose G1 because</b><br />
+        1. <font color="red">G1 gives predictable pause times</font>(hence
+        preferred due to debugging). <b><code>MaxGCPauseMillis</code></b
+        ><br />
+        2. Banks need regulatory audit trails, 24×7 availability, consistent
+        response times for customer channels, and large long-lived caches
+        (accounts, rates) in old generation — GC choice directly affects
+        peak-hour latency and outage risk.
+      </p>
+      <h4>How G1 works</h4>
+      <pre><code>
+Young collection: collect all Eden + survivor regions (stop-the-world, parallel).
+Concurrent mark: mark live objects across heap while app runs (mostly concurrent).
+Mixed collection: collect young regions + some old regions with most garbage (“garbage-first”).
+
+# Enable G1 (default on Java 9+ for server-class machines)
+-XX:+UseG1GC
+-XX:MaxGCPauseMillis=200
+-Xms4g -Xmx4g
+      </code></pre>
+
+      <h2 id="promotion">Moving Objects from Eden to old generation</h2>
+      <p>
+        <b>Tenuring / Promotion:</b> Each object in young gen has an age
+        (survived GC count). When age ≥ <code>MaxTenuringThreshold</code> (or
+        survivor space is full), live objects are <strong>promoted</strong> to
+        old generation.
+        <br />
+        <b>Promotion failure</b> (also called <em>promotion denied</em>): During
+        minor GC, the collector needs free space in old gen to receive promoted
+        objects. If old gen is full or too fragmented to fit them, promotion
+        fails. The JVM may then trigger a
+        <strong>full GC</strong> (expensive)<br />
+
+        &ensp; <u>Common causes of Promotion Failure</u> old gen too small
+        (<code>-Xmx</code> mostly eaten by tenured objects), memory leak
+        (objects never become garbage), spike of long-lived allocations,
+        fragmentation under certain collectors.<br />
+        &ensp;
+        <u>Mitigation to Promotion:</u> increase heap, fix leaks, tune tenuring
+        threshold, use G1 mixed cycles earlier, or switch to ZGC for very large
+        heaps; analyze with GC logs and heap dumps.
+      </p>
+
+      <h2 id="params">Key JVM parameters that affect GC</h2>
+      <table>
+        <tr>
+          <th>Flag</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><code>-Xms / -Xmx</code></td>
+          <td>Initial and max heap size</td>
+        </tr>
+        <tr>
+          <td><code>-XX:+UseG1GC</code></td>
+          <td>Select G1 collector</td>
+        </tr>
+        <tr>
+          <td><code>-XX:MaxGCPauseMillis</code></td>
+          <td>G1 pause time goal (soft target)</td>
+        </tr>
+        <tr>
+          <td><code>-XX:NewRatio</code></td>
+          <td>Old:young ratio (generational collectors)</td>
+        </tr>
+        <tr>
+          <td><code>-XX:SurvivorRatio</code></td>
+          <td>Eden vs one survivor size</td>
+        </tr>
+        <tr>
+          <td><code>-XX:MaxTenuringThreshold</code></td>
+          <td>GCs survived before promotion to old gen</td>
+        </tr>
+        <tr>
+          <td><code>-XX:+UseZGC</code></td>
+          <td>Enable ZGC (Java 15+ production, Java 21+ generational ZGC)</td>
+        </tr>
+        <tr>
+          <td><code>-Xlog:gc*</code></td>
+          <td>Unified GC logging (Java 9+)</td>
+        </tr>
+      </table>
+
+      <h2 id="monitor">Monitoring GC metrics</h2>
+      <p>
+        1. GC logs:
+        <code>-Xlog:gc*:file=gc.log:time,uptime,level,tags</code>
+        (Java 9+). Shows pause times, phases, promotion, heap before/after.
+        <br />
+        2. JFR (Java Flight Recorder) — low-overhead events:
+        <code>jdk.GCConfiguration</code>, <code>jdk.GCPhasePause</code>,
+        allocation profiling.<br />
+
+        3. JMX / VisualVM / JDK Mission Control — live heap, GC count, GC time,
+        old-gen usage.<br />
+        4. Micrometer + Prometheus/Grafana — export
+        <code>jvm.gc.pause</code>, <code>jvm.memory.used</code> from Spring Boot
+        Actuator.
+      </p>
+
+      <p><b>Metrics to watch:</b></p>
+      <p>
+        GC pause time (p50, p99, max STW)<br />
+        GC frequency (young vs old/mixed)<br />
+        Heap used after full GC (trend up = leak?)<br />
+        Promotion rate and promotion failures<br />
+        Allocation rate (MB/s into Eden)
+      </p>
+
+      <h2 id="tune">Tuning / demo GC (hands-on)</h2>
+      <p><b>1. Run with verbose GC logging:</b></p>
+      <pre><code>java -Xms512m -Xmx512m -Xlog:gc*:stdout:time,uptime GcDemo
+      </code></pre>
+      <p><b>2. Force GC in a demo (not for production):</b></p>
+      <pre><code class="language-java">System.gc(); // hint only — JVM may ignore; used in tutorials
+      </code></pre>
+      <p><b>3. Compare collectors on same workload:</b></p>
+      <pre><code>java -XX:+UseG1GC -Xlog:gc*:file=g1.log MyApp
+java -XX:+UseParallelGC -Xlog:gc*:file=parallel.log MyApp
+java -XX:+UseZGC -Xlog:gc*:file=zgc.log MyApp
+      </code></pre>
+      <p><b>4. Tune G1 for banking-style latency target:</b></p>
+      <pre><code>-Xms8g -Xmx8g
+-XX:+UseG1GC
+-XX:MaxGCPauseMillis=100
+-XX:+ParallelRefProcEnabled
+-Xlog:gc*,gc+heap=debug:file=gc.log:time,tags
+      </code></pre>
+      <p>
+        <b>Process:</b> measure baseline → change one flag at a time → compare
+        p99 latency and GC logs under load test (JMeter/Gatling) → avoid tuning
+        without production-like traffic.
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

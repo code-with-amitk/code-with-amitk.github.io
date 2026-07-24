@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Processes</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_of_process.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_of_process.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -74,6 +77,9 @@
         <a href="./fork.html"><h4>fork() = Create child process</h4></a>
 
         <h2 id="layout">Memory Layout of a Process</h2>
+
+        <h3><a href="./Memory_layout_compared.html#java">Java Process</a></h3>
+        <h3><a href="./Memory_layout_compared.html#c++">C++ Process</a></h3>
         <dl>
           After compilation obj file is created
           <a
@@ -82,19 +88,7 @@
           >. This ELF file has (.text=CS, .data & .rodata = DS and others) This
           file is loaded in memory which creates Memory layout of the process.
         </dl>
-        <pre><code>
-                                Heap [                   ]
-                                            /\
-                                             |
-                   |                         |<------DATA SEGMENT (static, global) ----------->                    |
-[Kernel] Process-2 |[STACK] shared_libraries {PTR-To-HEAP} {Uninitialized_BSS} {Initialized DS} [TEXT/CODE SEGMENT]|
-                   | ----->                                BlockStartedBySymbol <-RW--><--RO-->              0x0000|
-                
-Object/ELF File ===> |ELF Header|.data Header|.rodata Header|.text Header |.data|.rodata|.text|
-                                                                          /             /       \                         
-                                                                        /              /         \
-Memory Layout ==>                                                      | Data Segment |Code Segment| Stack |
-            </code></pre>
+
         <img
           src="/images/Memory/memory-layout-of-process.png"
           alt="Memory layout of a process"

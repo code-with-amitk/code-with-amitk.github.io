@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kafka — System Design</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Kafka/Introduction.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#overview">Overview</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#use-cases">Use cases</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#concepts">Core concepts</a>
+      <ul>
+        <li><a href="#records">Records &amp; offsets</a></li>
+        <li><a href="#topics">Topics &amp; partitions</a></li>
+        <li><a href="#brokers">Brokers &amp; cluster</a></li>
+        <li><a href="#consumer-groups">Consumer groups</a></li>
+        <li><a href="#hwm">High-water mark</a></li>
+      </ul>
+      <a href="#workflow">Publish &amp; consume flow</a>
+      <a href="#zookeeper">ZooKeeper / KRaft</a>
+      <a href="">Storing messages on disk</a>
+      <ul>
+        <li><a href="#storage">Disk · retention · quotas</a></li>
+      </ul>
+      <a href="#delivery">Delivery semantics</a>
+      <a href="#issues">Data issues & fixes</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <article>
+        <h2 id="overview">Apache Kafka — Distributed Messaging System</h2>
+        <p>
+          Kafka is an open-source
+          <b>Distributed Message Storage platform</b>.<br />
+          Producers append <b>records</b> to <b>topics</b>; consumers read them
+          in order. <br />
+          Unlike a simple message queue that deletes messages When 1 reader
+          reads the message, Kafka
+          <b>stores</b> Topics(msg1,msg2..) on disk for a configurable time or
+          size — so that consumer can replay a history.<br />
+          Decouples services at very high throughput, ie Fast producer, slow
+          consumer can be tied to the system.
+        </p>
+
+        <h2 id="requirements">Requirements</h2>
+        <h4>Non Functional</h4>
+        <p>
+          <b>High throughput:</b> Ingest millions of events/sec from many
+          producers without a single bottleneck.
+          <br />
+          <b>Scalability:</b> Add brokers and partitions horizontally as traffic
+          grows.
+          <br />
+          <b>Fault tolerance:</b> Survive broker/disk/network failures without
+          losing committed data.
+          <br />
+          <b>High availability:</b> Keep serving reads/writes when nodes fail
+          (leader election, replicas).
+          <br />
+          <b>Durability</b>
+          Persist messages to disk; survive process restarts and crashes.
+          <br />
+          <b>Ordering</b>
+          Preserve order within a partition (global order only if single
+          partition).
+          <br />
+          <b>Decoupling</b>
+          Producers and consumers evolve independently; no direct coupling.
+          <br />
+          <b>Replay</b>
+          New or slow consumers can re-read history from a stored log.
+          <br />
+          <b>Multi-subscriber</b>
+          Many consumer groups read the same topic independently.
+          <br />
+          <b>Backpressure &amp; retention</b>
+          Buffer spikes; drop or compact old data by policy, not by accident.
+        </p>
+
+        <h2 id="use-cases">Where Kafka Use Cases</h2>
+        <h4>Good Fit</h4>
+        <p>
+          <b>Event streaming / log aggregation</b> — app logs, metrics,
+          clickstreams into data lakes.
+          <br />
+          <b>Microservice decoupling</b> — order placed, payment captured,
+          inventory updated as events.
+          <br />
+          <b>Change data capture (CDC)</b> — database changes streamed to search
+          indexes or warehouses.
+          <br />
+          <b>Real-time analytics</b> — Flink/Spark/Kafka Streams processing
+          pipelines.
+          <br />
+          <b>Replay &amp; reprocessing</b> — rebuild a downstream system from
+          the log after a bug fix.
+          <br />
+          <b>High-volume pub/sub</b> — many services subscribe to the same topic
+          with separate consumer groups.
+        </p>
+
+        <h4>Poor fit:</h4>
+        <p>
+          <b>Low-latency RPC</b> — use gRPC/HTTP directly; Kafka adds ms–s
+          latency and batching trade-offs.
+          <br />
+          <b>Task queues with per-message ack delete</b> — SQS/RabbitMQ
+          patterns; Kafka is a log, not a mailbox.
+          <br />
+          <b>Small messages, few TPS, simple setup</b> — operational overhead of
+          a cluster may be overkill.
+          <br />
+          <b>Strict global ordering</b> — only one partition gives global order;
+          multi-partition = per-key or partition order.
+        </p>
+
+        <h2 id="architecture">Architecture</h2>
+        <p>
+          Cluster of brokers, topics split into partitions, and a special
+          <code>__consumer_offsets</code> topic<br />
+          Only 1 Topic can be stored in 1 Partition & A topic is spread across
+          many partitions.<br />
+
+          <b>Reliable:</b><br />
+          &ensp; Records/messages(<b>immutable</b>) are appended to a disk and
+          are strictly ordered. Each record gets a monotonic offset (0, 1, 2, …)
+          unique within that partition.<br />
+          &ensp; Consumers track committed offsets so restart continues from
+          last safe position.<br />
+          &ensp; To locate a record you need topic + partition + offset.<br />
+
+          <b>Scalable:</b> More nodes/paritions/disks can be added. Producers
+          can batch and compress record<br />
+
+          <b>Fault tolerant:</b> Each partition is replicated across brokers
+          (replication factor rf). If a leader fails, a follower from the ISR is
+          elected. Cluster continues serving as long as leaders exist for
+          partitions<br />
+
+          Each partition has one <b>leader</b> broker and zero or more
+          <b>follower</b> replicas on other brokers.
+        </p>
+
+        <pre><code>
+struct Message/Payload {
+  name
+  age
+  empId
+}
+┬────────────────────────────────────────  Kafka Cluser  ──────────────────────────────────────────────────────────┐
+|                                                                                                                  |
+|   ┬───────────────────────── BROKER-2(master) ────────────────────────────────────┐   ┬─ Broker1(master)──┐      |
+|   | ┬────────────────── Partition-1   ────────────────────┐                       |   |                   |      |
+|   | | ┬───────────── topic = Employee ──────────────┐     |                       |   ┴───────────────────┴      |
+|   | | | msg1->msg2->msg5    msg6->msg9->msg7        |     |                       |                              |
+|   | | ┴─────────────────────────────────────────────┴     |                       |                              |
+|   | ┴─────────────────────────────────────────────────────┴                       |                              |
+|   |                                                                               |                              |
+|   |                       ┬────────────────── Partition-2 ────────────────────┐   |                              |
+|   |                       | ┬───────────── topic = Orders ─────────────────┐  |   |                              |
+|   |                       | | m1 m2 m3 ....                                |  |   |                              |
+|   |                       | ┴──────────────────────────────────────────────┴  |   |                              |
+|   |                       ┴───────────────────────────────────────────────────┴   |                              |
+|   |                                                                               |                              |
+|   |              ┬───────────────────────── Partition-n ────────────────────────┐ |                              |
+|   |              | ┬───────────────topic = __consumer_offset ────────────────┐  | |                              |
+|   |              | |  Consumer_Name  ID    Topic   Committed_Offset  State   |  | |                              |
+|   |              | |  Consumer-1     uid1  Orders  Read till ms7     Alive   |  | |                              |
+|   |              | |  Consumer-2     uid1  Orders  Read till ms7     Alive   |  | |                              |
+|   |              | ┴─────────────────────────────────────────────────────────┴  | |                              |
+|   |              ┴──────────────────────────────────────────────────────────────┴ |                              |
+|   ┴───────────────────────────────────────────────────────────────────────────────┴                              |
+|                                                                                                                  |
+┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴
+          </code></pre>
+
+        <h3>Read & Write paths</h3>
+        <table>
+          <tr>
+            <td width="50%">
+              <img
+                src="/images/System_Design/Kafka/Producer_consumer.png"
+                alt="kafka"
+              />
+            </td>
+            <td>
+              <b>Write path:</b> Producers Always write to the partition leader.
+              Followers pull from leader via replication.<br /><br />
+
+              <b>Read Path:</b> Consumers Always fetch from the partition
+              leader.<br /><br />
+
+              <b>Metadata:</b> clients bootstrap from any broker
+              (<code>bootstrap.servers</code>), then use the cluster metadata
+              API to find partition leaders (not by calling ZooKeeper directly
+              in modern clients). <br /><br />
+
+              <b>Leader, follower, and ISR</b><br />
+              &ensp; For each partition replica set, one broker is the leader —
+              all producer writes and consumer reads go to the leader (by
+              default). Followers replicate the log tail from the leader.<br />
+              &ensp; ISR (In-Sync Replicas) is the set of followers caught up
+              within a configurable lag. Only ISR members are eligible to become
+              leader on failover. A leader is always in its own ISR.
+            </td>
+          </tr>
+        </table>
+
+        <h2 id="concepts">Core concepts</h2>
+
+        <h3 id="records">Records, messages, and offsets</h3>
+        <p>
+          A <strong>record</strong> (message) is typically a
+          <code>(key, value, timestamp, headers)</code> byte sequence. Records
+          in a partition are <strong>immutable</strong> and strictly ordered.
+          Each record gets a monotonic <strong>offset</strong> (0, 1, 2, …)
+          unique within that partition. To locate a record you need
+          <strong>topic + partition + offset</strong>. The
+          <strong>key</strong> is optional; same key → same partition (hash)
+          preserves order per key.
+        </p>
+
+        <h3 id="topics">Topics and partitions</h3>
+        <p>
+          A <strong>topic</strong> is a named stream of records (e.g.
+          <code>orders</code>, <code>payments</code>). Topics are split into
+          <strong>partitions</strong> for scale. Rule:
+          <strong>{1 topic → N partitions}</strong>. 1 partiton stores 1 topic
+        </p>
+
+        <h3 id="brokers">Brokers and cluster</h3>
+        <p>
+          A <strong>broker</strong> is a Kafka server (default port
+          <code>9092</code>) that stores partitions on local disk. A
+          <strong>cluster</strong> is multiple brokers. Kafka is multi-master at
+          the cluster level — any broker can host leaders for different
+          partitions.<br />
+          <strong>Bootstrap broker(s)</strong>: first address clients connect
+          to; broker returns full metadata (all brokers, topics, partition
+          leaders).
+        </p>
+
+        <h3 id="consumer-groups">Consumer groups</h3>
+        <p>
+          A consumer group is set of consumers that work together to read
+          topics. 1 consumer is given resonsiblity to read 1 or more topics to
+          partitions.<br />
+          This helps to avoid all consumers reading same message and hence to
+          scale (up to partition count).
+        </p>
+        <pre><code>
+Topic(Orders)
+Partition 0(3 messages): A B C
+Partition 1(3 messages): D E F
+Partition 2(3 messages): G H I
+
+Consumer group(OrderProcessors)
+	Consumer 1 reads +--> Partition 0, Partition 2
+	Consumer 2 reads +--> Partition 1
+Note Consumer 1 never reads Partition-1
+        </code></pre>
+
+        <p>
+          Offset progress is stored in the internal topic
+          <code>__consumer_offsets</code> (committed offset per group, topic,
+          partition). If a consumer dies, its partitions are
+          <strong>rebalanced</strong> to surviving members.
+        </p>
+
+        <h3 id="hwm">High-water mark (HWM)</h3>
+        <p>
+          When consumer/subscriber reads from Leader. Leader never returns
+          messages which have not been replicated to a minimum set of ISRs.<br />
+          Leader keeps track of highest water mark. Highest watermark is the
+          offset for that partition replication. <br />
+          Example(in figure below): Leader does not return messages greater than
+          offset=4, as it is the highest offset message that has been replicated
+          to all followers.
+        </p>
+        <img
+          src="/images/System_Design/high-water-mark.jpg"
+          alt="Partition replication and high-water mark"
+          style="
+            max-width: 480px;
+            width: 100%;
+            height: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+          "
+        />
+
+        <h2 id="workflow">Workflow — one message publish and consume</h2>
+        <div class="mermaid-wrap mermaid-compact">
+          <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant P as Producer
+    participant B as Any Broker<br/>(bootstrap)
+    participant L as Partition Leader<br/>Broker 2
+    participant F as Follower<br/>Broker 1
+    participant C as Consumer<br/>Group A
+    participant O as __consumer_offsets
+
+    P->>B: Metadata request — where is topic orders partition 1?
+    B-->>P: Leader = Broker 2
+
+    P->>L: Produce record (key=orderId, value=JSON)
+    L->>L: Append to local log segment on disk
+    L->>F: Replicate to follower ISR
+    F-->>L: ACK replication
+    L-->>P: ACK (acks=all)
+
+    C->>L: Fetch records from offset 42
+    L-->>C: Batch of records (up to HWM)
+    C->>C: Process business logic
+    C->>O: Commit offset 43
+            </pre>
+        </div>
+
+        <h2 id="zookeeper">Role of ZooKeeper (and KRaft)</h2>
+        <p>
+          <b>Classic Kafka (with ZooKeeper):</b> ZooKeeper stores cluster
+          metadata — broker registration, topic configuration,
+          <strong>partition leader election</strong>, controller identity, and
+          ACLs (in older setups). Brokers and the controller watch ZK for
+          changes. <em>Clients do not query ZooKeeper</em> for leaders; they use
+          the Kafka metadata protocol via brokers.
+        </p>
+        <p>
+          <b>Modern Kafka (KRaft mode, ZooKeeper-less):</b> metadata is stored
+          in an internal Raft quorum (<code>__cluster_metadata</code>). New
+          deployments should plan for KRaft; ZK is deprecated in Kafka 3.x+ and
+          removed in Kafka 4.x. Conceptually the controller still tracks
+          leaders, ISR, and broker membership — the storage layer changed.
+        </p>
+
+        <h2 id="storage">
+          Storing messages on disk, log retention, and client quotas
+        </h2>
+
+        <h3>Log segments on disk</h3>
+        <p>
+          Each partition is a directory of <strong>segment files</strong> (e.g.
+          <code>00000000000000000000.log</code>). Appends are sequential — fast
+          on HDD/SSD. An <strong>index</strong> maps offset → file position for
+          fast lookup. Segments are rolled by size (<code>segment.bytes</code>)
+          or time. This design is why Kafka handles very large volumes: it
+          behaves like a distributed commit log, not an in-memory queue.
+        </p>
+
+        <h3>Log retention</h3>
+        <p>
+          Old data is removed by policy — not when a consumer reads it:<br />
+          &ensp; retention.ms — delete segments older than N milliseconds
+          (default 7 days).<br />
+          &ensp; <code>retention.bytes</code> — cap total size per partition.<br />
+
+          <b>Compacted topics</b>
+          (<code>cleanup.policy=compact</code>) — keep latest record per key
+          (changelog topics, Kafka Streams state). Tune retention for compliance
+          (keep 90 days) vs cost (short TTL for high-volume telemetry).
+        </p>
+
+        <h3>Client quotas</h3>
+        <p>
+          <strong>Quotas</strong> throttle misbehaving clients so one tenant
+          cannot saturate the cluster. Kafka supports producer/consumer
+          byte-rate limits per <strong>client ID</strong> or
+          <strong>user/principal</strong> (<code>quota.producer.default</code>,
+          <code>quota.consumer.default</code>). Exceeding quota returns throttle
+          time in responses. Use quotas in multi-tenant platforms and shared
+          clusters.
+        </p>
+
+        <h2 id="delivery">Message delivery semantics</h2>
+        <table>
+          <tr>
+            <th>Semantics</th>
+            <th>Meaning</th>
+            <th>Typical setup</th>
+          </tr>
+          <tr>
+            <td><b>At-most-once</b></td>
+            <td>Message may be lost; never duplicated.</td>
+            <td>
+              Producer <code>acks=0</code>; consumer commits offset before
+              processing.
+            </td>
+          </tr>
+          <tr>
+            <td><b>At-least-once</b></td>
+            <td>No loss if committed; duplicates possible on retry.</td>
+            <td>
+              Producer retries + <code>acks=1/all</code>; consumer commits after
+              processing (idempotent handler).
+            </td>
+          </tr>
+          <tr>
+            <td><b>Exactly-once (EOS)</b></td>
+            <td>
+              Each record processed once end-to-end (within Kafka Streams /
+              transactional producer).
+            </td>
+            <td>
+              Idempotent producer + transactions +
+              <code>read_committed</code> consumers.
+            </td>
+          </tr>
+        </table>
+
+        <h2 id="issues">Common data issues and how to resolve them</h2>
+
+        <p>
+          <b>1. Message loss.</b><br />
+          Cause: <code>acks=0/1</code>, unclean leader election, producer not
+          retrying. Fix: <code>acks=all</code>,
+          <code>min.insync.replicas=2</code>, disable
+          <code>unclean.leader.election.enable</code>, enable producer retries
+          and idempotence.
+        </p>
+        <p>
+          <b>2. Duplicate messages.</b><br />
+          Cause: at-least-once retries, consumer crash after process but before
+          commit (or vice versa). Fix: idempotent consumers (store processed
+          IDs), idempotent producer, transactional writes, or dedupe in
+          downstream store.
+        </p>
+        <p>
+          <b>3. Out-of-order delivery.</b><br />
+          Cause: multiple partitions, retries, different keys routed to
+          different partitions. Fix: use same key for events that must stay
+          ordered; single partition if global order required; partition count
+          fixed at create time (or use rekeying carefully).
+        </p>
+        <p>
+          <b>4. Consumer lag growing.</b><br />
+          Cause: slow processing, too few consumers, hot partition skew. Fix:
+          scale consumer group (≤ partition count), optimize handler, increase
+          partitions and rebalance keys, monitor <code>records-lag-max</code>.
+        </p>
+        <p>
+          <b>5. Hot partition / skew.</b><br />
+          Cause: poor key choice (null key or constant key). Fix: choose
+          high-cardinality keys; custom partitioner; salting for extreme
+          hotspots.
+        </p>
+        <p>
+          <b>6. Disk full.</b><br />
+          Cause: retention too long, no size cap, replication multiplies
+          storage. Fix: lower <code>retention.ms/bytes</code>, add disks, tiered
+          storage (Kafka 3.x+), compression
+          (<code>compression.type=lz4/zstd</code>).
+        </p>
+        <p>
+          <b>7. Rebalance storms.</b><br />
+          Cause: consumers join/leave frequently, long
+          <code>max.poll.interval.ms</code> exceeded during heavy processing.
+          Fix: static group membership, cooperative rebalancer, increase
+          interval, decouple processing from poll loop.
+        </p>
+        <p>
+          <b>8. Under-replicated partitions.</b><br />
+          Cause: broker down, network issues, disk slow on follower. Fix:
+          restore broker, replace failed disk, rack awareness, alert on ISR
+          shrink; avoid rolling restart of too many brokers at once.
+        </p>
+      </article>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>
