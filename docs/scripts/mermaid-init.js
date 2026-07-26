@@ -9,16 +9,25 @@ import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.es
 mermaid.initialize({
   startOnLoad: false,
   sequence: {
-    useMaxWidth: true,
-    actorMargin: 50,
-    messageMargin: 35,
-    boxMargin: 10,
+    useMaxWidth: false,
+    actorMargin: 60,
+    messageMargin: 40,
+    boxMargin: 12,
+    messageFontSize: "16px",
+    actorFontSize: "16px",
+    noteFontSize: "15px",
+    messageAlign: "left",
   },
   flowchart: {
-    useMaxWidth: true,
+    useMaxWidth: false,
+    htmlLabels: true,
+    nodeSpacing: 50,
+    rankSpacing: 60,
+    padding: 16,
   },
   themeVariables: {
-    fontSize: "14px",
+    fontSize: "16px",
+    fontFamily: "Segoe UI, system-ui, sans-serif",
   },
 });
 
@@ -64,6 +73,9 @@ function setupMermaidZoom() {
 
       wrap.classList.add("mermaid-zoomed");
       activeWrap = wrap;
+      wrap.scrollTop = 0;
+      wrap.scrollLeft = 0;
+
       document.addEventListener("keydown", onEscape);
     });
   });

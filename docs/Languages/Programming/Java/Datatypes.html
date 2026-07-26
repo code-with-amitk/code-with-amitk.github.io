@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Java Data Types</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Java/Datatypes.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Java/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#overview">Overview</a>
+      <a href="#primitive">Primitive types</a>
+      <a href="#reference">Reference types</a>
+      <ul>
+        <li><a href="#string">String</a></li>
+        <li><a href="#wrappers">Wrapper classes</a></li>
+        <li><a href="#arrays">Arrays</a></li>
+        <li><a href="#classes">Classes &amp; Objects</a></li>
+        <li><a href="#enums">Enums</a></li>
+        <li><a href="#records">Records</a></li>
+      </ul>
+      <a href="#jdk-types">Common JDK types</a>
+      <a href="#special">Special cases</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">Java data types</h2>
+      <p>
+        Every variable in Java has a type. Types fall into two broad groups:<br />
+        1. <strong>Primitives</strong> (stored directly on the stack or inside
+        objects)<br />
+        2. <strong>Reference types</strong> (variables hold a reference/pointer
+        to an object on the
+        <a href="/Motherboard/Memory/Memory_layout_compared.html#java">heap</a
+        >).
+      </p>
+
+      <h2 id="primitive">Primitive types (always on stack)</h2>
+      <p>
+        Language provides these. They cannot be
+        <code>null</code>.
+      </p>
+      <pre><code class="language-css">
+Type     | Size (bytes) | Range / values
+---------|--------------|------------------------------------------
+byte     | 1 (signed)   | -128 to 127
+short    | 2 (signed)   | -32,768 to 32,767
+int      | 4 (signed)   | -2^31 to 2^31 - 1  (~±2.1 billion)
+long     | 8 (signed)   | -2^63 to 2^63 - 1
+float    | 4 (IEEE 754) | ~±3.4 × 10^38  (6–7 decimal digits)
+double   | 8 (IEEE 754) | ~±1.7 × 10^308 (15 decimal digits)
+boolean  | JVM-defined  | true or false only
+char     | 2 (UTF-16)   | '\u0000' to '\uffff'  (single Unicode code unit)
+      </code></pre>
+
+      <h2 id="reference">Reference Variables</h2>
+      <p>
+        String, arrays, classes you define, enums, records, interfaces, and
+        everything from the JDK (<code>List</code>, <code>LocalDate</code>,
+        etc.). They can be <code>null</code> and are garbage-collected on the
+        heap. See <a href="Garbage_Collection.html">Garbage Collection</a>.
+      </p>
+
+      <h3 id="string">String</h3>
+      <p>
+        <code>String</code> is a final class in <code>java.lang</code>, not a
+        primitive. String literals are immutable — any method that "changes" a
+        string returns a new object.
+      </p>
+      <pre><code class="language-java">
+String a = "test";
+String b = "test1";
+
+a.length();              // 4
+a.compareTo(b);          // negative (a comes before b lexicographically)
+a.equals(b);             // false
+a.equalsIgnoreCase("TEST"); // true
+
+System.out.println(a.toUpperCase());   // TEST
+System.out.println(a.substring(1, 3)); // es
+      </code></pre>
+
+      <h3 id="wrappers">Wrapper classes (Always allocated on heap)</h3>
+      <p>
+        A wrapper class is a class that encapsulates (wraps) a primitive data
+        type into an object.<br />
+        Every primitive type in Java has a corresponding wrapper class in the
+        java.lang package (e.g., int becomes Integer, double becomes Double,
+        char becomes Character).<br />
+        <b>Why Primitives types are wrapped in Objects?</b>
+        &ensp; By wrapping a primitive inside an object, it gains object-like
+        capabilities, such as having methods, holding null values.<br />
+        &ensp; Java collections (like ArrayList, HashMap, etc.) and generics
+        only work with objects, not primitives. You cannot write
+        ArrayList&lt;int&gt;, but you can write ArrayList&lt;Integer&gt;.
+      </p>
+      <pre><code class="language-java" data-code='Primitive | Wrapper class
+----------|---------------
+byte      | Byte
+short     | Short
+int       | Integer
+long      | Long
+float     | Float
+double    | Double
+boolean   | Boolean
+char      | Character
+
+ArrayList &lt;int&gt;       // error not allowed
+ArrayList &lt;Integer&gt;   // works'></code></pre>
+
+      <h3 id="arrays">Arrays</h3>
+      <p>
+        Arrays are reference types that hold a fixed number of elements of the
+        same type. Length is set at creation and cannot grow.
+      </p>
+      <pre><code class="language-java">
+int[] nums = { 1, 2, 3, 4, 5 };
+String[] names = new String[3];
+
+names[0] = "Alice";
+names[1] = "Bob";
+
+System.out.println(nums.length);   // 5
+System.out.println(nums[2]);       // 3
+
+// Multi-dimensional
+int[][] matrix = { { 1, 2 }, { 3, 4 } };
+      </code></pre>
+
+      <h3 id="classes">Classes & Objects</h3>
+      <p>
+        Objects generally lie on heap but not all.<br />
+        JVM uses Escape Analysis to keep some Objects on stack
+      </p>
+      <pre><code class="language-java" data-code='
+// Live on Heap
+class Employee {
+    String name;
+    int id;
+}
+Employee emp = new Employee();
+emp.name = "Ravi";
+emp.id = 101;
+
+// Live on Heap
+java.util.List <String> list = new java.util.ArrayList<>();
+list.add("Kafka");
+list.add("Redis");
+
+// Live on Stack
+public void calculate() {
+    // Point is a class, but p never leaves this method
+    // The JVM can optimize this to live on the stack.
+    Point p = new Point(1, 2); 
+    int sum = p.x + p.y;
+    System.out.println(sum);
+}'>
+</code></pre>
+
+      <h3 id="enums">Enums</h3>
+      <p>
+        Enums define a fixed set of named constants. They are type-safe
+        alternatives to integer or string constants.
+      </p>
+      <pre><code class="language-java">
+enum Day { MON, TUE, WED, THU, FRI, SAT, SUN }
+
+Day today = Day.MON;
+Day tomorrow = Day.valueOf("TUE");
+
+if (today == Day.MON) {
+    System.out.println("Start of week");
+}
+
+for (Day d : Day.values()) {
+    System.out.println(d);
+}
+      </code></pre>
+
+      <h3 id="records">Records (Java 16+)</h3>
+      <p>
+        Records are compact, immutable data carriers. The compiler generates
+        constructor, accessors, <code>equals</code>, <code>hashCode</code>, and
+        <code>toString</code> automatically.
+      </p>
+      <pre><code class="language-java">
+record Point(int x, int y) {}
+
+Point origin = new Point(0, 0);
+Point p = new Point(3, 4);
+
+System.out.println(p.x());          // 3  (accessor, not getX())
+System.out.println(p);              // Point[x=3, y=4]
+      </code></pre>
+
+      <h3 id="jdk-types">Common JDK types</h3>
+      <p>
+        Beyond collections, the JDK provides specialized reference types for
+        math, time, and optional values.
+      </p>
+      <pre><code class="language-css">
+Type            | Package          | Typical use
+----------------|------------------|----------------------------------
+BigInteger      | java.math        | Arbitrary-precision integers
+BigDecimal      | java.math        | Exact decimal arithmetic (money)
+LocalDate       | java.time        | Date without time zone (2026-07-18)
+LocalDateTime   | java.time        | Date + time without zone
+Instant         | java.time        | UTC timestamp (epoch-based)
+ZonedDateTime   | java.time        | Date-time with time zone
+UUID            | java.util        | 128-bit unique identifier
+Optional&lt;T&gt;     | java.util        | Explicit nullable wrapper
+Pattern         | java.util.regex  | Compiled regular expression
+StringBuilder   | java.lang        | Mutable string builder
+      </code></pre>
+      <h2 id="special">Special cases</h2>
+      <p>
+        <strong><code>void</code></strong> — not a variable type. Used only as a
+        method return type meaning "returns nothing".
+      </p>
+      <pre><code class="language-java">
+public void printHello() {
+    System.out.println("Hello");
+}
+      </code></pre>
+      <p>
+        <strong><code>null</code></strong> — the default value for uninitialized
+        reference-type fields. Assigning <code>null</code> to a primitive is a
+        compile error.
+      </p>
+      <pre><code class="language-java">
+String s = null;    // OK — reference type
+// int n = null;    // compile error — primitive
+      </code></pre>
+      <p>
+        <strong><code>var</code> (Java 10+)</strong> — local type inference. The
+        compiler deduces the type; it is not a new datatype.
+      </p>
+      <pre><code class="language-java">
+var message = "Hello";           // inferred as String
+var numbers = List.of(1, 2, 3);  // inferred as List&lt;Integer&gt;
+      </code></pre>
+      <p>
+        <strong>Generics</strong> — parameterized types such as
+        <code>List&lt;T&gt;</code> and <code>Map&lt;K, V&gt;</code> let
+        collections and classes work with type-safe element types at compile
+        time.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

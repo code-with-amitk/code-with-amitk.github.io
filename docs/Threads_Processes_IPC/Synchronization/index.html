@@ -1,14 +1,16 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Synchronization</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/Synchronization" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Synchronization"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
-    <!-- Add any necessary CSS and JavaScript files -->
   </head>
   <body>
     <nav class="navbar">
-      <!--See .navbar in styles.css-->
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Our team</a></li>
@@ -30,113 +32,353 @@
     </nav>
 
     <aside class="sidebar">
-      <!--See .sidebar in styles.css-->
       <a href="#what">What is Synchronization?</a>
       <a href="#methods">Synchronization Methods</a>
+      <ul>
+        <li><a href="#cpp">C++</a></li>
+        <li><a href="#rust">Rust</a></li>
+        <li><a href="#java">Java</a></li>
+        <li><a href="#go">Go</a></li>
+        <li><a href="#python">Python</a></li>
+        <li><a href="#cross">Cross-language / IPC</a></li>
+      </ul>
     </aside>
 
     <main>
-      <!--Here is our page's main content-->
       <article style="margin-left: 200px">
         <h2 id="what">What is Synchronization</h2>
         <dl>
           Coordination b/w processes/threads to access shared resources so that
           <a
             href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/Terms/README.adoc"
-            >deadlock & race conditions</a
+            >deadlock &amp; race conditions</a
           >
           can be avoided.<br />
-          Ex-1: When multiple threads need to modify a shared resource(eg:
+          Ex-1: When multiple threads need to modify a shared resource (e.g.
           global variable) we should lock the resource to guarantee at most 1
           thread can do modification.<br />
           Ex-2: When 2 threads are putting data on top of stack, without
-          synchronization it's immpossible to tell what is on top of the stack
+          synchronization it is impossible to tell what is on top of the stack
           at any one time.
         </dl>
 
         <h2 id="methods">Different Synchronization Methods</h2>
+        <p>
+          Methods are grouped by language. The <strong>Sync</strong> column
+          marks thread synchronization; <strong>IPC</strong> marks inter-process
+          communication.
+        </p>
+
         <table>
           <tr>
-            <th>Name</th>
+            <th>Language</th>
+            <th>Method / API</th>
             <th>Description</th>
-            <th>Synchronization</th>
+            <th>Sync</th>
             <th>IPC</th>
+          </tr>
+
+          <!-- C++ -->
+          <tr id="cpp">
+            <td rowspan="5"><strong>C++</strong></td>
+            <td>
+              <a href="mutex.html#createcpp"><code>std::mutex</code></a>
+            </td>
+            <td>
+              Exclusive lock for shared data. Use with
+              <code>lock_guard</code> or <code>unique_lock</code>.
+            </td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>std::shared_mutex</code> (RwLock)</td>
+            <td>Many readers or one writer at a time.</td>
+            <td>Yes</td>
+            <td>No</td>
           </tr>
           <tr>
             <td>
-              <a href="Rust/Arc.html">Rust Arc(Atomically Reference Counted)</a
-              ><br />
-              Shared Read-Only Access
+              <a href="condition_variable.html"
+                ><code>std::condition_variable</code></a
+              >
             </td>
-            <td>Immutable Reference to data. Data cannot be modified</td>
+            <td>
+              Lets threads wait until another thread signals a condition (used
+              with a mutex).
+            </td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>std::atomic</code></td>
+            <td>Lock-free atomic read/modify on integers and pointers.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>std::counting_semaphore</code> / barrier (C++20)</td>
+            <td>Limit concurrent access; synchronize at a barrier point.</td>
             <td>Yes</td>
             <td>No</td>
           </tr>
 
-          <tr>
-            <td><a href="../IPC/index.html">Channels (std::sync::mpsc)</a></td>
+          <!-- Rust -->
+          <tr id="rust">
+            <td rowspan="6"><strong>Rust</strong></td>
             <td>
-              block until both sender and receiver are ready, providing built-in
-              synchronization
+              <a href="Rust/Arc.html"><code>Arc&lt;T&gt;</code></a>
+            </td>
+            <td>
+              Atomically reference-counted shared ownership. Read-only unless
+              wrapped with interior mutability.
+            </td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="mutex.html#createrust"><code>Mutex&lt;T&gt;</code></a>
+            </td>
+            <td>
+              Exclusive lock around data. Plain mutex is not shareable across
+              threads by itself.
+            </td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="mutex.html#mutexarc"
+                ><code>Arc&lt;Mutex&lt;T&gt;&gt;</code></a
+              >
+            </td>
+            <td>Share a mutex-protected value across multiple threads.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>RwLock&lt;T&gt;</code></td>
+            <td>
+              Multiple readers or one writer (often inside <code>Arc</code>).
+            </td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="../IPC/Rust/channels.html"
+                >Channels (<code>mpsc</code>)</a
+              >
+            </td>
+            <td>
+              Message passing between threads; send/receive blocks until both
+              sides are ready.
+            </td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><code>std::sync::atomic</code></td>
+            <td>Low-level atomic types (<code>AtomicBool</code>, etc.).</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+
+          <!-- Java -->
+          <tr id="java">
+            <td rowspan="6">
+              <strong><a href="Java/index.html">Java</a></strong>
+            </td>
+            <td>
+              <a href="Java/index.html#synchronized"
+                ><code>synchronized</code> keyword</a
+              >
+            </td>
+            <td>
+              Intrinsic lock on a method or block. Every object has an
+              associated monitor lock.
+            </td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="Java/index.html#reentrantlock"
+                ><code>ReentrantLock</code></a
+              >
+            </td>
+            <td>
+              Explicit lock from <code>java.util.concurrent.locks</code>; same
+              thread can re-enter.
+            </td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="Java/index.html#readwritelock"
+                ><code>ReadWriteLock</code></a
+              >
+            </td>
+            <td>Separate read and write locks for shared data structures.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="Java/index.html#volatile"><code>volatile</code></a>
+            </td>
+            <td>
+              Visibility guarantee (no caching in thread-local CPU cache). Does
+              not make compound operations atomic.
+            </td>
+            <td>Partial</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="Java/index.html#semaphore"
+                ><code>java.util.concurrent</code></a
+              >
+              (Semaphore, CountDownLatch, CyclicBarrier, Phaser)
+            </td>
+            <td>Higher-level coordination between threads.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="Java/index.html#blockingqueue"
+                ><code>BlockingQueue</code></a
+              >,
+              <a href="Java/index.html#concurrenthashmap"
+                ><code>ConcurrentHashMap</code></a
+              >
+            </td>
+            <td>Thread-safe collections with built-in synchronization.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+
+          <!-- Go -->
+          <tr id="go">
+            <td rowspan="6"><strong>Go</strong></td>
+            <td><code>sync.Mutex</code></td>
+            <td>Exclusive lock; idiomatic for protecting shared memory.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>sync.RWMutex</code></td>
+            <td>Many readers or one writer.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="../IPC/Golang/channels.html">Channels</a>
+            </td>
+            <td>
+              Primary Go idiom — goroutines communicate by sending on channels
+              (buffered / unbuffered, directional).
+            </td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>
+              <a href="../IPC/Golang/atomics.html"><code>sync/atomic</code></a>
+            </td>
+            <td>Lock-free atomic operations on integers and pointers.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>sync.WaitGroup</code></td>
+            <td>Wait for a group of goroutines to finish.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>select</code></td>
+            <td>Wait on multiple channel operations at once.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+
+          <!-- Python -->
+          <tr id="python">
+            <td rowspan="6"><strong>Python</strong></td>
+            <td><code>threading.Lock</code></td>
+            <td>Basic mutex for threads within one process.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>threading.RLock</code></td>
+            <td>Reentrant lock — same thread can acquire it multiple times.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>threading.Semaphore</code> / <code>Event</code></td>
+            <td>Limit concurrent access; signal between threads.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>threading.Condition</code></td>
+            <td>Wait for a condition while holding a lock.</td>
+            <td>Yes</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><code>queue.Queue</code></td>
+            <td>Thread-safe FIFO queue (producer–consumer between threads).</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><code>multiprocessing.Lock</code> / <code>Pipe</code></td>
+            <td>
+              Synchronization and messaging between processes (bypasses GIL).
             </td>
             <td>Yes</td>
             <td>Yes</td>
           </tr>
 
-          <tr>
-            <td><a href="./mutex.html">Mutexes</a> and RwLocks</td>
-            <td>Plain mutex cannot be used across threads.</td>
-            <td>Yes</td>
-            <td></td>
-          </tr>
-          <tr>
+          <!-- Cross-language -->
+          <tr id="cross">
+            <td rowspan="4"><strong>POSIX / OS</strong></td>
             <td>
-              <a
-                href="/Threads_Processes_IPC/Synchronization/mutex.html#mutexarc"
-                >Arc &lt;Mutexes></a
-              >
+              <a href="mutex.html#createposix"><code>pthread_mutex</code></a>
             </td>
-            <td>Mutex inside Arc can be used across threads</td>
+            <td>C/POSIX mutex used by native code and some runtimes.</td>
             <td>Yes</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Atomic Types (std::sync::atomic)</td>
-            <td>Provides low-level atomic operations</td>
-            <td></td>
-            <td></td>
+            <td>No</td>
           </tr>
           <tr>
             <td>Pipes</td>
-            <td></td>
+            <td>Byte stream between processes (anonymous or named FIFO).</td>
             <td>No</td>
             <td>Yes</td>
           </tr>
           <tr>
             <td>Shared Memory</td>
-            <td>allows multiple processes to access the same memory space</td>
+            <td>Multiple processes map the same physical memory region.</td>
             <td>Yes</td>
-            <td>No</td>
+            <td>Yes</td>
           </tr>
           <tr>
-            <td>
-              Condition Variables:<br />
-              &ensp; <a href="./condition_variable.html">C++</a>
-            </td>
-            <td>
-              work with mutexes to allow threads to wait for specific conditions
-            </td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Barriers and Semaphores</td>
-            <td></td>
+            <td>Semaphores / Barriers (POSIX)</td>
+            <td>OS-level counting semaphores and barrier synchronization.</td>
             <td>Yes</td>
-            <td></td>
+            <td>Yes</td>
           </tr>
         </table>
       </article>
     </main>
+    <script src="/scripts/common.js"></script>
   </body>
 </html>

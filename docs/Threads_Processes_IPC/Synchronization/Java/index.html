@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Java Synchronization</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Synchronization/Java/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Threads_Processes_IPC/Synchronization/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#synchronized">synchronized</a>
+      <a href="#reentrantlock">ReentrantLock</a>
+      <a href="#readwritelock">ReadWriteLock</a>
+      <a href="#volatile">volatile</a>
+      <a href="#semaphore">Semaphore</a>
+      <a href="#countdownlatch">CountDownLatch</a>
+      <a href="#cyclicbarrier">CyclicBarrier</a>
+      <a href="#phaser">Phaser</a>
+      <a href="#atomic">AtomicInteger</a>
+      <a href="#blockingqueue">BlockingQueue</a>
+      <a href="#concurrenthashmap">ConcurrentHashMap</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="overview">Java Synchronization Methods</h1>
+      <p>
+        Java provides built-in monitors (<code>synchronized</code>), explicit
+        locks, atomics, and utilities in
+        <code>java.util.concurrent</code>. Each section below has a minimal
+        runnable example with <code>main</code>.
+      </p>
+
+      <h2 id="synchronized">1. synchronized</h2>
+      <p>
+        Every object has an intrinsic lock (monitor). Only one thread can enter
+        a <code>synchronized</code> block or method on the same lock at a time.
+      </p>
+      <pre><code class="language-java">
+public class SyncExample {
+    private int count = 0;
+    private final Object lock = new Object();
+
+    // synchronized method — lock is `this`
+    public synchronized void incrementMethod() {
+        count++;
+    }
+
+    public void incrementBlock() {
+        synchronized (lock) {   // lock on explicit object
+            count++;
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        SyncExample demo = new SyncExample();
+
+        Thread t1 = new Thread(() -&gt; {
+            for (int i = 0; i &lt; 1000; i++) demo.incrementMethod();
+        });
+        Thread t2 = new Thread(() -&gt; {
+            for (int i = 0; i &lt; 1000; i++) demo.incrementBlock();
+        });
+
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("count = " + demo.count);  // 2000
+    }
+}
+      </code></pre>
+
+      <h2 id="reentrantlock">2. ReentrantLock</h2>
+      <p>
+        Explicit lock from <code>java.util.concurrent.locks</code>. Same thread
+        can acquire it again (reentrant). Always unlock in a
+        <code>finally</code> block.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.locks.ReentrantLock;
+
+public class ReentrantLockExample {
+    private int count = 0;
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public void increment() {
+        lock.lock();
+        try {
+            count++;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ReentrantLockExample demo = new ReentrantLockExample();
+
+        Thread t1 = new Thread(() -&gt; {
+            for (int i = 0; i &lt; 1000; i++) demo.increment();
+        });
+        Thread t2 = new Thread(() -&gt; {
+            for (int i = 0; i &lt; 1000; i++) demo.increment();
+        });
+
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("count = " + demo.count);  // 2000
+    }
+}
+      </code></pre>
+
+      <h2 id="readwritelock">3. ReadWriteLock</h2>
+      <p>
+        Many threads can read concurrently; writes require an exclusive lock.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class ReadWriteLockExample {
+    private int value = 0;
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+
+    public int read() {
+        rwLock.readLock().lock();
+        try {
+            return value;
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public void write(int v) {
+        rwLock.writeLock().lock();
+        try {
+            value = v;
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ReadWriteLockExample demo = new ReadWriteLockExample();
+        demo.write(42);
+
+        Thread reader = new Thread(() -&gt;
+            System.out.println("read = " + demo.read())
+        );
+        Thread writer = new Thread(() -&gt; demo.write(100));
+
+        reader.start();
+        writer.start();
+        reader.join();
+        writer.join();
+
+        System.out.println("final = " + demo.read());  // 100
+    }
+}
+      </code></pre>
+
+      <h2 id="volatile">4. volatile</h2>
+      <p>
+        Ensures a write by one thread is visible to others immediately. Does
+        <strong>not</strong> make <code>count++</code> atomic — use
+        <code>synchronized</code> or atomics for compound updates.
+      </p>
+      <pre><code class="language-java">
+public class VolatileExample {
+    private volatile boolean running = true;
+
+    public static void main(String[] args) throws InterruptedException {
+        VolatileExample demo = new VolatileExample();
+
+        Thread worker = new Thread(() -&gt; {
+            while (demo.running) {
+                // busy wait — main will set running = false
+            }
+            System.out.println("worker stopped");
+        });
+
+        worker.start();
+        Thread.sleep(100);
+        demo.running = false;   // visible to worker without synchronized
+        worker.join();
+    }
+}
+      </code></pre>
+
+      <h2 id="semaphore">5. Semaphore</h2>
+      <p>Limits how many threads can access a resource at the same time.</p>
+      <pre><code class="language-java">
+import java.util.concurrent.Semaphore;
+
+public class SemaphoreExample {
+    // allow at most 2 threads into the critical section
+    private static final Semaphore sem = new Semaphore(2);
+
+    public static void main(String[] args) {
+        Runnable task = () -&gt; {
+            try {
+                sem.acquire();
+                System.out.println(Thread.currentThread().getName() + " entered");
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                sem.release();
+                System.out.println(Thread.currentThread().getName() + " left");
+            }
+        };
+
+        new Thread(task, "T1").start();
+        new Thread(task, "T2").start();
+        new Thread(task, "T3").start();
+    }
+}
+      </code></pre>
+
+      <h2 id="countdownlatch">6. CountDownLatch</h2>
+      <p>One or more threads wait until a counter reaches zero (one-shot).</p>
+      <pre><code class="language-java">
+import java.util.concurrent.CountDownLatch;
+
+public class CountDownLatchExample {
+    public static void main(String[] args) throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(3);
+
+        Runnable worker = () -&gt; {
+            System.out.println(Thread.currentThread().getName() + " done");
+            latch.countDown();
+        };
+
+        new Thread(worker, "W1").start();
+        new Thread(worker, "W2").start();
+        new Thread(worker, "W3").start();
+
+        latch.await();   // main waits until count = 0
+        System.out.println("All workers finished");
+    }
+}
+      </code></pre>
+
+      <h2 id="cyclicbarrier">7. CyclicBarrier</h2>
+      <p>
+        Threads wait at a barrier until all parties arrive, then all proceed
+        (reusable).
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+
+public class CyclicBarrierExample {
+    public static void main(String[] args) {
+        CyclicBarrier barrier = new CyclicBarrier(3, () -&gt;
+            System.out.println("All threads reached the barrier")
+        );
+
+        Runnable task = () -&gt; {
+            try {
+                System.out.println(Thread.currentThread().getName() + " waiting");
+                barrier.await();
+                System.out.println(Thread.currentThread().getName() + " passed");
+            } catch (InterruptedException | BrokenBarrierException e) {
+                Thread.currentThread().interrupt();
+            }
+        };
+
+        new Thread(task, "T1").start();
+        new Thread(task, "T2").start();
+        new Thread(task, "T3").start();
+    }
+}
+      </code></pre>
+
+      <h2 id="phaser">8. Phaser</h2>
+      <p>
+        Flexible multi-phase barrier — threads register, arrive, and advance
+        through phases.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.Phaser;
+
+public class PhaserExample {
+    public static void main(String[] args) {
+        Phaser phaser = new Phaser(1);  // main is party 0
+
+        Runnable task = () -&gt; {
+            phaser.register();
+            System.out.println(Thread.currentThread().getName() + " phase 0");
+            phaser.arriveAndAwaitAdvance();
+
+            System.out.println(Thread.currentThread().getName() + " phase 1");
+            phaser.arriveAndDeregister();
+        };
+
+        new Thread(task, "T1").start();
+        new Thread(task, "T2").start();
+
+        phaser.arriveAndAwaitAdvance();  // main waits for phase 0
+        System.out.println("Main: phase 0 complete");
+    }
+}
+      </code></pre>
+
+      <h2 id="atomic">9. AtomicInteger</h2>
+      <p>
+        Lock-free atomic read-modify from
+        <code>java.util.concurrent.atomic</code>.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class AtomicExample {
+    private static final AtomicInteger count = new AtomicInteger(0);
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread t1 = new Thread(() -&gt; {
+            for (int i = 0; i &lt; 1000; i++) count.incrementAndGet();
+        });
+        Thread t2 = new Thread(() -&gt; {
+            for (int i = 0; i &lt; 1000; i++) count.incrementAndGet();
+        });
+
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("count = " + count.get());  // 2000
+    }
+}
+      </code></pre>
+
+      <h2 id="blockingqueue">10. BlockingQueue</h2>
+      <p>
+        Thread-safe queue — producer blocks when full, consumer blocks when
+        empty.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+public class BlockingQueueExample {
+    public static void main(String[] args) throws InterruptedException {
+        BlockingQueue&lt;String&gt; queue = new ArrayBlockingQueue&lt;&gt;(2);
+
+        Thread producer = new Thread(() -&gt; {
+            try {
+                queue.put("msg-1");
+                queue.put("msg-2");
+                System.out.println("producer: sent 2 messages");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        Thread consumer = new Thread(() -&gt; {
+            try {
+                System.out.println("consumer: " + queue.take());
+                System.out.println("consumer: " + queue.take());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        producer.start();
+        consumer.start();
+        producer.join();
+        consumer.join();
+    }
+}
+      </code></pre>
+
+      <h2 id="concurrenthashmap">11. ConcurrentHashMap</h2>
+      <p>
+        Thread-safe hash map — multiple threads can read and write without
+        external locking.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.ConcurrentHashMap;
+
+public class ConcurrentHashMapExample {
+    public static void main(String[] args) throws InterruptedException {
+        ConcurrentHashMap&lt;String, Integer&gt; map = new ConcurrentHashMap&lt;&gt;();
+
+        Thread t1 = new Thread(() -&gt;
+            map.merge("hits", 1, Integer::sum)
+        );
+        Thread t2 = new Thread(() -&gt;
+            map.merge("hits", 1, Integer::sum)
+        );
+
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("hits = " + map.get("hits"));  // 2
+    }
+}
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

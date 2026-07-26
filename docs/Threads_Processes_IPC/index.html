@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Threads Processes IPC</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
@@ -52,13 +55,24 @@
             href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/Threads/README.md#memory-layout-of-threads"
             >Thread Memory Layout</a
           ><br />
+
           <b>Threads</b><br />
           &ensp;
-          <a href="Threads/Creation/Threads_Creation.html">Thread Creation:</a>
-          CPP(Threadclass, CPP Functor), Rust (Normal, Scoped), Go (<a
-            href="Threads/Creation/GoRoutines.html"
-            >goroutines</a
-          >), Python, POSIX, Java, Windows<br />
+          <a href="Threads/Creation/Threads_Creation.html">Thread Creation:</a
+          ><br />
+          &emsp; CPP(Threadclass, CPP Functor)<br />
+          &emsp; Rust (Normal, Scoped)<br />
+          &emsp; Go (<a href="Threads/Creation/GoRoutines.html">goroutines</a
+          >),<br />
+          &emsp; Python,<br />
+          &emsp; POSIX,<br />
+          &emsp; Java<br />
+          &emsp;&emsp; OS Thread(Runnable Interface)<br />
+          &emsp;&emsp; Green Thread(Thread.startVirtualThread(),
+          Thread.ofVirtual(), Virtual thread factory, Virtual thread
+          executor)<br />
+          &emsp; Windows<br />
+
           &ensp;
           <a href="Threads/Joinable_Detachable.html"
             >Joinable Detachable Threads</a
@@ -72,8 +86,11 @@
             >Problems in sync:</a
           >
           Dining Philospher, n Producer n Consumer <br />
+
           &ensp;
-          <u>Synchronization Methods:</u><br />
+          <a href="Synchronization/index.html">Synchronization Methods:</a
+          ><br />
+          &emsp; Java<br />
           &emsp; <a href="Synchronization/index.html">Methods List:</a> Pipes,
           Shared Memory, condvar, Semaphores, mutex, Arc&lt;mutex>, Rwlocks,
           channels<br />

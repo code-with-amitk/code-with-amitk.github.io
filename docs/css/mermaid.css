@@ -16,9 +16,11 @@
 }
 
 .mermaid-wrap .mermaid svg {
-  width: 100%;
+  width: auto;
   max-width: 100%;
   height: auto !important;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Optional: small preview — add class mermaid-compact on the wrap */
@@ -55,25 +57,39 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1002;
-  width: 95vw;
-  max-width: 1400px;
-  max-height: 92vh;
+  width: min(94vw, 1400px);
+  max-height: 90vh;
   overflow: auto;
   background: #fff;
-  padding: 1em;
+  padding: 1rem;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.45);
   cursor: zoom-out;
   border-color: #999;
 }
 
 .mermaid-wrap.mermaid-zoomed::after {
-  display: none;
+  content: "Scroll to explore · Esc or click outside to close";
+  display: block;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #666;
+  padding: 0.5rem 0 0;
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+}
+
+.mermaid-wrap.mermaid-zoomed .mermaid {
+  display: inline-block;
+  min-width: min-content;
 }
 
 .mermaid-wrap.mermaid-zoomed .mermaid svg {
-  width: 100%;
-  max-width: 100%;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0;
   height: auto !important;
+  display: block;
 }
 
 .mermaid-zoom-overlay {

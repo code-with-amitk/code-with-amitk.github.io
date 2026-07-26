@@ -12,7 +12,25 @@ function opencode(evt, cityName) {
   evt.currentTarget.className += " active";
 }
 
+function renderCodeBlocks() {
+  document.querySelectorAll("pre > code[class*='language-']").forEach((code) => {
+    const rawCode = code.getAttribute("data-code");
+    if (!rawCode) return;
+
+    code.textContent = rawCode
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&");
+
+    if (window.Prism) {
+      window.Prism.highlightElement(code);
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  renderCodeBlocks();
+
   const images = document.querySelectorAll(".zoomable-image");
 
   images.forEach((image) => {

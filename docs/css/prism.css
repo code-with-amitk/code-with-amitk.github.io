@@ -124,3 +124,16 @@ pre[class*="language-"] {
 .token.inserted {
   color: green;
 }
+
+/* C++ specific styling: add a `language-cpp` selector so code blocks
+   using `language-cpp` receive the same Prism styling and a slightly
+   larger monospace font. Use `white-space: pre` so code spacing and
+   angle-brackets appear as expected in rendered output. */
+code.language-cpp,
+pre.language-cpp,
+code[class*="language-cpp"],
+pre[class*="language-cpp"] {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 11px;
+  white-space: pre; /* preserve exact spacing for C++ examples */
+}

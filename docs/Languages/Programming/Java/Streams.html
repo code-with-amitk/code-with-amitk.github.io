@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Java Garbage Collection</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Java/Streams.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Java/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Java Streams (<a href="/Languages/Programming/C++/">C++20 Ranges</a>)</h2>
+      <p>
+        Introduced in Java 8, the Stream API is a tool used to process sequences of elements (like collections or arrays)<br>
+        Streams are specifically designed for data sources that contain multiple elements (sequences of data)<br>
+        Every object in java.util does not have .stream() method.<br>
+        Collections (List, Set, Queue) : HAVE .stream() method<br>
+        Maps (HashMap, TreeMap, etc.): DOEST NOT HAVE .stream() method.<br>
+        <br>
+
+        <b>Example:</b> Imagine you have a list of names and you want to find all 
+        names starting with the letter "A", convert them to uppercase, and collect them into a new list.
+      </p>
+      <pre><code class="language-java">
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class StreamExample {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "Amanda", "Brian");
+
+        // Using Java Streams
+        List<String> result = names.stream()
+                .filter(name -> name.startsWith("A")) // Intermediate operation
+                .map(String::toUpperCase)             // Intermediate operation
+                .collect(Collectors.toList());        // Terminal operation
+
+        System.out.println(result); // Output: [ALICE, AMANDA]
+    }
+}
+</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
