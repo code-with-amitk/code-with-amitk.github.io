@@ -1,0 +1,370 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Enterprise Integration Orchestrator (EIO)</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Enterprise_Integration_Orchestrator"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <li><a href="#what">Enterprise Integration Orchestrator</a></li>
+      <li><a href="#req">Requirements</a></li>
+      <li><a href="#hld">HLD</a></li>
+      <li><a href="#block">Block Diagram</a></li>
+      <li><a href="#seq">Flow Diagram</a></li>
+      <a href="#detialed">Detailed Design can be</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Enterprise Integration Orchestrator</h2>
+      <h3>Present day Problem (Integration of 2 Seperate Systems)</h3>
+      <p>
+        <b>Scenario:</b> Dell salesperson sells 100 laptops to HCL Technologies.
+        salesperson uses CRM(salesforce) and ERP(netsuite)<br />
+        &ensp; Salesforce (CRM - Customer Relationship Management): Tool used by
+        sales and marketing teams. It manages potential deals, sales pitches,
+        client conversations, and emails.<br />
+        &ensp; NetSuite or Oracle (ERP -
+        <a href="../ERP/index.html">Enterprise Resource Planning</a>): It tracks
+        inventory, processes invoices, handles shipping/fulfillment, and records
+        accounting data.<br />
+        <u>Step 1: The Sales Stage (Salesforce):</u>
+        A salesperson at Dell speaks with a client(HCL) who wants 50 laptops for
+        $50,000 of Brand(Dell). The salesperson tracks this in Salesforce as an
+        active Opportunity. After a few calls, the client(HCL) signs the
+        contract.The salesperson changes the Salesforce status from Negotiation
+        to Closed-Won (Opportunity Closure).<br />
+        Now salesforce has to write API/email to send data to Netsuite
+        <br />
+
+        <u>Step 2: Operations & Finance (NetSuite)</u>
+        Sales team at NetSuite creates a Sales Order containing: Customer
+        details: Address, billing contact. Product line items: 50 laptops.
+        Financial terms: $50,000, payment terms, etc. Payment link to be sent to
+        customer and sales person. Once payment done, Laptops packed shipped and
+        sent, all info provided to sales person for tracking.<br /><br />
+        <u>Problems in this workflow:</u> salesforce has to write API/email to
+        send data to Netsuite and viceversa.
+      </p>
+
+      <h3>Solution iPaaS: Jitterbit</h3>
+      <p>
+        Enterprise Workflow Integrator(Jitterbit) performing data sync between 2
+        seperated platforms
+      </p>
+      <img src="/images/System_Design/jitterbit.png" alt="jitterbit" />
+
+      <h2 id="req">Requirements</h2>
+      <p>
+        <b>Functional</b><br />
+        &ensp; 1. Workflow Management: Different system(AWS, GCP, Azure,
+        Salesforce, SAP, Oracle ERP, ServiceNow, Kafka, Databases, SFTP, REST
+        APIs, GraphQL, MQTT, Mainframes) produces events in different formats
+        and with different SLAs orchestration engine should provide a single
+        reliable control plane capable of coordinating millions of distributed
+        tasks<br />
+
+        <b>Non Functional</b><br />
+        &ensp; No data loss, Exactly-once processing (where possible), Fault
+        tolerance, Recovery after crashes, Cross-cloud execution, Scalability,
+        Observability
+      </p>
+
+      <h2 id="hld">HLD</h2>
+      <h3 id="block">Block Diagram</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '18px'}, 'flowchart': {'nodeSpacing': 55, 'rankSpacing': 70, 'padding': 18}}}%%
+flowchart LR
+
+%% External Components
+
+SF[Salesforce CRM]
+
+GLB[Global Load Balancer]
+
+RLB[Regional Load Balancer]
+
+GLB --> RLB
+
+SF --> GLB
+
+%% Jitterbit Cloud
+
+subgraph Jitterbit["Jitterbit Cloud (VPC/VNet)"]
+
+APIGW[API Gateway]
+
+AUTH[OAuth / Authentication]
+
+ORCH[Workflow Orchestrator]
+
+RULES[Business Rules Engine]
+
+TRANS[Transformation Engine]
+
+STATE[(Workflow State DB)]
+
+META[(Metadata DB)]
+
+KAFKA[(Kafka)]
+
+DLQ[(Dead Letter Queue)]
+
+W1[Worker 1]
+
+W2[Worker 2]
+
+W3[Worker 3]
+
+MON[Monitoring & Logging]
+
+RLB --> APIGW
+
+APIGW --> AUTH
+
+AUTH --> ORCH
+
+ORCH --> RULES
+
+ORCH --> TRANS
+
+ORCH --> STATE
+
+ORCH --> META
+
+TRANS --> KAFKA
+
+KAFKA --> W1
+KAFKA --> W2
+KAFKA --> W3
+
+W1 --> MON
+W2 --> MON
+W3 --> MON
+
+W1 --> DLQ
+W2 --> DLQ
+W3 --> DLQ
+
+end
+
+%% NetSuite
+
+subgraph NetSuite["NetSuite Cloud"]
+
+NS[NetSuite ERP]
+
+end
+
+W1 --> NS
+W2 --> NS
+W3 --> NS
+
+NS --> GLB
+        </pre>
+      </div>
+
+      <h3 id="seq">Flow Diagram</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '17px'}, 'sequence': {'actorFontSize': '17px', 'messageFontSize': '16px', 'noteFontSize': '15px', 'actorMargin': 70, 'messageMargin': 45}}}%%
+sequenceDiagram
+autonumber
+
+actor SalesRep
+
+box LightBlue Salesforce Cloud
+participant SAS as AppServer
+participant SDB as SF DB
+end
+
+box LightPink Jitterbit Cloud
+participant AGW as API GW
+participant Orc as Orchestrator<br>App Server
+participant Rules
+participant Transform
+participant Cache as Cache
+participant JDB as DB
+participant Kafka
+participant Workers as Worker<br>Pods
+end 
+
+box LightYellow NetSuite Cloud
+participant NAS as Netsuite<br>App Server
+participant NDB as DB
+participant NKafka as Netsuite<br>Kafka
+end
+
+SalesRep->>SAS: Order 100 laptops<br>HTTP POST<br>{<br>customer=HCL,<br>orderQty=100,<br>quotedPrice=50000$<br>}
+SAS->>SDB: INSERT INTO
+SDB-->>SAS: ok
+
+SAS->>AGW:HTTP POST<br>{<br>customer=HCL,<br>orderQty=100,<br>quotedPrice=50000$<br>}
+Note over AGW: Authenticate Salesforce<br>Oauth/Okta IDP<br> Get JWT
+
+AGW->>Orc: HTTP POST
+Orc->>Rules: Evaluate Workflow
+Rules-->>Cache: Is rule present?
+Cache->>Rules: Yes
+Rules-->>Orc: Create Sales Order
+
+Orc->>Transform: Map Salesforce → NetSuite
+Note over Transform: Netsuite listen on gRPC<br>Endpoint /abc
+
+Transform->>Cache: Is data present?
+Cache-->>Transform: No
+Transform->>JDB: INSERT INTO
+JDB-->>Transform: done
+
+Transform-->>Orc: NetSuite TYPE Payload<br>HTTP POST<br>{<br>customer=HCL,<br>orderQty=100,<br>quotedPrice=50000$<br>}
+
+Orc->>Kafka: NetSuite Payload
+
+Kafka->>Workers: Consume Task
+
+Workers->>NAS: Create Sales Order<br>HTTP POST<br>{<br>customer=HCL,<br>orderQty=100,<br>quotedPrice=50000$<br>}
+NAS->>NDB: Create order
+NDB-->>NAS: Ok
+NAS->>NKafka: topic="order_created",<br>"payload"
+Note over NKafka: via NotificationSvc<br>Call Mail GW<br>Email GW<br>SMS GW(Twilio, Msg91)
+
+NAS-->>Workers: SalesOrderID
+
+Workers-->>Orc: Success
+
+Orc-->>SAS: Update Opportunity (Synced)
+          </pre>
+      </div>
+      <p>
+        <b>Crashed Worker:</b> If a worker crashes halfway, the orchestrator
+        needs to resume from the last completed step. we can include a
+        persistent Workflow State Store.
+      </p>
+      <pre><code>
+Orchestrator
+↓
+Workflow State DB
+↓
+Resume Workflow
+</code></pre>
+      <p>
+        <b>Rules Engine:</b> Sort of a state machine which tells what next
+        action should take place
+      </p>
+      <pre><code>
+Rules Engine
+↓
+Opportunity Closed
+↓
+Create Sales Orde
+↓
+Update Customer
+↓
+Notify Finance
+      </code></pre>
+
+      <p>
+        <b>Dead Letter Queue:</b> A queue where failed topics should be
+        indicated to operators, if after 10 attempts delivery to Netsuite
+        consumer fails, the topic would be pushed to this queue
+      </p>
+      <pre><code>
+Worker
+↓
+Retry
+↓
+Retry
+↓
+Retry
+↓
+DLQ
+      </code></pre>
+
+      <p><b>Monitoring:</b> Add a separate Monitoring stack.</p>
+      <pre><code>
+Workers
+↓
+Prometheus
+↓
+Grafana
+↓
+ELK
+↓
+OpenTelemetry
+      </code></pre>
+
+      <h2 id="detialed">Detailed Design can be</h2>
+      <pre><code class="language-css">
+                 Salesforce Cloud
+
+             Salesforce REST APIs
+                     │
+             Global Load Balancer
+                     │
+             Regional Load Balancer
+                     │
+                 API Gateway
+                     │
+──────────────────────────────────────────
+             Jitterbit Cloud
+        Authentication Service
+                     │
+         Workflow Orchestrator
+          │      │       │
+          │      │       │
+      Rules   StateDB  MetadataDB
+          │
+      Transformation
+          │
+        Kafka Queue
+          │
+  ┌───────┼─────────┐
+  │       │         │
+Worker1 Worker2 Worker3
+  │       │         │
+ Connector Runtime
+          │
+──────────────────────────────────────────
+               NetSuite Cloud
+          REST API
+             │
+      Customer
+      Sales Orders
+      Inventory
+      Contacts
+      </code></pre>
+    </article>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

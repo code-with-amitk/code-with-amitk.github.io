@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Java Collections</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Java/Collections/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Java/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#list">List</a>
+      <ul>
+        <li><a href="#arraylist">ArrayList</a></li>
+        <li><a href="#linkedlist">LinkedList</a></li>
+        <li><a href="#vector">Vector</a></li>
+        <li><a href="#stack">Stack</a></li>
+      </ul>
+      <a href="#set">Set</a>
+      <ul>
+        <li><a href="#hashset">HashSet</a></li>
+        <li><a href="#linkedhashset">LinkedHashSet</a></li>
+        <li><a href="#treeset">TreeSet</a></li>
+      </ul>
+      <a href="#map">Map</a>
+      <ul>
+        <li><a href="#hashmap">HashMap</a></li>
+        <li><a href="#linkedhashmap">LinkedHashMap</a></li>
+        <li><a href="#treemap">TreeMap</a></li>
+        <li><a href="#hashtable">Hashtable</a></li>
+      </ul>
+      <a href="#queue-deque">Queue and Deque</a>
+      <ul>
+        <li><a href="#queue-priorityqueue">Queue / PriorityQueue</a></li>
+        <li><a href="#deque-arraydeque">Deque / ArrayDeque</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">
+        Collections Framework (<a href="/Languages/Programming/C++/STL/"
+          >C++ STL</a
+        >)
+      </h2>
+      <p>
+        Collections (part of the <code>java.util</code> package like ArrayList,
+        HashSet, HashMap) solve this by providing dynamic data structures that
+        can grow and shrink automatically.<br />
+        They also come with built-in algorithms for searching, sorting,
+        manipulating data, and handling types safely via generics.<br />
+        The reference is created on stack and object is stored on heap.
+      </p>
+
+      <h2 id="list">List</h2>
+
+      <h3 id="arraylist">ArrayList (Not threadsafe) (C++ std::vector)</h3>
+      <p>
+        Array is Java. It is fast for random access and appends, but slower for
+        insertions/removals in the middle.
+      </p>
+      <pre><code class="language-java">
+List&lt;Integer&gt; nums = new ArrayList&lt;&gt;();
+nums.add(10);
+nums.add(20);
+nums.add(30);
+System.out.println(nums.get(1));
+      </code></pre>
+
+      <h3 id="linkedlist">LinkedList (C++ std::list)</h3>
+      <p>
+        <code>LinkedList</code> stores elements as nodes, so insertions and
+        removals are efficient, but random access is slower.
+      </p>
+      <pre><code class="language-java">
+List&lt;String&gt; links = new LinkedList&lt;&gt;();
+links.add("one");
+links.add("two");
+links.remove(0);
+      </code></pre>
+
+      <h3 id="vector">Vector(threadsafe) (C++ std::vector)</h3>
+      <p>
+        <code>Vector</code> is similar to <code>ArrayList</code> but is
+        synchronized, making it thread-safe at the cost of extra overhead.
+      </p>
+      <pre><code class="language-java">
+Vector&lt;String&gt; v = new Vector&lt;&gt;();
+v.add("safe");
+      </code></pre>
+
+      <h3 id="stack">Stack (C++ std::stack)</h3>
+      <p>
+        <code>Stack</code> is a legacy LIFO structure. Use it when you need
+        push/pop semantics.
+      </p>
+      <pre><code class="language-java">
+Stack&lt;String&gt; st = new Stack&lt;&gt;();
+st.push("first");
+st.push("second");
+System.out.println(st.pop());
+      </code></pre>
+
+      <h2 id="set">Set (C++ std::set)</h2>
+      <p>
+        <code>Set</code> stores unique elements only. Duplicate inserts are
+        ignored.
+      </p>
+      <h3 id="hashset">HashSet (C++ std::unordered_set)</h3>
+      <p>
+        <code>HashSet</code> stores unique values using hashing and does not
+        preserve order.
+      </p>
+      <pre><code class="language-java">
+Set&lt;String&gt; set = new HashSet&lt;&gt;();
+set.add("one");
+set.add("one");
+System.out.println(set.size());
+      </code></pre>
+
+      <h3 id="linkedhashset">LinkedHashSet (HashSet with order)</h3>
+      <p>
+        <code>LinkedHashSet</code> keeps the insertion order while still
+        preventing duplicates.
+      </p>
+      <pre><code class="language-java">
+Set&lt;String&gt; ordered = new LinkedHashSet&lt;&gt;();
+ordered.add("b");
+ordered.add("a");
+      </code></pre>
+
+      <h3 id="treeset">TreeSet</h3>
+      <p><code>TreeSet</code> stores unique values in sorted order.</p>
+      <pre><code class="language-java">
+Set&lt;Integer&gt; sorted = new TreeSet&lt;&gt;();
+sorted.add(10);
+sorted.add(5);
+      </code></pre>
+
+      <h2 id="map">Map</h2>
+      <p>
+        <code>Map</code> stores key-value pairs. Keys must be unique, but values
+        can be duplicated.
+      </p>
+
+      <h3 id="hashmap">HashMap (C++ std::unordered_map)</h3>
+      <p>
+        <code>HashMap</code> stores key-value pairs with fast lookup. It does
+        not preserve insertion order and allows one <code>null</code> key.
+      </p>
+      <pre><code class="language-java">
+Map&lt;Integer, String&gt; map = new HashMap&lt;&gt;();
+map.put(1, "one");
+map.put(2, "two");
+System.out.println(map.get(1));
+      </code></pre>
+
+      <h3 id="linkedhashmap">LinkedHashMap</h3>
+      <p>
+        <code>LinkedHashMap</code> behaves like <code>HashMap</code> but
+        preserves insertion order.
+        <br />
+        <b>C++ comparison:</b> ordered hash map; closest is a custom wrapper
+        over a hash map.
+      </p>
+      <pre><code class="language-java">
+Map&lt;String, Integer&gt; orderMap = new LinkedHashMap&lt;&gt;();
+orderMap.put("A", 1);
+orderMap.put("B", 2);
+      </code></pre>
+
+      <h3 id="treemap">TreeMap (C++ std::map)</h3>
+      <p><code>TreeMap</code> stores entries in sorted key order.</p>
+      <pre><code class="language-java">
+Map&lt;String, Integer&gt; sortedMap = new TreeMap&lt;&gt;();
+sortedMap.put("z", 26);
+sortedMap.put("a", 1);
+      </code></pre>
+
+      <h3 id="hashtable">Hashtable (Synchronized std::unordered_map)</h3>
+      <p>
+        <code>Hashtable</code> is a synchronized version of
+        <code>HashMap</code>, similar in purpose but older and less flexible.
+      </p>
+      <pre><code class="language-java">
+Hashtable&lt;String, Integer&gt; table = new Hashtable&lt;&gt;();
+table.put("x", 10);
+      </code></pre>
+
+      <h2 id="queue-deque">Queue and Deque (std::queue, std::deque)</h2>
+      <p>
+        <code>Queue</code> supports FIFO operations, while <code>Deque</code>
+        supports both FIFO and LIFO behavior.
+      </p>
+
+      <h3 id="queue-priorityqueue">
+        Queue / PriorityQueue (std::priority_queue)
+      </h3>
+      <p>
+        <code>Queue</code> uses FIFO order, while <code>PriorityQueue</code>
+        orders elements by priority.
+      </p>
+      <pre><code class="language-java">
+Queue&lt;String&gt; q = new LinkedList&lt;&gt;();
+q.add("first");
+q.add("second");
+System.out.println(q.remove());
+
+PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();
+pq.add(30);
+pq.add(10);
+pq.add(20);
+System.out.println(pq.peek());
+      </code></pre>
+
+      <h3 id="deque-arraydeque">Deque / ArrayDeque (std::deque)</h3>
+      <p>
+        <code>Deque</code> is a double-ended queue. It can be used as a stack or
+        queue.
+      </p>
+      <pre><code class="language-java">
+Deque&lt;String&gt; dq = new ArrayDeque&lt;&gt;();
+dq.addFirst("A");
+dq.addLast("B");
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

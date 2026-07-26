@@ -160,7 +160,7 @@
         Support Vector Machines (SVMs), Decision Trees & Random Forests, Neural
         networks
       </p>
-      <h2>1.1 Regression (Gives % or numeric value)</h2>
+      <h1>1.1 Regression (Gives % or numeric value)</h1>
       <p>
         Examples: Predict whether based on inputs, Predict price of car provided
         with some inputs(mileage, age, brand, etc.)Decision Tree Regressor<br />
@@ -168,23 +168,30 @@
         chances being a spam.
       </p>
 
-      <h3 id="lr">1.1.1 Linear Regression</h3>
+      <h2 id="lr">
+        1.1.1
+        <a
+          href="https://developers.google.com/machine-learning/crash-course/linear-regression"
+          >Linear Regression</a
+        >
+      </h2>
       <p>
         linear regression finds the relationship between
-        <a href="/Machine Learning/Terms.html">features</a> and a
-        <a href="/Machine Learning/Terms.html">label</a>
+        <a href="/Machine Learning/Terms.html">features</a>(Given value = x) and
+        a <a href="/Machine Learning/Terms.html">label</a>(To be predicted value
+        = y), ie finding the best-fit line
       </p>
       <table>
         <tr>
           <td>
-            <b>In Mathematics</b><br />
-            y = mx + b. m(slope)=y2-y1/x2-x1. b(y intercept)<br />
+            <b>Understand linear equation in Mathematics</b><br />
             <img
               src="/images/Machine_Learning/Learning/linear_regression.png"
               alt="Linear Regression"
               style="width: 200px; height: 200px"
             /><br />
             <pre><code class="language-css">
+y = mx + b    // x(Feature/Given value), y(Label/To be predicted value)
 m(slope) = y2-y1 / x2-x1
          = 5-0 / 0 - 7 = -5/7
 
@@ -222,11 +229,49 @@ y = w1x1 + w2x2 + w3x3 ..+ b
           </td>
         </tr>
       </table>
-
-      <h4>Loss in Linear Regression</h4>
+      <h3><a href="Terms.html">Loss in linear regression</a></h3>
+      <h3>Purpose of linear regression: Create the Line</h3>
       <p>
-        Understanding <a href="Terms.html">Loss in linear regression</a>.<br />
+        You are given many (x, y) points, but you do NOT know the line, we need
+        to create the line, so that in future if we provide x(feature) value we
+        get y(label) prediction output<br />
+        Example: Suppose House prices are given, but we donot know the equation.
+        In future when some house size would be given we want to calculate
+        price, that means we should know the equation. In order to know the
+        equation we should know slope, gradient desent
       </p>
+      <pre><code>
+| Size (x)  | Price (y) |
+| --------- | --------- |
+| 1000 sqft | 2 Cr      |   (1000,2)
+| 1200 sqft | 2.4 Cr    |   (1200,2.4)
+| 1500 sqft | 3 Cr      |   (1500,3)
+| 1800 sqft | 3.6 Cr    |   (1800,3.6)
+
+Prediction from Model: if x=1700, y=?
+      </code></pre>
+
+      <h4>
+        <a
+          href="https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent"
+          >Gradient Desent</a
+        >
+      </h4>
+      <p>
+        This is the technique to find weight(w), bias(b) iteratively with the
+        lowest loss, and finally creating the linear equation.
+        <b>Steps of Gradient Decent</b>
+      </p>
+      <pre><code class="langiage-css">
+w = 0.1, b = 50     // 1. Start with random values of w,b.
+y = .1x + 50
+y = .1x1000+50=150  // Put x=1000, y=150. 
+  loss = y-actual_value
+  if (loss &gt; 5) { // Suppose
+    // Determine the direction to move the weights and bias that reduce loss.
+    // Repeat
+  }
+      </code></pre>
 
       <h4 id="dtr">1.1.2 Decision Tree</h4>
       <dl>

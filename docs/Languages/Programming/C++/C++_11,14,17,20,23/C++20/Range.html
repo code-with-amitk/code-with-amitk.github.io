@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Range</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/C%2B%2B_11%2C14%2C17%2C20%2C23/C%2B%2B20/Range.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/C++/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Range</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Range</h2>
+      <p>
+        To perform sequential operation on series.<br /><br />
+
+        <b>Example:</b> Imagine you have a list of names and you want to find
+        all names starting with the letter "A", convert them to uppercase, and
+        collect them into a new list.
+      </p>
+      <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;ranges&gt;
+
+int main() {
+  std::vector&lt;std::string&gt; names = {"Alice", "Bob", "Charlie", "Amanda", "Brian"};
+
+  // Using C++20 Ranges and Views
+  auto result = names 
+        | std::views::filter([](const std::string&amp; name) { 
+            return name.starts_with("A"); 
+          })
+        | std::views::transform([](std::string name) {
+            for (auto&amp; c : name) c = toupper(c);
+            return name;
+          });
+
+  for (const auto&amp; name : result) {
+    std::cout &lt;&lt; name &lt;&lt; " "; // Output: ALICE AMANDA 
+  }
+
+  return 0;
+}
+        </code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/prism-cpp-alias.js"></script>
+  </body>
+</html>
