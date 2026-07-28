@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Search index builder for code-with-amitk.github.io",
   "scripts": {
-    "build-index": "node scripts/build-search-index.js"
+    "build-index": "node scripts/build-search-index.js",
+    "build:sitemap": "node scripts/build-sitemap.js",
+    "build:seo": "node scripts/build-sitemap.js"
   },
   "dependencies": {
     "jsdom": "^22.1.0"
