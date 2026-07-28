@@ -1,12 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Async Programming</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Async_Programming" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Async_Programming"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
+
   <body>
     <nav class="navbar">
       <!--See .navbar in styles.css-->
@@ -15,6 +21,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -34,16 +41,32 @@
     <article style="margin-left: 200px">
       <dl>
         <a href="/Async_Programming/Introduction.html#what">Introduction:</a>
-        What is async, async, await, block_on(), Future, Async vs Threading<br />
-        <a href="notify-rs.html">notify-rs(Watch changes in file)</a><br />
-        <a href="Runtime/index.html">Runtime</a><br />
-        <ul>
-          <li><a href="Runtime/Tokio/index.html">Tokio</a><br /></li>
-        </ul>
+        What is async, async vs Threading<br />
+
+        Rust<br />
+        &ensp; <a href="Rust/index.html">async, await, block_on(), future</a
+        ><br />
+        &ensp;
+        <a href="Rust/notify-rs.html">notify-rs:</a> Watch changes in file,
+        RecommendedWatcher, PollWatcher
+        <br />
+        &ensp; <a href="Rust/Runtime/index.html">Runtime</a><br />
+        &emsp; <a href="Rust/Runtime/Tokio/index.html">Tokio</a>
+        <br />
+        &ensp;
         <a
-          href="./InterTask_Communication/Synchronous_Asynchronous_Channels.html"
+          href="Rust/InterTask_Communication/Synchronous_Asynchronous_Channels.html"
           >Intertask Communication(channel(), async_channel())</a
-        >
+        ><br /><br />
+
+        <a href="CPP/index.html">C++</a>: <code>std::async</code>,
+        <code>std::future</code><br /><br />
+
+        <a href="GoLang/index.html">Go</a>: goroutines, channels, select,
+        WaitGroup, context<br /><br />
+
+        <a href="Java/index.html">Java</a>: ExecutorService, Future,
+        CompletableFuture, virtual threads<br /><br />
       </dl>
     </article>
   </body>

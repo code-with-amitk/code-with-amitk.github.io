@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Java Async Programming</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Async_Programming/Java/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a href="#thread">Thread + Runnable</a>
+      <a href="#executor">ExecutorService</a>
+      <a href="#future">Future</a>
+      <a href="#completablefuture">CompletableFuture</a>
+      <a href="#virtual">Virtual threads</a>
+    </aside>
+
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Async_Programming/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">Async programming in Java</h2>
+      <dl>
+        Java supports async programming but does not have built-in
+        <code>async</code>/<code>await</code> syntax (unlike Rust or C#).<br />
+        Async-style work is done with threads, thread pools, and non-blocking
+        result objects (<code>Future</code>,
+        <code>CompletableFuture</code>).<br />
+        From Java 21 onward, <strong>virtual threads</strong> make blocking I/O
+        cheap — you write synchronous-looking code while the JVM schedules
+        thousands of tasks on few OS threads.<br />
+        See also:
+        <a
+          href="/Threads_Processes_IPC/Threads/Creation/Threads_Creation.html#java"
+          >Thread creation</a
+        >,
+        <a href="/Threads_Processes_IPC/Synchronization/Java/index.html"
+          >Java synchronization</a
+        >.
+      </dl>
+
+      <h3 id="thread">1. Thread + Runnable — basic background task</h3>
+      <dl>
+        Oldest approach: spawn a OS thread and return immediately from
+        <code>main</code>. The caller does not get a result object — use
+        <code>join()</code> to wait.
+      </dl>
+      <pre><code class="language-java">
+public class ThreadAsync {
+    public static void main(String[] args) throws InterruptedException {
+        Thread t = new Thread(() -&gt; {
+            System.out.println("background work on " + Thread.currentThread());
+        });
+        t.start();   // async — main continues
+        t.join();    // wait for completion
+        System.out.println("main done");
+    }
+}
+      </code></pre>
+
+      <h3 id="executor">2. ExecutorService — thread pool</h3>
+      <dl>
+        Submit many tasks to a pool instead of creating a new OS thread per
+        task. Returns a <code>Future</code> for each submission.
+      </dl>
+      <pre><code class="language-java">
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class ExecutorExample {
+    public static void main(String[] args) throws Exception {
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+
+        Future&lt;String&gt; future = pool.submit(() -&gt; {
+            Thread.sleep(500);
+            return "data from DB";
+        });
+
+        System.out.println("main continues while task runs...");
+        String result = future.get();   // block until result ready
+        System.out.println(result);
+
+        pool.shutdown();
+    }
+}
+      </code></pre>
+
+      <h3 id="future">3. Future — result of async computation</h3>
+      <dl>
+        <code>Future&lt;T&gt;</code> represents a result that may not be ready
+        yet. Call <code>get()</code> to block and retrieve it (similar to C++
+        <code>std::future</code>).
+      </dl>
+      <pre><code class="language-java">
+import java.util.concurrent.*;
+
+public class FutureExample {
+    public static void main(String[] args) throws Exception {
+        ExecutorService pool = Executors.newSingleThreadExecutor();
+
+        Future&lt;Integer&gt; future = pool.submit(() -&gt; {
+            Thread.sleep(300);
+            return 42;
+        });
+
+        System.out.println("waiting...");
+        System.out.println("answer = " + future.get());
+
+        pool.shutdown();
+    }
+}
+      </code></pre>
+
+      <h3 id="completablefuture">4. CompletableFuture — chain async steps</h3>
+      <dl>
+        <code>CompletableFuture</code> (Java 8+) supports callbacks,
+        composition, and combining multiple async operations without blocking
+        <code>main</code> at every step — closest to modern async/await style.
+      </dl>
+      <pre><code class="language-java">
+import java.util.concurrent.CompletableFuture;
+
+public class CompletableFutureExample {
+    static CompletableFuture&lt;String&gt; fetchUser() {
+        return CompletableFuture.supplyAsync(() -&gt; {
+            sleep(200);
+            return "Alice";
+        });
+    }
+
+    static CompletableFuture&lt;Integer&gt; fetchOrders(String user) {
+        return CompletableFuture.supplyAsync(() -&gt; {
+            sleep(200);
+            return user.equals("Alice") ? 3 : 0;
+        });
+    }
+
+    static void sleep(long ms) {
+        try { Thread.sleep(ms); } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static void main(String[] args) {
+        fetchUser()
+            .thenCompose(CompletableFutureExample::fetchOrders)
+            .thenAccept(count -&gt; System.out.println("orders = " + count))
+            .join();   // wait for pipeline to finish
+
+        // combine two independent async calls
+        CompletableFuture&lt;String&gt; a = fetchUser();
+        CompletableFuture&lt;Integer&gt; b = fetchOrders("Alice");
+        String summary = a.thenCombine(b, (user, orders) -&gt;
+            user + " has " + orders + " orders"
+        ).join();
+        System.out.println(summary);
+    }
+}
+      </code></pre>
+
+      <h3 id="virtual">5. Virtual threads — async I/O without callbacks</h3>
+      <dl>
+        Java 21+ virtual threads are green threads managed by the JVM. Blocking
+        calls (socket read, JDBC query) park the virtual thread instead of
+        blocking an OS thread — write straight-line code, get async scalability.
+      </dl>
+      <pre><code class="language-java">
+import java.util.concurrent.Executors;
+
+public class VirtualThreadExample {
+    public static void main(String[] args) throws InterruptedException {
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 5; i++) {
+                int id = i;
+                executor.submit(() -&gt; {
+                    System.out.println("task " + id + " on " + Thread.currentThread());
+                    // blocking I/O here is fine — JVM parks this virtual thread
+                });
+            }
+        }
+        System.out.println("all tasks done");
+    }
+}
+      </code></pre>
+
+      <p>
+        <strong>Summary:</strong> Use <code>CompletableFuture</code> for
+        callback-style async pipelines; use
+        <code>newVirtualThreadPerTaskExecutor()</code> (Java 21+) for
+        high-concurrency blocking I/O with simple synchronous code.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

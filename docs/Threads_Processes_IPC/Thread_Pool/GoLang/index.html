@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Go Thread Pool</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Thread_Pool/GoLang/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="../Introduction.html#what">What is Thread Pool?</a>
+      <a href="#overview">Go overview</a>
+      <a href="#worker">Worker pool (goroutines)</a>
+      <a href="#waitgroup">WaitGroup variant</a>
+      <a href="#ants">ants library</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">Thread pool in Go</h2>
+      <p>
+        Go has <strong>no OS thread pool</strong> in the standard library. You
+        rarely need one: goroutines are cheap and the Go runtime already
+        multiplexes them onto a small set of kernel threads (GOMAXPROCS).<br />
+        To get the <em>same functionality</em> as a thread pool — limit
+        concurrency and reuse workers — use a <strong>worker pool</strong> of
+        goroutines reading jobs from a channel. See
+        <a href="../Introduction.html#what">What is Thread Pool?</a> and
+        <a href="../../Threads/Creation/GoRoutines.html">Goroutines</a>.
+      </p>
+
+      <h3 id="worker">1. Worker pool — N goroutines + jobs channel</h3>
+      <p>
+        Start a fixed number of worker goroutines. Producers send jobs on a
+        channel; workers process and loop for the next job.
+      </p>
+      <pre><code class="language-go">
+package main
+
+import "fmt"
+
+func worker(id int, jobs &lt;-chan int, results chan&lt;- int) {
+    for job := range jobs {
+        fmt.Printf("worker %d processing job %d\n", id, job)
+        results &lt;- job * 2
+    }
+}
+
+func main() {
+    const numWorkers = 4
+    jobs := make(chan int, 10)
+    results := make(chan int, 10)
+
+    // start fixed pool of workers
+    for w := 0; w &lt; numWorkers; w++ {
+        go worker(w, jobs, results)
+    }
+
+    // submit 10 jobs
+    for j := 1; j &lt;= 10; j++ {
+        jobs &lt;- j
+    }
+    close(jobs)
+
+    // collect results
+    for r := 0; r &lt; 10; r++ {
+        fmt.Println("result:", &lt;-results)
+    }
+}
+      </code></pre>
+
+      <h3 id="waitgroup">2. Worker pool with sync.WaitGroup</h3>
+      <p>
+        Same idea, but <code>main</code> waits for all workers to finish before
+        exiting.
+      </p>
+      <pre><code class="language-go">
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+func main() {
+    const numWorkers = 4
+    jobs := make(chan int, 20)
+    var wg sync.WaitGroup
+
+    for w := 0; w &lt; numWorkers; w++ {
+        wg.Add(1)
+        go func(id int) {
+            defer wg.Done()
+            for job := range jobs {
+                fmt.Println("worker", id, "job", job)
+            }
+        }(w)
+    }
+
+    for j := 1; j &lt;= 10; j++ {
+        jobs &lt;- j
+    }
+    close(jobs)
+    wg.Wait()
+    fmt.Println("all workers done")
+}
+      </code></pre>
+
+      <h3 id="ants">3. Third-party goroutine pool — <code>ants</code></h3>
+      <p>
+        When you want a reusable goroutine pool with a task API (closest to
+        Java's <code>ExecutorService</code>), use a library such as
+        <code>github.com/panjf2000/ants/v2</code>.
+      </p>
+      <pre><code class="language-go">
+package main
+
+import (
+    "fmt"
+    "sync"
+
+    "github.com/panjf2000/ants/v2"
+)
+
+func main() {
+    pool, _ := ants.NewPool(4) // max 4 concurrent goroutines
+    defer pool.Release()
+
+    var wg sync.WaitGroup
+    for i := 0; i &lt; 10; i++ {
+        wg.Add(1)
+        n := i
+        _ = pool.Submit(func() {
+            defer wg.Done()
+            fmt.Println("task", n)
+        })
+    }
+    wg.Wait()
+}
+      </code></pre>
+
+      <p>
+        <strong>Summary:</strong> Go achieves thread-pool behavior with a
+        bounded set of worker goroutines + channel queue. The runtime handles
+        OS thread scheduling; you control application-level concurrency.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

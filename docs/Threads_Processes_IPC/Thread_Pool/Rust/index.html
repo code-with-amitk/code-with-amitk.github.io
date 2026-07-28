@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Rust Thread Pool</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Thread_Pool/Rust/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="../Introduction.html#what">What is Thread Pool?</a>
+      <a href="#overview">Rust overview</a>
+      <a href="#rayon">rayon (parallel pool)</a>
+      <a href="#threadpool">threadpool crate</a>
+      <a href="#manual">Manual pool</a>
+      <a href="#tokio">Tokio blocking pool</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">Thread pool in Rust</h2>
+      <p>
+        Rust's standard library has <code>std::thread</code> but
+        <strong>no built-in thread pool</strong>. Common approaches: the
+        <code>rayon</code> crate for CPU-bound parallelism, the
+        <code>threadpool</code> crate for a classic job queue, or a manual pool
+        with <code>mpsc</code> channels. See
+        <a href="../Introduction.html#what">What is Thread Pool?</a>.
+      </p>
+
+      <h3 id="rayon">1. rayon — global thread pool (data parallelism)</h3>
+      <p>
+        Most idiomatic for CPU-bound work. Rayon maintains a work-stealing pool
+        and provides parallel iterators — no manual queue needed.
+      </p>
+      <pre><code class="language-rust">
+use rayon::prelude::*;
+
+fn main() {
+    let nums: Vec&lt;i32> = (0..10).collect();
+
+    // rayon splits work across its internal thread pool
+    let sum: i32 = nums.par_iter().map(|x| x * 2).sum();
+    println!("sum = {}", sum);
+
+    nums.par_iter().for_each(|x| {
+        println!("task {} on {:?}", x, std::thread::current().id());
+    });
+}
+      </code></pre>
+
+      <h3 id="threadpool">2. <code>threadpool</code> crate — classic job pool</h3>
+      <p>
+        Submit closures to a fixed-size pool; closest to Java
+        <code>ExecutorService</code>.
+      </p>
+      <pre><code class="language-rust">
+use threadpool::ThreadPool;
+
+fn main() {
+    let pool = ThreadPool::new(4);
+
+    for i in 0..10 {
+        pool.execute(move || {
+            println!("task {} on {:?}", i, std::thread::current().id());
+        });
+    }
+
+    pool.join(); // wait for all tasks
+}
+      </code></pre>
+
+      <h3 id="manual">3. Manual pool — <code>std::thread</code> + <code>mpsc</code></h3>
+      <p>
+        Build your own with worker threads and a channel — no external crate
+        beyond std.
+      </p>
+      <pre><code class="language-rust">
+use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel::&lt;Box&lt;dyn FnOnce() + Send>>();
+    let rx = std::sync::Arc::new(std::sync::Mutex::new(rx));
+
+    let num_workers = 4;
+    for _ in 0..num_workers {
+        let rx = std::sync::Arc::clone(&amp;rx);
+        thread::spawn(move || loop {
+            let job = rx.lock().unwrap().recv();
+            match job {
+                Ok(f) =&gt; f(),
+                Err(_) =&gt; break,
+            }
+        });
+    }
+
+    for i in 0..10 {
+        tx.send(Box::new(move || println!("task {}", i))).unwrap();
+    }
+    drop(tx); // close channel when done submitting
+    thread::sleep(std::time::Duration::from_secs(1));
+}
+      </code></pre>
+
+      <h3 id="tokio">4. Tokio — blocking thread pool (async runtime)</h3>
+      <p>
+        For async code, CPU-heavy or blocking work should run on Tokio's
+        blocking pool via <code>spawn_blocking</code> — not on async tasks.
+      </p>
+      <pre><code class="language-rust">
+use tokio::task;
+
+#[tokio::main]
+async fn main() {
+    let handle = task::spawn_blocking(|| {
+        // runs on tokio's blocking thread pool
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        42
+    });
+
+    let result = handle.await.unwrap();
+    println!("result = {}", result);
+}
+      </code></pre>
+
+      <p>
+        <strong>Summary:</strong> Use <code>rayon</code> for parallel loops,
+        <code>threadpool</code> for explicit submit/join, or Tokio's blocking
+        pool inside async applications.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

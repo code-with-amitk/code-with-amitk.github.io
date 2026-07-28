@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>C++ Thread Pool</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Thread_Pool/CPP/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="../Introduction.html#what">What is Thread Pool?</a>
+      <a href="#overview">C++ overview</a>
+      <a href="#manual">Manual thread pool</a>
+      <a href="#async">std::async (limited)</a>
+      <a href="#cpp26">C++26 std::thread_pool</a>
+      <a href="#thirdparty">Third-party libraries</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">Thread pool in C++</h2>
+      <p>
+        C++11 through C++23 do <strong>not</strong> provide a standard thread
+        pool in the STL. You either build one (queue + worker
+        <code>std::thread</code>s + <code>std::mutex</code> +
+        <code>std::condition_variable</code>) or use a library. C++26 adds
+        <code>std::thread_pool</code>. See
+        <a href="../Introduction.html#what">What is Thread Pool?</a>.
+      </p>
+
+      <h3 id="manual">1. Manual thread pool (standard C++11+)</h3>
+      <p>
+        Classic pattern: N worker threads loop, pulling callables from a shared
+        queue. This is how most production pools work when you cannot add a
+        dependency.
+      </p>
+      <pre><code class="language-cpp">
+#include &lt;iostream>
+#include &lt;thread>
+#include &lt;vector>
+#include &lt;queue>
+#include &lt;mutex>
+#include &lt;condition_variable>
+#include &lt;functional>
+#include &lt;future>
+
+class ThreadPool {
+public:
+    explicit ThreadPool(size_t n) : stop_(false) {
+        for (size_t i = 0; i &lt; n; ++i) {
+            workers_.emplace_back([this] {
+                while (true) {
+                    std::function&lt;void()> task;
+                    {
+                        std::unique_lock&lt;std::mutex> lock(mutex_);
+                        cv_.wait(lock, [this] { return stop_ || !tasks_.empty(); });
+                        if (stop_ &amp;&amp; tasks_.empty()) return;
+                        task = std::move(tasks_.front());
+                        tasks_.pop();
+                    }
+                    task();
+                }
+            });
+        }
+    }
+
+    template &lt;class F>
+    void submit(F&amp;&amp; f) {
+        {
+            std::lock_guard&lt;std::mutex> lock(mutex_);
+            tasks_.emplace(std::forward&lt;F>(f));
+        }
+        cv_.notify_one();
+    }
+
+    ~ThreadPool() {
+        {
+            std::lock_guard&lt;std::mutex> lock(mutex_);
+            stop_ = true;
+        }
+        cv_.notify_all();
+        for (auto&amp; t : workers_) t.join();
+    }
+
+private:
+    std::vector&lt;std::thread> workers_;
+    std::queue&lt;std::function&lt;void()>> tasks_;
+    std::mutex mutex_;
+    std::condition_variable cv_;
+    bool stop_;
+};
+
+int main() {
+    ThreadPool pool(4);
+    for (int i = 0; i &lt; 10; ++i) {
+        pool.submit([i] { std::cout &lt;&lt; "task " &lt;&lt; i &lt;&lt; "\n"; });
+    }
+    // pool destructor waits for workers
+}
+      </code></pre>
+
+      <h3 id="async">2. <code>std::async</code> — not a true pool</h3>
+      <p>
+        <code>std::async(std::launch::async, ...)</code> may spawn a new thread
+        per call — no reuse, no queue limit. Fine for a few tasks; not a thread
+        pool substitute at scale.
+      </p>
+      <pre><code class="language-cpp">
+#include &lt;future>
+#include &lt;iostream>
+
+int main() {
+    auto fut = std::async(std::launch::async, [] {
+        return 42;
+    });
+    std::cout &lt;&lt; fut.get() &lt;&lt; "\n";
+}
+      </code></pre>
+
+      <h3 id="cpp26">3. C++26 — <code>std::thread_pool</code></h3>
+      <p>
+        The C++26 standard adds a built-in thread pool (P0443). Syntax may vary
+        slightly by compiler; check your toolchain.
+      </p>
+      <pre><code class="language-cpp">
+// C++26 (when available)
+#include &lt;thread_pool>
+#include &lt;iostream>
+
+int main() {
+    std::thread_pool pool(4);
+    pool.submit([] { std::cout &lt;&lt; "task on pool\n"; });
+    pool.wait();   // wait for submitted work
+}
+      </code></pre>
+
+      <h3 id="thirdparty">4. Third-party libraries</h3>
+      <p>When you need a production pool today without writing your own:</p>
+      <ul>
+        <li>
+          <strong>BS::thread_pool</strong> — single-header, drop-in pool
+        </li>
+        <li><strong>Boost.Asio</strong> — <code>thread_pool</code> executor</li>
+        <li><strong>Intel oneTBB</strong> — task arena / parallel tasks</li>
+      </ul>
+      <pre><code class="language-cpp">
+// BS::thread_pool example (header-only library)
+#include "BS_thread_pool.hpp"
+
+int main() {
+    BS::thread_pool pool(4);
+    for (int i = 0; i &lt; 10; ++i)
+        pool.submit_task([i] { /* work */ });
+    pool.wait();
+}
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

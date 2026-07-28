@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go Async Programming</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Async_Programming/GoLang/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a href="#goroutine">Goroutines</a>
+      <a href="#channels">Channels</a>
+      <a href="#select">select</a>
+      <a href="#waitgroup">WaitGroup</a>
+      <a href="#context">context</a>
+    </aside>
+
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Async_Programming/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">Async programming in Go</h2>
+      <dl>
+        Go support async programming using
+        <strong>goroutines</strong> (lightweight threads) and
+        <strong>channels</strong>. It does not have <code>async</code>/<code
+          >await</code
+        >
+        keywords.<br />
+        It passes message between goroutines using channels. The Go runtime
+        scheduler multiplexes goroutines onto thread pool threads. When a
+        goroutine blocks on I/O, another goroutine runs.<br />
+        See also:
+        <a href="/Threads_Processes_IPC/Threads/Creation/GoRoutines.html"
+          >Goroutine creation</a
+        >,
+        <a href="/Threads_Processes_IPC/IPC/Golang/channels.html">Channels</a>.
+      </dl>
+
+      <h3 id="goroutine">1. Goroutines — fire-and-forget concurrency</h3>
+      <dl>
+        Prefix any function call with <code>go</code> to run it concurrently.
+        <code>main</code> does not wait unless you use a <code>WaitGroup</code>,
+        channel, or <code>sync</code> primitive.
+      </dl>
+      <pre><code class="language-go">
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func fetchUser() {
+    time.Sleep(100 * time.Millisecond) // simulate network I/O
+    fmt.Println("user fetched")
+}
+
+func main() {
+    go fetchUser() // runs concurrently — like an async task
+    fmt.Println("main continues")
+    time.Sleep(200 * time.Millisecond) // wait so goroutine can finish
+}
+      </code></pre>
+
+      <h3 id="channels">2. Channels — async message passing</h3>
+      <dl>
+        Goroutines communicate by sending values on channels. An unbuffered
+        channel blocks until both sender and receiver are ready — built-in
+        synchronization.
+      </dl>
+      <pre><code class="language-go">
+package main
+
+import "fmt"
+
+func fetch(ch chan string) {
+    ch &lt;- "result from API" // send when done (blocks until main receives)
+}
+
+func main() {
+    ch := make(chan string)
+
+    go fetch(ch) // start async work
+
+    result := &lt;-ch // main waits for result — like await
+    fmt.Println(result)
+}
+      </code></pre>
+
+      <h3 id="select">3. select — wait on multiple async operations</h3>
+      <dl>
+        <code>select</code> waits on one or more channel operations — similar to
+        waiting on multiple futures. Use with <code>time.After</code> for
+        timeouts.
+      </dl>
+      <pre><code class="language-go">
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    ch1 := make(chan string)
+    ch2 := make(chan string)
+
+    go func() {
+        time.Sleep(50 * time.Millisecond)
+        ch1 &lt;- "service-A"
+    }()
+    go func() {
+        time.Sleep(200 * time.Millisecond)
+        ch2 &lt;- "service-B"
+    }()
+
+    select {
+    case msg := &lt;-ch1:
+        fmt.Println("got", msg)
+    case msg := &lt;-ch2:
+        fmt.Println("got", msg)
+    case &lt;-time.After(100 * time.Millisecond):
+        fmt.Println("timeout")
+    }
+}
+      </code></pre>
+
+      <h3 id="waitgroup">4. sync.WaitGroup — wait for many goroutines</h3>
+      <dl>
+        When <code>main</code> must wait for several concurrent tasks to finish
+        before exiting.
+      </dl>
+      <pre><code class="language-go">
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+func main() {
+    var wg sync.WaitGroup
+
+    for i := 0; i &lt; 3; i++ {
+        wg.Add(1)
+        go func(id int) {
+            defer wg.Done()
+            fmt.Println("task", id, "done")
+        }(i)
+    }
+
+    wg.Wait() // block until all goroutines call Done()
+    fmt.Println("all finished")
+}
+      </code></pre>
+
+      <h3 id="context">5. context — cancel async work</h3>
+      <dl>
+        <code>context.Context</code> carries deadlines, cancellation signals,
+        and request-scoped values across goroutines. Pass it into long-running
+        or I/O functions so they can stop when the caller cancels.
+      </dl>
+      <pre><code class="language-go">
+package main
+
+import (
+    "context"
+    "fmt"
+    "time"
+)
+
+func worker(ctx context.Context) {
+    select {
+    case &lt;-time.After(2 * time.Second):
+        fmt.Println("work finished")
+    case &lt;-ctx.Done():
+        fmt.Println("cancelled:", ctx.Err())
+    }
+}
+
+func main() {
+    ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
+    defer cancel()
+
+    go worker(ctx)
+    time.Sleep(1 * time.Second)
+}
+      </code></pre>
+
+      <p>
+        <strong>Summary:</strong> Go achieves async-style concurrency with
+        <code>go</code> + channels + <code>select</code>, not
+        <code>async</code>/<code>await</code>. For HTTP servers, the standard
+        library (<code>net/http</code>) handles each request in its own
+        goroutine automatically.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

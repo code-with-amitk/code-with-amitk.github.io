@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Pandas RW from file</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/Pandas/Functions.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/Pandas/Functions.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -31,7 +34,9 @@
       <a href="#describe">describe()</a>
       <a href="#drop">drop() and dropna()</a>
       <a href="#head">head()</a>
+      <a href="#index">index</a>
       <a href="#isNull">isNull()</a>
+      <a href="#loc">loc[]</a>
       <a href="#read_csv">read_csv(), .columns</a>
       <a href="#select_dtypes">select_dtypes()</a>
       <a href="#shape">shape()</a>
@@ -195,6 +200,18 @@ Duration,Pulse,Maxpulse,Calories
       <h3 id="head">head()</h3>
       <dl>head returns 1st n rows from dataframe, default is 5</dl>
 
+      <h3 id="index">index</h3>
+      <p>
+        index is row number generated for every row in a DataFrame. When we load
+        a CSV file using pd.read_csv(), pandas automatically generates an
+        integer sequence index starting from 0 up to N-1 (where $N$ is the total
+        number of rows), much like line numbers in a text editor, that is index
+      </p>
+      <pre><code>
+a = pd.read_csv("train.csv")  # 100 rows
+print('Total number of rows:'.format(len(a.index))) # Output=100
+      </code></pre>
+
       <h3 id="#isNull">isNull</h3>
       <p>
         Creates a dataframe with 1 or 0. if value is present, take it as 0, if
@@ -209,6 +226,21 @@ NaN     NaN
 t = (X_train.isnull())
 rollno = [0, 1, 0]
 marks =  [1, 1, 0]
+      </code></pre>
+
+      <h3 id="loc">loc[]</h3>
+      <p>
+        label-based data selection method. It allows you to select specific rows
+        and columns from a DataFrame based on their labels or boolean
+        conditions.
+      </p>
+      <pre><code class="language-css">
+# colon (:) before the comma means "select all rows"
+# tuple of strings after the comma specifies the exact column names you want to keep
+chicago_taxi_dataset.loc[:, ('TRIP_MILES', 'TRIP_SECONDS', 'FARE', 'COMPANY', 'PAYMENT_TYPE', 'TIP_RATE')]
+
+# training_df will contain only the 6 specific columns listed:
+TRIP_MILES, TRIP_SECONDS, FARE, COMPANY, PAYMENT_TYPE, TIP_RATE
       </code></pre>
 
       <h3 id="read_csv">read_csv(), .columns</h3>
