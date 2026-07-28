@@ -1,5 +1,5 @@
 /* PrismJS 1.29.0
-https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+clike+javascript */
+https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+clike+javascript+java+python */
 /// <reference lib="WebWorker"/>
 
 var _self =
@@ -1838,3 +1838,43 @@ Prism.languages.java = Prism.languages.extend("clike", {
     /\b(?:0b[01_]+|0x[\da-fA-F_]+|(?:\d(?:_?\d)*\.?(?:\d(?:_?\d)*)?(?:e[+-]?\d+)?|\.\d+)(?:f|d|l)?)\b/,
   operator: /::|->|[+\-*/%=&|^<>!~?:]+/,
 });
+
+Prism.languages.python = {
+  comment: {
+    pattern: /(^|[^\\])#.*/,
+    lookbehind: true,
+    greedy: true,
+  },
+  "triple-quoted-string": {
+    pattern: /(?:[rub]|br|rb)?("""|''')[\s\S]*?\1/i,
+    greedy: true,
+    alias: "string",
+  },
+  string: {
+    pattern: /(?:[rub]|br|rb)?("|')(?:\\.|(?!\1)[^\\\r\n])*\1/i,
+    greedy: true,
+  },
+  function: {
+    pattern: /((?:^|\s)def[ \t]+)[a-zA-Z_]\w*(?=\s*\()/g,
+    lookbehind: true,
+  },
+  "class-name": {
+    pattern: /(\bclass\s+)\w+/i,
+    lookbehind: true,
+  },
+  decorator: {
+    pattern: /(^[\t ]*)@\w+(?:\.\w+)*/m,
+    lookbehind: true,
+    alias: ["annotation", "punctuation"],
+    inside: {
+      punctuation: /\./,
+    },
+  },
+  keyword:
+    /\b(?:and|as|assert|async|await|break|case|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|match|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b/,
+  builtin: /\b(?:None|True|False|Ellipsis|NotImplemented)\b/,
+  number:
+    /\b0(?:b[01_]+|x[a-f0-9_]+)\b|\b\d+(?:_\d+)*(?:\.\d+(?:_\d+)*)?(?:[eE][+-]?\d+(?:_\d+)*)?\b/i,
+  operator: /[-+%=]=?|!=|:=|\*\*?=?|\/\/?=?|<<=?|>>=?|[|^~]/,
+  punctuation: /[{}[\];(),.:]/,
+};

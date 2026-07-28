@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPP Async Programming</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Async_Programming/Rust/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <aside class="sidebar"></aside>
+
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Async_Programming/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <!--<article style="margin-left: 200px">-->
+    <article style="margin-left: 200px">
+      <dl>
+        Future object is returned by the async function.<br />
+        Promise is returned by async.
+      </dl>
+      <pre><code class="language-css">
+include &lt;iostream&gt;
+#include &lt;future&gt;
+#include &lt;thread&gt;
+int main() {
+    // future from an async()
+    std::future &lt;int&gt; f2 = std::async(std::launch::async,
+                                []{                 //Creating lambda
+                                    return 8;
+                                });
+    f2.wait();
+    std::cout &lt;&lt; "Done!\nResults are:" &lt;&lt; f2.get();
+}
+$ g++ test.cpp -lpthread
+$ ./a.out
+Done 8
+
+// another Example
+#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;iostream&gt;
+#include &lt;future&gt;
+
+void fun(){
+    std::cout &lt;&lt; "Hello";
+}
+int main() {
+    auto fut = std::async (std::launch::async, fun);
+}
+$ ./a.out
+Hello
+                        </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

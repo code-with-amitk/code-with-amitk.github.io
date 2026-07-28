@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rust Async Programming</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Async_Programming/Rust/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a href="#async">async, await, block_on()</a>
+      <a href="#future">Future</a>
+      <a href="#awaitvsblockon">await vs block_on()</a>
+    </aside>
+
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Async_Programming/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <!--<article style="margin-left: 200px">-->
+    <article style="margin-left: 200px">
+      <h3 id="async">async, await, block_on()</h3>
+      <dl>
+        <b>async:</b> keyword is syntactic sugar. The compiler replaces the
+        return type with a future<br />
+        <b><a href="#await">await</a></b
+        ><br />
+        <b>async main(): </b> You cannot make main async, without additional
+        instructions to the compiler You need an executor to run async code<br />
+        <b>block_on(): </b> blocks the current thread until the provided future
+        has run to completion
+      </dl>
+      <pre><code class="language-css">
+use futures::executor::block_on;
+
+async fn count_to(count: i32) {
+    for i in 0..count {
+        println!("Count is: {i}!");
+    }
+}
+
+async fn async_main(count: i32) {
+    count_to(count).await;
+}
+
+fn main() {
+    block_on(async_main(4));
+}
+$ cargo run
+Count is: 0
+Count is: 1
+Count is: 2
+Count is: 3
+                </code></pre>
+
+      <h3 id="future">Future</h3>
+      <dl>
+        Asynchronous operation is based on "futures", which represent work that
+        may be completed in the future. Futures are "polled" until they signal
+        that they are complete<br />
+        <a
+          href="/Languages/Programming/Rust/Trait/Rust%20Provided%20Triats/#future"
+          >future is trait</a
+        >.
+      </dl>
+      <h3 id="await">await</h3>
+      <dl>
+        The .await keyword, applied to a Future, causes the current async
+        function to pause until that Future is ready, and then evaluates to its
+        output.<br />
+        await is used to wait for another async function.
+      </dl>
+
+      <h3 id="awaitvsblockon">await vs block_on()</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>await</th>
+          <th>block_on()</th>
+        </tr>
+        <tr>
+          <td>Blocks current thread</td>
+          <td>no</td>
+          <td>yes</td>
+        </tr>
+        <tr>
+          <td>wait for future to complete</td>
+          <td>yes</td>
+          <td>yes</td>
+        </tr>
+        <tr>
+          <td>Other tasks in async function can run?</td>
+          <td>yes</td>
+          <td>no</td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Threads Pool</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Thread_Pool/Introduction.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Threads_Processes_IPC/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What</a>
+      <a href="Java/index.html">Java</a>
+      <a href="CPP/index.html">C++</a>
+      <a href="GoLang/index.html">Go</a>
+      <a href="Rust/index.html">Rust</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is ThreadPool</h2>
+      <p>
+        A thread pool is a software design pattern used to achieve concurrent or
+        Parallel execution. Instead of spawning a brand-new OS or Green thread
+        every time a task arrives (and destroying it when it finishes), a thread
+        pool pre-creates a fixed or managed number of worker threads.<br />
+        These worker threads sit in an idle state, pulling tasks out of a shared
+        queue, executing them, and then going back for more. This drastically
+        cuts down on the CPU overhead, memory consumption, and latency caused by
+        constant thread creation and destruction.
+      </p>
+    </article>
+  </body>
+</html>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Java Thread Pool</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Thread_Pool/Java/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#manual">Manual threads vs pool</a>
+      <a href="#fixed">Fixed thread pool</a>
+      <a href="#cached">Cached thread pool</a>
+      <a href="#custom">ThreadPoolExecutor</a>
+      <a href="#virtual">Virtual thread pool</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="overview">
+        <a href="/Threads_Processes_IPC/Thread_Pool/Introduction.html"
+          >Thread Pool</a
+        >
+        in Java
+      </h2>
+      <p>
+        Java has built-in thread pools in
+        <code>java.util.concurrent</code>. Use
+        <code>ExecutorService</code> instead of creating a new
+        <code>Thread</code> per task — workers are reused from a pool. See
+        <a href="../Introduction.html#what">What is Thread Pool?</a>.
+      </p>
+
+      <h3 id="manual">Manual threads vs thread pool</h3>
+      <p>
+        Without a pool you create each worker yourself — e.g. four separate
+        <code>Thread</code> objects — and assign tasks to them by hand. That
+        works for a tiny, fixed workload but breaks down quickly.
+      </p>
+      <table>
+        <tr>
+          <th>Thread pool (<code>newFixedThreadPool(4)</code>)</th>
+          <th>Four separate threads (<code>new Thread(...)</code>)</th>
+        </tr>
+        <tr>
+          <td>
+            Submit 10 tasks → 4 workers reuse themselves; extra tasks wait in
+            queue automatically.<br />
+            <pre><code class="language-java">
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class FixedPoolExample {
+    public static void main(String[] args) {
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+
+        for (int i = 0; i &lt; 10; i++) {
+            int taskId = i;
+            pool.submit(() -&gt;
+                System.out.println("task " + taskId
+                    + " on " + Thread.currentThread().getName())
+            );
+        }
+
+        pool.shutdown(); // one call — pool drains queue and stops
+    }
+}
+            </code></pre>
+          </td>
+          <td>
+            Only 4 threads exist; each needs manual <code>start()</code> /
+            <code>join()</code>. No shared queue.<br />
+            <pre><code class="language-java">
+public class ManualFourThreads implements Runnable {
+    private int taskId;
+
+    public void setTask(int id) { this.taskId = id; }
+
+    public void run() {
+        System.out.println("task " + taskId
+            + " on " + Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        // 4 OS threads created manually — one object per thread
+        ManualFourThreads worker = new ManualFourThreads();
+        Thread t1 = new Thread(worker, "worker-1");
+        Thread t2 = new Thread(worker, "worker-2");
+        Thread t3 = new Thread(worker, "worker-3");
+        Thread t4 = new Thread(worker, "worker-4");
+
+        // YOU must assign each task and start/join each thread
+        worker.setTask(0); t1.start(); t1.join();
+        worker.setTask(1); t2.start(); t2.join();
+        worker.setTask(2); t3.start(); t3.join();
+        worker.setTask(3); t4.start(); t4.join();
+        // tasks 4–9? create more threads or rewrite scheduling logic
+    }
+}
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h4>Issues with four separate threads</h4>
+      <p>
+        a. Threads die after join(). A pool keeps workers alive and pulls the
+        next job from the queue.<br />
+        b. No central shutdown — pool: shutdown() / awaitTermination() once.
+        Manual: track every thread, join or interrupt each, handle partial
+        failure.<br />
+        c. Hard to cap concurrency — pool size = 4 enforces the limit. With
+        manual threads, a bug that calls start() on extra threads bypasses the
+        cap.<br />
+        d. More tasks than threads — 10 tasks, 4 threads: pool queues 6
+        automatically. Manual approach requires batching, another queue, or
+        creating 6 more threads.
+      </p>
+
+      <h3 id="fixed">1. Fixed thread pool — <code>newFixedThreadPool</code></h3>
+      <p>
+        Fixed number of worker threads. Extra tasks wait in an unbounded queue.
+        Prefer this over creating <code>Thread t1…t4</code> by hand.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class FixedPoolExample {
+    public static void main(String[] args) {
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+
+        for (int i = 0; i &lt; 10; i++) {
+            int taskId = i;
+            pool.submit(() -&gt;
+                System.out.println("task " + taskId + " on " + Thread.currentThread().getName())
+            );
+        }
+
+        pool.shutdown(); // no new tasks; finish existing ones
+    }
+}
+
+// Example output (order varies):
+// task 0 on pool-1-thread-1
+// task 1 on pool-1-thread-2
+// task 4 on pool-1-thread-1   ← thread-1 reused after task 0 finished
+// task 2 on pool-1-thread-3
+// ...
+      </code></pre>
+
+      <h3 id="cached">
+        2. Cached thread pool — <code>newCachedThreadPool</code>
+      </h3>
+      <p>
+        Creates threads as needed, reuses idle threads, removes threads idle for
+        60 seconds. Good for many short-lived tasks; unbounded growth possible.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class CachedPoolExample {
+    public static void main(String[] args) {
+        ExecutorService pool = Executors.newCachedThreadPool();
+
+        pool.submit(() -&gt; System.out.println("short task"));
+        pool.shutdown();
+    }
+}
+      </code></pre>
+
+      <h3 id="custom">3. Custom pool — <code>ThreadPoolExecutor</code></h3>
+      <p>
+        Full control over core/max pool size, queue type, and rejection policy.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.*;
+
+public class CustomPoolExample {
+    public static void main(String[] args) throws InterruptedException {
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(
+            2,                          // core pool size
+            4,                          // max pool size
+            60L, TimeUnit.SECONDS,      // idle thread timeout
+            new ArrayBlockingQueue&lt;&gt;(100),
+            new ThreadPoolExecutor.CallerRunsPolicy()
+        );
+
+        pool.submit(() -&gt; System.out.println("custom pool task"));
+        pool.shutdown();
+        pool.awaitTermination(1, TimeUnit.MINUTES);
+    }
+}
+      </code></pre>
+
+      <h3 id="virtual">4. Virtual thread pool (Java 21+)</h3>
+      <p>
+        Not an OS thread pool — each task gets a lightweight virtual thread.
+        Same submit/wait API, far higher concurrency for I/O-bound work.
+      </p>
+      <pre><code class="language-java">
+import java.util.concurrent.Executors;
+
+public class VirtualPoolExample {
+    public static void main(String[] args) {
+        try (var pool = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 10_000; i++) {
+                int id = i;
+                pool.submit(() -&gt; System.out.println("vt-task " + id));
+            }
+        }
+    }
+}
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

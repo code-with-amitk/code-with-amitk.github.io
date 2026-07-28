@@ -273,6 +273,36 @@ y = .1x1000+50=150  // Put x=1000, y=150.
   }
       </code></pre>
 
+      <h4 id="Hyperparameters">
+        <a
+          href="https://developers.google.com/machine-learning/crash-course/linear-regression/hyperparameters"
+          >Hyperparameters</a
+        >
+      </h4>
+      <p>
+        These are variables that control different aspects of training.<br />
+        So m,b are parameters which need to be calculated during training, but
+        hyperparameters define how m,b are derived<br />
+        <b>1. Learning rate:</b> This determines magnitude of the changes to
+        make to the weights and bias during each step of the gradient descent
+        process for model to converge quickly. For example, if the gradient's
+        magnitude is 2.5 and the learning rate is 0.01, then the model will
+        change the parameter by 0.025.<br />
+        &ensp; If the learning rate is too low, the model can take a long time
+        to converge.<br />
+        &ensp; if the learning rate is too high, the model never converges, but
+        bounces around the weights and bias that minimize the loss. &ensp; Pick
+        a learning rate that's not too high nor too low so that the model
+        converges quickly.<br />
+        <b>2. Batch size:</b> number of examples the model processes before
+        updating its weights and bias<br />
+        &ensp; <u>a. Stochastic gradient descent(SGD):</u> Uses single example
+        (a batch size of one) per iteration to adjust m, b.<br />
+        &ensp; b. Mini-batch stochastic gradient descent(mini-batch SGD):
+        Compromise between full-batch and SGD. <br />
+        <b>3. Epochs</b>
+      </p>
+
       <h4 id="dtr">1.1.2 Decision Tree</h4>
       <dl>
         This is Binary Tree(not balanced) which works in flowchart-like manner

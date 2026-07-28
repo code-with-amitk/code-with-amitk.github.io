@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>pytest vs unittest vs pytest_asyncio</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Frameworks/Python/pytest_asyncio/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Frameworks/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is pytest_asyncio?</a>
+      <dl>
+        <li><a href="#example">Async test example</a></li>
+      </dl>
+      <a href="#comparison">pyunit vs unitest vs asyncio</a>
+      <a href="#async-pytest">Testing async code with pytest</a>
+      <ul>
+        <li><a href="#drawbacks">Drawbacks</a></li>
+      </ul>
+      <a href="#where-asyncio">Where async I/O fits</a>
+      <a href="../Unittest/index.html">unittest (PyUnit)</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">pytest_asyncio</h2>
+      <p>
+        <code>pytest-asyncio</code> is a third-party <strong>plugin</strong> for
+        pytest that adds support for testing asynchronous code — functions
+        written with <code>async def</code> and the
+        <code>asyncio</code> library.<br />
+        Plain pytest and
+        <a href="../Unittest/index.html">unittest</a> do not run
+        <code>async def</code> tests natively without extra wiring.
+      </p>
+
+      <h3 id="example">Testing with pytest_asyncio</h3>
+      <pre><code class="language-python">
+# code under test
+import asyncio
+
+async def fetch_data():
+    await asyncio.sleep(0.1)
+    return "Hello, Async!"
+
+# test code — requires: pip install pytest pytest-asyncio
+import pytest
+
+@pytest.mark.asyncio
+async def test_fetch_data():
+    result = await fetch_data()   # directly await inside the test
+    assert result == "Hello, Async!"
+      </code></pre>
+      <p>Run: <code>pytest test_fetch.py</code></p>
+
+      <h2 id="comparison">unittest vs pytest vs pytest_asyncio</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>unittest (PyUnit)</th>
+          <th>pytest</th>
+          <th>pytest + pytest_asyncio</th>
+        </tr>
+        <tr>
+          <td><strong>What it is</strong></td>
+          <td>Built-in Python test framework (<code>import unittest</code>)</td>
+          <td>
+            Third-party test runner and framework (<code
+              >pip install pytest</code
+            >)
+          </td>
+          <td>
+            pytest plugin for async tests (<code
+              >pip install pytest-asyncio</code
+            >)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Test style</strong></td>
+          <td>
+            Classes inheriting <code>unittest.TestCase</code>; methods named
+            <code>test_*</code>
+          </td>
+          <td>
+            Plain functions or classes; <code>test_*</code> functions; minimal
+            boilerplate
+          </td>
+          <td>
+            Same as pytest — <code>async def test_*</code> with
+            <code>@pytest.mark.asyncio</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Assertions</strong></td>
+          <td>
+            <code>self.assertEqual</code>, <code>self.assertTrue</code>, …
+          </td>
+          <td>Plain <code>assert</code> — failures show rich diffs</td>
+          <td>Plain <code>assert</code> inside <code>async def</code> tests</td>
+        </tr>
+        <tr>
+          <td><strong>Fixtures</strong></td>
+          <td>
+            <code>setUp</code> / <code>tearDown</code>, <code>setUpClass</code>
+          </td>
+          <td>
+            <code>@pytest.fixture</code> — composable, scoped
+            (function/module/session)
+          </td>
+          <td><code>@pytest_asyncio.fixture</code> for async setup/teardown</td>
+        </tr>
+        <tr>
+          <td><strong>Sync code testing</strong></td>
+          <td>Yes — primary use case</td>
+          <td>Yes — primary use case</td>
+          <td>Yes — plugin does not replace sync tests; both coexist</td>
+        </tr>
+        <tr>
+          <td><strong>Async code testing</strong></td>
+          <td>
+            No native <code>async def</code> tests. Wrap with
+            <code>asyncio.run(coro)</code> inside a sync
+            <code>test_*</code> method
+          </td>
+          <td>
+            <strong>Does not run</strong> <code>async def</code> tests by
+            default — they are skipped or error without a plugin
+          </td>
+          <td>
+            <strong>Yes</strong> — plugin runs coroutine tests on an event loop
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Async I/O (network, DB, files)</strong></td>
+          <td>
+            Call async API via <code>asyncio.run()</code> in sync test; awkward
+            for multiple awaits
+          </td>
+          <td>Same workaround without plugin; no built-in event loop</td>
+          <td>
+            Natural <code>await</code> on httpx, aiohttp, async DB drivers,
+            FastAPI
+            <code>AsyncClient</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Discovery / run</strong></td>
+          <td>
+            <code>python -m unittest</code> or <code>unittest.main()</code>
+          </td>
+          <td><code>pytest</code> — auto-discovers tests, plugins, markers</td>
+          <td><code>pytest</code> with plugin loaded (auto if installed)</td>
+        </tr>
+        <tr>
+          <td><strong>Dependencies</strong></td>
+          <td>None (stdlib)</td>
+          <td><code>pytest</code></td>
+          <td><code>pytest</code> + <code>pytest-asyncio</code></td>
+        </tr>
+        <tr>
+          <td><strong>Best for</strong></td>
+          <td>Simple projects, Django defaults, teams wanting stdlib only</td>
+          <td>Most Python projects; sync unit and integration tests</td>
+          <td>
+            FastAPI, aiohttp, async libraries, any
+            <code>async/await</code> codebase
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="async-pytest">Testing async code with pytest</h2>
+      <p>
+        If you write <code>async def test_foo()</code> and run plain pytest
+        <strong>without</strong> <code>pytest-asyncio</code><br />
+        Pytest collects the function but does <strong>not</strong> await it —
+        the coroutine is never executed, so the test may pass everytime.
+      </p>
+
+      <pre><code class="language-python">
+# Plain pytest — sync wrapper (no pytest-asyncio)
+import asyncio
+
+async def fetch_data():
+    return "Hello, Async!"
+
+def test_fetch_data_sync_wrapper():
+    result = asyncio.run(fetch_data())
+    assert result == "Hello, Async!"
+      </code></pre>
+      <p>
+        <strong>With pytest-asyncio:</strong> the plugin detects
+        <code>@pytest.mark.asyncio</code> (or auto mode), creates/reuses an
+        event loop, runs the coroutine to completion, and reports failures like
+        any other pytest test.
+      </p>
+
+      <h3 id="drawbacks">
+        Drawbacks of pytest + pytest_asyncio for async code
+      </h3>
+      <table>
+        <tr>
+          <th>Drawback</th>
+          <th>Detail</th>
+        </tr>
+        <tr>
+          <td>Extra dependency</td>
+          <td>
+            Not in stdlib — CI and dev env must install
+            <code>pytest-asyncio</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Event loop scope</td>
+          <td>
+            Loop per function vs module vs session (<code>asyncio_mode</code>,
+            fixture scope) — wrong choice causes "loop is closed" or leaked
+            resources
+          </td>
+        </tr>
+        <tr>
+          <td>Plugin configuration</td>
+          <td>
+            <code>pytest.ini</code>: <code>asyncio_mode = auto</code> or
+            explicit markers — team must agree on one mode
+          </td>
+        </tr>
+        <tr>
+          <td>Mixing sync and async</td>
+          <td>
+            Calling blocking I/O inside <code>async def</code> tests blocks the
+            loop — use <code>asyncio.to_thread()</code> or async libraries
+          </td>
+        </tr>
+        <tr>
+          <td>Debugging</td>
+          <td>
+            Async stack traces and "Task was destroyed but pending" harder to
+            read than sync tests
+          </td>
+        </tr>
+        <tr>
+          <td>Not a replacement for unittest/pytest</td>
+          <td>
+            Plugin only adds async execution — you still choose pytest over
+            unittest for the base runner and fixtures
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="where-asyncio">Where async I/O fits in pytest</h2>
+      <p>
+        Async I/O means non-blocking operations — HTTP calls, WebSockets, async
+        database drivers (<code>asyncpg</code>, <code>motor</code>), file I/O
+        (<code>aiofiles</code>). In pytest with <code>pytest-asyncio</code>:
+      </p>
+      <table>
+        <tr>
+          <th>Layer</th>
+          <th>Role in pytest</th>
+        </tr>
+        <tr>
+          <td><code>pytest</code></td>
+          <td>Discovers tests, runs fixtures, reports pass/fail</td>
+        </tr>
+        <tr>
+          <td><code>pytest-asyncio</code></td>
+          <td>
+            Provides event loop; runs <code>async def</code> tests and async
+            fixtures
+          </td>
+        </tr>
+        <tr>
+          <td><code>@pytest.mark.asyncio</code></td>
+          <td>Marks a test coroutine for the plugin to execute</td>
+        </tr>
+        <tr>
+          <td><code>@pytest_asyncio.fixture</code></td>
+          <td>
+            Async setup — e.g. open <code>AsyncClient</code>, DB pool, then
+            yield to test
+          </td>
+        </tr>
+        <tr>
+          <td>Async libraries under test</td>
+          <td>
+            <code>httpx.AsyncClient</code>, FastAPI test client,
+            <code>aiohttp</code>
+            — awaited directly inside the test body
+          </td>
+        </tr>
+      </table>
+      <pre><code class="language-python">
+# Async I/O example — FastAPI + httpx
+import pytest
+from httpx import AsyncClient, ASGITransport
+from myapp import app
+
+@pytest.mark.asyncio
+async def test_read_root():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.get("/")
+    assert response.status_code == 200
+      </code></pre>
+
+      <p>
+        <strong>Summary:</strong> use <strong>unittest</strong> for stdlib sync
+        tests; use <strong>pytest</strong> for ergonomic sync tests; add
+        <strong>pytest-asyncio</strong> when the code under test uses
+        <code>async/await</code> and you want to <code>await</code> directly in
+        tests instead of wrapping everything in <code>asyncio.run()</code>.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>
