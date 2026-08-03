@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>Layers, Design Issues</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Networking/OSI-Layers" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/OSI-Layers"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
 
@@ -95,7 +98,8 @@
         &emsp; <a href="Layer-3/VPN/Packet_Flow.html">Packet Flow:</a> Inbound,
         Outbound<br />
         &emsp;
-        <a href="Layer-3/VPN/VPN_NAT_Traversal.html">NAT Traversal</a><br />
+        <a href="Layer-3/VPN/VPN_NAT_Traversal.html">NAT Traversal</a>
+        <br /><br />
 
         <b>Layer-6</b>(Presentation)<br />
         &ensp; <a href="Layer-6/SSL_TLS/Introduction.html">SSL_TLS:</a> TLS,
@@ -104,7 +108,7 @@
         Signed CA(for dev testing))<br />
         &ensp; <a href="Layer-6/SSL_TLS/Terms/index.html">Terms:</a> SNI<br />
         &ensp; <a href="Layer-6/SSL_TLS/lets_encrypt.html">Let's Encrypt</a> Get
-        cert signed by Let's Encrypt Root CA<br />
+        cert signed by Let's Encrypt Root CA <br /><br />
 
         <b>Layer-7</b>(Application)<br />
         &ensp; Protocols:<br />
@@ -122,14 +126,22 @@
         &emsp;&emsp;<a href="Layer-7/HTTP/AdvDis_Features_Methods.html"
           >Introduction:</a
         >
-        Features, Adv, Disadv, Methods(GET,POST,PUT,DELETE),
-        <a href="Layer-7/HTTP/HTTP Headers.html">Headers, </a>
-        <a href="Layer-7/HTTP/HTTP Cookie.html">Cookies</a>(Session, Domain,
-        Stolen Cookie, Cookie Surrogate)<br />
-        &emsp;&emsp;
-        <a href="Layer-7/HTTP/HTTP_Authentication.html">HTTP Authentication:</a>
-        How browser gets Session Cookie<br />
-        &emsp;&emsp; <a href="Layer-7/HTTP/HTTP_Connect.html">HTTP Connect</a
+        Features, Adv, Disadv, Methods(GET,POST,PUT,DELETE)<br />
+        &emsp;&emsp;<a href="Layer-7/HTTP/HTTP Headers.html">Headers</a><br />
+        &emsp;&emsp;<a href="Layer-7/HTTP/HTTP Cookie.html">Cookies</a>(Session,
+        Domain, Stolen Cookie, Cookie Surrogate)<br />
+        &emsp;&emsp;<u>Authentication:</u><br />
+        &emsp;&emsp;&emsp;<a href="Layer-7/HTTP/HTTP_Session_Cookie.html">
+          Authenticate by IDP: </a
+        >Get session cookie<br />
+        &emsp;&emsp;&emsp;<a href="Layer-7/HTTP/HTTP Cookie.html"> Cookies</a
+        >(Session, Domain, Global, Stolen)<br />
+        &emsp;&emsp;&emsp;<a href="Layer-7/HTTP/JWT_Token.html"> JWT Token</a
+        ><br />
+        &emsp;&emsp;&emsp;<a href="Layer-7/HTTP/Refresh_Token.html">
+          Refresh Token</a
+        ><br />
+        &emsp;&emsp;<a href="Layer-7/HTTP/HTTP_Connect.html">HTTP Connect</a
         ><br />
 
         &emsp; <b>Authentication Procotols:</b>

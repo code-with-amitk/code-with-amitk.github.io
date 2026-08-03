@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <title>HTTP Authentication</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Authentication.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Authentication.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -34,13 +37,16 @@
     <aside class="sidebar">
       <a href="#what">HTTP Authentication</a>
       <a href="#flow">Authentication Flow</a>
+      <a href="#session-expiry">Session cookie expiry</a>
+      <a href="#regain">Regaining session</a>
+      <a href="#refresh-token">vs Refresh token</a>
       <a href="#terms">Terms</a>
       <ul>
         <li><a href="#proxy">Proxy</a></li>
         <li><a href="#saml">SAML IdP</a></li>
         <li><a href="#jwt">JWT</a></li>
         <li>
-          <a href="HTTP Cookie.html#session-cookie">Session Cookie</a>
+          <a href="#session-cookie">Session Cookie</a>
         </li>
         <li>
           <a href="HTTP Cookie.html#domain-cookie">Domain Cookie</a>
@@ -52,16 +58,17 @@
     <article style="margin-left: 200px">
       <h2 id="what">HTTP Authentication</h2>
       <p>
-        In enterprise networks, a <b>Forward proxy</b> often sits between users and the
-        internet. Before allowing outbound traffic, the proxy checks whether the
-        user is authenticated. If not, the browser is redirected through an
-        <b>Auth Service</b> and a <b>SAML Identity Provider (IdP)</b> to verify
-        credentials, then receives a token or cookie for later requests.
+        In enterprise networks, a <b>Forward proxy</b> often sits between users
+        and the internet. Before allowing outbound traffic, the proxy checks
+        whether the user is authenticated. If not, the browser is redirected
+        through an <b>Auth Service</b> and a
+        <b>SAML Identity Provider (IdP)</b> to verify credentials, then receives
+        a token or cookie for later requests.
       </p>
 
       <h2 id="flow">Authentication Flow</h2>
       <div class="mermaid-wrap">
-      <pre class="mermaid">
+        <pre class="mermaid">
 %%{init: {'themeVariables': {'fontSize': '16px'}, 'sequence': {'actorMargin': 70, 'messageMargin': 55, 'boxMargin': 30, 'useMaxWidth': true}}}%%
 sequenceDiagram
     autonumber
@@ -138,6 +145,35 @@ sequenceDiagram
       </pre>
       </div>
 
+      <h2 id="session-expiry">When does the session cookie expire?</h2>
+      <p>
+        The proxy session cookie (<code>nspatoken</code> / UTKN) can stop
+        working for <b>three different reasons</b>. It forces the user back
+        through authentication.<br />
+        1. User closes the browser (all windows/tabs for that profile). Next
+        browse session has no cookie → proxy redirects to login.<br />
+        2. Admin policy — e.g. idle 8 hours, max 24 hours. Cookie may still be
+        sent by the browser, but proxy lookup fails → treat as expired →
+        <code>302</code> to Auth Service.<br />
+        3. IdP may require password/MFA again after its own SSO timeout (often
+        hours).<br />
+
+        Cookie is regains after re-authenication.
+      </p>
+
+      <h2 id="refresh-token">
+        Can the <a href="Refresh_Token.html">refresh token</a> idea be used for
+        session cookie? No
+      </h2>
+      <p>
+        The refresh token concept (short-lived <b>access</b> JWT + long-lived
+        <b>refresh</b> UUID stored server-side) solves a
+        <b>REST API</b> problem. ie Renew credentials without asking for the
+        password every 15 minutes.<br />
+        Because browsers usually have <b>one</b> opaque session cookie
+        (<code>nspatoken</code>)
+      </p>
+
       <h3 id="terms">Terms</h3>
       <table>
         <tr>
@@ -181,6 +217,18 @@ sequenceDiagram
             JSON Web Token created by the Auth Service after successful login.
             Contains user identity and groups. The proxy sends this to the Auth
             Service on each request for validation.
+          </td>
+        </tr>
+        <tr>
+          <td id="session-cookie">Session cookie (nspatoken / UTKN)</td>
+          <td>
+            Opaque cookie set by the forward proxy after login. Browser sends it
+            on every CONNECT. Maps to server-side session (user, groups,
+            tenant). Expires per
+            <a href="#session-expiry">browser session, proxy TTL, or IdP SSO</a
+            >. Regained via <a href="#regain">re-authentication flow</a> — not
+            via <a href="Refresh_Token.html">REST refresh token</a> API in
+            typical SWG.
           </td>
         </tr>
       </table>
