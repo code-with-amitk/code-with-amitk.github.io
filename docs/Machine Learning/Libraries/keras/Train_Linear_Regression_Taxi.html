@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Keras — Train Linear Regression (Taxi Fare)</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/keras/Train_Linear_Regression_Taxi.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#source">Colab source</a>
+      <a href="#goal">Goal</a>
+      <a href="#prereqs">Prerequisites</a>
+      <a href="#create">create_model()</a>
+      <a href="#train">train_model()</a>
+      <a href="#run">Run experiment</a>
+      <a href="#concepts">Concepts glossary</a>
+      <a href="Introduction.html">Keras intro</a>
+      <a href="Layers_and_APIs.html">Functional API</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1>Build &amp; train a Keras model — taxi fare (linear regression)</h1>
+
+      <h2 id="source">Source notebook</h2>
+      <p>
+        This walkthrough follows Google’s Machine Learning Crash Course lab:
+        <a
+          href="https://colab.research.google.com/github/google/eng-edu/blob/main/ml/cc/exercises/linear_regression_taxi.ipynb"
+          target="_blank"
+          rel="noopener"
+          >Linear regression — taxi fare (Colab)</a
+        >. The notebook uses Chicago taxi data: predict
+        <strong>FARE</strong> from trip features. We start with one input:
+        <code>TRIP_MILES</code>.
+      </p>
+
+      <h2>Code1</h2>
+      <pre><code class="language-python">
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+# Feature
+# Machine Learning\Terms.html#Features (x)
+X = np.array([1.0, 2.0, 3.0, 4.0], dtype=float)
+
+# Label
+# Machine Learning\Terms.html#Label (y)
+y = np.array([2.0, 4.0, 6.0, 8.0], dtype=float)
+
+# Machine Learning\Libraries\keras\Layers_and_APIs.html
+model = keras.Sequential([
+    layers.Input(1),      # 1 feature(x) (TRIP_MILES)
+    layers.Dense(1)       # Layer with 1 neuron. 1 label(y)
+])
+
+# Machine Learning\Libraries\keras\Layers_and_APIs.html
+# Configure the model for training
+# learning_rate=0.01 is a hyperparameter for gradient descent Terms.html#Gradient Descent
+model.compile(
+    optimizer=keras.optimizers.SGD(learning_rate=0.01), # Gradient Descent settings
+    loss='mean_squared_error'                          # Loss function
+)
+
+# Machine Learning\Libraries\keras\Layers_and_APIs.html
+# Train the model
+model.fit(X, y, epochs=500, verbose=0)
+
+# Machine Learning\Libraries\keras\Layers_and_APIs.html
+# Use the trained model to make predictions
+print(model.predict(np.array([5.0])))
+      </code></pre>
+
+      <h2>Code2</h2>
+      <pre><code class="language-python">
+def create_model(
+    settings: ml_edu.experiment.ExperimentSettings,
+    metrics: list[keras.metrics.Metric],
+) -&gt; keras.Model:
+    inputs = {
+        name: keras.Input(shape=(1,), name=name)
+        for name in settings.input_features
+    }
+    concatenated_inputs = keras.layers.Concatenate()(list(inputs.values()))
+    outputs = keras.layers.Dense(units=1)(concatenated_inputs)
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    model.compile(
+        optimizer=keras.optimizers.RMSprop(learning_rate=settings.learning_rate),
+        loss="mean_squared_error",
+        metrics=metrics,
+    )
+    return model
+
+def train_model(
+    experiment_name: str,
+    model: keras.Model,
+    dataset: pd.DataFrame,
+    label_name: str,
+    settings: ml_edu.experiment.ExperimentSettings,
+) -&gt; ml_edu.experiment.Experiment:
+
+    features = {name: dataset[name].values for name in settings.input_features}
+    label = dataset[label_name].values
+    history = model.fit(
+        x=features,
+        y=label,
+        batch_size=settings.batch_size,
+        epochs=settings.number_epochs,
+    )
+    return ml_edu.experiment.Experiment(
+        name=experiment_name,
+        settings=settings,
+        model=model,
+        epochs=history.epoch,
+        metrics_history=pd.DataFrame(history.history),
+    )
+
+
+settings_1 = ml_edu.experiment.ExperimentSettings(
+    learning_rate=0.001,
+    number_epochs=20,
+    batch_size=50,
+    input_features=["TRIP_MILES"],
+)
+
+metrics = [keras.metrics.RootMeanSquaredError(name="rmse")]
+model_1 = create_model(settings_1, metrics)
+experiment_1 = train_model(
+    "one_feature", model_1, training_df, "FARE", settings_1
+)
+ml_edu.results.plot_experiment_metrics(experiment_1, ["rmse"])
+ml_edu.results.plot_model_predictions(experiment_1, training_df, "FARE")
+      </code></pre>
+
+      <p></p>
+      <h2 id="goal">What this code does</h2>
+      <p>
+        This is
+        <strong
+          ><a href="/Machine Learning/ML_and_Types_Algorithms.html"
+            >linear regression</a
+          ></strong
+        >
+        using keras. Model tries to predict fares/label(y) using
+        trip_miles/feature(x)
+      </p>
+      <pre><code class="language-text">fare(y) ≈ w × trip_miles(x) + b
+      </code></pre>
+
+      <p>
+        Keras implements that with a single <code>Dense(units=1)</code> layer
+        (no activation = linear). Training minimizes
+        <strong>mean squared error</strong> between predicted and actual fare.
+      </p>
+
+      <h2 id="prereqs">What you need before this code runs</h2>
+      <table>
+        <tr>
+          <th>Item</th>
+          <th>Role</th>
+        </tr>
+        <tr>
+          <td><code>keras</code> / <code>tf.keras</code></td>
+          <td>Build and train the neural network API</td>
+        </tr>
+        <tr>
+          <td><code>pandas</code> (<code>pd</code>)</td>
+          <td>
+            <code>training_df</code> — DataFrame with columns like
+            <code>TRIP_MILES</code>, <code>FARE</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ml_edu</code></td>
+          <td>
+            Google’s helper package in the Colab notebook —
+            <code>ExperimentSettings</code>, <code>Experiment</code>, plotting
+            utilities
+          </td>
+        </tr>
+        <tr>
+          <td><code>training_df</code></td>
+          <td>Preprocessed taxi dataset (created earlier in the notebook)</td>
+        </tr>
+        <tr>
+          <td><code>ExperimentSettings</code></td>
+          <td>
+            Holds hyperparameters: learning rate, epochs, batch size, input
+            feature names
+          </td>
+        </tr>
+        <tr>
+          <td><code>metrics</code></td>
+          <td>List of Keras metrics to track during training (here: RMSE)</td>
+        </tr>
+      </table>
+      <p>
+        In Colab, earlier cells install dependencies, load CSV data, and build
+        <code>training_df</code>. This page focuses on
+        <strong>model creation and training</strong> only.
+      </p>
+
+      <h2 id="create">create_model() — build the graph</h2>
+      <p>
+        Uses the
+        <a href="Layers_and_APIs.html#apitypes">Functional API</a> (multiple
+        named inputs → one output), not Sequential.
+      </p>
+      <pre><code class="language-python">
+def create_model(
+    settings: ml_edu.experiment.ExperimentSettings,
+    metrics: list[keras.metrics.Metric],
+) -> keras.Model:
+    # One Input layer per feature name in settings (here: only 'TRIP_MILES')
+    # shape=(1,) = one number per example; name= used for the dict key in fit()
+    inputs = {
+        name: keras.Input(shape=(1,), name=name)
+        for name in settings.input_features
+    }
+
+    # Merge all feature tensors into one vector (needed when you add more features)
+    concatenated_inputs = keras.layers.Concatenate()(list(inputs.values()))
+
+    # Single neuron, linear activation (default) → scalar prediction (fare)
+    outputs = keras.layers.Dense(units=1)(concatenated_inputs)
+
+    # Functional API: explicit inputs dict + output tensor
+    model = keras.Model(inputs=inputs, outputs=outputs)
+
+    # compile = choose optimizer, loss, and metrics for training
+    model.compile(
+        optimizer=keras.optimizers.RMSprop(learning_rate=settings.learning_rate),
+        loss="mean_squared_error",
+        metrics=metrics,
+    )
+
+    return model
+      </code></pre>
+
+      <h3>Line-by-line notes</h3>
+      <ul>
+        <li>
+          <code>keras.Input(shape=(1,), name=name)</code> — defines a
+          placeholder for one numeric feature per row. With one feature, input
+          is shape <code>(batch, 1)</code>.
+        </li>
+        <li>
+          <code>Concatenate()</code> — joins inputs along the feature axis. With
+          one feature it is a pass-through; with many (e.g.
+          <code>TRIP_MILES</code> + <code>TRIP_SECONDS</code>) it stacks them
+          into one vector before Dense.
+        </li>
+        <li>
+          <code>Dense(units=1)</code> — one weight per input feature plus bias →
+          linear regression output.
+        </li>
+        <li>
+          <code>RMSprop</code> — adaptive learning-rate optimizer; updates
+          weights to reduce loss each batch.
+        </li>
+        <li>
+          <code>loss="mean_squared_error"</code> — average squared difference
+          between predicted and true fare; what training minimizes.
+        </li>
+        <li>
+          <code>metrics</code> — extra numbers logged each epoch (RMSE is in
+          same units as fare — easier to read than MSE).
+        </li>
+      </ul>
+
+      <h2 id="train">train_model() — fit on data</h2>
+      <pre><code class="language-python">
+def train_model(
+    experiment_name: str,
+    model: keras.Model,
+    dataset: pd.DataFrame,
+    label_name: str,
+    settings: ml_edu.experiment.ExperimentSettings,
+) -> ml_edu.experiment.Experiment:
+    """Train the model by feeding it data."""
+
+    # Build dict of feature columns — keys must match Input layer names
+    features = {name: dataset[name].values for name in settings.input_features}
+    label = dataset[label_name].values
+
+    # fit = gradient descent loop for number_epochs passes over the data
+    history = model.fit(
+        x=features,
+        y=label,
+        batch_size=settings.batch_size,
+        epochs=settings.number_epochs,
+    )
+
+    return ml_edu.experiment.Experiment(
+        name=experiment_name,
+        settings=settings,
+        model=model,
+        epochs=history.epoch,
+        metrics_history=pd.DataFrame(history.history),
+    )
+      </code></pre>
+
+      <h3>Line-by-line notes</h3>
+      <ul>
+        <li>
+          <code>features</code> dict — for Functional API with named inputs,
+          <code>fit(x={...})</code> keys must match
+          <code>Input(name=...)</code>.
+        </li>
+        <li>
+          <code>label</code> — target column <code>FARE</code> (float dollars).
+        </li>
+        <li>
+          <code>batch_size=50</code> — 50 rows per gradient update (noise vs
+          speed tradeoff).
+        </li>
+        <li>
+          <code>epochs=20</code> — full pass over the training set 20 times.
+        </li>
+        <li>
+          <code>history</code> — per-epoch loss and RMSE; wrapped in
+          <code>Experiment</code> for Colab plotting helpers.
+        </li>
+      </ul>
+
+      <h2 id="run">Run the experiment</h2>
+      <pre><code class="language-python">
+settings_1 = ml_edu.experiment.ExperimentSettings(
+    learning_rate=0.001,
+    number_epochs=20,
+    batch_size=50,
+    input_features=["TRIP_MILES"],
+)
+
+metrics = [keras.metrics.RootMeanSquaredError(name="rmse")]
+
+model_1 = create_model(settings_1, metrics)
+experiment_1 = train_model(
+    "one_feature", model_1, training_df, "FARE", settings_1
+)
+
+# Colab helpers — plot loss/RMSE over epochs and predicted vs actual fare
+ml_edu.results.plot_experiment_metrics(experiment_1, ["rmse"])
+ml_edu.results.plot_model_predictions(experiment_1, training_df, "FARE")
+      </code></pre>
+
+      <h3>Hyperparameters in this run</h3>
+      <table>
+        <tr>
+          <th>Setting</th>
+          <th>Value</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><code>learning_rate</code></td>
+          <td>0.001</td>
+          <td>Step size for RMSprop weight updates</td>
+        </tr>
+        <tr>
+          <td><code>number_epochs</code></td>
+          <td>20</td>
+          <td>How many times to iterate over full dataset</td>
+        </tr>
+        <tr>
+          <td><code>batch_size</code></td>
+          <td>50</td>
+          <td>Examples per gradient step</td>
+        </tr>
+        <tr>
+          <td><code>input_features</code></td>
+          <td><code>['TRIP_MILES']</code></td>
+          <td>Single predictor — miles driven</td>
+        </tr>
+        <tr>
+          <td><code>label</code></td>
+          <td><code>FARE</code></td>
+          <td>What we predict (dollars)</td>
+        </tr>
+        <tr>
+          <td><code>rmse</code></td>
+          <td>metric</td>
+          <td>Root mean squared error — typical error in fare units</td>
+        </tr>
+      </table>
+
+      <h2 id="concepts">Concepts glossary (everything this code touches)</h2>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><strong>Model</strong></td>
+          <td>The computation graph: inputs → layers → output</td>
+        </tr>
+        <tr>
+          <td><strong>Layer</strong></td>
+          <td>
+            Input, Concatenate, Dense — see
+            <a href="Layers_and_APIs.html#layers">Keras layers</a>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>compile</strong></td>
+          <td>Attach optimizer, loss function, metrics before training</td>
+        </tr>
+        <tr>
+          <td><strong>fit</strong></td>
+          <td>
+            Train: feed features + labels, update weights for
+            <code>epochs</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Optimizer (RMSprop)</strong></td>
+          <td>Algorithm that adjusts weights using gradients of the loss</td>
+        </tr>
+        <tr>
+          <td><strong>Loss (MSE)</strong></td>
+          <td>
+            What the optimizer minimizes; penalizes large prediction errors
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Metric (RMSE)</strong></td>
+          <td>
+            Reported each epoch for monitoring; not always the same as loss
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Functional API</strong></td>
+          <td>
+            <code>Model(inputs=..., outputs=...)</code> — supports dict inputs
+            and branching
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Experiment</strong></td>
+          <td>
+            Colab <code>ml_edu</code> wrapper storing settings, model, and
+            history for plots
+          </td>
+        </tr>
+      </table>
+
+      <h3>Flow diagram</h3>
+      <pre><code class="language-text">
+training_df['TRIP_MILES']  ──►  Input(name='TRIP_MILES')
+                                      │
+                                      ▼
+                                 Concatenate
+                                      │
+                                      ▼
+                              Dense(units=1)  ──►  predicted FARE
+                                      ▲
+training_df['FARE']  ────────────────┘  (compare via MSE, backprop updates weights)
+
+settings: lr=0.001, batch=50, epochs=20
+      </code></pre>
+
+      <p>
+        <strong>Try in Colab:</strong>
+        <a
+          href="https://colab.research.google.com/github/google/eng-edu/blob/main/ml/cc/exercises/linear_regression_taxi.ipynb#scrollTo=F_17Aum6IG1F"
+          target="_blank"
+          rel="noopener"
+          >Open notebook at create_model section →</a
+        >
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

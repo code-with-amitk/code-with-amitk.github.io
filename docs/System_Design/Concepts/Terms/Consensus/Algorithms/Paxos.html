@@ -1,20 +1,24 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Paxos Consensus Algorithm</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Algorithms/Paxos.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Algorithms/Paxos.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
   <body>
     <nav class="navbar">
-      <!--See .navbar in styles.css-->
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -29,29 +33,79 @@
       </ul>
     </nav>
     <aside class="sidebar">
-      <a href="#what">Paxos?</a>
+      <a href="#what">What is Paxos?</a>
+      <ul>
+        <li><a href="#roles">Roles</a></li>
+      </ul>
       <a href="#work">How it works</a>
+      <a href="Raft.html">Raft</a>
     </aside>
 
     <main style="margin-left: 200px">
-      <h2>What is Paxos?</h2>
-      <dl>
-        Paxos works without a permanent leader<br />
-        Each node can have 1 of 3 roles:<br />
-        &ensp; Proposers: Suggest values to be agreed upon.<br />
-        &ensp; Acceptors: Vote to accept or reject proposed values.<br />
-        &ensp; Learners: Learn the decision after consensus.
-      </dl>
+      <h2 id="what">What is Paxos?</h2>
+      <p>
+        Paxos is a classic consensus algorithm (Leslie Lamport, 1990s). A group
+        of nodes agrees on a single value even if proposers fail and messages
+        are lost. <b>Multi-Paxos</b> extends this to a full replicated log (like
+        Raft’s job).<br />
+        Examples:<br />
+        Google Chubby — distributed lock / coordination service (Paxos).<br />
+        Google Spanner — globally distributed DB; Paxos per shard for
+        replication.<br />
+        Apache ZooKeeper — uses Zab (Paxos-like) for coordination.<br />
+        Custom enterprise DBs and locking services needing proven quorum safety.
+      </p>
 
-      <h2 id="work">How it works</h2>
-      <dl>
-        Proposer sends a "prepare" message with a proposal number.<br />
-        Acceptors reply with a promise to ignore older proposals and their last
-        accepted proposal.<br />
-        If the proposer gets a majority, it sends an "accept" request with the
-        value.<br />
-        Majority acceptance results in consensus; learners are notified.
-      </dl>
+      <h3 id="roles">Roles</h3>
+      <p>
+        <b>Proposer</b> — suggests a value with a proposal number.<br />
+        <b>Acceptor</b> — votes; remembers the highest proposal it promised to
+        consider.<br />
+        <b>Learner</b> — learns the chosen value once a quorum accepts it.
+      </p>
+
+      <h2 id="work">How Paxos works (single round)</h2>
+      <p>
+        <b>Phase 1 — Prepare</b> — Proposer sends <code>prepare(n)</code> with
+        proposal number <i>n</i>.
+        <br />
+        <b>Promise</b> — Acceptors reply: “I will ignore proposals &lt;
+        <i>n</i>” and report any value they already accepted.
+        <br />
+        <b>Phase 2 — Accept</b> — If proposer gets a majority of promises, it
+        sends <code>accept(n, value)</code>.
+        <br />
+        <b>Chosen</b> — If a majority accept, that value is chosen; Learners are
+        notified.
+      </p>
+
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+  participant P as Proposer P1
+  participant A1 as Acceptor A
+  participant A2 as Acceptor B
+  participant A3 as Acceptor C
+  participant L as Learner
+
+  P->>A1: prepare(n=5)
+  P->>A2: prepare(n=5)
+  P->>A3: prepare(n=5)
+  A1-->>P: promise(n=5)
+  A2-->>P: promise(n=5)
+  A3-->>P: promise(n=5)
+  Note over P: Majority promised
+
+  P->>A1: accept(n=5, value="leader=X")
+  P->>A2: accept(n=5, value="leader=X")
+  P->>A3: accept(n=5, value="leader=X")
+  A1-->>P: accepted
+  A2-->>P: accepted
+  A3-->>P: accepted
+  Note over P,L: Value chosen — learners apply "leader=X"
+        </pre>
+      </div>
     </main>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>

@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Machine Learning Models</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/ML_Models/Claude_Code" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/ML_Models/Claude_Code"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -24,23 +27,390 @@
     </nav>
 
     <aside class="sidebar">
-      <!-- Sidebar -->
-      <a href="#things">Things Calude can do</a>
+      <a href="#things">Commands</a>
+      <a href="#workflow">Recommended Workflow</a>
+      <a href="#context">Context</a>
+      <ul>
+        <li><a href="#context-window">Context Window</a></li>
+        <li><a href="#saving-context">Saving Context Window</a></li>
+      </ul>
+      <a href="#subagents">Subagents</a>
+      <ul>
+        <li><a href="#builtin-subagents">Built-in Subagents</a></li>
+        <li><a href="#custom-subagent">Creating Subagent</a></li>
+      </ul>
+      <a href="#claude-md">CLAUDE.md</a>
+      <ul>
+        <li><a href="#claude-md-locations">Where CLAUDE.md lives</a></li>
+      </ul>
+      <a href="#skills">Skills</a>
+      <ul>
+        <li><a href="#skill-md">SKILL.md</a></li>
+        <li><a href="#skill-locations">Where SKILL.md lives</a></li>
+        <li><a href="#claude-vs-skill">CLAUDE.md vs SKILL.md</a></li>
+      </ul>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="things">Things to do with Claude Code</h2>
-      <h3>Automate the work</h3>
-      <pre><code class="language-css">
-Enter the project folder
-$ claude
-claude "write tests for the auth module, run them, and fix any failures"
-        </code></pre>
+      <h2 id="things">Commands</h2>
+      <table>
+        <tr>
+          <th>Command</th>
+          <th>What it does?</th>
+        </tr>
+        <tr>
+          <td><code>/agents</code></td>
+          <td>
+            Opens the agent manager. Helps in:<br />
+            - View all built-in <br />
+            - Create your own custom agents <br />
+            - Edit/Delete existing agents <br />
+            - See currently running agents <br />
+            - Configure models, tools, permissions, prompts, etc
+          </td>
+        </tr>
+        <tr>
+          <td><code>/claude</code></td>
+          <td>Start the Claude Code CLI</td>
+        </tr>
+        <tr>
+          <td><code>/clear</code></td>
+          <td>
+            Clear everything in the <a href="#context-window">context window</a>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/compact</code></td>
+          <td>Compact the <a href="#context-window">context window</a></td>
+        </tr>
+        <tr>
+          <td><code>/context</code></td>
+          <td>Check state of the <a href="#context">context</a></td>
+        </tr>
+        <tr>
+          <td><code>/init</code></td>
+          <td>
+            Claude will scan the codebase and draft a starting
+            <a href="#claude-md">CLAUDE.md</a>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/plan</code></td>
+          <td>This is plan <a href="#subagents">subagent</a></td>
+        </tr>
+        <tr>
+          <td>
+            <code
+              >claude mcp add --transport http linear-server
+              https://mcp.linear.app/app</code
+            ><br />
+            <code
+              >claude mcp add --transport stdio dev-utils --python
+              server.py</code
+            >
+          </td>
+          <td>
+            Add a <a href="#mcp">MCP Server</a><br />
+            - http: Remote services, connect over network<br />
+            - stdio: Local services, connect via standard input/output(those run
+            on your machine)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>/mcp</code>
+          </td>
+          <td>
+            List all <a href="#mcp">MCP Servers</a> which are connected and
+            disable which are not in use
+          </td>
+        </tr>
+        <tr>
+          <td>shift tab</td>
+          <td>
+            Switch between autoapprove, require permission for command run<br />
+            <b>Plan Mode(good for complex tasks):</b><br />
+            &ensp; Within (shift Tab) there is plan mode, which is READ ONLY and
+            does research on code base.<br />
+            &ensp; Then it returns detialed plan to work on.
+          </td>
+        </tr>
+      </table>
 
-      <h3 id="agents">Create custom agents</h3>
-      <dl>
-        Enter the project folder $ claude /agents &gt; Create New subagent
-      </dl>
+      <h2 id="workflow">
+        Recommended Workflow for claude (Explore - Plan - Code - Commit)
+      </h2>
+      <p>
+        1. Explore(/RO Mode): Use claude to explore the code base and understand
+        the project. This helps claude to understand the project<br />
+        2. Write Test Cases: Ask Claude to write test cases for the project.<br />
+        3. Write Code: Use claude to write code based on the understanding
+        gained from the Plan mode phase.<br />
+        4. Review: Review the code written by claude and make any necessary
+        changes.<br />
+        5. Run Test Cases: Run the code and test its functionality.<br />
+        6. Commit: Once the code is working as expected, commit the changes to
+        the code base.
+      </p>
+
+      <h2 id="context">Context = Claude Memory</h2>
+      <p>
+        Every command/message we type, code it writes all gets stored in Context
+      </p>
+      <h3 id="context-window">Context Window</h3>
+      <p>
+        Amount of memory Claude can use to remember the project.<br />
+        <b>Compaction of Context Window:</b> When all memory is occupied, Claude
+        will compact the memory to make space for new memory. Remove unneccesary
+        memory and keep important memory.
+      </p>
+
+      <h4 id="saving-context">Saving Context Window</h4>
+      <p>
+        <b>1. Less MCP Servers:</b><br />
+        &ensp; MCP Server loads all of the tools into Context(by default), so if
+        there are lot of MCP Servers or unrelated to project, trim them off.<br />
+        <a href="#subagents">2. Subagents:</a>
+      </p>
+
+      <h2 id="subagents">Subagents</h2>
+      <p>
+        <b>Usage:</b><br />
+        Subagents have their own context window, so if some other task is
+        needed(eg: How auth module work), you can use subagents which will
+        return results to main agent saving the context window<br />
+        This keeps main agent away from uneeccessary noise. When subagent
+        finishes entire subagent conversation gets completely discarded.
+      </p>
+
+      <h3 id="builtin-subagents">Built in subagents</h3>
+      <p>Claude Code currently includes several built-in subagents</p>
+      <table>
+        <tr>
+          <th>Subagent</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><code>Explore</code></td>
+          <td>
+            Search codebase, grep files, understand architecture Read-only
+          </td>
+        </tr>
+        <tr>
+          <td><code>Plan</code></td>
+          <td>Research while in Plan Mode Read-only</td>
+        </tr>
+        <tr>
+          <td><code>General-purpose</code></td>
+          <td>Multi-step coding, editing, implementation Full tools</td>
+        </tr>
+        <tr>
+          <td><code>statusline-setup</code></td>
+          <td>Configure /statusline Limited</td>
+        </tr>
+        <tr>
+          <td><code>claude-code-guide</code></td>
+          <td>Answers questions about Claude Code Read-only</td>
+        </tr>
+      </table>
+
+      <h3 id="custom-subagent">Creating my own subagent</h3>
+      <p>
+        Suppose you repeatedly ask Claude:
+        <code> Review my C++ code for race conditions. </code>
+        Instead of repeating that prompt every day, create:
+        <code> race-condition-reviewer</code>
+      </p>
+      <pre><code class="language-css">~/.claude/agents/race-reviewer.md
+name: race-condition-reviewer
+You are a senior concurrency engineer. Look for
+
+- data races
+- deadlocks
+- ABA problems
+- lock inversion
+- atomics misuse
+
+Return fixes.
+      </code></pre>
+
+      <h2 id="claude-md">CLAUDE.md</h2>
+      <p>
+        This file is read automatically everytime a session is started<br />
+        CLAUDE.md contains all the information(project context, build commands,
+        and coding rules) about the project, which you want claude to remember
+        at start of the project.<br />
+        It is a good practice to keep this file updated with the latest
+        information about the project.<br />
+        Claude does not fully self-update this file on its own during normal
+        use; it relies on you to maintain it or use initialization commands<br />
+
+        <b>Can We upload on git?</b> Yes we should upload this file on git.
+      </p>
+      <pre><code class="language-markdown">
+# Project 
+This is a project to build a web application for managing tasks.
+
+# Commands
+- Build the project: `npm run build`
+- Run the project: `npm run start`
+- Run the tests: `npm run test`
+- Run the tests in watch mode: `npm run test:watch`
+- Run the tests in watch mode: `npm run test:watch`
+
+# Code Style
+Use the following code style:
+- Use 2 spaces for indentation
+- Use camelCase for variable names
+- Use PascalCase for class names
+- Use snake_case for function names
+- Use kebab-case for file names
+- Use double quotes for strings
+- Use single quotes for comments
+
+# Documentation to look
+@docs/test.md
+</code></pre>
+
+      <h3 id="claude-md-locations">Places where CLAUDE.md can be present</h3>
+      <table>
+        <tr>
+          <th>Location</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code>.claude/CLAUDE.md</code></td>
+          <td>Project-level configuration file</td>
+        </tr>
+        <tr>
+          <td><code>~/.claude/CLAUDE.md</code></td>
+          <td>
+            User-level configuration file. User can put his personal preferences
+            here.<br />
+            - How you write code comments
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="skills">Skills</h2>
+      <p>
+        These are instructions, scripts, examples etc for agents to do that task
+        more accurately & efficiently.
+      </p>
+
+      <h3 id="skill-md">SKILL.md</h3>
+      <p>Define a skill for an agent.</p>
+      <pre><code class="language-markdown">review-pr.md
+name: pr-review
+description: Review a pull request for code quality, style, and best practices.
+        </code></pre>
+      <p>
+        Now whenever you ask claude to review the PR
+        <code>Can you review this PR?</code>, it will match skill name and use
+        the skill to review the PR.<br />
+        Claude will read description and match against all available skill
+        descriptions and activates the 1 that match
+      </p>
+
+      <h3 id="skill-locations">Places where SKILL.md can be stored</h3>
+      <table>
+        <tr>
+          <th>Location</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code>.claude/skills</code></td>
+          <td>Project-level skill files</td>
+        </tr>
+        <tr>
+          <td><code>~/.claude/skills</code></td>
+          <td>User-level skill files.</td>
+        </tr>
+      </table>
+
+      <h3 id="claude-vs-skill">CLAUDE.md vs SKILL.md</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>CLAUDE.md</th>
+          <th>SKILL.md</th>
+        </tr>
+        <tr>
+          <td>Loading</td>
+          <td>Loads to every conversation</td>
+          <td>Only load when a request is matched</td>
+        </tr>
+        <tr>
+          <td>Typing</td>
+          <td>commands <code>/command</code> needed to be typed</td>
+          <td>
+            Donot need to be typed. Claude applies whenever a matching request
+            is received
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="mcp">MCP (Model Context Protocol)</h2>
+      <p>
+        This is the open source protocol by which claude code connects to
+        external tools and data sources
+      </p>
+
+      <h3>Scoping of MCP Servers</h3>
+      <p>
+        Scoping means where the MCP Server is stored and who can access it.<br />
+        1. Local (<code>./.claude.json</code>): Only available in current
+        project<br />
+        2. User (<code>~/.claude.json</code>): Available to all projects of the
+        user<br />
+        3. Global (<code>/project/.mcp.json</code>): Checked into git and
+        available to all users of the project
+      </p>
+
+      <h2 id="hooks">Hooks</h2>
+      <p>
+        Hooks are scripts that run automatically when specific events occur in
+        the development workflow (eg: before editing a file or after
+        <code>git commit</code>).<br />
+        <b>Common use cases</b><br />
+        1. Pre-commit hooks: Run before a commit is made to check for code
+        quality, style, or run tests.<br />
+        2. Post-commit hooks: Run after a commit is made to perform actions like
+        sending notifications or updating documentation.<br />
+        3. Autocode formatting after editing a file<br />
+        4. Blocking dangerous commands like <code>rm -rf</code> or
+        <code>git push</code>
+      </p>
+
+      <h3>Tool-Level Lifecycle Hooks</h3>
+      <p>
+        1. PreToolUse: Fires right before a tool executes. Used as a safety gate
+        to inspect actions, block dangerous shell commands, or enforce
+        file-access rules.<br />
+        2. PostToolUse: Fires immediately after a tool succeeds. Used as a
+        quality gate to run linters, format files, log changes, or run tests.<br />
+        3. PostToolUseFailure: Triggers when a tool execution fails, allowing
+        error logging or recovery management
+      </p>
+
+      <h3>Configure hooks</h3>
+      <pre><code>
+.claude/settings.json
+{
+  "hooks": {
+    "pre-commit": [
+      "python -m unittest discover tests",
+      "black ."
+    ],
+    "post-commit": [
+      "echo 'Commit made!'"
+    ],
+    "PostToolUse": {
+      "matcher": "edit|delete",
+    }
+  }
+}
+      </code></pre>
     </article>
 
     <script src="/scripts/search.js"></script>

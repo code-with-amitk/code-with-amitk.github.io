@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <title>libuv</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Libraries/libuv/"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Libraries/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">libuv</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">libuv</h2>
+      <p>
+        libuv is a multi-platform library for asynchronous I/O. It was primarily
+        developed for use by Node.js, but it's also used by Luvit, Julia, pyuv,
+        and others.<br />
+        It supports Windows IOCP, epoll, kqueue, and Solaris event ports. It
+        also provides the event loop and callback-based asynchrony. The library
+        is written in C and has bindings to various languages.
+      </p>
+      <h3>Features</h3>
+      <p>
+        <b>1. Cross-Platform Abstraction:</b> It hides different low-level OS
+        notification systems—like epoll on Linux, kqueue on macOS, and IOCP on
+        Windows—behind a single uniform API.<br />
+        <b>2. Event Loop:</b> It manages an event loop that runs callbacks when
+        tasks (like network requests or timers) finish, keeping applications
+        fast and non-blocking.<br />
+        <b>3. Thread Pool:</b> It provides an internal thread pool to handle
+        operations that do not have native asynchronous support from the
+        operating system, such as file system tasks.
+      </p>
+
+      <h3>Example</h3>
+      <h4>1. Create a Timer</h4>
+      <pre><code class="language-css">
+$ sudo apt-get install libuv1-dev           Install libuv
+
+#include &lt;stdio.h&gt;
+#include &lt;uv.h&gt;
+
+// This function runs when the timer finishes
+void on_timer(uv_timer_t* handle) {
+    printf("Timer finished!\n");
+}
+
+int main() {
+    uv_loop_t *loop = uv_default_loop();
+
+    uv_timer_t timer;
+    uv_timer_init(loop, &timer);
+    
+    // Start the timer: call on_timer after 1000ms (1 second), do not repeat
+    uv_timer_start(&timer, on_timer, 1000, 0);
+
+    // Run the event loop
+    uv_run(loop, UV_RUN_DEFAULT);
+
+    // Clean up
+    uv_loop_close(loop);
+    return 0;
+}
+      </code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

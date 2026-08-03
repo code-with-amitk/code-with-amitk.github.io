@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <title>npm</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Scripting/Javascript/npm.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Scripting/Javascript/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is npm?</h2>
+      <p>
+        This is similar to <a href="/Languages/Programming/Rust/">cargo</a> for
+        Rust, pip for Python, vcpkg for C++, gem for Ruby, composer for PHP,
+        etc, <br />
+        npm is default package manager for JavaScript & JavaScript runtime
+        environment Node.js.<br />
+        It is an online database of public and paid-for private packages, called
+        the npm registry. The registry is accessed via the client, and the
+        available packages can be browsed and searched via the npm website.
+      </p>
+
+      <h2 id="installation">Installation on WSL</h2>
+      <pre><code class="language-css">
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+nvm use --lts
+      </code></pre>
+
+      <h2 id="example">Example Usage</h2>
+      <h3 id="hello-world">Hello, World Example</h3>
+      <table>
+        <tr>
+          <td>
+            Create package.json<br />
+            <pre><code class="language-css">
+$ mkdir test
+$ cd test
+
+// You can create a package.json file manually or
+// by running the following command (npm init)
+$ cat package.json
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node test.js"
+  }
+}
+
+// Install pacakges in package.json
+$ npm install
+up to date, audited 1 package in 156ms
+
+$ npm list
+hello-world@1.0.0 /home/amit/hello-world
+└── (empty)
+              </code></pre>
+          </td>
+          <td>
+            Create index.js and test.js(module to test index.js)<br />
+            <pre><code class="language-css">
+// Create index.js
+$ cat index.js
+function hello() {
+  return "Hello, world!";
+}
+module.exports = hello;
+
+// Create test.js
+$ cat test.js
+const assert = require("assert");
+const hello = require("./index");
+
+assert.strictEqual(hello(), "Hello, world!");
+console.log("tests passed");
+              </code></pre>
+          </td>
+          <td>
+            Run test<br />
+            <pre><code class="language-css">
+$ npm test
+
+&gt; hello-world@1.0.0 test
+&gt; node test.js
+
+tests passed
+              </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

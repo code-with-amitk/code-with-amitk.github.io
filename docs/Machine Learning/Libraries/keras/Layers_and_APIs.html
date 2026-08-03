@@ -1,14 +1,17 @@
 <!doctype html>
 <html>
   <head>
-    <title>Keras Layers</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/keras/Layers_and_APIs.html" />
+    <title>Keras Models</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/keras/Layers_and_APIs.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
   <body>
     <nav class="navbar">
-      <!--See .navbar in styles.css-->
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Our team</a></li>
@@ -25,80 +28,100 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="api">APIs / Model / Container?</a>
+      <a href="#api">Keras Models</a>
       <ul>
-        <li><a href="apitypes">API Types</a></li>
+        <li><a href="#sequential-api">Sequential Model</a></li>
+        <li><a href="#functional-api">Functional Model</a></li>
+        <li><a href="#subclassing">Model Subclassing</a></li>
       </ul>
-      <a href="#layers">keras Layers?</a>
+      <a href="#layers">Layers in Keras</a>
       <ul>
         <li><a href="#types">Types of Layers</a></li>
+        <li><a href="#dense-layer">Dense Layer</a></li>
+        <li><a href="#neurons-decision">Neurons per layer</a></li>
       </ul>
+      <a href="#create-network">Create Neural Network</a>
+      <a href="#functions">Functions</a>
+      <ul>
+        <li><a href="#containers">Containers</a></li>
+        <ul>
+          <li><a href="#sequential">Sequential / Model</a></li>
+        </ul>
+        <li><a href="#layer-fns">Layer functions</a></li>
+        <ul>
+          <li><a href="#input">Input</a></li>
+          <li><a href="#dense">Dense</a></li>
+          <li><a href="#dropout">Dropout</a></li>
+        </ul>
+        <li><a href="#train-predict">Train, Predict</a></li>
+        <ul>
+          <li><a href="#compile">compile</a></li>
+          <li><a href="#fit">fit</a></li>
+          <li><a href="#predict">predict</a></li>
+        </ul>
+        <li><a href="#optimizer-loss">Optimizer / loss</a></li>
+      </ul>
+      <a href="API_one.html">API — functions &amp; 3 steps</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="api">API / Model / Container?</h2>
-      <dl>
-        API/Container/Organizer/Model is way of arranging the layers to create
-        <a href="/Machine Learning/Terms/Neural_Network/">neural networks</a>.
-      </dl>
-      <h3 id="apitypes">API Types</h3>
-      <table>
-        <tr>
-          <th></th>
-          <th>1. Sequential (Simple, linear models)</th>
-          <th>2. Functional (Complex, production-ready models)</th>
-          <th>3. Model Subclassing (Research, highly custom architectures)</th>
-        </tr>
-        <tr>
-          <td>Description</td>
-          <td>
-            Layers are placed in linear fashion, to create neural network<br />
-            linear topology with exactly one input and one output
-          </td>
-          <td>
-            Non-linear data flow, complex layers, shared layers, and multiple
-            inputs/outputs<br />
-            Supports Multiple Inputs/Outputs
-          </td>
-          <td>
-            Provides highest level of flexibility, allowing to implement
-            everything from scratch by subclassing the tf.keras.Model<br />
-            For dynamic architectures, such as models that require custom loops
-            or conditional logic in the forward pass<br />
-            Supports Multiple Inputs/Outputs
-          </td>
-        </tr>
-        <tr>
-          <td>Examples</td>
-          <td>
-            Multi-layer perceptrons (MLPs), Basic Convolutional Neural Networks
-            (CNNs), Recurrent Neural Networks (RNNs)
-          </td>
-          <td>
-            Multi-input/multi-output models (e.g., a model that takes image and
-            text inputs to produce a classification and a regression output)
-          </td>
-          <td>
-            Out-of-the-box research models or custom architectures like a
-            Tree-RNN
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <pre><code class="language-css">
-SEQUENTIAL API - STRAIGHT LINE FLOW
-┌─────────┐     ┌─────────┐     ┌─────────┐     ┌─────────┐
-│ INPUT   │────▶│ LAYER 1│────▶│ LAYER 2 │───▶│ OUTPUT  │
-│ (Shape) │     │         │     │         │     │         │
-└─────────┘     └─────────┘     └─────────┘     └─────────┘
-     │               │               │               │
-     └───────────────┴───────────────┴───────────────┘
-                 Data flows in ONE direction
-          </code></pre>
-          </td>
-          <td>
-            <pre><code class="language-css">
+      <h1 id="api">Keras Models</h1>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart TD
+
+A[Keras Models]
+
+A --> B[Sequential Model]
+A --> C[Functional API]
+A --> D[Model Subclassing]
+
+B --> B1[Simple stack of layers]
+
+C --> C1[Multiple Inputs]
+C --> C2[Multiple Outputs]
+C --> C3[Branching]
+C --> C4[Skip Connections]
+
+D --> D1[Custom Forward Pass]
+D --> D2[Research Models]
+D --> D3[Dynamic Networks]
+        </pre>
+      </div>
+
+      <h3 id="sequential-api">1. Sequential Model</h3>
+      <p>
+        Every layer has exactly one input and one output. Layers are placed in
+        linear fashion, to create neural network<br />
+        Eg: Multi-layer perceptrons (MLPs), Basic Convolutional Neural Networks
+        (CNNs), Recurrent Neural Networks (RNNs)
+      </p>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart LR
+
+X[Input]
+
+L1[Layer 1]
+
+L2[Layer 2]
+
+L3[Layer 3]
+
+Y[Output]
+
+X --> L1 --> L2 --> L3 --> Y
+        </pre>
+      </div>
+
+      <h3 id="functional-api">2. Functional Model</h3>
+      <p>
+        Non-linear data flow, complex layers, shared layers, and multiple
+        inputs/outputs Supports Multiple Inputs/Outputs<br />
+        Eg: Multi-input/multi-output models (e.g., a model that takes image and
+        text inputs to produce a classification and a regression output)
+      </p>
+      <pre><code class="language-css">
 FUNCTIONAL API - GRAPH STRUCTURE
                           ┌─────────┐
                      ┌───▶│ Dense 3 │───┐
@@ -114,138 +137,156 @@ FUNCTIONAL API - GRAPH STRUCTURE
                  └───▶│ Dense 2 │
                       └─────────┘
           </code></pre>
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Code Example</td>
-          <td>
-            <pre><code class="language-css">
-model = Sequential([
-    layers.Dense(64, activation='relu', 
-                input_shape=(10,)),  # Layer 1
-    layers.Dropout(0.2),             # Layer 2  
-    layers.Dense(32, activation='relu'),# Layer 3
-    layers.Dense(1)                     # Layer 4 (Output)
-])
-          </code></pre>
-          </td>
-          <td>
-            <pre><code class="language-css">
-from tensorflow.keras import Input, Model
-from tensorflow.keras import layers
 
-# Define two inputs
-text_input = Input(shape=(100,), name='text_input')
-image_input = Input(shape=(32, 32, 3), name='image_input')
+      <h3 id="subclassing">
+        3. Model Subclassing (Research, highly custom architectures)
+      </h3>
+      <p>
+        Provides highest level of flexibility, allowing to implement everything
+        from scratch by subclassing the tf.keras.Model For dynamic
+        architectures, such as models that require custom loops or conditional
+        logic in the forward pass Supports Multiple Inputs/Outputs<br />
+        Eg: Out-of-the-box research models or custom architectures like a
+        Tree-RNN
+      </p>
 
-# Process text branch
-text_branch = layers.Dense(64, activation='relu')(text_input)
-text_branch = layers.Dense(32, activation='relu')(text_branch)
-
-# Process image branch  
-image_branch = layers.Conv2D(32, (3, 3))(image_input)
-image_branch = layers.Flatten()(image_branch)
-image_branch = layers.Dense(32)(image_branch)
-
-# Combine branches
-combined = layers.concatenate([text_branch, image_branch])
-output = layers.Dense(1, activation='sigmoid')(combined)
-
-# Create model
-model = Model(inputs=[text_input, image_input], outputs=output)
-          </code></pre>
-          </td>
-        </tr>
-      </table>
-
-      <h2 id="layers">Layers in Keras?</h2>
-      <dl>
+      <h1 id="layers">Layers in Keras?</h1>
+      <p>
+        Layer is combination of
+        <a href="/Machine Learning/Terms.html">Neurons</a>. 1 layer will have
+        multiple neurons<br />
         Layer is component used to build a
-        <a href="/Machine Learning/Terms/Neural_Network/">neural network</a>.
-        Multiple layers are stacked together to create a neural network. Output
-        from 1 layer is fed to other.
-        <br />
-        Layers is composed of
-        <a href="/Machine Learning/Terms/Neural_Network/">Neurons</a>
-      </dl>
+        <a href="/Machine Learning/Terms.html">neural network</a>. Multiple
+        layers are stacked together to create a neural network. Output from 1
+        layer is fed to other.
+      </p>
 
+      <h3 id="types">Types of Layers</h3>
+      <p>
+        Common Keras layer types include:<br />
+        1. <strong>Dense</strong> — fully connected layers for general-purpose
+        modeling.<br />
+        2. <b>Conv2D / Conv1D</b> — convolutional layers for images, time
+        series, and spatial data.<br />
+        3. <strong>Pooling</strong> — downsampling layers such as
+        <code>MaxPool2D</code> and <code>AveragePool2D</code>.<br />
+        4. <strong>Dropout</strong> — regularization layers that randomly drop
+        units during training.<br />
+        5. <strong>Normalization</strong> — layers such as
+        <code>BatchNormalization</code> and <code>LayerNormalization</code>.
+      </p>
+
+      <h3 id="dense-layer">1. Dense Layer</h3>
+      <p>
+        Dense(8) = Layer with 8 neurons. 8 labels<br />
+        Dense(4) = Layer with 4 neurons. 4 labels<br />
+        Dense(1) = Layer with 1 neuron. 1 label<br />
+
+        <a href="/Machine Learning/Terms.html">Neural Network</a> = {Dense(8)
+        -&gt; Dense(4) -&gt; Dense(1)}
+      </p>
       <img
-        src="/images/Machine_Learning/layers.png"
+        src="/images/Machine_Learning/DenseLayers.png"
         alt="Layers"
-        style="width: 500px; height: 300px"
+        style="width: 900px; height: 600px"
       />
-      <h3 id="types">Types of Layers in Keras</h3>
-      <table>
-        <tr>
-          <th>Layer</th>
-          <th>Description</th>
-          <th>How to create</th>
-        </tr>
-        <tr>
-          <td>1. Dense</td>
-          <td>
-            Fully connected layer. Every neuron in this layer is connected to
-            every neuron from the previous layer
-          </td>
-          <td>
-            <pre><code class="language-css">
-layers.Dense(output_neurons=1, input_FeaturesOrDimensions=[11])
 
-INPUT LAYER          DENSE LAYER (Output)
-   ↓                        ↓
-┌─────────┐            ┌─────────┐
-│ x₁      │───────────→│         │
-├─────────┤            │         │
-│ x₂      │───────────→│ Neuron  │──→ Output
-├─────────┤            │         │
-│ x₃      │───────────→│         │
-├─────────┤            └─────────┘
-│ ...     │                ↑
-├─────────┤           (weights & bias)
-│ x₁₁     │───────────→ w₁₁x₁₁ + w₁₀x₁₀ + ... + w₁x₁ + b
-└─────────┘
-            </code></pre>
-          </td>
-        </tr>
-        <tr>
-          <td>2. Convolutional(Conv2D, Conv1D)</td>
-          <td>For image/sequence processing</td>
-          <td>layers.Conv2D(32, (3, 3), activation='relu')</td>
-        </tr>
-        <tr>
-          <td>3. Pooling (MaxPooling2D, AveragePooling2D)</td>
-          <td>For downsampling</td>
-          <td>layers.MaxPooling2D((2, 2))</td>
-        </tr>
-        <tr>
-          <td>4. Recurrent (LSTM, GRU)</td>
-          <td>For sequential/temporal data</td>
-          <td>layers.LSTM(64, return_sequences=True)</td>
-        </tr>
-        <tr>
-          <td>5. Dropout</td>
-          <td>For regularization</td>
-          <td>layers.Dropout(0.3)</td>
-        </tr>
-        <tr>
-          <td>6. Batch Normalization</td>
-          <td>For stabilizing training</td>
-          <td>layers.BatchNormalization()</td>
-        </tr>
-        <tr>
-          <td>7. Embedding</td>
-          <td>For text/word representations</td>
-          <td>layers.Embedding(10000, 128)</td>
-        </tr>
-        <tr>
-          <td>8. Flatten</td>
-          <td>reshaping tensor to 1D</td>
-          <td>layers.Flatten()</td>
-        </tr>
-      </table>
+      <h4 id="neurons-decision">
+        How Neurons Per layer and number of layers is decided
+      </h4>
+      <p>
+        Number of input features → Determined by your dataset. <br />
+        Example: Age, Salary, Experience = 3 features. <br />
+        Number of neurons per layer → Chosen by the model designer (a
+        hyperparameter). <br />
+        Number of hidden layers → Also chosen by the model designer.
+      </p>
+
+      <h1 id="create-network">Create Neural Network</h1>
+      <p>
+        In Keras you mostly call functions (or constructors that look like
+        functions). Each call creates an object — a layer, a model, or a
+        training setting — and you chain them together.<br />
+        Think of it like building with LEGO: layers.Dense(...) is one brick,
+        keras.Sequential([...]) is the base plate that holds the stack,
+        model.compile(...) tells Keras how to train, and model.fit(...) actually
+        runs training.
+      </p>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart LR
+  A["1. Define model<br/>Sequential / Functional"] --> B["2. compile()<br/>optimizer, loss, metrics"]
+  B --> C["3. fit()<br/>x, y, epochs, batch_size"]
+        </pre>
+      </div>
+
+      <h2 id="functions">Functions</h2>
+      <h3 id="containers">Containers</h3>
+      <h4 id="sequential">Sequential([...]), Model</h4>
+      <p>Hold layers together — the neural network object</p>
+
+      <h3 id="layer-fns">Layers</h3>
+      <h4 id="input">Layers.Input(shape=(...))</h4>
+      <p>
+        How much data the model expects. The shape of the input data
+        (features).<br />
+      </p>
+
+      <h4 id="dense">Layer.Dense(n)</h4>
+      <p>Dense(n) = Layer with n neurons. n labels(y)</p>
+      <pre><code pre class="language-python">
+# Linear Regression: y = mx + b  (1 feature, 1 output)
+model = keras.Sequential([
+    layers.Input(shape=(1,)), # 1 input feature(x)
+    layers.Dense(1),          # Layer with 1 neuron. 1 label(y)
+])
+
+# MLP — binary classification: y = m1x1 + m2x2 + ... + b  (n features, 1 output)
+model = keras.Sequential([
+    layers.Input(shape=(n_features,)), # n input features(x1, x2, ... xn)
+    layers.Dense(64, activation="relu"), # Layer with 64 Neurons. 64 labels(y1, y2, ... y64)
+    layers.Dense(32, activation="relu"),  # Layer with 32 Neurons. 32 labels(y1, y2, ... y32)
+    layers.Dense(1, activation="sigmoid"), # Layer with 1 Neuron. 1 label(y)
+])
+      </code></pre>
+
+      <h4 id="dropout">Layer.Dropout(rate)</h4>
+      <pre><code pre class="language-python">
+# MLP — multi-class classification: y = m1x1 + m2x2 + ... + b  (n features, K outputs)
+model = keras.Sequential([
+    layers.Input(shape=(784,)),                     # 784 input features (x1, x2, ... x784)
+    layers.Dense(128, activation="relu"),           # Layer with 128 Neurons. 128 labels(y1, y2, ... y128)
+    layers.Dropout(0.2),                            # Drop out 20% of the neurons
+    layers.Dense(10, activation="softmax"),         # Layer with 10 Neurons. 10 labels(y1, y2, ... y10)
+])
+      </code></pre>
+
+      <h3 id="train-predict">Train, Predict</h3>
+      <h4 id="compile">compile(optimizer, loss)</h4>
+      <p>Configure the model for training</p>
+
+      <h4 id="fit">fit(x, y, epochs, batch_size)</h4>
+      <p>Train the model</p>
+
+      <h4 id="predict">predict(x)</h4>
+      <p>Make predictions with the model</p>
+
+      <h3 id="optimizer-loss">Optimizer / loss</h3>
+      <p>
+        SGD, Adam, RMSprop, "mse"<br />
+        Passed into compile() — not layers
+      </p>
+
+      <h3 id="sequential-limits">What Sequential cannot do easily</h3>
+      <p>
+        Use the <b>Functional API</b> (above) when you need multiple inputs,
+        multiple outputs, shared layers, or skip connections (ResNet, U-Net,
+        two-tower models). Use <b>Model subclassing</b> for fully custom forward
+        passes (GANs, neural ODEs, dynamic graphs).
+      </p>
     </article>
     <script src="/scripts/search.js"></script>
     <script src="/scripts/prism.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>

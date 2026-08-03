@@ -1,0 +1,338 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ZTNA — Zero Trust Network Access</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/Terms/ZTNA.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is ZTNA</a>
+      <ul>
+        <li><a href="#example">Example</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#vs-swg">ZTNA vs SWG</a></li>
+        <li><a href="#vs-ztfp">ZTNA vs Zero Trust Forward Proxy</a></li>
+        <li><a href="#terms">Terms in ZTNA</a></li>
+      </ul>
+
+      <a href="../SWG/index.html">SWG</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">ZTNA (Zero Trust Network Access)</h2>
+      <p>
+        <b>What?</b><br />
+        ZTNA is a security model that gives users access to
+        <b>specific private applications</b> without putting them on the full
+        corporate network. <br />
+        Example: Company employee want to access Jira, then providing access to
+        this application only is ZTNA.<br />
+        <b>Core idea:</b> “Never trust, always verify.” A user on a home laptop
+        or at an airport gets the same scrutiny as someone in a branch
+        office.<br />
+        In a full <a href="Gartner Terms.html#sase">SASE</a> stack you often
+        deploy <b>both</b>: SWG for SaaS/web, ZTNA for internal applications.
+      </p>
+      <h3 id="example">Example</h3>
+      <p>
+        A bank employee working from home needs the internal loan-processing app
+        (hosted in a private datacenter).<br />
+        <b>Without ZTNA:</b> Employee connects VPN → lands on corporate LAN →
+        can reach many servers if <a href="ACLs.html">ACLs</a> are loose.<br />
+        <b>With ZTNA:</b> Employee opens the ZTNA client, signs in with Okta
+        MFA, passes device compliance check → broker opens access only to
+        <code>loan-app.internal.bank</code> → traffic flows through an app
+        connector; no VPN, no broad network access.<br />
+        The same employee browsing Google or uploading a file to personal Gmail
+        is handled by <b>SWG</b>, not ZTNA.<br />
+        <b>Vendor Examples</b><br />
+        <a href="https://www.zscaler.com/products/zscaler-private-access"
+          >Zscaler Private Access (ZPA)</a
+        >,
+        <a href="https://www.netskope.com/products/netskope-private-access"
+          >Netskope Private Access</a
+        >,
+        <a href="https://www.cloudflare.com/zero-trust/products/access/"
+          >Cloudflare Access</a
+        >,
+        <a
+          href="https://learn.microsoft.com/en-us/entra/global-secure-access/concept-private-access"
+          >Microsoft Entra Private Access</a
+        >
+      </p>
+
+      <h3 id="how">How ZTNA works (vs traditional VPN)</h3>
+      <table>
+        <tr>
+          <th>Traditional VPN</th>
+          <th>ZTNA</th>
+        </tr>
+        <tr>
+          <td>
+            User joins the <b>entire</b> corporate network (Layer 3 tunnel)<br />
+            Once connected, user can often reach many subnets<br />
+            Trust is tied to “being on VPN”
+          </td>
+          <td>
+            User connects only to a <b>broker</b> (cloud or on-prem)<br />
+            Broker opens a narrow path to <b>one approved app</b> at a time<br />
+            Policy checks identity + device + risk on every session<br />
+            Apps are hidden from the public internet (no inbound open ports)<br />
+            User never joins the full corporate network — only the approved app
+            path is opened.
+          </td>
+        </tr>
+      </table>
+
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart LR
+  subgraph user_side [User]
+    U[Remote user]
+  end
+  subgraph cloud [ZTNA broker cloud POP]
+    PE[Policy engine]
+    AC[App connector]
+  end
+  IDP[Identity Provider]
+  APP[Private app on-prem / VPC]
+
+  U -->|1 SSO / MFA| PE
+  PE -->|2 verify| IDP
+  PE -->|3 posture check| PE
+  U -->|4 request app| PE
+  PE --> AC
+  AC -->|5 micro-tunnel| APP
+  APP --> AC --> PE --> U
+        </pre>
+      </div>
+
+      <h3 id="vs-swg">ZTNA vs SWG (Secure Web Gateway)</h3>
+      <p>
+        Both often appear in the same
+        <a href="Gartner Terms.html#sse">SSE</a> product (see the Netskope SASE
+        diagram on <a href="Gartner Terms.html#sase">Gartner Terms</a> — ZTNA
+        and SWG sit side by side in the POP). They solve
+        <b>different traffic problems</b>.
+      </p>
+      <table>
+        <tr>
+          <th></th>
+          <th>SWG</th>
+          <th>ZTNA</th>
+        </tr>
+        <tr>
+          <td><b>Traffic direction</b></td>
+          <td>
+            <b>Outbound</b> — user going <b>out</b> to the internet and SaaS
+            (Google, Salesforce, malicious sites)
+          </td>
+          <td>
+            <b>Inbound-style access</b> — user reaching <b>private</b>
+            internal apps that are not on the public internet
+          </td>
+        </tr>
+        <tr>
+          <td><b>Primary goal</b></td>
+          <td>
+            Secure web browsing: block malware, filter URLs, inspect SSL, stop
+            data leaks on cloud apps<br />
+            See <a href="../SWG/index.html">SWG</a>
+          </td>
+          <td>
+            Replace VPN: grant least-privilege access to specific internal
+            applications only
+          </td>
+        </tr>
+        <tr>
+          <td><b>What user accesses</b></td>
+          <td>Public internet &amp; sanctioned SaaS</td>
+          <td>
+            Private apps (ERP, internal Git, RDP to a server, datacenter app)
+          </td>
+        </tr>
+        <tr>
+          <td><b>Typical controls</b></td>
+          <td>
+            URL categories, SSL inspection, antivirus,
+            <a href="DLP.html">DLP</a> on uploads, CASB for SaaS
+          </td>
+          <td>
+            App catalog, per-app policy, device compliance, MFA,
+            micro-segmentation
+          </td>
+        </tr>
+        <tr>
+          <td><b>Client path</b></td>
+          <td>
+            PAC file / forward proxy — all web traffic steered to SWG<br />
+            Example:
+            <a href="../OSI-Layers/Layer-7/HTTP/HTTP_Authentication.html"
+              >HTTP Authentication via forward proxy</a
+            >
+          </td>
+          <td>
+            ZTNA client agent or browser-based portal; broker mediates to app
+            connector inside the datacenter/VPC
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="vs-ztfp">ZTNA vs Zero Trust Forward Proxy (ZTFP)</h3>
+      <p>
+        A <b>Zero Trust Forward Proxy</b> applies zero-trust principles to
+        <b>outbound</b> HTTP/HTTPS traffic — the same path as an
+        <a href="../SWG/index.html">SWG</a> or enterprise forward proxy. It
+        authenticates the user, enforces identity-aware policy, may do SSL
+        inspection, DLP, and audit logging before traffic leaves to the
+        internet.
+      </p>
+
+      <h3 id="terms">Terms and components included in ZTNA</h3>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Role in ZTNA</th>
+        </tr>
+        <tr>
+          <td><b>Identity Provider (IdP)</b></td>
+          <td>
+            Source of truth for users and groups (Okta, Azure AD, Google
+            Workspace). ZTNA trusts IdP assertions for SSO and MFA.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Device posture / trust</b></td>
+          <td>
+            Checks OS patch level, disk encryption, managed vs BYOD, jailbreak
+            status before allowing app access.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Policy engine</b></td>
+          <td>
+            Evaluates rules: user + group + device + location + app → allow /
+            deny / step-up MFA.
+          </td>
+        </tr>
+        <tr>
+          <td><b>ZTNA broker / gateway</b></td>
+          <td>
+            Cloud or on-prem service that terminates user sessions and enforces
+            policy (Netskope, Zscaler Private Access, Cloudflare Access, etc.).
+          </td>
+        </tr>
+        <tr>
+          <td><b>App connector / cloud connector</b></td>
+          <td>
+            Lightweight agent inside the datacenter or VPC that creates
+            outbound-only tunnels to the broker — private apps stay off the
+            public internet.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Application catalog</b></td>
+          <td>
+            Admin-defined list of apps (hostname, port, protocol) users may
+            request through ZTNA.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Agent vs agentless</b></td>
+          <td>
+            <b>Agent:</b> client on laptop/phone (full posture checks).<br />
+            <b>Agentless:</b> browser portal / reverse proxy — good for
+            contractors or unmanaged devices with tighter limits.
+          </td>
+        </tr>
+        <tr>
+          <td><b>SDP (Software Defined Perimeter)</b></td>
+          <td>
+            Earlier name for the same idea: hide infrastructure, authenticate
+            before revealing apps. ZTNA is the market term Gartner uses in SSE.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Least-privilege access</b></td>
+          <td>
+            User gets only the apps needed for their role — not entire VLANs or
+            RDP to every server.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Micro-segmentation</b></td>
+          <td>
+            Network segmentation at application or workload level instead of
+            coarse firewall zones.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Context-aware access</b></td>
+          <td>
+            Decisions use IP geolocation, time of day, anomaly score, and threat
+            intel — not just username/password.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Continuous authorization</b></td>
+          <td>
+            Session can be re-evaluated or revoked if device becomes
+            non-compliant or risk score changes.
+          </td>
+        </tr>
+        <tr>
+          <td><b>MFA / step-up auth</b></td>
+          <td>
+            Extra verification for sensitive apps (finance ERP, production admin
+            consoles).
+          </td>
+        </tr>
+        <tr>
+          <td><b>Audit &amp; session logging</b></td>
+          <td>
+            Who accessed which app, when, from which device — for compliance and
+            incident response.
+          </td>
+        </tr>
+        <tr>
+          <td><b>Related SSE pieces</b></td>
+          <td>
+            Often bundled with
+            <a href="../SWG/index.html">SWG</a>, <a href="DLP.html">DLP</a>,
+            <a href="Gartner Terms.html#sse">CASB</a>, and
+            <a href="Gartner Terms.html#sse">FaaS</a> in one platform — but each
+            solves a distinct problem.
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>

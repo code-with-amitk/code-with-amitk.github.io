@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <head>
+    <title>anyhow Rust Library</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Libraries/anyhow/"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is anyhow</a>
+      <a href="#without">Without anyhow</a>
+      <a href="#scopes">Scopes</a>
+      <a href="#compare">Compare</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">What is <code>anyhow</code>?</h2>
+      <p>
+        anyhow is a Rust crate by David Tolnay(2019) that gives application code
+        one error type —
+        <code>anyhow::Error</code>. You return
+        <code>anyhow::Result&lt;T&gt;</code> and use <code>?</code> to bubble
+        errors up to <code>main</code> without writing a custom error
+        <code>enum</code> for every failure.<br /><br />
+
+        <b>Why anyhow:</b> Different steps can fail with different error types
+        (<code>reqwest::Error</code>, <code>std::io::Error</code>, …). anyhow
+        converts them all into one type.
+        <code>anyhow::Context::context(...)</code> adds a short message so you
+        know <b>where</b> it failed.
+      </p>
+      <pre><code class="language-rust">#[tokio::main]
+async fn main() -> anyhow::Result&lt;()&gt; {
+    let response = anyhow::Context::context(
+        reqwest::get("https://example.com").await,
+        "HTTP request failed",
+    )?;
+    let body = anyhow::Context::context(
+        response.text().await,
+        "reading response body failed",
+    )?;
+
+    println!("{body}");
+    Ok(())
+}</code></pre>
+      <p>
+        If something fails, you see a chain like:
+        <code>reading response body failed → HTTP request failed → ...</code>
+      </p>
+
+      <h3 id="without">If we don't use anyhow, what do we lag behind on?</h3>
+      <p>
+        <b>Custom error enums everywhere</b> — you must define
+        <code>enum AppError</code> and add <code>From</code> for every library
+        error type yourself.
+        <br />
+        <b>No easy context chain</b> — without <code>.context()</code>, errors
+        only say “connection reset” with no hint that it happened during “fetch
+        user config”.
+        <br />
+        <b><code>Box&lt;dyn Error&gt;</code> boilerplate</b> — works for
+        propagation, but no context, downcast, or backtrace helpers out of the
+        box.
+        <br />
+        <b>Mixed error types in <code>main</code></b> — hard to combine I/O,
+        HTTP, JSON, and DB errors in one return type without anyhow or a large
+        hand-written enum.
+        <br />
+        <b>Slower debugging</b> — more time tracing failures because messages
+        don't stack up step by step.
+      </p>
+
+      <h3 id="scopes">Scopes for anyhow</h3>
+      <table>
+        <tr>
+          <th>Where</th>
+          <th>Use anyhow?</th>
+        </tr>
+        <tr>
+          <td><code>main</code>, CLI, server binary</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Library public API (other crates call you)</td>
+          <td>No — use <code>thiserror</code></td>
+        </tr>
+        <tr>
+          <td>Private helpers inside your app</td>
+          <td>Yes</td>
+        </tr>
+      </table>
+
+      <h3 id="compare">Compare with other crates</h3>
+      <table>
+        <tr>
+          <th>Crate</th>
+          <th>Role</th>
+        </tr>
+        <tr>
+          <td><b>anyhow</b></td>
+          <td>One error type at the app top — propagate with <code>?</code></td>
+        </tr>
+        <tr>
+          <td>
+            <b
+              ><a href="https://crates.io/crates/thiserror" target="_blank"
+                >thiserror</a
+              ></b
+            >
+          </td>
+          <td>
+            Typed errors in libraries — callers can <code>match</code> variants
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b
+              ><a href="https://crates.io/crates/eyre" target="_blank"
+                >eyre</a
+              ></b
+            >
+          </td>
+          <td>
+            Same niche as anyhow; often paired with <code>color-eyre</code> for
+            pretty reports
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b
+              ><a href="https://crates.io/crates/tracing" target="_blank"
+                >tracing</a
+              ></b
+            >
+          </td>
+          <td>
+            Logging and spans — complements anyhow; anyhow carries the error,
+            tracing logs events
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        <a href="https://docs.rs/anyhow" target="_blank">docs.rs/anyhow</a>
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

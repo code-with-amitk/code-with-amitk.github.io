@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Machine Learning Terms</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/Terms/Neural_Network" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/Terms/Neural_Network"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -31,62 +34,6 @@
 
     <div style="margin-left: 200px">
       <h2 id="neuralnetwork">Neural Network</h2>
-      <p>
-        This is brain-inspired AI model which uses interconnected nodes
-        <a href="#neuron">neurons</a> in layers to finds patterns in input data,
-        then learn from examples to make predictions<br />
-        It contains an input layer, one or more hidden layers, and an output
-        layer.
-      </p>
-      <pre><code>
-        |-------------|                                  |-------------|
-        |             |         |--------------|         |             |
-        | Input Layer |--------&gt;| Hidden Layer|---------&gt;| Output Layer|
-        |             |         |--------------|         |             |
-        |-------------|                                  |-------------|
-      </code></pre>
-      <h2 id="neuron">Neuron / y=wx+b</h2>
-      <p>
-        A neuron is the basic unit within a layer. It takes input, performs a
-        computation, and produces an output. Each neuron has
-        <b>weight, bias, activation function</b><br />
-        <b>Weight, Bias</b> are the numbers found within the nodes of neural
-        networks and instruct the node about how to interact with the data<br />
-        A neuron is a single computational unit (node) within a layer, taking
-        inputs, multiplying by weights, adding a bias, and applying an
-        activation function
-      </p>
-      <table>
-        <tr>
-          <td>
-            <img
-              src="/images/Machine_Learning/neuron.png"
-              alt="neuron"
-              style="width: 200px; height: 80px"
-            />
-          </td>
-          <td>
-            input(x) is multipled with <b>weight(w)</b> and added to bais(b)
-          </td>
-        </tr>
-      </table>
-
-      <pre><code class="language-css">
-class Neuron:
-    def __init__(self, num_inputs):
-        self.weights = initialize_weights(num_inputs)
-        self.bias = initialize_bias()
-        self.activation_function = relu
-
-    def forward(self, input_data):
-        # Compute the weighted sum of inputs
-        weighted_sum = sum(weight * input_value for weight, input_value in zip(self.weights, input_data)) + self.bias
-        
-        # Apply the activation function
-        output = self.activation_function(weighted_sum)
-        
-        return output
-        </code></pre>
     </div>
     <script src="/scripts/prism.js"></script>
   </body>

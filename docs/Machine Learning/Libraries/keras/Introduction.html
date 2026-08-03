@@ -1,14 +1,17 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Keras</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/keras/Introduction.html" />
+    <meta charset="UTF-8" />
+    <title>Keras — Introduction</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/keras/Introduction.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
-    <!-- Add any necessary CSS and JavaScript files -->
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
   <body>
     <nav class="navbar">
-      <!--See .navbar in styles.css-->
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Our team</a></li>
@@ -25,64 +28,130 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="#what">keras?</a>
-      <a href="#vs"
-        >Neural Networks(keras) vs. Traditional ML Models(scikit-learn)</a
-      >
+      <a href="#what">What is Keras?</a>
+      <a href="#tensorflow">Keras &amp; TensorFlow</a>
+      <a href="#vs">Keras vs scikit-learn</a>
+      <a href="Layers_and_APIs.html">Layers &amp; APIs</a>
+      <a href="API_one.html">API — functions &amp; 3 steps</a>
+      <a href="Train_Linear_Regression_Taxi.html">Train a model (example)</a>
     </aside>
 
     <article style="margin-left: 200px">
       <h2 id="what">What is Keras?</h2>
-      <dl>
-        This is a high-level API(written in Python) for creating
-        <a href="/Machine Learning/">Neural Networks.</a><br />
-        Keras can run on top of other deep learning frameworks like TensorFlow,
-        Theano, or Microsoft Cognitive Toolkit (CNTK).
-      </dl>
+      <p>
+        <strong>Keras</strong> is a high-level Python API for building and
+        training <strong>neural networks</strong>. You describe a model as a
+        stack (or graph) of layers — Input, Dense, Concatenate, etc. — then call
+        <code>compile()</code> and <code>fit()</code> to train it with data.
+      </p>
+      <p>
+        Keras focuses on being <strong>easy to use</strong>: the same few
+        concepts (model, layer, optimizer, loss, metrics) apply whether you are
+        doing a tiny linear regression or a deep CNN. See
+        <a href="/Machine Learning/Terms/Neural_Network/">Neural Networks</a>.
+      </p>
+
+      <h3 id="tensorflow">Keras &amp; TensorFlow (updated)</h3>
+      <p>
+        Your old page listed Theano and CNTK — those backends are
+        <strong>obsolete</strong>. Today:
+      </p>
+      <ul>
+        <li>
+          <strong>Keras 3</strong> is a standalone package (
+          <code>pip install keras</code>) with a multi-backend design — it can
+          run on <strong>TensorFlow</strong>, <strong>JAX</strong>, or
+          <strong>PyTorch</strong>.
+        </li>
+        <li>
+          In many tutorials (including Google Colab MLCC), you still see
+          <code>import keras</code> or <code>tf.keras</code> — both are the same
+          Keras API; Colab ships TensorFlow with Keras built in.
+        </li>
+        <li>
+          See also:
+          <a href="/Machine Learning/Libraries/Tensorflow/index.html"
+            >TensorFlow</a
+          >.
+        </li>
+      </ul>
 
       <h2 id="vs">
-        <a href="/Machine Learning/Terms/Neural_Network/">Neural Networks</a
-        >(Keras) vs. Traditional ML Models(scikit-learn)
+        Neural networks (Keras) vs traditional ML (scikit-learn)
       </h2>
       <table>
         <tr>
           <th></th>
           <th>
             <a href="/Machine Learning/Terms/Neural_Network/"
-              >Neural Networks</a
+              >Neural networks</a
             >
+            (Keras)
           </th>
-          <th>Traditional ML Models</th>
+          <th>Traditional ML</th>
         </tr>
         <tr>
-          <td>Build using</td>
-          <td>Keras</td>
-          <td>scikit-learn</td>
+          <td>Typical library</td>
+          <td>Keras / TensorFlow</td>
+          <td>
+            <a href="/Machine Learning/Libraries/scikit-learn/index.html"
+              >scikit-learn</a
+            >
+          </td>
         </tr>
         <tr>
           <td>Structure</td>
+          <td>Layers of connected units (neurons)</td>
           <td>
-            Layers of interconnected
-            <a href="/Machine Learning/Terms/Neural_Network/">neurons</a>
-          </td>
-          <td>
-            Depends on Model. Eg
+            Algorithm-specific (trees, SVM, linear models, etc.) — see
             <a href="/Machine Learning/ML_and_Types_Algorithms.html"
-              >Decision Trees/Random Forests</a
-            >(Tree-based hierarchy)
+              >ML algorithms</a
+            >
           </td>
         </tr>
         <tr>
-          <td>Training Time</td>
-          <td>Longer</td>
-          <td>Less</td>
+          <td>Training</td>
+          <td>Gradient descent over many epochs (<code>model.fit</code>)</td>
+          <td>Often faster closed-form or single-pass fits on tabular data</td>
         </tr>
         <tr>
-          <td>When to Use</td>
-          <td>LOTS of data, Working with Larger,complex non-linear patterns</td>
-          <td>Tabular data, Working with smaller datasets</td>
+          <td>When to use</td>
+          <td>
+            Images, text, audio, large datasets, custom architectures, deep
+            non-linear models
+          </td>
+          <td>
+            Small/medium tabular data, interpretability, quick baselines
+            (RandomForest, LinearRegression)
+          </td>
+        </tr>
+        <tr>
+          <td>Example</td>
+          <td>
+            <a href="Train_Linear_Regression_Taxi.html"
+              >Taxi fare linear regression in Keras</a
+            >
+            (learning exercise; sklearn would also work)
+          </td>
+          <td>
+            <a
+              href="/Machine Learning/ML_Models/Calorie_Predictor_DecisionTree_and_RandomForestRegressor.html"
+              >Calorie predictor (Decision Tree)</a
+            >
+          </td>
         </tr>
       </table>
+
+      <p>
+        <strong>Next:</strong>
+        <a href="Layers_and_APIs.html">Layers &amp; APIs</a> (Sequential vs
+        Functional) →
+        <a href="Train_Linear_Regression_Taxi.html"
+          >Build &amp; train a Keras model (Colab taxi lab)</a
+        >
+      </p>
     </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
   </body>
 </html>

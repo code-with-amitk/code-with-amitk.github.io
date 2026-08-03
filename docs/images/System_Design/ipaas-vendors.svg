@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="80" viewBox="0 0 520 80" role="img" aria-label="iPaaS vendor logos">
+  <rect x="0" y="10" width="90" height="60" rx="8" fill="#1a3a5c"/>
+  <text x="45" y="46" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff">Jitterbit</text>
+  <rect x="100" y="10" width="90" height="60" rx="8" fill="#00a2df"/>
+  <text x="145" y="46" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff">MuleSoft</text>
+  <rect x="200" y="10" width="90" height="60" rx="8" fill="#0076ce"/>
+  <text x="245" y="46" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff">Boomi</text>
+  <rect x="300" y="10" width="90" height="60" rx="8" fill="#ff5842"/>
+  <text x="345" y="46" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff">Workato</text>
+  <rect x="400" y="10" width="110" height="60" rx="8" fill="#ff4d00"/>
+  <text x="455" y="46" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff">Informatica</text>
+</svg>

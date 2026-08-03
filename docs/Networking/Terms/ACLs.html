@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ACLs — Access Control Lists</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/Terms/ACLs.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">ACL?</a>
+      <ul>
+        <li><a href="#how">How ACLs work</a></li>
+        <li><a href="#example">Simple example</a></li>
+        <li><a href="#types">Types of ACLs</a></li>
+        <li><a href="#related">Related</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">ACL (Access Control List)</h2>
+      <dl>
+        An <b>Access Control List</b> is an ordered list of rules that says who
+        or what is <b>allowed</b> or <b>denied</b> access to a resource.<br />
+        Each rule matches some condition (source IP, destination port, user,
+        file path, etc.) and applies an action (<b>permit</b> / <b>allow</b> or
+        <b>deny</b> / <b>drop</b>).<br />
+        Think of it as a bouncer with a numbered checklist: the system walks
+        the list <b>from top to bottom</b> and stops at the
+        <b>first rule that matches</b>.
+      </dl>
+
+      <h3 id="how">How ACLs work</h3>
+
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart TD
+  P[Packet arrives] --> R1{Rule 1 match?}
+  R1 -->|yes| A1[Apply Rule 1 action]
+  R1 -->|no| R2{Rule 2 match?}
+  R2 -->|yes| A2[Apply Rule 2 action]
+  R2 -->|no| R3{Rule 3 match?}
+  R3 -->|yes| A3[Apply Rule 3 action]
+  R3 -->|no| D[Implicit deny]
+        </pre>
+      </div>
+
+      <h3 id="example">Simple network ACL example</h3>
+      <p>
+        A small office router protects a web server at
+        <code>10.0.1.50</code>. Only HTTPS from the internet should reach it;
+        SSH is allowed only from the admin subnet
+        <code>10.0.2.0/24</code>.
+      </p>
+
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Action</th>
+          <th>Source</th>
+          <th>Destination</th>
+          <th>Port</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>PERMIT</td>
+          <td>10.0.2.0/24</td>
+          <td>10.0.1.50</td>
+          <td>22 (SSH)</td>
+          <td>Admins on office LAN may SSH to the server</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>PERMIT</td>
+          <td>any</td>
+          <td>10.0.1.50</td>
+          <td>443 (HTTPS)</td>
+          <td>Anyone may reach the public website</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>DENY</td>
+          <td>any</td>
+          <td>10.0.1.50</td>
+          <td>any</td>
+          <td>Block everything else to that server</td>
+        </tr>
+      </table>
+
+      <h4>Walkthrough</h4>
+      <table>
+        <tr>
+          <th>Traffic</th>
+          <th>First matching rule</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td>Admin <code>10.0.2.10</code> → SSH port 22</td>
+          <td>Rule 1</td>
+          <td><b>Allowed</b></td>
+        </tr>
+        <tr>
+          <td>Customer on internet → HTTPS port 443</td>
+          <td>Rule 2</td>
+          <td><b>Allowed</b></td>
+        </tr>
+        <tr>
+          <td>Attacker on internet → SSH port 22</td>
+          <td>Rule 3 (Rule 1 does not match — wrong source)</td>
+          <td><b>Denied</b></td>
+        </tr>
+        <tr>
+          <td>Anyone → port 8080</td>
+          <td>Rule 3</td>
+          <td><b>Denied</b></td>
+        </tr>
+      </table>
+
+      <p>
+        <b>Rule order matters.</b> If Rule 2 (permit any → 443) were placed
+        before Rule 1, admins would still reach SSH only when Rule 1 matches —
+        but a careless “permit any any” at the top would bypass all later
+        restrictions. Always put <b>specific rules before broad ones</b>.
+      </p>
+
+      <h4>Same idea on Linux (iptables)</h4>
+      <p>
+        <a href="../OSI-Layers/Layer-3/iptables.html">iptables</a> is one way
+        to implement ACL-style filtering on a Linux host:
+      </p>
+      <pre><code class="language-bash"># Allow SSH only from admin subnet
+iptables -A INPUT -s 10.0.2.0/24 -d 10.0.1.50 -p tcp --dport 22 -j ACCEPT
+
+# Allow HTTPS from anywhere
+iptables -A INPUT -d 10.0.1.50 -p tcp --dport 443 -j ACCEPT
+
+# Drop other traffic to the server
+iptables -A INPUT -d 10.0.1.50 -j DROP</code></pre>
+
+      <h3 id="types">Types of ACLs (same idea, different layer)</h3>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Where</th>
+          <th>What is controlled</th>
+        </tr>
+        <tr>
+          <td><b>Network / firewall ACL</b></td>
+          <td>Router, firewall, cloud security group</td>
+          <td>IP addresses, ports, protocols</td>
+        </tr>
+        <tr>
+          <td><b>File-system ACL</b></td>
+          <td>Windows NTFS, Linux <code>setfacl</code></td>
+          <td>Which user/group may read, write, or execute a file</td>
+        </tr>
+        <tr>
+          <td><b>Application ACL</b></td>
+          <td>Databases, APIs, Kubernetes RBAC</td>
+          <td>Which role may call which operation on which object</td>
+        </tr>
+      </table>
+
+      <h3 id="related">Related on this site</h3>
+      <dl>
+        <a href="../OSI-Layers/Layer-3/iptables.html">iptables</a> —
+        Linux packet filter rules<br />
+        <a href="ZTNA.html">ZTNA</a> — replaces “join VPN + loose network
+        ACLs” with per-app access<br />
+        <a href="IPS.html">IPS</a> — detects threats; ACLs define who may
+        connect at all<br />
+        <a href="../Networking_Devices/Fortinet_Firewall.html">Fortinet Firewall</a>
+        — appliance that applies ACL-like policies at scale
+      </dl>
+    </article>
+
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

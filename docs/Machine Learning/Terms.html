@@ -67,9 +67,8 @@
       </ul>
       <a href="#matplotlib">Matplotlib</a>
       <a href="#metrics">Metrics</a>
-      <a href="/Machine Learning/Terms/Neural_Network/index.html"
-        >Neural Network</a
-      >
+      <a href="#Neuron">Neuron</a>
+      <a href="#Neural_Network">Neural Network</a>
       <a href="#tensor">Tensor</a>
       <ul>
         <li><a href="#vector">Vector</a></li>
@@ -489,7 +488,9 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         In <a href="ML_and_Types_Algorithms.html">linear regression</a>, there
         are five main types of loss, which are outlined below. <br />
         Loss metrics like MAE and RMSE may be preferable to L2 loss or MSE in
-        some use cases because they tend to be more human-interpretable
+        some use cases because they tend to be more human-interpretable.<br />
+        Loss, MAE(Mean Absolute Error), MSE(Mean Squared Error), RMSE(Root Mean
+        Squared Error).
       </p>
       <img
         src="/images/Machine_Learning/Learning/loss_linear_regression.png"
@@ -547,6 +548,73 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
 
       <h2 id="metrics">Metrics</h2>
       <p>Metrics to monitor during training and testing</p>
+
+      <h2 id="Neuron">One neuron = one linear equation</h2>
+      <p>
+        <a href="#hyperplane">Linear equation in Hyperplane</a> is called a
+        neuron<br />
+        y = m1x1 + m2x2 + m3x3 + b // 3 features, 1 label = Neuron<br />
+        z = m1x1 + m2x2 + m3x3 + m4x4 + m5x5 + b // 5 features, 1 label=Neuron
+      </p>
+      <pre><code class="language-css">
+class Neuron:
+    def __init__(self, num_inputs):
+        self.weights = initialize_weights(num_inputs)
+        self.bias = initialize_bias()
+        self.activation_function = relu
+
+    def forward(self, input_data):
+        # Compute the weighted sum of inputs
+        weighted_sum = sum(weight * input_value for weight, input_value in zip(self.weights, input_data)) + self.bias
+        
+        # Apply the activation function
+        output = self.activation_function(weighted_sum)
+        
+        return output
+        </code></pre>
+
+      <h2 id="Neural_Network">Neural Network</h2>
+      <p>
+        This is brain-inspired AI model which uses interconnected nodes
+        <a href="#Neuron">neurons</a> in layers to finds patterns in input data,
+        then learn from examples to make predictions<br />
+        It contains an input layer, one or more hidden layers, and an output
+        layer.<br />
+        <a href="/Machine Learning/Libraries/keras/Layers_and_APIs.html "
+          >Creating Neural Network using Keras</a
+        >
+      </p>
+      <pre><code>
+|-------------|                                  |-------------|
+|             |         |--------------|         |             |
+| Input Layer |--------&gt;| Hidden Layer|---------&gt;| Output Layer|
+|             |         |--------------|         |             |
+|-------------|                                  |-------------|
+      </code></pre>
+
+      <h2 id="planes">Planes</h2>
+      <h3>2 D Plane</h3>
+      <p>Only 2 axis x and y</p>
+
+      <h3>3 D Plane</h3>
+      <p>
+        Linear equation in 2 D Plane<br />
+        <code> y = mx + nz + b</code>
+      </p>
+
+      <h3 id="hyperplane">Hyperplane(N Dimensional Plane)</h3>
+      <p>
+        <a href="#Feature">Feature, Label</a><br />
+        Linear equation in Hyperplane<br />
+        <code>
+          y = m<sub>1</sub>x<sub>1</sub> + m<sub>2</sub>x<sub>2</sub> +
+          m<sub>3</sub>x<sub>3</sub> + b // 3 features, 1 label <br />
+
+          z = m<sub>1</sub>x<sub>1</sub> + m<sub>2</sub>x<sub>2</sub> +
+          m<sub>3</sub>x<sub>3</sub> + m<sub>4</sub>x<sub>4</sub> +
+          m<sub>5</sub>x<sub>5</sub> + b // 5 features, 1 label
+        </code>
+      </p>
 
       <h2 id="tensor">Tensor = n-D Matrix</h2>
       <p>
