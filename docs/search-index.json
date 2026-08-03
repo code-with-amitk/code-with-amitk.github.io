@@ -35,6 +35,11 @@
     "excerpt": "Abstraction Home Our team Projects Contact Back Abstraction? What is Abstraction Concept of hiding the complex internal details of a system and showin..."
   },
   {
+    "title": "ACLs — Access Control Lists",
+    "url": "/Networking/Terms/ACLs.html",
+    "excerpt": "ACLs — Access Control Lists Home Our team Projects Contact Back ACL? How ACLs work Simple example Types of ACLs Related ACL (Access Control List) An A..."
+  },
+  {
     "title": "Administrative Law",
     "url": "/Law/Administrative Law/",
     "excerpt": "Administrative Law Home Our team Projects Contact What is Administrative law Conseil d'État Doctrines Separation of Powers Post decisional hearing Exc..."
@@ -71,8 +76,13 @@
   },
   {
     "title": "Anomaly Detection using Scikit Learn",
-    "url": "/Machine Learning/Code/anomaly_detection_using_scikit_learn.html",
+    "url": "/Machine Learning/Libraries/scikit-learn/Code/anomaly_detection_using_scikit_learn.html",
     "excerpt": "Anomaly Detection using Scikit Learn Home Our team Projects Contact Back Inlier, outlier Inlier, outlier, Novelty Inlier: A Data point that falls with..."
+  },
+  {
+    "title": "anyhow Rust Library",
+    "url": "/Languages/Programming/Rust/Libraries/anyhow/",
+    "excerpt": "anyhow Rust Library Home Our team Projects Contact Back What is anyhow Without anyhow Scopes Compare What is anyhow ? anyhow is a Rust crate by David ..."
   },
   {
     "title": "Apache Web Servers",
@@ -133,6 +143,11 @@
     "title": "Backtracking",
     "url": "/DS_Questions/Algorithms/Backtracking/",
     "excerpt": "Backtracking All Combinations"
+  },
+  {
+    "title": "Bare Runtime",
+    "url": "/Languages/Scripting/Javascript/Runtime/Bare/",
+    "excerpt": "Bare Runtime Home Our team Projects Contact Back Runtime? Bare Runtime? What is Runtime? A runtime environment is a software environment in which a pr..."
   },
   {
     "title": "Benchmark RAG with RAGAS",
@@ -253,6 +268,11 @@
     "title": "Cache",
     "url": "/System_Design/Concepts/Cache/",
     "excerpt": "Cache Home Our team Projects Contact Back What is Cache Types of Cache Where Caches can be placed? 1. Web Browser Cache 2. Cache Between AppServer & D..."
+  },
+  {
+    "title": "California House Price Prediction",
+    "url": "/Machine Learning/Libraries/scikit-learn/Code/California_house_price_prediction.html",
+    "excerpt": "California House Price Prediction Home Our team Projects Contact Back California House Price Prediction This example demonstrates how to use scikit-le..."
   },
   {
     "title": "Cargo",
@@ -386,18 +406,13 @@
   },
   {
     "title": "Consensus",
-    "url": "/System_Design/Concepts/Consensus/",
-    "excerpt": "Consensus Home Our team Projects Contact Back What Categories of consensus mechanisms Implementations 1. Paxos 2. RAFT Consensus Mechanism What is Con..."
-  },
-  {
-    "title": "Consensus",
     "url": "/System_Design/Concepts/Terms/CAP_Theorem.html",
     "excerpt": "Consensus Home Our team Projects Contact Back CAP CAP Theorem CAP = Consistency , Availability Partition-Tolerance CAP theorem says: Only 2 out 3 can ..."
   },
   {
     "title": "Consensus",
     "url": "/System_Design/Concepts/Terms/Consensus/Introduction.html",
-    "excerpt": "Consensus Home Our team Projects Contact What is Consensus? Raft vs Paxos What is Consensus Consensus is a process of agreement between distrusting no..."
+    "excerpt": "Consensus Home Our team Projects Contact Back What is Consensus? Raft vs Paxos What is Consensus? Consensus is how a group of servers agree on one val..."
   },
   {
     "title": "constexpr",
@@ -580,6 +595,11 @@
     "excerpt": "Dioxus Rust Home Our team Projects Contact What is Dioxus? Frontend using Dioxus Terms Components rsx macro Event Handlers States Local Vars Signals G..."
   },
   {
+    "title": "Distributed Cache System Design",
+    "url": "/System_Design/Scalable/Distributed_Cache/",
+    "excerpt": "Distributed Cache System Design Home Our team Projects Contact Back Distributed Cache Requirements Architecture Meaning of Distributed Block Diagram U..."
+  },
+  {
     "title": "Distributed Rate Limiter",
     "url": "/System_Design/Scalable/Rate Limiter/",
     "excerpt": "Distributed Rate Limiter Home Our team Projects Contact Back Requirements High Level Design Where Rate limiter sits Block Diagram Request flow Sequenc..."
@@ -587,7 +607,7 @@
   {
     "title": "Distributed Systems",
     "url": "/System_Design/Concepts/Terms/Distributed_System/",
-    "excerpt": "Distributed Systems Home Our team Projects Contact Back Distributed System Types of Distributed Systems Distributed System? A system whose components(..."
+    "excerpt": "Distributed Systems Home Our team Projects Contact Back Distributed System Types of Distributed Systems Jitterbit iPaaS Distributed System? A system w..."
   },
   {
     "title": "Django",
@@ -756,7 +776,7 @@
   },
   {
     "title": "Filling Missing values using Imputator",
-    "url": "/Machine Learning/ML_Models/Filling_Missing_values_using_Imputator.html",
+    "url": "/Machine Learning/Libraries/scikit-learn/Code/Filling_Missing_values_using_Imputator.html",
     "excerpt": "Filling Missing values using Imputator Home Our team Projects Contact Back Filling Missing values using Imputator Imputation fills in the missing valu..."
   },
   {
@@ -847,7 +867,7 @@
   {
     "title": "Gartner Terms",
     "url": "/Networking/Terms/Gartner Terms.html",
-    "excerpt": "Gartner Terms Home Our team Projects Contact Captive Portal Gartner Terms Magic Quadrant SASE SD-WAN SSE SIEM SDN Captive Portal captive portal is a w..."
+    "excerpt": "Gartner Terms Home Our team Projects Contact Captive Portal Gartner Terms Magic Quadrant SASE SD-WAN SSE SIEM ZTNA SDN Captive Portal captive portal i..."
   },
   {
     "title": "Gateway",
@@ -1212,7 +1232,7 @@
   {
     "title": "JavaScript",
     "url": "/Languages/Scripting/Javascript/",
-    "excerpt": "JavaScript Home Our team Projects Contact Introduction Functions &ensp; Arrow Function"
+    "excerpt": "JavaScript Home Our team Projects Contact Back Introduction Functions &ensp; Arrow Function Bare Runtime npm (Node Package Manager)"
   },
   {
     "title": "JavaScript Functions",
@@ -1255,14 +1275,19 @@
     "excerpt": "Kafka — System Design Home Our team Projects Contact Back Overview Requirements Use cases Architecture Core concepts Records &amp; offsets Topics &amp..."
   },
   {
-    "title": "Keras",
+    "title": "Keras — Introduction",
     "url": "/Machine Learning/Libraries/keras/Introduction.html",
-    "excerpt": "Keras Home Our team Projects Contact Back keras? Neural Networks(keras) vs. Traditional ML Models(scikit-learn) What is Keras? This is a high-level AP..."
+    "excerpt": "Keras — Introduction Home Our team Projects Contact Back What is Keras? Keras &amp; TensorFlow Keras vs scikit-learn Layers &amp; APIs API — functions..."
   },
   {
-    "title": "Keras Layers",
+    "title": "Keras — Train Linear Regression (Taxi Fare)",
+    "url": "/Machine Learning/Libraries/keras/Train_Linear_Regression_Taxi.html",
+    "excerpt": "Keras — Train Linear Regression (Taxi Fare) Home Our team Projects Contact Back Colab source Goal Prerequisites create_model() train_model() Run exper..."
+  },
+  {
+    "title": "Keras Models",
     "url": "/Machine Learning/Libraries/keras/Layers_and_APIs.html",
-    "excerpt": "Keras Layers Home Our team Projects Contact Back APIs / Model / Container? API Types keras Layers? Types of Layers API / Model / Container? API/Contai..."
+    "excerpt": "Keras Models Home Our team Projects Contact Back Keras Models Sequential Model Functional Model Model Subclassing Layers in Keras Types of Layers Dens..."
   },
   {
     "title": "Kerberos",
@@ -1417,7 +1442,12 @@
   {
     "title": "Libraries",
     "url": "/Libraries/",
-    "excerpt": "Libraries Home Our team Projects Contact JSON Parsing: Jansson JSX React Libraries for 2D, 3D graphics rendering: OpenGL & DirectX, Glew for OpenGL, V..."
+    "excerpt": "Libraries Home Our team Projects Contact C: &ensp; libuv JSON Parsing: Jansson JSX React Libraries for 2D, 3D graphics rendering: OpenGL & DirectX, Gl..."
+  },
+  {
+    "title": "libuv",
+    "url": "/Libraries/libuv/",
+    "excerpt": "libuv Home Our team Projects Contact Back libuv libuv libuv is a multi-platform library for asynchronous I/O. It was primarily developed for use by No..."
   },
   {
     "title": "Lifetime in Rust",
@@ -1481,18 +1511,18 @@
   },
   {
     "title": "Machine Learning Models",
-    "url": "/Machine Learning/ML_Models/Calorie_Predictor_DecisionTree_and_RandomForestRegressor.html",
+    "url": "/Machine Learning/Libraries/scikit-learn/Code/Calorie_Predictor_DecisionTree_and_RandomForestRegressor.html",
     "excerpt": "Machine Learning Models Home Our team Projects Contact Back Calorie prediction (DecisionTreeRegressor, Random Forest) Models Model doing prediction Mo..."
   },
   {
     "title": "Machine Learning Models",
     "url": "/Machine Learning/ML_Models/Claude_Code/",
-    "excerpt": "Machine Learning Models Home Our team Projects Contact Back Things Calude can do Things to do with Claude Code Automate the work Enter the project fol..."
+    "excerpt": "Machine Learning Models Home Our team Projects Contact Back Commands Recommended Workflow Context Context Window Saving Context Window Subagents Built..."
   },
   {
     "title": "Machine Learning Terms",
     "url": "/Machine Learning/Terms/Neural_Network/",
-    "excerpt": "Machine Learning Terms Home Our team Projects Contact Back Neural Network? Neuron Neural Network This is brain-inspired AI model which uses interconne..."
+    "excerpt": "Machine Learning Terms Home Our team Projects Contact Back Neural Network? Neuron Neural Network"
   },
   {
     "title": "Machine Learning Terms",
@@ -1685,6 +1715,11 @@
     "excerpt": "notify-rs Home Our team Projects Contact Back notify-rs? RecommendedWatcher vs PollWatcher RecommendedWatcher code PollWatcher Code What is notify-rs ..."
   },
   {
+    "title": "npm",
+    "url": "/Languages/Scripting/Javascript/npm.html",
+    "excerpt": "npm Home Our team Projects Contact Back What What is npm? This is similar to cargo for Rust, pip for Python, vcpkg for C++, gem for Ruby, composer for..."
+  },
+  {
     "title": "NVML",
     "url": "/Motherboard/GPU/Troubleshooting/NVML.html",
     "excerpt": "NVML Home Our team Projects Contact NVML Applications NVIDIA Management Library NVML is C-based API developed by NVIDIA for managing and monitoring th..."
@@ -1747,7 +1782,7 @@
   {
     "title": "Paxos Consensus Algorithm",
     "url": "/System_Design/Concepts/Terms/Consensus/Algorithms/Paxos.html",
-    "excerpt": "Paxos Consensus Algorithm Home Our team Projects Contact Paxos? How it works What is Paxos? Paxos works without a permanent leader Each node can have ..."
+    "excerpt": "Paxos Consensus Algorithm Home Our team Projects Contact Back What is Paxos? Roles How it works Raft What is Paxos? Paxos is a classic consensus algor..."
   },
   {
     "title": "PgBouncer",
@@ -1917,7 +1952,7 @@
   {
     "title": "Raft Consensus Algorithm",
     "url": "/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html",
-    "excerpt": "Raft Consensus Algorithm Home Our team Projects Contact Raft? How it works What is Raft? Raft is a consensus algorithm that is designed to be easy to ..."
+    "excerpt": "Raft Consensus Algorithm Home Our team Projects Contact Back What is Raft? How it works What is Raft? Raft is a consensus algorithm designed to be eas..."
   },
   {
     "title": "RAG",
@@ -2122,7 +2157,7 @@
   {
     "title": "scikit-learn",
     "url": "/Machine Learning/Libraries/scikit-learn/",
-    "excerpt": "scikit-learn Home Our team Projects Contact Back What What is scikit-learn Used for create Machine Learning models , which can be fed using Pandas dat..."
+    "excerpt": "scikit-learn Home Our team Projects Contact Back What What is scikit-learn Library for building and training the Machine Learning models to do predict..."
   },
   {
     "title": "scikit-learn Functions",
@@ -2132,7 +2167,7 @@
   {
     "title": "Scripting Languages",
     "url": "/Languages/Scripting/",
-    "excerpt": "Scripting Languages Home Our team Projects Contact Javascript Python"
+    "excerpt": "Scripting Languages Home Our team Projects Contact Back Javascript Python"
   },
   {
     "title": "Secure Web Gateway",
@@ -2558,5 +2593,10 @@
     "title": "Why Go over other Languages",
     "url": "/Languages/Programming/Go/Why_go_over_other_lang.html",
     "excerpt": "Why Go over other Languages Home Our team Projects Contact Back Go vs CPP Go vs CPP Go CPP Memory Management Go has Automatic Garbage Collection, whic..."
+  },
+  {
+    "title": "ZTNA — Zero Trust Network Access",
+    "url": "/Networking/Terms/ZTNA.html",
+    "excerpt": "ZTNA — Zero Trust Network Access Home Our team Projects Contact Back What is ZTNA Example How it works ZTNA vs SWG ZTNA vs Zero Trust Forward Proxy Te..."
   }
 ]
