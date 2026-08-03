@@ -266,7 +266,7 @@
   },
   {
     "title": "Cache",
-    "url": "/System_Design/Concepts/Cache/",
+    "url": "/System_Design/Concepts/Components/Cache/",
     "excerpt": "Cache Home Our team Projects Contact Back What is Cache Types of Cache Where Caches can be placed? 1. Web Browser Cache 2. Cache Between AppServer & D..."
   },
   {
@@ -451,7 +451,7 @@
   },
   {
     "title": "Cookies for Domain based Authentication",
-    "url": "/System_Design/Concepts/Terms/Authentication/cookies.html",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/cookies.html",
     "excerpt": "Cookies for Domain based Authentication Home Our team Projects Contact Back Per browser Cookie based Auth Cookie based Authentication for seperate Bro..."
   },
   {
@@ -1072,7 +1072,7 @@
   {
     "title": "HTTP Authentication",
     "url": "/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Authentication.html",
-    "excerpt": "HTTP Authentication Home Our team Projects Contact Back HTTP Authentication Authentication Flow Terms Proxy SAML IdP JWT Session Cookie Domain Cookie ..."
+    "excerpt": "HTTP Authentication Home Our team Projects Contact Back HTTP Authentication Authentication Flow Session cookie expiry Regaining session vs Refresh tok..."
   },
   {
     "title": "HTTP Connect",
@@ -2061,7 +2061,7 @@
   },
   {
     "title": "Refresh Token",
-    "url": "/System_Design/Concepts/Terms/Authentication/refresh_token.html",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/Refresh_Token.html",
     "excerpt": "Refresh Token Home Our team Projects Contact Back Why JWT Token Issue with 1 Token System Refresh Token Flow Can't Refresh token be Compromised? DB Sc..."
   },
   {
@@ -2366,6 +2366,11 @@
   },
   {
     "title": "Terms",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/JWT_Token.html",
+    "excerpt": "Terms Home Our team Projects Contact Back Json Web Token Disecting token JWT Authentication to RESTFul APIs Json Web Token / oauth_token / auth_token ..."
+  },
+  {
+    "title": "Terms",
     "url": "/Networking/Terms/Terms.html",
     "excerpt": "Terms Home Our team Projects Contact Back User Agent User Agent This is a self-identification string that a software application sends to a web server..."
   },
@@ -2373,11 +2378,6 @@
     "title": "Terms",
     "url": "/Operating System/Virtualization/Terms/",
     "excerpt": "Terms Home Our team Projects Contact Back QEMU Virglrenderer Venus Server Venus Protocol QEMU Emulator and virtualizer, used as use space component of..."
-  },
-  {
-    "title": "Terms",
-    "url": "/System_Design/Concepts/Terms/Authentication/jwt.html",
-    "excerpt": "Terms Home Our team Projects Contact Back Json Web Token Disecting token JWT Authentication to RESTFul APIs Json Web Token / oauth_token / auth_token ..."
   },
   {
     "title": "Terms",

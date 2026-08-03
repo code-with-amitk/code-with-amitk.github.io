@@ -2179,6 +2179,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/cookies.html</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP%20Cookie.html</loc>
     <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
@@ -2198,6 +2204,18 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Connect.html</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/JWT_Token.html</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/Refresh_Token.html</loc>
     <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -2443,13 +2461,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://code-with-amitk.github.io/System_Design/Concepts/Cache</loc>
+    <loc>https://code-with-amitk.github.io/System_Design/Concepts/Components/API_Gateway</loc>
     <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://code-with-amitk.github.io/System_Design/Concepts/Components/API_Gateway</loc>
+    <loc>https://code-with-amitk.github.io/System_Design/Concepts/Components/Cache</loc>
     <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -2810,24 +2828,6 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/System_Design/Concepts/Microservices/Introduction.html</loc>
-    <lastmod>2026-08-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://code-with-amitk.github.io/System_Design/Concepts/Terms/Authentication/cookies.html</loc>
-    <lastmod>2026-08-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://code-with-amitk.github.io/System_Design/Concepts/Terms/Authentication/jwt.html</loc>
-    <lastmod>2026-08-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://code-with-amitk.github.io/System_Design/Concepts/Terms/Authentication/refresh_token.html</loc>
     <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
