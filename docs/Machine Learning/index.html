@@ -44,11 +44,12 @@
 
         <a href="Terms.html">Terms:</a>
         AI vs ML vs DL, Activation Function, Bias/Sampling Bias, Conda, CNTK,
-        Overfitting, Underfitting, Optimizer, Large Language Model(LLM), Layer,
-        Learning Types, Loss, Matplotlib, Metrics,
-        <a href="Terms/Neural_Network/">Neuron, Neural Network</a>, Tensor: Add
-        Vector & matrix, Dot Product, Tensor Reshaping stochastic gradient
-        descent (SGD) Tensorflow Variance <br />
+        feature, Overfitting, Underfitting, Optimizer, label, Large Language
+        Model(LLM), Layer, Learning Types, Loss, Matplotlib, Metrics, Neuron,
+        Neural Network, Tensor: Add Vector & matrix, Dot Product, Tensor
+        Reshaping stochastic gradient descent (SGD) Tensorflow Variance, Loss,
+        MAE(Mean Absolute Error), MSE(Mean Squared Error), RMSE(Root Mean
+        Squared Error) <br />
 
         <b><font color="red">Code:</font></b
         ><br />
@@ -64,37 +65,39 @@
         ><br />
 
         <b>ML Model</b><br />
-        &ensp; <font color="red">Code:</font><br />
-        &emsp; 1. Calories Predictor during workout using:
-        <a
-          href="ML_Models/Calorie_Predictor_DecisionTree_and_RandomForestRegressor.html"
-        >
-          DecisionTreeRegressor, Random Forest Regression model</a
-        ><br />
-        &emsp; 2.
-        <a href="ML_Models/Filling_Missing_values_using_Imputator.html"
-          >Filling Missing values using Imputator</a
-        >
-        <br />
         &ensp; <a href="ML_Models/Claude_Code/">Claude Code</a> <br />
         &ensp; <a href="ML_Models/Ollama.html">Ollama:</a> Open Source Model
         Runner<br />
 
-        <b>ML Libraries</b><br />
-        &ensp; <u>Keras(build Neural Networks)</u>:
-        <a href="Libraries/keras/Introduction.html">keras, Comparison</a
-        >(Networks vs. Traditional ML Models(scikit-learn)),
-        <a href="Libraries/keras/Layers_and_APIs.html">Layers & APIs</a>(Dense,
-        Convolutional..) <br />
-        &emsp; <font color="red">Code:</font>
+        <b><u>ML Libraries</u></b
+        ><br />
+        &ensp; <b>Keras(build Neural Networks)</b>: <br />
+        &emsp;
+        <a href="Libraries/keras/Introduction.html">Introduction:</a>
+        Models(Sequential, Functional, Subclassing)<br />
+        &emsp; <a href="Libraries/keras/Layers_and_APIs.html">Layers</a>(Dense,
+        Convolutional..)<br />
+        &emsp;
+        <a href="Libraries/keras/Layers_and_APIs.html">Functions:</a> Dense(),
+        compile(), fit(), predict(), evaluate()
+        <br />
+
+        &emsp; <font color="red">Code:</font><br />
+        &emsp;&emsp;
         <a href="Code/Image Classification.html"
           >Classify grayscale images into(0 to 9)</a
-        >,
+        ><br />
+        &emsp;&emsp;
         <a
           href="Code/Classify_movie_reviews_positive_or_negative_from_imdb.html"
           >Classify movie Review as +ve or -ve based on 50k review.</a
         ><br />
-        &ensp; <u>Pandas</u>:<br />
+        &emsp;&emsp;
+        <a href="Libraries/keras/Train_Linear_Regression_Taxi.html"
+          >Train model — taxi fare (Colab MLCC)</a
+        ><br />
+
+        &ensp; <b>Pandas</b>:<br />
         &emsp;
         <a href="Libraries/Pandas/Introduction.html">Introduction</a>(series,
         dataframes),
@@ -107,12 +110,32 @@
         read_csv(), describe(), drop(), dropna(), head(), isNull(), loc[],
         select_dtypes(), shape(), sum()<br />
         &ensp;
-        <u>scikit-learn(build light weight models)</u>
-        <a href="Libraries/scikit-learn/index.html">Introduction</a><br />
-        &emsp; Code:
-        <a href="Code/anomaly_detection_using_scikit_learn.html"
+
+        <b>scikit-learn(build light weight models)</b><br />
+        &emsp; <a href="Libraries/scikit-learn/index.html">Introduction</a
+        ><br />
+        &emsp; <font color="red">Code:</font><br />
+        &emsp;&emsp; 1. Calories Predictor during workout using:
+        <a
+          href="Libraries/scikit-learn/Code/Calorie_Predictor_DecisionTree_and_RandomForestRegressor.html"
+        >
+          DecisionTreeRegressor, Random Forest Regression model</a
+        ><br />
+        &emsp;&emsp; 2.
+        <a
+          href="Libraries/scikit-learn/Code/Filling_Missing_values_using_Imputator.html"
+          >Filling Missing values using Imputator</a
+        >
+        <br />
+        &emsp;&emsp; 3.<a
+          href="Libraries/scikit-learn/Code/anomaly_detection_using_scikit_learn.html"
           >Anomaly Detection using scikit learn</a
         ><br />
+        &emsp;&emsp; 4.<a
+          href="Libraries/scikit-learn/Code/California_house_price_prediction.html"
+          >California House Price Prediction</a
+        ><br />
+
         &emsp;
         <a href="Libraries/scikit-learn/Functions.html">Functions:</a>
         fit(), fit_transform(), Imputator, SimpleImputator, transform(),

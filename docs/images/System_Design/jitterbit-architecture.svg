@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="420" viewBox="0 0 700 420" role="img" aria-label="Jitterbit Harmony architecture">
+  <rect width="700" height="420" fill="#fafafa"/>
+  <text x="350" y="24" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" fill="#333">Jitterbit Harmony  control plane vs data plane</text>
+  <!-- Control plane -->
+  <rect x="120" y="40" width="460" height="120" rx="8" fill="#e8eaf6" stroke="#3f51b5" stroke-width="1.5"/>
+  <text x="350" y="58" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#283593">Control plane (Harmony cloud)</text>
+  <rect x="140" y="72" width="90" height="36" rx="4" fill="#fff" stroke="#7986cb"/>
+  <text x="185" y="95" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif">Cloud Studio</text>
+  <rect x="245" y="72" width="90" height="36" rx="4" fill="#fff" stroke="#7986cb"/>
+  <text x="290" y="95" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif">API Manager</text>
+  <rect x="350" y="72" width="100" height="36" rx="4" fill="#fff" stroke="#7986cb"/>
+  <text x="400" y="95" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif">Mgmt Console</text>
+  <rect x="465" y="72" width="90" height="36" rx="4" fill="#fff" stroke="#7986cb"/>
+  <text x="510" y="95" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif">Marketplace</text>
+  <rect x="280" y="118" width="140" height="28" rx="4" fill="#c5cae9"/>
+  <text x="350" y="137" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif">Repository � Gateways � Logging</text>
+  <!-- Data plane -->
+  <rect x="80" y="190" width="540" height="130" rx="8" fill="#e0f2f1" stroke="#00897b" stroke-width="1.5"/>
+  <text x="350" y="208" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#00695c">Data plane (Agents)</text>
+  <rect x="120" y="228" width="180" height="70" rx="6" fill="#fff" stroke="#26a69a"/>
+  <text x="210" y="252" text-anchor="middle" font-size="11" font-weight="600" font-family="Segoe UI, Arial, sans-serif">Cloud Agent Group</text>
+  <text x="210" y="270" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif">SaaS � SaaS</text>
+  <rect x="400" y="228" width="180" height="70" rx="6" fill="#fff" stroke="#26a69a"/>
+  <text x="490" y="252" text-anchor="middle" font-size="11" font-weight="600" font-family="Segoe UI, Arial, sans-serif">Private Agent Group</text>
+  <text x="490" y="270" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif">On-prem DB / SAP</text>
+  <!-- Endpoints -->
+  <rect x="60" y="350" width="110" height="40" rx="6" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="115" y="375" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif">Salesforce</text>
+  <rect x="295" y="350" width="110" height="40" rx="6" fill="#e8f5e9" stroke="#388e3c"/>
+  <text x="350" y="375" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif">NetSuite</text>
+  <rect x="530" y="350" width="110" height="40" rx="6" fill="#fff3e0" stroke="#f57c00"/>
+  <text x="585" y="375" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif">On-prem DB</text>
+  <line x1="210" y1="298" x2="115" y2="350" stroke="#666" stroke-width="1.5"/>
+  <line x1="210" y1="298" x2="350" y2="350" stroke="#666" stroke-width="1.5"/>
+  <line x1="490" y1="298" x2="585" y2="350" stroke="#666" stroke-width="1.5"/>
+  <line x1="350" y1="160" x2="350" y2="190" stroke="#666" stroke-width="2" stroke-dasharray="4"/>
+</svg>

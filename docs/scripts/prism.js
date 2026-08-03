@@ -1878,3 +1878,66 @@ Prism.languages.python = {
   operator: /[-+%=]=?|!=|:=|\*\*?=?|\/\/?=?|<<=?|>>=?|[|^~]/,
   punctuation: /[{}[\];(),.:]/,
 };
+
+Prism.languages.rust = {
+  comment: [
+    {
+      pattern:
+        /(^|[^\\])\/\/(?:[^\\\r\n]|\\(?:\r\n|[\s\S]))*|\/\*[\s\S]*?(?:\*\/|$)/,
+      lookbehind: true,
+      greedy: true,
+    },
+    {
+      pattern: /(^|[^\\])#!.*$/,
+      lookbehind: true,
+      greedy: true,
+    },
+  ],
+  string: {
+    pattern: /b?"(?:\\[\s\S]|[^\\"])*"|b?r(#*)"(?:[^"]|"(?!\1))*"\1/,
+    greedy: true,
+  },
+  char: {
+    pattern:
+      /b?'(?:\\(?:x[0-7][\da-fA-F]|u\{(?:[\da-fA-F]_*){1,6}\}|.)|[^\\\r\n\t'])'/,
+    greedy: true,
+  },
+  attribute: {
+    pattern: /#\![\w\[\]<>]+|#(?:\[[^\]]*\]|[\w-]+)/,
+    greedy: true,
+    alias: "attr-name",
+  },
+  "macro-name": {
+    pattern: /(?:^|\s)(?:macro_rules!\s+)?[\w:]+!/,
+    lookbehind: true,
+    alias: "function",
+  },
+  "lifetime-annotation": {
+    pattern: /'[\w-]+/,
+    alias: "symbol",
+  },
+  constant: /\b(?:[A-Z_]{2,}|(?:[A-Z_]+)?[A-Z][A-Z0-9_]*)\b/,
+  namespace: {
+    pattern:
+      /(?:\b(?:crate|super|self|std)\s+)?[\w-]+(?=\s*::(?:[\w-]+::)*[\w-]+)/,
+    inside: {
+      punctuation: /::/,
+    },
+  },
+  number:
+    /\b(?:0x[\dA-Fa-f](?:_?[\dA-Fa-f])*|0o[0-7](?:_?[0-7])*|0b[01](?:_?[01])*|(?:(?:\d(?:_?\d)*)?\.)?\d(?:_?\d)*(?:[Ee][+-]?\d+)?)(?:_?(?:u8|u16|u32|u64|u128|i8|i16|i32|i64|i128|f32|f64|isize|usize))?\b/,
+  boolean: /\b(?:false|true)\b/,
+  punctuation: /->|\.\.=|\.(?=\w)|\.{1,3}|::|[{}[\];(),:]/,
+  operator: /[-+*\/%!^]=?|=[=>]?|<<=?|>>=?|&&|\|\||\?\?|\?\./,
+};
+
+Prism.languages.insertBefore("rust", "constant", {
+  keyword:
+    /\b(?:as|async|await|break|const|continue|crate|dyn|else|enum|extern|false|fn|for|if|impl|in|let|loop|match|mod|move|mut|pub|ref|return|self|Self|static|struct|super|trait|true|type|union|unsafe|use|where|while)\b/,
+  builtin:
+    /\b(?:Any|bool|char|f(?:32|64)|i(?:8|16|32|64|128|size)|Option|Result|str|String|u(?:8|16|32|64|128|size)|Vec|Copy|Clone|Eq|PartialEq|Ord|PartialOrd|Hash|Debug|Default|Send|Sync|Sized|Drop|Fn|FnMut|FnOnce|Box|ToOwned)\b/,
+});
+
+Prism.languages.rust["attribute"].inside = {
+  string: Prism.languages.rust["string"],
+};

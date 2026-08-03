@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <title>California House Price Prediction</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/Libraries/scikit-learn/Code/California_house_price_prediction.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning/">Back</a></li>
+        <form>
+          <input type="search" name="q" placeholder="Search site" />
+          <input type="submit" value="Go!" />
+        </form>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"></aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">California House Price Prediction</h2>
+      <p>
+        This example demonstrates how to use scikit-learn to predict house
+        prices in California.<br />
+        Features: 9 coloumns<br />
+        Label: median_house_value<br />
+        Imputet is used to fill the missing values in the dataset.<br />
+        <b>Note:</b> The 'ocean_proximity' column is not used because its not
+        numeric.<br />
+        <a
+          href="https://www.kaggle.com/code/amitkumar25nov/notebook42f7224bac?scriptVersionId=339728693"
+          >Code on Kaggle</a
+        >
+      </p>
+      <pre><code class="language-css">
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+from sklearn.impute import SimpleImputer
+
+# Read data from CSV file
+data_frame = pd.read_csv('/kaggle/input/datasets/camnugent/california-housing-prices/housing.csv')
+
+# Features: 'longitude', 'latitude', 'housing_median_age', 'total_rooms', 'total_bedrooms', 
+#'population', 'households', 'median_income', 'ocean_proximity'
+# Label: 'median_house_value'
+y_label = data_frame.median_house_value
+X_features = data_frame.drop(['median_house_value'], axis=1)
+X_features = data_frame.drop(['ocean_proximity'], axis=1)   #ocean_proximity was not int
+
+X_feature_train, X_feature_valid, y_label_train, y_label_valid = train_test_split(
+    X_features, y_label, train_size=0.8, test_size=0.2, random_state=0
+)
+
+#Fill empty values with median
+imputer = SimpleImputer(strategy='median')
+X_feature_train = imputer.fit_transform(X_feature_train)
+X_feature_valid = imputer.transform(X_feature_valid)
+
+# Create Model & Train
+model = LinearRegression()
+model.fit(X_feature_train, y_label_train)
+
+prediction_house_prices = model.predict(X_feature_valid)
+print(mean_absolute_error(y_label_valid, prediction_house_prices))
+      </code></pre>
+    </article>
+
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

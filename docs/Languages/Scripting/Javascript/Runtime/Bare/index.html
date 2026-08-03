@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bare Runtime</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Scripting/Javascript"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Scripting/Javascript/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Runtime?</a>
+      <a href="#bare">Bare Runtime?</a>
+    </aside>
+
+    <div style="margin-left: 200px">
+      <h2 id="what">What is Runtime?</h2>
+      <p>
+        A runtime environment is a software environment in which a program or
+        application runs. It provides the necessary resources and services for
+        the execution of the program, including memory management, input/output
+        operations, and access to system resources.<br />
+        <b>Example of Runtime C++</b><br />
+        &ensp; The C++ runtime library provides the necessary functions and
+        classes for managing memory, handling input/output operations, and
+        providing other essential services for C++ programs.
+      </p>
+
+      <h2 id="bare">What is Bare Runtime?</h2>
+      <p>
+        Bare Runtime is a minimal JavaScript runtime environment that provides
+        the essential features needed to execute JavaScript code without the
+        overhead of a full-fledged runtime like Node.js browser environments.<br />
+        It is designed for scenarios where you want to run JavaScript code in a
+        lightweight applications eg(embedded systems, IoT devices, or other
+        resource-constrained environments).
+      </p>
+
+      <h2>How to Use Bare</h2>
+      <p>
+        write a standard JavaScript file and execute it using the Bare binary or
+        environment
+      </p>
+      <table>
+        <tr>
+          <td>
+            C++ Code, that can be used by JavaScript<br />
+            <pre><code class="language-css">
+#include &lt;node_api.h&gt;
+
+// A simple C++ function that adds two numbers
+napi_value Add(napi_env env, napi_callback_info info) {
+    size_t argc = 2;
+    napi_value args[2];
+    napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+
+    double arg0, arg1;
+    napi_get_value_double(env, args[0], &arg0);
+    napi_get_value_double(env, args[1], &arg1);
+
+    napi_value sum;
+    napi_create_double(env, arg0 + arg1, &sum);
+
+    return sum;
+}
+
+// Initialize the module and export the 'add' function
+napi_value Init(napi_env env, napi_value exports) {
+    napi_property_descriptor desc = {
+        "add", 0, Add, 0, 0, 0, napi_default, 0
+    };
+    napi_define_properties(env, exports, 1, &desc);
+    return exports;
+}
+
+NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+        </code></pre>
+          </td>
+          <td>
+            Build this C++ code into a shared library <br />
+            (e.g.,
+            <code>addon.node</code> on Windows/Linux or <code>.dylib</code> on
+            macOS)
+          </td>
+          <td>
+            Consume in Javascript<br />
+            <pre><code class="language-css">
+// Load the compiled C++ native addon
+const addon = require('./build/Release/addon.node');
+
+// Call the C++ function seamlessly from JavaScript!
+const result = addon.add(5, 10);
+console.log('Result from C++ API:', result); // Output: Result from C++ API: 15
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

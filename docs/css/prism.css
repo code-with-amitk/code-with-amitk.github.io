@@ -137,3 +137,24 @@ pre[class*="language-cpp"] {
   font-size: 11px;
   white-space: pre; /* preserve exact spacing for C++ examples */
 }
+
+/* C specific styling: add a `language-c` selector so code blocks
+   using `language-c` receive the same Prism styling as C/C++ examples */
+code.language-c,
+pre.language-c,
+code[class*="language-c"],
+pre[class*="language-c"] {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 11px;
+  white-space: pre;
+}
+
+/* Rust: `language-rust` on code blocks (anyhow, tokio examples, etc.) */
+code.language-rust,
+pre.language-rust,
+code[class*="language-rust"],
+pre[class*="language-rust"] {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 11px;
+  white-space: pre;
+}

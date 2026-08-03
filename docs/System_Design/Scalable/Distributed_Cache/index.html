@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Distributed Cache System Design</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Distributed_Cache/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#overview">Distributed Cache</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#architecture">Architecture</a>
+      <ul>
+        <li><a href="#distributed-meaning">Meaning of Distributed</a></li>
+        <li><a href="#blockdiagram">Block Diagram</a></li>
+      </ul>
+      <a href="#timeline-read">User Reads Timeline</a>
+      <a href="#rediscluster">Redis Cluster</a>
+      <ul>
+        <li><a href="#redis-client">Cluster Client Library</a></li>
+        <li><a href="#redis-storage">Storage of Hashes</a></li>
+        <li><a href="#hash-calc">Hash calculation</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <article>
+        <h2 id="overview">Distributed Cache (eg for twitter)</h2>
+        <p>
+          A cache is storage space for access to data kept in database.
+          Application server instead of going to DB will check cache and in case
+          of Cache Hit will return result
+        </p>
+
+        <h2 id="requirements">Requirements</h2>
+        <h4>Functional</h4>
+        <p>
+          1. Low latency: Cache instead of database (less than 5ms)<br />
+          2. Automatic cache population & eviction<br />
+          3. cache consistency: Updates should update cache across all cache
+          nodes.
+        </p>
+        <h4>Non Functional</h4>
+        <p>
+          1. High Availability: Cache cluster should survive node/zone
+          failures.<br />
+          2. Horizontal Scalability: Add cache nodes without downtime using
+          consistent hashing.<br />
+          3. High Throughput: Handle millions of QPS with sub-5ms response time.
+        </p>
+
+        <h2 id="architecture">Architecture</h2>
+        <h3 id="distributed-meaning">
+          Meaning of Distributed in Cache
+          &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+          VERY IMPORTANT
+        </h3>
+        <p>
+          <font color="red"
+            >Distributed does not mean Region1(redis) will sync data to
+            Region2(redis).</font
+          ><br />
+          Redis is a cache—not the source of truth—so regions do not synchronize
+          cached data with one another; they rebuild cache entries from the
+          database or other authoritative backend when needed.<br />
+          "Distributed" means how cache data is partitioned across multiple
+          Redis nodes (shards) within a <b>1 region ONLY</b>.
+          <br />
+          Each region maintains its own independent Redis cluster(Cache), which
+          caches data for requests served in that region.
+        </p>
+
+        <h3 id="blockdiagram">Block Diagram</h3>
+        <p>
+          1. <b>No load balancer before Redis Cluster:</b> See Below<br />
+          2. Application talks to both: Redis for cache lookups. Database on
+          cache misses or writes.
+        </p>
+
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+flowchart TB
+
+    Client["Browser / Mobile App"]
+
+    GLB["Global Load Balancer"]
+    RLB["Regional Load Balancer<br>Cluster"]
+    RLB1["Regional Load Balancer<br>Cluster"]
+
+    subgraph API_GW["API GW Cluster"]
+        APIGW["API GW<br/>(pod1)"]
+        APIGW1["API GW<br/>(pod2)"]
+    end
+
+    subgraph Kubernets_Cluster["Kubernets Cluster"]
+        APPLB["kubernets LB/Envoy"]
+        APPLB1["kubernets LB/Envoy"]
+    end
+
+    subgraph APP["AppServer HPA"]
+        APP1["AppServer Pod 1<br><br> Redis_Cluster_Client(Library)"]
+        APP2["AppServer Pod 2"]
+    end
+
+    subgraph REDIS["Redis Cluster"]
+        subgraph SHARD1["Shard 1"]
+            M1["Master(pod1) TCP:6379"]
+            R1["Replica(pod2)"]
+            M1 -->|Replication| R1
+        end
+
+        subgraph SHARD2["Shard 2"]
+            M2["Master(pod3) TCP:6379"]
+            R2["Replica (pod4)"]
+            M2 -->|Replication| R2
+        end
+
+    end
+
+    DB["Cassandra / ScyllaDB"]
+
+    Client --> GLB
+    GLB --> RLB
+    GLB --> RLB1
+    RLB --> APIGW
+    RLB --> APIGW1
+    APIGW --> APPLB
+    APIGW --> APPLB1
+    APPLB --> APP1
+    APPLB --> APP2
+
+    APP1 -. SET(key, val) <br> GET(key)<br>ATOMICALLY run inside Redis POD .-> M1
+
+    M1 --> DB
+    M2 --> DB
+          </pre>
+        </div>
+
+        <h2 id="timeline-read">User Reads his Timeline</h2>
+        <p>User1 follows alice,bob want to read his timeline</p>
+        <pre><code class="language-css">
+// HTTP Request
+GET /api/v1/timeline?limit=20 HTTP/1.1
+Host: twitter.com
+Authorization: Bearer eyJ...
+Accept: application/json
+User-Agent: Twitter-iOS
+Cookie: session=abc123
+
+// Timeline Response
+[
+ {
+   "tweetId":991,
+   "text":"Hello World",
+   "author":"Alice"
+ },
+ {
+   "tweetId":990,
+   "text":"Good Morning",
+   "author":"Bob"
+ }
+]
+</code></pre>
+
+        <h4>Sequence Diagram</h4>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+sequenceDiagram
+
+participant User
+participant Browser
+participant GLB
+participant RLB
+participant Gateway
+participant Auth
+participant App
+participant Redis
+participant DB
+
+User->>Browser: Open Home Timeline
+
+Browser->>GLB: GET /api/v1/timeline?limit=1
+Note over Browser,GLB: Cookie/JWT included
+
+GLB->>RLB: HTTPS Request
+RLB->>Gateway: Forward
+
+Gateway->>Auth: Validate Session
+Auth-->>Gateway: UserId=100
+
+Gateway->>App: Fetch Timeline(UserId=100)
+
+App->>Redis: GET timeline:100
+
+alt Cache Hit
+
+Redis-->>App: [991]
+
+App-->>Gateway: Tweet 991
+
+else Cache Miss
+
+Redis-->>App: MISS
+
+App->>DB: Query Latest Tweet
+
+DB-->>App: Tweet 991
+
+App->>Redis: SET timeline:100=[991] TTL=60s
+
+App-->>Gateway: Tweet 991
+
+end
+
+Gateway-->>Browser: HTTP 200 + JSON
+
+Browser-->>User: Display "Hello World"
+</pre
+          >
+        </div>
+
+        <h2 id="rediscluster">Redis Cluster</h2>
+
+        <h3 id="redis-client">Redis Cluster Client Library</h3>
+        <p>
+          See Block Diagram, Application service used REDIS_CLUSTER_CLIENT
+          library(Lettuce Cluster Client(Java), hiredis cluster client(C++),
+          redis/go-redis/v9(Go)) to decide on which Redis master node request
+          should be sent<br /><br />
+
+          <b>How redis cluster client learn the topology?</b><br />
+          When the application starts, redis cluster client connects to any
+          redis node(redis-cluster.default.svc:6379) and toplology is returned
+          (Slots 0-1000 -&gt; 10.0.0.21, Slots 1001-2000 -&gt; 10.0.0.21)
+        </p>
+        <pre><code class="language-css">
+/////////////// Application Server POD Code /////////////////
+app() {
+    GET(timeline:100)
+}
+
+Redis Client 
+GET() {
+  slot_hash = CRC16("timeline:100") % 16384      //slot_hash = 990
+}
+
+Client already knows
+Node          Slots
+Master 1      0-1000
+Master 2      1001-2000
+/////////////////////////////////////////////////////////////
+</code></pre>
+
+        <h3 id="hash-calc">Hash calculation on Redis</h3>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+sequenceDiagram
+
+participant User
+box Application Pod
+participant App as AppSrv
+participant Client as Redis Cluster Client<br>Hiredis(C++)<br>go-redis(Go)<br>
+end
+participant M3 as Redis Master 3<br>10.0.0.3:6379
+participant M1 as Redis Master 1<br>10.0.0.1:6379
+participant M2 as Redis Master 2<br>10.0.0.2:6379
+
+User->>App: GET /timeline (user=1)
+
+Note over App: Create string "timeline:1"
+
+App->>Client: GET("timeline:1")
+
+Note over Client: Compute CRC16("timeline:1")<br/>CRC16 % 16384 = Hash(12553)
+
+Note over Client: Hash Table<br>Slot Cache<br/>0-5000 → Master1(10.0.0.1:6379)<br/>5001-10000 → Master2(10.0.0.2:6379)<br/>10001-16383 → Master3(10.0.0.3:6379)
+
+Client->>M3: GET timeline:1
+
+Note over M3: Hash table (Key: Value)<br/><br>timeline:100  [991,990]<br>user:100   {...profile...}<br>tweet:991   {...tweet JSON...}
+
+M3-->>Client: [990,991]
+
+Client-->>App: Cached Tweet IDs
+
+App-->>User: Timeline Response
+          </pre>
+        </div>
+
+        <h3 id="redis-storage">
+          Hash Table on Redis Master(Not Redis Client library)
+        </h3>
+        <pre><code class="language-css">
+
+Redis Master Node Hash Table    // Stored on Master node
+
+Key                     Value
+--------------------------------------------
+timeline:100            [991,990]
+timeline:101            [345,567]
+user:100                {...profile...}
+tweet:991               {...tweet JSON...}
+followers:100           [45,88,90]
+
+                  Region 1 (Redis Cluster)
+
++----------------------+   +----------------------+   +----------------------+
+| Master :6379         |   | Master :6379         |   | Master :6379         |
+| Shard 1              |   | Shard 2              |   | Shard 3              |
+| Slots 0-5460         |   | Slots 5461-10922     |   | Slots 10923-16383    |
++----------+-----------+   +----------+-----------+   +----------+-----------+
+           |                          |                          |
+      Replication                Replication                Replication
+           |                          |                          |
++----------v-----------+   +----------v-----------+   +----------v-----------+
+| Replica              |   | Replica              |   | Replica              |
++----------------------+   +----------------------+   +----------------------+
+</code></pre>
+      </article>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>

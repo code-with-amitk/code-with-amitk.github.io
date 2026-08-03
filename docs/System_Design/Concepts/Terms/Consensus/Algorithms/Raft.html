@@ -1,20 +1,24 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Raft Consensus Algorithm</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
   <body>
     <nav class="navbar">
-      <!--See .navbar in styles.css-->
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -29,35 +33,60 @@
       </ul>
     </nav>
     <aside class="sidebar">
-      <a href="#what">Raft?</a>
+      <a href="#what">What is Raft?</a>
       <a href="#work">How it works</a>
     </aside>
 
     <main style="margin-left: 200px">
-      <h2>What is Raft?</h2>
-      <dl>
-        Raft is a consensus algorithm that is designed to be easy to understand.
-        It's equivalent to Paxos in fault-tolerance and performance
-      </dl>
+      <h2 id="what">What is Raft?</h2>
+      <p>
+        Raft is a consensus algorithm designed to be <b>easy to understand</b>.
+        It gives the same kind of fault tolerance as Paxos for crash failures:
+        as long as a <b>majority</b> of nodes are alive, the cluster keeps
+        working.<br />
+        Raft is <b>not a blockchain algorithm</b>. It is used in — Kubernetes
+        etcd, HashiCorp Consul, CockroachDB — to replicate configuration and
+        data inside <b>your</b> datacenter.
+      </p>
 
-      <h2 id="work">How it works</h2>
-      <h4>Leader election and log replication</h4>
-      <dl>
-        &ensp; Leader is elected. others become followers<br />
-        &ensp; Once a leader is chosen, it accepts and logs client commands.<br />
-        &ensp; Followers replicate log entries, guaranteeing consistency.
-      </dl>
+      <h2 id="work">How Raft works</h2>
+      <p>
+        <b>Leader election</b> — one node becomes Leader; others are
+        Followers.<br />
+        <b>Log replication</b> — client writes go to the Leader; Leader appends
+        to its log and copies to Followers.<br />
+        <b>Commit</b> — once a majority has stored an entry, it is committed and
+        applied to the state machine.<br />
+        <b>Safety</b> — if the Leader dies, a new election runs; committed
+        entries are never lost.<br />
+      </p>
 
-      <h4>Example</h4>
-      <dl>
-        Consider five servers (A, B, C, D, E):<br />
-        &ensp; All start as followers. C’s timeout elapses, it requests
-        votes.<br />
-        &ensp; C is elected leader by a majority.<br />
-        &ensp; Client sends command to C (leader). C appends command to its log
-        and sends it to A, B, D, E.<br />
-        &ensp; Upon successful replication, command is committed.
-      </dl>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+  participant Client
+  participant L as Leader (C)
+  participant F1 as Follower A
+  participant F2 as Follower B
+  participant F3 as Follower D
+  participant F4 as Follower E
+
+  Note over L,F4: 1. C wins election (3 of 5 votes)
+
+  Client->>L: SET config/key = "prod-v2"
+  L->>L: Append entry #42 to local log
+  L->>F1: AppendEntries #42
+  L->>F2: AppendEntries #42
+  L->>F3: AppendEntries #42
+  L->>F4: AppendEntries #42
+  F1-->>L: OK
+  F2-->>L: OK
+  F3-->>L: OK
+  Note over L: Majority (3/5) acked → commit #42
+  L-->>Client: Success
+        </pre>
+      </div>
     </main>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>
