@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>SAML</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Markup/SAML" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Markup/SAML"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -77,7 +80,6 @@ sequenceDiagram
     participant FP as Forward Proxy
     participant Auth as Authentication Service
     participant IdP as Okta / Azure AD
-
     Bob->>Browser: Open https://google.com
     Browser->>FP: HTTP Request
     FP->>FP: User unknown — no session cookie
@@ -110,8 +112,8 @@ Username : bob@acme.com
 Password : ********
 MFA      : Approved
       </code></pre>
-      <p>The IdP verifies the credentials.</p>
       <p>
+        The IdP verifies the credentials.<br />
         If authentication succeeds, the IdP creates a <b>SAML Response</b> and
         sends it back to the Authentication Service.
       </p>
@@ -119,29 +121,28 @@ MFA      : Approved
       <h2 id="response">What is a SAML Response?</h2>
       <p>
         A <b>SAML Response</b> is an XML document sent by the IdP after
-        successful authentication.<br />
-        It contains:<br />
-        &ensp; Authentication status<br />
-        &ensp; One SAML Assertion<br />
-        &ensp; Digital Signature<br />
-        &ensp; Timestamp<br />
-        &ensp; Audience (who should trust it)<br />
-
-        Think of it as a secure envelope sent from the IdP to the Authentication
-        Service.
+        successful authentication
       </p>
       <pre><code class="language-css">
 SAML Response
 │
 ├── Status = Success
 ├── Assertion
+  &lt;Assertion&gt;   // Actual user information (claims) is inside the assertion
+    User = bob@acme.com
+    Name = Bob Smith
+    Tenant = acme-corp
+    Groups = Engineering, VPNUsers, Developers
+    Authenticated = true
+    LoginTime = 10:30 AM
+    Expiry = 11:30 AM
+  &lt;/Assertion&gt;
 ├── Signature
 └── Issue Time
       </code></pre>
 
-      <h2 id="assertion">What is a SAML Assertion?</h2>
+      <h3 id="assertion">SAML Assertion?</h3>
       <p>
-        The <b>Assertion</b> is the most important part of the SAML Response.<br />
         It is the IdP saying:
         <i
           >"I have authenticated this user, and here are the user's identity and
@@ -149,26 +150,6 @@ SAML Response
         ><br />
         It contains the actual user information (called <b>claims</b>)<br />
         For Bob, the assertion may contain:
-      </p>
-      <pre><code class="language-css">
-&lt;Assertion&gt;
-
-  User = bob@acme.com
-  Name = Bob Smith
-  Tenant = acme-corp
-  Groups =
-      Engineering
-      VPNUsers
-      Developers
-  Authenticated = true
-  LoginTime = 10:30 AM
-  Expiry = 11:30 AM
-
-&lt;/Assertion&gt;
-      </code></pre>
-      <p>
-        The real assertion is XML, but conceptually it contains the above
-        information.
       </p>
 
       <h2 id="auth-service">What does the Authentication Service do?</h2>
@@ -180,18 +161,11 @@ SAML Response
         &ensp; Verify the audience is this Authentication Service.<br />
         &ensp; Verify the assertion has not been replayed.<br />
         &ensp; Extract user attributes.<br />
+        After successful validation it finds:
       </p>
-      <p>
-        After successful validation:<br />
-        &ensp; User = bob@acme.com<br />
-        &ensp; Groups = Engineering, Developers<br />
-        &ensp; Tenant = acme-corp<br />
-      </p>
-      <pre><code class="language-css">
-User   = bob@acme.com
+      <pre><code class="language-css">User   = bob@acme.com
 Groups = Engineering, Developers
-Tenant = acme-corp
-      </code></pre>
+Tenant = acme-corp</code></pre>
       <p>
         The Authentication Service then creates an authenticated session and
         issues the

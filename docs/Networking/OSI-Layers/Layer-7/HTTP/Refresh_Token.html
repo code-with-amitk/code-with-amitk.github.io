@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Refresh Token</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Authentication/refresh_token.html" />
+    <link rel="canonical" href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/Refresh_Token.html" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -15,7 +15,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -52,16 +52,13 @@
     <main style="margin-left: 200px">
       <h2 id="jwt">Why JWT Token</h2>
       <p>
-        <b><a href="./jwt.html">JWT Token</a>?</b><br />
-        &ensp; JWT token is assigned to a user when user Authenticates and then
+        <b><a href="./jwt.html">JWT Token</a>?</b> JWT token is assigned to a user when user Authenticates and then
         token is used as Bearer token in every request to access the REST
         endpoint.
       </p>
 
       <h2 id="issue">Issue with 1 Token System(ie only JWT Token)?</h2>
       <p>
-        JWT Token is often associated with Password, ie whenever user entered
-        correct password a new JWT token is provided to the user.<br />
         <u>Long JWT Token expiry(3 months):</u><br />
         &ensp; if JWT token expiry is kept for longer period and token is
         compromised. Malicious user can attack system for longer duration of
@@ -73,7 +70,7 @@
         user has to enter his password again. <br />
 
         <u>Solution:</u> Maintain 2 tokens.<br />
-        &ensp; Short lived(24 hours): access token = JWT Token<br />
+        &ensp; Short lived(15 min - 1 hour): access token = JWT Token<br />
         &ensp; Long lived(90 days): uuid = Refresh token
       </p>
 
@@ -93,8 +90,7 @@
         minutes).<br />
         &ensp; 2. refresh_token: long‑lived random string stored server‑side
         (e.g., 7–90 days)<br>
-        &ensp; 3. Client/frontend uses Refresh token to renew access/JWT token<br>
-        &ensp; 4. Backend issues both new refresh, JWT token to frontend.
+        &ensp; 3. Client/frontend uses Refresh token to renew access/JWT token
       </dl>
 
       <h3 id="compromise">Can't Refresh token be Compromised?</h3>
@@ -149,13 +145,16 @@ Indexes:
 
       <h2 id="hld">HLD (High Level Design)</h2>
       <dl>
-        - There can be muliple refresh tokens per user. Past tokens are kept for auditing purposes.<br>
-        - When user logins, we will create a new refresh token and insert into DB. We will also create JWT token and send both tokens to frontend.<br />
-        - When user access REST endpoint, we will validate the JWT token. If JWT token is valid, we will allow access to REST endpoint. If JWT token is expired, we will return 401 Unauthorized.<br />
-        - When user calls refresh endpoint with refresh token, we will check if the refresh token is valid by comparing the hash of the 
-        received refresh token with the hash stored in DB. If they match and token is not expired and not revoked, 
-        then we will revoke the old refresh token and issue new JWT and refresh token to frontend. <br>
-        - If they don't match, then we will return 401 Unauthorized and this can be <font color="red">an MIM Attack</font>. Tenant Admin will revoke after 2factor authentication.
+        - There can be muliple refresh tokens per browser/app. Past tokens are kept for auditing purposes.<br>
+        - When browser/app logins,  app-server will create a new refresh token and insert into DB. app-server will also create 
+        JWT token and send both tokens to frontend.<br />
+        - When browser/app access REST endpoint, app-server will validate the JWT token. If JWT token is valid, app-server will allow access to REST endpoint. 
+        If JWT token is expired, we will return 401 Unauthorized.<br />
+        - When browser/app calls refresh endpoint with refresh token, app-server will check if the refresh token is valid by comparing the hash of the 
+        received refresh token with the hash stored in DB. If they match and token is not expired and not revoked.
+        then app-server will revoke the old refresh token and issue new JWT and refresh token to frontend. <br>
+        - If they don't match, then app-server will return 401 Unauthorized and this can be <font color="red">an MIM Attack</font>. 
+        Tenant Admin will revoke after 2factor checking.
       </dl>
           <img 
       src="//www.plantuml.com/plantuml/png/jLJVR-9647xVlsAYUmbI-07D4ogdEiHfqkC81KTvYOGMxuAtiNUjtG5Ae_pl7HllWGKNfG-rX87PcVbclczcBp2HcOGyvKgp2o6NIai8dcUJf-yZI11prs-tBT-sLWgJzMBjf8sDHgcn5PkipRSkvGjNV3SL7RZcqjWcPTEupjBsfdlTwhI5SiWkJ8xAQ4Yu5bkha580shLaZCTeB0I8F7wL5hvCfV0saIaD05-6Ewuhsp1L14wsYTAlBESMLQnoJgQR8buB9ZZo1NSIfd9ffKiYG-Q8BrB2ggARNxrt7oQFimZQgLaHr5jifI07nLFtphH12MOZxO_KHVjNa7FdjW8sF5M23QtavFR7SmGbK6Nmu9MHWg58nrYLYaeuhQyF3-DPE8t0xa_cM1ov5tqfipmrEoddIWowdUuLb2VpXBjaS4z_vT-veeWvnq6hrMeSK0XcttCV_jfY2TMzBBrtWzvrOjQsyQ8hkFhfBvdHcBZ6MT9-3uapdgisnL6EM3AUuW6XuWReELT9hzE1nszCfauUOgeU1F0bIWkzQoYgSpzDSjtfmfFcQqoCLVz8KN3CpcXs0i1gxO9oLRM-posdbvRRGjEIPf9TwPKNfIReHoDLnhQhA7YheRuVLtewftTAYphUFIaz8vmxQpBwQ2GW60oWjAEXjfI-lM61SsgbfG0qu6VcYeqD-kO_FOcpS1GE8pWQFBYRFdw7-cZ2Ytw-3wTXVHuX6D-IuuPiWaOI7cOmVXgDIlDXKk4hQBDbnUHK2dn4oRHC1vX8AAsKFrPo8mKiYHBmd1pw0te-Rl5fSXj4uMb7ip0wgdumVdo-RC3dspmpXFvIu7wkhchgmjBO7qop1-saHL0Q3P2a1y60dl_X-kYTNXy_sxatlqozUWEzz_qoArqNyd2jC_y34YwOGtEqY4tSRoBZvTJdAT-vkeu--BzksISe-tCjxMxFHytxrsRpd7ijlr-g4xvylUKjvLcPrsGvZH6Pqdq8eYWOVYCbOJ8AXY5StgGcVgqKQ1oOtVkpyWsfMRdgbkhT1Mnn5C9u74jtn6SnZh_HQvsb_m80"
@@ -262,7 +261,7 @@ end
       <h4>Revoke compromised refresh tokens</h4>
       <dl>
         1. Mark all active refresh tokens for the employee as revoked.
-        This step can be carried by tenant admin after 2 step authentication.
+        This step can be carried by tenant admin after 2 step authentication.<br>
         <pre><code class="language-css">
 UPDATE refresh_tokens SET revoked_at = NOW() WHERE employee_id = X AND revoked_at IS NULL
         </code></pre><br>
