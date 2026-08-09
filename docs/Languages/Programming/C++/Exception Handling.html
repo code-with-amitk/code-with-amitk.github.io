@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Exception Handling</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/Exception%20Handling.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/Exception%20Handling.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -39,6 +42,12 @@
         <li><a href="#empty">Empty Exception class</a></li>
         <li><a href="#whatmethod">Exception class having what() method</a></li>
         <li><a href="#null">NULLException class</a></li>
+      </ul>
+      <a href="#overhead">Runtime overhead</a>
+      <ul>
+        <li><a href="#cpp">C++ cost</a></li>
+        <li><a href="#rust">Rust no exception handling</a></li>
+        <li><a href="#go">Go no exception handling</a></li>
       </ul>
     </aside>
 
@@ -266,8 +275,101 @@ Logged message on Log server                  //1
 filename.cpp                                  //2 
 Amit Null Exception                           //3
         </code></pre>
-    </article>
 
+      <h2 id="overhead">
+        Runtime overhead(Increased Time) of exception handling
+      </h2>
+      <p>
+        There is no runtime overhead on happy path(ie no exception returned)
+        called zero overhead on the happy path<br />
+        There is increased time complexity when exception is thrown. This is
+        roughly equal to O(n), where n is number of stacks to be unwinded
+      </p>
+
+      <h3 id="cpp">C++</h3>
+      <h4>No Exception Thrown (no overhead)</h4>
+      <p>
+        Once b=0 reaches B(), it returns to known address(0x40) in A's stack
+        frame<br />
+        A returns to k
+      </p>
+      <pre><code class="language-css">
+void B(int a, int b){
+	if (b==0)
+		return;         // return to known address in A's frame
+}
+void A(){
+    B(1,0);
+}                   // returns to known address in main()'s frame
+int main(){
+	int x;
+    try{
+        A();
+    }
+    catch(...){
+    }
+}
+&lt;---------main frame----------&gt;       &lt;---------A frame----------&gt;         &lt;---------B frame--------------&gt;
+inputparams(argv argc),x,retAdd       inputparams,localvar,retAdd(0x50)    inputparams(a,b),localvar,retAddtoA(0x40)
+      </code></pre>
+
+      <h4>No Exception Thrown</h4>
+      <p>
+        When exception is thrown in B() and it does not know the handler(if its
+        in B() or A()) whole stack frame is searched<br />
+        Now in A() again whole stack frame is searched for handler.<br />
+        This searching of handler takes time
+      </p>
+      <pre><code class="language-cpp">
+void B(int a, int b){
+	if (b==0)
+		throw runtime_error("failed");
+}
+void A(){
+    B(1,0);
+}
+int main(){
+	int x;
+    try{
+        A();
+    }
+    catch(...){
+    }
+}
+&lt;---------main frame----------&gt; &lt;---------A frame----------&gt; &lt;---------B frame--------------&gt;
+inputparams(argv argc),x,retAdd       inputparams,localvar,retAdd         inputparams(a,b),localvar,retAddtoA
+      </code></pre>
+
+      <h3 id="rust">Rust does not have exception handling</h3>
+      <p>No stack walking. No searching. No unwinding for normal errors.</p>
+      <pre><code class="language-rust">
+fn divide() -&gt; Result &lt; i32, String &gt; {
+    Ok(10)
+}
+match divide() {
+    Ok(v) = ...
+    Err(e) =&gt; ...
+}
+      </code></pre>
+
+      <h3 id="go">Go avoids exception handling</h3>
+      <p>The error is another return value.</p>
+      <pre><code class="language-go">
+value, err := Divide()
+if err != nil {
+    return err
+}
+
+call
+↓
+return value
+↓
+check err
+↓
+continue
+      </code></pre>
+    </article>
+    <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>
   </body>
 </html>

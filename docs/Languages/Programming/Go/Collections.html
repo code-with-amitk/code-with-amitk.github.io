@@ -2,10 +2,12 @@
 <html>
   <head>
     <title>collections</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Go/Collections.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Collections.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
-    <!-- Add any necessary CSS and JavaScript files -->
   </head>
   <body>
     <nav class="navbar">
@@ -56,29 +58,39 @@
       <dl>
         fixed-size collection of elements of the same type. Array cannot be
         resized<br />
+        When we assign an array to a new variable or pass it to a function, Go
+        creates a complete copy of the entire array.<br />
         <pre><code class="language-css">
 var a [10]int
+b = a         // seperate copy is created for b
                 </code></pre>
       </dl>
 
       <h3 id="slices">
-        2. Slices [] (Dynamic Array) = C++(vector&lt;int>) = Rust(vec&lt;i32 > )
+        2. Slices [] = C++20(std::span) = Rust(Slice (written as &[T]))
       </h3>
-      <dl>
-        Slice is part of an array. Changing the elements of a slice modifies
-        underlying array.
-      </dl>
-      <h4>Slice has 3 components</h4>
-      <dl>
+      <p>
+        Slice is a reference pointing to underlying array, slice can view/modify
+        elements of an underlying array.<br />
+        <b>Slice has 3 components</b><br />
         1. Pointer(to underlying array)<br />
         2. Length(number of elements in slice). len(slice)<br />
         3. Capacity(maximum number of elements it can hold). cap(slice): length
         of undelying array - 1<br />
-        <br />
-
         <b>nil slice:</b> slice which does not point to any array(at present),
-        but can in future.
-      </dl>
+        but can in future.<br />
+        <b>Can Slice increase the size of underlying array?</b> No<br />
+        &ensp; If underlying array has a length of 10, the maximum number of
+        elements slice can hold is 10<br />
+        &ensp; If we try to append an 11th element using append(), Go
+        automatically does the following behind the scenes:<br />
+        &emsp; Allocates a brand new, larger underlying array in memory (usually
+        double the size)<br />
+        &emsp; Copies all the old elements into the new array.<br />
+        &emsp; Appends the new element.<br />
+        &emsp; Returns a new slice pointing to this new array. The original
+        array of size 10 remains untouched.
+      </p>
 
       <h4>Slice Functions</h4>
       <dl>
@@ -271,5 +283,6 @@ yaml.Unmarshal(bytes, &cfg)         //Stored bytes into Config struct
       </h2>
     </article>
     <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
   </body>
 </html>

@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Go Routine</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/Threads/Creation/GoRoutines.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Threads/Creation/GoRoutines.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -35,14 +38,14 @@
       <a href="#gocode">Code</a>
       <ul>
         <li><a href="#hello">Hello World</a></li>
-        <li><a href="#10threads">10 Threads executing 1 function</a></li>
+        <li><a href="#2threads">2 Threads executing 1 function</a></li>
       </ul>
       <a href="#leak">Memory Leak in goroutine</a>
       <a href="#bounded">Bounded go routines</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h3 id="what">What is Go routine(Thread)</h3>
+      <h2 id="what">What is Go routine(Green Thread)</h2>
       <p>
         A goroutine is a lightweight thread managed by the Go runtime.<br />
         Memory allocation on stack, heap is very less wrt OS Threads.
@@ -51,8 +54,8 @@
         >
       </p>
 
-      <h3 id="gocode">Code</h3>
-      <h4 id="hello">Hello World</h4>
+      <h2 id="gocode">Code</h2>
+      <h3 id="hello">Hello World</h3>
       <pre><code class="language-css">
 package main
 import (
@@ -73,7 +76,7 @@ Hello from main!
 Hello from goroutine!
       </code></pre>
 
-      <h4 id="10threads">10 Threads executing 1 function</h4>
+      <h3 id="2threads">2 Threads executing 1 function</h3>
       <table>
         <tr>
           <th>Code</th>
@@ -83,75 +86,47 @@ Hello from goroutine!
           <td>
             <pre><code class="language-css">
 package main
+
 import (
-    "fmt"
-    "sync"
-    "time"
+	"fmt"
+	"sync"
 )
-func worker(id int, wg *sync.WaitGroup) {
-    // ie wg.Done() would be called when surrounding function finishes
-    defer wg.Done()
-    fmt.Printf("Worker %d started\n", id)
-    time.Sleep(time.Second) // Simulate work
-    fmt.Printf("Worker %d finished\n", id)
-}
 
 func main() {
-    var wg sync.WaitGroup               // Create WaitGroup object
-    numWorkers := 10                    // Number of goroutines to create
-    wg.Add(numWorkers)                  // Create these goroutines
+	var wg sync.WaitGroup
+	wg.Add(2)               // 2 goroutines. internal counter=0
 
-    for i := 1; i &lt;= numWorkers; i++ {
-        go worker(i, &wg)
-    }
-    wg.Wait()                               // Wait for all goroutines to finish
-    fmt.Println("All workers finished")
+	task := func(id int) {  // defer executes when scope ends
+		defer wg.Done()       // Decrement counter when task finishes
+		fmt.Printf("Goroutine %d is running\n", id)
+	}
+
+	// Launch 2 goroutines executing the task
+	go task(1)
+	go task(2)
+
+	wg.Wait() // Wait for both to complete
 }
-
-$ go run test.go
-Worker 10 started
-Worker 8 started
-Worker 9 started
-Worker 2 started
-Worker 1 started
-Worker 6 started
-Worker 3 started
-Worker 4 started
-Worker 5 started
-Worker 7 started
-Worker 10 finished
-Worker 8 finished
-Worker 1 finished
-Worker 9 finished
-Worker 2 finished
-Worker 3 finished
-Worker 6 finished
-Worker 4 finished
-Worker 7 finished
-Worker 5 finished
-All workers finished
       </code></pre>
           </td>
           <td>
-            <b>sync.waitgroup:</b><br />
-            - Synchronization primitive provided by the Go to synchronize the
-            execution of a group of goroutines.<br />
+            <b>sync.waitgroup = <a href="">join() in C++</a></b
+            ><br />
+            - Provided by Go to synchronize the execution of a group of
+            goroutines. A WaitGroup creates a threadsafe shared counter, whose
+            value is decreamented and once value reaches 0<br />
             - <u>How it works?</u><br />
-            &emsp; A WaitGroup maintains shared counter internally(which is
-            initially set to 0). counter is thread-safe.<br />
-            &emsp; At start of goroutine wg.Add(numberOfWorkers) is called. This
-            makes counter=10<br />
-            &emsp; goroutine finishes (defer make wg.Done() to called after
-            function finishes), and counter is decremented<br />
+            &emsp; wg.Add(2); Create shared counter value=2<br />
+            &emsp; goroutine finishes wg.Done() decrements it by 1(defer make
+            wg.Done())<br />
             &emsp; wg.Wait() method in main waits until counter=0
             <br />
-
-            <a href="/Languages/Programming/Go/">defer?</a>
+            <a href="/Languages/Programming/Go/Statements.html">defer?</a>
           </td>
         </tr>
       </table>
 
-      <h3 id="leak">Memory Leak in goroutine</h3>
+      <h2 id="leak">Memory Leak in goroutine</h2>
       <dl>
         <u>Memory allocated to goroutine:</u> Around
         <a href="/Languages/Programming/Go/Why_go_over_other_lang.html"
@@ -187,7 +162,7 @@ All workers finished
         <a href="/Languages/Programming/Go/">buffered channel</a>
       </dl>
 
-      <h3 id="bounded">Bounded go routines</h3>
+      <h2 id="bounded">Bounded go routines</h2>
       <dl>
         By default, Go makes it easy to spawn thousands of goroutines.<br />
         And each goroutine consumes

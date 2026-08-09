@@ -55,9 +55,10 @@
         </ul>
         <li><a href="#train-predict">Train, Predict</a></li>
         <ul>
-          <li><a href="#compile">compile</a></li>
-          <li><a href="#fit">fit</a></li>
-          <li><a href="#predict">predict</a></li>
+          <li><a href="#compile">compile()</a></li>
+          <li><a href="#evaluate">evaluate()</a></li>
+          <li><a href="#fit">fit()</a></li>
+          <li><a href="#predict">predict()</a></li>
         </ul>
         <li><a href="#optimizer-loss">Optimizer / loss</a></li>
       </ul>
@@ -232,23 +233,32 @@ flowchart LR
         (features).<br />
       </p>
 
-      <h4 id="dense">Layer.Dense(n)</h4>
-      <p>Dense(n) = Layer with n neurons. n labels(y)</p>
-      <pre><code pre class="language-python">
-# Linear Regression: y = mx + b  (1 feature, 1 output)
-model = keras.Sequential([
-    layers.Input(shape=(1,)), # 1 input feature(x)
-    layers.Dense(1),          # Layer with 1 neuron. 1 label(y)
+      <h4 id="dense">keras.Layer.Dense(n)</h4>
+      <table>
+        <tr>
+          <td>
+            <b>Linear Regression: y = mx + b (1 feature, 1 output)</b><br />
+            <pre><code pre class="language-python">model = keras.Sequential([
+  layers.Input(shape=(1,)), # 1 input feature(x)
+  layers.Dense(1),          # Layer with 1 neuron(ie 1 feature).
+])</code></pre>
+          </td>
+          <td>
+            <b
+              >MLP — binary classification: y = m1x1 + m2x2 + ... + b (n
+              features, 1 output)</b
+            ><br />
+            <pre><code pre class="language-python">model = keras.Sequential([
+  layers.Dense(64, activation="relu"),    # Layer with 64 Neurons. 64 labels(y1, y2, ... y64)
+  layers.Dense(32, activation="relu"),    # Layer with 32 Neurons. 32 labels(y1, y2, ... y32)
+  layers.Dense(1, activation="sigmoid"),  # Layer with 1 Neuron. 1 label(y)
 ])
 
-# MLP — binary classification: y = m1x1 + m2x2 + ... + b  (n features, 1 output)
-model = keras.Sequential([
-    layers.Input(shape=(n_features,)), # n input features(x1, x2, ... xn)
-    layers.Dense(64, activation="relu"), # Layer with 64 Neurons. 64 labels(y1, y2, ... y64)
-    layers.Dense(32, activation="relu"),  # Layer with 32 Neurons. 32 labels(y1, y2, ... y32)
-    layers.Dense(1, activation="sigmoid"), # Layer with 1 Neuron. 1 label(y)
-])
-      </code></pre>
+// activation function applied to output of layer (Term.html)
+</code></pre>
+          </td>
+        </tr>
+      </table>
 
       <h4 id="dropout">Layer.Dropout(rate)</h4>
       <pre><code pre class="language-python">
@@ -262,14 +272,32 @@ model = keras.Sequential([
       </code></pre>
 
       <h3 id="train-predict">Train, Predict</h3>
-      <h4 id="compile">compile(optimizer, loss)</h4>
-      <p>Configure the model for training</p>
+      <h4 id="compile">compile(optimizer, loss, accuracy)</h4>
+      <p>
+        Configure the model for training.
+        <a href="/Machine%20Learning/Terms.html"
+          >optimizer(adam), Loss(binary_crossentropy)</a
+        >
+      </p>
+      <pre><code class="language-css">model.compile(
+  optimizer="adam",
+  loss="binary_crossentropy",
+  metrics=["accuracy"],
+)</code></pre>
 
       <h4 id="fit">fit(x, y, epochs, batch_size)</h4>
       <p>Train the model</p>
 
       <h4 id="predict">predict(x)</h4>
       <p>Make predictions with the model</p>
+      <pre><code class="language-css">predictions = model.predict(X_validation, verbose=0)</code></pre>
+
+      <h3 id="evaluate">evaluate()</h3>
+      <p>
+        computes the performance metrics (like loss and accuracy) of a trained
+        model
+      </p>
+      <pre><code class="language-css">loss, accuracy = model.evaluate(X, y, verbose=0)</code></pre>
 
       <h3 id="optimizer-loss">Optimizer / loss</h3>
       <p>

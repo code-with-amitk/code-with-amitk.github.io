@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Rust Ownership</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Ownership.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Ownership</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Ownership(avoid crash in Rust)</h2>
+      <p>
+        - Defines how memory is managed safely(without need of garbage
+        collector) by Rust program.<br />
+        - Every Variable/data have single owner at a time. When the owner goes
+        out of scope, Rust automatically deallocates the memory.<br />
+        - Ownership rules are checked at compile time.<br />
+        - Ownership applies to memory allocated on heap(dynamically), Eg:
+        String(), vector ie those are moved. For variable allocated on Stack
+        (Eg: int, float) variable is copied.
+        <br />
+        In Rust, raw pointers (*const T and *mut T) don't embody ownership
+        semantics directly. However, smart pointers have ownership like<br />
+        -
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/Rust/Smart_Pointers"
+          >Box&lt;T&gt;</a
+        >: It represents ownership of a heap-allocated value.<br />
+        -
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/Rust/Smart_Pointers"
+          >Rc&lt;T&gt;</a
+        >: It provides reference counting and allows multiple ownership.<br />
+        - <a href="/Languages/Programming/Rust/">Arc&lt;T&gt;</a>: It's like
+        Rc&lt;T&gt;, but with atomic reference counting, suitable for concurrent
+        access.
+      </p>
+      <table>
+        <tr>
+          <td>C++ <font color="red">(Crash in C++)</font></td>
+          <td>Rust (No null pointer Exception(Crash) in Rust)</td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/Languages/Programming/C++/C++_11,14,17,20,23/C++11/smart_shared_unique.html"
+              >unique_ptr</a
+            ><br />
+            <pre><code class="language-css">
+#include &lt;iostream&gt;
+#include &lt;memory&gt;  // unique_ptr
+using namespace std;
+
+int main() {
+    // Create a unique_ptr to manage the std::string object
+    unique_ptr &lt;string&gt; s = make_unique &lt;string&gt;("hello");
+
+    // Transfer ownership to s1
+    unique_ptr &lt; string&gt; s1 = move(s);
+
+    // No compile time check.
+    // Run time Segmentation fault
+    cout &lt;&lt; *s;
+
+    std::cout &lt;&lt; *s1;
+
+    return 0;
+}
+                        </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">
+fn main() {
+    // Box owns the heap-allocated String
+    let s = Box::new(String::from("hello")); 
+
+    // Ownership transferred to s1
+    let s1 = s; 
+
+    // Compilation error
+    // value borrowed here after move
+    // The ownership of the String was moved to s1, 
+    //so s is no longer valid to use
+    println!("{}", s);
+
+    // The String is still valid through s1
+    println!("{}", s1);
+} // Box goes out of scope, 
+// and the String is deallocated automatically
+                            
+                        </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

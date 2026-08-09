@@ -14,6 +14,7 @@
             <li><a href="#">Our team</a></li>
             <li><a href="#">Projects</a></li>
             <li><a href="/contact.html">Contact</a></li>
+            <li><a href="/Languages/Programming/Go/">Back</a></li>
             <li>
                 <form>
                     <input type="search" name="q" placeholder="Search site" />
@@ -33,9 +34,9 @@
 
         <article style="margin-left:200px;">
             <h2 id="pacmod">Packages and Module</h2>
-            <dl>
+            <p>
                 Go, packages and modules serve distinct but related roles in organizing and managing code
-            </dl>
+            </p>
             <table>
                 <tr>
                     <th></th>
@@ -57,7 +58,7 @@ $ mkdir mymodule
 $ cd mymodule
                         </code></pre>
                         <br>
-Command creates a <a href="#gomod">go.mod file</a> that defines your module path & initializes it
+<code>go mod init</code> creates a <a href="#gomod">go.mod file</a> that defines your module path & initializes it<br>
                         <pre><code class="language-css">
 $ go mod init mymodule
 $ ls -ltr 

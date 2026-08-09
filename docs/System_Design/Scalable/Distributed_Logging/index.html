@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Distributed Log Design</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Distributed_Logging/index.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#overview">Distributed Logging</a>
+      <a href="#req">Requirements</a>
+      <a href="#hld">HLD</a>
+      <ul>
+        <a href="#storage">Storage Pipeline (Write Path)</a>
+        <ul>
+          <li><a href="#collector-agent">Collector Agent</a></li>
+          <li><a href="#api-gateway">API Gateway</a></li>
+          <li><a href="#ingestion-service">Ingestion Service</a></li>
+          <ul>
+            <li><a href="#authentication">Authentication</a></li>
+            <li><a href="#pods-scaling">Pods Scaling</a></li>
+            <li><a href="#ingestion-processing">Processing at Ingestion</a></li>
+            <li><a href="#sequence-diagram">Sequence Diagram</a></li>
+          </ul>
+        </ul>
+        <a href="#query">Query Pipeline (Read Path)</a>
+        <a href="#dashboard">Logs on Dashboard</a>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <article>
+        <h1 id="overview">
+          Distributed Logging (eg: Sumologc, Datadog, Splunk cloud)
+        </h1>
+        <p>
+          This is a multi-tenant distributed version of Sumo Logic, Splunk
+          Cloud, Datadog Logs, or Grafana Loki, where applications running
+          across thousands of machines and multiple regions continuously stream
+          logs to a central platform for indexing, searching, alerting, and
+          analytics.<br />
+          Example: Netskope sending(Event logs, application logs, transaction
+          logs, service logs, alerts), CompanyX(general logs), Domain
+          Controller(sends syslogs)<br />
+          <b>Purpose:</b> Distributed logging system will store the logs and
+          provide dashboard for monitoring.
+        </p>
+
+        <h1 id="req">Requirements</h1>
+        <h3 id="req-functional">Functional</h3>
+        <p>
+          <b>1. Log Collection:</b> Tenants/Customers/Applications can
+          send(Application logs, System logs, Audit logs, Security logs,
+          Kubernetes logs, Container logs, Network device logs. Support multiple
+          protocols(HTTP HTTPS gRPC TCP UDP (Syslog) Kafka)<br />
+          <b>2. Highly scalable:</b> Millions of logs/sec<br />
+          <b>3. Near Real-Time Search(within 2-5 seconds)</b> Formats:<br />
+          &ensp; Text Search: (status=500, user=amit, host=server12,
+          requestId=abc123, service=auth)<br />
+          &ensp; Time Range Query: (Last 5 minutes, Last 1 hour, Yesterday, Last
+          30 days)<br />
+          &ensp; Aggregation: (count(), avg(), sum(), percentile(), top(),
+          histogram(), group by())<br />
+          <b>4. Send Alerts:</b> If ERROR &gt; 100/sec, Send Slack, PagerDuty,
+          Email, Webhook<br />
+          <b>5. Multitenant:</b> 1000s of customers<br />
+          <b>6. Different Rentention polcies:</b> 7 days, 30 days, 180 days, 1
+          year<br />
+        </p>
+        <h3 id="req-nonfunctional">Non-functional Requirements</h3>
+        <p>
+          High availability (99.99%+), Horizontal scalability, Fault tolerance,
+          Low ingestion latency, High write throughput, Eventual consistency for
+          search, Secure transport (TLS), Encryption at rest, RBAC,
+          Cost-efficient storage, Multi-region deployment
+        </p>
+
+        <h1 id="hld">HLD</h1>
+        <p>
+          There are 2 independent systems:<br />
+          1. Storage Pipeline (Write Path): optimized for ingesting millions of
+          events/sec. Where tenants write the logs and those are stored<br />
+          2. Query Pipeline (Read Path): optimized for searching petabytes of
+          historical data. Dashboards where data is searched looked upon for
+          investigation/forensics
+        </p>
+
+        <h2 id="storage">Storage Pipeline (Write Path)</h2>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+flowchart LR
+    subgraph TENANT_NS1["Tenant Netskope"]
+        APP1[POP1<br>nsproxy]
+        subgraph Agent Client1
+            AGENT1[Fluent Bit<br>Collector<br>Agent]
+            COMPRESS1[gzip / zstd]
+        end
+    end
+    subgraph TENANT_NS1["Tenant Netskope"]
+        APP2[POP2<br>nsproxy]
+        subgraph Agent Client2
+            AGENT2[Collector<br>Agent]
+            COMPRESS2[gzip / zstd]
+        end
+    end
+
+    subgraph Tenant XYZ 
+        APP3[Server]
+        subgraph AWS
+            AGENT3[Open Telemetry<br>Collector<br>Agent]
+            COMPRESS3[gzip / zstd]
+        end
+    end
+
+    APP1 -->|transaction logs<br>Alerts<br>Event logs<br><br>Log Format1| AGENT1
+    AGENT1 --> COMPRESS1
+    APP2 --> AGENT2
+    AGENT2 --> COMPRESS2
+    APP3 -->|General logs<br><br>Log Format2| AGENT3
+    AGENT3 --> COMPRESS3
+
+    COMPRESS1 -->|"1000 log bundle <br>HTTP<br>Header:metadata(tenantid,Timestamp..)<br>Body:500 log batch logs.zip"| GLB[Global<br>Load<br>Balancer]
+    COMPRESS2 -->|"500 log bundle <br>HTTP<br>Header:metadata<br>Body:logs.zip"| GLB[Global<br>Load<br>Balancer]
+    COMPRESS3 -->|"100 log bundle <br>HTTP<br>Header:metadata<br>Body:logs.zip"| GLB[Global<br>Load<br>Balancer]
+    GLB --> RLB[Regional<br>Load<br>Balancer]
+    RLB --> APIGW[API<br>Gateway]
+
+    subgraph Sumologic Datacenter 
+    APIGW --> AUTH[Tenant Validation Cache]
+
+    APIGW --> INGRESS[Kubernetes Ingress<br>Load Balancer]
+
+    INGRESS --> INGEST1[Ingestion<br>Service Pod1]
+    INGRESS --> INGEST2[Ingestion<br>Service Pod2]
+    INGEST1 -.- Note["1.Add Meta Data to logs<br>2.Create Kafka Topic"]
+    style Note fill:#fff9c4,stroke:#fbc02d,stroke-width:1px
+
+    INGEST1 -->|validate request| CACHE[(Authentication<br>CACHE)]
+    CACHE -->|Validated| INGEST1
+
+    INGEST1 -->|Topic=Log<br>Msg=logs.zip+MetaData| RETRY[Retry Queue]
+
+    RETRY --> KAFKA[(Kafka)]
+
+    INGEST1 -->|Topic=Log<br>Msg=logs.zip+MetaData| DLQ[(Dead Letter Queue)]
+
+    KAFKA --> Processing_Worker[Workers]
+    end
+    Processing_Worker -->|logs.zip| Hot[(Hot Storage<br>7-30 days<br>SSSD)]
+    Processing_Worker -->|logs.zip| Cold[(Cold Storage<br>1,5,10 years<br>Amazon S3)]
+    Processing_Worker -->|Metadata| Meta[(Metadata)]
+
+    INGEST1 --> METRICS[Prometheus Metrics]
+        </pre>
+        </div>
+        <h3 id="collector-agent">
+          Collector Agent (Installed on Log Server). Eg: Opentelemetry Agent,
+          Fluent Bit Agent
+        </h3>
+        <p>
+          Suppose one server generates: 100,000 logs/sec. It does not send:
+          100,000 HTTP requests/sec. Instead it buffers logs. like<br />
+          <code> 500 logs -&gt;One HTTP request </code><br />
+          Now authentication will happen on this 1 HTTP request
+        </p>
+
+        <h3 id="api-gateway">API Gateway</h3>
+        <p>
+          TLS termination, DDoS, Rate limiting, API key/JWT validation, Routing
+        </p>
+
+        <h3 id="ingestion-service">Ingestion Service</h3>
+        <p>
+          Validate tenant exists, Validate source type, Attach metadata, send to
+          kafka
+        </p>
+        <h4 id="authentication">Authentication</h4>
+        <p>
+          Imagine Netskope signs up for your logging platform. During
+          onboarding, they receive:
+        </p>
+        <pre><code class="language-css">Tenant ID: tenant-3421
+API Key: abcXYZ...
+Secret: xxxxxxxx
+Region: us-east
+Retention: 90 days</code></pre>
+        <p>
+          Their log agent (for example, Fluent Bit or OpenTelemetry Collector)
+          is configured with these credentials. Every request includes headers
+          such as:
+        </p>
+        <pre><code class="language-css">POST /v1/logs
+Authorization: Bearer eyJhb...
+X-Tenant-ID: tenant-3421
+X-Source: kubernetes
+Content-Encoding: gzip
+Content-Type: application/json</code></pre>
+        <p>
+          Authentication will happen on every batched request. See
+          <a href="#collector-agent"
+            >Collector agent sends logs in batch of 500,100 logs</a
+          ><br />
+          At every HTTP request following things can be checked from local cache
+          <code>tenant, rentention days, quota, region, allowed sources</code>
+        </p>
+
+        <h4 id="pods-scaling">Pods Scaling</h4>
+        <p>
+          if traffic doubles. Scales itself(HPA. On CPU, memory, request rate,
+          or queue depth).
+          <code> 6 Pods -&gt; 40 Pods -&gt; 100 Pods </code>
+        </p>
+
+        <h4 id="ingestion-processing">Proccessing at Ingestion Service</h4>
+        <p>
+          Ingestion service will not unzip every log.zip, if Ingestion service
+          keep unzipping, it will become bottleneck.<br />
+
+          With every log message customer also sends Meta data(whose schema is
+          same for all customers)<br />
+          Different customers will have different log formats, but same schema
+        </p>
+        <pre><code class="language-css">
+Log format
+Company A {"user":"amit","error":"timeout"}
+Company B {"employee":"123","status":"failed"}
+
+Meta data schema
+Tenant ID, Timestamp, Host, Region, Source, Log Type, Service, Namespace, Cluster, Severity, Trace ID, Span ID, Request ID, Compression Type, Retention Class, Encryption Key ID, Schema Version
+        </code></pre>
+
+        <h3 id="sequence-diagram">Sequence Diagram</h3>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+sequenceDiagram
+    autonumber
+
+    box Customer Premises POP
+        participant App as Server Generating Log
+        participant Collector
+    end
+
+    participant API as API Gateway
+
+    box Datacenter
+        participant Ingest as Ingestion Service
+        participant Cache as Tenant Cache
+        participant MetaDB as Metadata DB Batch Level
+        participant Kafka
+    end
+
+    App->>Collector: Generate log events
+
+    Collector->>Collector: Buffer 500 logs / 1 MB / 1 sec
+
+    Note over Collector: Compress batch gzip/zstd<br/>500 logs per HTTP POST
+
+    Collector->>API: HTTPS POST JWT + Tenant ID<br/>Body logs.zip
+
+    API->>API: TLS Rate Limit JWT Validation
+
+    API->>Ingest: Forward authenticated request
+
+    Ingest->>Cache: Get tenant data
+    Cache-->>Ingest: Retention Quota Allowed Sources
+
+    Note over Ingest: Validate tenant and sources
+
+    Note over Ingest: Add metadata<br/>Tenant ID,Region<br/>Source,Log Type<br/>Service,Host<br/>Namespace,Cluster<br/>Retention,Encryption Key ID<br/>Schema Version,Compression Type<br/>Ingestion Timestamp
+
+    Ingest->>MetaDB: Store Batch Metadata<br/>(BatchID, TenantID, Time Range, Region,<br/>Source, Log Count, Compression,<br/>Retention, Object ID*)
+
+    MetaDB-->>Ingest: Metadata stored
+
+    Ingest->>Kafka: Publish internal event batch
+
+    Kafka-->>Ingest: ACK
+
+    Ingest-->>Collector: HTTP 200 OK
+          </pre>
+        </div>
+
+        <h2 id="read">Query Pipeline (Read Path)</h2>
+        <p>
+          <b>Downstream workers:</b> Messages are consumed by downstream
+          workers, transformed, indexed, and stored.<br />
+          <b>Dashboard:</b> queries the Search Index (OpenSearch, ClickHouse,
+          Loki, etc.) and retrieves raw logs from Object Storage only when
+          necessary
+        </p>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+flowchart LR
+
+    K1[(Kafka<br/>raw-logs)]
+
+    P[Parser Service<br>multipod]
+    K2[(Kafka<br/>normalized-logs)]
+
+    E[Enrichment Service<br>multipod]
+    K3[(Kafka<br/>enriched-logs)]
+
+    IX[Indexer Service<br>multipod<br><br>consumer-group=indexer-group]
+    CW[Chunk Writer Service<br>multipod<br><br>consumer-group=chunker-group]
+    MW[Metadata Writer Service<br>multipod<br><br>consumer-group=metadata-group]
+
+    SI[(Search Index<br/>OpenSearch / ClickHouse)]
+    OS[(Object Storage<br/>S3 / Blob)]
+    MDB[(Metadata DB)]
+
+    K1 --> P
+    P --> K2
+
+    K2 --> E
+    E --> K3
+
+    K3 --> IX
+    K3 --> CW
+    K3 --> MW
+
+    IX --> SI
+    CW --> OS
+    MW --> MDB
+          </pre>
+        </div>
+        <table>
+          <tr>
+            <th>Service</th>
+            <th>Work</th>
+          </tr>
+          <tr>
+            <td>Parser Servic</td>
+            <td>
+              Parser Service converts customer-specific formats into a
+              normalized representation<br />
+
+              <table>
+                <tr>
+                  <td>
+                    Suppose Kafka contains:<br />
+                    <pre><code class="language-css">{
+  "tenantId": "abc company",
+  "source": "kubernetes",
+  "payload": {
+    "time": "10:31:12",
+    "level": "ERROR",
+    "msg": "Redis timeout"
+  }
+}</code></pre>
+                  </td>
+                  <td>
+                    Normalized representation (ie its own internal
+                    representation):<br />
+                    <pre><code class="language-css">{
+  "tenantId": "abc company",
+  "timestamp": "2026-08-08T10:31:12Z",       &lt;&lt;&lt;&lt;&lt;
+  "severity": "ERROR",              &lt;&lt;&lt;&lt;&lt;
+  "message": "Redis timeout",       &lt;&lt;&lt;&lt;&lt;
+  "service": "policy-engine",
+  "host": "server-101"
+}</code></pre>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>Enrichment Service</td>
+            <td>
+              Adds additional information(recieved from Collector Agent) to
+              logs<br />
+              <table>
+                <tr>
+                  <td>
+                    <pre><code class="language-css">Cloud region
+Kubernetes cluster
+Namespace
+Pod
+Container
+Availability zone
+Geo information
+Security classification
+                        </code></pre>
+                  </td>
+                  <td>
+                    <pre><code class="language-txt">{
+  "tenantId": "abc company",
+  "timestamp": "...",
+  "severity": "ERROR",
+  "service": "policy-engine",
+  "host": "server-101",
+  "region": "us-east-1",
+  "cluster": "prod-cluster-01",
+  "namespace": "proxy"
+}
+                        </code></pre>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Indexer Service</td>
+            <td>
+              Creates the
+              <a
+                href="/System_Design/Concepts/Databases/Terms/Indexing/#indexing"
+                >inverted indexes</a
+              ><br />
+              <pre><code class="language-css">
+ERROR (present in following documents)
+  ├── document 123
+  ├── document 145
+  └── document 991
+
+policy-engine
+  ├── document 123
+  ├── document 145</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>Chunk Writer</td>
+            <td>
+              Create batch of logs.
+              <code
+                >logs -> Create batch(100MB or 5 sec) -> compress -> encrypt ->
+                S3</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>Metadata Writer</td>
+            <td>
+              Maintains the catalog telling us where the actual data lives<br />
+              <pre><code class="language-txt">Chunk ID: chunk-12345
+Tenant: abc
+Region: us-east-1
+Start Time: 10:00
+End Time: 10:05
+Object: s3://.../chunk-12345.zst
+Log Count: 4,500,000
+Compression: zstd
+Encryption Key: key-42
+              </code></pre>
+            </td>
+          </tr>
+        </table>
+
+        <h2 id="dashboard">Logs on Dashboard</h2>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+flowchart LR
+
+    USER[User]
+
+    UI[Logging Dashboard]
+
+    API[Query API Service]
+
+    AUTH[Authentication &<br>Authorization]
+
+    QC[Query Coordinator]
+
+    QS[ClickHouse Query<br>Service]
+
+    CH[(ClickHouse Shard1<br/>Distributed Tables)]
+    CH1[(ClickHouse Shard2<br/>Distributed Tables)]
+    CH2[(ClickHouse Shard3<br/>Distributed Tables)]
+
+    CACHE[Query Cache<br/>Optional]
+
+    FORMAT[Result Formatter<br/>Pagination / Sorting / Aggregation]
+
+    USER --> UI
+
+    UI --> API
+
+    API --> AUTH
+
+    AUTH --> QC
+
+    QC --> CACHE
+
+    CACHE -->|Cache Miss| QS
+
+    QS <--> CH
+    QS <--> CH1
+    QS <--> CH2
+
+    QS --> QC
+
+    QC --> FORMAT
+
+    FORMAT --> API
+
+    API --> UI
+
+    UI --> USER
+          </pre>
+        </div>
+
+        <h3>Sequence Diagram</h3>
+        <p>
+          Optimization is that (tenant_id, timestamp) should be part of the
+          physical data layout/partitioning strategy, so ClickHouse doesn't scan
+          the entire log dataset.<br />
+          <b>Search from S3/Object Store:</b>When the requested time range has
+          moved to cold storage or when you deliberately keep only a subset of
+          fields in ClickHouse.
+        </p>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+sequenceDiagram
+
+    participant User
+    participant UI as Dashboard/Browser
+    participant API as Query API
+    participant Auth as Auth/IDP
+    participant QC as Query Coordinator
+    participant Cache as Query Cache
+    participant QSvc as ClickHouse Query Service
+    participant CH as ClickHouse Cluster
+    participant S1 as Shard 1
+    participant S2 as Shard 2
+    participant S3 as Shard 3
+
+    User->>UI: Selects<br/>Tenant: abc<br>Service: Policy Engine<br>Severity: ERROR<br>Time: Last 1 hour
+
+    UI->>API: GET /api/v1/logs?<br>service=policy-engine<br>&severity=ERROR<br>&from=10:00<br>&to=11:00
+
+    API->>Auth: Authenticate + authorize user
+
+    Auth-->>API: Authorized for tenant=abc
+
+    API->>QC: Execute log query
+
+    QC->>QC: Validate query<br/>Apply tenant scope<br/>Determine time range<br/>Apply query limits
+
+    QC->>Cache: Check query cache
+
+    alt Cache Hit
+
+        Cache-->>QC: Cached results
+
+    else Cache Miss
+
+        QC->>QSvc: Execute ClickHouse query
+
+        Note over QSvc:SELECT timestamp, service,<br>host,severity,<br>message,trace_id<br>FROM logs<br>WHERE tenant_id = 'abc'<br>AND service = 'policy-engine'<br>AND severity = 'ERROR'<br>AND timestamp >= now() - INTERVAL 1 HOUR<br>ORDER BY timestamp DESC<br>LIMIT 100;
+        QSvc->>CH: Distributed query
+
+        CH->>S1: Query relevant partitions
+        CH->>S2: Query relevant partitions
+        CH->>S3: Query relevant partitions
+
+        S1-->>CH: Matching rows
+        S2-->>CH: Matching rows
+        S3-->>CH: Matching rows
+
+        CH->>CH: Merge shard results
+        CH->>CH: Sort by timestamp
+        CH->>CH: Apply LIMIT / aggregation
+
+        CH-->>QSvc: Query results
+
+        QSvc-->>QC: Query results
+
+        QC->>Cache: Store result (optional)
+
+    end
+
+    QC->>QC: Merge / sort / paginate
+
+    QC-->>API: Final result set
+
+    API-->>UI: JSON response
+
+    UI->>UI: Render log table
+
+    UI-->>User: Display logs
+          </pre>
+        </div>
+      </article>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>

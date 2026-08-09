@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dynamic Dispatch Rust</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Dynamic_Dispatch.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Dynamic Dispatch</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">Dynamic Dispatch</h2>
+      <p>
+        Box &lt;dyn Printable&gt; enable dynamic dispatch without the need for
+        runtime type information.
+      </p>
+      <pre><code class="language-css">
+trait Printable {
+    fn print(&self);
+}
+
+struct Base;
+struct Derived;
+
+impl Printable for Base {
+    fn print(&self) {
+        println!("Base");
+    }
+}
+
+impl Printable for Derived {
+    fn print(&self) {
+        println!("Derived");
+    }
+}
+
+fn main() {
+    let base: Box&lt;dyn Printable&gt; = Box::new(Derived);
+    base.print(); // Dynamic dispatch without RTTI
+}    
+</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

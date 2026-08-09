@@ -138,6 +138,19 @@ pre[class*="language-cpp"] {
   white-space: pre; /* preserve exact spacing for C++ examples */
 }
 
+/* C++ specific styling: add a `language-txt` selector so code blocks
+   using `language-txt` receive the same Prism styling and a slightly
+   larger monospace font. Use `white-space: pre` so code spacing and
+   angle-brackets appear as expected in rendered output. */
+code.language-txt,
+pre.language-txt,
+code[class*="language-txt"],
+pre[class*="language-txt"] {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 11px;
+  white-space: pre; /* preserve exact spacing for C++ examples */
+}
+
 /* C specific styling: add a `language-c` selector so code blocks
    using `language-c` receive the same Prism styling as C/C++ examples */
 code.language-c,
