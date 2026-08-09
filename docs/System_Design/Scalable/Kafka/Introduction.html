@@ -42,24 +42,23 @@
       <a href="#concepts">Core concepts</a>
       <ul>
         <li><a href="#records">Records &amp; offsets</a></li>
-        <li><a href="#topics">Topics &amp; partitions</a></li>
+        <li><a href="#topics">Topics</a></li>
+        <li><a href="#partitions">Partitions &amp; Replicas</a></li>
         <li><a href="#brokers">Brokers &amp; cluster</a></li>
         <li><a href="#consumer-groups">Consumer groups</a></li>
         <li><a href="#hwm">High-water mark</a></li>
       </ul>
       <a href="#workflow">Publish &amp; consume flow</a>
       <a href="#zookeeper">ZooKeeper / KRaft</a>
-      <a href="">Storing messages on disk</a>
-      <ul>
-        <li><a href="#storage">Disk · retention · quotas</a></li>
-      </ul>
+      <a href="#storage">Storing messages on disk</a>
       <a href="#delivery">Delivery semantics</a>
-      <a href="#issues">Data issues & fixes</a>
+      <a href="#dlq">Dead letter queue</a>
+      <a href="#dead">Kafka Broker Dead</a>
     </aside>
 
     <main style="margin-left: 200px">
       <article>
-        <h2 id="overview">Apache Kafka — Distributed Messaging System</h2>
+        <h1 id="overview">Apache Kafka — Distributed Messaging System</h1>
         <p>
           Kafka is an open-source
           <b>Distributed Message Storage platform</b>.<br />
@@ -73,7 +72,7 @@
           consumer can be tied to the system.
         </p>
 
-        <h2 id="requirements">Requirements</h2>
+        <h1 id="requirements">Requirements</h1>
         <h4>Non Functional</h4>
         <p>
           <b>High throughput:</b> Ingest millions of events/sec from many
@@ -108,7 +107,7 @@
           Buffer spikes; drop or compact old data by policy, not by accident.
         </p>
 
-        <h2 id="use-cases">Where Kafka Use Cases</h2>
+        <h1 id="use-cases">Where Kafka Use Cases</h1>
         <h4>Good Fit</h4>
         <p>
           <b>Event streaming / log aggregation</b> — app logs, metrics,
@@ -145,7 +144,7 @@
           multi-partition = per-key or partition order.
         </p>
 
-        <h2 id="architecture">Architecture</h2>
+        <h1 id="architecture">Architecture</h1>
         <p>
           Cluster of brokers, topics split into partitions, and a special
           <code>__consumer_offsets</code> topic<br />
@@ -205,7 +204,7 @@ struct Message/Payload {
 ┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴
           </code></pre>
 
-        <h3>Read & Write paths</h3>
+        <h2>Read & Write paths</h2>
         <table>
           <tr>
             <td width="50%">
@@ -237,9 +236,9 @@ struct Message/Payload {
           </tr>
         </table>
 
-        <h2 id="concepts">Core concepts</h2>
+        <h1 id="concepts">Core concepts</h1>
 
-        <h3 id="records">Records, messages, and offsets</h3>
+        <h2 id="records">Records, messages, and offsets</h2>
         <p>
           A <strong>record</strong> (message) is typically a
           <code>(key, value, timestamp, headers)</code> byte sequence. Records
@@ -251,15 +250,46 @@ struct Message/Payload {
           preserves order per key.
         </p>
 
-        <h3 id="topics">Topics and partitions</h3>
+        <h2 id="topics">Topics</h2>
         <p>
           A <strong>topic</strong> is a named stream of records (e.g.
           <code>orders</code>, <code>payments</code>). Topics are split into
-          <strong>partitions</strong> for scale. Rule:
-          <strong>{1 topic → N partitions}</strong>. 1 partiton stores 1 topic
+          <strong>partitions</strong> for scale.
         </p>
 
-        <h3 id="brokers">Brokers and cluster</h3>
+        <h2 id="partitions">Partitions and Replicas</h2>
+        <h3>Partitions</h3>
+        <p>
+          Partitions split a topic's data into independent, non-overlapping
+          shards for scalability.<br />
+          If <code>topic=employee</code> has 2 partitions & 3 messages msg1
+          msg2, msg3. Then messages gets distributed across them (by key hash,
+          or round-robin if no key).<br />
+          <font color="green">Messages are never duplicated on Partitions.</font
+          ><br />
+          <b>Will 2 partition always lie on different brokers?</b> No, depends
+          on number of brokers and kafka configuration.
+          <code>if (brokers &lt; partitions)</code> how can partitions go on
+          seperate brokers
+        </p>
+        <pre><code class="language-css">|--- Partition 0 ---|
+| topic=employee    |----&gt;  Insync replica ISR(Leader) ----&gt; Replica1(Follower)
+| msg1 msg3         |                               |---------&gt; Replica2(Follower)
+|-------------------|         
+
+|--- Partition 1 ---|
+| topic=employee    |----&gt; Replica
+| msg2              |
+|-------------------|</code></pre>
+
+        <h3>Replicas</h3>
+        <p>
+          Replicas are copies of the same partition, spread across different
+          brokers, purely for <b>fault tolerance</b>.<br />
+          "partition 0" itself might have 3 replicas (1 leader + 2 followers)
+        </p>
+
+        <h2 id="brokers">Brokers and cluster</h2>
         <p>
           A <strong>broker</strong> is a Kafka server (default port
           <code>9092</code>) that stores partitions on local disk. A
@@ -271,34 +301,99 @@ struct Message/Payload {
           leaders).
         </p>
 
-        <h3 id="consumer-groups">Consumer groups</h3>
+        <h2 id="consumer-groups">Consumer group</h2>
         <p>
-          A consumer group is set of consumers that work together to read
-          topics. 1 consumer is given resonsiblity to read 1 or more topics to
-          partitions.<br />
-          This helps to avoid all consumers reading same message and hence to
-          scale (up to partition count).
+          A consumer group is (set of consumers = pods of same service) that
+          work together to read 1 topic.<br />
+          (1 consumer = 1 pod) is given responsiblity to read some messages from
+          topic, while other consumer will read rest of messages<br />
+          2 consumers will never read same message from topic helps to avoid
+          duplicate work.
         </p>
-        <pre><code>
-Topic(Orders)
-Partition 0(3 messages): A B C
-Partition 1(3 messages): D E F
-Partition 2(3 messages): G H I
-
-Consumer group(OrderProcessors)
-	Consumer 1 reads +--> Partition 0, Partition 2
-	Consumer 2 reads +--> Partition 1
-Note Consumer 1 never reads Partition-1
-        </code></pre>
-
+        <h3>Example</h3>
         <p>
-          Offset progress is stored in the internal topic
-          <code>__consumer_offsets</code> (committed offset per group, topic,
-          partition). If a consumer dies, its partitions are
-          <strong>rebalanced</strong> to surviving members.
+          - Conside a Topic(Employee) has 2 partitions, receiving a continuous
+          stream of employee-update events<br />
+          - Partition 0 has 2 messages(msg1,msg2) and Partition 1 has 1
+          message(msg3)<br />
+          - 3 seperate microservices want to read all messages from
+          topic=Employee.
         </p>
 
-        <h3 id="hwm">High-water mark (HWM)</h3>
+        <table>
+          <tr>
+            <td>
+              <pre><code>
+┬───────────────────── Broker 1 ────────────────────────────┐
+| ┬────── Partition 0 ────────┐                             |
+| | ┬── topic = Employee ──┐  |                             |
+| | | msg1->msg2           |  |                             |
+| | ┴──────────────────────┴  |                             |
+| ┴───────────────────────────┴                             |
+|                                                           |
+| ┬────── Partition 1 ────────┐                             |
+| | ┬── topic = Employee ──┐  |                             |
+| | | msg3                 |  |                             |
+| | ┴──────────────────────┴  |                             |
+| ┴───────────────────────────┴                             |
+|                                                           |
+| ┬───────────── topic = __consumer_offset ───────────────┐ |
+| | Consumer_Name  ID    Topic  Committed_Offset  State   | |
+| | Consumer-1     uid1  Emp    Read till msg1    Alive   | |
+| | Consumer-2     uid1  Emp    Read till msg3    Alive   | |
+| ┴───────────────────────────────────────────────────────┴ |
+┴───────────────────────────────────────────────────────────┴
+</code></pre>
+            </td>
+            <td>
+              - All pods of 1 microservice will be in same consumer group<br />
+              - 3 microservices will be in seperate consumer group<br /><br />
+              <table>
+                <tr>
+                  <th>Consumer Group</th>
+                  <th>Purpose</th>
+                  <th>Members</th>
+                  <th>Partition assignment</th>
+                  <th>What it sees</th>
+                </tr>
+                <tr>
+                  <td>audit-log</td>
+                  <td>Service A:<br />writes every event to an audit trail</td>
+                  <td>1 pod</td>
+                  <td>1 pod owns all partitions</td>
+                  <td>All messages</td>
+                </tr>
+                <tr>
+                  <td>search-index</td>
+                  <td>Service B:<br />Update elasticsearch</td>
+                  <td>3 pods (HPA)</td>
+                  <td>
+                    pod1(read P0)<br />pod2(read P1)<br />pod3(idle no work)
+                  </td>
+                  <td>Work split in pods</td>
+                </tr>
+                <tr>
+                  <td>email-notify</td>
+                  <td>Service C:<br />sends "profile updated notification"</td>
+                  <td>2 pods</td>
+                  <td>pod1(read P0)<br />pod2(read P1)</td>
+                  <td>Work split in pods</td>
+                </tr>
+              </table>
+              <br />
+              <b
+                >How Kafka enforce the guarantee (2 consumers will not read same
+                message)?</b
+              >
+              Each consumer group tracks its own committed offset per partition
+              using <code>topic = __consumer_offsets</code>. If a consumer dies,
+              its partitions are <strong>rebalanced</strong> to surviving
+              members.
+            </td>
+          </tr>
+        </table>
+
+        <h2 id="hwm">High-water mark (HWM)</h2>
         <p>
           When consumer/subscriber reads from Leader. Leader never returns
           messages which have not been replicated to a minimum set of ISRs.<br />
@@ -321,7 +416,7 @@ Note Consumer 1 never reads Partition-1
         />
 
         <h2 id="workflow">Workflow — one message publish and consume</h2>
-        <div class="mermaid-wrap mermaid-compact">
+        <div class="mermaid-wrap">
           <pre class="mermaid">
 sequenceDiagram
     autonumber
@@ -365,9 +460,9 @@ sequenceDiagram
           leaders, ISR, and broker membership — the storage layer changed.
         </p>
 
-        <h2 id="storage">
+        <h1 id="storage">
           Storing messages on disk, log retention, and client quotas
-        </h2>
+        </h1>
 
         <h3>Log segments on disk</h3>
         <p>
@@ -439,61 +534,22 @@ sequenceDiagram
           </tr>
         </table>
 
-        <h2 id="issues">Common data issues and how to resolve them</h2>
+        <h2 id="dlq">Dead letter queue (DLQ)</h2>
+        <p>
+          DLQ is a topic on which consumer has to write error messages<br />
+          When a topic arrives at consumer, and it finds a unrecoverable error
+          in message.<br />
+          It catches the exception and explicitly produces (writes) that failed
+          message into the DLQ topic.<br />
+          It then commits the offset of the original message so it can continue
+          consuming newer messages.
+        </p>
 
+        <h2 id="dead">Kafka Broker Dead</h2>
+        <h3>Producer Actionables</h3>
         <p>
-          <b>1. Message loss.</b><br />
-          Cause: <code>acks=0/1</code>, unclean leader election, producer not
-          retrying. Fix: <code>acks=all</code>,
-          <code>min.insync.replicas=2</code>, disable
-          <code>unclean.leader.election.enable</code>, enable producer retries
-          and idempotence.
-        </p>
-        <p>
-          <b>2. Duplicate messages.</b><br />
-          Cause: at-least-once retries, consumer crash after process but before
-          commit (or vice versa). Fix: idempotent consumers (store processed
-          IDs), idempotent producer, transactional writes, or dedupe in
-          downstream store.
-        </p>
-        <p>
-          <b>3. Out-of-order delivery.</b><br />
-          Cause: multiple partitions, retries, different keys routed to
-          different partitions. Fix: use same key for events that must stay
-          ordered; single partition if global order required; partition count
-          fixed at create time (or use rekeying carefully).
-        </p>
-        <p>
-          <b>4. Consumer lag growing.</b><br />
-          Cause: slow processing, too few consumers, hot partition skew. Fix:
-          scale consumer group (≤ partition count), optimize handler, increase
-          partitions and rebalance keys, monitor <code>records-lag-max</code>.
-        </p>
-        <p>
-          <b>5. Hot partition / skew.</b><br />
-          Cause: poor key choice (null key or constant key). Fix: choose
-          high-cardinality keys; custom partitioner; salting for extreme
-          hotspots.
-        </p>
-        <p>
-          <b>6. Disk full.</b><br />
-          Cause: retention too long, no size cap, replication multiplies
-          storage. Fix: lower <code>retention.ms/bytes</code>, add disks, tiered
-          storage (Kafka 3.x+), compression
-          (<code>compression.type=lz4/zstd</code>).
-        </p>
-        <p>
-          <b>7. Rebalance storms.</b><br />
-          Cause: consumers join/leave frequently, long
-          <code>max.poll.interval.ms</code> exceeded during heavy processing.
-          Fix: static group membership, cooperative rebalancer, increase
-          interval, decouple processing from poll loop.
-        </p>
-        <p>
-          <b>8. Under-replicated partitions.</b><br />
-          Cause: broker down, network issues, disk slow on follower. Fix:
-          restore broker, replace failed disk, rack awareness, alert on ISR
-          shrink; avoid rolling restart of too many brokers at once.
+          1. Producer should send messages after retry timer<br />
+          2. Discover new leader as it comes from ISR
         </p>
       </article>
     </main>

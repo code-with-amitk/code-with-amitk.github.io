@@ -1,78 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Database Commands</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Databases/SQL/PostgreSQL/Postgres_Commands.html" />
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Databases/SQL/PostgreSQL/Postgres_Commands.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
-       </li>
-    </ul>
-</nav>
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
-    <a href="#login">Login</a>
-    <a href="#create">Create</a>
-    <ul>
-      <li><a href="#connect">Create DB & Connect to it</a></li>
-      <li><a href="#createtable">Create table & insert data</a></li>
-      <li><a href="#index">Table Index</a></li>
-    </ul>
-    <a href="#read">Read</a>
-    <ul>
-      <li><a href="#listdb">List Database, List Tables, Show Table schema</a></li>
-    </ul>
-    <a href="#update">Update</a>
-    <ul>
-      <li><a href="#addcolomn">Add Col in table</a></li>
-      <li><a href="#colomn">Change Col name in table</a></li>
-      <li><a href="#delcol">Remove col from table</a></li>
-      <li><a href="#updatecol">Update entry in col in table</a></li>
-    </ul>
-    <a href="#delete">Delete</a>
-    <a href="#join">JOIN Tables</a>
-  </aside>
+    <aside class="sidebar">
+      <a href="#login">Login</a>
+      <a href="#create">Create</a>
+      <ul>
+        <li><a href="#connect">Create DB & Connect to it</a></li>
+        <li><a href="#createtable">Create table & insert data</a></li>
+        <li><a href="#index">Table Index</a></li>
+      </ul>
+      <a href="#read">Read</a>
+      <ul>
+        <li>
+          <a href="#listdb">List Database, List Tables, Show Table schema</a>
+        </li>
+      </ul>
+      <a href="#update">Update</a>
+      <ul>
+        <li><a href="#addcolomn">Add Col in table</a></li>
+        <li><a href="#colomn">Change Col name in table</a></li>
+        <li><a href="#delcol">Remove col from table</a></li>
+        <li><a href="#updatecol">Update entry in col in table</a></li>
+      </ul>
+      <a href="#delete">Delete</a>
+      <a href="#join">JOIN Tables</a>
+    </aside>
 
-  <main>
-    <article style="margin-left:200px;">
-      <h3><a href="../Terms/Joins_Left_Right.html#order">SQL Execution Order</a></h3>
-      <dl>
-        if there is a complicated query having SELECT, FROM, JOINS, WHERE and other SQL commands parameters
-        then there is order in which each keyword is executed defined by ANSI SQL
-      </dl>
+    <main>
+      <article style="margin-left: 200px">
+        <h3>
+          <a href="../Terms/Joins_Left_Right.html#order">SQL Execution Order</a>
+        </h3>
+        <dl>
+          if there is a complicated query having SELECT, FROM, JOINS, WHERE and
+          other SQL commands parameters then there is order in which each
+          keyword is executed defined by ANSI SQL
+        </dl>
 
-      <h3 id="login">Login to DB</h3>
-      <table>
-        <tr>
-          <th>Description</th>
-          <th>Command</th>
-        </tr>
-        <tr>
-          <td>
-              Login to database as user=postgres
-          </td>
-          <td>
-            <table>
-              <tr>
-                <td><pre><code class="language-css">
+        <h3 id="login">Login to DB</h3>
+        <table>
+          <tr>
+            <th>Description</th>
+            <th>Command</th>
+          </tr>
+          <tr>
+            <td>Login to database as user=postgres</td>
+            <td>
+              <table>
+                <tr>
+                  <td>
+                    <pre><code class="language-css">
 //Linux
 # sudo -u postgres psql
-                </code></pre></td>
-                <td><pre><code class="language-css">
+                </code></pre>
+                  </td>
+                  <td>
+                    <pre><code class="language-css">
 //Windows
 C:\Users\user> psql -U postgres
 Password for user postgres:
@@ -85,15 +100,16 @@ Type "help" for help.
 
 postgres=#
                 </code></pre>
-              </tr>
-            </table>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
-      </table>
+        </table>
 
-      <h3 id="create">Create</h3>
-      <h4 id="connect">Create DB & Connect to it</h4>
-      <pre><code class="language-css">
+        <h3 id="create">Create</h3>
+        <h4 id="connect">Create DB & Connect to it</h4>
+        <pre><code class="language-css">
 postgres=# create database teachers;
 CREATE DATABASE
 postgres=# \c teachers;              //Connect to DB
@@ -101,8 +117,8 @@ You are now connected to database "teachers" as user "postgres".
 teachers-#
       </code></pre>
 
-      <h4 id="createtable">Create table & insert data</h4>
-      <pre><code class="language-css">
+        <h4 id="createtable">Create table & insert data</h4>
+        <pre><code class="language-css">
 ********** Create Table **********
 teachers=# CREATE TABLE teachers_login (
 id serial PRIMARY KEY,
@@ -127,13 +143,16 @@ id |       email       |    password_hash
 (1 row)
       </code></pre>
 
-      <h4 id="index">Table Index</h4>
-      <dl>
-        index can be created before or after table creation.<br>
-        <a href="/System_Design/Concepts/Databases/Indexing/" target="_blank">
-          Meaning of Index<br> Advantages of Indexing<br> Types of Indexing (BTree, Hash, Rtree)</a>
-      </dl>
-      <pre><code class="language-css">
+        <h4 id="index">Table Index</h4>
+        <dl>
+          index can be created before or after table creation.<br />
+          <a href="/System_Design/Concepts/Databases/Indexing/" target="_blank">
+            Meaning of Index<br />
+            Advantages of Indexing<br />
+            Types of Indexing (BTree, Hash, Rtree)</a
+          >
+        </dl>
+        <pre><code class="language-css">
 // We have Tenants Table
 -- Create tenants table
 CREATE TABLE tenants (
@@ -145,9 +164,9 @@ CREATE TABLE tenants (
 CREATE UNIQUE INDEX idx_tenant_name ON tenants(tenant_name);
       </code></pre>
 
-      <h3 id="read">Read</h3>
-      <h4 id="listdb">List Database, List Tables, Show Table schema</h4>
-      <pre><code class="language-css">
+        <h3 id="read">Read</h3>
+        <h4 id="listdb">List Database, List Tables, Show Table schema</h4>
+        <pre><code class="language-css">
 ********** Lists all available commands **********
 postgres=# \h
 
@@ -183,9 +202,9 @@ password_salt | text                   |           | not null |
 active        | boolean                |           | not null | false
       </code></pre>
 
-      <h3 id="update">Update</h3>
-      <h4 id="addcolomn">Add Col</h4>
-      <pre><code class="language-css">
+        <h3 id="update">Update</h3>
+        <h4 id="addcolomn">Add Col</h4>
+        <pre><code class="language-css">
 // Adding tenant_id to leads Table.
 // tenant_id is FOREIGN key in tenants table
 ALTER TABLE leads
@@ -194,16 +213,16 @@ ADD CONSTRAINT fk_tenant FOREIGN KEY (tenant_id) REFERENCES tenants(id);
 ALTER TABLE
       </code></pre>
 
-      <h4 id="colomn">Change Col name</h4>
-      <pre><code class="language-css">
+        <h4 id="colomn">Change Col name</h4>
+        <pre><code class="language-css">
 ALTER TABLE table_name RENAME COLUMN old_name to new_name;
 
 crm=# ALTER TABLE tenants RENAME COLUMN tenant_id to tenant_name;
 ALTER TABLE
       </code></pre>
 
-      <h4 id="delcol">Remove col from table</h4>
-      <pre><code class="language-css">
+        <h4 id="delcol">Remove col from table</h4>
+        <pre><code class="language-css">
 crm=# select * from employees;
 id | email | passwd_hash | tenant_id | is_admin | created_at
 ----+-------+-------------+-----------+----------+------------
@@ -218,8 +237,8 @@ id | email | tenant_id | is_admin | created_at
 (0 rows)
       </code></pre>
 
-      <h4 id="updatecol">Update entry in col in table</h4>
-      <pre><code class="language-css">
+        <h4 id="updatecol">Update entry in col in table</h4>
+        <pre><code class="language-css">
 crm=# select * from employees;
 id | email | passwd_hash | tenant_id | is_admin | created_at
 ----+-------+-------------+-----------+----------+------------
@@ -229,24 +248,23 @@ id | email | passwd_hash | tenant_id | is_admin | created_at
 crm=# update employees set is_admin=t where email='test@gmail.com'
       </code></pre>
 
-      <h3 id="delete">Delete</h3>
-      <pre><code class="language-css">
-********** Delete database teachers **********
-postgres=# DROP DATABASE teachers;
+        <h3 id="delete">Delete</h3>
+        <pre><code class="language-css">postgres=# DROP DATABASE teachers;      # Delete DB
 DROP DATABASE
 
-********** Delete table users **********
-postgres=# DROP table users;
+postgres=# DROP table users;    # Delete table
 DROP TABLE
-      </pre></code>
 
-      <h3 id="join">JOIN 2 tables</h3>
-      <dl>
-        1. Create 2 tables (Person, PersonFriend)<br>
-        2. Find friends of Bob from PersonFriend table.<br>
-        https://onecompiler.com/mysql/42szxs8p5
-      </dl>
-      <pre><code class="language-css">
+postgres=# delete from table where condition;     # Delete entry from table
+      </code></pre>
+
+        <h3 id="join">JOIN 2 tables</h3>
+        <dl>
+          1. Create 2 tables (Person, PersonFriend)<br />
+          2. Find friends of Bob from PersonFriend table.<br />
+          https://onecompiler.com/mysql/42szxs8p5
+        </dl>
+        <pre><code class="language-css">
 create table Person(ID int primary key, Person text);
 insert into Person values(1, 'alice');
 insert into Person values(2, 'Bob');
@@ -297,9 +315,8 @@ Output:
 | zach   |
 +--------+
       </code></pre>
-
-    </article>
-  </main>
-  <script src="/scripts/prism.js"></script>
-</body>
+      </article>
+    </main>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

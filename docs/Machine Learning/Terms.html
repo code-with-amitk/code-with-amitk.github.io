@@ -45,6 +45,7 @@
       <a href="#axis">Axis</a>
       <a href="#bias">Bias/Sampling Bias</a>
       <a href="#conda">Conda</a>
+      <a href="#Confusion">Confusion Matrix</a>
       <a href="#cntk">CNTK</a>
       <a href="#Dataset">Dataset</a>
       <a href="#em">Embedding Models</a>
@@ -125,51 +126,22 @@
         </tr>
       </table>
 
-      <h3 id="ActivationFunction">Activation Function</h3>
+      <h2 id="ActivationFunction">Activation Function</h2>
       <p>
-        <strong>Relu:</strong> Relu is operation carried on 2D Tensor. if value
-        is less than 0, Take 0 else take the original value
+        Activation function is applied on output of a Layer. It makes the layer
+        behave as <a href="./ML_and_Types_Algorithms.html">sigmoid</a>(for
+        binary classification), softmax(for multi-class classification), no
+        activation(for
+        <a href="./ML_and_Types_Algorithms.html">linear regression</a>).
       </p>
-      <pre><code class="language-css">
-#Means max(x,0)
+      <pre><code class="language-css">model = keras.Sequential([
+  layers.Dense(1),                        # Linear Regression. /Machine%20Learning/ML_and_Types_Algorithms.html
+  layers.Dense(1, activation="sigmoid"),  # Sigmoid Function. Logistic Regression. /Machine%20Learning/ML_and_Types_Algorithms.html
+  layers.Dense(64, activation="relu"),    # ReLU (Rectified Linear Unit) 
+  layers.Dense(32, activation="softmax"),    # Converts a vector of raw scores into probabilities that sum up to 1.
+])</code></pre>
 
-def relu(x):     
-    if (element < 0)
-        Replace with 0
-    else
-        Keep element as it is
-
-def naive_relu(x):                      #x is 2D Tensor
-    assert len(x.shape) == 2
-
-    x = x.copy()                        #copy to avoid changing input
-    for i in range(x.shape[0]):         #x.shape[0]=2
-        for j in range(x.shape[1]):     #x.shape[1]=3
-            x[i, j] = max(x[i, j], 0)
-return x            
-
-a = np.array([              #Dimension=2. Shape(2,3)
-            [0, 1, -2],
-            [4, 5, -6],
-        ])
-b = naive_relu(a)
-print(b)
-[[0 1 0]
- [4 5 0]]
-
-        </code></pre>
-
-      <p>
-        Adding activation function to a layer introduces non-linearity into the
-        model, allowing it to learn more complex relationships between the input
-        and output data<br />
-
-        Non-linear activation functions such as ReLU, Sigmoid, and Tanh can help
-        the model to better fit the training data and make more accurate
-        predictions on new data.
-      </p>
-
-      <h3 id="axis">Axis</h3>
+      <h2 id="axis">Axis</h2>
       <h4>Pandas</h4>
       <p>
         <b>In <a href="/Machine Learning/">Pandas Dataframe</a>:</b> axis can
@@ -191,7 +163,208 @@ print(b)
         required software especially for the GPU setup.
       </p>
 
-      <h3 id="Dataset">Dataset</h3>
+      <h1 id="Confusion">Confusion Matrix</h1>
+      <p>
+        Model's work is to detect cancer. Positive result would be considered
+        when model correctly detects cancer
+      </p>
+      <pre><code class="language-css">Example: Cancer Detection
+Suppose there are 100 people.
+- 20 actually have cancer. 80 do not have cancer.
+
+The AI predicts (Confusion Matrix):
+Actual	      Predicted Cancer	Predicted Healthy
+Cancer(20)	      18	            2             // out of 20
+Healthy(80)	      10	            70            // out of 80
+
+--------------------100 Patients--------------------------------------
+=====20 cancer=====|==================80 Healthy======================
+..18cancer....2no..|....10cancer....,............70healthy............
+  TP          FN         FP                       TN
+</code></pre>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Meaning</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td>True Positive (TP)</td>
+          <td>Model said Cancer, actually Cancer</td>
+          <td>18</td>
+        </tr>
+        <tr>
+          <td>True Negative (TN)</td>
+          <td>Model said Healthy, actually Healthy</td>
+          <td>70</td>
+        </tr>
+        <tr>
+          <td>False Positive (FP)</td>
+          <td>Model said Cancer, actually Healthy</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>False Negative (FN)</td>
+          <td>Model said Healthy, actually Cancer</td>
+          <td>2</td>
+        </tr>
+      </table>
+
+      <h2>Recall, Precision, Accuracy, False Positive Rate</h2>
+      <table>
+        <tr>
+          <th>Metric</th>
+          <th>Formula</th>
+          <th>Question it Answers</th>
+          <th>Simple Analogy</th>
+          <th>Use When...</th>
+          <th>Avoid When...</th>
+          <th>Memory Trick</th>
+        </tr>
+
+        <tr>
+          <td><b>Accuracy</b></td>
+          <td>
+            <code>(TP + TN) / (TP + TN + FP + FN)</code>
+          </td>
+          <td>Out of all predictions, how many were correct?</td>
+          <td>
+            Exam score.<br />
+            "Out of 100 questions, how many did I answer correctly?"
+          </td>
+          <td>
+            <ul>
+              <li>Balanced dataset</li>
+              <li>Both mistake types (FP & FN) have similar cost</li>
+              <li>General model evaluation</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>Imbalanced datasets</li>
+              <li>Rare events (fraud, cancer, spam)</li>
+            </ul>
+          </td>
+          <td>
+            <b>Overall correctness</b>
+          </td>
+        </tr>
+
+        <tr>
+          <td><b>Recall</b><br />(Sensitivity / True Positive Rate)</td>
+          <td>
+            <code>TP / (TP + FN)</code>
+          </td>
+          <td>Out of all actual positives, how many did I detect?</td>
+          <td>
+            Police catching criminals.<br />
+            Did we catch all criminals?
+          </td>
+          <td>
+            <ul>
+              <li>Cancer detection</li>
+              <li>Fraud detection</li>
+              <li>Fire alarms</li>
+              <li>Cyber attacks</li>
+              <li>Intrusion detection</li>
+            </ul>
+          </td>
+          <td>When false alarms are more expensive than missing cases.</td>
+          <td>
+            <b>Don't miss real positives.</b><br />
+            High Recall = Few False Negatives.
+          </td>
+        </tr>
+
+        <tr>
+          <td><b>Precision</b></td>
+          <td>
+            <code>TP / (TP + FP)</code>
+          </td>
+          <td>
+            Out of everything predicted positive, how many were actually
+            positive?
+          </td>
+          <td>
+            Police arrests.<br />
+            If someone is arrested, are they actually a criminal?
+          </td>
+          <td>
+            <ul>
+              <li>Spam filtering</li>
+              <li>Search engines</li>
+              <li>Face recognition</li>
+              <li>Recommendation systems</li>
+            </ul>
+          </td>
+          <td>When missing positives is much worse than false alarms.</td>
+          <td>
+            <b>When I say YES, I should be right.</b><br />
+            High Precision = Few False Positives.
+          </td>
+        </tr>
+
+        <tr>
+          <td><b>False Positive Rate (FPR)</b></td>
+          <td>
+            <code>FP / (FP + TN)</code>
+          </td>
+          <td>
+            Out of all actual negatives, how many did I wrongly classify as
+            positive?
+          </td>
+          <td>
+            Airport security.<br />
+            How many innocent passengers triggered the alarm?
+          </td>
+          <td>
+            <ul>
+              <li>Airport security</li>
+              <li>Bank fraud alerts</li>
+              <li>Medical screening</li>
+              <li>Authentication systems</li>
+            </ul>
+          </td>
+          <td>
+            When actual negatives are extremely few (metric becomes unstable).
+          </td>
+          <td>
+            <b>False Alarm Rate.</b><br />
+            Lower is always better.
+          </td>
+        </tr>
+      </table>
+
+      <h3>One-Line Memory Tricks</h3>
+
+      <table>
+        <tr>
+          <th>Metric</th>
+          <th>Remember It As...</th>
+        </tr>
+
+        <tr>
+          <td>Accuracy</td>
+          <td>How often am I correct overall?</td>
+        </tr>
+
+        <tr>
+          <td>Recall</td>
+          <td>Did I catch all the real positives?</td>
+        </tr>
+
+        <tr>
+          <td>Precision</td>
+          <td>When I predict Positive, am I usually right?</td>
+        </tr>
+
+        <tr>
+          <td>False Positive Rate</td>
+          <td>How often do I raise a false alarm?</td>
+        </tr>
+      </table>
+
+      <h1 id="Dataset">Dataset</h1>
       <p>
         Datasets are made up of individual entries that contain features and a
         label. Example: Xcel sheet having data is a dataset<br />
@@ -223,10 +396,14 @@ print(b)
         </tr>
       </table>
 
-      <h3 id="opt">Optimizers</h3>
+      <h1 id="opt">Optimizer</h1>
       <p>
-        optimizer is an algorithm used to adjust the parameters of a model in
-        order to minimize the <a href="#loss">error or loss function</a>
+        Optimizer minimizes
+        <a href="/Machine%20Learning/ML_and_Types_Algorithms.html"
+          >Gradient Descent</a
+        >
+        to minimize the
+        <a href="#loss">Loss</a>
       </p>
       <table>
         <tr>
@@ -250,8 +427,34 @@ optimizer = RMSprop(learning_rate=0.001, rho=0.9)
         <tr>
           <td>2. Stochastic Gradient Descent (SGD)</td>
           <td>
-            Adjusts the model parameters based on the average gradient of the
-            loss
+            updates the parameters by taking a fixed step size (the
+            <a href="/Machine%20Learning/ML_and_Types_Algorithms.html"
+              >learning rate</a
+            >)
+          </td>
+          <td>
+            <pre><code class="language-css">
+from keras.optimizers import SGD
+optimizer = SGD(learning_rate=0.01, momentum=0.9)
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>3. SGD with momentum</td>
+          <td>
+            To fix the oscillation problem of standard SGD, Momentum adds a
+            velocity term ($v$)
+          </td>
+          <td>
+            <pre><code class="language-css">
+                </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>4. "adam" (Adaptive Moment Estimation)</td>
+          <td>
+            Adam combines the principles of Momentum (tracking the mean of the
+            gradients, or first moment m<sub>t</sub>)
           </td>
           <td>
             <pre><code class="language-css">
@@ -348,7 +551,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         <a href="#Training">training</a> is done), we can use the model to make
         predictions, called inferences, on unlabeled examples.
       </p>
-      <h3 id="Label">Label</h3>
+      <h1 id="Label">Label</h1>
       <p>
         The label is the "answer," or the value we want the model to predict.
       </p>
@@ -474,23 +677,32 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         Image and text-to-image
       </p>
 
-      <h2 id="loss">Loss</h2>
+      <h1 id="loss">
+        <a
+          href="https://developers.google.com/machine-learning/crash-course/linear-regression/loss"
+          >Loss</a
+        >
+      </h1>
       <p>
-        difference between the predicted and actual values. Loss focuses on the
-        distance between the values, not the direction. For example, if a model
-        predicts 2, but the actual value is 5, we don't care that the loss is
-        negative (2 – 5= –3). Instead, we care that the distance between the
-        values is 3.
+        Loss is a numerical metric that describes how wrong a model's
+        predictions are. Loss measures the distance between the model's
+        predictions and the actual <a href="#Label">labels</a>. <br />
+        Loss focuses on the distance between the values, not the direction. For
+        example, if a model predicts 2, but the actual value is 5, we don't care
+        that the loss is negative (2 – 5= –3). Instead, we care that the
+        distance between the values is 3.
       </p>
 
-      <h3>Losses in Linear Regression</h3>
+      <h2>
+        Losses in <a href="ML_and_Types_Algorithms.html">Linear Regression</a>
+      </h2>
       <p>
-        In <a href="ML_and_Types_Algorithms.html">linear regression</a>, there
-        are five main types of loss, which are outlined below. <br />
+        1. MAE(Mean Absolute Error)<br />
+        2. MSE(Mean Squared Error)<br />
+        3. RMSE(Root Mean Squared Error)<br />
+        4. L2 Loss<br />
         Loss metrics like MAE and RMSE may be preferable to L2 loss or MSE in
-        some use cases because they tend to be more human-interpretable.<br />
-        Loss, MAE(Mean Absolute Error), MSE(Mean Squared Error), RMSE(Root Mean
-        Squared Error).
+        some use cases because they tend to be more human-interpretable.
       </p>
       <img
         src="/images/Machine_Learning/Learning/loss_linear_regression.png"
@@ -534,6 +746,27 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
           </td>
         </tr>
       </table>
+
+      <h2>
+        Loss in
+        <a href="ML_and_Types_Algorithms.html">Logistic Regression</a> is Log
+        Loss
+      </h2>
+      <img
+        src="/images/Machine_Learning/LogLoss.png"
+        alt="Log loss"
+        style="width: 500px; height: 250px"
+      />
+
+      <h2>Loss for Keras</h2>
+      <p>
+        <b>binary_crossentropy:</b> Binary Classification (2 classes, e.g., Spam
+        vs. Not Spam)<br />
+        <b>categorical_crossentropy:</b> Multi-Class Classification (3+ mutually
+        exclusive classes)<br />
+        <b>mean_squared_error, mean_absolute_error:</b> Regression (Predicting
+        continuous numbers)
+      </p>
 
       <h2 id="matplotlib">Matplotlib</h2>
       <p>

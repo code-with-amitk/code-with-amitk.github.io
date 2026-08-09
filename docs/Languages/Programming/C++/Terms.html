@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Terms</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/Terms.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/Terms.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -25,73 +28,10 @@
     </nav>
 
     <aside class="sidebar">
-      <!--See .sidebar in styles.css-->
-      <a href="#su">Stack Unwinding</a>
       <a href="#rtti">Runtime Type Information (RTTI)</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="su">Stack Unwinding</h2>
-      <p>
-        Whenever a exception is thrown, process of deallocating resources and
-        calling destructors for objects starts on the stack, this is called
-        stack Unwinding.
-      </p>
-      <table>
-        <tr>
-          <td>
-            <pre><code class="language-css">
-class Resource {
-public:
-    Resource() {
-        std::cout &lt;&lt; "Resource acquired\n";
-    }
-
-    ~Resource() {
-        std::cout &lt;&lt; "Resource released\n";
-    }
-};
-void foo() {
-    Resource res; // Resource acquired
-    throw std::runtime_error("Error in foo");
-}
-int main() {
-    try {
-        foo();
-    } catch (const std::runtime_error& e) {
-        std::cerr &lt;&lt; "Caught exception: " &lt;&lt; e.what();
-    }
-    return 0;
-}                            
-                    </code></pre>
-          </td>
-          <td>
-            <b>How Stack unwinding works</b><br />
-            - foo() is called, it acquires a Resource object<br />
-            - it then throws a std::runtime_error exception.<br />
-            - As a result, the stack starts unwinding, and the destructor for
-            res is called to release the Resource<br />
-            - Then, exception is caught in the main() function.<br />
-            - This ensures that resources are properly cleaned up even in the
-            presence of exceptions.
-          </td>
-        </tr>
-      </table>
-
-      <dl>
-        <strong
-          ><font color="red">Stack Unwinding has runtime overhead</font></strong
-        >
-      </dl>
-      <p>
-        - When there are deeply nested function calls or objects with complex
-        destructors, it will take time to deallocate the object.<br />
-        -
-        <a href="/Languages/Programming/Rust/Why_rust_over_cpp.html#rto"
-          >How RUST removes this overhead</a
-        >
-      </p>
-
       <h2 id="rtti">Runtime Type Information (RTTI)</h2>
       <p>
         RTTI means performing dynamic type checking and type casting at
