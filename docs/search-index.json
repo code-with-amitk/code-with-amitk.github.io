@@ -465,6 +465,11 @@
     "excerpt": "CPP Async Programming Home Our team Projects Contact Back --> Future object is returned by the async function. Promise is returned by async. include &..."
   },
   {
+    "title": "Creating a Library Rust",
+    "url": "/Languages/Programming/Rust/Crates/Creating_Library_in_Rust.html",
+    "excerpt": "Creating a Library Rust Home Our team Projects Contact Back Library (lib.rs) Types of Library Library Artifact(lib.rs) We can create a library crate a..."
+  },
+  {
     "title": "Criminology & Penology",
     "url": "/Law/Criminology_and_Penology/",
     "excerpt": "Criminology & Penology Home Our team Projects Contact Criminology? Schools of Criminology Juvenile delinquency Juvenile Court Indeterminate sentence R..."
@@ -600,9 +605,9 @@
     "excerpt": "Distributed Cache System Design Home Our team Projects Contact Back Distributed Cache Requirements Architecture Meaning of Distributed Block Diagram U..."
   },
   {
-    "title": "Distributed Configuration Enforcement Engine (Ceph Infra Client)",
+    "title": "Distributed Configuration Enforcement Engine (Ceph Infra Client, Habitat)",
     "url": "/System_Design/Scalable/Distributed_Config_Engine/",
-    "excerpt": "Distributed Configuration Enforcement Engine (Ceph Infra Client) Home Our team Projects Contact Back Distributed Ceph Infra client Requirements Archit..."
+    "excerpt": "Distributed Configuration Enforcement Engine (Ceph Infra Client, Habitat) Home Our team Projects Contact Back Distributed Ceph Infra client Requiremen..."
   },
   {
     "title": "Distributed Log Design",
@@ -1490,9 +1495,19 @@
     "excerpt": "Load Testing Tools Home Our team Projects Contact Bombardier Bombardier (HTTP Load Generation Tool) Install $ go install github.com/codesenberg/bombar..."
   },
   {
+    "title": "log — Rust logging facade",
+    "url": "/Languages/Programming/Rust/Logging/log.html",
+    "excerpt": "log — Rust logging facade Home Our team Projects Contact Back What is log Simple example Backends tracing slog log4rs What is the log crate? log (2014..."
+  },
+  {
     "title": "Log Storage",
     "url": "/System_Design/Scalable/Log_Management_Service/",
     "excerpt": "Log Storage Home Our team Projects Contact Requirements HLD Log management Service Design a service that collects Logs from network devices(firewalls,..."
+  },
+  {
+    "title": "log4rs — configurable log backend",
+    "url": "/Languages/Programming/Rust/Logging/log4rs.html",
+    "excerpt": "log4rs — configurable log backend Home Our team Projects Contact Back What is log4rs Simple example YAML config log tracing slog What is log4rs ? log4..."
   },
   {
     "title": "Logging",
@@ -2122,7 +2137,7 @@
   {
     "title": "Rust",
     "url": "/Languages/Programming/Rust/",
-    "excerpt": "Rust Home Our team Projects Contact Back Why Rust Over C++(Ownership, Borrowing) Automated Tests Cargo &ensp; What is cargo , Files( Cargo.toml ) &ens..."
+    "excerpt": "Rust Home Our team Projects Contact Back Why Rust Over C++(Ownership, Borrowing) Arc(Atomically Reference Counted) Automated Tests Cargo &ensp; What i..."
   },
   {
     "title": "Rust Async Programming",
@@ -2133,6 +2148,11 @@
     "title": "Rust enum",
     "url": "/Languages/Programming/Rust/enum.html",
     "excerpt": "Rust enum Home Our team Projects Contact Back What is enum enum Types Not holding data holding data Option Enum = NULL What is enum Enums are User def..."
+  },
+  {
+    "title": "Rust Macros",
+    "url": "/Languages/Programming/Rust/macros/Introduction.html",
+    "excerpt": "Rust Macros Home Our team Projects Contact Back What are macros Rust vs C macros Hygienic &amp; context-aware Types of Rust macros Declarative (macro_..."
   },
   {
     "title": "Rust Ownership",
@@ -2158,6 +2178,11 @@
     "title": "Rust Smart Pointers",
     "url": "/Languages/Programming/Rust/Smart Pointers/",
     "excerpt": "Rust Smart Pointers Home Our team Projects Contact Back Smart Pointers? Examples Rc &lt;T> Features What is Smart Pointer? Same as C++ Smart,shared po..."
+  },
+  {
+    "title": "Rust structured logging comparions",
+    "url": "/Languages/Programming/Rust/Logging/comparison.html",
+    "excerpt": "Rust structured logging comparions Home Our team Projects Contact Back Compare Compare Crate Type First release (approx.) Structured fields Spans / tr..."
   },
   {
     "title": "Rust Thread Pool",
@@ -2248,6 +2273,11 @@
     "title": "Single Number II",
     "url": "/DS_Questions/Questions/vectors_arrays/Find_Search_Count/Find/Unsorted/All_Elements_Occur_3times_orNTimes_1Element_once.html",
     "excerpt": "Single Number II Home Our team Projects Contact Problem Approach-1, unordered_map, Count Frequency. Time:O(n), Space:O(m) Approach-2, unordered_set, T..."
+  },
+  {
+    "title": "slog — Rust structured logging",
+    "url": "/Languages/Programming/Rust/Logging/slog.html",
+    "excerpt": "slog — Rust structured logging Home Our team Projects Contact Back What is slog Simple example Drains and loggers tracing log log4rs What is slog ? sl..."
   },
   {
     "title": "Solana Blockchain",
@@ -2458,6 +2488,16 @@
     "title": "TLS SSL",
     "url": "/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/",
     "excerpt": "TLS SSL Home Our team Projects Contact Back SNI SNI (Server Name Indication) SSL Client can specify the domain name it is trying to reach, this is pur..."
+  },
+  {
+    "title": "tokio::select!",
+    "url": "/Async_Programming/Rust/Runtime/Tokio/tokio_select.html",
+    "excerpt": "tokio::select! Home Our team Projects Contact Back What is tokio::select! When to use vs select() syscall Simple example Tokio runtime tokio::select! ..."
+  },
+  {
+    "title": "tracing — Rust structured logging",
+    "url": "/Languages/Programming/Rust/Logging/tracing.html",
+    "excerpt": "tracing — Rust structured logging Home Our team Projects Contact Back What is tracing Spans vs events How its suitable for Async runtimes tracing vs l..."
   },
   {
     "title": "Trait Rust",
