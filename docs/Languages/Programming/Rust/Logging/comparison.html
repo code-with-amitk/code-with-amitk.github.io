@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Rust structured logging comparions</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Logging/comparison.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#comp">Compare</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="comp">Compare</h1>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Crate</th>
+          <th>Type</th>
+          <th>First release (approx.)</th>
+          <th>Structured fields</th>
+          <th>Spans / tracing</th>
+          <th>Async-friendly</th>
+          <th>Notes</th>
+        </tr>
+        <tr>
+          <td>
+            <a href="log.html"><code>log</code></a>
+          </td>
+          <td>Facade (trait only)</td>
+          <td>2014</td>
+          <td>No (format strings)</td>
+          <td>No</td>
+          <td>Basic</td>
+          <td>
+            <code>log::info!("user={}", id)</code> — you need a backend like
+            <code>env_logger</code> or <code>log4rs</code>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="log4rs.html"><code>log4rs</code></a>
+          </td>
+          <td>Backend for <code>log</code></td>
+          <td>2015</td>
+          <td>Limited</td>
+          <td>No</td>
+          <td>OK</td>
+          <td>Log4j-style YAML/TOML config, appenders, rolling files</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="slog.html"><code>slog</code></a>
+          </td>
+          <td>Structured logging framework</td>
+          <td>2016</td>
+          <td>Yes (key-value)</td>
+          <td>No (scopes via <code>Logger</code>)</td>
+          <td>OK</td>
+          <td>
+            Drains, JSON, async drain; mature but less common in new Tokio apps
+          </td>
+        </tr>
+        <tr>
+          <td><code>tracing</code></td>
+          <td>Structured logging + tracing framework</td>
+          <td>2019</td>
+          <td>Yes (typed fields)</td>
+          <td>Yes (first-class spans)</td>
+          <td>Excellent</td>
+          <td>
+            Default choice for new async services; OpenTelemetry integration
+          </td>
+        </tr>
+      </table>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

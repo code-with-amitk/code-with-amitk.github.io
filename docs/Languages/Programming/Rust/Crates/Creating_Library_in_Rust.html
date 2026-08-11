@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Creating a Library Rust</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Crates/Creating_Library_in_Rust.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Library (lib.rs)</a>
+      <a href="#types">Types of Library</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">Library Artifact(lib.rs)</h1>
+      <p>
+        We can create a library crate and then use it from one or more binary
+        crates<br />
+        Library is mainly about code organization and reuse; it does not
+        automatically make the final executable smaller.
+      </p>
+      <table>
+        <tr>
+          <td>
+            Create Library<br />
+            <pre><code class="language-rust">
+$ cargo new mathlib --lib
+mathlib/
+├── Cargo.toml
+└── src/
+    └── lib.rs
+
+$ lib.rs
+pub fn add(a: i32, b: i32) -&gt; i32 {
+    a + b
+}
+pub fn multiply(a: i32, b: i32) -&gt; i32 {
+    a * b
+}
+
+$ cargo build
+target/debug/
+└── libmathlib.rlib
+      </code></pre>
+          </td>
+          <td>
+            Create an application that uses it<br />
+            <pre><code class="language-rust">
+$ cargo new myapp
+myapp/
+├── Cargo.toml
+└── src/
+    └── main.rs
+$ Cargo.toml
+[dependencies]
+mathlib = { path = "../mathlib" }
+
+$ main.rs
+use mathlib::{add, multiply};
+fn main() {
+    println!("{}", add(10, 20));
+    println!("{}", multiply(10, 20));
+}
+$ cargo run
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h1 id="type">Types of Libraries</h1>
+      <p>
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Libraries/Static_Dynamic"
+          >C++ Static(.a), Dynamic(.so)</a
+        >
+        Libraries<br />
+        In Rust 3 types of libraries can be created:
+      </p>
+      <table>
+        <tr>
+          <th></th>
+          <th>1. Rust-specific static dependency(.rlib)</th>
+          <th>2. staticlib(.a)</th>
+          <th>3. Sharedlib(.so)</th>
+          <th>4. Rust-to-Rust dynamic linking</th>
+        </tr>
+        <tr>
+          <td>Cargo.toml</td>
+          <td>
+            <pre><code class="language-rust">
+[lib]
+crate-type = ["rlib"]
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-rust">
+[lib]
+crate-type = ["staticlib"]
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-rust">
+[lib]
+crate-type = ["cdylib"]
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-rust">
+[lib]
+crate-type = ["dylib"]
+            </code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Code</td>
+          <td>
+            <pre><code class="language-rust">
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-rust">
+
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-rust">
+$ src/lib.rs
+#[unsafe(no_mangle)]        //So that other languages can call it
+pub extern "C" fn add(a: i32, b: i32) -&gt; i32 {
+    a + b
+}
+$ cargo build --release
+target/release/
+└── libmathlib.so
+            </code></pre>
+          </td>
+          <td>
+            <pre><code class="language-rust">
+
+            </code></pre>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

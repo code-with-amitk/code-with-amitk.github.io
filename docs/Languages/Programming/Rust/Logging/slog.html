@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <title>slog — Rust structured logging</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Logging/slog.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is slog</a>
+      <a href="#example">Simple example</a>
+      <a href="#concepts">Drains and loggers</a>
+      <a href="tracing.html">tracing</a>
+      <a href="log.html">log</a>
+      <a href="log4rs.html">log4rs</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">What is <code>slog</code>?</h1>
+      <p>
+        <code>slog</code> (2016) is a <b>structured logging framework</b> for
+        Rust. Log records carry key-value fields (not just formatted strings),
+        and output flows through composable <b>drains</b> (terminal, JSON file,
+        async writer, etc.).
+      </p>
+      <p>
+        It predates <code>tracing</code> and was popular for services that wanted
+        JSON logs and contextual <code>Logger</code> handles passed through call
+        chains. New Tokio-centric projects often choose
+        <a href="tracing.html"><code>tracing</code></a> instead, but
+        <code>slog</code> remains mature and stable.
+      </p>
+
+      <h2 id="example">Simple example</h2>
+      <pre><code class="language-rust">use slog::{o, Drain, Logger};
+use slog_term::{CompactFormat, TermDecorator};
+
+fn main() {
+    let decorator = TermDecorator::new().build();
+    let drain = CompactFormat::new(decorator).build().fuse();
+    let log = Logger::root(drain, o!());
+
+    slog::info!(log, "request handled"; "user_id" => 42, "latency_ms" => 12);
+}</code></pre>
+      <p>
+        Fields <code>user_id</code> and <code>latency_ms</code> are structured —
+        JSON drains serialize them as separate columns/keys for log aggregators.
+      </p>
+
+      <h2 id="concepts">Drains and loggers</h2>
+      <ul>
+        <li>
+          <b>Drain</b> — where records go (stdout, file, syslog). Drains can be
+          chained (filter → format → write).
+        </li>
+        <li>
+          <b>Logger</b> — handle with default context; child loggers add fields
+          (similar in spirit to tracing spans, but scope is manual).
+        </li>
+        <li>
+          <b>slog-async</b> — non-blocking drain for high-throughput apps.
+        </li>
+      </ul>
+      <p>
+        Comparison table:
+        <a href="tracing.html#compare">tracing vs log vs slog vs log4rs</a>.
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>
-      Distributed Configuration Enforcement Engine (Ceph Infra Client)
+      Distributed Configuration Enforcement Engine (Ceph Infra Client, Habitat)
     </title>
     <link
       rel="canonical"
@@ -45,7 +45,7 @@
 
     <main style="margin-left: 200px">
       <article>
-        <h2 id="what">Distributed Ceph Infra client</h2>
+        <h2 id="what">Distributed Ceph Infra client, Habitat</h2>
         <p>
           Chef Software developed Chef Infra, an Infrastructure-as-Code (IaC)
           platform that automates following on remote laptop/servers/clients:<br />
@@ -56,6 +56,33 @@
           - Verify final state<br />
           - Report compliance
         </p>
+
+        <h3>Ceph Infra client & Habitat</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>Ceph Infra client</th>
+            <th>Habitat</th>
+          </tr>
+          <tr>
+            <td>What</td>
+            <td>
+              Machine/infrastructure-level desired-state management. Works it
+              can do:<br />
+              1. Download pacakges using RPM/DEB/MSI<br />
+              2. Machine state management(Check OpenSSL ,Create nginx user
+              ,Create directories ,Install certificate ,Configure firewall
+              ,Configure OS)<br />
+              3. Habitat to install nginx binary, Ceph Infra will setup
+              files/permissions etc
+            </td>
+            <td>
+              Only 1 work Application/package download and install using .hart
+              file. <br />
+              Works: Download nginx-1.28.hart ,Verify ,Start ,Monitor ,Upgrade
+            </td>
+          </tr>
+        </table>
 
         <h2 id="Requirements">Requirements</h2>
         <h4>Functional</h4>
@@ -102,357 +129,234 @@ flowchart LR
 
 subgraph ControlPlane["Chef Control Plane"]
 
-Admin["Administrator"]
+    Admin["Administrator"]
 
-PolicyUI["Policy Management UI"]
+    PolicyUI["Policy Management UI"]
 
-PolicyEngine["Policy Engine"]
+    PolicyEngine["Policy Engine"]
 
-PolicyRepo["Policy Repository
-Desired State
+    PolicyRepo["Policy Repository
+    Desired State
+    Install:
+    NGINX 1.28
+    Service=Running"]
 
-Install:
-NGINX 1.28
-Service=Running"]
+    HabitatDepot["Habitat Builder Depot
+    self contained app package
+    nginx-1.28.hart
+    app plus ALL its deps
+    bundled into ONE artifact"]
 
-Metadata["Metadata Service
+    Metadata["Metadata Service
+    Latest Policy = v128
+    Artifact URL
+    Checksum
+    Signature"]
 
-Latest Policy = v128
+    ArtifactRepo["Artifact Repository
+    nginx-1.28.rpm
+    nginx-1.28.deb
+    nginx-1.28.msi
+    nginx-1.28.pkg"]
 
-Artifact URL
+    LB["Global Load Balancer"]
 
-Checksum
+    CDN["CDN / Edge Cache"]
 
-Signature"]
+    Admin -->|"Create Policy"| PolicyUI
 
-ArtifactRepo["Artifact Repository
+    PolicyUI --> PolicyEngine
 
-nginx-1.28.rpm
+    PolicyEngine -->|"Upload Hart Package"| HabitatDepot
 
-nginx-1.28.deb
+    PolicyEngine -->|"Store Desired State"| PolicyRepo
 
-nginx-1.28.msi
+    PolicyEngine -->|"Publish Metadata"| Metadata
 
-nginx-1.28.pkg"]
+    PolicyEngine -->|"Upload Artifacts"| ArtifactRepo
 
-LB["Global Load Balancer"]
+    Metadata --> LB
+    ArtifactRepo --> LB
+    HabitatDepot --> LB
 
-CDN["CDN / Edge Cache"]
-
-Admin -->|"Create Policy"| PolicyUI
-
-PolicyUI --> PolicyEngine
-
-PolicyEngine -->|"Store Desired State"| PolicyRepo
-
-PolicyEngine -->|"Publish Metadata"| Metadata
-
-PolicyEngine -->|"Upload Artifacts"| ArtifactRepo
-
-Metadata --> LB
-
-ArtifactRepo --> LB
-
-LB --> CDN
+    LB --> CDN
 
 end
 
-
 subgraph Endpoint["Managed Laptop"]
 
-Scheduler["Scheduler
-(Periodic + Jitter)"]
+    subgraph Chef["Chef Infra Client"]
+      ChefClient["Chef Client"]
+      Cache["Local Metadata Cache"]
+      State["Current State Collector"]
+      Diff["Diff Engine"]
+      Downloader["Artifact Downloader"]
+      Verifier["Checksum / Signature Verification"]
+      OSConfig["OS Configuration
+            Files / Users / Certificates"]
+    end
 
-Chef["Chef Client (Rust)"]
+    subgraph Habitat["Chef Habitat"]
+      HabSup["Habitat Supervisor
+      Manages ONE PACKAGE
+      via a single hart file"]
+      HabDownloader["Habitat Downloader"]
+      HartVerifier["Package .hart Verification<br>Checksum / Signature"]
+      HabRuntime["Habitat Runtime"]
+      Nginx["NGINX 1.28 Running Application"]
+    end
+    Laptop["Local Operating System"]
 
-Cache["Local Metadata Cache"]
+    Scheduler --> ChefClient
+    Scheduler --> HabSup
+    ChefClient --> Cache
 
-State["Current State Collector"]
+    ChefClient <-->|"GET Latest policyMetadata"| Metadata
+    HabSup -->|"GET Latest metadata"| Metadata
+    HabSup --> HabDownloader
 
-Diff["Diff Engine"]
+    ChefClient --> State
+    State --> Diff
+    Cache --> Diff
+    Diff -->|"Download files"| Downloader
 
-Downloader["Artifact Downloader"]
+    Downloader <-->|"HTTP GET Artifact<br>(config files, permissions,<br>certificates)"| CDN
+    HabDownloader <-->|"nginx.hart"| CDN
+    HabDownloader -->|""verify .hart signatures|HartVerifier
+    HartVerifier --> HabRuntime
+    HabRuntime -->|Start / Stop / <br>Upgrade / Monitor|Nginx
+    Nginx --> Laptop
 
-Verifier["Checksum / Signature Verification"]
+    Downloader --> Verifier
 
-Executor["Execution Engine"]
+    Verifier --> OSConfig
 
-Pkg["Native Package Manager"]
-
-Scheduler --> Chef
-
-Chef --> Cache
-
-Chef -->|"GET Latest Metadata"| Metadata
-
-Metadata -->|"Policy v128
-Artifact URL"| Chef
-
-Chef --> State
-
-State --> Diff
-
-Cache --> Diff
-
-Diff -->|"Upgrade Needed"| Downloader
-
-Downloader -->|"HTTP GET Artifact"| CDN
-
-CDN -->|"Stream NGINX Package"| Downloader
-
-Downloader --> Verifier
-
-Verifier --> Executor
-
-Executor --> Pkg
-
-Pkg -->|"Install NGINX 1.28"| Laptop["Local Operating System"]
+    OSConfig --> Laptop
 
 end
           </pre>
         </div>
 
-        <h2 id="seq">Sequence Diagram (Download nginx1.28)</h2>
-
-        <h3>Ceph Infra Client (Installed on Customer Laptop)</h3>
-        <p>
-          <b>What?</b> client is much more than a downloader. It is the
-          configuration enforcement engine running on every managed node.<br />
-          <b>Responsibilites</b>
-        </p>
-        <table>
-          <tr>
-            <th>Responsiblity</th>
-            <th>Description</th>
-          </tr>
-          <tr>
-            <td>Scheduler</td>
-            <td>
-              Periodically wakes up (with configurable interval and random
-              jitter) to start a Chef run.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Authentication &amp; Secure Communication</td>
-            <td>
-              Authenticates with the Chef Server using client certificates/keys,
-              establishes TLS connections, and securely fetches policies.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Policy Fetcher</td>
-            <td>
-              Retrieves the latest policy metadata, cookbook versions, and
-              execution instructions from the control plane.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Local Cache Manager</td>
-            <td>
-              Stores downloaded cookbooks, policies, artifacts, and metadata
-              locally to reduce network traffic and support offline or retry
-              scenarios.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Policy Parser / Compiler</td>
-            <td>
-              Parses the downloaded policy (cookbooks, recipes, resources) into
-              an internal execution model.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Current State Collector</td>
-            <td>
-              Discovers the machine's current state including OS, installed
-              packages, running services, files, users, permissions,
-              certificates, and Windows Registry entries.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Diff / Idempotency Engine</td>
-            <td>
-              Compares the desired state with the current state and determines
-              exactly what changes are required while preventing unnecessary
-              operations.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Dependency &amp; Execution Planner</td>
-            <td>
-              Resolves dependencies between resources and computes the correct
-              execution order (for example, install package → update
-              configuration → restart service).
-            </td>
-          </tr>
-
-          <tr>
-            <td>Artifact Downloader</td>
-            <td>
-              Downloads required binaries, packages, templates, and other
-              artifacts from an artifact repository or CDN. Supports retries and
-              resumable downloads.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Integrity &amp; Security Verifier</td>
-            <td>
-              Verifies SHA-256 checksums, digital signatures, and artifact
-              integrity before execution to prevent tampering.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Execution Engine</td>
-            <td>
-              Applies configuration changes by invoking native operating system
-              facilities such as APT, RPM, MSI, PowerShell, systemd, launchd,
-              filesystem operations, and user management APIs.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Resource Throttling</td>
-            <td>
-              Limits CPU, memory, disk I/O, network bandwidth, and concurrent
-              operations to avoid disrupting production workloads.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Failure Handling &amp; Rollback</td>
-            <td>
-              Handles transient failures, retries operations, records partial
-              progress, and supports rollback or recovery where applicable.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Compliance Verification</td>
-            <td>
-              Re-validates the system after execution to confirm that the
-              desired state has been successfully achieved.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Reporting &amp; Telemetry</td>
-            <td>
-              Sends execution status, compliance reports, metrics, logs,
-              execution duration, and errors back to the Chef Server for
-              monitoring and auditing.
-            </td>
-          </tr>
-
-          <tr>
-            <td>Audit Logging</td>
-            <td>
-              Maintains detailed local logs for troubleshooting, compliance,
-              diagnostics, and forensic analysis.
-            </td>
-          </tr>
-        </table>
+        <h2 id="seq">
+          Sequence Diagram (Download nginx1.28) Ceph Infra Client, Habitat
+        </h2>
 
         <div class="mermaid-wrap">
           <pre class="mermaid">
 sequenceDiagram
-autonumber
+    autonumber
 
-actor Admin
-box LightCyan Customer Premises
-  participant UI
-  participant Compiler
-  participant Metadata
-  participant ArtifactRepo
-end
-  participant CDN
+    actor Admin
 
-box LightYellow Ceph Infra Client(Installed on Laptop)
-  participant Scheduler
-  participant ChefClient
-  participant Cache
-  participant StateCollector
-  participant DiffEngine
-  participant Planner
-  participant Downloader
-  participant PackageManager
-  participant LocalSystem
-  participant Audit
-end
+    box Customer Admin 
+        participant UI as Policy UI
+        participant Engine as Policy Engine
+        participant Repo as Policy Repository
+        participant Meta as Metadata Service
+        participant Depot as Habitat Builder
+    end
+        participant CDN as CDN
 
-Admin->>UI: Create Policy<br>Install nginx 1.28<br>Enable service<br>Copy nginx.conf
 
-UI->>Compiler: Compile Cookbook
+    participant Scheduler as Laptop Scheduler
 
-Compiler->>ArtifactRepo: Store installers<br>Windows MSI<br>Linux RPM<br>Linux DEB<br>macOS PKG
+    box "Ceph Infra Client"
+        participant Chef as Chef Infra Client
+        participant Cache as Chef<br>Local Cache
+        participant State as Machine State<br>Process
+        participant Diff as Diff Engine
+        participant Downloader as Chef Artifact<br>Downloader
+        participant OSConfig as OS Config<br>Executor
+    end
 
-Compiler->>Metadata: Publish Policy v128<br>Artifact URLs<br>Checksums<br>Digital Signatures
+    box Habitat
+        participant Supervisor as Habitat Supervisor
+        participant HabDownload as Habitat Downloader
+        participant HartVerify as Hart Verifier
+        participant Runtime as Habitat Runtime
+    end
 
-Note over Scheduler: Every 30 min ± Random Jitter
+    participant Audit as Audit Service
 
-Scheduler->>ChefClient: Wake Up
+    Admin->>UI: Create deployment<br>policy
+    UI->>Engine: Submit policy
+    Engine->>Repo: Store Chef<br>desired state
+    Note over Repo: Files, users, certificates,<br/>directories, permissions
 
-ChefClient->>Cache: Read last applied version
+    Engine->>Depot: Publish NGINX 1.28 package
+    Depot-->>Engine: nginx-1.28.hart available
 
-Cache-->>ChefClient: Current = v127
+    Engine->>Meta: Publish policy metadata
+    Note over Meta: Policy v128<br/>Infrastructure state<br/>NGINX version 1.28<br/>Artifact URLs<br/>Checksums<br/>Signatures
 
-ChefClient->>Metadata: GET Latest Policy Metadata
 
-Metadata-->>ChefClient: Latest=v128<br>Artifact URL<br>Checksum<br>Signature<br>Execution Rules
+    Note over Scheduler: Periodic run<br/>30 min + random jitter
 
-ChefClient->>StateCollector: Collect Current Machine State
+    Scheduler->>Chef: Start Chef run
+    Scheduler->>Supervisor: Trigger Habitat reconciliation
 
-StateCollector-->>ChefClient: OS=Ubuntu<br>Arch=x64<br>nginx=1.26<br>Service=Running<br>Config=Old
+    rect rgb(230, 245, 255)
+        Chef->>Cache: Read last applied policy
+        Cache-->>Chef: Last applied = v127
 
-ChefClient->>DiffEngine: Compare Desired vs Current
+        Chef->>Meta: GET latest policy metadata
+        Meta-->>Chef: Policy v128 + infrastructure desired state
 
-DiffEngine-->>ChefClient: Upgrade Required
+        Note over State: Inspect local machine<br>Read files, users, certificates, permissions
+        State-->>Chef: Current state
 
-ChefClient->>Planner: Build Execution Plan
+        Chef->>Diff: Compare desired vs current
+        Diff-->>Chef: Changes required
 
-Planner-->>ChefClient: 1.Install nginx 1.28<br>2.Copy config<br>3.Restart only if config changes<br>4.Verify version
+        Chef->>Downloader: Download infrastructure artifacts
+        Downloader->>CDN: GET certificate/config artifact
+        CDN-->>Downloader: Stream artifact
+        Downloader-->>Chef: Download complete
 
-ChefClient->>Downloader: Download Artifact
+        Note over Chef: Verify checksum<br>Verify digital signature
+        Chef->>OSConfig: Apply machine configuration
+        Note over OSConfig:Install certificate<br>Create nginx user<br>Create directories<br>Set permissions
+        OSConfig-->>Chef: Machine converged
 
-Downloader->>CDN: HTTP GET linux-amd64.rpm
+        Chef->>State: Verify machine state
+        Note over State: Re-check configuration
+        State-->>Chef: ok
+        Chef->>Cache: Store policy v128
+    end
 
-CDN-->>Downloader: Stream RPM Package
+    rect rgb(235, 255, 235)
 
-Downloader-->>ChefClient: Download Complete
+        Supervisor->>Meta: GET desired application metadata
+        Meta-->>Supervisor: NGINX 1.28 + .hart URL
 
-ChefClient->>ChefClient: Verify SHA256 Checksum
+        Note over Supervisor: Current = NGINX 1.27<br/>Desired = NGINX 1.28
 
-ChefClient->>ChefClient: Verify Digital Signature
+        Supervisor->>HabDownload: Download nginx-1.28.hart
+        HabDownload->>CDN: GET nginx-1.28.hart
+        CDN-->>HabDownload: Stream .hart package
+        HabDownload-->>Supervisor: Package downloaded
 
-ChefClient->>PackageManager: Install RPM
+        Supervisor->>HartVerify: Verify .hart checksum
+        HartVerify-->>Supervisor: Checksum valid
 
-PackageManager->>LocalSystem: Upgrade nginx
+        Supervisor->>HartVerify: Verify .hart signature
+        HartVerify-->>Supervisor: Signature valid
 
-LocalSystem-->>PackageManager: Success
+        Supervisor->>Runtime: Install / prepare NGINX 1.28
+        Note over Runtime:Stop NGINX 1.27<br>Start NGINX 1.28<br>Health check
 
-ChefClient->>LocalSystem: Copy nginx.conf
+        Runtime-->>Supervisor: NGINX 1.28 running
+    end
 
-ChefClient->>LocalSystem: Restart Service
 
-ChefClient->>StateCollector: Verify Final State
+    Chef->>Audit: Report infrastructure compliance
+    Supervisor->>Audit: Report NGINX 1.28 healthy
 
-StateCollector-->>ChefClient: nginx=1.28<br>Service=Running<br>Config=Current
+    Audit-->>Chef: ACK
+    Audit-->>Supervisor: ACK
 
-ChefClient->>Cache: Store Policy Version=v128
-
-ChefClient->>Audit: POST Compliance Report<br>Policy=v128<br>Status=Success<br>Duration<br>MachineID
-
-Audit-->>ChefClient: ACK
-
-ChefClient-->>Scheduler: Sleep Until Next Run
+    Chef-->>Scheduler: Chef run complete
+    Supervisor-->>Scheduler: Habitat reconciliation complete
 </pre>
         </div>
       </article>

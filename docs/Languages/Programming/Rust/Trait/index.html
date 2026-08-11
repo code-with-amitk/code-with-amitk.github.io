@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Trait Rust</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Rust/Trait" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Trait"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -47,9 +50,13 @@
     <article style="margin-left: 200px">
       <h2 id="triat">What is Triat in Rust</h2>
       <p>
-        Interface/class in Rust(declared with keyword trait) having Virtual
-        Functions(not pure Virtual) declared or defined inside it. These
-        functions are implemented(overridden) on type.
+        Interface/class in Rust(declared with keyword trait) having
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime"
+          >Virtual Functions(not pure Virtual)</a
+        >
+        declared or defined inside it. These functions are
+        implemented(overridden) on type.
       </p>
 
       <h2 id="dec">Declaration & Definition</h2>
@@ -62,7 +69,7 @@
       <table>
         <tr>
           <td>
-            <b>Trait Declaration</b>
+            <b>Trait Declaration</b><br />
             <pre><code class="language-css">
 pub trait T {
     // No need to add pub in front of function
@@ -78,7 +85,7 @@ pub trait T {
                         </code></pre>
           </td>
           <td>
-            <b>Type on which trait is defined</b>
+            <b>Type on which trait is defined</b><br />
             <pre><code class="language-css">
 pub struct S {
     pub x: i32,
@@ -87,7 +94,7 @@ pub struct S {
                         </code></pre>
           </td>
           <td>
-            <b>Trait Definition</b>
+            <b>Trait Definition</b><br />
             <pre><code class="language-css">
 //impl triat for type
 impl T for S {

@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>Box System Design</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Scalable/Box.com" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Box.com"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -49,7 +52,7 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">What is Box</h2>
+      <h1 id="what">What is Box</h1>
       <p>
         Box.com is a cloud file storage and collaboration platform. Users
         upload, share, and manage files through a web or mobile client.
@@ -69,7 +72,7 @@
         and editing files even if all replicas are not immediately identical
       </p>
 
-      <h2 id="Requirements">Requirements</h2>
+      <h1 id="Requirements">Requirements</h1>
       <p>
         <b>Functional:</b><br />
         - User can upload/download file of any size<br />
@@ -84,49 +87,55 @@
         - Scalability: Support billions of files and petabytes of storage.
       </p>
 
-      <h2 id="hld">HLD</h2>
-      <h3 id="block">Block Diagram</h3>
+      <h1 id="hld">HLD</h1>
+      <h2 id="block">Block Diagram</h2>
       <div class="mermaid-wrap">
         <pre class="mermaid">
-%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 45, 'messageMargin': 30, 'boxMargin': 8, 'useMaxWidth': true}}}%%
 flowchart LR
 
 Client["Web / Mobile Client"]
-
-subgraph Edge
-API["API Gateway"]
-end
+IDP["IDP"]
 
 subgraph Control_Plane
-
-APP["Application Service"]
-
-META["Metadata Service"]
-
-AUTH["Auth Service"]
-
-NOTIFY["Notification Service"]
-
-CACHE["Redis Cache"]
-
-WORKER["Async Workers"]
-
+  API["API Gateway"]
+  APP["Application Svc Pod1"]
+  APP1["Application Svc pod2"]
+  APP2["Application Svc Pod3"]
+  META["Metadata Service"]
+  AUTH["Auth Service"]
+  ILB["kubernets Ingress LB"]
+  NOTIFY["Notification Service"]
+  CACHE["Redis Cache"]
+  WORKER["Async Workers"]
 end
 
 subgraph Data
-
-DB[(Metadata DB)]
-
-S3[(Object Storage)]
-
-MQ["Kafka / SQS"]
-
+  DB[(Metadata DB)]
+  S3[(Object Storage)]
+  MQ["Kafka / SQS"]
 end
 
-Client --> API
+DNS["DNS"]
+GLB["Global LB"]
+RLB1["Regional LB1"]
+RLB2["Regional LB2"]
 
-API --> AUTH
-API --> APP
+Client -->|give IP of box.com| DNS
+DNS -->|A record|Client
+
+Client --> GLB
+GLB --> RLB1
+GLB --> RLB2
+RLB1 --> API
+API -.-> Note>NOTE: TLS Termination,Request Routing,Authentication,Rate limiting,Load balancing]
+
+API <--> AUTH
+AUTH <--> IDP
+API --> ILB
+
+ILB --> APP
+ILB --> APP1
+ILB --> APP2
 
 APP --> META
 
@@ -149,13 +158,14 @@ META --> DB
         >
       </div>
 
-      <h3 id="flow">Flow Diagram(10 GB Upload)</h3>
-      <h4>
+      <h2 id="flow">Flow Diagram(10 GB Upload)</h2>
+      <h3>
         <a href="#earlier">Design-1. upload through the Application Server</a>
-      </h4>
-      <h4 id="presigned">
+      </h3>
+
+      <h3 id="presigned">
         Design-2: Using Pre-signed URL (Direct Upload to Object Storage)
-      </h4>
+      </h3>
       <p>
         Instead of streaming file bytes through the Application Server, Box.com
         uses a <b>pre-signed URL</b> so the client uploads directly to object
@@ -179,12 +189,14 @@ App Server ──returns pre-signed PUT URL──► Browser/Client
 Browser/Client ──10 GB PUT (direct)──────────────► S3
 Browser/Client ──POST /upload/complete───────────► App Server (update metadata)
       </code></pre>
+
+      <h4>How do Pre-signed URLs work? (Box.com upload)</h4>
       <p>
-        <b>How do Pre-signed URLs work? (Box.com upload)</b><br />
         A pre-signed URL embeds temporary security credentials in the query
         string (access key, signature, expiry). Object storage validates the
-        signature and expiry before accepting the upload — no separate auth call
-        needed during transfer.
+        signature and expiry before accepting the upload<br />
+        No separate auth call needed during transfer, that means
+        <font color="red">S3 does not authenticate client</font>
       </p>
       <pre><code class="language-css">
 # Example pre-signed PUT URL (conceptual)
