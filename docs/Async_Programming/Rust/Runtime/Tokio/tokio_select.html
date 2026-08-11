@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>tokio::select!</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Async_Programming/Rust/Runtime/Tokio/tokio_select.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Async_Programming/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is tokio::select!</a>
+      <a href="#when">When to use</a>
+      <a href="#vs">vs select() syscall</a>
+      <a href="#example">Simple example</a>
+      <a href="index.html">Tokio runtime</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">tokio::select!</h1>
+      <p>
+        <code>tokio::select!</code> is a <b>macro</b> that waits on several
+        async operations at once and runs the branch of the first one that
+        completes.
+      </p>
+
+      <h2 id="when">Usecases of tokio::select!</h2>
+      <p>
+        1. Network read wait<br />
+        2. process work from a channel <i>or</i> stop when Ctrl+C / shutdown
+        channel fires.<br />
+      </p>
+
+      <h2 id="vs">tokio::select! vs POSIX select() system call</h2>
+      <p>Names sound similar but they live at <b>different layers</b>.</p>
+      <table>
+        <tr>
+          <th></th>
+          <th><code>select()</code> (POSIX syscall)</th>
+          <th><code>tokio::select!</code> (Rust macro)</th>
+        </tr>
+        <tr>
+          <td>Layer</td>
+          <td>OS kernel — watches <b>file descriptors</b> (sockets, pipes)</td>
+          <td>
+            User space — watches <b>async tasks / futures</b> on Tokio runtime
+          </td>
+        </tr>
+        <tr>
+          <td><b>Blocking?</b></td>
+          <td>Blocks the <b>OS thread</b> until a fd is ready (or timeout)</td>
+          <td><b>Non-blocking</b> — task yields; thread can run other tasks</td>
+        </tr>
+        <tr>
+          <td><b>What you pass in</b></td>
+          <td>fd sets: readfds, writefds, …</td>
+          <td>Rust futures: <code>rx.recv()</code>, <code>sleep()</code>, …</td>
+        </tr>
+        <tr>
+          <td><b>Typical use</b></td>
+          <td>C servers: one thread, many client sockets</td>
+          <td>Async Rust: timeouts, shutdown, multiplexing channels</td>
+        </tr>
+        <tr>
+          <td><b>Relation</b></td>
+          <td>
+            Tokio’s reactor uses <code>epoll</code> / <code>IOCP</code> under
+            the hood (similar <i>idea</i> to select/poll, but faster)
+          </td>
+          <td>
+            Built <b>on top</b> of that reactor — you rarely call
+            <code>select(2)</code> yourself in Tokio code
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="example">Simple example — message or timeout</h2>
+      <p>
+        Wait for a value on a channel. If nothing arrives in 2 seconds, print
+        “timeout” and exit.
+      </p>
+      <pre><code class="language-rust">use tokio::sync::mpsc;
+use tokio::time::{sleep, Duration};
+
+#[tokio::main]
+async fn main() {
+    let (tx, mut rx) = mpsc::channel::&lt;String&gt;(1);
+
+    // Another task sends a message after 3 seconds (too late)
+    tokio::spawn(async move {
+        sleep(Duration::from_secs(3)).await;
+        let _ = tx.send(String::from("hello")).await;
+    });
+
+    tokio::select! {
+        maybe_msg = rx.recv() => {
+            match maybe_msg {
+                Some(msg) => println!("got: {msg}"),
+                None => println!("channel closed"),
+            }
+        }
+        _ = sleep(Duration::from_secs(2)) => {
+            println!("timeout — no message in 2 sec");
+        }
+    }
+}
+
+// Output: timeout — no message in 2 sec
+// (recv branch was cancelled when sleep finished first)
+</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

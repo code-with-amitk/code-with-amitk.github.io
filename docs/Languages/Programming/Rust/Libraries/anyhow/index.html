@@ -34,11 +34,12 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">What is <code>anyhow</code>?</h2>
+      <h1 id="what">What is <code>anyhow</code>?</h1>
       <p>
         anyhow is a Rust crate by David Tolnay(2019) that gives application code
         one error type —
-        <code>anyhow::Error</code>. You return
+        <code>anyhow::Error</code>.<br />
+        You return
         <code>anyhow::Result&lt;T&gt;</code> and use <code>?</code> to bubble
         errors up to <code>main</code> without writing a custom error
         <code>enum</code> for every failure.<br /><br />
@@ -47,7 +48,7 @@
         (<code>reqwest::Error</code>, <code>std::io::Error</code>, …). anyhow
         converts them all into one type.
         <code>anyhow::Context::context(...)</code> adds a short message so you
-        know <b>where</b> it failed.
+        know where it failed.
       </p>
       <pre><code class="language-rust">#[tokio::main]
 async fn main() -> anyhow::Result&lt;()&gt; {
@@ -68,7 +69,7 @@ async fn main() -> anyhow::Result&lt;()&gt; {
         <code>reading response body failed → HTTP request failed → ...</code>
       </p>
 
-      <h3 id="without">If we don't use anyhow, what do we lag behind on?</h3>
+      <h2 id="without">If we don't use anyhow, what do we lag behind on?</h2>
       <p>
         <b>Custom error enums everywhere</b> — you must define
         <code>enum AppError</code> and add <code>From</code> for every library

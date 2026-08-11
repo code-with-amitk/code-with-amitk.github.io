@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+  <head>
+    <title>tracing — Rust structured logging</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Logging/tracing.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is tracing</a>
+      <a href="#spans">Spans vs events</a>
+      <a href="#async-runtimes">How its suitable for Async runtimes</a>
+      <a href="comparison.html">tracing vs log vs slog vs log4rs</a>
+      <a href="#which">Which is best</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">What is <code>tracing</code>? (2019 rustc 1.65+)</h1>
+      <p>
+        Rust crate for structured, contextual logging and distributed
+        tracing.<br />
+        Unlike plain text log lines, it records <b>events</b> (log messages with
+        typed fields) inside <b><a href="#spans">spans</a></b> (named scopes
+        that follow a request or task through async code).<br />
+
+        It is widely used with async Rust (<code>tokio</code>,
+        <code>axum</code>, <code>tonic</code>) because
+        <a href="#spans">spans</a> survive across
+        <code>.await</code> points.<br />
+
+        <b>Crates:</b> <code>tracing</code> (macros + span API),
+        <code>tracing-subscriber</code> (formatters, filters, layers),
+        <code>tracing-appender</code> (file rotation). Often paired with
+        <code>tracing-opentelemetry</code> to export traces to Jaeger, Tempo,
+        etc.
+      </p>
+
+      <h2 id="example">Simple example</h2>
+      <pre><code class="language-rust">use tracing::{info, instrument};
+use tracing_subscriber;
+
+#[instrument] // creates a span named "log" with args user_id
+async fn log(user_id: u64) {
+    info!(user_id, "processing request");
+    // ... work ...
+    info!("request finished");
+}
+
+#[tokio::main]
+async fn main() {
+    tracing_subscriber::fmt()
+        .with_env_filter("info")
+        .init();
+
+    log(42).await;
+}</code></pre>
+      <p>Sample output (JSON mode is also supported):</p>
+      <pre><code>2026-07-18T10:00:00.123Z  INFO log{user_id=42}: processing request
+2026-07-18T10:00:00.125Z  INFO log{user_id=42}: request finished</code></pre>
+      <p>
+        The span name and <code>user_id</code> field appear on every line inside
+        <code>log</code>, so you can grep or query logs by request context
+        without repeating fields in every message.
+      </p>
+
+      <h1 id="spans">Spans vs events</h1>
+      <table>
+        <tr>
+          <th>Concept</th>
+          <th>Analogy</th>
+          <th>Macro examples</th>
+        </tr>
+        <tr>
+          <td><b>Event</b></td>
+          <td>A single log line</td>
+          <td><code>info!</code>, <code>warn!</code>, <code>error!</code></td>
+        </tr>
+        <tr>
+          <td><b>Span</b></td>
+          <td>A scope / operation with start and end</td>
+          <td><code>#[instrument]</code>, <code>span!(...)</code></td>
+        </tr>
+      </table>
+      <p>
+        Spans can be nested (HTTP handler → DB query → cache lookup).
+        Subscribers can export span trees for latency analysis, not just flat
+        text logs.
+      </p>
+
+      <h2 id="async-runtimes">
+        How tracing suitable for Async runtimes(eg: tokio)
+      </h2>
+      <p>
+        What async does?<br />
+        A single OS thread may run
+        <code>task A -&gt; task B (.await) -&gt; task A</code> — every time a
+        task hits <code>.await</code> and is parked. <code>.await</code> loses
+        track of which request or task produced a message.<br />
+        <b>How tracing helps here?</b> A span is attached to the
+        <b>logical task</b>, not just the thread.<br />
+        When Tokio polls a future again after an <code>.await</code>, the span
+        context is <b>re-entered</b>, so every log line inside that handler
+        still carries the same request id, trace id, and parent span — even if
+        the work ran on three different threads.
+      </p>
+
+      <h3>
+        Why <code>log</code> and <code>slog</code> poor fit across async
+        runtimes
+      </h3>
+      <p>
+        We can call
+        <code>log::info!</code> or <code>slog::info!</code> from an
+        <code>async fn</code>. The problem is
+        <b>context does not follow <code>.await</code></b> automatically.
+      </p>
+
+      <h2 id="which">Which is best? Which is newest?</h2>
+      <p>
+        <b>Newest (among these):</b> <code>tracing</code> (2019). Active
+        development continues in the Tokio project.<br /><b
+          >Best depends on your project:</b
+        >
+      </p>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Scenario</th>
+          <th>Recommendation</th>
+        </tr>
+        <tr>
+          <td>Small CLI, quick debug output</td>
+          <td><code>log</code> + <code>env_logger</code></td>
+        </tr>
+        <tr>
+          <td>Need Log4j-style config files on <code>log</code></td>
+          <td><code>log4rs</code></td>
+        </tr>
+        <tr>
+          <td>Structured JSON logs, sync or legacy codebase</td>
+          <td><code>slog</code> (still solid; check team familiarity)</td>
+        </tr>
+        <tr>
+          <td>Async web/service, request context, OpenTelemetry</td>
+          <td><code>tracing</code> + <code>tracing-subscriber</code></td>
+        </tr>
+      </table>
+      <p>
+        There is no single “best” crate — <code>log</code> remains the common
+        denominator (many libraries emit <code>log</code> events). Production
+        async services in 2026 usually standardize on <code>tracing</code> and
+        bridge older <code>log</code> output with <code>tracing-log</code> when
+        needed.
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

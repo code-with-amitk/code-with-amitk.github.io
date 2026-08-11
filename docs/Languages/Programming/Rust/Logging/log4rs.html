@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <title>log4rs — configurable log backend</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Logging/log4rs.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is log4rs</a>
+      <a href="#example">Simple example</a>
+      <a href="#config">YAML config</a>
+      <a href="log.html">log</a>
+      <a href="tracing.html">tracing</a>
+      <a href="slog.html">slog</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">What is <code>log4rs</code>?</h1>
+      <p>
+        <code>log4rs</code> (2015) is a <b>logging implementation</b> for the
+        <a href="log.html"><code>log</code></a> facade — inspired by Java’s
+        Log4j. It supports multiple appenders (console, rolling files),
+        encoders, and filter levels, often driven by a YAML or TOML config file
+        so ops can change logging without recompiling.
+      </p>
+      <p>
+        It is <b>not</b> a structured tracing framework: no spans, limited
+        key-value structure. Use it when you already emit
+        <code>log::info!</code> and need production-grade file rotation and
+        external configuration.
+      </p>
+
+      <h2 id="example">Simple example (code init)</h2>
+      <pre><code class="language-rust">use log::info;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    log4rs::init_file("log4rs.yaml", Default::default())?;
+
+    info!("application started");
+    Ok(())
+}</code></pre>
+
+      <h2 id="config">Example <code>log4rs.yaml</code></h2>
+      <pre><code>appenders:
+  stdout:
+    kind: console
+  file:
+    kind: rolling_file
+    path: "logs/app.log"
+    policy:
+      trigger:
+        kind: size
+        limit: 10mb
+      roller:
+        kind: fixed_window
+        pattern: "logs/app.{}.log"
+        count: 5
+
+root:
+  level: info
+  appenders:
+    - stdout
+    - file</code></pre>
+      <p>
+        Libraries still use <code>log</code> macros; <code>log4rs</code> only
+        decides where those lines go and at what level.
+      </p>
+      <p>
+        For structured fields and async request tracing, see
+        <a href="tracing.html"><code>tracing</code></a>.
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

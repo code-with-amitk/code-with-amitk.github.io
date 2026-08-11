@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <title>log — Rust logging facade</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Logging/log.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Rust/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is log</a>
+      <a href="#example">Simple example</a>
+      <a href="#backends">Backends</a>
+      <a href="tracing.html">tracing</a>
+      <a href="slog.html">slog</a>
+      <a href="log4rs.html">log4rs</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">What is the <code>log</code> crate?</h1>
+      <p>
+        <code>log</code> (2014) is the standard <b>logging facade</b> for Rust —
+        not a full logger. It defines macros (<code>info!</code>,
+        <code>warn!</code>, <code>error!</code>, …) and the
+        <code>Log</code> trait. A separate crate must be installed as the
+        <b>logger implementation</b> at runtime.
+      </p>
+      <p>
+        Libraries use <code>log</code> so applications can choose any backend
+        without forcing a dependency on <code>tracing</code> or
+        <code>slog</code>.
+      </p>
+
+      <h2 id="example">Simple example</h2>
+      <pre><code class="language-rust">use log::{info, warn};
+
+fn main() {
+    env_logger::init(); // backend: reads RUST_LOG env var
+
+    info!("server starting");
+    warn!("cache miss for key={}", "user:42");
+}</code></pre>
+      <p>Run with filter:</p>
+      <pre><code>RUST_LOG=info cargo run</code></pre>
+
+      <h2 id="backends">Common backends</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Backend</th>
+          <th>Use case</th>
+        </tr>
+        <tr>
+          <td><code>env_logger</code></td>
+          <td>CLI tools, development — minimal setup</td>
+        </tr>
+        <tr>
+          <td><a href="log4rs.html"><code>log4rs</code></a></td>
+          <td>Production file appenders, YAML/TOML config</td>
+        </tr>
+        <tr>
+          <td><code>tracing-log</code></td>
+          <td>Forward <code>log</code> records into <code>tracing</code></td>
+        </tr>
+      </table>
+      <p>
+        See also: <a href="tracing.html">tracing</a> for structured logging and
+        spans in async services.
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
