@@ -116,13 +116,13 @@
   },
   {
     "title": "Async Programming",
-    "url": "/Async_Programming/",
-    "excerpt": "Async Programming Home Our team Projects Contact Back Introduction: What is async, async vs Threading Rust &ensp; async, await, block_on(), future &en..."
+    "url": "/Async_Programming/Introduction.html",
+    "excerpt": "Async Programming What is async Async vs Threading Home Our team Projects Contact Back --> What is Asynchronous (Means Concurrent )? Multiple tasks ar..."
   },
   {
     "title": "Async Programming",
-    "url": "/Async_Programming/Introduction.html",
-    "excerpt": "Async Programming What is async Async vs Threading Home Our team Projects Contact Back --> What is Asynchronous (Means Concurrent )? Multiple tasks ar..."
+    "url": "/Async_Programming/",
+    "excerpt": "Async Programming Home Our team Projects Contact Back Introduction: What is async, async vs Threading Rust &ensp; async, await, block_on(), future &en..."
   },
   {
     "title": "attributes",
@@ -176,13 +176,13 @@
   },
   {
     "title": "Binary Trees",
-    "url": "/DS_Questions/Data_Structures/Trees/",
-    "excerpt": "Binary Trees Home Our team Projects Contact Types of Trees Binary Trees C++, Rust, Python, Go C++, Rust, Python, Go C++ Rust Python(List []) Go Defini..."
+    "url": "/DS_Questions/Data_Structures/Trees/Types_of_Trees.html",
+    "excerpt": "Binary Trees Home Our team Projects Contact Types of Trees Binary Trees Binary Search Trees AVL Trees Red Black Trees BTrees Trie Heap Ternary Search ..."
   },
   {
     "title": "Binary Trees",
-    "url": "/DS_Questions/Data_Structures/Trees/Types_of_Trees.html",
-    "excerpt": "Binary Trees Home Our team Projects Contact Types of Trees Binary Trees Binary Search Trees AVL Trees Red Black Trees BTrees Trie Heap Ternary Search ..."
+    "url": "/DS_Questions/Data_Structures/Trees/",
+    "excerpt": "Binary Trees Home Our team Projects Contact Types of Trees Binary Trees C++, Rust, Python, Go C++, Rust, Python, Go C++ Rust Python(List []) Go Defini..."
   },
   {
     "title": "bitwise",
@@ -191,13 +191,13 @@
   },
   {
     "title": "Blockchain",
-    "url": "/BlockChain/",
-    "excerpt": "Blockchain Home Our team Projects Contact Introduction Blockchain? How bitcoin can be issued? Terms BlockchainAddress, Block, Consensus Mechanism , Cu..."
+    "url": "/BlockChain/Introduction.html",
+    "excerpt": "Blockchain Home Our team Projects Contact Back Blockchain? How bitcoin can be issued? Blockchain What This is an SHARED immutable(no changable) append..."
   },
   {
     "title": "Blockchain",
-    "url": "/BlockChain/Introduction.html",
-    "excerpt": "Blockchain Home Our team Projects Contact Back Blockchain? How bitcoin can be issued? Blockchain What This is an SHARED immutable(no changable) append..."
+    "url": "/BlockChain/",
+    "excerpt": "Blockchain Home Our team Projects Contact Introduction Blockchain? How bitcoin can be issued? Terms BlockchainAddress, Block, Consensus Mechanism , Cu..."
   },
   {
     "title": "Blockchain Terms",
@@ -506,6 +506,11 @@
   },
   {
     "title": "Data Structures",
+    "url": "/DS_Questions/Data_Structures/",
+    "excerpt": "Data Structures Home Our team Projects Contact Linked List Trees"
+  },
+  {
+    "title": "Data Structures",
     "url": "/Data_Structures/Hash_Tables/Introduction.html",
     "excerpt": "Data Structures Home Our team Projects Contact Back DAT? Hash Table? Internal Impl? Hash Collision 1. Open Addressing 2. Seperate Chaining Rehashing I..."
   },
@@ -513,11 +518,6 @@
     "title": "Data Structures",
     "url": "/Data_Structures/",
     "excerpt": "Data Structures Home Our team Projects Contact Back Comparison &ensp; Hash Table vs Self-Balancing Binary Trees Hash Tables &ensp; DAT(Direct Access T..."
-  },
-  {
-    "title": "Data Structures",
-    "url": "/DS_Questions/Data_Structures/",
-    "excerpt": "Data Structures Home Our team Projects Contact Linked List Trees"
   },
   {
     "title": "Data Structures Compared",
@@ -541,13 +541,13 @@
   },
   {
     "title": "Database Scaling",
-    "url": "/System_Design/Concepts/Databases/DB_Scaling/",
-    "excerpt": "Database Scaling Home Our team Projects Contact 1. Replication 2. Federation 3. Sharding"
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/Replication/",
+    "excerpt": "Database Scaling Home Our team Projects Contact What is Replication Types of Replication What is Replication? Keeping a copy of the same data on multi..."
   },
   {
     "title": "Database Scaling",
-    "url": "/System_Design/Concepts/Databases/DB_Scaling/Replication/",
-    "excerpt": "Database Scaling Home Our team Projects Contact What is Replication Types of Replication What is Replication? Keeping a copy of the same data on multi..."
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/",
+    "excerpt": "Database Scaling Home Our team Projects Contact 1. Replication 2. Federation 3. Sharding"
   },
   {
     "title": "Database Schema",
@@ -566,13 +566,13 @@
   },
   {
     "title": "Databases",
-    "url": "/System_Design/Concepts/Databases/",
-    "excerpt": "Databases Home Our team Projects Contact Back Types of DB: SQL, NoSQL, Vector SQL Databases &ensp; Examples: &emsp; PostgreSQL: &emsp;&emsp; Install ,..."
+    "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
+    "excerpt": "Databases Home Our team Projects Contact Column DB faster than row Difference OLAP Column DB faster than row Row oriented Coloumn oriented Consider em..."
   },
   {
     "title": "Databases",
-    "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
-    "excerpt": "Databases Home Our team Projects Contact Column DB faster than row Difference OLAP Column DB faster than row Row oriented Coloumn oriented Consider em..."
+    "url": "/System_Design/Concepts/Databases/",
+    "excerpt": "Databases Home Our team Projects Contact Back Types of DB: SQL, NoSQL, Vector SQL Databases &ensp; Examples: &emsp; PostgreSQL: &emsp;&emsp; Install ,..."
   },
   {
     "title": "decltype",
@@ -926,23 +926,23 @@
   },
   {
     "title": "Glew Library",
-    "url": "/Libraries/Glew/",
-    "excerpt": "Glew Library Home Our team Projects Contact Glew? &ensp; What is Glew &ensp; Program to print Glew version"
-  },
-  {
-    "title": "Glew Library",
     "url": "/Libraries/Glew/Introduction.html",
     "excerpt": "Glew Library Home Our team Projects Contact Glew? Print Glew Version What is Glew? Glew is OpenGL's Extension Wrangler Library that helps developers i..."
   },
   {
-    "title": "Go",
-    "url": "/Languages/Programming/Go/",
-    "excerpt": "Go Home Our team Projects Contact Back Go Versions: 1.0(2012), 1.26.5(2026) Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command lin..."
+    "title": "Glew Library",
+    "url": "/Libraries/Glew/",
+    "excerpt": "Glew Library Home Our team Projects Contact Glew? &ensp; What is Glew &ensp; Program to print Glew version"
   },
   {
     "title": "Go",
     "url": "/Languages/Programming/Go/Install_Go.html",
     "excerpt": "Go Home Our team Projects Contact Install Go Install Go Ubuntu WSL Windows $ wget https://go.dev/dl/go1.22.4.linux-amd64.tar.gz $ sudo tar -C /usr/loc..."
+  },
+  {
+    "title": "Go",
+    "url": "/Languages/Programming/Go/",
+    "excerpt": "Go Home Our team Projects Contact Back Go Versions: 1.0(2012), 1.26.5(2026) Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command lin..."
   },
   {
     "title": "Go Async Programming",
@@ -1191,13 +1191,13 @@
   },
   {
     "title": "IPC",
-    "url": "/Threads_Processes_IPC/IPC/",
-    "excerpt": "IPC Home Our team Projects Contact Back What IPC? For communication between 2 processes, Parent and child as well."
+    "url": "/Threads_Processes_IPC/IPC/Methods.html",
+    "excerpt": "IPC Home Our team Projects Contact Back Methods Methods of IPC Method Communication Synchronization 1. Pipe, Rust Channels Parent to child viceversa Y..."
   },
   {
     "title": "IPC",
-    "url": "/Threads_Processes_IPC/IPC/Methods.html",
-    "excerpt": "IPC Home Our team Projects Contact Back Methods Methods of IPC Method Communication Synchronization 1. Pipe, Rust Channels Parent to child viceversa Y..."
+    "url": "/Threads_Processes_IPC/IPC/",
+    "excerpt": "IPC Home Our team Projects Contact Back What IPC? For communication between 2 processes, Parent and child as well."
   },
   {
     "title": "IPC Channels",
@@ -1481,13 +1481,13 @@
   },
   {
     "title": "Libraries",
-    "url": "/Libraries/",
-    "excerpt": "Libraries Home Our team Projects Contact C: &ensp; libuv JSON Parsing: Jansson JSX React Libraries for 2D, 3D graphics rendering: OpenGL & DirectX, Gl..."
+    "url": "/Libraries/Jansson/",
+    "excerpt": "Libraries Home Our team Projects Contact What Install Examples Repo Example json_object_foreach() What is Jansson Jansson is C library for encoding/de..."
   },
   {
     "title": "Libraries",
-    "url": "/Libraries/Jansson/",
-    "excerpt": "Libraries Home Our team Projects Contact What Install Examples Repo Example json_object_foreach() What is Jansson Jansson is C library for encoding/de..."
+    "url": "/Libraries/",
+    "excerpt": "Libraries Home Our team Projects Contact C: &ensp; libuv JSON Parsing: Jansson JSX React Libraries for 2D, 3D graphics rendering: OpenGL & DirectX, Gl..."
   },
   {
     "title": "libuv",
@@ -1561,13 +1561,13 @@
   },
   {
     "title": "Machine Learning",
-    "url": "/Machine Learning/",
-    "excerpt": "Machine Learning Home Our team Projects Contact Back Create Virtual Env in Python Run ML on AMD GPU Machine Learning & Types: &ensp; Supervised Learni..."
+    "url": "/Machine Learning/Run_ML_on_AMD_GPU.html",
+    "excerpt": "Machine Learning Home Our team Projects Contact Run ML on AMD GPU Run ML on AMD GPU 1. Windows version (>10, 1709) 2. Install minconda in C:\\Users\\ami..."
   },
   {
     "title": "Machine Learning",
-    "url": "/Machine Learning/Run_ML_on_AMD_GPU.html",
-    "excerpt": "Machine Learning Home Our team Projects Contact Run ML on AMD GPU Run ML on AMD GPU 1. Windows version (>10, 1709) 2. Install minconda in C:\\Users\\ami..."
+    "url": "/Machine Learning/",
+    "excerpt": "Machine Learning Home Our team Projects Contact Back Create Virtual Env in Python Run ML on AMD GPU Machine Learning & Types: &ensp; Supervised Learni..."
   },
   {
     "title": "Machine Learning Models",
@@ -1681,13 +1681,13 @@
   },
   {
     "title": "Motherboard",
-    "url": "/Motherboard/",
-    "excerpt": "Motherboard Home Our team Projects Contact Back Memory &ensp; Virtual & Physical Memory &ensp; Memory Types(Registers, Caches) &ensp; Process &emsp; C..."
+    "url": "/Motherboard/Terms/",
+    "excerpt": "Motherboard Home Our team Projects Contact Back UART (Universal Asynchronous Receiver-Transmitter) Hardware communication protocol (a set of rules) us..."
   },
   {
     "title": "Motherboard",
-    "url": "/Motherboard/Terms/",
-    "excerpt": "Motherboard Home Our team Projects Contact Back UART (Universal Asynchronous Receiver-Transmitter) Hardware communication protocol (a set of rules) us..."
+    "url": "/Motherboard/",
+    "excerpt": "Motherboard Home Our team Projects Contact Back Memory &ensp; Virtual & Physical Memory &ensp; Memory Types(Registers, Caches) &ensp; Process &emsp; C..."
   },
   {
     "title": "Movie Review Classification(+ve or -ve)",
@@ -1741,13 +1741,13 @@
   },
   {
     "title": "Networking",
-    "url": "/Networking/",
-    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Integrations: Meta Networking Devices &ensp; Firewalls: Fortin..."
+    "url": "/Networking/OSI-Layers/Layer-3/Protocols/IP_Internet_Protocol/IP_Addressing_Scheme/",
+    "excerpt": "Networking Home Our team Projects Contact OSI Layers IP Addressing Scheme Types of IP Addressing 1. Classful Addressing. Ancient Valid IPv4 Addresses ..."
   },
   {
     "title": "Networking",
-    "url": "/Networking/OSI-Layers/Layer-3/Protocols/IP_Internet_Protocol/IP_Addressing_Scheme/",
-    "excerpt": "Networking Home Our team Projects Contact OSI Layers IP Addressing Scheme Types of IP Addressing 1. Classful Addressing. Ancient Valid IPv4 Addresses ..."
+    "url": "/Networking/",
+    "excerpt": "Networking Home Our team Projects Contact Back Why Cloud Data, Control Plane OSI Layers Integrations: Meta Networking Devices &ensp; Firewalls: Fortin..."
   },
   {
     "title": "Networking Devices",
@@ -1936,18 +1936,8 @@
   },
   {
     "title": "Python",
-    "url": "/Languages/Scripting/Python/Containers/",
-    "excerpt": "Python Home Our team Projects Contact Back Type Description Example Seqeunce Containers Sequence containers are ordered collections that support index..."
-  },
-  {
-    "title": "Python",
     "url": "/Languages/Scripting/Python/Containers/MappingType/Dictionary.html",
     "excerpt": "Python Home Our team Projects Contact What Comprehension enumerate Removal Zip(iteratable) What Keys are immutable(non changable). If we try entering ..."
-  },
-  {
-    "title": "Python",
-    "url": "/Languages/Scripting/Python/Containers/MappingType/",
-    "excerpt": "Python Home Our team Projects Contact Type Represented by Description Comprehension Dictionary/HashMap (Mutable key-value) {} y Ordered Dictionary {} ..."
   },
   {
     "title": "Python",
@@ -1961,8 +1951,8 @@
   },
   {
     "title": "Python",
-    "url": "/Languages/Scripting/Python/Containers/Sequence/",
-    "excerpt": "Python Home Our team Projects Contact Type Represented by Description Comprehension List (Mutable) [] ordered collections, Can store different data ty..."
+    "url": "/Languages/Scripting/Python/Containers/MappingType/",
+    "excerpt": "Python Home Our team Projects Contact Type Represented by Description Comprehension Dictionary/HashMap (Mutable key-value) {} y Ordered Dictionary {} ..."
   },
   {
     "title": "Python",
@@ -1976,6 +1966,16 @@
   },
   {
     "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/Sequence/",
+    "excerpt": "Python Home Our team Projects Contact Type Represented by Description Comprehension List (Mutable) [] ordered collections, Can store different data ty..."
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/",
+    "excerpt": "Python Home Our team Projects Contact Back Type Description Example Seqeunce Containers Sequence containers are ordered collections that support index..."
+  },
+  {
+    "title": "Python",
     "url": "/Languages/Scripting/Python/Control_Flow.html",
     "excerpt": "Python Home Our team Projects Contact if for match range if if x &lt; 0: x = 0 print('Negative changed to zero') elif x == 0: print('Zero') else: //Op..."
   },
@@ -1986,13 +1986,13 @@
   },
   {
     "title": "Python",
-    "url": "/Languages/Scripting/Python/",
-    "excerpt": "Python Home Our team Projects Contact Back Introduction: What is Python? Terms / Concepts: Global Interpreter Lock, Memory Management, PEP 8 Control F..."
+    "url": "/Languages/Scripting/Python/Introduction.html",
+    "excerpt": "Python Home Our team Projects Contact What What Python is interpreted(executes statement line by line), general Purpose language. Other Interpreted la..."
   },
   {
     "title": "Python",
-    "url": "/Languages/Scripting/Python/Introduction.html",
-    "excerpt": "Python Home Our team Projects Contact What What Python is interpreted(executes statement line by line), general Purpose language. Other Interpreted la..."
+    "url": "/Languages/Scripting/Python/",
+    "excerpt": "Python Home Our team Projects Contact Back Introduction: What is Python? Terms / Concepts: Global Interpreter Lock, Memory Management, PEP 8 Control F..."
   },
   {
     "title": "Python Terms",
@@ -2031,23 +2031,23 @@
   },
   {
     "title": "React",
-    "url": "/Libraries/React/",
-    "excerpt": "React Home Our team Projects Contact What is React React Terms Components Rendering lists Event Handler Remembering State Sharing data between compone..."
-  },
-  {
-    "title": "React",
     "url": "/Libraries/React/What_Terms.html",
     "excerpt": "React Home Our team Projects Contact React Terms Components Rendering lists Event Handler Remembering State Sharing data between components What is Re..."
   },
   {
-    "title": "React Native",
-    "url": "/Frameworks/React_Native/components/",
-    "excerpt": "React Native Home Our team Projects Contact Components FlatList ScrollView, ParallaxScrollView SafeAreaView and SafeAreaProvider Text TextInput Themed..."
+    "title": "React",
+    "url": "/Libraries/React/",
+    "excerpt": "React Home Our team Projects Contact What is React React Terms Components Rendering lists Event Handler Remembering State Sharing data between compone..."
   },
   {
     "title": "React Native",
     "url": "/Frameworks/React_Native/components/SafeArea.html",
     "excerpt": "React Native Home Our team Projects Contact SafeArea SafeAreaView SafeAreaProvider What is SafeArea SafeArea? Area of the app screen that is not cover..."
+  },
+  {
+    "title": "React Native",
+    "url": "/Frameworks/React_Native/components/",
+    "excerpt": "React Native Home Our team Projects Contact Components FlatList ScrollView, ParallaxScrollView SafeAreaView and SafeAreaProvider Text TextInput Themed..."
   },
   {
     "title": "React Native",
@@ -2086,13 +2086,13 @@
   },
   {
     "title": "React Native Networking",
-    "url": "/Frameworks/React_Native/Networking/",
-    "excerpt": "React Native Networking Home Our team Projects Contact Navigation between Screens Fetch data from REST endpoint Passing data between Screens"
+    "url": "/Frameworks/React_Native/Networking/Passing data between screens.html",
+    "excerpt": "React Native Networking Home Our team Projects Contact Pass Data Passing data between screens _layout.tsx Defines the navigation stack (Required) in e..."
   },
   {
     "title": "React Native Networking",
-    "url": "/Frameworks/React_Native/Networking/Passing data between screens.html",
-    "excerpt": "React Native Networking Home Our team Projects Contact Pass Data Passing data between screens _layout.tsx Defines the navigation stack (Required) in e..."
+    "url": "/Frameworks/React_Native/Networking/",
+    "excerpt": "React Native Networking Home Our team Projects Contact Navigation between Screens Fetch data from REST endpoint Passing data between Screens"
   },
   {
     "title": "React Native ScrollView",
@@ -2146,23 +2146,23 @@
   },
   {
     "title": "Runtimes",
-    "url": "/Async_Programming/Rust/Runtime/",
-    "excerpt": "Runtimes Home Our team Projects Contact Back What is Runtime? Runtimes Tokio What is Runtime? Runtime provides: &ensp; Reactor: Support for performing..."
-  },
-  {
-    "title": "Runtimes",
     "url": "/Async_Programming/Rust/Runtime/Tokio/",
     "excerpt": "Runtimes Home Our team Projects Contact Back Creating Task tokio::spawn() tokio::task::spawn_blocking executor::block_on Comparison spawn() vs spawn_b..."
   },
   {
-    "title": "Rust",
-    "url": "/Languages/Programming/Rust/",
-    "excerpt": "Rust Home Our team Projects Contact Back Why Rust Over C++(Ownership, Borrowing) Arc(Atomically Reference Counted) Automated Tests Cargo &ensp; What i..."
+    "title": "Runtimes",
+    "url": "/Async_Programming/Rust/Runtime/",
+    "excerpt": "Runtimes Home Our team Projects Contact Back What is Runtime? Runtimes Tokio What is Runtime? Runtime provides: &ensp; Reactor: Support for performing..."
   },
   {
     "title": "Rust",
     "url": "/Languages/Programming/Rust/Why_rust_over_cpp.html",
     "excerpt": "Rust Home Our team Projects Contact Back Compile time checks those avoids runtime crashes(segfault) 1. Ownership 2. Borrowing 3. No Manual Memory mana..."
+  },
+  {
+    "title": "Rust",
+    "url": "/Languages/Programming/Rust/",
+    "excerpt": "Rust Home Our team Projects Contact Back Why Rust Over C++(Ownership, Borrowing) Arc(Atomically Reference Counted) Automated Tests Cargo &ensp; What i..."
   },
   {
     "title": "Rust Async Programming",
@@ -2386,13 +2386,13 @@
   },
   {
     "title": "SubSequences",
-    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/",
-    "excerpt": "SubSequences SubSequences"
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/SubSequence/",
+    "excerpt": "SubSequences Longest Subsequence forming Arithmetic Progression Number of Longest Increasing Subsequence"
   },
   {
     "title": "SubSequences",
-    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/SubSequence/",
-    "excerpt": "SubSequences Longest Subsequence forming Arithmetic Progression Number of Longest Increasing Subsequence"
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/",
+    "excerpt": "SubSequences SubSequences"
   },
   {
     "title": "Symmetric key Encryption",
@@ -2416,13 +2416,13 @@
   },
   {
     "title": "System Design",
-    "url": "/System_Design/",
-    "excerpt": "System Design Home Our team Projects Contact Back 8 building blocks SD Interview Questions Concepts Scalable Systems 8 Building Blocks of System Desig..."
+    "url": "/System_Design/Scalable/",
+    "excerpt": "System Design Home Our team Projects Contact Back Authentication Flow Methods to reach Microservice System Designs: &ensp; Box Design &ensp;Amo Apps: ..."
   },
   {
     "title": "System Design",
-    "url": "/System_Design/Scalable/",
-    "excerpt": "System Design Home Our team Projects Contact Back Authentication Flow Methods to reach Microservice System Designs: &ensp; Box Design &ensp;Amo Apps: ..."
+    "url": "/System_Design/",
+    "excerpt": "System Design Home Our team Projects Contact Back 8 building blocks SD Interview Questions Concepts Scalable Systems 8 Building Blocks of System Desig..."
   },
   {
     "title": "Tallest Billboard",
@@ -2491,13 +2491,13 @@
   },
   {
     "title": "Threads Processes IPC",
-    "url": "/Threads_Processes_IPC/",
-    "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Compared: Thread vs Process , Threads (User Space, Kernel Space, Green Threads), Memory Layo..."
+    "url": "/Threads_Processes_IPC/Threads_vs_Processes.html",
+    "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Thread vs Process Why Processes Threads vs Processes (Mechanisms used for executing code con..."
   },
   {
     "title": "Threads Processes IPC",
-    "url": "/Threads_Processes_IPC/Threads_vs_Processes.html",
-    "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Thread vs Process Why Processes Threads vs Processes (Mechanisms used for executing code con..."
+    "url": "/Threads_Processes_IPC/",
+    "excerpt": "Threads Processes IPC Home Our team Projects Contact Back Compared: Thread vs Process , Threads (User Space, Kernel Space, Green Threads), Memory Layo..."
   },
   {
     "title": "Tilt by Amo",
