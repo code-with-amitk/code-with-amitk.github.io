@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AWS — Service index by category</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/AWS/"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#analytics">Analytics</a>
+      <a href="#application-integration">Application Integration</a>
+      <a href="#compute">Compute</a>
+      <a href="#containers">Containers</a>
+      <a href="#database">Database</a>
+      <a href="#developer-tools">Developer Tools</a>
+      <a href="#machine-learning">Machine Learning</a>
+      <a href="#management-governance">Management &amp; Governance</a>
+      <a href="#migration">Migration &amp; Transfer</a>
+      <a href="#networking">Networking &amp; Content Delivery</a>
+      <a href="#security">Security, Identity &amp; Compliance</a>
+      <a href="#storage">Storage</a>
+      <a href="#site-pages">Pages on this site</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h4 id="analytics"></h4>
+      <dd>
+        <b>Analytics:</b> Query, process, and visualize data at scale.<br />
+        &ensp; Athena (SQL on S3)<br />
+        &ensp; Data Pipeline (batch data workflows)<br />
+        &ensp; EMR (Elastic MapReduce — Hadoop/Spark)<br />
+        &ensp; Glue (ETL — Extract, Transform, Load)<br />
+        &ensp; Kinesis (Data Streams, Firehose, Analytics)<br />
+        &ensp; Lake Formation (data lake governance)<br />
+        &ensp; MSK (Managed Streaming for Apache Kafka)<br />
+        &ensp; OpenSearch Service (search &amp; log analytics; formerly
+        Elasticsearch)<br />
+        &ensp; QuickSight (BI dashboards)<br />
+        &ensp; Redshift (data warehouse)<br />
+      </dd>
+
+      <h4 id="application-integration"></h4>
+      <dd>
+        <b>Application Integration:</b> Connect decoupled components, events,
+        and workflows.<br />
+        &ensp; AppFlow (SaaS data integration)<br />
+        &ensp; EventBridge (event bus)<br />
+        &ensp; MQ (managed ActiveMQ/RabbitMQ)<br />
+        &ensp; SNS (pub/sub notifications)<br />
+        &ensp; SQS (message queues)<br />
+        &ensp; <a href="Application_Integration/Step_Function.html">Step Functions</a> (orchestration)<br />
+        &ensp; SWF (Simple Workflow — legacy)<br />
+      </dd>
+
+      <h4 id="compute"></h4>
+      <dd>
+        <b>Compute:</b> Run code on VMs, serverless, or managed platforms.<br />
+        &ensp; App Runner (containerized web apps &amp; APIs)<br />
+        &ensp; Batch (batch jobs on EC2/Fargate)<br />
+        &ensp; EC2 (VM — security groups, AMI)<br />
+        &ensp; EC2 Auto Scaling<br />
+        &ensp; Elastic Beanstalk (PaaS — deploy app, creates EC2)<br />
+        &ensp; <a href="Compute/Lambda.html">Lambda</a> (serverless functions)<br />
+        &ensp; Lightsail (simple VM + OS + app bundles, e.g. WordPress)<br />
+        &ensp; Outposts (hardware in your datacenter)<br />
+      </dd>
+
+      <h4 id="containers"></h4>
+      <dd>
+        <b>Containers:</b> Run and orchestrate Docker/OCI workloads.<br />
+        &ensp; ECR (container registry)<br />
+        &ensp; ECS (Elastic Container Service)<br />
+        &ensp; EKS (Elastic Kubernetes Service)<br />
+        &ensp; Fargate (serverless containers for ECS/EKS)<br />
+      </dd>
+
+      <h4 id="database"></h4>
+      <dd>
+        <b>Database:</b> Relational, NoSQL, cache, graph, and time-series
+        stores.<br />
+        &ensp; Aurora (MySQL/PostgreSQL-compatible)<br />
+        &ensp; DocumentDB (MongoDB-compatible)<br />
+        &ensp; DynamoDB (key-value / document NoSQL)<br />
+        &ensp; ElastiCache (Redis, Memcached)<br />
+        &ensp; MemoryDB for Redis<br />
+        &ensp; Neptune (graph DB)<br />
+        &ensp; RDS (managed SQL — MySQL, Postgres, …)<br />
+        &ensp; Timestream (time-series)<br />
+      </dd>
+
+      <h4 id="developer-tools"></h4>
+      <dd>
+        <b>Developer Tools:</b> CI/CD, code hosting, debugging, and IDE.<br />
+        &ensp; Cloud9 (cloud IDE)<br />
+        &ensp; CodeBuild (build service)<br />
+        &ensp; CodeCatalyst<br />
+        &ensp; CodeCommit (Git repos)<br />
+        &ensp; CodeDeploy (deployment)<br />
+        &ensp; CodePipeline (CI/CD orchestration)<br />
+        &ensp; X-Ray (distributed tracing)<br />
+      </dd>
+
+      <h4 id="machine-learning"></h4>
+      <dd>
+        <b>Machine Learning:</b> Train, deploy, and consume ML models.<br />
+        &ensp; Bedrock (foundation models)<br />
+        &ensp; Comprehend (NLP)<br />
+        &ensp; Lex (chatbots)<br />
+        &ensp; Polly (text-to-speech)<br />
+        &ensp; Rekognition (vision)<br />
+        &ensp; SageMaker<br />
+        &ensp; Transcribe (speech-to-text)<br />
+      </dd>
+
+      <h4 id="management-governance"></h4>
+      <dd>
+        <b>Management &amp; Governance:</b> Monitor, audit, configure, and
+        organize resources.<br />
+        &ensp; Billing Conductor<br />
+        &ensp; CloudTrail (API audit trail)<br />
+        &ensp; CloudWatch (metrics, logs, alarms)<br />
+        &ensp; Config (resource configuration history)<br />
+        &ensp; Control Tower (landing zone)<br />
+        &ensp; Cost Explorer<br />
+        &ensp; Organizations (multi-account)<br />
+        &ensp; Service Catalog<br />
+        &ensp; Systems Manager (patch, parameter store)<br />
+        &ensp; Trusted Advisor<br />
+      </dd>
+
+      <h4 id="migration"></h4>
+      <dd>
+        <b>Migration &amp; Transfer:</b> Move workloads and data into the
+        cloud.<br />
+        &ensp; Application Migration Service (MGN)<br />
+        &ensp; Database Migration Service (DMS)<br />
+        &ensp; Migration Hub<br />
+        &ensp; Snow Family (Snowball, Snowmobile — offline transfer)<br />
+        &ensp; Transfer Family (SFTP/FTP to S3)<br />
+      </dd>
+
+      <h4 id="networking"></h4>
+      <dd>
+        <b>Networking &amp; Content Delivery:</b> VPCs, load balancing, DNS,
+        CDN, and hybrid connectivity.<br />
+        &ensp; API Gateway<br />
+        &ensp; CloudFront (CDN)<br />
+        &ensp; Direct Connect (dedicated network link)<br />
+        &ensp;
+        <a
+          href="Networking_and_Content_Delivery/Elastic_Load_Balancing_ELB.html"
+          >Elastic Load Balancing (ELB)</a
+        >
+        — ELB(L4-L7), ALB(L7), NLB(L4), GWLB(L3)<br />
+        &ensp; Global Accelerator<br />
+        &ensp; PrivateLink<br />
+        &ensp; Route 53 (DNS)<br />
+        &ensp; Transit Gateway<br />
+        &ensp; VPC (Virtual Private Cloud)<br />
+        &ensp; VPN (Site-to-Site, Client VPN)<br />
+      </dd>
+
+      <h4 id="security"></h4>
+      <dd>
+        <b>Security, Identity &amp; Compliance:</b> Authentication, encryption,
+        threat detection, and compliance.<br />
+        &ensp; Certificate Manager (ACM)<br />
+        &ensp; Cognito (user pools, identity pools)<br />
+        &ensp; GuardDuty (threat detection)<br />
+        &ensp; IAM (Identity and Access Management)<br />
+        &ensp; Inspector (vulnerability scanning)<br />
+        &ensp; KMS (Key Management Service)<br />
+        &ensp; Macie (sensitive data discovery in S3)<br />
+        &ensp; Secrets Manager<br />
+        &ensp; Shield (DDoS protection)<br />
+        &ensp; WAF (Web Application Firewall)<br />
+      </dd>
+
+      <h4 id="storage"></h4>
+      <dd>
+        <b>Storage:</b> Object, block, file, and archive storage.<br />
+        &ensp; Backup (centralized backup)<br />
+        &ensp; EBS (block storage for EC2)<br />
+        &ensp; EFS (managed NFS)<br />
+        &ensp; FSx (Windows/Lustre/NetApp/…)<br />
+        &ensp; S3 (object storage)<br />
+        &ensp; S3 Glacier (archive)<br />
+        &ensp; Storage Gateway (hybrid on-prem ↔ cloud)<br />
+      </dd>
+
+      <h4 id="site-pages"></h4>
+      <dd>
+        <b>Pages on this site:</b><br />
+        &ensp; Shield — Security<br />
+        &ensp; Terraform — IaC tooling (not an AWS service; used to provision
+        AWS)<br />
+        &ensp; VPC — Networking<br />
+      </dd>
+    </main>
+  </body>
+</html>

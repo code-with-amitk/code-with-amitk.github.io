@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Elastic Load Balancing (ELB)</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/AWS/Networking_and_Content_Delivery/Elastic_Load_Balancing_ELB.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/AWS/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is ELB</a>
+      <a href="#vs-nginx">ELB vs NGINX,HAProxy</a>
+      <a href="#types">ALB, NLB, GWLB</a>
+      <a href="#block">Block diagram</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h1 id="what">Elastic Load Balancing (ELB)</h1>
+      <p>
+        It distributes incoming traffic across targets (EC2, containers, IP
+        addresses, Lambda) inside a VPC.
+      </p>
+      <p>
+        See also:
+        <a href="/System_Design/Concepts/Components/Load%20Balancer/"
+          >generic load balancer concepts</a
+        >.
+      </p>
+
+      <h2 id="vs-nginx">NGINX, HAProxy, F5 vs ELB</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th></th>
+          <th>NGINX / HAProxy (self-managed)</th>
+          <th>AWS ELB (managed)</th>
+        </tr>
+        <tr>
+          <td>Patching</td>
+          <td>self</td>
+          <td>AWS managed</td>
+        </tr>
+        <tr>
+          <td>Scaling</td>
+          <td>Self. Add LB instances + keepalived or DNS round-robin</td>
+          <td>AWS. Auto-scales with traffic; spans AZs by design</td>
+        </tr>
+        <tr>
+          <td>Health checks</td>
+          <td>Self. configure in nginx.conf / haproxy.cfg</td>
+          <td>AWS. Target group health checks in console/Terraform</td>
+        </tr>
+        <tr>
+          <td>Layers</td>
+          <td>NGINX(L7) HTTP; HAProxy(L4/L7)</td>
+          <td>ALB (L7), NLB (L4), or GWLB (L3 gateway for appliances)</td>
+        </tr>
+        <tr>
+          <td>Features</td>
+          <td>Full control: custom modules, WAF rules in nginx, Lua, etc.</td>
+          <td>ACM (TLS), WAF, Cognito auth (ALB), EKS, Auto Scaling</td>
+        </tr>
+        <tr>
+          <td>Cost model</td>
+          <td>For deployment on EC2</td>
+          <td>Per-hour + per LCU (capacity unit) / processed bytes</td>
+        </tr>
+      </table>
+
+      <h2 id="types">ALB, NLB, GWLB (often written “GLB”)</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Type</th>
+          <th>Layer</th>
+          <th>Best for</th>
+          <th>Protocols</th>
+        </tr>
+        <tr>
+          <td>ELB</td>
+          <td>L4 - L7</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><b>ALB</b> — Application Load Balancer</td>
+          <td>L7 (HTTP/HTTPS)</td>
+          <td>Web apps, microservices, path/host routing, WebSockets</td>
+          <td>HTTP, HTTPS, gRPC</td>
+        </tr>
+        <tr>
+          <td><b>NLB</b> — Network Load Balancer</td>
+          <td>L4 (TCP/UDP)</td>
+          <td>
+            Ultra-low latency, static IP, millions of RPS, TLS passthrough
+          </td>
+          <td>TCP, UDP, TLS</td>
+        </tr>
+        <tr>
+          <td><b>GWLB</b> — Gateway Load Balancer</td>
+          <td>L3 gateway</td>
+          <td>
+            Insert third-party appliances (firewall, IDS) in the traffic path
+          </td>
+          <td>IP packets to appliance fleet</td>
+        </tr>
+      </table>
+
+      <h2 id="block">Block diagram</h2>
+
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart LR
+    Client[Client / Browser]
+    DNS[Route 53 /DNS]
+    GLB[Global LB]
+    RLB[Regional LB]
+    RLB1[Regional LB1]
+
+    subgraph AWS Datacenter
+        APIGW[API Gateway]
+        ELB[ELB / ALB]
+        subgraph EKS["EC2 / EKS"]
+            Ingress[K8s Ingress]
+            Pod1[App Svc Pod 1]
+            Pod2[Pod 2]
+            Pod3[Pod 3]
+        end
+    end
+
+    Client -->|IP for google.com| DNS
+    DNS -->|A record 1.2.3.4| Client
+    Client -->|HTTP GET https:google.com| GLB
+    GLB --> RLB
+    GLB --> RLB1
+    RLB --> APIGW
+    APIGW -->|HTTP| ELB
+    ELB --> Ingress
+    Ingress --> Pod1
+    Ingress --> Pod2
+    Ingress --> Pod3
+        </pre>
+      </div>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>

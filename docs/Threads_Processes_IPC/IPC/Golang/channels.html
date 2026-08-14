@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Golang IPC Channels</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/IPC/Golang/channels.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/IPC/Golang/channels.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -45,18 +48,15 @@
     <article style="margin-left: 200px">
       <h2 id="what">Go Channel(for IPC)</h2>
       <p>
-        Go channels are used for synchronizing IPC between goroutines(Same as
-        <a
-          href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Threads#usks"
-          >Rust Tasks = Green Threads</a
-        >). Go routines are managed by Go runtime.<br />
+        Go channels are used for synchronizing between 2 or goroutines OR
+        goroutine and main process.<br />
         <font color="red"
           >NOTE: Channels are not needed if 2 or more goroutines are not
           present. Channels are designed exclusively for inter-goroutine
           communication and synchronization</font
         ><br />
         If you are doing everything sequentially inside the single main
-        goroutine, channel is unnecessary<br />
+        goroutine, channel is not required<br />
         we can send/recv data via channel with operator, &lt;- between
         goroutines. The data flows in the direction of the arrow.<br />
         channels are datastructures allocated on heap that reference both sender
@@ -318,25 +318,24 @@ package main
 import "fmt"
 
 func main() {
-	ch1 := make(chan int)
+	ch1 := make(chan int)               // Two unbuffered integer channels, ch1 and ch2, are created.
 	ch2 := make(chan int)
 
-	go func() {
-		ch1 &lt;- 1
+	go func() {                         // Producer Goroutine
+		ch1 &lt;- 1                       // It sends the value 1 into ch1 and 2 into ch2
 		ch2 &lt;- 2
-		// 1. Must close channels when finished sending
-		close(ch1)
-	    close(ch2)
+		                                  // 1. Must close channels when finished sending
+		close(ch1)                        // explicitly closes both channels to signal to the receiver that no more values will be sent
+    close(ch2)
 	}()
 
 	for {
-		select {
-		case v1, ok := &lt;-ch1:
+		select {                          // Consumer Loop
+		case v1, ok := &lt;-ch1:          // checks whether the channel is still open
 			if ok {
 				fmt.Println("ch1:", v1)
 			} else {
-				// 2. Setting a channel to nil disables this case in a select block
-				ch1 = nil 
+				ch1 = nil                     // 2. Setting a channel to nil disables this case in a select block
 			}
 		case v2, ok := &lt;-ch2:
 			if ok {

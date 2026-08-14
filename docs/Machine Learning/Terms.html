@@ -50,6 +50,7 @@
       <a href="#Dataset">Dataset</a>
       <a href="#em">Embedding Models</a>
       <a href="#Feature">Feature</a>
+      <a href="#FeatureEngineering">Feature Engineering</a>
       <a href="#fitting">Fitting</a>
       <ul>
         <li><a href="#overfitting">Overfitting</a></li>
@@ -58,7 +59,7 @@
       <a href="#Inference">Inference</a>
       <a href="#opt">Optimizer, stochastic gradient descent (SGD)</a>
       <a href="#orchestration">Orchestration</a>
-      <a href="#outlier">outlier</a>
+      <a href="#outlier">Outlier</a>
       <a href="#llm">LLM</a>
       <a href="#Label">Label</a>
       <a href="#layer">Layer</a>
@@ -478,18 +479,32 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         performance metrics
       </p>
 
-      <h3 id="outlier">Outlier</h3>
+      <h1 id="outlier">Outlier</h1>
       <p>
         Most <a href="#Feature">feature</a> values in a
-        <a href="#Dataset">dataset</a> typically fall within a distinct range.
-        For example, cars are normally between 2000 and 5000 kg and get between
-        8 to 50 km/liter. But a 8,000 kg car, or a car that gets 100 km/liter,
-        is outside the typical range and would be considered an outlier.<br />
-        An outlier can also refer to how far off a model's predictions are from
-        the real values.
+        <a href="#Dataset">dataset</a> typically fall within a range.<br />
+        An outlier is a value distant from most other values in a feature or
+        label. Outliers often cause problems in model training, so finding
+        outliers is important.<br />
+        For example, cars are normally between 2000 - 5000 kg. But a car of
+        15000 kg is an outlier.<br />
+      </p>
+      <h2>Finding Outliers</h2>
+      <h3>1. Percentile</h3>
+      <p>
+        When the delta between the 0th and 25th percentiles differs
+        significantly from the delta between the 75th and 100th percentiles, the
+        dataset probably contains outliers.<br />
+        Consider a class of students, My Percentile means number of students
+        below my marks in class<br />
+        Consider there are 4 students with marks 10, 20, 50, and 90<br />
+        For the student who got 10 marks:Percentile: 25%, Why: There is 1
+        student out of 4 who got 10 or lower (1/4 = 25%).<br />
+        For the student who got 20 marks:Percentile: 50%, Why: There is 2
+        student out of 4 who got 20 or lower (2/4 = 50%)
       </p>
 
-      <h3 id="bias">Bias/Sampling Bias</h3>
+      <h1 id="bias">Bias/Sampling Bias</h1>
       <p>
         We should use a training data set that is representative of the cases we
         want model to predict.
@@ -524,8 +539,55 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         style="width: 500px; height: 200px"
       />
 
-      <h3 id="fitting">Fitting</h3>
-      <h4 id="overfitting">Overfitting</h4>
+      <h1 id="FeatureEngineering">Feature Engineering</h1>
+      <p>
+        Changing raw dataset values(features) to some values with which model
+        can be trained better is called feature engineering.<br />
+        <b>Methods of Feature Engineering:</b><br />
+        1. Normalization: Converting numerical values into a standard range<br />
+        2. Binning (also referred to as bucketing): Converting numerical values
+        into buckets of ranges.
+      </p>
+      <h2>1. Normalization</h2>
+      <p>
+        The goal of normalization is to transform features to be on a similar
+        scale.<br />
+        <b>Example</b><br />
+        &ensp; Feature X spans the range 154 to 24,917,482.<br />
+        &ensp; Feature Y spans the range 5 to 22.<br />
+        &ensp; These two features span very different ranges. Normalization
+        might manipulate/change X and Y so that they span a similar range
+        <b>Benefits of Normalization</b><br />
+        1. Helps models converge more quickly during training. When different
+        features have different ranges, gradient descent can "bounce" and slow
+        convergence.<br />
+        2. Helps models make better predictions.<br />
+        3. Helps avoid the "NaN trap" when feature values are very high. NaN is
+        an abbreviation for not a number.<br />
+        4. Helps the model learn appropriate weights for each feature.
+      </p>
+      <h3>Methods of Normalization</h3>
+      <p>
+        <b>1. Linear Scaling/Scaling:</b> Converting floating-point values from
+        their natural range into a standard range—usually 0 to 1 or -1 to +1.<br />
+        <b>2. Z-score scaling:</b> Number of standard deviations a value is from
+        the mean. For example, a value that is 2 standard deviations greater
+        than the mean has a Z-score of +2.0<br />
+        <b>3. Log Scaling:</b> Log scaling computes the logarithm of the raw
+        value. In theory, the logarithm could be any base; in practice, log
+        scaling usually calculates the natural logarithm (ln).<br />
+        <b>4. Clipping:</b> Technique to minimize the influence of extreme
+        outliers. In brief, clipping usually caps (reduces) the value of
+        outliers to a specific maximum value
+      </p>
+      <img
+        src="/images/Machine_Learning/normalization.png"
+        alt="Normalization"
+        style="width: 600px; height: 250px"
+      />
+
+      <h1 id="fitting">Fitting</h1>
+      <h2 id="overfitting">Overfitting</h2>
       <p>
         Means that the model performs well on the training data, but it does not
         generalize well(ie produces good results on real world/unseen data),

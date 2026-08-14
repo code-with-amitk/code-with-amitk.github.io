@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AWS vs GCP vs Azure</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/GCP/AWS_vs_GCP_vs_Azure.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#compute">Compute</a>
+      <a href="#web">Web applications</a>
+      <a href="#containers">Containers</a>
+      <a href="#containers-orchestration">Kubernetes</a>
+      <a href="#storage">Storage</a>
+      <a href="#database">Database</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#bigdata">Spark &amp; Hadoop</a>
+      <a href="#networking">Networking</a>
+      <a href="#lb">Load balancer</a>
+      <a href="#identity">Identity</a>
+      <a href="#security">Security</a>
+      <a href="#ml">Machine learning</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h3>AWS vs GCP vs Azure — service mapping</h3>
+
+      <h4 id="compute"></h4>
+      <p>
+        <b>Serverless functions:</b> Run code without managing servers<br />
+        &ensp; AWS(Lambda), GCP(Cloud Functions), Azure(Azure Functions)<br />
+        <br />
+        <b>Virtual machines (IaaS):</b> VMs with full OS control<br />
+        &ensp; AWS(EC2), GCP(Compute Engine), Azure(Virtual Machines)
+      </p>
+
+      <h4 id="web"></h4>
+      <p>
+        <b>Platform for web apps (PaaS):</b> Upload app; cloud handles scaling
+        and runtime<br />
+        &ensp; AWS(Elastic Beanstalk), GCP(App Engine), Azure(App Service)
+      </p>
+
+      <h4 id="containers"></h4>
+      <p>
+        <b>Container registry:</b> Store and manage Docker/OCI images<br />
+        &ensp; AWS(ECR), GCP(Artifact Registry), Azure(Container Registry —
+        ACR)<br />
+        <br />
+        <b>Container orchestration (non-Kubernetes):</b> Run containers without
+        managing K8s control plane<br />
+        &ensp; AWS(ECS), GCP(Cloud Run), Azure(Container Apps)
+      </p>
+
+      <h4 id="containers-orchestration"></h4>
+      <p>
+        <b>Managed Kubernetes:</b> Deploy, scale, and manage containerized
+        workloads<br />
+        &ensp; AWS(EKS), GCP(GKE), Azure(AKS — Azure Kubernetes Service)
+      </p>
+
+      <h4 id="storage"></h4>
+      <p>
+        <b>Object storage:</b> Scalable storage for files, backups, static
+        assets<br />
+        &ensp; AWS(S3), GCP(Cloud Storage), Azure(Blob Storage)<br />
+        <br />
+        <b>Block storage:</b> Disk volumes attached to VMs<br />
+        &ensp; AWS(EBS), GCP(Persistent Disk), Azure(Managed Disks)
+      </p>
+
+      <h4 id="database"></h4>
+      <p>
+        <b>Relational SQL (managed):</b> Managed MySQL, PostgreSQL, SQL Server,
+        etc.<br />
+        &ensp; AWS(RDS, Aurora), GCP(Cloud SQL), Azure(Azure SQL Database, Azure
+        Database for PostgreSQL/MySQL)<br />
+        <br />
+        <b>Globally distributed SQL:</b> Horizontally scalable relational DB
+        with strong consistency<br />
+        &ensp; AWS(Aurora Global Database), GCP(Cloud Spanner), Azure(Azure SQL
+        Database — geo-replication / Hyperscale)<br />
+        <br />
+        <b>Document / key-value NoSQL:</b> Low-latency operational NoSQL with
+        autoscaling<br />
+        &ensp; AWS(DynamoDB), GCP(Firestore), Azure(Cosmos DB)<br />
+        <br />
+        <b>Wide-column NoSQL:</b> Large-scale analytical and operational
+        wide-column store<br />
+        &ensp; AWS(Keyspaces), GCP(Bigtable), Azure(Cosmos DB — Cassandra API)
+      </p>
+
+      <h4 id="analytics"></h4>
+      <p>
+        <b>Data warehouse:</b> Analyze petabyte-scale datasets with SQL<br />
+        &ensp; AWS(Redshift), GCP(BigQuery), Azure(Synapse Analytics)
+      </p>
+
+      <h4 id="bigdata"></h4>
+      <p>
+        <b>Managed Spark &amp; Hadoop:</b> Batch and big-data processing
+        clusters<br />
+        &ensp; AWS(EMR), GCP(Dataproc), Azure(HDInsight)
+      </p>
+
+      <h4 id="networking"></h4>
+      <p>
+        <b>Virtual private network:</b> Isolated cloud network with subnets and
+        routing<br />
+        &ensp; AWS(VPC), GCP(VPC), Azure(Virtual Network — VNet)
+      </p>
+
+      <h4 id="lb"></h4>
+      <p>
+        <b>Load balancing:</b> Distribute traffic across instances or
+        containers<br />
+        &ensp; AWS(ELB — ALB/NLB), GCP(Cloud Load Balancing), Azure(Load
+        Balancer / Application Gateway)
+      </p>
+
+      <h4 id="identity"></h4>
+      <p>
+        <b>Identity and access:</b> Users, roles, and permissions for cloud
+        resources<br />
+        &ensp; AWS(IAM), GCP(IAM), Azure(Microsoft Entra ID + Azure RBAC)
+      </p>
+
+      <h4 id="security"></h4>
+      <p>
+        <b>DDoS protection:</b> Mitigate distributed denial-of-service
+        attacks<br />
+        &ensp; AWS(Shield), GCP(Cloud Armor), Azure(DDoS Protection)
+      </p>
+
+      <h4 id="ml"></h4>
+      <p>
+        <b>ML platform:</b> Build, train, deploy, and manage ML models and
+        pipelines<br />
+        &ensp; AWS(SageMaker), GCP(Vertex AI), Azure(Azure Machine Learning)<br />
+        <br />
+        <b>Conversational AI / chatbots:</b> Build voice and text bots<br />
+        &ensp; AWS(Lex), GCP(Dialogflow), Azure(Bot Service)<br />
+        <br />
+        <b>Pre-trained AI APIs:</b> Speech, vision, language, translation
+        without training custom models<br />
+        &ensp; AWS(Rekognition, Comprehend, Polly, Transcribe), GCP(Vision AI,
+        Natural Language API, Speech-to-Text, Translation API), Azure(Cognitive
+        Services — Vision, Speech, Language, Translator)
+      </p>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

@@ -47,10 +47,14 @@
     <article style="margin-left: 200px">
       <h2 id="what">What is Go routine(Green Thread)</h2>
       <p>
-        A goroutine is a lightweight thread managed by the Go runtime.<br />
-        Memory allocation on stack, heap is very less wrt OS Threads.
-        <a href="/Threads_Processes_IPC/Threads/Green_vs_OS_threads.html"
-          >Goroutine vs OS Threads</a
+        A goroutine is a lightweight
+        <a href="/Threads_Processes_IPC/Threads/Green_vs_OS_threads.html">
+          Green thread</a
+        >
+        managed by the Go runtime.<br />
+        Memory is allocated on Process's Heap for go routines. Check
+        <a href="/Motherboard/Memory/Memory_layout_compared.html#go"
+          >Go Process Memory Layout</a
         >
       </p>
 
@@ -94,7 +98,7 @@ import (
 
 func main() {
 	var wg sync.WaitGroup
-	wg.Add(2)               // 2 goroutines. internal counter=0
+	wg.Add(2)               // 2 goroutines. internal counter=2
 
 	task := func(id int) {  // defer executes when scope ends
 		defer wg.Done()       // Decrement counter when task finishes

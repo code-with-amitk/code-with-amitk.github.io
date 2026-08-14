@@ -105,12 +105,13 @@
 
         <h1 id="hld">HLD</h1>
         <p>
-          There are 2 independent systems:<br />
+          There are 3 independent systems/pipelines:<br />
           1. Storage Pipeline (Write Path): optimized for ingesting millions of
           events/sec. Where tenants write the logs and those are stored<br />
           2. Query Pipeline (Read Path): optimized for searching petabytes of
           historical data. Dashboards where data is searched looked upon for
-          investigation/forensics
+          investigation/forensics<br />
+          3. Logs to Dashboard pipeline
         </p>
 
         <h2 id="storage">Storage Pipeline (Write Path)</h2>
@@ -322,10 +323,12 @@ flowchart LR
 
     K1[(Kafka<br/>raw-logs)]
 
-    P[Parser Service<br>multipod]
+    P[Parser Service<br>pod1]
+    P1[Parser Service<br>pod2]
     K2[(Kafka<br/>normalized-logs)]
 
-    E[Enrichment Service<br>multipod]
+    E[Enrichment Service<br>pod1]
+    E1[Enrichment Service<br>pod2]
     K3[(Kafka<br/>enriched-logs)]
 
     IX[Indexer Service<br>multipod<br><br>consumer-group=indexer-group]
@@ -337,9 +340,11 @@ flowchart LR
     MDB[(Metadata DB)]
 
     K1 --> P
+    K1 --> P1
     P --> K2
 
     K2 --> E
+    K2 --> E1
     E --> K3
 
     K3 --> IX

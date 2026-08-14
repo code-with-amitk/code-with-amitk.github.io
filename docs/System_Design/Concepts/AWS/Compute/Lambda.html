@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lambda — AWS serverless compute</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/AWS/Compute/Lambda.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/AWS/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Definition</a>
+      <a href="#placement">Where Lambda fits</a>
+      <a href="#example">Simple example</a>
+      <a href="#vs">Lambda vs EC2</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h1 id="what">Lambda</h1>
+      <p>
+        <b>Definition:</b> AWS Lambda is <b>serverless compute</b> — you upload
+        a function (handler code); AWS runs it when an <b>event</b> triggers it.
+        You do not provision or manage servers, and you pay per invocation and
+        duration (GB-seconds), not for idle VMs.<br />
+        Example upload Rest API code to Lambda, and once client hits lambda will
+        start the service and you pay as you go
+        <br />
+        <b>Serverless</b> here means you do not patch OS or scale instances —
+        AWS does. There are still servers behind the service.
+      </p>
+
+      <h2 id="placement">Where Lambda fits in architecture</h2>
+      <p>
+        Lambda is the <b>worker</b> that runs small units of logic in response
+        to events. It sits <b>behind a trigger</b>, not as a long-running web
+        server (unless fronted by API Gateway for request/response APIs).
+      </p>
+      <pre><code>Event source                    Lambda                    Downstream
+─────────────                   ──────                    ──────────
+API Gateway  ──HTTP request──►  your handler  ──►         DynamoDB, S3, SNS
+S3 bucket    ──object created►  your handler  ──►         resize image, log
+SQS queue    ──message───────►  your handler  ──►         process order
+EventBridge  ──schedule/event►  your handler  ──►         cleanup, sync
+Step Functions ──Task step───►  your handler  ──►         one step in workflow
+CloudWatch   ──alarm────────►  your handler  ──►         notify, remediate</code></pre>
+
+      <h2 id="example">Simple example — resize image on S3 upload</h2>
+      <p>
+        User uploads <code>photo.jpg</code> to S3. S3 notifies Lambda; Lambda
+        reads the file, creates a thumbnail, saves it to another bucket.
+      </p>
+      <pre><code class="language-bash"># Invoke manually for testing (optional)
+aws lambda invoke \
+  --function-name ResizeImage \
+  --payload file://s3-event-sample.json \
+  out.json</code></pre>
+
+      <h2 id="vs">Lambda vs EC2 (when to pick which)</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th></th>
+          <th>Lambda</th>
+          <th>EC2</th>
+        </tr>
+        <tr>
+          <td>Runs</td>
+          <td>On event; seconds to 15 min max</td>
+          <td>Always on; full VM control</td>
+        </tr>
+        <tr>
+          <td>Scale</td>
+          <td>Automatic per concurrency</td>
+          <td>You configure Auto Scaling</td>
+        </tr>
+        <tr>
+          <td>Cost</td>
+          <td>Per invocation + duration</td>
+          <td>Per hour while instance runs</td>
+        </tr>
+        <tr>
+          <td>Best for</td>
+          <td>Sporadic, small, event-driven tasks</td>
+          <td>Steady load, custom OS, long jobs</td>
+        </tr>
+      </table>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>
