@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Types in golang</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Go/Types.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Types.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -123,29 +126,24 @@ func (p Person) fun() string {  //Define function for struct
 package main
 import "fmt"
 
-// 1. Define the interface (The Contract)
-type Speaker interface {      &lt;&lt;&lt;&lt;&lt;&lt; See Keyword interface
-	Speak() string // Pure behavior, no implementation, no variables
+type Speaker interface {      // 1. Define the interface (The Contract)
+	Speak() string
 }
 
-// 2. Define a concrete type
-type Dog struct {
-	Name string // Structs hold the data
+type Dog struct {           // 2. Define a concrete type
+	Name string
 }
 
-// 3. Implement the method (Implicitly!)
-// There is no mention of "Speaker" here. Go just figures it out.
-func (d Dog) Speak() string {
+func (d Dog) Speak() string {   // 3. Implement interface(Speaker not mentioned, it figured implicitly)
 	return "Woof!"
 }
 
 type Robot struct{}
 
 func main() {
-	// A variable of interface type
-	var s Speaker
+	var s Speaker                     // Interface var
 
-	s = Dog{Name: "Buddy"} // Valid! Dog implements Speak()
+	s = Dog{Name: "Buddy"}            // Valid! Dog implements Speak()
 	fmt.Println(s.Speak())
 
 	// s = Robot{} 

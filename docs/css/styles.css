@@ -96,8 +96,12 @@ a:hover {
   transition: transform var(--transition-speed) ease;
   z-index: 1000;
   padding: 1rem 0;
+  font-size: 10px;
 }
-
+.sidebar a,
+.sidebar li {
+  font-size: 0.8rem;
+}
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -579,7 +583,7 @@ pre {
 }
 .sidebar ul {
   margin: -1px 0;
-  font-size: x-small;
+  font-size: 8px;
 }
 summary {
   margin-left: 10px;

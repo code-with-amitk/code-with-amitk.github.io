@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Step Functions — AWS orchestration</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/AWS/Application_Integration/Step_Function.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/AWS/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Definition</a>
+      <a href="#scenario">Scenarios</a>
+      <a href="#placement">Where it sits</a>
+      <a href="#diagram">Flow diagram</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h1 id="what">Step Functions</h1>
+      <p>
+        <b>Definition:</b> AWS Step Functions is a
+        <b>serverless workflow orchestration</b> service.<br />
+        Serverless does not mean there are no servers; it means that you do not
+        manage, provision, or scale them<br />
+        You define a state machine (steps, branches, retries, timeouts) in JSON
+        called <b>Amazon States Language (ASL)</b>. Step Functions runs the
+        workflow, calls each step in order, tracks state, and handles failures —
+        without you writing a custom coordinator in code.
+      </p>
+
+      <h2 id="scenario">Scenarios where Step Functions fits</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Scenario</th>
+          <th>Why Step Functions</th>
+        </tr>
+        <tr>
+          <td>Order processing</td>
+          <td>Validate → charge → ship → notify; branch on payment failure</td>
+        </tr>
+        <tr>
+          <td>Human approval</td>
+          <td>Wait for manager approve/reject, then continue or cancel</td>
+        </tr>
+        <tr>
+          <td>Media pipeline</td>
+          <td>Upload → transcode → thumbnail → publish — parallel steps</td>
+        </tr>
+        <tr>
+          <td>Data ETL</td>
+          <td>Extract → transform → load with retries on transient errors</td>
+        </tr>
+        <tr>
+          <td>Microservice saga</td>
+          <td>Coordinate compensating steps if one service fails</td>
+        </tr>
+      </table>
+
+      <h2 id="placement">Where it is placed in architecture</h2>
+      <p>
+        Step Functions sits in the <b>orchestration layer</b> — between the
+        trigger and the workers:
+      </p>
+      <pre><code>Trigger (API Gateway, EventBridge, S3 event, manual)
+        │
+        ▼
+  Step Functions  ◄── you are here (defines and runs the workflow)
+        │
+        ├──► Lambda
+        ├──► ECS / Fargate task
+        ├──► SNS / SQS
+        ├──► DynamoDB
+        └──► other AWS services / HTTP</code></pre>
+
+      <h2 id="diagram">Flow diagram</h2>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart LR
+    Start([Order placed]) --> V[ValidateOrder Lambda]
+    V --> P[ChargePayment Lambda]
+    P --> C{paymentStatus?}
+    C -->|FAILED| N[SNS NotifyFailure]
+    C -->|OK| S[ShipOrder Lambda]
+    S --> End([Done])
+    N --> End
+        </pre>
+      </div>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+  </body>
+</html>

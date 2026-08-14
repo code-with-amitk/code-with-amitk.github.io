@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Data Analytics System Design</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Pipelines/Data_Analytics.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar"></aside>
+
+    <article style="margin-left: 200px">
+      <h1>Data Analytics Pipeline</h1>
+      <p>
+        This accepts data from many heterogeneous sources, stores the original
+        data, cleans and standardizes it, transforms it into business-ready
+        datasets, and exposes those datasets to analytics, BI, data warehouse,
+        and ML systems. What data can come?
+      </p>
+      <pre><code>csv
+files
+json
+pdf
+Application logs</code></pre>
+
+      <h2>Requirements</h2>
+      <p>
+        <b>Functional requirements</b><br />
+        1. Multiple ingestion sources<br />
+        2. Preserve original data<br />
+        3. Data validation: Detect missing fields, invalid types, duplicate
+        records, malformed records, invalid timestamps, invalid business
+        values<br />
+        4. Analytics: Users should be able to ask: How many sales in city X<br />
+
+        <b>Non-functional requirements</b><br />
+        1. Scalability: upto 10 TB/day<br />
+        2. Availability: A failure in one pipeline should not destroy data
+        already ingested<br />
+        3. Security
+      </p>
+
+      <h1>HLD</h1>
+    </article>
+  </body>
+</html>

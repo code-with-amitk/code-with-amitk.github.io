@@ -36,97 +36,112 @@
 
     <main>
       <article style="margin-left: 200px">
-        <p>
-          Threads<br />
-          &ensp;
-          <a href="Threads_vs_Processes.html"
-            >Thread vs Process, Why processes are heavy</a
-          ><br />
-          &ensp;
-          <a href="/Motherboard/Memory/Memory_layout_of_process.html"
-            >Process Memory Layout</a
-          ><br />
-          &ensp;
-          <a href="Threads/Green_vs_OS_threads.html"
-            >User Space, Kernel Space, Green Threads</a
-          ><br />
-          &ensp;
+        <dt>
+          Compared:
+          <a href="Threads_vs_Processes.html">Thread vs Process</a>,
+          <a href="Threads/Green_vs_OS_threads.html">Threads</a>(User Space,
+          Kernel Space, Green Threads), Memory Layout(<a
+            href="/Motherboard/Memory/Memory_layout_compared.html"
+            >Process(C++,Rust,Go,Java)</a
+          >,
           <a
             href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/Threads/README.md#memory-layout-of-threads"
-            >Thread Memory Layout</a
-          ><br />
+            >Thread</a
+          >)<br />
 
           <b>
             <a href="Threads/Creation/Threads_Creation.html"
               >Thread Creation:</a
             ></b
-          ><br />
-          &emsp; CPP(Threadclass, CPP Functor)<br />
-          &emsp; Rust (Normal, Scoped)<br />
-          &emsp; Go (<a href="Threads/Creation/GoRoutines.html">goroutines</a
-          >),<br />
-          &emsp; Python,<br />
-          &emsp; POSIX,<br />
-          &emsp; Java<br />
-          &emsp;&emsp; OS Thread(Runnable Interface)<br />
-          &emsp;&emsp; Green Thread(Thread.startVirtualThread(),
-          Thread.ofVirtual(), Virtual thread factory, Virtual thread
-          executor)<br />
-          &emsp; Windows<br />
+          >
+          CPP(Threadclass, CPP Functor), Rust (Normal, Scoped), Go (<a
+            href="Threads/Creation/GoRoutines.html"
+            >goroutines</a
+          >), Python, POSIX, Java(OS Thread, Green Threads), Windows<br />
 
           &ensp;
           <a href="Threads/Joinable_Detachable.html"
             >Joinable Detachable Threads</a
           ><br />
+
           <b>Synchronization</b><br />
           &ensp;
-          <a href="Synchronization/index.html">What is Synchronization?</a
-          ><br />
+          <a href="Synchronization/index.html">Synchronization Methods:</a> C++,
+          Golang, Java, Python<br />
           &ensp;
           <a href="Synchronization/Problems on synchronization.html"
             >Problems in sync:</a
           >
           Dining Philospher, n Producer n Consumer <br />
 
-          &ensp;
-          <a href="Synchronization/index.html">Synchronization Methods:</a
-          ><br />
-          &emsp; Java<br />
-          &emsp; <a href="Synchronization/index.html">Methods List:</a> Pipes,
-          Shared Memory, condvar, Semaphores, mutex, Arc&lt;mutex>, Rwlocks,
-          channels<br />
           &emsp; Rust:
-          <a href="Synchronization/Rust/Arc.html">Arc, Arc&lt;mutex></a><br />
+          <a href="Synchronization/Rust/Arc.html">Arc, Arc&lt;mutex&gt;</a
+          ><br />
           &emsp; C++:
           <a href="Synchronization/condition_variable.html"
             >condition_variable</a
           ><br />
           &emsp; mutex: <a href="Synchronization/mutex.html">C++, POSIX, Rust</a
           ><br />
+          &emsp; Go: <a href="IPC/Golang/channels.html">Channels</a>,
+          <a href="IPC/Golang/atomics.html">Atomics</a><br />
 
-          <b>IPC</b><br />
-          &ensp; <a href="IPC/index.html">What is IPC?</a><br />
-          &ensp; <u>IPC Methods:</u><br />
-          &emsp; <a href="IPC/Methods.html">Types:</a> Pipe, Channels(Rust, go),
-          Named pipes, fifo, Message Queues, Shared Memory, Memory mapped
-          files<br />
+          <b>Communication</b><br />
+          &ensp; Interprocess (IPC): <a href="IPC/index.html">What is IPC?</a
+          ><br />
+          &emsp;&emsp; <a href="IPC/Methods.html">Types:</a> Pipe, Named pipes,
+          fifo, Message Queues, Shared Memory, Memory mapped files<br />
 
-          &emsp; Rust: <a href="IPC/Rust/channels.html">Channels</a><br />
-
-          &emsp; Golang:<br />
+          &ensp; Interthread:<br />
+          &emsp;&emsp; <a href="IPC/Rust/channels.html">Rust Channels</a><br />
           &emsp;&emsp;
-          <a href="IPC/Golang/channels.html">Channels</a>
-          Types(Buffered/Unbuffered, Directional/Bidirectional), select(wait on
-          multiple channels)<br />
-          &emsp; &emsp; <a href="IPC/Golang/atomics.html">Atomic</a>
+          <a href="IPC/Golang/channels.html">Go Channels</a>
+          ((Buffered/Unbuffered, Directional/Bidirectional), select(wait on
+          multiple channels)),
+          <a href="IPC/Golang/atomics.html">Go Atomic</a>
           <br />
 
-          <a href="Thread_Pool/Introduction.html">Thread Pool</a><br />
-          &ensp; <a href="Thread_Pool/Java/index.html">Java</a><br />
-          &ensp; <a href="Thread_Pool/CPP/index.html">C++</a><br />
-          &ensp; <a href="Thread_Pool/GoLang/index.html">Go</a><br />
-          &ensp; <a href="Thread_Pool/Rust/index.html">Rust</a><br />
-        </p>
+          &ensp; <b><font color="red">Code(multithreaded)</font></b
+          >:<br />
+          &emsp;&emsp;
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/Building_H2O.adoc"
+            >Building H2O</a
+          ><br />
+          &emsp;&emsp;
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/Fizz_Buzz_Multithreaded.adoc"
+            >Fizz Buzz Multithreaded</a
+          ><br />
+          &emsp;&emsp;
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/Print_FooBar_Alternately.md"
+            >Print FooBar Alternately</a
+          ><br />
+          &emsp;&emsp;
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/Print_Zero_Even_Odd.adoc"
+            >Print Zero Even Odd</a
+          ><br />
+          &emsp;&emsp;
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/Print_in_order_Execute_3_funs_in_order.md"
+            >Print in order Execute 3 functions in order</a
+          ><br />
+          &emsp;&emsp;
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/Stream_Logger.adoc"
+            >Stream Logger:</a
+          >
+          Logger that receives a stream of log messages along with their
+          timestamps (in seconds). and print after 10 seconds<br /><br />
+
+          <a href="Thread_Pool/Introduction.html">Thread Pool:</a>
+          <a href="Thread_Pool/Java/index.html">Java</a>,
+          <a href="Thread_Pool/CPP/index.html">C++</a>,
+          <a href="Thread_Pool/GoLang/index.html">Go</a>,
+          <a href="Thread_Pool/Rust/index.html">Rust</a><br />
+        </dt>
       </article>
     </main>
   </body>

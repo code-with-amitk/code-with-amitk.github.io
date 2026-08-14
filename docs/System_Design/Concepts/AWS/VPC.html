@@ -1,21 +1,25 @@
 <!doctype html>
 <html>
   <head>
-    <title>VPC</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/AWS/VPC.html" />
+    <meta charset="UTF-8" />
+    <title>VPC — Virtual Private Cloud</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/AWS/VPC.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
   <body>
     <nav class="navbar">
-      <!--See .navbar in styles.css-->
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li><a href="/System_Design/Concepts/AWS/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -29,22 +33,253 @@
         </li>
       </ul>
     </nav>
+
     <aside class="sidebar">
       <a href="#what">What is VPC</a>
+      <a href="#concepts">Networking concepts</a>
+      <a href="#igw">Internet Gateway</a>
+      <a href="#placement">Where each service sits</a>
+      <a href="#scenario">Example scenario</a>
+      <a href="#block">Block diagram</a>
+      <a href="#sequence">Sequence diagram</a>
     </aside>
 
     <main style="margin-left: 200px">
-      <h2 id="what">VPC (Virtual Pvt Cloud)</h2>
-      <dl>
-        This is a private, isolated virtual network environment where you can
-        launch AWS resources(eg EC2) into subnets that you define<br />
-        It allows you to provision a logically isolated section of the AWS
-        Cloud<br />
-        Within your VPC, you can define your own IP address range subnets, route
-        tables, and network gateways as you see fit
-      </dl>
+      <h1 id="what">VPC (Virtual Private Cloud)</h1>
+      <p>
+        Its a isolated virtual network inside AWS(like a private datacenter LAN
+        in the cloud)<br />
+        VPC's can be created across AZ's<br />
+        Every machine/resource is provided a IP address, subnets, routing
+        tables, ACL, security groups can be created
+        <br />
+        Every AWS resource that handles traffic (eg: EC2, ECS, EKS, RDS, ELB)
+        lives inside a VPC. If networking is wrong inside that VPC, ELB cannot
+        reach your containers even though both exist in AWS.
+      </p>
+
+      <h2 id="concepts">How VPC maps to networking concepts</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>VPC component</th>
+          <th>Traditional networking analogy</th>
+          <th>Role</th>
+        </tr>
+        <tr>
+          <td><b>VPC</b></td>
+          <td>Private campus / datacenter network</td>
+          <td>Isolated address space, e.g. <code>10.0.0.0/16</code></td>
+        </tr>
+        <tr>
+          <td><b>Subnet</b></td>
+          <td>VLAN / network segment</td>
+          <td>
+            Slice of VPC IP range per Availability Zone (public or private)
+          </td>
+        </tr>
+        <tr>
+          <td><b>Internet Gateway (IGW)</b></td>
+          <td>Datacenter border router to the internet</td>
+          <td>
+            VPC attachment point for public internet traffic (see
+            <a href="#igw">below</a>)
+          </td>
+        </tr>
+        <tr>
+          <td><b>Route table</b></td>
+          <td>Router routing table</td>
+          <td>Public subnet: <code>0.0.0.0/0 → IGW</code>; private: <code>→ NAT</code></td>
+        </tr>
+        <tr>
+          <td><b>NAT Gateway</b></td>
+          <td>Outbound-only NAT</td>
+          <td>Private subnets reach internet without accepting inbound</td>
+        </tr>
+        <tr>
+          <td><b>Security group</b></td>
+          <td>Stateful host firewall</td>
+          <td>e.g. allow ALB → container on port 8080</td>
+        </tr>
+        <tr>
+          <td><b>Elastic IP / ENI</b></td>
+          <td>Static IP / NIC</td>
+          <td>IP address attached to an instance or load balancer node</td>
+        </tr>
+      </table>
+
+      <h2 id="igw">What is the Internet Gateway (IGW)?</h2>
+      <p>
+        The <b>Internet Gateway</b> is <b>not</b> a global load balancer and
+        <b>not</b> something the client connects to by name. It is an
+        AWS-managed component <b>attached to your VPC</b> at the edge of that VPC
+        inside an AWS region (yes — inside AWS’s network, at the border of
+        <em>your</em> virtual network).
+      </p>
+      <p>
+        <b>What it does:</b> Allows traffic between the <b>public internet</b>
+        and resources in your VPC that have public IPs (e.g. internet-facing
+        ALB in a public subnet). Public subnet route tables send
+        <code>0.0.0.0/0</code> to the IGW.
+      </p>
+      <p>
+        <b>What it is not:</b> Route 53, Global Accelerator, API Gateway, or
+        ELB. Those are separate services. IGW is only the <b>VPC front door</b>
+        for internet ↔ public subnet routing.
+      </p>
+
+      <h2 id="placement">Where Route 53, global LB, API Gateway, and ELB sit</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Service</th>
+          <th>Inside VPC?</th>
+          <th>Role in HTTP path</th>
+        </tr>
+        <tr>
+          <td><b>Route 53</b></td>
+          <td>No — global DNS</td>
+          <td>Resolves <code>api.example.com</code> to ALB, API Gateway, or Global Accelerator</td>
+        </tr>
+        <tr>
+          <td><b>Global Accelerator / CloudFront</b></td>
+          <td>No — global/edge</td>
+          <td>Optional; sends user to nearest healthy <b>regional</b> endpoint</td>
+        </tr>
+        <tr>
+          <td><b>API Gateway</b></td>
+          <td>No (regional AWS service); uses <b>VPC Link</b> ENIs to reach private VPC</td>
+          <td>Optional; <b>before</b> ALB when you need API keys, throttling, auth</td>
+        </tr>
+        <tr>
+          <td><b>Internet Gateway</b></td>
+          <td>Attached to VPC boundary (not in a subnet)</td>
+          <td>Path for internet traffic into/out of <b>public subnets</b></td>
+        </tr>
+        <tr>
+          <td><b>ELB / ALB</b></td>
+          <td><b>Yes</b> — ENIs in your public (or internal) subnets</td>
+          <td>Regional load balancer; distributes to targets in VPC</td>
+        </tr>
+        <tr>
+          <td><b>EKS pods / EC2</b></td>
+          <td><b>Yes</b> — usually private subnets</td>
+          <td>Application containers</td>
+        </tr>
+      </table>
+      <p>
+        <b>Load balancing vs API Gateway order:</b><br />
+        • <b>Web app (typical):</b> Client → Route 53 → ALB → pods (no API Gateway).<br />
+        • <b>Managed public API:</b> Client → Route 53 → <b>API Gateway</b> → ALB → pods.<br />
+        API Gateway is <b>before</b> ALB when both are used. ELB is always
+        <b>inside the VPC</b>; API Gateway sits outside and forwards in.
+      </p>
+
+      <h2 id="scenario">Example scenario — App Server in VPC</h2>
+      <p>
+        A company runs a containerized App Server on <b>EKS</b> in
+        <code>us-east-1</code><br />
+
+        Create VPC <code>10.0.0.0/16</code> with two AZs for high
+        availability.<br />
+
+        <b>Public subnets</b> (<code>10.0.1.0/24</code>,
+        <code>10.0.2.0/24</code>) — ALB and NAT Gateway; route table points
+        <code>0.0.0.0/0</code> to IGW.<br />
+
+        <b>Private subnets</b> (<code>10.0.10.0/24</code>,
+        <code>10.0.11.0/24</code>) — EKS worker nodes and pods; route table
+        points <code>0.0.0.0/0</code> to NAT (outbound only).<br />
+
+        <b>RDS</b> in private subnets — reachable from app security group only,
+        not from the internet.<br />
+
+        Client → Route 53 → ALB (public subnet) → Ingress → pods (private
+        subnet).<br />
+
+        Without this layout, you either expose containers directly to the
+        internet (unsafe) or have no path for the load balancer to forward
+        traffic to private workloads.
+      </p>
+
+      <h2 id="block">Block diagram — client HTTP request into VPC</h2>
+      <p>
+        Outside → inside: client on the internet, optional global/regional
+        services, then IGW as VPC border, then ALB and private workloads.
+      </p>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart TB
+    Client[Client on public internet]
+
+    R53[Route 53 — global DNS]
+    GA[Global Accelerator — optional global LB]
+    APIGW[API Gateway — optional, before ALB]
+
+    subgraph VPC["Your VPC (inside AWS region)"]
+        IGW[Internet Gateway — VPC door to internet]
+        ALB[ALB / ELB — regional LB in public subnet]
+        Pod[Containers in private subnet]
+    end
+
+    Client -->|1 lookup| R53
+    Client -->|2 HTTP request| GA
+    GA --> APIGW
+    APIGW -->|3a API path| ALB
+    Client -->|2 alt web app| IGW
+    GA -.->|skip API GW| IGW
+    IGW -->|3b enters VPC| ALB
+    ALB -->|4 forward| Pod
+        </pre>
+      </div>
+      <p>
+        <b>Read top to bottom:</b><br />
+        1. <b>Route 53</b> (global DNS) tells the client where to send the request.<br />
+        2. <b>Global Accelerator</b> (optional) picks the nearest region.<br />
+        3. <b>API Gateway</b> (optional) sits <b>before</b> ALB for API management.<br />
+        4. Request crosses the <b>public internet</b> into the AWS region.<br />
+        5. <b>Internet Gateway</b> is the VPC’s door — traffic enters public subnets.<br />
+        6. <b>ALB</b> (inside VPC) load-balances to containers in <b>private</b> subnets.
+      </p>
+
+      <h2 id="sequence">Sequence diagram — same HTTP request step by step</h2>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+    participant Client as Client (internet)
+    participant R53 as Route 53
+    participant APIGW as API Gateway (optional)
+    participant IGW as Internet Gateway (VPC border)
+    participant ALB as ALB (VPC public subnet)
+    participant Pod as Pod (VPC private subnet)
+
+    Client->>R53: Resolve api.example.com
+    R53-->>Client: ALB or API Gateway hostname
+
+    alt Public API with API Gateway
+        Client->>APIGW: HTTPS POST /orders
+        APIGW->>APIGW: Auth, throttle, validate
+        APIGW->>ALB: Forward to backend (VPC Link / HTTP)
+    else Web app — direct to ALB
+        Client->>IGW: HTTPS over internet toward ALB address
+        Note over IGW: IGW routes into VPC<br/>client does not connect to IGW by name
+        IGW->>ALB: Deliver to ALB network interface
+    end
+
+    ALB->>ALB: Pick healthy target in target group
+    ALB->>Pod: HTTP to private IP 10.0.10.5:8080
+    Pod-->>ALB: 200 OK
+    ALB-->>Client: 200 OK (via same path back)
+        </pre>
+      </div>
+      <p>
+        <b>Note:</b> In the sequence, IGW appears only on the
+        <b>direct-to-ALB</b> path — it is the routing point where internet
+        traffic enters the VPC. API Gateway traffic also eventually reaches ALB
+        inside the VPC (often via VPC Link ENIs in your subnets).
+      </p>
     </main>
+
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>

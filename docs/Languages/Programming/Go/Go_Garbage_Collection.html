@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Go Garbage Collection</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Go_Garbage_Collection.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Go GC</a>
+      <a href="#example">Simple example</a>
+      <a href="#steps">How GC works(Tri-color Marking)</a>
+      <a href="#vs-java">Go vs Java GC</a>
+      <a href="#tuning">Tuning GC</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">Go garbage collection</h1>
+      <p>
+        Go automatically frees heap memory when heap allocated memory does not
+        have reference. We never call <code>free</code> or <code>delete</code>.
+        Pause times are kept low.<br />
+        Go routines live on heap in
+        <a href="/Motherboard/Memory/Memory_layout_compared.html#go"
+          >Go process memory layout</a
+        ><br />
+        Garbage collector lies on Process's Text Area/Code Area section
+      </p>
+
+      <h2 id="example">Simple example (Linked List)</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">type Node struct {
+    Value int
+    Next  *Node
+}
+func main() {
+    a := &Node{Value: 10}
+    b := &Node{Value: 20}
+    c := &Node{Value: 30}
+
+    a.Next = b
+    b.Next = c
+}
+
+Stack/root -> a -> b -> c</code></pre>
+          </td>
+          <td>
+            Suppose Later
+            <pre><code>a = nil
+
+[Node A] ---> [Node B] ---> [Node C]
+
+A, B, C becomes garbage and are collected by GC later</code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="steps">How GC works = Tri-color Marking(White, Grey, Black)</h2>
+      <p>These are 3 buckets:</p>
+      <table>
+        <tr>
+          <th>Bucket</th>
+          <th>White</th>
+          <th>Grey</th>
+          <th>Black</th>
+        </tr>
+        <tr>
+          <td>Meaning</td>
+          <td>Garbage</td>
+          <td>Reachable, but work remains</td>
+          <td>Reachable and fully scanned</td>
+        </tr>
+      </table>
+
+      <pre><code class="language-css">
+root
+ |
+ v
+[A] ---> [B] ---> [C]
+
+time 0. White=A,B,C
+time 1. Grey=A,  White=B,C              // A(Reachable, but work remains)
+time 2. Black=A,  Grey=B,   White=C     // A(Reachable and fully scanned), B(Reachable, but work remains)
+      </code></pre>
+
+      <h3>Why tri color scheme</h3>
+      <p>
+        Go doesn't want to stop the entire application while it scans the
+        heap.<br />
+        Go's GC is concurrent, ie it keeps marking while you keep on allocating
+        heap. stop-the-world (STW) phases should be low
+      </p>
+
+      <h2 id="vs-java">Go vs Java GC</h2>
+      <p>
+        <b>Same core idea:</b> both are <b>tracing</b> collectors — start from
+        roots, follow references, reclaim what is unreachable. Neither requires
+        you to free individual objects on the heap.
+      </p>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th></th>
+          <th>Go</th>
+          <th>Java</th>
+        </tr>
+        <tr>
+          <td><b>Heap model</b></td>
+          <td>Single Go heap (+ goroutine stacks on heap)</td>
+          <td>
+            Object heap + separate
+            <a href="/Motherboard/Memory/Memory_layout_compared.html#java"
+              >metaspace</a
+            >
+            for class metadata
+          </td>
+        </tr>
+        <tr>
+          <td><b>Generations</b></td>
+          <td><b>Non-generational</b> — no Eden / Old gen split</td>
+          <td>
+            <b>Generational</b> — Eden, survivor spaces, old generation (most
+            collectors)
+          </td>
+        </tr>
+        <tr>
+          <td><b>Concurrency</b></td>
+          <td>Mark-and-sweep, mostly concurrent with app code</td>
+          <td>
+            Depends on collector (G1, ZGC, etc.); young GC often STW, modern
+            collectors reduce pauses
+          </td>
+        </tr>
+        <tr>
+          <td><b>Roots</b></td>
+          <td>Goroutine stacks, globals, CPU registers</td>
+          <td>Java thread stacks, static fields, JNI refs, etc.</td>
+        </tr>
+        <tr>
+          <td><b>What gets collected</b></td>
+          <td>Heap objects; stack frames scanned for pointers</td>
+          <td>
+            Heap objects only (class data in metaspace, not GC’d like objects)
+          </td>
+        </tr>
+        <tr>
+          <td><b>Allocation path</b></td>
+          <td>Escape analysis — locals may stay on stack or move to heap</td>
+          <td>Almost all objects allocated on heap (<code>new</code>)</td>
+        </tr>
+      </table>
+
+      <h2 id="tuning">Tuning GC</h2>
+      <p>
+        <code>GOGC</code> (default <code>100</code>) — heap growth vs GC
+        frequency. Higher = less frequent GC, more memory.<br />
+        <code>GODEBUG=gctrace=1</code> — print GC stats to stderr (useful when
+        learning or debugging pauses).<br />
+        Reduce unnecessary heap allocations (reuse buffers, avoid allocations in
+        hot loops) — same advice as Java, but Go has no generational “Eden is
+        cheap” assumption to the same degree.
+      </p>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
