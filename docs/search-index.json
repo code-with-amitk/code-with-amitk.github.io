@@ -546,14 +546,13 @@
   },
   {
     "title": "Database Scaling",
-    "url": "/System_Design/Concepts/Databases/DB_Scaling/",
-    "excerpt": "Database Scaling Home Our team Projects Contact Back 1. Replication 2. Federation 3. Sharding"
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/Replication/",
+    "excerpt": "Database Scaling Home Our team Projects Contact Back What is Replication Types of Replication Replication? Keeping a copy of the same data on multiple..."
   },
   {
     "title": "Database Scaling",
-    "url": "/System_Design/Concepts/Databases/DB_Scaling/Replication/",
-    "excerpt": "Database Scaling Home Our team Projects Contact Back What is Replication Types of Replication Replication? Keeping a copy of the same data on multiple..."
-
+    "url": "/System_Design/Concepts/Databases/DB_Scaling/",
+    "excerpt": "Database Scaling Home Our team Projects Contact Back 1. Replication 2. Federation 3. Sharding"
   },
   {
     "title": "Database Schema",
@@ -572,13 +571,8 @@
   },
   {
     "title": "Databases",
-    "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
-    "excerpt": "Databases Home Our team Projects Contact Column DB faster than row Difference OLAP Column DB faster than row Row oriented Coloumn oriented Consider em..."
-  },
-  {
-    "title": "Databases",
     "url": "/System_Design/Concepts/Databases/",
-    "excerpt": "Databases Home Our team Projects Contact Back Types of DB: SQL, NoSQL, Vector SQL Databases &ensp; Examples: &emsp; PostgreSQL: &emsp;&emsp; Install ,..."
+    "excerpt": "Databases Home Our team Projects Contact Back Types of DB: SQL, NoSQL, Vector SQL NoSQL Types Columnar DB , Graph DB(Cypher, GraphDB) Example PostgreS..."
   },
   {
     "title": "decltype",
