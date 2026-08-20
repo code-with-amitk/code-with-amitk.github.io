@@ -1,135 +1,168 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title>Databases</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Databases/NoSQL/Column%20Oriented%20DB" />
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
+    <title>Column-Oriented Databases</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Databases/NoSQL/Column%20Oriented%20DB/"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
   </head>
 
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
             <input type="submit" value="Go!" />
-        </form>
-       </li>
-    </ul>
-</nav>
+          </form>
+        </li>
+      </ul>
+    </nav>
 
-  <aside class="sidebar">
-    <a href="#speed">Column DB faster than row</a>
-    <a href="#diff">Difference</a>
-    <a href="#olap">OLAP</a>
-  </aside>
+    <aside class="sidebar">
+      <a href="#speed">Column vs row storage</a>
+      <a href="#diff">Difference</a>
+      <a href="#timeseries">Time series-Column wins</a>
+    </aside>
 
-  <main>
-    <article style="margin-left:200px;">
-      <h2 id="speed">Column DB faster than row</h2>
-      <table>
-        <tr>
-          <th>Row oriented</th>
-          <th>Coloumn oriented</th>
-        </tr>
-        <tr>
-          <td>
-            Consider employee data is stored
-            <pre><code class="language-css">
-ID	  Name	  Age	Salary
-1	    Alice	  30	50000
-2	    Bob	    25	60000
-3	    Carol	35	70000
-4	    Dave	40	80000
+    <main>
+      <article style="margin-left: 200px">
+        <h1>Column-oriented databases</h1>
+        <p>
+          Column-oriented (columnar) databases store each <b>column</b> together
+          on disk, not each full row. They are optimized for
+          <b>analytics</b> (read many rows, few columns). Row-oriented SQL
+          databases (PostgreSQL, MySQL) store each <b>row</b> together and are
+          optimized for <b>OLTP</b> (read/update one row at a time).
+        </p>
 
-On Row Oriented DB its Stored as(On Disk):
-1, Alice, 30, 50000
-2, Bob, 25, 60000
-3, Carol, 35, 70000
-4, Dave, 40, 80000
+        <h2 id="speed">Column DB faster than row — for analytics</h2>
+        <table border="1" cellpadding="6">
+          <tr>
+            <th></th>
+            <th>Row oriented</th>
+            <th>Column oriented</th>
+          </tr>
+          <tr>
+            <td>Storage</td>
+            <td>
+              <pre><code>orderId   Amount
+1         10
+2         20
+3         30
 
-Query: SELECT AVG(Salary) FROM Employees;
-DB system needs to read each row, extract the Salary value, and then compute the average
-            </code></pre>
-          </td>
-          <td>
-            Same data is stored as:
-            <pre><code class="language-css">
-ID:    1,     2,    3,    4
-Name:  Alice, Bob, Carol, Dave
-Age:   30,    25,   35,   40
-Salary:50000, 60000, 70000, 80000
+How its stored on Disk?
+struct row {id, amount}
+{1,10}{2,20}{3,30}</code></pre>
+            </td>
+            <td>
+              <pre><code>orderId: 1   2   3   4
+Amount  30  32  56  78
 
-Query: SELECT AVG(Salary) FROM Employees;
-DB system only needs to read the Salary row
+How its stored in Disk?
+file1(orderId): 1 2 3 4
+file2(Amount): 30 32 56 78</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td>Query (sum all amount)</td>
+            <td>
+              <code>SELECT SUM(amount) FROM orders;</code><br />
+              <b>How it works underhood</b>( if there are 1 Million rows)<br />
+              - SQL need to traverse every byte<br />
+              - Store all entries in RAM and then sum.<br />
+              - <font color="red">Consume more RAM & Slower wrt columnar</font>
+            </td>
+            <td>
+              <code>SELECT SUM(amount) FROM orders;</code><br />
+              <b>How it works underhood</b><br />
+              - It bypasses the ID file and all other coloumn files<br />
+              - It reads only the amount file sequentially from disk.<br />
+              - <font color="red">Less RAM, faster</font>
+            </td>
+          </tr>
+          <tr>
+            <td>Examples</td>
+            <td>Mysql, postgres</td>
+            <td>
+              ClickHouse, Amazon Redshift, Google BigQuery, Apache Parquet (file
+              format)
+            </td>
+          </tr>
+          <tr>
+            <td>Usecase</td>
+            <td>
+              Better for transactional workloads, where you frequently read or
+              write entire records
+            </td>
+            <td>
+              - AVG / SUM / COUNT over millions of rows<br />
+              - GROUP BY time bucket, region, product<br />
+              - Filter + aggregate (WHERE timestamp range, GROUP BY sensor)
+            </td>
+          </tr>
+        </table>
 
-Remember, Only some queries are faster. if we do SELECT * from employee where age>27;
-row oriented would be faster.
-            </code></pre>
-          </td>
-        </tr>
-      </table>
+        <h1 id="timeseries">Columnar wins for(Analytics, Time series) data</h1>
+        <p>
+          <b>Time series data</b> = many rows with a timestamp plus metrics
+          (sensor readings, stock prices, request latency). Analytics usually
+          touch <b>timestamp + one or two metrics</b>, not every column — that
+          is where columnar stores win.
+        </p>
 
-      <h2 id="diff">Difference Row vs Column DB</h2>
-      <table>
-        <tr>
-          <th></th>
-          <th>Row Oriented</th>
-          <th>Column Oriented <b>(Best for Analytical Queries)</b></th>
-        </tr>
-        <tr>
-          <td>SQL</td>
-          <td>yes</td>
-          <td>yes</td>
-        </tr>
-        <tr>
-          <td>What</td>
-          <td>data is stored row by row. Eg: MySQL, Postgres</td>
-          <td>data is stored column by column. Eg: Amazon Redshift, SAP HANA, Google PowerDrill</td>
-        </tr>
-        <tr>
-          <td>Use Case</td>
-          <td></td>
-          <td>
-            <b><a href="#olap">OLAP</a></b> needs complex queries that 
-            require the processing of large volumes of data to generate insights. Example<br>
-            &ensp; Finding Average(SELECT AVG(Salary) FROM Employees)<br>
-            &ensp; Aggregating Queries (SELECT AVG(Salary), MIN(Age), MAX(Age) FROM Employees;)<br>
-            &ensp; Filtering with Aggregation (SELECT Department, COUNT(*) FROM Employees WHERE Age > 30 GROUP BY Department;)
-            </ul>
-          </td>
-        </tr>
-      </table>
+        <h3>Sample data — IoT sensor readings</h3>
+        <pre><code>timestamp            sensor_id  temperature_c  humidity_pct  firmware_version
+2026-08-15 10:00:00  S1         22.1           45            v3.2
+2026-08-15 10:01:00  S1         22.3           46            v3.2
+2026-08-15 10:00:00  S2         18.0           50            v3.1
+2026-08-15 10:01:00  S2         18.2           51            v3.1
+... (billions of rows over months)</code></pre>
 
-      <h2>OLAP Scenario</h2>
-      <h3 id="olap">What is OLAP(Online Analytical Processing)</h3>
-      <dl>
-        OLAP scenarios require real-time responses on top of large datasets for complex analytical queries with the following characteristics:<br>
-        1. Datasets would be massive - billions or trillions of rows<br>
-        2. Only a few columns are selected to answer any particular query<br>
-        3. Results must be returned in milliseconds or seconds<br>
-        4. OLAP scenario is very different from other popular scenarios (such as OLTP or Key-Value access).<br>
-        5. MongoDB or Redis for analytics will get very poor performance compared to OLAP databases
-      </dl>
+        <h3>Analytics query</h3>
+        <pre><code class="language-sql">SELECT
+  date_trunc('hour', timestamp) AS hour,
+  AVG(temperature_c)          AS avg_temp
+FROM sensor_readings
+WHERE sensor_id = 'S1'
+  AND timestamp BETWEEN '2026-08-01' AND '2026-08-15'
+GROUP BY hour
+ORDER BY hour;</code></pre>
+        <p>
+          This query needs only <b>timestamp</b>, <b>sensor_id</b>, and
+          <b>temperature_c</b>. It does <b>not</b> need humidity or
+          firmware_version.
+        </p>
 
-      <h3 id="adv">Advatanges on IO</h3>
-      <dl>
-        1. For an analytical query, only a small number of table columns need to be read.
-      </dl>
-      <dd>
-        In a column-oriented database, you can read just the data you need. <br>
-        For example, if you need 5 columns out of 100, you can expect a 20-fold reduction in I/O
-      </dd>
-      <dl>2. Data in columns is also easier to compress.</dl>
-      <dl>3. Due to the reduced I/O, more data fits in the system cache.</dl>
-    </article>
-  </main>
+        <h3>Row-oriented SQL (e.g. PostgreSQL)</h3>
+        <pre><code>On disk — each row stored together:
+[10:00 S1 22.1 45 v3.2][10:01 S1 22.3 46 v3.2][10:00 S2 18.0 50 v3.1]...
+</code></pre>
 
-  <script src="/scripts/prism.js"></script>
-</body>
+        <p>
+          For the query above:<br />
+          • Scans millions of matching rows (or index ranges on timestamp +
+          sensor_id)<br />
+          • Each row page still carries humidity + firmware — extra bytes read
+          from disk<br />
+          • Works, but I/O grows with row width and table size
+        </p>
+      </article>
+    </main>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

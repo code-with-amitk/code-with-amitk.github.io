@@ -47,13 +47,15 @@
       <ul>
         <li>lock_guard</li>
         <li>unique_lock</li>
+        <li>unique_lock&lt;defer_lock&gt;</li>
+        <li>shared_lock&lt;shared_mutex&gt;</li>
       </ul>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">
+      <h1 id="what">
         Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep
-      </h2>
+      </h1  >
       <dl>
         if 1 thread is in CS other cannot enter, Return value: None, Parameters:
         None
@@ -76,7 +78,7 @@
         discretion) & 999 falls to sleep.
       </dl>
 
-      <h2 id="prob">Problems with Mutex</h2>
+      <h1 id="prob">Problems with Mutex</h1>
       <table>
         <tr>
           <th>Problem</th>
@@ -146,7 +148,7 @@ Thread-2: Random value
         </tr>
       </table>
 
-      <h2 id="create">Creating Mutex</h2>
+      <h1 id="create">Creating Mutex</h1>
       <table>
         <tr>
           <th>C++11</th>
@@ -240,7 +242,7 @@ fn main() {
         </tr>
       </table>
 
-      <h2 id="wrappers">Wrappers around mutex</h2>
+      <h1 id="wrappers">Wrappers around mutex</h1>
       <p>
         These are classes which owns mutex and provide RAII
       </p>
@@ -281,8 +283,7 @@ fn main() {
         <tr>
           <td>Code</td>
           <td>
-            <pre><code class="language-css">
-int var = 0;
+            <pre><code class="language-css">int var = 0;
 mutex m;
 
 void fun(int tid) {
@@ -290,13 +291,11 @@ void fun(int tid) {
   lock_guard<mutex> lg(m);
   cout << "tid: " << tid << ", var: " <<  var++ << "\n";
 }
-int main()
-{
+int main() {
     int a = 1;
     int num_of_thrs = 5;
     thread t[10];
-    for (auto i = 0; i < num_of_thrs; i++)
-    {
+    for (auto i = 0; i < num_of_thrs; i++) {
         t[i] = thread(fun, i);
     }
 
@@ -318,24 +317,58 @@ tid: 1, var: 1
 tid: 2, var: 2
 tid: 4, var: 3
 tid: 3, var: 4
-*/
-          </code></pre></td>
+*/</code></pre>
+      </td>
           <td>
+            <b>Immediate lock</b><br>
             <pre><code class="language-css">mutex m;
 void fun(int tid) {
     unique_lock<mutex> ul(m);
-
     // Do some work here
-
     ul.unlock();    // unlock early
-
     // Do other work without the lock
-
     ul.lock();      // lock again
-}</code></pre>
+}</code></pre><br><br>
+
+          <b>unique_lock &lt;defer_lock&gt;</b><br>
+          - Donot lock immediately. Most of deadlock problem occur because of immediate mutex locking.<br>
+          - defer_lock delays locking on mutex for some time. <a href="/Threads_Processes_IPC/index.html">defer_lock example</a>(Deadlock)<br>
+        <pre><code class="language-css">std::mutex mtx;
+void task() {
+    // Construct the unique_lock, donot lock mutex immediately
+    std::unique_lock<std::mutex> lock(mtx, std::defer_lock);
+
+    // Do some work while the mutex is NOT locked...
+
+    // Now, manually lock the mutex when you actually need it
+    lock.lock();
+    // Critical section
+} // The destructor of 'lock' will automatically unlock mtx when it goes out of scope
+
+int main() {
+    std::thread t(task);
+    t.join();
+    return 0;
+}</code></pre><br>
+
+          <b>1 Writer, Multiple Readers</b><br>
+          <pre><code class="language-css">
+#include &lt;shared_mutex&gt;
+std::shared_mutex mtx;
+
+// For read-only operations (e.g., getCurrentCount)
+shared_lock &lt;std::shared_mutex&gt; rlock(mtx); // multiple readers allowed
+
+// For write operations (e.g., allowRequest when it modifies state)
+unique_lock &lt;shared_mutex&gt; wlock(mtx); // single writer
+          </code></pre>
+
           </td>
         </tr>
       </table>
+
+
+
     </article>
     <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>

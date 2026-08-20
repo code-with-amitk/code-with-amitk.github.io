@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Kubernets Manifests</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Kubernets_manifests.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Kubernets_manifests.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -39,6 +42,7 @@
         <li><a href="#services">2. service.yaml</a></li>
         <li><a href="#hpa">3. hpa.yaml (Horizontal Pod Autoscaler)</a></li>
         <li><a href="#namespace">4. namespace.yaml</a></li>
+        <li><a href="#NodePool">NodePool</a></li>
         <li><a href="#configmap">5. configmap.yaml</a></li>
         <li><a href="#secrets">6. secrets.yaml</a></li>
         <li><a href="#servicemonitor">7. servicemonitor.yaml</a></li>
@@ -182,6 +186,39 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: production-env
+      </code></pre>
+
+      <h3 id="NodePool">NodePool</h3>
+      <p>
+        What is
+        <a href="System_Design\Concepts\Kubernets\Terms.html">Karpenter</a
+        >?<br />
+        NodePool is Karpenter Configuration
+      </p>
+      <pre><code class="language-css">
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: default
+spec:
+  template:
+    spec:
+      requirements:
+        # Tells Karpenter to only provision Linux AMD64 machines
+        - key: "kubernetes.io/os"
+          operator: In
+          values: ["linux"]
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["amd64"]
+        # Allow both cheap Spot instances and reliable On-Demand instances
+        - key: "karpenter.sh/capacity-type"
+          operator: In
+          values: ["spot", "on-demand"]
+      nodeClassRef:
+        name: default # Links to cloud-specific settings (like AWS subnets/security groups)
+  limits:
+    cpu: 1000 # Maximum total CPU cores Karpenter is allowed to spin up
       </code></pre>
 
       <h3 id="configmap">

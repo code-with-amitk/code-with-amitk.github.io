@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Databases</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Databases" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Databases"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -38,48 +41,64 @@
           Types of DB:
           <a href="./SQL_NoSQL_Vector.html" target="_blank"
             >SQL, NoSQL, Vector</a
-          ><br />
-          <b>SQL Databases</b><br />
-          &ensp;<u>Examples:</u><br />
-          &emsp; PostgreSQL:<br />
-          &emsp;&emsp; <a href="SQL/PostgreSQL/Install.html">Install</a>,
-          <a href="SQL/PostgreSQL/Postgres_Commands.html">Commands</a
-          >(Create/Connect/List/Delete database, tables. Insert data)<br />
-          &emsp;&emsp;
-          <a
-            href="SQL/PostgreSQL/Stored_Procedures_and_Functions/Stored_Procedures/Introduction.html"
-            >Stored procedures</a
-          >,
-          <a
-            href="SQL/PostgreSQL/Stored_Procedures_and_Functions/Functions/Introduction.html"
-            >Function</a
-          >, <a href="SQL/PostgreSQL/Extensions/">Extensions (pg_trgm)</a>,
-          <a href="SQL/PostgreSQL/pgmq.html">pgmq</a>(Postgres Inbuilt
-          MessageQueue),
-          <a href="SQL/PostgreSQL/pgBouncer.html">PgBouncer</a>(Connection
-          Pooler)<br />
+          >
+        </p>
+        <table>
+          <tr>
+            <th></th>
+            <th>SQL</th>
+            <th>NoSQL</th>
+          </tr>
+          <tr>
+            <td>Types</td>
+            <td></td>
+            <td>
+              <a href="NoSQL/Column Oriented DB/">Columnar DB</a>,
+              <a href="NoSQL/Graph DB/">Graph DB(Cypher, GraphDB)</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Example</td>
+            <td>
+              PostgreSQL:<br />
+              &ensp; <a href="SQL/PostgreSQL/Install.html">Install</a>,
+              <a href="SQL/PostgreSQL/Postgres_Commands.html">Commands</a
+              >(Create/Connect/List/Delete database, tables. Insert data)<br />
+              &ensp;
+              <a
+                href="SQL/PostgreSQL/Stored_Procedures_and_Functions/Stored_Procedures/Introduction.html"
+                >Stored procedures</a
+              >,
+              <a
+                href="SQL/PostgreSQL/Stored_Procedures_and_Functions/Functions/Introduction.html"
+                >Function</a
+              >, <a href="SQL/PostgreSQL/Extensions/">Extensions (pg_trgm)</a>,
+              <a href="SQL/PostgreSQL/pgmq.html">pgmq</a>(Postgres Inbuilt
+              MessageQueue),
+              <a href="SQL/PostgreSQL/pgBouncer.html">PgBouncer</a>(Connection
+              Pooler)<br />
 
-          &emsp; <a href="SQL/MariaDB/index.html" target="_blank">MariaDB</a>,
-          MySQL, Amazon RDS, Amazon Aurora<br />
-          &emsp; <a href="SQL/CockroachDB/Introduction.html">CockroachDB</a
-          ><br />
-          &ensp; <a href="./SQL/" target="_blank">SQL Database Issues</a><br />
+              <a href="SQL/CockroachDB/Introduction.html">CockroachDB</a>,
+              <a href="SQL/MariaDB/index.html" target="_blank">MariaDB</a>,
+              MySQL, Amazon RDS, Amazon Aurora
+            </td>
+            <td>
+              Couchbase(<a href="NoSQL/Couchbase/Introduction.html"
+                >Introduction</a
+              >, <a href="NoSQL/Couchbase/N1QL.html">N1QL</a>)
+            </td>
+          </tr>
+          <tr>
+            <td>Issues</td>
+            <td><a href="./SQL/" target="_blank">SQL Database Issues</a></td>
+            <td></td>
+          </tr>
+        </table>
+        <dl>
+          <a href="./DB_Scaling/">DB Scaling: </a>Replication, Federation,
+          Sharding <br />
+          <a href="DB_Schema/" target="_blank">DB Schema</a><br /><br />
 
-          <b>NoSQL Databases</b><br />
-          &ensp; <u>Examples:</u>
-          <a href="NoSQL/Column Oriented DB/">Columnar DB</a>,
-          <a href="NoSQL/Graph DB/">Graph DB(Cypher, GraphDB)</a><br />
-          &ensp; <b>DB:</b> Couchbase(<a
-            href="NoSQL/Couchbase/Introduction.html"
-            >Introduction</a
-          >, <a href="NoSQL/Couchbase/N1QL.html">N1QL</a>)<br />
-
-          <b>Vector Databases</b><br />
-          &ensp; <a href="">Introduction</a><br />
-
-          <a href="./DB_Scaling/" target="_blank">DB Scaling: </a>Replication,
-          Federation, Sharding <br />
-          <a href="DB_Schema/" target="_blank">DB Schema</a><br />
           <b>Terms:</b><br />
           &ensp; <a href="Terms/All_Terms.html">ACID</a>(Atomicity, Consistency,
           Isolation, Durability)<br />
@@ -90,7 +109,7 @@
           Inner, Full, Cross)<br />
           &ensp; <a href="Terms/Transactions.html">Transaction</a>(Dirty Read,
           Dirty Write, Read Skew, Write Skew, 2PC(Two Phase Commit))
-        </p>
+        </dl>
       </article>
     </main>
   </body>

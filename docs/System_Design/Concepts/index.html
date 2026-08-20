@@ -69,51 +69,10 @@
         <a href="Containers/Introduction.html">Container vs VM, Advantages</a>
         <br />
 
-        <b>Docker</b><br />
-        &ensp;<a href="Docker/Introduction.html">Introduction:</a> Docker,
-        Docker vs Kubernets<br />
-        &ensp;
-        <a href="Docker/Docker-Networking.html">Networking:</a> Bridge, None,
-        Host<br />
-        &ensp;<a href="Docker/Terms.html" target="_blank">Docker Terms:</a>
-        Docker Host, Docker Image, Docker File, Docker Registry, docker-compose,
-        docker volume<br />
-        &ensp;<a href="Docker/Commands.html">Docker Commands, </a> &ensp;<a
-          href="Docker/docker-compose.html"
-          >docker-compose,
-        </a>
-        &ensp;<a href="Docker/SampleDockerFile.html">Sample Docker File</a
-        ><br />
-        &ensp;<a href="Docker/Architecture.html">Architecture</a><br />
-        &ensp;<b>Logging:</b>
-        <a href="Docker/Logging.html">Loki + Promtail + Grafana</a>
-        <br />
-        &emsp;
-        <a href="Transactionid_Requestid.html"
-          >TransactionId, RequestId in Logs</a
-        ><br />
-
         <b>git:</b>
         <a href="git/Commands.html">Commands</a>,
         <a href="git/First_Time_Clone.html">1st time clone</a>
         <br />
-
-        <b>Kubernets:</b><br />
-        &ensp; <a href="Kubernets/Introduction.html">Introduction</a>: What is
-        Kubernets, How Kubernets helps in scaling<br />
-        &ensp; <a href="Kubernets/Architecture.html">Architecture</a><br />
-        &ensp;
-        <a href="Kubernets/Kubernets_manifests.html">Kubernets Manifests</a>
-        (ClusterRole, ConfigMap, Deployment, Job, RBAC, ServiceAccount,
-        Services, Secrets, POD)<br />
-        &ensp; <a href="Kubernets/Terms.html">Terms</a>(Ambassador API Gateway,
-        Namespace, Ports(Nodeport, ContainerPort, HostPort), PVC(Persistant
-        Volume Claims), Authorization(Service Tokens, Istio Authorization
-        Policy))<br />
-        &ensp; <a href="Kubernets/Commands.html">Commands</a><br />
-        &ensp;
-        <a href="Kubernets/Other_Alternatives.html">Kubernets Alternatives</a
-        ><br />
 
         <b>K3s:</b>
         <a href="k3s/Architecture.html">Introduction & Architecture</a><br />
@@ -145,6 +104,59 @@
         >, Algorithms(<a href="Terms/Consensus/Algorithms/Paxos.html">Paxos</a>,
         <a href="Terms/Consensus/Algorithms/Raft.html">Raft</a>))<br />
         &ensp; <a href="Terms/Terms.html">Reliable, Scalable, Maintainable</a>
+
+        <table>
+          <tr>
+            <th>Docker</th>
+            <th>Kubernets</th>
+          </tr>
+          <tr>
+            <td>
+              <a href="Docker/Introduction.html">Introduction:</a> Docker,
+              Docker vs Kubernets<br />
+
+              <a href="Docker/Docker-Networking.html">Networking:</a> Bridge,
+              None, Host<br />
+              <a href="Docker/Terms.html" target="_blank">Docker Terms:</a>
+              Docker Host, Docker Image, Docker File, Docker Registry,
+              docker-compose, docker volume<br />
+              <a href="Docker/Commands.html">Docker Commands, </a>
+              <a href="Docker/docker-compose.html">docker-compose, </a>
+              <a href="Docker/SampleDockerFile.html">Sample Docker File</a
+              ><br />
+              <a href="Docker/Architecture.html">Architecture</a><br />
+              <b>Logging:</b>
+              <a href="Docker/Logging.html">Loki + Promtail + Grafana</a>
+              <br />
+              &emsp;
+              <a href="Transactionid_Requestid.html"
+                >TransactionId, RequestId in Logs</a
+              >
+            </td>
+            <td>
+              <a href="Kubernets/Introduction.html">Introduction</a>: What is
+              Kubernets, How Kubernets helps in scaling<br />
+              <a href="Kubernets/Architecture.html">Architecture</a><br />
+
+              <a href="Kubernets/Kubernets_manifests.html"
+                >Kubernets Manifests</a
+              >
+              (ClusterRole, ConfigMap, Deployment, Job, RBAC, ServiceAccount,
+              Services, Secrets, POD)<br />
+              <a href="Kubernets/Terms.html">Terms</a>:<br />
+              &ensp; Ambassador API Gateway, Namespace, Ports(Nodeport,
+              ContainerPort, HostPort)<br />
+              &ensp; PVC(Persistant Volume Claims), Authorization(Service
+              Tokens, Istio Authorization Policy)<br />
+              &ensp; sKubernetes Controller(Kubebuilder, Operator)<br />
+              &ensp; Karpenter<br />
+              <a href="Kubernets/Commands.html">Commands</a><br />
+              <a href="Kubernets/Other_Alternatives.html"
+                >Kubernets Alternatives</a
+              >
+            </td>
+          </tr>
+        </table>
       </dl>
     </main>
   </body>

@@ -5,7 +5,8 @@
     <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Architecture.html" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
-    <!-- Add any necessary CSS and JavaScript files -->
+    <link rel="stylesheet" href="/css/mermaid.css" />
+    <meta charset="UTF-8" />
   </head>
 
   <body>
@@ -51,6 +52,68 @@
         id="zoomableImage2"
         alt="Kubernets Architecture"
       />
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart TD
+    subgraph Master["Master Node / Control Plane"]
+        CM["Controller Manager"]
+        SCH["Scheduler"]
+        ETCD["etcd"]
+        AO["Add Ons"]
+        API["API Server"]
+    end
+
+    subgraph W1["WORKER_NODE-1 / Agent Node"]
+        W1Idle["idle worker"]
+    end
+
+    subgraph W2["WORKER_NODE-2 / Agent Node"]
+        KP2["Kubelet / kubectl proxy"]
+        KProxy2["Kube-Proxy"]
+        Meta2["Node status and metadata"]
+        AddOns2["Add Ons"]
+
+        subgraph Docker["Docker - container runtime"]
+            subgraph NS2["Namespace_2"]
+                POD_a2["POD_a2"]
+                C22["Container-22 docker"]
+            end
+
+            subgraph NS1["Namespace_1"]
+                subgraph POD_a["POD_a"]
+                    subgraph C2["Container-2 sidecar localhost:9191"]
+                        H2["Helper&lt;br&gt;Log Forwarder"]
+                        R2["Runtime-2"]
+                        D2["Depedencies-2"]
+                    end
+                    subgraph C1["Container-1 JAMS localhost:9192"]
+                        A1["Application-1&lt;br&gt;jams-server&lt;br&gt;TargetPort=8080"]
+                        R1["Runtime-1"]
+                        D1["Depedencies-1"]
+                    end
+                end
+
+                subgraph POD_b["POD_b"]
+                    subgraph CXYZ["Container XYZ"]
+                        An["Application-n TargetPort=8080"]
+                        Rn["Runtime-n"]
+                        Dn["Depedencies-n"]
+                    end
+                end
+            end
+        end
+    end
+
+    Note_NS1["Namespace can have multiple pods"]
+    Note_Pod["Pod can have multiple containers"]
+    C22 -.-> Note_NS1
+    A1 -.-> Note_Pod
+
+    API --> W1Idle
+    API --> KP2
+    API --> KProxy2
+        </pre>
+      </div>
       
       <script type="text/plain" class="puml" style="display:none;">
 @startuml
@@ -222,5 +285,6 @@ package "Master Node/Control Plane/Server Node" {
     </main>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>

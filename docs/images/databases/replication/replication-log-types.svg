@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-label="Four ways a leader can ship changes: statement log, write-ahead log, logical row log, and trigger table">
+  <rect width="960" height="420" fill="#fafafa"/>
+  <text x="480" y="28" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#333">How the leader ships a change to followers</text>
+  <text x="480" y="48" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#666">Same write  UPDATE users SET avatar='new.jpg' WHERE id=7  encoded four different ways</text>
+
+  <!-- WAL -->
+  <rect x="20" y="70" width="220" height="320" rx="10" fill="#fff" stroke="#e65100" stroke-width="2"/>
+  <text x="130" y="98" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#e65100">Write-ahead log</text>
+  <text x="130" y="118" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">physical / byte-level</text>
+  <rect x="36" y="136" width="188" height="150" rx="6" fill="#fff8e1" stroke="#ffcc80"/>
+  <text x="130" y="160" text-anchor="middle" font-family="Consolas, monospace" font-size="11" fill="#333">WAL record:</text>
+  <text x="130" y="180" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#bf360c">page 17, offset 4096</text>
+  <text x="130" y="196" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#bf360c">overwrite 64 bytes</text>
+  <text x="130" y="220" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#555">LSN 0/16A4F08</text>
+  <text x="130" y="248" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">Follower rebuilds the</text>
+  <text x="130" y="264" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">same on-disk pages</text>
+  <text x="130" y="300" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#2e7d32">+ exact copy, fast</text>
+  <text x="130" y="320" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#c62828"> tied to storage engine</text>
+  <text x="130" y="360" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#555">PostgreSQL, Oracle</text>
+
+  <!-- Statement -->
+  <rect x="255" y="70" width="220" height="320" rx="10" fill="#fff" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="365" y="98" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#6a1b9a">Statement-based</text>
+  <text x="365" y="118" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">replay the SQL</text>
+  <rect x="271" y="136" width="188" height="150" rx="6" fill="#f3e5f5" stroke="#ce93d8"/>
+  <text x="365" y="168" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#333">UPDATE users</text>
+  <text x="365" y="186" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#6a1b9a">SET avatar='new.jpg'</text>
+  <text x="365" y="204" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#6a1b9a">WHERE id=7;</text>
+  <text x="365" y="236" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#555">sent as-is to follower</text>
+  <text x="365" y="248" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666"></text>
+  <text x="365" y="264" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">Follower parses SQL</text>
+  <text x="365" y="300" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#2e7d32">+ compact log</text>
+  <text x="365" y="320" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#c62828"> NOW(), RAND() drift</text>
+  <text x="365" y="360" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#555">old MySQL, VoltDB</text>
+
+  <!-- Logical -->
+  <rect x="490" y="70" width="220" height="320" rx="10" fill="#fff" stroke="#1565c0" stroke-width="2"/>
+  <text x="600" y="98" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#1565c0">Logical (row) log</text>
+  <text x="600" y="118" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">row change events</text>
+  <rect x="506" y="136" width="188" height="150" rx="6" fill="#e3f2fd" stroke="#64b5f6"/>
+  <text x="600" y="160" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#333">UPDATE row</text>
+  <text x="600" y="180" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#1565c0">table=users  pk=7</text>
+  <text x="600" y="198" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#1565c0">avatar='new.jpg'</text>
+  <text x="600" y="224" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#555">+ COMMIT record</text>
+  <text x="600" y="248" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">Follower applies row</text>
+  <text x="600" y="264" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">not the SQL text</text>
+  <text x="600" y="300" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#2e7d32">+ version-tolerant, CDC</text>
+  <text x="600" y="320" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#c62828"> larger than SQL text</text>
+  <text x="600" y="360" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#555">MySQL row binlog</text>
+
+  <!-- Trigger -->
+  <rect x="725" y="70" width="215" height="320" rx="10" fill="#fff" stroke="#2e7d32" stroke-width="2"/>
+  <text x="832" y="98" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#2e7d32">Trigger-based</text>
+  <text x="832" y="118" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">application layer</text>
+  <rect x="741" y="136" width="183" height="150" rx="6" fill="#e8f5e9" stroke="#81c784"/>
+  <text x="832" y="160" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#333">AFTER UPDATE</text>
+  <text x="832" y="178" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#2e7d32">INSERT INTO</text>
+  <text x="832" y="196" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#2e7d32">change_queue</text>
+  <text x="832" y="224" text-anchor="middle" font-family="Consolas, monospace" font-size="10" fill="#555">external worker ships it</text>
+  <text x="832" y="248" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">You pick subset /</text>
+  <text x="832" y="264" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#666">cross-database rules</text>
+  <text x="832" y="300" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#2e7d32">+ flexible</text>
+  <text x="832" y="320" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#c62828"> slower, more bugs</text>
+  <text x="832" y="360" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#555">Bucardo, GoldenGate</text>
+</svg>

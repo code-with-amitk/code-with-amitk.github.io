@@ -260,27 +260,54 @@ struct Message/Payload {
         <h2 id="partitions">Partitions and Replicas</h2>
         <h3>Partitions</h3>
         <p>
-          Partitions split a topic's data into independent, non-overlapping
-          shards for scalability.<br />
-          If <code>topic=employee</code> has 2 partitions & 3 messages msg1
-          msg2, msg3. Then messages gets distributed across them (by key hash,
-          or round-robin if no key).<br />
+          <b>What?</b>
+          Single topic can receive millions of messages per second, Kafka splits
+          that topic into smaller, parallel segments called partitions. These
+          partitions are stored on different non-overlapping broker/shards for
+          scalability.
+        </p>
+
+        <h4>Partition Id</h4>
+        <p>
+          Let us consider a scenario where 1000 routers are sending syslogs
+          messages to collector. In a day around 1TB of data is sent by routers
+          to collector.<br />
+          Now to store information on Kafka, Collector becomes kafka Producer &
+          hence need to calculate the partition key, which determines on which
+          partition the log message should be sent.<br />
+          <b>How parititon Key/partition ID should be decided?</b><br />
+          &ensp; Golden rule is Design your partition key backwards from your
+          consumers.<br />
+          &ensp; Example here, collector uses the router's IP (or ID) as the
+          message key. All logs from Router 1 go to Partition 0, Router 2 to
+          Partition 1, etc.<br />
+          <b>Calculating the Partition ID:</b> <br />
+          &ensp; The Collector parses the log and extracts fields like source_ip
+          (192.168.1.1), destination_ip, size, etc.<br />
+          &ensp; The Collector then explicitly chooses a Kafka Message Key (for
+          example, it sets the message key to Router 1's IP).<br />
+          &ensp; Kafka producer library will run hash function on the message
+          key (hash("192.168.1.1") % total_partitions) = 2.<br />
+          &ensp; Collector sends the message to Kafka along with the Key, and
+          Kafka's broker looks at the key and appends the message to the
+          partition.
+        </p>
+        <pre><code> partitionKey = hash("src_ip recieved in pkt") % total_partitions
+
+router1 ----[srcip,dstip,pkt]-----\                                       |-- Kafka Broker ------|
+                                   \                                      | Topic(router-logs)   |----> Insync replica ISR(Leader) ----> Replica1(Follower)
+router2 -----[srcip,dstip,pkt]-------> Collector(kafka Producer) ------>  |partition-1(msg1,msg3)|
+                                   /                           msg,partId |                      |
+router-n ----[srcip,dstip,pkt]----/                                       |partition-3(msg2)     |
+                                                                          |----------------------|</code></pre>
+
+        <h4>Reading from Partition</h4>
+        <p>
           <font color="green">Messages are never duplicated on Partitions.</font
           ><br />
-          <b>Will 2 partition always lie on different brokers?</b> No, depends
-          on number of brokers and kafka configuration.
-          <code>if (brokers &lt; partitions)</code> how can partitions go on
-          seperate brokers
+          Now messages from partitions are read by consumers using
+          <a href="#consumer-groups">consumer groups</a>
         </p>
-        <pre><code class="language-css">|--- Partition 0 ---|
-| topic=employee    |----&gt;  Insync replica ISR(Leader) ----&gt; Replica1(Follower)
-| msg1 msg3         |                               |---------&gt; Replica2(Follower)
-|-------------------|         
-
-|--- Partition 1 ---|
-| topic=employee    |----&gt; Replica
-| msg2              |
-|-------------------|</code></pre>
 
         <h3>Replicas</h3>
         <p>

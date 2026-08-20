@@ -375,6 +375,11 @@
     "excerpt": "collections Home Our team Projects Contact Back Built-in 1. Arrays 2. Slice (vector) 3. Channels 4. Maps Standard Library Provided 1. Queue(using slic..."
   },
   {
+    "title": "Column-Oriented Databases",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
+    "excerpt": "Column-Oriented Databases Home Our team Projects Contact Back Column vs row storage Difference Time series-Column wins Column-oriented databases Colum..."
+  },
+  {
     "title": "Companies",
     "url": "/Companies/",
     "excerpt": "Companies Home Our team Projects Contact Amazon"
@@ -542,12 +547,12 @@
   {
     "title": "Database Scaling",
     "url": "/System_Design/Concepts/Databases/DB_Scaling/",
-    "excerpt": "Database Scaling Home Our team Projects Contact 1. Replication 2. Federation 3. Sharding"
+    "excerpt": "Database Scaling Home Our team Projects Contact Back 1. Replication 2. Federation 3. Sharding"
   },
   {
     "title": "Database Scaling",
     "url": "/System_Design/Concepts/Databases/DB_Scaling/Replication/",
-    "excerpt": "Database Scaling Home Our team Projects Contact What is Replication Types of Replication What is Replication? Keeping a copy of the same data on multi..."
+    "excerpt": "Database Scaling Home Our team Projects Contact Back What is Replication Types of Replication Replication? Keeping a copy of the same data on multiple..."
   },
   {
     "title": "Database Schema",
@@ -567,12 +572,7 @@
   {
     "title": "Databases",
     "url": "/System_Design/Concepts/Databases/",
-    "excerpt": "Databases Home Our team Projects Contact Back Types of DB: SQL, NoSQL, Vector SQL Databases &ensp; Examples: &emsp; PostgreSQL: &emsp;&emsp; Install ,..."
-  },
-  {
-    "title": "Databases",
-    "url": "/System_Design/Concepts/Databases/NoSQL/Column Oriented DB/",
-    "excerpt": "Databases Home Our team Projects Contact Column DB faster than row Difference OLAP Column DB faster than row Row oriented Coloumn oriented Consider em..."
+    "excerpt": "Databases Home Our team Projects Contact Back Types of DB: SQL, NoSQL, Vector SQL NoSQL Types Columnar DB , Graph DB(Cypher, GraphDB) Example PostgreS..."
   },
   {
     "title": "decltype",
@@ -628,6 +628,11 @@
     "title": "Distributed Rate Limiter",
     "url": "/System_Design/Scalable/Rate Limiter/",
     "excerpt": "Distributed Rate Limiter Home Our team Projects Contact Back Requirements High Level Design Where Rate limiter sits Block Diagram Request flow Sequenc..."
+  },
+  {
+    "title": "Distributed Sandbox",
+    "url": "/System_Design/Scalable/Distributed_Sandbox/",
+    "excerpt": "Distributed Sandbox Home Our team Projects Contact Back Requirements What is Sandbox? This is a env where developers/AI agents can create isolated exe..."
   },
   {
     "title": "Distributed Systems",
@@ -723,6 +728,11 @@
     "title": "Economics",
     "url": "/Economics/",
     "excerpt": "Economics Home Our team Projects Contact GST Example-1: Table Manufacturing Example-2: Exporting IT Services outside India GST GST(Goods and Services ..."
+  },
+  {
+    "title": "EKS - Elastic Kubernetes Service",
+    "url": "/System_Design/Concepts/AWS/Containers/EKS_Elastic_Kubernets_Service.html",
+    "excerpt": "EKS - Elastic Kubernetes Service Home Our team Projects Contact Back EKS - Elastic Kubernetes Service"
   },
   {
     "title": "Elastic Load Balancing (ELB)",
@@ -1352,7 +1362,7 @@
   {
     "title": "Kubernets Architecture",
     "url": "/System_Design/Concepts/Kubernets/Architecture.html",
-    "excerpt": "Kubernets Architecture Home Our team Projects Contact Back Architecture Master Node Worker Node POD Terms Kubernets Architecture Master Node/Control P..."
+    "excerpt": "Kubernets Architecture Home Our team Projects Contact Back Architecture Master Node Worker Node POD Terms Kubernets Architecture flowchart TD subgraph..."
   },
   {
     "title": "Kubernets Introduction",
@@ -1707,7 +1717,7 @@
   {
     "title": "Mutex",
     "url": "/Threads_Processes_IPC/Synchronization/mutex.html",
-    "excerpt": "Mutex Home Our team Projects Contact Back Mutex? Problems in mutex? Creating Mutex C++11 POSIX Rust Wrappers around Mutex lock_guard unique_lock Mutex..."
+    "excerpt": "Mutex Home Our team Projects Contact Back Mutex? Problems in mutex? Creating Mutex C++11 POSIX Rust Wrappers around Mutex lock_guard unique_lock uniqu..."
   },
   {
     "title": "N1QL",
