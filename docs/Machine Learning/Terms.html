@@ -45,12 +45,18 @@
       <a href="#axis">Axis</a>
       <a href="#bias">Bias/Sampling Bias</a>
       <a href="#conda">Conda</a>
+      <a href="#CartesianProduct">Cartesian Product</a>
+      <a href="#Categorical">Categorical Data</a>
       <a href="#Confusion">Confusion Matrix</a>
       <a href="#cntk">CNTK</a>
       <a href="#Dataset">Dataset</a>
       <a href="#em">Embedding Models</a>
+      <a href="#Encoding">Encoding</a>
       <a href="#Feature">Feature</a>
       <a href="#FeatureEngineering">Feature Engineering</a>
+      <ul>
+        <li><a href="#Normalization">Normalization</a></li>
+      </ul>
       <a href="#fitting">Fitting</a>
       <ul>
         <li><a href="#overfitting">Overfitting</a></li>
@@ -152,7 +158,21 @@
         columns.
       </p>
 
-      <h3 id="conda">Conda</h3>
+      <h1 id="#CartesianProduct">Cartesian Product</h1>
+      <p>
+        Cartesian product (A x B) is the set of all possible combinations. Eg:
+      </p>
+      <pre><code>Set A (Shirts): {Red, Blue}
+Set B (Pants): {Jeans, Cargo}
+Cartesian product (AXB) = (Red, Jeans), (Red, Cargo), (Blue, Jeans), (Blue, Cargo)</code></pre>
+
+      <h1 id="Categorical">Categorical Data (enums)</h1>
+      <p>
+        Data having a specific set of possible values. For example: different
+        species of animals in a national park, names of countries etc.
+      </p>
+
+      <h1 id="conda">Conda</h1>
       <p>
         <a href="https://docs.conda.io/projects/miniconda/en/latest/"
           >Miniconda</a
@@ -396,6 +416,29 @@ Healthy(80)	      10	            70            // out of 80
           </td>
         </tr>
       </table>
+      <h2>Types of Dataset</h2>
+      <p>
+        Numerical data<br />
+        <a href="#Categorical">Categorical Data</a><br />
+        human language, including individual words and sentences<br />
+        multimedia (such as images, videos, and audio files)<br />
+        Outputs from other ML systems<br />
+        Embedding vectors<br />
+        Class-balanced: number of positive classes and negative classes is about
+        equal.<br />
+        Class-imbalanced: one label is considerably more common than the other.
+        In the real world, class-imbalanced datasets are far more common than
+        class-balanced datasets.
+      </p>
+      <h2>Dividing the Dataset</h2>
+      <p>
+        Dataset should be divided into 3 parts<br />
+        <b>1. Training set:</b> Set on which model is trained.<br />
+        <b>2. validation set:</b> Set against which trained model should be
+        validated<br />
+        <b>3. Test set:</b> Once model is trained, it should be tested against
+        this set.
+      </p>
 
       <h1 id="opt">Optimizer</h1>
       <p>
@@ -520,7 +563,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         This is Microsoft Cognitive Toolkit (CNTK) backend, plugged with keras.
       </p>
 
-      <h3 id="em">Embedding Models</h3>
+      <h1 id="em">Embedding Models</h1>
       <p>
         Embdedding models are used in
         <a href="RAG/Introduction.html">RAG pipelines</a>. They take
@@ -528,7 +571,31 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         <a href="#tensor">vectors/tensors</a>
       </p>
 
-      <h3 id="Feature">Feature</h3>
+      <h1 id="Encoding">Encoding</h1>
+      <p>
+        Encoding means converting <a href="#Categorical">Categorical Data</a> or
+        other data to numerical vectors that a model can train on.<br />
+        This conversion is necessary because models can only train on
+        floating-point values; models can't train on strings such as "dog" or
+        "maple".
+      </p>
+      <h2>One Hot Encoding</h2>
+      <p>
+        If feature have strings the converting string to bits to represent the
+        encoding.
+      </p>
+      <pre><code>Feature	  Red	  Orange	Blue	Yellow	Green	Black	Purple	Brown
+"Red"	      1	  0	      0	    0	      0	    0	    0	      0
+"Orange"	  0	  1	      0	    0	      0	    0	    0	      0
+"Blue"	    0   0	      1	    0	      0     0     0       0
+"Yellow"	  0   0	      0	    1	      0     0     0       0
+"Green"	    0   0	      0	    0	      1     0     0       0
+"Black"	    0   0	      0	    0	      0     1     0       0
+"Purple"	  0   0	      0	    0	      0     0     1       0
+"Brown"	    0   0	      0	    0	      0     0     0       1
+      </code></pre>
+
+      <h1 id="Feature">Feature</h1>
       <p>
         Features are the values that a supervised model uses to predict the
         <a href="#Label">label</a>.
@@ -538,6 +605,15 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         alt="Feature"
         style="width: 500px; height: 200px"
       />
+      <h2 id="featurecross">Feature Cross</h2>
+      <p>
+        Take Cartesian product of 2 or more categorical features of the dataset.
+      </p>
+      <pre><code>
+Apples : {Red, Green}
+State: {Ripe, Raw}
+Feature Cross: Red_Ripe, Red_Raw, Green_Ripe, Green_Raw
+      </code></pre>
 
       <h1 id="FeatureEngineering">Feature Engineering</h1>
       <p>
@@ -548,7 +624,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         2. Binning (also referred to as bucketing): Converting numerical values
         into buckets of ranges.
       </p>
-      <h2>1. Normalization</h2>
+      <h2 id="Normalization">1. Normalization</h2>
       <p>
         The goal of normalization is to transform features to be on a similar
         scale.<br />
@@ -578,7 +654,23 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         scaling usually calculates the natural logarithm (ln).<br />
         <b>4. Clipping:</b> Technique to minimize the influence of extreme
         outliers. In brief, clipping usually caps (reduces) the value of
-        outliers to a specific maximum value
+        outliers to a specific maximum value<br />
+        <b>5. Binning/Bucketing:</b> Grouping different numerical subranges into
+        bins. For example, consider a feature named X whose lowest value is 15
+        and highest value is 425. Using binning, you could represent X with the
+        following five bins:
+      </p>
+      <pre><code>
+Bin number	Range   	Feature vector
+1	          15-34	    [1.0, 0.0, 0.0, 0.0, 0.0]
+2	          35-117	  [0.0, 1.0, 0.0, 0.0, 0.0]
+3	          118-279	  [0.0, 0.0, 1.0, 0.0, 0.0]
+4	          280-392	  [0.0, 0.0, 0.0, 1.0, 0.0]
+5	          393-425	  [0.0, 0.0, 0.0, 0.0, 1.0]
+      </code></pre>
+      <p>
+        <b>6. Quantile Bucketing:</b> creates bucketing boundaries such that the
+        number of examples in each bucket is exactly or nearly equal
       </p>
       <img
         src="/images/Machine_Learning/normalization.png"
@@ -598,7 +690,14 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         >
       </p>
 
-      <h4 id="underfitting">Underfitting</h4>
+      <h2>Generalization</h2>
+      <p>
+        Generalization is the opposite of overfitting. That is, a model that
+        generalizes well makes good predictions on new data and on training data
+        both.
+      </p>
+
+      <h2 id="underfitting">Underfitting</h2>
       <p>
         Does not produces good results on traning data and bad results on new
         data as well<br />
@@ -622,6 +721,13 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         alt="Feature"
         style="width: 500px; height: 200px"
       />
+      <h2>Types of Labels</h2>
+      <p>
+        1. Direct labels: Labels identical to the prediction your model is
+        trying to make as present in labels coloumn in dataset<br />
+        2. Proxy labels: which are labels that are similar—but not identical—to
+        the prediction your model is trying to make.
+      </p>
 
       <h3 id="llm">Large language model / Model</h3>
       <p>

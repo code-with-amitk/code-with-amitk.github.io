@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="500" viewBox="0 0 980 500" role="img" aria-label="Timeline of leader-based replication with one synchronous follower and one asynchronous follower. Time flows left to right.">
+  <rect width="980" height="500" fill="#fafafa"/>
+  <text x="490" y="26" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#333">One synchronous follower + one asynchronous follower</text>
+  <text x="490" y="46" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#666">Time flows left � right. Leader waits for Follower 1 (sync) before telling the client success. Follower 2 (async) may lag.</text>
+
+  <defs>
+    <marker id="a1" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 Z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- Swimlanes -->
+  <line x1="170" y1="80" x2="940" y2="80" stroke="#ccc" stroke-width="1"/>
+  <line x1="170" y1="170" x2="940" y2="170" stroke="#ccc" stroke-width="1"/>
+  <line x1="170" y1="260" x2="940" y2="260" stroke="#ccc" stroke-width="1"/>
+  <line x1="170" y1="350" x2="940" y2="350" stroke="#ccc" stroke-width="1"/>
+
+  <rect x="20" y="58" width="140" height="44" rx="6" fill="#eceff1" stroke="#546e7a"/>
+  <text x="90" y="85" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#37474f">Client</text>
+
+  <rect x="20" y="148" width="140" height="44" rx="6" fill="#fff3e0" stroke="#e65100"/>
+  <text x="90" y="175" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#e65100">Leader</text>
+
+  <rect x="20" y="238" width="140" height="44" rx="6" fill="#c8e6c9" stroke="#2e7d32"/>
+  <text x="90" y="257" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#2e7d32">Follower 1</text>
+  <text x="90" y="273" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#1b5e20">synchronous</text>
+
+  <rect x="20" y="328" width="140" height="44" rx="6" fill="#bbdefb" stroke="#1565c0"/>
+  <text x="90" y="347" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#1565c0">Follower 2</text>
+  <text x="90" y="363" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#0d47a1">asynchronous</text>
+
+  <!-- 1. Client write to leader -->
+  <line x1="200" y1="80" x2="200" y2="170" stroke="#333" stroke-width="3.5" marker-end="url(#a1)"/>
+  <text x="208" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#333">UPDATE avatar</text>
+
+  <!-- Leader writes locally (small note) -->
+  <rect x="214" y="178" width="118" height="22" rx="4" fill="#fff8e1" stroke="#ffb74d"/>
+  <text x="273" y="193" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#e65100">write local disk</text>
+
+  <!-- 2. Leader -> Follower 1 (sync) -->
+  <line x1="280" y1="170" x2="280" y2="260" stroke="#2e7d32" stroke-width="3.5" marker-end="url(#a1)"/>
+  <text x="288" y="220" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#2e7d32">replication log</text>
+
+  <!-- Follower 1 apply -->
+  <rect x="294" y="268" width="90" height="22" rx="4" fill="#e8f5e9" stroke="#81c784"/>
+  <text x="339" y="283" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#2e7d32">apply + ACK</text>
+
+  <!-- 3. Follower 1 ACK back -->
+  <line x1="400" y1="260" x2="400" y2="170" stroke="#2e7d32" stroke-width="3.5" marker-end="url(#a1)"/>
+  <text x="408" y="220" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#2e7d32">ACK</text>
+
+  <!-- Wait bracket -->
+  <path d="M280 152 H400" stroke="#2e7d32" stroke-width="1.5" fill="none"/>
+  <path d="M280 146 V158 M400 146 V158" stroke="#2e7d32" stroke-width="1.5"/>
+  <text x="340" y="144" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" fill="#2e7d32">leader waits</text>
+
+  <!-- 4. Success to client -->
+  <line x1="460" y1="170" x2="460" y2="80" stroke="#333" stroke-width="3.5" marker-end="url(#a1)"/>
+  <text x="468" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#333">success</text>
+
+  <!-- 5. Async to follower 2  sent around same time as F1, processed much later -->
+  <line x1="280" y1="170" x2="280" y2="338" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <line x1="280" y1="350" x2="760" y2="350" stroke="#1565c0" stroke-width="3.5" marker-end="url(#a1)"/>
+  <text x="430" y="338" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#1565c0">replication log (no wait)</text>
+  <rect x="772" y="338" width="92" height="24" rx="4" fill="#e3f2fd" stroke="#64b5f6"/>
+  <text x="818" y="354" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#1565c0">apply later</text>
+
+  <!-- Delay brace -->
+  <path d="M280 378 H760" stroke="#1565c0" stroke-width="1.5" fill="none"/>
+  <path d="M280 372 V384 M760 372 V384" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="520" y="400" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" fill="#1565c0">replication lag  Follower 2 can be seconds or minutes behind</text>
+
+  <!-- Time axis -->
+  <line x1="170" y1="430" x2="920" y2="430" stroke="#333" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="545" y="452" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#333">time �</text>
+  <text x="200" y="468" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#777">write arrives</text>
+  <text x="460" y="468" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#777">client sees success</text>
+  <text x="818" y="468" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#777">async replica catches up</text>
+</svg>

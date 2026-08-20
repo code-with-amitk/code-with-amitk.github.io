@@ -1,0 +1,363 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Distributed Sandbox</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Distributed_Sandbox"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#req">Requirements</a>
+    </aside>
+
+    <main>
+      <article style="margin-left: 200px">
+        <h1>What is Sandbox?</h1>
+        <p>
+          This is a env where developers/AI agents can create isolated execution
+          environments, execute commands, and connect to them through
+          APIs/WebSockets
+        </p>
+
+        <h1 id="req">Requirements</h1>
+        <p>
+          1. Sandbox configurable with different CPU, memory, disk, network, and
+          runtime/image; each sandbox must be strongly isolated from other
+          tenants and the host.<br />
+          2. Clients can execute commands, stream stdout/stderr, inspect process
+          status, upload/download files, and maintain interactive terminal
+          sessions over REST APIs and WebSockets<br />
+          3. Horizontally scalable sandbox
+        </p>
+
+        <h1 id="hld">High Level Design</h1>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+flowchart LR
+    Client["Developer / AI Agent"]
+
+    GLB["Global LB"]
+
+    subgraph Regions["Global Infrastructure"]
+        RLB["Regional LB - Region 1"]
+        RLB1["Regional LB - Region 2"]
+    end
+
+    subgraph AWS["AWS Region / Datacenter"]
+
+        %% =========================
+        %% CONTROL PLANE
+        %% =========================
+        subgraph CP["CONTROL PLANE (Sandbox creation, billing, auth)"]
+            direction TB
+
+            API["API Gateway<br/>REST + WebSocket"]
+            Auth["Auth + Rate Limiter"]
+            SandboxAPI["Sandbox Control Service"]
+
+            Queue["Sandbox Job Queue<br>Kafka/RabitMQ"]
+            Scheduler["Scheduler<br>(See Below)"]
+
+            DB[("Metadata DB")]
+            Cache[("Redis / Session Store")]
+
+            API --> Auth
+            Auth --> SandboxAPI
+
+            SandboxAPI --> DB
+            SandboxAPI --> Cache
+            SandboxAPI --> Queue
+
+            Queue --> Scheduler
+            Scheduler --> DB
+        end
+
+        %% =========================
+        %% DATA PLANE
+        %% =========================
+        subgraph DP["DATA PLANE "]
+            direction TB
+
+            Router["Sandbox / Session Router"]
+
+            subgraph Compute["Sandbox Compute Cluster"]
+                direction LR
+
+                Worker1["Worker Node 1<br/>Worker Agent"]
+                Worker2["Worker Node 2<br/>Worker Agent"]
+                WorkerN["Worker Node N<br/>Worker Agent"]
+
+                Runtime1["Sandbox Runtime 1<br/>Container / MicroVM"]
+                Runtime2["Sandbox Runtime 2<br/>Container / MicroVM"]
+                RuntimeN["Sandbox Runtime N<br/>Container / MicroVM"]
+
+                Worker1 --> Runtime1
+                Worker2 --> Runtime2
+                WorkerN --> RuntimeN
+            end
+
+            ObjectStore[("Object Storage<br/>Files / Artifacts")]
+
+            Router --> Worker1
+            Router --> Worker2
+            Router --> WorkerN
+
+            Runtime1 --> ObjectStore
+            Runtime2 --> ObjectStore
+            RuntimeN --> ObjectStore
+        end
+
+    end
+
+    %% =========================
+    %% GLOBAL ROUTING
+    %% =========================
+    Client --> GLB
+    GLB --> RLB
+    GLB --> RLB1
+
+    RLB --> API
+
+    %% =========================
+    %% CONTROL PLANE
+    %% =========================
+    Scheduler --> Worker1
+    Scheduler --> Worker2
+    Scheduler --> WorkerN
+
+    %% =========================
+    %% DATA PLANE
+    %% =========================
+    API -. "WebSocket<br/>terminal / streaming I/O" .-> Router
+    Router -. "Interactive I/O" .-> Runtime1
+    Router -. "Interactive I/O" .-> Runtime2
+    Router -. "Interactive I/O" .-> RuntimeN
+          </pre>
+        </div>
+        <table>
+          <tr>
+            <th>Component</th>
+            <th>Role</th>
+          </tr>
+          <tr>
+            <td>Scheduler</td>
+            <td>
+              Why not place Worker directly at end of Kafka?<br />
+              Kafka directly gives jobs to workers(consumer groups), does not
+              understand which worker has how much capacity<br />
+              We can assign capacity to workers and scheduler can understand and
+              route accordingly<br />
+              <pre><code>
+                 Sandbox Request
+                       │
+                       ▼
+                 Scheduler
+                       │
+          ┌────────────┼─────────────┐
+          ▼            ▼             ▼
+       Worker A     Worker B      Worker C
+       2 CPU        16 CPU         8 CPU
+       8 GB RAM     64 GB RAM      32 GB RAM
+       no GPU       GPU            no GPU
+              </code></pre>
+            </td>
+          </tr>
+        </table>
+
+        <h1>Seqeunce Diagram</h1>
+        <p>Whole architecture is divided into 2 planes</p>
+
+        <h3>Control plane (Sandbox creation, billing, auth)</h3>
+        <p>
+          Responsible for: create sandbox, delete sandbox, authentication,
+          quotas, scheduling, billing, metadata, lifecycle, worker health
+        </p>
+        <h3>Data Plane (Actual user commands)</h3>
+        <p>
+          Run code, stdin stdout stderr, file operations, terminal sessions,
+          network traffic
+        </p>
+        <div class="mermaid-wrap">
+          <pre class="mermaid">
+sequenceDiagram
+    autonumber
+
+    actor C as Developer / AI Agent
+
+    box Control Plane
+        participant API as API Gateway
+        participant S as Sandbox Service
+        participant Q as Sandbox Job Queue
+        participant SCH as Scheduler
+        participant DB as Metadata DB
+    end
+
+    box Data Plane
+        participant W as Worker Agent
+        participant R as Sandbox Runtime
+        participant P as User Process
+    end
+
+    box Data Plane Routing
+        participant SR as Sandbox / Session Router
+    end
+
+    %% =========================================
+    %% CREATE SANDBOX - CONTROL PLANE
+    %% =========================================
+
+    Note over C: CREATE SANDBOX - Control Plane
+
+    C->>API: POST /v1/sandboxes
+    Note right of C: <br>{<br>image: python:3.12,<br>cpu: 2,<br>memory_mb: 4096,<br>disk_gb: 20,<br>ttl_seconds: 3600}
+
+    API->>S: Create sandbox request
+    S->>DB: Create sandbox record<br/>status = CREATING
+
+    S->>Q: Enqueue CREATE_SANDBOX job
+
+    Note over Q,SCH: Durable job waiting for capacity
+
+    Q->>SCH: Consume sandbox job
+
+    SCH->>DB: Find suitable worker
+    DB-->>SCH: Worker Node 17 available
+
+    SCH->>W: Deploy sandbox<br/>sandbox_id + resource requirements
+
+    %% =========================================
+    %% SANDBOX CREATION - DATA PLANE
+    %% =========================================
+
+    Note over W,R: Sandbox creation - Data Plane
+
+    W->>R: Create isolated runtime
+    R->>R: Allocate CPU / RAM / Disk
+    R->>R: Boot Container / MicroVM
+    R->>R: Start sandbox-agent
+
+    R-->>W: READY<br/>runtime_id + endpoint
+
+    W->>S: Sandbox READY
+    S->>DB: Update status = READY<br/>worker_id + runtime_id
+
+    S-->>API: Sandbox details
+    API-->>C: 201 Created<br/>sandbox_id + status=READY
+
+    %% =========================================
+    %% INTERACTIVE EXECUTION - DATA PLANE
+    %% =========================================
+
+    Note over C,SR: EXECUTION - Data Plane
+
+    C->>API: WebSocket /v1/sandboxes/{id}/terminal
+    API->>SR: Establish session for sandbox_id
+
+    SR->>DB: Resolve sandbox → worker/runtime
+    DB-->>SR: worker-17 / runtime-42
+
+    SR->>R: Establish terminal session
+    R-->>SR: Session established
+    SR-->>API: WebSocket connected
+    API-->>C: WebSocket connected
+
+    %% =========================================
+    %% COMMAND / TERMINAL I/O
+    %% =========================================
+
+    C->>API: stdin: "python\n"
+    API->>SR: Forward stdin
+    SR->>R: stdin
+
+    R->>P: Start Python process
+    P-->>R: stdout: "Python 3.12..."
+
+    R-->>SR: stdout
+    SR-->>API: stdout
+    API-->>C: Stream stdout
+
+    C->>API: stdin: "print(2 + 3)\n"
+    API->>SR: Forward stdin
+    SR->>R: stdin
+    R->>P: Execute command
+
+    P-->>R: stdout: "5\n"
+    R-->>SR: stdout
+    SR-->>API: stdout
+    API-->>C: Stream output
+
+    %% =========================================
+    %% CLOSE SESSION
+    %% =========================================
+
+    C->>API: Close WebSocket
+    API->>SR: Close terminal session
+    SR->>R: Close PTY/session
+    R-->>SR: Session closed
+
+    %% =========================================
+    %% DELETE SANDBOX - CONTROL PLANE
+    %% =========================================
+
+    Note over C,API: DELETE SANDBOX - Control Plane
+
+    C->>API: DELETE /v1/sandboxes/{id}
+    API->>S: Delete sandbox request
+
+    S->>DB: status = TERMINATING
+    S->>Q: Enqueue DELETE_SANDBOX job
+
+    Q->>SCH: Consume cleanup job
+    SCH->>W: Destroy sandbox
+
+    %% =========================================
+    %% DESTROY - DATA PLANE
+    %% =========================================
+
+    W->>R: Destroy runtime
+    R->>P: Terminate processes
+    R-->>W: Resources released
+
+    W->>S: Sandbox destroyed
+    S->>DB: status = TERMINATED
+
+    S-->>API: Cleanup complete
+    API-->>C: 204 No Content
+          </pre>
+        </div>
+      </article>
+    </main>
+
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

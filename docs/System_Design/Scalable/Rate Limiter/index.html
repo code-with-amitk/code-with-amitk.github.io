@@ -306,14 +306,21 @@ Note over Sync,GStore: Config sync pushes<br>policy updates to all regions
 
         <h3 id="fixed">Fixed Window Counter</h3>
         <p>
+          <b
+            ><a
+              href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/Rate_Limiter/README.adoc"
+              >Multithreaded Code</a
+            ></b
+          ><br />
           Divide time into fixed windows (e.g., 00:00–00:59, 01:00–01:59).
           Maintain a counter per window. When a request arrives, increment the
           counter. If the counter exceeds the limit, reject the request. The
           counter resets at the window boundary.
         </p>
         <pre><code class="language-css"> 
+// 10 req/min
 Window 1 (12:00 - 12:01)         Window 2 (12:01 - 12:02)
-  |-------4 req--------|          |-------4 req--------|
+  |-------10 req-------|         |-------10 req--------|
    |  |  |  |   |                 
                drop
         </code></pre>

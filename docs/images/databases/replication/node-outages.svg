@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-label="Follower catch-up recovery versus leader failover">
+  <rect width="960" height="360" fill="#fafafa"/>
+  <text x="480" y="26" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#333">Handling node outages</text>
+
+  <!-- Follower failure -->
+  <rect x="20" y="48" width="450" height="290" rx="10" fill="#fff" stroke="#1565c0" stroke-width="2"/>
+  <text x="245" y="76" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#1565c0">Follower failure  catch-up</text>
+
+  <rect x="50" y="100" width="110" height="50" rx="6" fill="#fff3e0" stroke="#e65100"/>
+  <text x="105" y="130" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#e65100">Leader</text>
+
+  <rect x="300" y="100" width="130" height="50" rx="6" fill="#ffebee" stroke="#c62828"/>
+  <text x="365" y="122" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#c62828">Follower</text>
+  <text x="365" y="138" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#c62828">crashed / network down</text>
+
+  <path d="M160 125 H298" stroke="#c62828" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="230" y="116" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#c62828">stream paused</text>
+
+  <rect x="50" y="180" width="380" height="130" rx="6" fill="#e3f2fd" stroke="#90caf9"/>
+  <text x="240" y="204" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#1565c0">Recovery (automatic)</text>
+  <text x="240" y="228" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#333">1. Restart. Local log knows last applied LSN.</text>
+  <text x="240" y="248" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#333">2. Ask leader: send everything after LSN X.</text>
+  <text x="240" y="268" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#333">3. Replay the gap, then resume the live stream.</text>
+  <text x="240" y="292" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#2e7d32">Writes on the leader never stop.</text>
+
+  <!-- Leader failure -->
+  <rect x="490" y="48" width="450" height="290" rx="10" fill="#fff" stroke="#e65100" stroke-width="2"/>
+  <text x="715" y="76" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#e65100">Leader failure  failover</text>
+
+  <rect x="520" y="100" width="110" height="50" rx="6" fill="#ffebee" stroke="#c62828"/>
+  <text x="575" y="122" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#c62828">Leader</text>
+  <text x="575" y="138" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#c62828">dead / timed out</text>
+
+  <rect x="700" y="92" width="200" height="66" rx="6" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="800" y="116" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#2e7d32">Follower � new leader</text>
+  <text x="800" y="134" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#1b5e20">usually the most up-to-date replica</text>
+  <text x="800" y="148" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#1b5e20">clients now write here</text>
+
+  <path d="M630 125 H698" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#farr)"/>
+  <defs>
+    <marker id="farr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#2e7d32"/>
+    </marker>
+  </defs>
+
+  <rect x="520" y="180" width="390" height="130" rx="6" fill="#fff8e1" stroke="#ffcc80"/>
+  <text x="715" y="204" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e65100">Failover steps</text>
+  <text x="715" y="228" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#333">1. Detect: no heartbeat for ~30s � assume dead.</text>
+  <text x="715" y="248" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#333">2. Elect / appoint the newest replica as leader.</text>
+  <text x="715" y="268" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#333">3. Point clients + remaining followers at it.</text>
+  <text x="715" y="292" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#c62828">Watch split brain and discarded async writes.</text>
+</svg>
