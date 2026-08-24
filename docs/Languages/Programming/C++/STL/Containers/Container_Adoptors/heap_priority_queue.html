@@ -1,83 +1,139 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Heap / Priority Queue</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/STL/Containers/Container_Adoptors/heap_priority_queue.html" />
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/STL/Containers/Container_Adoptors/heap_priority_queue.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
 
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/C++/STL/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <h1>Max Heap</h1>
-    <ul>
-      <li>
-          <h3><a href="#heap">C++ vs Python vs Rust</a></h3>
-      </li>
-    </ul>
+    <aside class="sidebar">
+      <a href="#what">What</a>
+      <ul>
+        <li><a href="#max">Max Heap</a></li>
+        <li><a href="#min">Min Heap</a></li>
+      </ul>
+      <a href="#code">Code</a>
+    </aside>
 
-    <h3 id="heap">C++ vs Python vs Rust</h3>
-    <table>
+    <article style="margin-left: 200px">
+      <h1 id="what">Heap / Priority Queue</h1>
+      <p>
+        This is
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/DS_Questions/Data_Structures/Trees/SelfBalancedBST"
+          >Balanced BT</a
+        >
+        which is
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/DS_Questions/Data_Structures/Trees"
+          >Complete BT</a
+        >.<br />
+        Each element is given a priority. Higher priority element is processed
+        before any lower priority element. Duplicates are allowed. This is
+        suited to be stored in array ie Heap can be implemented using arrays. If
+        you use arrays to implement Heaps then you don’t need to store pointer
+        as done in trees and its space advantage<br />
+        Complexities Insert: O(logn), Search: O(1), Delete: O(logn)<br />
+
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/DS_Questions/Data_Structures/Queue/Priority_Queue"
+          >Process of Heap Creation, Heapify</a
+        >
+      </p>
+      <h2 id="max">Max Heap (priority_queue &lt;int&gt;)</h2>
+      <p>
+        Root is always greatest. parent &gt;= child<br />
+        2nd, 3rd largest element are direct children of root(either left or
+        right).
+      </p>
+      <h2 id="min">
+        Min Heap (priority_queue &lt;int, vector &lt;int&gt;, greater
+        &lt;int&gt;&gt;)
+      </h2>
+      <p>Root is always least. Condition: parent &lt;= child.</p>
+
+      <h1 id="code">Code C++ vs Python vs Rust</h1>
+      <table>
         <tr>
-            <th></th>
-            <th>C++</th>
-            <th>Rust (use std::collections::BinaryHeap)</th>
-            <th>Python</th>
+          <th></th>
+          <th>C++</th>
+          <th>Rust (use std::collections::BinaryHeap)</th>
+          <th>Python</th>
         </tr>
 
         <tr>
-            <td>Declaration</td>
-            <td><pre>                       <!--c++-->
-priority_queue&lt;pair&lt;key, value>> pq
-            </pre></td>
+          <td>Declaration</td>
+          <td>
+            <pre>                       <!--c++-->
+priority_queue&lt;pair&lt;key, value&gt;&gt; pq
+            </pre>
+          </td>
 
-            <td>                       <!--Rust-->
-max_heap
-                <table>
-                    <tr>
-                        <td>i32</td>
-                        <td><pre>
-let mut max_heap: BinaryHeap&lt;> = 
+          <td>
+            <!--Rust-->
+            max_heap
+            <table>
+              <tr>
+                <td>i32</td>
+                <td>
+                  <pre>
+let mut max_heap: BinaryHeap&lt;&gt; = 
 BinaryHeap::new();                            
-                        </pre></td>
-                    </tr>
-                    <tr>
-                        <td>Pair &lt;i32, char></td>
-                        <td><pre>
-let mut max_heap:BinaryHeap<(i32, char)> = 
+                        </pre
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Pair &lt;i32, char&gt;</td>
+                <td>
+                  <pre>
+let mut max_heap:BinaryHeap &lt;(i32, char)&gt; = 
 BinaryHeap::new();
-                        </pre></td>
-                    </tr>
-                </table>
-<br>
-min_heap 
-                <table>
-                    <tr>
-                        <td>i32</td>
-                        <td><pre>
+                        </pre
+                  >
+                </td>
+              </tr>
+            </table>
+            <br />
+            min_heap
+            <table>
+              <tr>
+                <td>i32</td>
+                <td>
+                  <pre>
 use std::cmp::Reverse;
-let mut min_heap: BinaryHeap&lt;Reverse&lt;i32>> = 
+let mut min_heap: BinaryHeap&lt;Reverse&lt;i32&gt;&gt; = 
 BinaryHeap::new();
-                        </pre></td>
-                    </tr>
-                </table>
-            </td>
+                        </pre
+                  >
+                </td>
+              </tr>
+            </table>
+          </td>
 
-            <td><pre>                       <!--Python-->
+          <td>
+            <pre>                       <!--Python-->
 #Python does not provide built-in heap.
 #But it provides heapq module for heap operations on list
 import heapq
@@ -85,72 +141,91 @@ import heapq
 # Creating a Max Heap
 max_heap = []
 heapq.heapify(max_heap)  # Convert list into a max heap
-            </pre></td>    
+            </pre>
+          </td>
         </tr>
 
         <tr>
-            <td>push</td>
-            <td><pre>       <!--c++-->
+          <td>push</td>
+          <td>
+            <pre>       <!--c++-->
 dq.push_back(x)
-            </pre></td>
-            <td><pre>       <!--Rust-->
+            </pre>
+          </td>
+          <td>
+            <pre>       <!--Rust-->
 max_heap.push(x);
 min_heap.push(Reverse(x));
-            </pre></td>
-            <td><pre>       <!--Python-->
+            </pre>
+          </td>
+          <td>
+            <pre>       <!--Python-->
 self.dq.append(x)
-            </pre></td>
+            </pre>
+          </td>
         </tr>
 
         <tr>
-            <td>Front, Back element</td>
-            <td><pre>
+          <td>Front, Back element</td>
+          <td>
+            <pre>
 dq.front()
 dq.back()
-            </pre></td>
-            <td><pre>
+            </pre>
+          </td>
+          <td>
+            <pre>
 heap.front()
 dq.back()
-            </pre></td>
-            <td><pre>
+            </pre>
+          </td>
+          <td>
+            <pre>
 self.dq[0]
 self.dq[-1]
-            </pre></td>
+            </pre>
+          </td>
         </tr>
 
         <tr>
-            <td>Pop, Top</td>
-            <td><pre>       <!--c++-->
+          <td>Pop, Top</td>
+          <td>
+            <pre>       <!--c++-->
 dq.pop_front()
 dq.pop_back()
-            </pre></td>
-            <td><pre>                   <!--Rust-->
-pub fn pop(&mut self) -> Option<T>
+            </pre>
+          </td>
+          <td>
+            <pre>                   <!--Rust-->
+pub fn pop(&mut self) -&gt; Option &lt;T&gt;
 while let Some(top) = max_heap.pop() {
 }
 if let Some(Reverse(top)) = min_heap.pop(){
 
 }
-            </pre></td>
-            <td><pre>
+            </pre>
+          </td>
+          <td>
+            <pre>
 self.dq.pop()
 self.dq.popleft()
-            </pre></td>
+            </pre>
+          </td>
         </tr>
         <tr>
-            <td>Check empty</td>
-            <td>!dq.empty()</td>
-            <td>!dq.empty()</td>
-            <td>bool(self.dq) != False</td>
+          <td>Check empty</td>
+          <td>!dq.empty()</td>
+          <td>!dq.empty()</td>
+          <td>bool(self.dq) != False</td>
         </tr>
 
         <tr>
-            <td>size</td>
-            <td>dq.size()</td>
-            <td>dq.len()</td>
-            <td>len(self.dq)</td>
+          <td>size</td>
+          <td>dq.size()</td>
+          <td>dq.len()</td>
+          <td>len(self.dq)</td>
         </tr>
-    </table>
-
-</body>
+      </table>
+    </article>
+  </body>
 </html>

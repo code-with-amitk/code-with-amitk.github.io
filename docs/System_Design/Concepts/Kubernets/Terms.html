@@ -8,6 +8,7 @@
     />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
 
@@ -37,31 +38,29 @@
     <aside class="sidebar">
       <a href="#aag">Ambassador API Gateway</a>
       <a href="#auth">Authorization in kubernets</a>
-      <ul>
-        <li>1. service Tokens</li>
-        <li>2. Istio Authorization Policy</li>
-      </ul>
       <a href="#karpenter">karpenter</a>
       <a href="#Controller">Kubernets Controller</a>
       <ul>
-        <li><a href="#Kubebuilder">Kubebuilder</a></li>
-        <li><a href="#Operator">Operator</a></li>
-        <li><a href="#Runtime">Runtime</a></li>
-        <li><a href="#Types">Types</a></li>
+        <li>Operator</li>
       </ul>
+      <a href="#Kubebuilder">Kubebuilder</a>
       <a href="#namespace">Namespace</a>
-      <a href="#pvc">PVC(Persistant Volume Claims)</a>
       <a href="#ports">Ports</a>
       <ul>
-        <li><a href="#containerport">ContainerPort</a></li>
-        <li><a href="#hostport">HostPort</a></li>
-        <li><a href="#nodeport">Nodeport</a></li>
+        <li>ContainerPort</li>
+        <li>HostPort</li>
+        <li>Nodeport</li>
       </ul>
+      <a href="#pvc">PVC</a>
       <a href="#service">Service</a>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#crd">CRD</a></li>
+      </ul>
     </aside>
 
     <main style="margin-left: 200px">
-      <h3 id="aag">Ambassador API Gateway</h3>
+      <h1 id="aag">Ambassador API Gateway</h1>
       <p>
         This is Kubernetes-native API Gateway for controlling and managing
         traffic between microservices within a Kubernetes cluster. Built on top
@@ -75,7 +74,7 @@
         and authentication.
       </p>
 
-      <h3 id="auth">Authorization in kubernets</h3>
+      <h1 id="auth">Authorization in kubernets</h1>
       <table>
         <tr>
           <th>Name</th>
@@ -110,51 +109,159 @@
         </tr>
       </table>
 
+      <h1 id="Controller">Kubernetes Controller = control loop</h1>
+      <p>
+        A Kubernetes controller is a control loop/Reconcile loop/Infinite loop
+        that continuously watches the state of kubernets cluster and makes
+        changes to align the actual state with your desired state.<br />
+        This is similar to = File Watcher(fsnotify)<br />
+        <b>How Controllers Run (Reconciliation Loop = Infinite Loop)</b><br />
+        1. Observe: Look at the current state of the world<br />
+        2. Analyze: Compare the Current State with the Desired State<br />
+        3. Act: Take corrective action to bridge the gap<br /><br />
+
+        <b>Types of Controllers</b><br />
+      </p>
+
+      <h2 id="operators">
+        1. Kubernetes Operator (Domain specific Controller)
+      </h2>
+      <p>
+        It can manage:<br />
+        1. Built-in kubernetes resources. Eg(Pods, Deployment, Node etc)<br />
+        2. User created <a href="#crd">Custom Resources (CR)</a>. CRD means my
+        specific resource(e.g., a MyDatabase resource).
+      </p>
+      <pre><code>while (1) { 
+    if (state changed)
+        Apply state 
+} </code></pre>
+
+      <h3>Pod Recovery Flow (Reconciliation Loop)</h3>
+      <h4>
+        Method-1: User defined reconciliation loop using client-go library
+      </h4>
+      <p>
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Containers/Kubernets/Controllers/Code/hello_world"
+          >hello World pod is created everytime its deleted</a
+        >
+      </p>
+
+      <h4>Method-2: Control Plane running Controller</h4>
+      <p>
+        <b>Check <a href="Architecture.html">Kubernetes Architecture</a> 1st</b
+        ><br />
+        The sequence diagram below illustrates how the control plane detects a
+        pod failure and ensures it keeps running
+      </p>
+      <img
+        src="//www.plantuml.com/plantuml/png/RLFDRXen4BxxAKQSu51LlNA84f6eGYq4s4QvS9cr9-1cCrxPOzgyVMUzAzWAEA3rpFSp_gmnzqamIlve36O9d3zgYiRKuIzCNaDyfmZhu6XYG7-j8htrBRB0Uwwf8G5C1M287IXhe2u2ImmDR1ha6-J9msO95SKJnKcdeCTh38brqqSKh37HhE2Uj6GASkpIK8GLCXuezbPNKjrDO9ifKv5PRM_3lZ_ldbz-BTTFUzwH3Mnzur5yOFWPGhldaT-EsiPRh4YAuc9rMt4HOc_PVHJ8EQShR6MFv78pHAAdSwO01Trfm9UxEqrh3gyezWXjSD_CEWX1E0rFLQ0RhODF43EpvqCVMHP8sJdYvXDin7IazDLvIiM7LSGO5IWMe1umxsKU2JLqBPH6zmJQUMaTgckIxjypkE6TphZLzZ_wQjjLDQUnwcLoRSmX3fdJT6OKU1bZ4QcpOVgZtEjPAZoTcn3gtsHbpzDAHyj9tOYTHZ2xq3HQPQctV_k4yDPJUrIlhu2H-qDA_i15N08WZDRYzYWbnDeNmGkYLEUmv2GnMu4VmmAfPbb1aEFeYlSwJxUKvXy0"
+        style="width: 60%; height: 60%"
+        class="zoomable-image"
+        id="zoomableImage2"
+        alt="Kubernets Architecture"
+      />
+      <script type="text/plain" class="puml" style="display: none">
+        @startuml
+        autonumber
+
+        box "Worker Node"
+            participant kubelet as Node
+        end box
+
+        box "Control Plane"
+            participant "API Server" as API
+            participant "etcd(Database)" as Etcd
+
+            box "Controller Manager"
+                participant "Work Queue" as MQ
+                participant "GOROUTINE\nReconciliation Loop\nController ReplicaSet" as CM
+                participant "Core" as Core
+            end box
+
+            participant "Scheduler" as Sch
+        end box
+
+            Core ->>API: Watch pod1
+        Note over Node
+            Pod1 is running
+            but suddenly crashes/dies
+        end note
+
+        Node ->> API : Pod1 Dead
+
+        API ->> Etcd : Update state in database
+        API ->> MQ: Pod1 Dead
+
+        MQ ->> CM : Pod1 Dead
+        Note over CM: reconcile()
+        CM ->> API : Create new Pod
+
+        API ->> Etcd : Save new Pod object\n(Status: Pending)
+
+        API ->> Sch : Notify of new Pending Pod
+
+        Sch ->> API : Assign Pod to a Worker Node
+
+        API ->> Etcd : Save Node binding
+
+        API ->> Node : Instruct Kubelet to start the new Pod
+
+        @enduml
+      </script>
+
+      <h1 id="Kubebuilder">Kubebuilder = framework/SDK</h1>
+      <p>
+        <b>Work-1 (Build custom Kinds):</b><br />
+        &ensp; While native Kubernetes gives us
+        <a href="Kubernets_manifests.html">built-in kinds</a> like (Service,
+        Deployment, Pod etc). <br />
+        &ensp; With Kubebuilder we can define entirely new kinds using
+        <a href="#crd">Custom Resource Definitions (CRDs)</a> tailored to our
+        applications (such as kind: Database, kind: RedisCluster, or kind:
+        AppDeployment). <br />
+
+        &ensp; <u>Why would someone create a new kind?</u><br />
+        &emsp; - Built-in Kubernetes kinds are generic. They don't know anything
+        about your specific application, database, or business logic<br />
+        &emsp; - We want higher-level abstraction: Instead of forcing developers
+        to manually write 5 different manifests eg: (Deployment, Service,
+        ConfigMap, PersistentVolumeClaim, Secret) every time they want to deploy
+        a database, you create a single kind (kind: MyDatabase) that handles all
+        of that under the hood.<br />
+        &emsp; - If a database crashes or needs a backup, native Kubernetes
+        doesn't know how to do a database backup. By creating a custom kind and
+        pairing it with a controller (written via Kubebuilder), your cluster
+        gains the intelligence to automatically perform specialized tasks like
+        failovers, schema migrations, and backups.<br />
+        &emsp; Code Example:
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Containers/Kubernets/kuberbuilder/Greetings"
+          >Creating a new kind = Greetings</a
+        ><br /><br />
+
+        <b
+          >Work-2 (Talk to the <a href="./Architecture.html">API server</a>,
+          through
+          <a
+            href="/Languages/Programming/Go/Modules/kubernetes_controllerruntime.html"
+            >controller-runtime library</a
+          >
+          to keep kind alive)</b
+        ><br />
+        &ensp; Code Example:
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Containers/Kubernets/kuberbuilder/Greetings"
+          >Kubebuilder plugs into a Kubernetes controller and keeps newly
+          created Kind:Greetings Up and Live</a
+        >
+      </p>
+
       <h1 id="#karpenter">karpenter (Cluster Autoscalar)</h1>
       <p>
         HPA scales Pods(50 → 300 pods)<br />
         karpenter scales Kubernetes cluster(adds EC2 nodes if needed)
-      </p>
-
-      <h1 id="Controller">Kubernetes Controller</h1>
-      <p>
-        A Kubernetes controller is a dedicated control loop that continuously
-        monitors the state of the cluster and makes changes to align the actual
-        state with your desired state.<br />
-        Eg: Cluster should have 3 replicas of pod. When pod crashes 2 are left,
-        it brings up 3rd by watching deployment.yaml<br />
-        <font color="red">This is similar to = File Watcher(fsnotify)</font>
-        <br />
-        <b>How Controllers Run (Reconciliation Loop = Infinite Loop)</b><br />
-        1. Observe: Look at the current state of the world (e.g., query the API
-        server: "How many pods are running?").<br />
-        2. Analyze: Compare the Current State with the Desired State (e.g., "We
-        want 3 pods, but only 2 exist").<br />
-        3. Act: Take corrective action to bridge the gap (e.g., "Create 1 new
-        pod"), then repeat.
-      </p>
-
-      <h2 id="#Runtime">Controller-Runtime</h2>
-      <p>
-        A Go library (built by Kubernetes SIGs) that provides caching, clients,
-        and leader election
-      </p>
-
-      <h2 id="Kubebuilder">Kubebuilder</h2>
-      <p>
-        CLI tool and framework that uses controller-runtime to scaffold, build,
-        and publish Kubernetes operators quickly. It generates the project
-        structure, boilerplate code, and manifests for you.
-      </p>
-
-      <h2>Types of Controllers</h2>
-      <h3 id="#Operator">
-        1. Kubernetes Operator (Domain specific Controller)
-      </h3>
-      <p>
-        Instead of managing built-in resources like Pods or Deployments this
-        Controller manages Custom Resources (CRDs).<br />
-        CRD means my specific resource(e.g., a MyDatabase resource).
       </p>
 
       <h1 id="namespace">Namespace</h1>
@@ -170,7 +277,7 @@ $ kubectl create namespace test                       //Creating new namespace
 $ kubectl --namespace=test  run ngnix --image=nginx   //Deploy namespace
         </code></pre>
 
-      <h3 id="ports">Ports</h3>
+      <h1 id="ports">Ports</h1>
       <h4 id="containerport">ContainerPort</h4>
       <p>Port on which application inside container is listening</p>
 
@@ -225,7 +332,7 @@ spec:
 $ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 30080
             </code></pre>
 
-      <h3 id="pvc">PVC(Persistant Volume Claims)</h3>
+      <h1 id="pvc">PVC(Persistant Volume Claims)</h1>
       <p>Types of PVC</p>
       <table>
         <tr>
@@ -256,7 +363,7 @@ $ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 3
         </tr>
       </table>
 
-      <h3 id="service">Service</h3>
+      <h1 id="service">Service</h1>
       <p>
         This is kubernets Networking objects<br />
         Service is Networking abstraction which provides stable network access
@@ -265,8 +372,16 @@ $ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 3
         service routes the traffic to 1 or more POD<br />
         Service provides: Load balancing, service discovery, stable endpoints
       </p>
+
+      <h1 id="terms">Terms</h1>
+      <h2 id="crd">Custom Resource Definition (CRD)</h2>
+      <p>
+        Resources which are created by user. Controller manages Custom Resources
+        (CR).
+      </p>
     </main>
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>

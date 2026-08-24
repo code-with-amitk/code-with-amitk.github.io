@@ -260,7 +260,7 @@ Prediction from Model: if x=1700, y=?</code></pre>
       </h4>
       <p>
         This is the technique to find weight(w), bias(b) iteratively with the
-        lowest loss, and finally creating the linear equation.
+        lowest loss, and finally creating the linear equation.<br />
         <b>Steps of Gradient Decent</b>
       </p>
       <pre><code class="language-css">w = 0.1, b = 50     // 1. Start with random values of w,b.
@@ -271,6 +271,19 @@ y = .1x1000+50=150  // Put x=1000, y=150.
     // Determine the direction to move the weights and bias that reduce loss.
     // Repeat
   }</code></pre>
+      <p>
+        <b>Types of Gradient Desent</b><br />
+        <u>1. Vanishing Gradients:</u> During
+        <a href="Terms.html">backpropagation</a>, the gradients become extremely
+        small, so the earlier layers of the
+        <a href="Terms.html">neural network</a> learn extremely slowly or almost
+        stop learning. When the gradient values approach 0 for the lower layers,
+        the gradients are said to "vanish". The ReLU activation function can
+        help prevent vanishing gradients.<br />
+        <u>2. Exploding Gradients:</u> During
+        <a href="Terms.html">backpropagation</a>, the gradients become extremely
+        large. Batch normalization can help prevent exploding gradients
+      </p>
 
       <h4 id="Hyperparameters">
         <a

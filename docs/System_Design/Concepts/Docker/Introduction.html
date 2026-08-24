@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Introduction</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Docker/Introduction.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Docker/Introduction.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -58,8 +61,18 @@
       <table>
         <tr>
           <th></th>
-          <th>Docker</th>
-          <th>Kubernetes(Container Orchestration system)</th>
+          <th>Docker (docker)</th>
+          <th>Kubernetes (kubectl)(Container Orchestration system)</th>
+        </tr>
+        <tr>
+          <td>Unit you manage</td>
+          <td>A <b>container</b></td>
+          <td>A <b>Pod</b> (1+ containers that share IP and volumes)</td>
+        </tr>
+        <tr>
+          <td>Scope</td>
+          <td>This machine only</td>
+          <td>Whole cluster (filtered by namespace)</td>
         </tr>
         <tr>
           <td>What</td>

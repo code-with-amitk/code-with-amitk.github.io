@@ -53,11 +53,15 @@
     </aside>
 
     <main style="margin-left: 200px">
-      <h2 id="#what">Kubernets Manifests</h2>
+      <h1 id="#what">Kubernetes Manifests / Custom Resource / Objects</h1>
       <p>
-        Kubernetes Manifests are physical YAML file which are used to create
-        Kubernetes Objects.
-        <br /><br />
+        <b>Kubernetes Manifests</b> are physical YAML file which are used to
+        create Kubernetes Objects.<br /><br />
+        While native Kubernetes gives you built-in kinds like (Service,
+        Deployment, or Pod). <br />
+        <a href="Terms.html">Kubebuilder</a> provides the tooling to define
+        entirely new kinds tailored to your applications (such as kind:
+        Database, kind: RedisCluster, or kind: AppDeployment).<br /><br />
 
         <b>Kubernets Object</b><br />
         The Object is the actual active entity running inside the cluster after
@@ -72,7 +76,7 @@
         configuration, and monitoring.
       </p>
 
-      <h2 id="types">Kubernets Manifest Types</h2>
+      <h1 id="types">Predefined Kubernets Manifest Types / Custom Resource</h1>
       <h3 id="deployment">1. deployment.yaml (Mandatory)</h3>
       <p>
         Manages application's lifecycle, defines which Docker image to run, and
@@ -399,6 +403,31 @@ roleRef:                                  # "roleRef" specifies the binding to a
           </td>
         </tr>
       </table>
+
+      <h3 id="ServiceAccount">ServiceAccount</h3>
+      <p>
+        Credentials used by service running inside pod to communicate with
+        kubernets server.<br />
+        When your application code inside a container needs to talk to the
+        Kubernetes API server (for example, to list pods, create resources, or
+        watch config maps), it authenticates using the credentials associated
+        with a ServiceAccount.<br />
+        <b>How it works?</b><br />
+        - When the Kubernetes control plane creates your Pod, it automatically
+        provisions and injects authentication credentials into that Pod.<br />
+        - Kubernetes automatically mounts a projected volume into the Pod
+        (usually at /var/run/secrets/kubernetes.io/serviceaccount). Inside this
+        folder, it places a short-lived, cryptographically signed JSON Web Token
+        (JWT) file named token.
+      </p>
+      <pre><code class="language-css">apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: server-ingest
+  namespace: identity-bridge
+  labels:
+    app: server-ingest
+    tier: ingestion</code></pre>
     </main>
 
     <script src="/scripts/prism.js"></script>

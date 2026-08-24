@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Kubernets Terms</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Terms/kubernetes_controllers.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#kc">Kubernetes Controller</a>
+      <ul>
+        <li><a href="#types">Types</a></li>
+        <ul>
+          <li><a href="#operators">1. Operators</a></li>
+          <li>2. Custom Controllers</li>
+        </ul>
+      </ul>
+      <a href="#Kubebuilder">Kubebuilder</a>
+      <a href="#Controller">Controller-Runtime</a>
+      <a href="#terms">Terms</a>
+      <ul>
+        <li><a href="#crd">CRD</a></li>
+      </ul>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h1 id="kc">Kubernetes Controller = control loop</h1>
+      <p>
+        A Kubernetes controller is a control loop(reconcile loop) that
+        continuously watches the state of kubernets cluster and makes changes to
+        align the actual state with your desired state.<br />
+        This is similar to = File Watcher(fsnotify)<br />
+        <b>How Controllers Run (Reconciliation Loop = Infinite Loop)</b><br />
+        1. Observe: Look at the current state of the world<br />
+        2. Analyze: Compare the Current State with the Desired State<br />
+        3. Act: Take corrective action to bridge the gap
+      </p>
+
+      <h2 if="types">Types of Controllers</h2>
+      <h3 id="operators">
+        1. Kubernetes Operator (Domain specific Controller)
+      </h3>
+      <p>
+        Instead of managing built-in resources like Pods or Deployments this
+        Controller manages Custom Resources (CR). CRD means my specific
+        resource(e.g., a MyDatabase resource). Every Kubernetes controller runs
+        an infinite reconcile loop:
+      </p>
+      <pre><code>while (1) { 
+    if (state changed)
+        Apply state 
+} </code></pre>
+
+      <h4 id="code">Code Example</h4>
+      <dl>
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Concepts/Containers/Kubernets/Controllers/Code/hello_world"
+          >hello World pod is created everytime its deleted</a
+        >
+      </dl>
+
+      <h1 id="Kubebuilder">Kubebuilder = framework/SDK</h1>
+      <p>
+        Framework to build Kubernetes APIs(or Kinds) using
+        <a href="#crd">Custom Resource Definitions (CRDs)</a><br />
+        - API types under `api/`<br />
+        - Controller under `internal/controller/`<br />
+        - CRD/RBAC/manifests under `config/`<br />
+        - Makefile targets (`make run`, `make deploy`)
+      </p>
+
+      <h1 id="terms">Terms</h1>
+      <h2 id="crd">Custom Resource Definition (CRD)</h2>
+      <p>
+        Resources which are created by user. Controller manages Custom Resources
+        (CR).
+      </p>
+
+      <h1 id="Controller">Controller-Runtime</h1>
+      <p>
+        A Go library (built by Kubernetes SIGs) that provides caching, clients,
+        and leader election
+      </p>
+    </main>
+    <script src="/scripts/prism.js"></script>
+    <script src="/scripts/common.js"></script>
+  </body>
+</html>

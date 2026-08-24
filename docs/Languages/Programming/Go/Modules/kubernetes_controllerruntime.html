@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+  <head>
+    <title>controller-runtime — Go package</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Modules/kubernetes_controllerruntime.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is it?</a>
+      <a href="#why">Why use it?</a>
+      <a href="#how">How it works</a>
+      <a href="#example">Simple example</a>
+      <a href="#install">Install</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">controller-runtime (Go package)</h1>
+      <p>
+        Package <code>sigs.k8s.io/controller-runtime</code> is used to build
+        <a href="/System_Design/Concepts/Kubernets/Terms/"
+          >Kubernetes controllers and operators.</a
+        >
+      </p>
+
+      <h2 id="why">Why is it used?</h2>
+      <p>
+        You <i>could</i> write all of that yourself with the raw Kubernetes
+        client-go library. controller-runtime provides boiler plate correct
+        code. <br />
+        controller-runtime is the <b>framework</b> for “watch K8s objects and
+        react.” You only write the business logic inside
+        <code>Reconcile()</code>.
+      </p>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Without controller-runtime</th>
+          <th>With controller-runtime</th>
+        </tr>
+        <tr>
+          <td>Write your own watch loops and retries</td>
+          <td>
+            Built-in <b>Reconcile</b> loop — your function runs when something
+            changes
+          </td>
+        </tr>
+        <tr>
+          <td>Call the API server on every read</td>
+          <td>Local <b>cache</b> of cluster objects</td>
+        </tr>
+        <tr>
+          <td>Two copies of the controller both “fix” the same thing</td>
+          <td><b>Leader election</b> — only one instance runs the loop</td>
+        </tr>
+        <tr>
+          <td>Wire up HTTP health checks by hand</td>
+          <td>
+            <b>Manager</b> starts controllers, metrics, and probes together
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="example">Very simple example</h2>
+      <p>
+        Goal: whenever a <b>Pod</b> is created or changed, print its name and
+        make sure it has a label <code>managed-by=demo-controller</code>.
+      </p>
+
+      <h3>Step 1 — define the reconciler</h3>
+      <pre><code class="language-go">package main
+
+import (
+    "context"
+
+    corev1 "k8s.io/api/core/v1"
+    "k8s.io/apimachinery/pkg/types"
+    "sigs.k8s.io/controller-runtime/pkg/client"
+    "sigs.k8s.io/controller-runtime/pkg/reconcile"
+)
+
+// PodReconciler watches Pods and adds a label if missing.
+type PodReconciler struct {
+    client client.Client // reads/writes objects via the local cache
+}
+
+func (r *PodReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+    // 1. READ — fetch the Pod that triggered this run
+    pod := &corev1.Pod{}
+    if err := r.client.Get(ctx, types.NamespacedName{
+        Name:      req.Name,
+        Namespace: req.Namespace,
+    }, pod); err != nil {
+        return reconcile.Result{}, client.IgnoreNotFound(err) // Pod was deleted — ignore
+    }
+
+    // 2. COMPARE — do we already have the label?
+    if pod.Labels["managed-by"] == "demo-controller" {
+        return reconcile.Result{}, nil // nothing to do
+    }
+
+    // 3. ACT — add the label and write back to the cluster
+    if pod.Labels == nil {
+        pod.Labels = map[string]string{}
+    }
+    pod.Labels["managed-by"] = "demo-controller"
+    return reconcile.Result{}, r.client.Update(ctx, pod)
+}</code></pre>
+
+      <h3>Step 2 — start the manager</h3>
+      <pre><code class="language-go">import (
+    ctrl "sigs.k8s.io/controller-runtime"
+    "sigs.k8s.io/controller-runtime/pkg/log/zap"
+)
+
+func main() {
+    ctrl.SetLogger(zap.New()) // optional: structured logs
+
+    // Manager = connection to cluster + cache + leader election
+    mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{})
+    if err != nil {
+        panic(err)
+    }
+
+    // Register our PodReconciler and tell it to watch Pod objects
+    if err := ctrl.NewControllerManagedBy(mgr).
+        For(&amp;corev1.Pod{}).                    // watch Pods
+        Complete(&amp;PodReconciler{client: mgr.GetClient()}); err != nil {
+        panic(err)
+    }
+
+    // Blocks forever — runs Reconcile whenever a Pod changes
+    if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+        panic(err)
+    }
+}</code></pre>
+
+      <h3>What happens at runtime</h3>
+      <pre><code>User runs:  kubectl run nginx --image=nginx
+            ↓
+API server creates Pod "nginx"
+            ↓
+controller-runtime cache sees the new Pod
+            ↓
+PodReconciler.Reconcile() runs for Pod nginx
+            ↓
+Reconciler adds label managed-by=demo-controller
+            ↓
+kubectl get pod nginx --show-labels
+NAME    ...   LABELS
+nginx   ...   managed-by=demo-controller</code></pre>
+      <p>
+        That is the whole pattern used by real operators — just with your own
+        custom resource (CRD) instead of a Pod, and more logic inside
+        <code>Reconcile</code> (create Deployments, Services, Secrets, etc.).
+      </p>
+
+      <h2 id="install">Install in your Go module</h2>
+      <pre><code class="language-css">go mod init my-operator
+go get sigs.k8s.io/controller-runtime@latest
+go get k8s.io/api@latest
+go get k8s.io/apimachinery@latest</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

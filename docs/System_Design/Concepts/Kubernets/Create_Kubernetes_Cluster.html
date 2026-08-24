@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Kubernets Introduction</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Create_Kubernetes_Cluster.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!-- Sidebar -->
+      <a href="#what">Create Cluster</a>
+    </aside>
+
+    <main style="margin-left: 200px">
+      <h1 id="#what">Create Kubernets cluster on Docker Desktop</h1>
+      <pre><code>1. **Docker Desktop** installed (Windows/Mac) with WSL2 backend  
+2. **Settings → Kubernetes → Enable Kubernetes** → Apply & Restart 
+
+$ kubectl config get-contexts
+CURRENT   NAME             CLUSTER          AUTHINFO         NAMESPACE
+*         docker-desktop   docker-desktop   docker-desktop
+
+$ bash install.sh
+Kubernetes control plane is running at https://127.0.0.1:6443
+
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+======== nginx =========
+NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller   LoadBalancer   10.102.183.20   localhost     80:31744/TCP,443:30606/TCP   3m38s
+
+======== Kafka (Redpanda) =======
+kafka.identity-bridge.svc.cluster.local:9092
+kubectl exec -n identity-bridge deploy/kafka -- rpk topic list
+NAME                PARTITIONS  REPLICAS
+identity-catalog    8           1
+identity-events     24          1
+identity-heartbeat  4           1</code></pre>
+
+      <h2>Architecture</h2>
+      <pre><code>Your WSL shell / browser
+        │
+        │  http://ingest.local  (127.0.0.1 in /etc/hosts)
+        ▼
+┌─────────────────────────────────────────────────────────┐
+│  Docker Desktop Kubernetes (single node: docker-desktop) │
+│                                                          │
+│  namespace: ingress-nginx                                │
+│    nginx Ingress Controller  ← local “load balancer”     │
+│    (LoadBalancer → localhost:80)                         │
+│         │                                                │
+│         ▼                                                │
+│  namespace: identity-bridge                              │
+│    Ingress server-ingest  (host: ingest.local)           │
+│         │                                                │
+│         ▼                                                │
+│    Service server-ingest :8080                           │
+│         │                                                │
+│         ├──► server-ingest pod (nginx stub)              │
+│         └──► server-ingest pod                           │
+│                                                          │
+│    kafka pod (Redpanda :9092)  ← Kafka API               │
+│      topics: identity-events, identity-catalog, ...      │
+└─────────────────────────────────────────────────────────┘</code></pre>
+    </main>
+  </body>
+</html>

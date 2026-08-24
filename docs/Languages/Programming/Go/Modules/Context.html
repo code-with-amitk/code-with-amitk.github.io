@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Context in Go</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Go/Interfaces/Context.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Modules/Context.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -35,13 +38,18 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">What is Context?</h2>
+      <h1>context Package</h1>
       <p>
-        In Go, context.Context is an
+        Package context defines the <a href="#what">Context type</a>, which
+        carries deadlines, cancellation signals, and other request-scoped values
+        across API boundaries and between processes.
+      </p>
+
+      <h2 id="what">Context type(Interface)</h2>
+      <p>
+        context.Context is an
         <a href="/Languages/Programming/Go/">interface</a> which defined in
-        <a href="https://pkg.go.dev/context">package context</a> that carries
-        deadlines, cancellation signals, and request-scoped values across API
-        boundaries and between goroutines. <br />
+        <a href="https://pkg.go.dev/context">package context</a><br>
         Incoming requests to a HTTP server creates a Context, and outgoing calls
         to servers accept a Context. The chain of function calls between them
         MUST propagate the Context(This is developer's responsibility)<br />
