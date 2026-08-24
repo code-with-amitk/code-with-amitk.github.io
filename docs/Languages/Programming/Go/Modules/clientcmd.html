@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <title>clientcmd — Go package</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Modules/clientcmd.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is it?</a>
+      <a href="#buildconfig">BuildConfigFromFlags</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what"><code>k8s.io/client-go/tools/clientcmd</code> package</h1>
+      <p>
+        Kubernets configuration is stored in
+        <code>~/.kube/config</code> file<br />
+        clientcmd package reads this file
+        <code>/home/username/.kube/config</code> and converts to
+        <code>*rest.Config</code> so that We can use it in our program to
+        connect to Kubernetes cluster.
+      </p>
+      <pre><code class="language-css">$ cat /home/username/.kube/config
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: ..
+    server: https://127.0.0.1:6443      &lt;&lt;&lt;&lt;&lt;&lt; API server running here
+  name: docker-desktop
+contexts:
+- context:
+    cluster: docker-desktop
+    user: docker-desktop
+  name: docker-desktop
+current-context: docker-desktop
+kind: Config
+preferences: {}
+users:
+- name: docker-desktop
+  user:
+    client-certificate-data: ..</code></pre>
+
+      <h2 id="buildconfig">function — <code>BuildConfigFromFlags()</code></h2>
+      <pre><code class="language-go">func BuildConfigFromFlags(masterUrl, kubeconfigPath string) (*rest.Config, error)
+// kubeconfigPath: path to the config file. Pass "" use the default (~/.kube/config)
+// masterUrl — override the API server URL. "" to use whatever the kubeconfig says (normal case).
+
+Returns *rest.Config or an error if the file is missing</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

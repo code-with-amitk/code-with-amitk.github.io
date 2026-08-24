@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Data Lineage Policy enforcement</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/DataLineage_PolicyEnforcement"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/System_Design/Scalable/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#req">What</a>
+      <a href="#hld">HLD</a>
+      <ul>
+        <li><a href="#bd">Block Diagram</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="req">Data Lineage Policy enforcement</h1>
+      <p>
+        Every activity is sent by Windows Agent to Cloud, so that inspection can
+        be done<br />
+        Policy enforcement and lineage Graph will constructed using every
+        activity.<br /><br />
+        <b>Lineage:</b> the series of families that somebody comes from
+        originally
+      </p>
+
+      <h1 id="hld">HLD</h1>
+      <h2 id="how">How cyberhaven Laptop client captures the events</h2>
+      <pre><code>
+                    LAPTOP
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  Chrome                    Claude Code          │
+│    │                           │                │
+│    │                           │                │
+│    └──────────────┐  ┌─────────┘                │
+│                   │  │                          │
+│              OS-level events                   │
+│                   │  │                          │
+│             Cyberhaven Agent                   │
+│                   │                             │
+│                   +---- Browser Extension       │
+│ETW on Windows, 
+| Endpoint Security Framework on macOS, 
+| and eBPF on Linux                               │
+└─────────────────────────────────────────────────┘
+
+Chrome
+   |
+   | Upload request / file access
+   v
+Cyberhaven endpoint enforcement
+   |
+   +---- inspect/context/policy
+   |
+   +---- ALLOW ─────────────> Box
+   |
+   +---- BLOCK
+      </code></pre>
+
+      <h2>Policy decisions are taken locally by cyberhaven client</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code>Tenant Admin
+     |
+     | Create DLP / AI security policy
+     v
+Cyberhaven Cloud
+     |
+     | Policy distribution
+     v
+Endpoint Agent
+     |
+     | Local policy/context
+     v
+Runtime activity</code></pre>
+          </td>
+          <td>
+            <pre><code>                 CYBERHAVEN CLOUD
+       ┌────────────────────────────────┐
+       │                                │
+       │ Tenant Policy                  │
+       │ Data Classification            │
+       │ Data Lineage                   │
+       │ Risk / Analytics               │
+       │ Central Policy Management      │
+       │                                │
+       └───────────────┬────────────────┘
+                       │
+                policy/config/context
+                       │
+                       ↓
+               ENDPOINT AGENT
+       ┌────────────────────────────────┐
+       │ Local observation              │
+       │ Local context                  │
+       │ Local enforcement              │
+       │ Browser integration            │
+       └───────────────┬────────────────┘
+                       │
+                actual user action
+                       │
+             ┌─────────┼─────────┐
+             ↓         ↓         ↓
+           Box      GitHub     USB</code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="bd">Block Diagram</h2>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+flowchart TB
+
+    Admin["Security Admin"]
+
+    subgraph Tenant["Enterprise Tenant"]
+        Policy["Cyberhaven Policy Engine"]
+        Classification["Data Classification"]
+        Risk["AI Risk / Context Engine"]
+        Lineage["Data Lineage Graph"]
+        Analytics["Security Console / Analytics"]
+    end
+
+    subgraph Endpoint["Developer Endpoint"]
+        Agent["Cyberhaven Endpoint Agent"]
+
+        IDE["IDE / CLI"]
+        AI["AI Agent\nClaude Code / Copilot / Codex"]
+        Files["Source Code / Sensitive Files"]
+        MCP["Local MCP Server"]
+    end
+
+    SaaS["Enterprise SaaS / Cloud / Tools"]
+
+    Admin --> Analytics
+    Analytics --> Policy
+
+    Files --> AI
+    IDE --> AI
+    AI --> MCP
+    AI --> SaaS
+
+    Agent -. data events .-> Classification
+    Agent -. lineage events .-> Lineage
+    Agent -. behavior .-> Risk
+
+    Classification --> Policy
+    Lineage --> Policy
+    Risk --> Policy
+
+    Policy -->|Action| Agent
+
+    Agent -->|"ALLOW / WARN / BLOCK"| AI
+        </pre>
+      </div>
+
+      <h2>Sequence Diagram</h2>
+      <h3 id="sd1">AI Agent pushed code with secret</h3>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+sequenceDiagram
+
+    actor Dev as Developer
+
+    participant CC as Claude Code<br/>(Local AI Agent)
+    participant FS as Local Git Repository
+    participant CA as Cyberhaven<br/>Endpoint Agent
+    participant CH as Cyberhaven Cloud
+    participant DL as Data Lineage
+    participant PE as Policy Engine
+    participant GH as GitHub
+
+    Dev->>CC: "Fix login bug and create a PR"
+
+    CC->>FS: Read source files
+    FS-->>CC: Source code
+
+    CA->>CH: Observe file access / agent activity
+    CH->>DL: Record data lineage
+
+    CC->>FS: Read additional files
+    FS-->>CC: Source + configuration data
+
+    CA->>CH: Observe sensitive-data access
+    CH->>DL: Associate data with Claude Code
+
+    CC->>FS: Modify source code
+    FS-->>CC: Modified files
+
+    CA->>CH: Observe file modifications
+    CH->>DL: Extend lineage
+
+    CC->>FS: git diff / git commit
+
+    CA->>CH: Observe commit activity
+    CH->>DL: Track sensitive data lineage
+
+    CC->>GH: Push branch / create PR
+
+    CA->>CH: Observe outbound data activity
+
+    CH->>PE: Evaluate user + agent + data + destination
+
+    PE->>DL: Query data lineage / sensitivity
+    DL-->>PE: Sensitive enterprise data detected
+
+    PE-->>CH: BLOCK
+
+    CH-->>CA: Enforce policy
+
+    CA-->>CC: Prevent / block prohibited data transfer
+
+    CC-->>Dev: PR blocked: sensitive data policy violation
+
+    CH-->>Dev: Security event / explanation
+        </pre>
+      </div>
+    </article>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

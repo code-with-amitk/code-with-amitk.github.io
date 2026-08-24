@@ -1,8 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Container Commands</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Commands.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Commands.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -15,7 +18,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="../">Back</a></li>
+        <li><a href="/System_Design/Concepts/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -31,22 +34,167 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="#namespace">Namespace Commands</a>
-      <a href="#pod">POD Commands</a>
-      <a href="#container">Container Commands</a>
+      <a href="#compare">Command comparison(docker vs Kubernetes)</a>
+      <ul>
+        <li><a href="#lifecycle">Run / list / stop</a></li>
+        <li><a href="#debug">Logs / exec / inspect</a></li>
+        <li><a href="#config">Ports / env / volumes</a></li>
+        <li><a href="#images">Images / build</a></li>
+      </ul>
+      <a href="#KubernetesCommands">Kubernetes Commands</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2>Commands</h2>
-      <pre><code>
-|- Worker node
-  |- Docker runtime
-    |- Namespace
-      |- POD
-        |- Container(Application), Container(sidecar)
-      </code></pre>
-      <h3>Check <a href="Architecture.html">Architecture</a></h3>
+      <pre><code>|- Worker node
+  |- Docker runtime (or containerd)
+    |- Namespace
+      |- POD
+        |- Container(Application), Container(sidecar)</code></pre>
 
+      <p>
+        <a href="Architecture.html"> Kubernetes Architecture</a><br />
+        <a href="../Docker/Commands.html">Docker Commands</a><br />
+        <a href="../Docker/Introduction.html">Docker vs Kubernets</a>.
+      </p>
+
+      <h1 id="compare">Command comparison (docker vs Kubernetes)</h1>
+      <p>
+        Same intent, different CLI. Kubernetes almost always needs a
+        <b>namespace</b> (<code>-n my-namespace</code>). Docker has no
+        equivalent unless you invent one with compose project names.
+      </p>
+
+      <h4 id="lifecycle">Run, list, stop, delete</h4>
+      <table>
+        <tr>
+          <th>Concept / Action</th>
+          <th>Docker</th>
+          <th>Kubernetes</th>
+        </tr>
+        <tr>
+          <td>List All(Running, stopped) Items</td>
+          <td><code>docker ps -a</code></td>
+          <td><code>kubectl get pods -A</code> (all namespaces)</td>
+        </tr>
+        <tr>
+          <td>Buid a image</td>
+          <td><code>docker build -t myapp:1 .</code></td>
+          <td>No kubectl equivalent. Cluster only pulls images</td>
+        </tr>
+        <tr>
+          <td>Stop Container(docker), pod(kuberenetes)</td>
+          <td><code>docker stop container_name</code></td>
+          <td>
+            <code>kubectl delete pod pod_name</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Remove Container(docker), pod(kuberenetes)</td>
+          <td><code>docker rm container_name</code></td>
+          <td>
+            <code>kubectl delete pod pod_name</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Restart Container(docker), pod(kuberenetes)</td>
+          <td><code>docker restart container_name</code></td>
+          <td>
+            <code>kubectl rollout restart deploy pod_name</code><br />
+            Rolling restart
+          </td>
+        </tr>
+        <tr>
+          <td>Scale Container(docker), pod(kuberenetes)</td>
+          <td><code>docker compose up --scale container_name=3</code></td>
+          <td><code>kubectl scale deploy pod_naame --replicas=3</code></td>
+        </tr>
+      </table>
+
+      <h4 id="debug">Logs, shell, inspect, copy, stats</h4>
+      <table>
+        <tr>
+          <th>Action</th>
+          <th>Docker</th>
+          <th>Kubernetes</th>
+        </tr>
+        <tr>
+          <td>Logs</td>
+          <td>
+            <code>docker logs container_name</code>
+          </td>
+          <td>
+            <code>kubectl logs -f pod_name -c app</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Shell inside</td>
+          <td><code>docker exec -it container_name bash</code></td>
+          <td>
+            <code>kubectl exec -it pod_name -c app -- sh</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Inspect details</td>
+          <td><code>docker inspect container_name</code></td>
+          <td>
+            <code>kubectl get pod pod_name -o yaml</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Copy files</td>
+          <td><code>docker cp container_name:/app/log.txt .</code></td>
+          <td>
+            <code>kubectl cp namespace/pod_name:/app/log.txt ./log.txt</code>
+          </td>
+        </tr>
+        <tr>
+          <td>CPU / memory</td>
+          <td><code>docker stats</code></td>
+          <td>
+            <code>kubectl top pod</code><br /><code>kubectl top node</code>
+          </td>
+        </tr>
+      </table>
+
+      <h4 id="config">Ports, env, volumes</h4>
+      <table>
+        <tr>
+          <th>What you want</th>
+          <th>Docker</th>
+          <th>Kubernetes</th>
+          <th>Note</th>
+        </tr>
+        <tr>
+          <td>Publish a port</td>
+          <td><code>docker run -p 8080:80 nginx</code></td>
+          <td>
+            containerPort in the Pod spec, then a Service:<br />
+            <code>kubectl expose deploy web --port=80 --type=NodePort</code>
+          </td>
+          <td>
+            <code>-p</code> binds this host. A Service is a stable cluster
+            name/IP; Ingress / LoadBalancer is how users reach it. See
+            <a href="Terms.html#ports">Ports</a>.
+          </td>
+        </tr>
+        <tr>
+          <td>Env vars</td>
+          <td><code>docker run -e KEY=val nginx</code></td>
+          <td>env in Pod spec, or ConfigMap / Secret</td>
+          <td>Do not put secrets in the image. Use Secret objects.</td>
+        </tr>
+        <tr>
+          <td>Mount a directory</td>
+          <td><code>docker run -v /data:/data nginx</code></td>
+          <td>volumeMounts + PersistentVolumeClaim</td>
+          <td>
+            Bind mounts are node-local. PVC can move with the Pod (depending on
+            storage class). See <a href="Terms.html#pvc">PVC</a>.
+          </td>
+        </tr>
+      </table>
+
+      <h1 id="KubernetesCommands">Kubernetes Commands</h1>
       <h3 id="namespace">Namespace Commands</h3>
       <h4>List Namespace</h4>
       <pre><code class="language-css">
@@ -69,7 +217,7 @@ $ kubectl delete namespace {namespace-name}
       <h3 id="pod">Pod Commands</h3>
       <h4>Create POD inside namespace</h4>
       <pre><code class="language-css">
-$ kubectl apply -f depolyment.yaml           // Namespace name provided inside yml file
+$ kubectl apply -f deployment.yaml           // Namespace name provided inside yml file
       </code></pre>
 
       <h4>List Pods, Containers in Pod</h4>
@@ -83,15 +231,22 @@ $ kubectl describe pod pod-name -n my-namespace
 
       <h4>Delete Pods</h4>
       <pre><code class="language-css">
-$ kubectl delete deployment pod-name
-$ kubectl delete deployment pod-name --all --grace-period=0 --force
+$ kubectl delete pod pod-name                         // Deployment will recreate this Pod
+$ kubectl delete deployment deploy-name
+$ kubectl delete deployment deploy-name --grace-period=0 --force
           </code></pre>
 
       <h3 id="container">Container Commands</h3>
+      <p>
+        These are <b>Docker</b> commands on a single host. They are not kubectl.
+        Use them for local images / containers, or only on a node if you know
+        Docker is the runtime and you are not touching kubelet-managed
+        containers.
+      </p>
       <h4>List Containers</h4>
       <pre><code class="language-css">
 $ docker ps
-$ docker inspect 7d8b5d857e84   
+$ docker inspect 7d8b5d857e84
       </code></pre>
 
       <h4>Remove Containers</h4>

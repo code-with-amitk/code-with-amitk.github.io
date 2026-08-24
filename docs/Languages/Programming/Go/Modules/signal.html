@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+  <head>
+    <title>signal package in Go</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Modules/signal.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">What is signal?</a>
+      <a href="#notify">signal.Notify</a>
+      <a href="#notifycontext">NotifyContext</a>
+      <ul>
+        <li><a href="#returns">ctx and stop</a></li>
+        <li><a href="#done">ctx.Done()</a></li>
+      </ul>
+      <a href="#example">Simple example</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">os/signal package</h1>
+      <p>
+        Go program can hear OS signals(software interrupts) the kernel sends to
+        the process. The common ones:<br />
+        1. os.Interrupt (SIGINT): User presses Ctrl+C<br />
+        2. syscall.SIGTERM: kill pid, Docker/Kubernetes stop, systemd stop
+      </p>
+
+      <p>
+        Same idea as
+        <a href="/Signal_Handling/">Signal Handling</a> in C — Go just wraps it
+        so you wait on a channel or a
+        <a href="/Languages/Programming/Go/Modules/Context.html">Context</a>
+        instead of writing a C signal handler.
+      </p>
+
+      <h2 id="notify">Older way: <code>signal.Notify</code></h2>
+      <p>Put signals onto a channel. You block until one arrives:</p>
+      <pre><code class="language-go">c := make(chan os.Signal, 1)
+signal.Notify(c, os.Interrupt)
+s := &lt;-c   // blocks until Ctrl+C
+fmt.Println("got", s)</code></pre>
+      <p>
+        That works, but it does not cancel your HTTP handlers / DB queries.
+        Those already take a Context. So Go 1.16 added
+        <code>NotifyContext</code>: turn “Ctrl+C arrived” into “this Context is
+        cancelled.”
+      </p>
+
+      <h2 id="notifycontext">
+        <code>signal.NotifyContext</code>
+      </h2>
+      <pre><code class="language-go">func NotifyContext(parent context.Context, signals ...os.Signal) (ctx context.Context, stop context.CancelFunc)</code></pre>
+      <p>
+        It creates a <b>child Context</b> of <code>parent</code>. That child is
+        cancelled when:
+      </p>
+      <ol>
+        <li>one of the listed OS signals arrives, or</li>
+        <li>the parent Context is already cancelled, or</li>
+        <li>you call <code>stop()</code></li>
+      </ol>
+
+      <h3 id="returns">
+        What it returns: <code>ctx</code> and <code>stop</code>
+      </h3>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Return</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><code>ctx</code></td>
+          <td>
+            A Context that becomes cancelled on Ctrl+C (or SIGTERM). Pass this
+            into work you want to stop: HTTP server, loops, DB calls.
+          </td>
+        </tr>
+        <tr>
+          <td><code>stop</code></td>
+          <td>
+            A function you must call when you are done listening (almost always
+            <code>defer stop()</code>). It <b>unregisters</b> the signal handler
+            and cancels <code>ctx</code>
+            if it is not cancelled yet.
+          </td>
+        </tr>
+      </table>
+      <p>
+        Why call <code>stop()</code>? If you never stop, the process keeps
+        catching Ctrl+C forever. After <code>stop()</code>, a
+        <b>second Ctrl+C</b> uses the default behavior and kills the process —
+        that is what you want during shutdown (if graceful shutdown hangs, the
+        user can force-quit).
+      </p>
+
+      <h3 id="done">What does <code>ctx.Done()</code> mean?</h3>
+      <p>
+        You do <b>not</b> call <code>Done()</code> to cancel anything.
+        <code>Done()</code> <b>returns a channel</b>. That channel is closed
+        when the Context is cancelled.
+      </p>
+      <pre><code class="language-go">// Context interface (simplified)
+type Context interface {
+    Done() &lt;-chan struct{}   // closed when cancelled
+    Err() error              // why it was cancelled
+    // ...
+}</code></pre>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>Code</th>
+          <th>What it means</th>
+        </tr>
+        <tr>
+          <td><code>&lt;-ctx.Done()</code></td>
+          <td>
+            <b>Wait</b> until cancelled (Ctrl+C, parent cancelled, or
+            <code>stop()</code>). Receive succeeds when the channel is closed.
+          </td>
+        </tr>
+        <tr>
+          <td><code>ctx.Err()</code></td>
+          <td>
+            After Done fires:
+            <code>context.Canceled</code> (or
+            <code>context.DeadlineExceeded</code> if a timeout was set on the
+            parent).
+          </td>
+        </tr>
+        <tr>
+          <td><code>stop()</code></td>
+          <td>
+            This is the cancel function. Calling it is what
+            <i>makes</i> Done fire (if a signal has not already).
+          </td>
+        </tr>
+      </table>
+      <p>
+        Same pattern as
+        <code>ctx, cancel := context.WithCancel(...)</code>:
+        <code>stop</code> here is that <code>cancel</code>.
+      </p>
+
+      <h2 id="example">Very simple example</h2>
+      <p>
+        Program prints “working…” until you press Ctrl+C. Then
+        <code>&lt;-ctx.Done()</code> unblocks and it exits.
+      </p>
+      <pre><code class="language-go">package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    "os/signal"
+    "time"
+)
+
+func main() {
+    // ctx is cancelled when Ctrl+C arrives
+    // stop unregisters the handler — always defer it
+    ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+    defer stop()
+
+    fmt.Println("working... press Ctrl+C")
+
+    for {
+        select {
+        case &lt;-ctx.Done():
+            // channel closed → Context cancelled
+            fmt.Println("shutting down:", ctx.Err()) // context.Canceled
+            return
+        case &lt;-time.After(1 * time.Second):
+            fmt.Println("working...")
+        }
+    }
+}</code></pre>
+      <pre><code>$ go run main.go
+working... press Ctrl+C
+working...
+working...
+^C
+shutting down: context canceled</code></pre>
+
+      <h3>Pass the same ctx into other work</h3>
+      <p>
+        Anything that already accepts a Context will stop when the signal
+        arrives — you do not need a second signal channel.
+      </p>
+      <pre><code class="language-go">ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+defer stop()
+
+// HTTP: Shutdown waits until ctx is cancelled (Ctrl+C)
+go server.ListenAndServe()
+&lt;-ctx.Done()
+server.Shutdown(context.Background())</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

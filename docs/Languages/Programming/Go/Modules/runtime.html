@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+  <head>
+    <title>runtime — Go stdlib and k8s Scheme</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Modules/runtime.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#what">Go runtime (stdlib)</a>
+      <a href="#why">Why use it?</a>
+      <a href="#osarch">OS and CPU</a>
+      <a href="#scheme">k8s Scheme</a>
+      <ul>
+        <li><a href="#meaning">What is a Scheme?</a></li>
+        <li><a href="#newscheme">NewScheme()</a></li>
+        <li><a href="#example">Example</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">runtime package</h1>
+      <p>
+        <code>runtime</code> is a <b>standard library</b> package. It talks to
+        the hidden engine that actually runs your Go program — goroutines, the
+        scheduler, memory, and
+        <a href="/Languages/Programming/Go/Go_Garbage_Collection.html"
+          >garbage collection</a
+        >.
+      </p>
+      <pre><code class="language-go">import "runtime"</code></pre>
+
+      <h2 id="why">Why is it used?</h2>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>You want to know / do</th>
+          <th>Use</th>
+        </tr>
+        <tr>
+          <td>Which OS / CPU is this binary on?</td>
+          <td><code>runtime.GOOS</code>, <code>runtime.GOARCH</code></td>
+        </tr>
+        <tr>
+          <td>How many CPUs? How many workers?</td>
+          <td><code>NumCPU()</code>, <code>GOMAXPROCS()</code></td>
+        </tr>
+        <tr>
+          <td>Are we leaking goroutines?</td>
+          <td><code>NumGoroutine()</code></td>
+        </tr>
+        <tr>
+          <td>How much heap? Force a GC?</td>
+          <td><code>ReadMemStats()</code>, <code>GC()</code></td>
+        </tr>
+      </table>
+
+      <h3 id="osarch">OS and CPU (constants)</h3>
+      <p>
+        These are set at <b>compile time</b>. Same values you would pass as
+        <code>GOOS</code> / <code>GOARCH</code> when cross-compiling.
+      </p>
+      <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "runtime"
+)
+
+func main() {
+    fmt.Println(runtime.GOOS)   // linux, windows, darwin
+    fmt.Println(runtime.GOARCH) // amd64, arm64
+}</code></pre>
+
+      <h1 id="scheme">
+        Kubernetes <code>runtime.NewScheme()</code> (different package)
+      </h1>
+      <p>
+        <code>scheme := runtime.NewScheme()</code> is
+        <b>not</b> from Go’s standard library. It comes from
+        <code>k8s.io/apimachinery/pkg/runtime</code> — the package
+        <a href="/Languages/Programming/Go/Modules/controllerruntime.html"
+          >controller-runtime</a
+        >
+        and
+        <a href="/Languages/Programming/Go/Modules/kubernetes.html">client-go</a>
+        use to encode and decode Kubernetes objects.
+      </p>
+      <pre><code class="language-go">import (
+    "k8s.io/apimachinery/pkg/runtime"
+)</code></pre>
+
+      <h2 id="meaning">What does “Scheme” mean?</h2>
+      <p>
+        A <b>Scheme</b> is a <b>phone book of types</b>. Kubernetes talks in
+        YAML/JSON using <code>apiVersion</code> + <code>kind</code>. Go talks in
+        structs. The Scheme maps one to the other:
+      </p>
+      <pre><code>YAML/JSON                         Go struct
+---------                         ---------
+apiVersion: v1             &lt;--&gt;   *corev1.Pod
+kind: Pod
+
+apiVersion: apps/v1        &lt;--&gt;   *appsv1.Deployment
+kind: Deployment
+
+apiVersion: demo.io/v1     &lt;--&gt;   *demov1.Widget   (your CRD)
+kind: Widget</code></pre>
+      <p>
+        Without a Scheme, the client sees <code>kind: Widget</code> and does not
+        know which Go type to put the bytes into. Typical error:
+        <code>no kind "Widget" is registered for version "demo.io/v1"</code>.
+      </p>
+
+      <h2 id="newscheme">What <code>runtime.NewScheme()</code> does</h2>
+      <p>
+        It creates an <b>empty</b> phone book. Nothing is registered yet — not
+        even Pod. You then fill it with
+        <code>AddToScheme(scheme)</code> for every API group you will read or
+        write.
+      </p>
+      <pre><code class="language-go">scheme := runtime.NewScheme() // empty book
+
+// Register built-in types (Pod, Service, Deployment, ...)
+utilruntime.Must(clientgoscheme.AddToScheme(scheme))
+
+// Register your CRD types
+utilruntime.Must(demov1.AddToScheme(scheme))</code></pre>
+      <p>
+        After that you pass <code>scheme</code> into the Manager or client so
+        every Get / List / Update can encode and decode those types.
+      </p>
+
+      <h2 id="example">Very simple example</h2>
+      <p>
+        Goal: decode this YAML into a real Go <code>Pod</code> struct. That
+        works only after Pod is registered on the Scheme.
+      </p>
+      <pre><code class="language-go">package main
+
+import (
+    "fmt"
+
+    corev1 "k8s.io/api/core/v1"
+    "k8s.io/apimachinery/pkg/runtime"
+    "k8s.io/apimachinery/pkg/runtime/serializer"
+    clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+)
+
+func main() {
+    // 1. Empty phone book
+    scheme := runtime.NewScheme()
+
+    // 2. Teach it: kind Pod + apiVersion v1 → *corev1.Pod
+    if err := clientgoscheme.AddToScheme(scheme); err != nil {
+        panic(err)
+    }
+
+    yamlBytes := []byte(`
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: default
+`)
+
+    // 3. Decoder uses the Scheme to pick the Go type
+    decoder := serializer.NewCodecFactory(scheme).UniversalDeserializer()
+    obj, gvk, err := decoder.Decode(yamlBytes, nil, nil)
+    if err != nil {
+        panic(err)
+    }
+
+    pod := obj.(*corev1.Pod)
+    fmt.Println("decoded kind:", gvk.Kind) // Pod
+    fmt.Println("pod name:", pod.Name)     // nginx
+}</code></pre>
+      <p>
+        Comment out <code>AddToScheme</code> and the same YAML fails — the empty
+        Scheme does not know what a Pod is.
+      </p>
+
+      <h3>Same Scheme in a controller</h3>
+      <p>
+        Operators do the same thing once at startup, then hand the Scheme to
+        <a href="/Languages/Programming/Go/Modules/controllerruntime.html"
+          >controller-runtime</a
+        >:
+      </p>
+      <pre><code class="language-go">var scheme = runtime.NewScheme()
+
+func init() {
+    utilruntime.Must(clientgoscheme.AddToScheme(scheme))
+    utilruntime.Must(demov1.AddToScheme(scheme)) // your CRD
+}
+
+func main() {
+    mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+        Scheme: scheme, // Manager + cache + client all share this book
+    })
+    // ...
+}</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

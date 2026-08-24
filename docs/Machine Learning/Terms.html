@@ -43,6 +43,7 @@
       </ul>
       <a href="#ActivationFunction">Activation Function</a>
       <a href="#axis">Axis</a>
+      <a href="#Backpropagation">Backpropagation</a>
       <a href="#bias">Bias/Sampling Bias</a>
       <a href="#conda">Conda</a>
       <a href="#CartesianProduct">Cartesian Product</a>
@@ -116,9 +117,7 @@
           <td>Machine making decisions without being programmed</td>
           <td>
             Using
-            <a href="/Machine Learning/Terms/Neural_Network/"
-              >Neural networks</a
-            >
+            <a href="#Neural_Network">Neural networks</a>
             to solve complex problems
           </td>
         </tr>
@@ -126,10 +125,7 @@
           <td>Objective</td>
           <td>Building machines which can think like humans</td>
           <td>Algo which can learn thru data</td>
-          <td>
-            <a href="/Machine Learning/Terms/Neural_Network/">Neural n/w</a> to
-            identify patterns
-          </td>
+          <td><a href="#Neural_Network">Neural n/w</a> to identify patterns</td>
         </tr>
       </table>
 
@@ -139,13 +135,25 @@
         behave as <a href="./ML_and_Types_Algorithms.html">sigmoid</a>(for
         binary classification), softmax(for multi-class classification), no
         activation(for
-        <a href="./ML_and_Types_Algorithms.html">linear regression</a>).
+        <a href="./ML_and_Types_Algorithms.html">linear regression</a>).<br />
+        <b
+          >Usage of Activation Function (To represent Non-Linear
+          relationships):</b
+        ><br />
+        &ensp; Neural network is composed of neurons on layer. Neurons are
+        linear equations, whose output is also linear equation. when linear
+        equation is fed to Activation Function, we can achieve non linear
+        relationship based on shape of activation function<br />
+        &ensp; With enough layers and activation function in neural network we
+        can approximate any non linear function via neural network.
       </p>
       <pre><code class="language-css">model = keras.Sequential([
   layers.Dense(1),                        # Linear Regression. /Machine%20Learning/ML_and_Types_Algorithms.html
   layers.Dense(1, activation="sigmoid"),  # Sigmoid Function. Logistic Regression. /Machine%20Learning/ML_and_Types_Algorithms.html
-  layers.Dense(64, activation="relu"),    # ReLU (Rectified Linear Unit) 
+  layers.Dense(64, activation="relu"),    # ReLU (Rectified Linear Unit). if(x&lt;0)return 0. if(x&gt;0)return input value
   layers.Dense(32, activation="softmax"),    # Converts a vector of raw scores into probabilities that sum up to 1.
+  layers.Dense(32, activation="tanh"),    # F(x) = tanh(x)
+  layers.Dense(.., activation="other"),   # In practice, any mathematical function can serve as an activation function
 ])</code></pre>
 
       <h2 id="axis">Axis</h2>
@@ -157,6 +165,38 @@
         &ensp; 1=columns The horizontal axis. Operations move across the
         columns.
       </p>
+
+      <h1 id="Backpropagation">
+        Backpropagation (How each weight should change)
+      </h1>
+      <p>
+        Backpropagation for <a href="#Neural_Network">neural network</a> is way
+        to learn from its mistakes.<br />
+        Remember neural network is neurons = weight x feature. In
+        <a href="ML_and_Types_Algorithms.html">Linear regression</a> we are
+        given y,x but we need to find w,b ie find weights.<br />
+        if neural network does wrong prediction, error is sent backward to
+        adjust weights to make correct predictions<br />
+        <code
+          >Make a prediction → calculate how wrong it is → send that error
+          backward → adjust the weights → try again</code
+        ><br />
+        If the prediction is wrong, backpropagation calculates: How much did
+        each weight contribute to the error?<br />
+        Then an optimization algorithm such as
+        <a href="ML_and_Types_Algorithms.html">gradient descent</a> changes the
+        weights:<br />
+        <code>Weight_new = Weight_old - learning_rate × gradient</code>
+      </p>
+      <pre><code>Example to understand backpropagation:
+Correct equation to be predicted is y=2x+1. if x=2, y=5 
+But model predicted w=3(instead of 2). y=3x+1. On x=2, y=7 
+so there is a drift of 7-5=2
+
+Loss = square(2)=4. Because loss can be negative as well. To take +ve loss all time.
+
+gradient desent. w(new) = w(old) - learning_rate x loss
+                        = 3 - .1x4 = 2.6</code></pre>
 
       <h1 id="#CartesianProduct">Cartesian Product</h1>
       <p>
@@ -428,7 +468,9 @@ Healthy(80)	      10	            70            // out of 80
         equal.<br />
         Class-imbalanced: one label is considerably more common than the other.
         In the real world, class-imbalanced datasets are far more common than
-        class-balanced datasets.
+        class-balanced datasets.<br />
+        Stationary dataset is a time series where statistical properties like
+        the mean, variance, and autocorrelation stay constant over time.
       </p>
       <h2>Dividing the Dataset</h2>
       <p>
@@ -690,6 +732,47 @@ Bin number	Range   	Feature vector
         >
       </p>
 
+      <h3 id="Regularization">Regularization</h3>
+      <p>
+        Technique used in machine learning to prevent overfitting by adding a
+        penalty for complexity. It discourages the model from memorizing noise
+        or random patterns in the training data
+      </p>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>L2 Regularization (Ridge)</td>
+          <td>
+            Adds a penalty proportional to the square of the model's weights. It
+            shrinks all weights evenly without making them zero, making the
+            model more stable
+          </td>
+        </tr>
+        <tr>
+          <td>L1 Regularization (Lasso)</td>
+          <td>
+            Adds a penalty proportional to the absolute value of the weights
+          </td>
+        </tr>
+        <tr>
+          <td>Dropout</td>
+          <td>
+            Randomly turns off a set of neurons during training in neural
+            networks. This stops neurons from depending too much on each other
+          </td>
+        </tr>
+        <tr>
+          <td>Early Stopping</td>
+          <td>
+            Stops the training process as soon as performance on a validation
+            dataset stops improving
+          </td>
+        </tr>
+      </table>
+
       <h2>Generalization</h2>
       <p>
         Generalization is the opposite of overfitting. That is, a model that
@@ -794,8 +877,8 @@ Bin number	Range   	Feature vector
       <p>
         Layer processes input data(tensor) and produces an output(tensor) in
         specific format.
-        <a href="/Machine Learning/Terms/Neural_Network/">Neural network</a> is
-        created by cascading multiple layers.<br />
+        <a href="#Neural_Network">Neural network</a> is created by cascading
+        multiple layers.<br />
         Types of Layers:
       </p>
       <table>
@@ -974,7 +1057,7 @@ class Neuron:
         return output
         </code></pre>
 
-      <h2 id="Neural_Network">Neural Network</h2>
+      <h1 id="Neural_Network">Neural Network</h1>
       <p>
         This is brain-inspired AI model which uses interconnected nodes
         <a href="#Neuron">neurons</a> in layers to finds patterns in input data,
