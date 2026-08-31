@@ -2,10 +2,7 @@
 <html>
   <head>
     <title>Machine Learning Terms</title>
-    <link
-      rel="canonical"
-      href="https://code-with-amitk.github.io/Machine%20Learning/Terms.html"
-    />
+    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/Terms.html" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -42,17 +39,24 @@
         <li>Generative AI</li>
       </ul>
       <a href="#ActivationFunction">Activation Function</a>
+      <a href="#AutoML">AutoML</a>
       <a href="#axis">Axis</a>
       <a href="#Backpropagation">Backpropagation</a>
-      <a href="#bias">Bias/Sampling Bias</a>
+      <a href="#bias">Bias</a>
       <a href="#conda">Conda</a>
       <a href="#CartesianProduct">Cartesian Product</a>
       <a href="#Categorical">Categorical Data</a>
       <a href="#Confusion">Confusion Matrix</a>
+      <a href="#Context">Context</a>
       <a href="#cntk">CNTK</a>
       <a href="#Dataset">Dataset</a>
-      <a href="#em">Embedding Models</a>
+      <a href="#Embedding">Embedding Models</a>
+      <ul>
+        <li><a href="#EmbeddingSpace">Embedding Space</a></li>
+        <li><a href="#StaticEmbedding">Static Embedding</a></li>
+      </ul>
       <a href="#Encoding">Encoding</a>
+      <a href="#Fairness">Fairness</a>
       <a href="#Feature">Feature</a>
       <a href="#FeatureEngineering">Feature Engineering</a>
       <ul>
@@ -67,7 +71,14 @@
       <a href="#opt">Optimizer, stochastic gradient descent (SGD)</a>
       <a href="#orchestration">Orchestration</a>
       <a href="#outlier">Outlier</a>
-      <a href="#llm">LLM</a>
+      <a href="#LanguageModel">Language Model</a>
+      <ul>
+        <li><a href="#ngram">1. n-gram Model</a></li>
+        <li><a href="#llm">2. LLM</a></li>
+        <ul>
+          <li><a href="#Transformer">Transformer</a></li>
+        </ul>
+      </ul>
       <a href="#Label">Label</a>
       <a href="#layer">Layer</a>
       <a href="#loss">Loss</a>
@@ -78,6 +89,7 @@
       <a href="#metrics">Metrics</a>
       <a href="#Neuron">Neuron</a>
       <a href="#Neural_Network">Neural Network</a>
+      <a href="#PromptEngineering">Prompt Engineering</a>
       <a href="#tensor">Tensor</a>
       <ul>
         <li><a href="#vector">Vector</a></li>
@@ -86,6 +98,7 @@
         <li><a href="#tensroreshape">Tensor Reshaping</a></li>
       </ul>
       <a href="/Libraries/Python/TensorFlow">Tensorflow</a>
+      <a href="#Token">Token</a>
       <a href="#Training">Training</a>
       <a href="#variance">Variance</a>
       <a href="/Machine Learning/Terms/Neural_Network/index.html"
@@ -156,7 +169,25 @@
   layers.Dense(.., activation="other"),   # In practice, any mathematical function can serve as an activation function
 ])</code></pre>
 
-      <h2 id="axis">Axis</h2>
+      <h1 id="AutoML">AutoML</h1>
+      <p>
+        This is a process of automating certain repetitive tasks in a machine
+        learning workflow. eg: Data Engineering(Feature engineering, Feature
+        selection), Training(Identifying an appropriate ML algorithm, Selecting
+        the best hyperparameters), Analysis(Evaluating metrics generated during
+        training)<br />
+        <b>Benefits of AutoML</b><br />
+        1. To save time: save time by avoiding extensive manual experimentation
+        to find the best model.<br />
+        2. Build an ML model without needing specialized skills<br />
+        3. Best practices: Automation includes built-in support to apply ML best
+        practices<br />
+        <b>Limitations</b><br />
+        1. Model quality may not be as good as manual training<br />
+        2.
+      </p>
+
+      <h1 id="axis">Axis</h1>
       <h4>Pandas</h4>
       <p>
         <b>In <a href="/Machine Learning/">Pandas Dataframe</a>:</b> axis can
@@ -197,6 +228,50 @@ Loss = square(2)=4. Because loss can be negative as well. To take +ve loss all t
 
 gradient desent. w(new) = w(old) - learning_rate x loss
                         = 3 - .1x4 = 2.6</code></pre>
+
+      <h1 id="bias">Bias</h1>
+      <p>
+        Bias in ML refers to systematic errors or prejudices in a model's
+        predictions that lead to unfair outcomes for certain groups of people.
+        This is corrected using <a href="#Fairness">Fairness</a><br />
+        Bias usually stems from historical human prejudices embedded in the
+        training data rather than the code itself.<br />
+        <b>Mitigating the Bias</b><br />
+        1. Augmenting the training data: If an audit of the training data has
+        uncovered issues with missing, incorrect, or skewed data, the most
+        straightforward way to address the problem is often to collect
+        additional data.<br />
+        2. Adjusting the model's loss function: we can choose an optimization
+        function designed to penalize errors in a fairness-aware fashion<br />
+        Types of Bias:
+      </p>
+      <h2>Historical Bias</h2>
+      <p>
+        Over the past decade, the company predominantly hired men for
+        engineering roles. The AI analyzes this data and "learns" that being
+        male is a key feature of a successful employee. Consequently, it starts
+        downgrading resumes from equally or more qualified female applicants
+        because their profiles don't match the historical pattern. The model has
+        internalized historical data bias<br />
+        <b>Fairness to Correct it:</b> To make the system fair, data scientists
+        intervene. They might strip out identifying markers like names and
+        gendered language from the resumes, or apply mathematical constraints to
+        ensure the model evaluates candidates purely on technical skills,
+        ensuring that a qualified woman has an equal probability of being
+        shortlisted as a qualified man.
+      </p>
+      <h2>Sampling Bias</h2>
+      <p>
+        The training data does not accurately represent the real-world
+        population (e.g., testing a facial recognition system primarily on
+        lighter skin tones, causing it to fail on darker skin tones).
+      </p>
+      <h2>Measurement Bias</h2>
+      <p>
+        Choosing flawed metrics to define success (e.g., using "amount of money
+        spent on healthcare" as a proxy for "healthcare need," which ignores
+        individuals who cannot afford care in the first place).
+      </p>
 
       <h1 id="#CartesianProduct">Cartesian Product</h1>
       <p>
@@ -425,6 +500,16 @@ Healthy(80)	      10	            70            // out of 80
         </tr>
       </table>
 
+      <h1 id="Context">Context</h1>
+      <p>
+        Context is helpful information before or after the target token. Eg:
+      </p>
+      <pre><code>I went to the bank.
+
+Bank can mean = financial institution or River Bank
+
+The words around bank give us context(ie correct meaning of word).</code></pre>
+
       <h1 id="Dataset">Dataset</h1>
       <p>
         Datasets are made up of individual entries that contain features and a
@@ -589,23 +674,101 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         student out of 4 who got 20 or lower (2/4 = 50%)
       </p>
 
-      <h1 id="bias">Bias/Sampling Bias</h1>
-      <p>
-        We should use a training data set that is representative of the cases we
-        want model to predict.
-        <br />
-        if the sample is too small, you will have sampling noise (i.e.,
-        nonrepresentative data as a result of chance), but even very large
-        samples can be nonrepresentative if the sampling method is flawed. This
-        is called sampling bias.
-      </p>
-
       <h3 id="cntk">CNTK</h3>
       <p>
         This is Microsoft Cognitive Toolkit (CNTK) backend, plugged with keras.
       </p>
 
-      <h1 id="em">Embedding Models</h1>
+      <h1 id="Embedding">Embedding</h1>
+      <p>
+        Embedding = one point/vector.<br />
+        Suppose we have 4 foods and we want to represent foods on basis of
+        "fast-food-ness", "sweetness".
+      </p>
+      <pre><code>Food	      "fast-food-ness"       "sweetness"
+Pizza        0.9                    0.1                       //[0.9, 0.1] &lt; These 2 numbers are called embeddings
+Burger       0.95                   0.05
+Salad        0.1                    0.0
+Ice cream    0.2                    0.95</code></pre>
+      <p>
+        Embeddings aren't limited to words. Images, audio, and other data can
+        also be embedded<br />
+        <b>Use of Embeddings?</b><br />
+        &ensp; More close 2 embeddings are, more similar items are.<br />
+        &ensp; <code>Pizza → [0.9, 0.1], Burger → [0.95, 0.05]</code> These
+        points are very close. Hence: Pizza ≈ Burger<br />
+        &ensp; <code>Pizza → [0.9, 0.1], Ice cream → [0.2, 0.95]</code> These
+        are far apart. Therefore: Pizza ≠ Ice cream
+      </p>
+
+      <h2>How emdeddings(numbers) are calculated?</h2>
+      <h3>
+        Method 1 — Dimensionality reduction. Eg: PCA (Principal Component
+        Analysis)
+      </h3>
+      <p>
+        Start with lots of numbers and mathematically compress them into fewer
+        numbers.<br />
+        Suppose foods using 100 features(fastfoodness, sweetness, breadiness,
+        cheesiness ..)
+      </p>
+      <pre><code>Pizza → [0, 1, 0, 1, 1, 0, 0, ... 100 numbers]
+Model will compress these to smaller dimension
+100 dimensions
+       ↓
+      PCA
+       ↓
+3 dimensions
+Pizza → [0.8, 0.2, 0.1]</code></pre>
+
+      <h3>Method 2 — Neural Network learn the embedding</h3>
+      <p>
+        Add a embedding layer in neural network, this layer will find embeddings
+        during training<br />
+        <b>But embeddings are learned in training?</b> Adjusting weights and
+        bias(gradient desent) & backpropagation.
+      </p>
+      <pre><code>
+                              |--- Embedding Layer ----|      |---- Other Layers -----|
+"Hot dog" --> [0,1,0,0,0] --> | 2.98, -0.75, 0.00      | ---> |                       |---> Prediction
+                              |------------------------|      |-----------------------|</code></pre>
+
+      <h2 id="EmbeddingSpace">Embedding Space</h2>
+      <p>
+        Embedding space = the mathematical space containing all those
+        points/vectors<br />
+        if we plot above embeddings on graph, it is called embedding space.<br />
+        Real embedding spaces may have
+        <font color="red">256, 512, 1024 or more dimensions</font>
+      </p>
+      <pre><code>              Sweetness
+                 ↑
+                 |
+          Ice cream ●
+                 |
+                 |
+                 |
+                 |
+ Salad ●         |        ● Pizza
+                 |             ● Burger
+                 +------------------------→ Fast-food-ness</code></pre>
+
+      <h2 id="StaticEmbedding">Static Embedding</h2>
+      <p>
+        A word appears in different contexts have different meaning. Eg:<br />
+        <code> I deposited money in the bank.</code><br />
+        <code>I sat on the bank of the river.</code><br />
+        Word bank appears in different context(should have different embedding
+        value), but model assign it fixed vector
+        <code>bank → [0.42, -0.17, 0.83, ...]</code>
+        fixed vector
+      </p>
+      <h3>Solution: Contextual embeddings</h3>
+      <p>
+        Allow a word to be represented by multiple embeddings that incorporate
+        information about the surrounding words
+      </p>
+
       <p>
         Embdedding models are used in
         <a href="RAG/Introduction.html">RAG pipelines</a>. They take
@@ -636,6 +799,59 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
 "Purple"	  0   0	      0	    0	      0     0     1       0
 "Brown"	    0   0	      0	    0	      0     0     0       1
       </code></pre>
+
+      <h1 id="Fairness">Fairness</h1>
+      <p>
+        This is effort to detect, measure, and correct the
+        <a href="#Bias">biases</a> so that algorithms treat all individuals
+        equitably.<br />
+        Types of fairness
+      </p>
+      <h2>1. Demographic Parity</h2>
+      <p>
+        Demographic parity requires that a model's positive decisions (like
+        approving a loan) are made at equal rates across all groups, regardless
+        of historical qualifications or repayment rates.<br />
+
+        <u>Simple Example:</u> Out of 100 applicants from Group A, the AI
+        approves 50 (50%). Demographic parity demands that out of 100 applicants
+        from Group B, the AI also approves 50 (50%), even if Group B submitted
+        fewer complete applications overall.<br />
+
+        <u>The Catch:</u> It focuses purely on equal outcomes, ignoring whether
+        applicants actually qualify, which can sometimes force unfair shortcuts.
+      </p>
+      <h2>2. Equality of Opportunity</h2>
+      <p>
+        Equality of opportunity requires that qualified individuals from all
+        groups have an equal chance of being accepted. It focuses only on the
+        subset of people who deserve or are qualified for the positive outcome
+        (the "true positives").<br />
+
+        <u>Simple Example:</u> Imagine 40 people in Group A and 40 people in
+        Group B are fully qualified to repay a loan. Equality of opportunity
+        means the AI must approve loans for 36 qualified people in Group A (90%)
+        and 36 qualified people in Group B (90%).<br />
+
+        <u>The Catch:</u> It allows different overall approval rates between
+        groups as long as the qualified individuals within those groups are
+        treated equally.
+      </p>
+      <h2>3. Counterfactual Fairness</h2>
+      <p>
+        Counterfactual fairness looks at an individual level rather than group
+        statistics. A decision is counterfactually fair if it would have been
+        exactly the same if the person's sensitive attribute (like race or
+        gender) had been magically flipped to something else, while all other
+        facts remained unchanged.<br />
+
+        <u>Simple Example:</u> A woman applies for a loan with a specific
+        income, credit score, and debt history, and she gets rejected. To test
+        for counterfactual fairness, you run her exact profile through the AI
+        model again, changing only her gender to male. If the model now approves
+        the loan, it violates counterfactual fairness because the decision was
+        explicitly sensitive to her gender.
+      </p>
 
       <h1 id="Feature">Feature</h1>
       <p>
@@ -789,12 +1005,18 @@ Bin number	Range   	Feature vector
         >
       </p>
 
-      <h3 id="Inference">Inference / Prediction</h3>
+      <h1 id="Inference">Inference / Prediction</h1>
       <p>
         Once we're satisfied with the results from evaluating the model (ie
         <a href="#Training">training</a> is done), we can use the model to make
         predictions, called inferences, on unlabeled examples.
       </p>
+      <h2 id="Offlineinference">Offline inference</h2>
+      <p>
+        Rather than responding to queries at serving time, the trained model
+        makes predictions in advance and then caches those predictions.
+      </p>
+
       <h1 id="Label">Label</h1>
       <p>
         The label is the "answer," or the value we want the model to predict.
@@ -812,28 +1034,84 @@ Bin number	Range   	Feature vector
         the prediction your model is trying to make.
       </p>
 
-      <h3 id="llm">Large language model / Model</h3>
+      <h1 id="LanguageModel">Language Models</h1>
       <p>
-        This is a computational model that can do natural language processing
-        tasks such as
-        <a href="/Machine%20Learning/ML_and_Types_Algorithms.html"
-          >classification</a
-        >.<br />
-        LLM is not an executable(exe), or shared library(so file). It doesn’t
-        contain machine instructions (x86_64 or ARM)<br />
-        An LLM/AI model is a massive multidimensional array of numbers (a static
-        data file), coupled with a specific file structure metadata layout.
-        These numbers are called weights and biases.<br />
-        When a model "learns" during training, it isn't writing code. It is
-        adjusting millions or billions of floating-point numbers until those
-        numbers mathematically represent patterns in data. LLMs learns from by
-        <a href="/Machine%20Learning/ML_and_Types_Algorithms.html"
-          >self-supervised and semi-supervised training</a
-        >.<br />
+        A model is a software that learns the patterns of language and can
+        predict the next token/word from previous
+        <a href="#Tokens">words/tokens</a>. Eg:
+      </p>
+      <pre><code>"I am going to ___"
+A language model might predict:
 
+school   → 0.40
+office   → 0.25
+home     → 0.15
+market   → 0.05
+...</code></pre>
+
+      <h2 id="ngram">1. n-gram language model</h2>
+      <p>An N-gram is just a group of N consecutive words.</p>
+      <table>
+        <tr>
+          <th></th>
+          <th>2-gram (bigram)</th>
+          <th>3-gram</th>
+        </tr>
+        <tr>
+          <td>Meaning</td>
+          <td>
+            Does prediction using 2 words<br />
+            <pre><code>I like
+like machine
+machine learning</code></pre>
+          </td>
+          <td>
+            Does prediction using 3 words<br />
+            <pre><code>I like machine
+like machine learning</code></pre>
+          </td>
+        </tr>
+      </table>
+      <h3>N-gram have <a href="#Context">Context</a> problem?</h3>
+      <table>
+        <tr>
+          <th>3-gram</th>
+          <th>n-gram</th>
+        </tr>
+        <tr>
+          <td>
+            A 3-gram will only look at 2 words around the word for prediction.
+            Eg:<br />
+            <pre><code>orange is ______
+
+orange is ripe
+orange is cheerful
+
+But orange is isn't enough to know whether we're talking about fruit or color.</code></pre>
+          </td>
+          <td>
+            But can't we take n=1000 for better prediction?<br />
+            The larger the N, the rarer the exact sequence become. "I like
+            machine learning" might appear thousands of times.<br />
+            Does not generalize well
+          </td>
+        </tr>
+      </table>
+      <p></p>
+
+      <h2 id="llm">2. Large language Model / Model</h2>
+      <p>
+        LLMs predict a <a href="#Token">Token</a> or sequence of tokens, LLMs
+        contain far more parameters than recurrent models.<br />
         Examples:<br />
         - Opensource Models: Llama, Gemma, Phi, Llama 3.2, Qwen 2.5 3B <br />
         - Closedsource Models: gpt(openai), Claude (Anthropic).<br />
+        <b>Challenges with LLMs:</b><br />
+        &ensp; Gathering an enormous training set.<br />
+        &ensp; Consuming multiple months and enormous computational resources
+        and electricity.<br />
+        &ensp; Solving parallelism challenges.<br />
+        &ensp; Have hallucinations.
       </p>
 
       <dl><strong>Llama(Meta's LLM) Models</strong></dl>
@@ -855,7 +1133,49 @@ Bin number	Range   	Feature vector
         </tr>
       </table>
 
-      <h4>LLM Model's Efficiency</h4>
+      <h3>1. Transformer (Type of LLM)</h3>
+      <p>
+        Transformer contains
+        <font colore="red">Trillions of Parameters</font>(weights,bias)<br />
+        It is used in wide variety of language model applications, such as
+        translation eg: English to French<br />
+        Transformer consists of:<br />
+        1. Encoder(Huge Neural Network): converts input text into an
+        intermediate representation.<br />
+        2. Decoder(Huge Neural Network): converts that intermediate
+        representation into useful text
+      </p>
+      <img
+        src="https://developers.google.com/static/machine-learning/crash-course/images/TransformerBasedTranslator.png"
+        alt="transformer"
+        style="width: 400px; height: 150px"
+      />
+
+      <h4>Self Attention</h4>
+      <p>
+        This means How much does each other token of input affect the
+        interpretation of this token?<br />
+        Example In sentence
+        <code
+          >The animal didn't cross the street because it was too tired.</code
+        >
+        self attention determines <code>it</code> refers tp animal or street.<br />
+        A complete transformer model stacks multiple self-attention layers on
+        top of one another.
+      </p>
+
+      <h4>Fine Tuning</h4>
+      <p>
+        Additional training of foundational LLM model to learn specific tasks.
+      </p>
+
+      <h4>Distillation</h4>
+      <p>
+        The distilled LLM generates predictions much faster and requires fewer
+        computational and environmental resources than the full LLM
+      </p>
+
+      <h2>LLM Model's Efficiency</h2>
       <p>
         <b>1. Parameters:</b>
         The "1B", "3B", or "8B" stands for Billion Parameters(the number of
@@ -1076,7 +1396,24 @@ class Neuron:
 |-------------|                                  |-------------|
       </code></pre>
 
-      <h2 id="planes">Planes</h2>
+      <h1 id="PromptEngineering">Prompt Engineering</h1>
+      <p>
+        PE helps LLM users to customize the model's output. That is, end users
+        clarify how the LLM should respond to their prompt.
+      </p>
+
+      <h2 id="OneShotPrompting">One Shot Prompting</h2>
+      <p>Showing 1 example to an LLM and LLM starts providing similar output</p>
+      <pre><code>peach: drupe
+apple: ______</code></pre>
+
+      <h2 id="FewShotPrompting">Few Shot Prompting</h2>
+      <p>Providing multiple examples</p>
+
+      <h2 id="ZeroShotPrompting">Zero Shot prompting</h2>
+      <p>providing no example to LLM, but LLM likes context for predictions</p>
+
+      <h1 id="planes">Planes</h1>
       <h3>2 D Plane</h3>
       <p>Only 2 axis x and y</p>
 
@@ -1389,7 +1726,16 @@ Dimension/Axis   Array
         </tr>
       </table>
 
-      <h3 id="Training">Training</h3>
+      <h1 id="Token">Token</h1>
+      <p>
+        Atomic unit that the model is training on and making predictions on(eg:
+        word, character or subwords). Eg:
+      </p>
+      <pre><code>"test" has 4 characters=4 tokens 
+"test has 1 word = 1 token
+"cats can have 2 subwords (cat, s) = 2 tokens"</code></pre>
+
+      <h1 id="Training">Training</h1>
       <p>
         Before a model can make predictions, it must be trained. To train a
         model, we give the model a <a href="#Dataset">dataset</a> with labeled

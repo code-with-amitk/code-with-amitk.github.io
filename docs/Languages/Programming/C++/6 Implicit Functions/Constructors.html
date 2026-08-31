@@ -34,23 +34,26 @@
         <li><a href="#copy">Copy (lvalue ref)</a></li>
         <li><a href="#move">Move (rvalue ref) / Move Semantics</a></li>
       </ul>
+      <a href="#delete">delete the ctr</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="ctr">Constructor</h2>
-      <dl>
-        Same named function of class. Ctr is called when object of class is
+      <h1><a href="Rule_of_035.html">Rule of Zero/Three/Five</a></h1>
+
+      <h1 id="ctr">Constructor</h1>
+      <p>
+        Same named function of class. Ctr is cal led when object of class is
         created. Used to provide values to data members.<br />
         Return type=None, Cannot access to address of ctr, Inheriting
         ctr=Cannot<br />
         PRIVATE SCOPED CTR*: Can ctr be inside private section(Yes. Single DP)
-      </dl>
+      </p>
 
       <table>
         <tr>
           <th>
             <h4 id="callinghierarchy">
-              Ctr calling Hierarchy (Base Class > Derv Class Ctr)
+              Ctr calling Hierarchy (Base Class &gt; Derv Class Ctr)
             </h4>
           </th>
           <th><h4>Base class constructor should be defined</h4></th>
@@ -61,19 +64,28 @@
             Derived class object also have inherited properties of Base class,
             <br />
             and only base class constructor can properly initialize base class
-            members
+            members<br />
 
             <pre><code class="language-css">
 class A{
-    public:
-        A() { cout &lt;&lt; "base ctr";  }
-        ~A() { cout &lt;&lt; "base dtr";  }
+  public:
+    A() { cout &lt;&lt; "base ctr";  }
+    ~A() { cout &lt;&lt; "base dtr";  }
 };
     
 class B: public A {
-    public:
-        B() { cout &lt;&lt; "Derv ctr";  }
-        ~B() { cout &lt;&lt; "Derv dtr";  }
+  public:
+    B() { cout &lt;&lt; "Derv ctr";  }
+    //What the compiler turns B() into
+    //B() : A() {..} Implicitly calls A's default constructor 1st
+
+    ~B() { cout &lt;&lt; "Derv dtr";  }
+    // What the compiler turns ~B() into:
+    //~B() {
+      //  cout &lt;&lt; "~B";  // Your custom destructor code runs first
+      // Compiler automatically inserts the base destructor call here at the end:
+      //A::~A();
+    //}
 };
 int main(){
     B obj;
@@ -86,11 +98,15 @@ Base dtr
             </code></pre>
           </td>
           <td>
+            C++ will always call Base ctr 1st<br />
+            Either user has provide definition (A(){})<br />
+            Or user can remove his contructor. Compiler will add its default
+            ctr<br />
             <pre><code class="language-css">
 class A{
-    public:
-        A();
-        ~A();
+public:
+    A();
+    ~A();
 };
 class B: public A {
 public:
@@ -106,7 +122,7 @@ Error cannot find A::A()
           </td>
           <td>
             In the initializer list, the order of execution takes place
-            according to the order of declaration of member variables.
+            according to the order of declaration of member variables.<br />
             <pre><code class="language-css">
 class test{
     int a; //Declared 1st
@@ -134,7 +150,8 @@ Since a = b*2, and b does not have value hence a is initialized to garbage.
       <h3 id="copy">1. Copy Constructor</h3>
       <dl>
         Copy Ctr is
-        <a href="/Languages/Programming/C++/C++_11,14,17,20,23/"
+        <a
+          href="/Languages/Programming/C++/C++_11,14,17,20,23/C++11/lvalue_rvalue_reference.html"
           >L Value Refererence</a
         >. Creates copy of object
       </dl>
@@ -154,8 +171,7 @@ Since a = b*2, and b does not have value hence a is initialized to garbage.
             member-wise copy.<br />
             This works well for simple classes without dynamically allocated
             memory. <br />
-            <pre><code class="language-css">
-#include &lt;iostream>
+            <pre><code class="language-css">#include &lt;iostream&gt;
 using namespace std;
 
 class A {
@@ -172,8 +188,7 @@ int main() {
 	obj3.print();       //1
 	obj2.print();       //1
 	return 0;
-}
-            </code></pre>
+}</code></pre>
           </td>
           <td>
             A user-defined copy constructor is necessary when a class has a
@@ -182,9 +197,8 @@ int main() {
             same memory location, (e.g., a double-free error) when freed<br />
             user-defined constructor below performs a deep copy by allocating
             new memory for the copied object.<br />
-            <pre><code class="language-css">
-#include &lt;iostream>
-#include &lt;cstring>
+            <pre><code class="language-css">#include &lt;iostream&gt;
+#include &lt;cstring&gt;
 using namespace std;
 
 class A {
@@ -214,14 +228,16 @@ int main() {
 	A obj2 = obj1;
 	obj2.print();           //Hello
 	return 0;
-}
-            </code></pre>
+}</code></pre>
           </td>
         </tr>
       </table>
 
       <h3 id="move">
-        2. Move Constructor(rvalue reference) (Introduced in c++11)
+        2. Move Constructor(<a
+          href="/Languages/Programming/C++/C++_11,14,17,20,23/C++11/lvalue_rvalue_reference.html"
+          >rvalue reference</a
+        >) (Introduced in c++11)
       </h3>
       <h4>Move Semantics?</h4>
       <dl>
@@ -272,6 +288,35 @@ After move ctr in main()    //Value moved not availble in main
 $
 */
         </code></pre>
+
+      <h2 id="delete">delete the contructor</h2>
+      <p>
+        Introduced in C++11, = delete is an instruction telling the compiler to
+        explicitly disable a function. If any code tries to call that
+        function—or if the compiler will immediately throw a compile-time
+        error<br />
+        <b>Before C++11</b> Programmers used to hide functions by making them
+        private and leaving them unimplemented to prevent copying. However, that
+        old trick only caused linker errors later in the build process when
+        friend functions call it
+      </p>
+      <pre><code>class Database {
+public:
+    Database() = delete; // Cannot do: Database db;
+    Database(string connectionString); // Must use this
+};</code></pre>
+
+      <h3>Use Cases of =delete constructor</h3>
+      <p>
+        1. Classes that require parameters: Ensuring a class must be initialized
+        with specific data (e.g., A(int x) is provided, but A() = delete; forces
+        users to pass an integer).<br />
+        2. Static-only utility classes: Classes that act merely as a namespace
+        for static helper functions and shouldn't ever be instantiated as
+        objects.<br />
+        3. Singletons: Preventing multiple instances from being created
+        accidentally via default construction.
+      </p>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>
