@@ -242,7 +242,7 @@
   {
     "title": "C++",
     "url": "/Languages/Programming/C++/",
-    "excerpt": "C++ Home Our team Projects Contact Back 6 Implicit Functions &ensp; Constructor (1. Default, 2. copy, 3. move) &ensp; Assignment Operator(4. Copy, 5. ..."
+    "excerpt": "C++ Home Our team Projects Contact Back 6 Implicit Functions: Rule of 0,3,5 &ensp; Constructor (1. Default, 2. copy, 3. move) &ensp; Assignment Operat..."
   },
   {
     "title": "C++ Thread Pool",
@@ -265,9 +265,14 @@
     "excerpt": "C++(unordered_set), Python, Rust(HashSet) Home Our team Projects Contact C++ vs Rust vs Python C++ Rust (use std::collections::HashSet) Python (set())..."
   },
   {
+    "title": "C++(vector) internal Implementation",
+    "url": "/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector/Internal_Implementation.html",
+    "excerpt": "C++(vector) internal Implementation Home Our team Projects Contact Back vector internal Implementation vector allocates memory on heap vector start wi..."
+  },
+  {
     "title": "C++(vector), Rust(Vec), Python(List []), Go([])",
-    "url": "/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector.html",
-    "excerpt": "C++(vector), Rust(Vec), Python(List []), Go([]) Home Our team Projects Contact Vectors C++, Rust, Python, Go, C C++, Rust, Python, Go(No semicolons), ..."
+    "url": "/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector/Functions.html",
+    "excerpt": "C++(vector), Rust(Vec), Python(List []), Go([]) Home Our team Projects Contact Back Vectors C++, Rust, Python, Go, C C++, Rust, Python, Go(No semicolo..."
   },
   {
     "title": "Cache",
@@ -371,6 +376,11 @@
   },
   {
     "title": "Code Examples",
+    "url": "/Badges/",
+    "excerpt": "Code Examples Home Our team Projects Contact Back Go! TOP 3% TALENT Vetted by Hire me Pro5.ai Top 5% ©Copyright 2050 by nobody. All rights reversed --..."
+  },
+  {
+    "title": "Code Examples",
     "url": "/",
     "excerpt": "This is a document type declaration (DTD), which indicate the version of HTML. It is the required initial tag for HTML5 documents. Browser follows app..."
   },
@@ -443,6 +453,11 @@
     "title": "Constructor",
     "url": "/Languages/Programming/C++/6 Implicit Functions/Constructors.html",
     "excerpt": "Constructor Home Our team Projects Contact Back Constructor Ctr calling Hierarchy Ctr Initializer list Types of Ctr Copy (lvalue ref) Move (rvalue ref..."
+  },
+  {
+    "title": "Constructor",
+    "url": "/Languages/Programming/C++/6 Implicit Functions/Rule_of_035.html",
+    "excerpt": "Constructor Home Our team Projects Contact Back Rule Rule of Zero/Three/Five Compiler implicitly genereates 5 default functions if they are needed and..."
   },
   {
     "title": "Container Commands",
@@ -1402,7 +1417,7 @@
   {
     "title": "Kubernets Manifests",
     "url": "/System_Design/Concepts/Kubernets/Kubernets_manifests.html",
-    "excerpt": "Kubernets Manifests Home Our team Projects Contact Back Kubernets Manifest Manifest Types 1. deployment.yaml 2. service.yaml 3. hpa.yaml (Horizontal P..."
+    "excerpt": "Kubernets Manifests Home Our team Projects Contact Back Kubernets Manifest Manifest Types Deployment Horizontal Pod Autoscaler PodDisruptionBudget (PD..."
   },
   {
     "title": "Kubernets Terms",
@@ -2422,7 +2437,7 @@
   {
     "title": "STL",
     "url": "/Languages/Programming/C++/STL/",
-    "excerpt": "STL Home Our team Projects Contact Back Containers Associative Containers Unsorted Unordered Example How elements are stored Access Advantages Complex..."
+    "excerpt": "STL Home Our team Projects Contact Back Containers Associative Containers Unsorted Unordered C++ unordered_map: Internal Implementation, Functions Exa..."
   },
   {
     "title": "Stored Procedures Introduction",
@@ -2621,8 +2636,13 @@
   },
   {
     "title": "unordered_map",
-    "url": "/Languages/Programming/C++/STL/Containers/unordered_map.html",
-    "excerpt": "unordered_map Home Our team Projects Contact C++ Rust (use std::collections::HashMap) Python ({} Dictionary) Go Create unordered_map&lt;string, int> u..."
+    "url": "/Languages/Programming/C++/STL/Containers/Associative_Containers/unordered_map/Functions.html",
+    "excerpt": "unordered_map Home Our team Projects Contact Back C++ Rust (use std::collections::HashMap) Python ({} Dictionary) Go Create unordered_map&lt;string, i..."
+  },
+  {
+    "title": "unordered_map",
+    "url": "/Languages/Programming/C++/STL/Containers/Associative_Containers/unordered_map/",
+    "excerpt": "unordered_map Home Our team Projects Contact Back C++ undordered_map&lt;int, int&gt; Functions Internal Implementation"
   },
   {
     "title": "Unsafe Rust",
@@ -2643,6 +2663,11 @@
     "title": "Variadic Templates",
     "url": "/Languages/Programming/C++/Characteristics of OOPS/Polymorphism/Static_CompileTime/Templates/Variadic Templates.html",
     "excerpt": "Variadic Templates Home Our team Projects Contact Back What is Variadic? Variadic Class Template Variadic Function Template What is Variadic Templates..."
+  },
+  {
+    "title": "vector",
+    "url": "/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector/",
+    "excerpt": "vector Home Our team Projects Contact Back std::vector C++ Functions in vector Internal Implementation"
   },
   {
     "title": "Vector Databases",

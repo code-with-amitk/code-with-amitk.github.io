@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Constructor</title>
+    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/6%20Implicit%20Functions/Rule_of_035.html" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/C++">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#ruel">Rule</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1>Rule of Zero/Three/Five</h1>
+      <p>
+        Compiler implicitly genereates 5 default functions if they are needed
+        and if user haven't declared conflicting versions<br />
+        &ensp; 1. Default Constructor (ClassName())<br />
+        &ensp; 2. Destructor (~ClassName())<br />
+        &ensp; 3. Copy Constructor (ClassName(const ClassName&))<br />
+        &ensp; 4. Copy Assignment Operator (ClassName& operator=(const
+        ClassName&))<br />
+        &ensp; 5. Move Constructor (ClassName(ClassName&&))<br />
+        &ensp; 6. Move Assignment Operator (ClassName&
+        operator=(ClassName&&))<br />
+
+        <b>Rule of 0:</b> Modern C++ says you should aim to write none of them.
+        By using smart pointers (std::unique_ptr) and standard containers
+        (std::vector)<br />
+        <b>Rule of 3 (Pre-C++11):</b> If a class manages a raw resource, it
+        needs custom logic for Destructor, Copy Constructor, and Copy Assignment
+        Operator. If you write one, you almost always need all three to prevent
+        double-frees or memory leaks.<br />
+        <b>Rule of 5 (C++11 and later):</b> When C++11 introduced move semantics
+        for performance, the group expanded to 5. If you manage a raw resource,
+        you now need to define all five: Destructor, Copy Constructor, Copy
+        Assignment, Move Constructor, and Move Assignment.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

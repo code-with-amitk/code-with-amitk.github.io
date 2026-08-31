@@ -2,10 +2,7 @@
 <html>
   <head>
     <title>Kubernets Architecture</title>
-    <link
-      rel="canonical"
-      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Architecture.html"
-    />
+    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Architecture.html" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -52,6 +49,7 @@
         <li><a href="#KubeProxy">3. Kube-proxy</a></li>
         <li><a href="#Addons1">4. Add-Ons</a></li>
         <li><a href="#status">5. Node status & Meta-data</a></li>
+        <li><a href="#kubectl">kubectl</a></li>
       </ul>
       <a href="#terms">Terms</a>
     </aside>
@@ -301,6 +299,13 @@ flowchart TD
         Ambassador API Gateway, Namespace, Ports(Nodeport, ContainerPort,
         HostPort), PVC(Persistant Volume Claims), Authorization(Service Tokens,
         Istio Authorization Policy)
+      </p>
+
+      <h2 id="kubectl">kubelet</h2>
+      <p>
+        kubectl is a command-line tool used by humans to send commands to the
+        API-Server(on control plane). kubectl command directly reaches API
+        server, does not route via kubelet.
       </p>
     </main>
     <script src="/scripts/prism.js"></script>

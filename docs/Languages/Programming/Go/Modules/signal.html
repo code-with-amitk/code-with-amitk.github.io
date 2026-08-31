@@ -2,10 +2,7 @@
 <html>
   <head>
     <title>signal package in Go</title>
-    <link
-      rel="canonical"
-      href="https://code-with-amitk.github.io/Languages/Programming/Go/Modules/signal.html"
-    />
+    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Go/Modules/signal.html" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -71,49 +68,12 @@ fmt.Println("got", s)</code></pre>
       <h2 id="notifycontext">
         <code>signal.NotifyContext</code>
       </h2>
-      <pre><code class="language-go">func NotifyContext(parent context.Context, signals ...os.Signal) (ctx context.Context, stop context.CancelFunc)</code></pre>
-      <p>
-        It creates a <b>child Context</b> of <code>parent</code>. That child is
-        cancelled when:
-      </p>
-      <ol>
-        <li>one of the listed OS signals arrives, or</li>
-        <li>the parent Context is already cancelled, or</li>
-        <li>you call <code>stop()</code></li>
-      </ol>
-
-      <h3 id="returns">
-        What it returns: <code>ctx</code> and <code>stop</code>
-      </h3>
-      <table border="1" cellpadding="6">
-        <tr>
-          <th>Return</th>
-          <th>Meaning</th>
-        </tr>
-        <tr>
-          <td><code>ctx</code></td>
-          <td>
-            A Context that becomes cancelled on Ctrl+C (or SIGTERM). Pass this
-            into work you want to stop: HTTP server, loops, DB calls.
-          </td>
-        </tr>
-        <tr>
-          <td><code>stop</code></td>
-          <td>
-            A function you must call when you are done listening (almost always
-            <code>defer stop()</code>). It <b>unregisters</b> the signal handler
-            and cancels <code>ctx</code>
-            if it is not cancelled yet.
-          </td>
-        </tr>
-      </table>
-      <p>
-        Why call <code>stop()</code>? If you never stop, the process keeps
-        catching Ctrl+C forever. After <code>stop()</code>, a
-        <b>second Ctrl+C</b> uses the default behavior and kills the process —
-        that is what you want during shutdown (if graceful shutdown hangs, the
-        user can force-quit).
-      </p>
+      <pre><code class="language-go">func NotifyContext(parent context.Context, signals ...os.Signal) (ctx context.Context, stop context.CancelFunc)
+      
+Returns
+ctx: A Context that becomes cancelled on Ctrl+C (or SIGTERM). Pass this into work you want to stop: HTTP server, loops, DB calls.
+stop: A function you must call when you are done listening (always defer stop) It unregisters signal handler and cancels ctx
+      if it is not cancelled yet.</code></pre>
 
       <h3 id="done">What does <code>ctx.Done()</code> mean?</h3>
       <p>

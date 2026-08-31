@@ -2,13 +2,10 @@
 <html>
   <head>
     <title>Kubernets Manifests</title>
-    <link
-      rel="canonical"
-      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Kubernets_manifests.html"
-    />
+    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Kubernets_manifests.html" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
-    <!-- Add any necessary CSS and JavaScript files -->
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
   <body>
@@ -38,9 +35,14 @@
       <a href="#what">Kubernets Manifest</a>
       <a href="#">Manifest Types</a>
       <ul>
-        <li><a href="#deployment">1. deployment.yaml</a></li>
-        <li><a href="#services">2. service.yaml</a></li>
-        <li><a href="#hpa">3. hpa.yaml (Horizontal Pod Autoscaler)</a></li>
+        <li><a href="#deployment">Deployment</a></li>
+        <li><a href="#hpa">Horizontal Pod Autoscaler</a></li>
+        <li><a href="#pdb">PodDisruptionBudget (PDB)</a></li>
+        <li><a href="#NetworkPolicy">NetworkPolicy</a></li>
+        <li><a href="#ingress">Ingress</a></li>
+        <li><a href="#services">Service</a></li>
+        <li><a href="#ServiceAccount">ServiceAccount</a></li>
+
         <li><a href="#namespace">4. namespace.yaml</a></li>
         <li><a href="#NodePool">NodePool</a></li>
         <li><a href="#configmap">5. configmap.yaml</a></li>
@@ -77,21 +79,19 @@
       </p>
 
       <h1 id="types">Predefined Kubernets Manifest Types / Custom Resource</h1>
-      <h3 id="deployment">1. deployment.yaml (Mandatory)</h3>
-      <p>
-        Manages application's lifecycle, defines which Docker image to run, and
-        ensures the specified number of Pod replicas remain healthy.
-      </p>
-      <pre><code class="language-css">
-apiVersion: apps/v1               #(Required) Which version of the Kubernetes API you're using to create this object
+      <h2 id="deployment">1. deployment.yaml (Mandatory)</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">apiVersion: apps/v1               #(Required) Which version of the Kubernetes API you're using to create this object
 kind: Deployment                  #(Required) What kind of object you want to create
 metadata:                         #(Required) Data that helps uniquely identify the object
-  name: {{ .Values.image.app }}   #Taken from values.yaml
+  name: Kafka
 spec:                             #(Required) What state you desire for the object
   replicas: 3                     # Run 3 identical copies of your app
   selector:
     matchLabels:
-      app: web-app
+      app: test                   # POD Label
   template:
     metadata:
       labels:
@@ -99,34 +99,102 @@ spec:                             #(Required) What state you desire for the obje
     spec:
       containers:
       - name: app-container
-        image: myregistry/web-app:v1
+        image: redpandadata/redpanda:v24.2.2    # Kafka Contianer Image.
         ports:
         - containerPort: 8080      # Internal port your app listens on
+$ kubectl apply -f test.yaml</code></pre>
+          </td>
+          <td>
+            <font color="red">In kubernetes docker image is not build</font>,
+            Image is only pulled(from registry) and pod is created.<br /><br />
+            <b>Deployment</b><br />
+            &ensp; Create a pod when <code>kubectl apply -f test.yaml</code> is
+            executed.<br />
+            &ensp; <u>Deployment is self healing</u> if pod crashes
+            <a href="">kubernetes Controller</a> automatically provisions a
+            brand-new Pod to replace it.<br />
+            &ensp; <u>Zero downtime updates:</u> if we want to update the
+            Redpanda version, we just change the image name in the YAML and
+            apply it.
+          </td>
+        </tr>
+      </table>
 
-$ kubectl apply -f test.yaml
-      </code></pre>
-
-      <h3 id="service">2. service.yaml (Mandatory)</h3>
-      <p>
-        Thi is needed if your app needs to receive traffic<br />
-        Purpose: Provides a fixed IP address and DNS name to route network
-        traffic to your constantly changing Pods
-      </p>
-      <pre><code class="language-css">
-apiVersion: v1
+      <h2 id="services">2. service.yaml (Mandatory)</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">apiVersion: v1
 kind: Service
 metadata:
-  name: app-service
+  namespace: test
 spec:
   selector:
-    app: web-app                  # Routes traffic to pods matching this label
+    app: Kafka
   ports:
   - protocol: TCP
     port: 80                      # External port exposed to users
     targetPort: 8080              # Internal port inside your container
     nodePort: 30080               # Fixed external NodePort
-  type: ClusterIP                 # Internal routing (change to LoadBalancer for public)
-      </code></pre>
+  type: ClusterIP                 # Internal routing (change to LoadBalancer for public)</code></pre>
+          </td>
+          <td>
+            <b>Service</b><br />
+            &ensp; In Kubernetes, Pods are temporary. They are created,
+            destroyed, and replaced constantly during updates or node
+            failures.<br />
+            &ensp; if pod gets deleted and new pod is created, how new pod would
+            be reachable?<br />
+            &ensp; A Service provides a static/permanent IP address and a
+            permanent DNS name (kafka.test.svc.cluster.local) to pod<br />
+            &ensp; Now other apps will talk to service<br />
+            &ensp; Every time a new Pod is created, it gets a dynamic,
+            unpredictable IP address.
+            <pre><code>10.244.a.b:9092
+       ↓
+       ↓ Pod gets deleted
+       ↓
+10.244.c.d :9092
+
+DNS: kafka.test.svc.cluster.local:9092 remains same, where other apps will reach</code></pre>
+            <div class="mermaid-wrap">
+              <pre class="mermaid">graph LR
+    %% Define styles
+    classDef client fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef svc fill:#85C1E9,stroke:#333,stroke-width:2px;
+    classDef deployment fill:#D2B4DE,stroke:#333,stroke-width:2px;
+    classDef pod fill:#2ECC71,stroke:#333,stroke-width:2px;
+    classDef dns fill:#F5B041,stroke:#333,stroke-width:2px;
+
+    %% Components
+    Client[Client App-X Pod<br/>Anywhere in Cluster]:::client
+    
+    subgraph DNS [CoreDNS System]
+        DNS_Record["kafka.test.svc.cluster.local"]:::dns
+    end
+
+    subgraph K8s_Namespace [test Namespace]
+        
+        Service[Service: kafka<br/>Type: ClusterIP<br/>IP: 10.96.x.x <font color=blue>STATIC IP</font>]:::svc
+        
+        subgraph Deployment_Layer [Deployment: kafka]
+            Pod[Pod: kafka-7f8d...<br/>Labels: app=kafka<br/>IP: 10.244.x.x <font color=red>DYNAMIC IP</font>]:::pod
+            Container[Redpanda Container<br/>Port: 9092]:::pod
+        end
+        
+    end
+
+    %% Connections
+    Client -->|1. Resolves Name| DNS_Record
+    DNS_Record -->|2. Returns Static Service IP| Client
+    Client ==> |3. Sends traffic to 10.96.x.x:9092| Service
+    Service ==> |4. Routes traffic via Selector app=kafka| Pod
+    Pod --> Container</pre>
+            </div>
+          </td>
+        </tr>
+      </table>
+
       <p>
         Every service is assigned a CLUSTER-IP, via which pod behind service can
         be reached.<br />
@@ -153,12 +221,127 @@ External client → NodeIP:30080 → ClusterIP:80 → PodIP:8080
 That’s why kubectl get svc still shows a ClusterIP — it always exists; NodePort is built on top of it.
       </code></pre>
 
-      <h3 id="hpa">3. hpa.yaml (Horizontal Pod Autoscaler) (Optional)</h3>
+      <h2 id="ServiceAccount">3. ServiceAccount</h2>
       <p>
-        Scales the number of Pod replicas up or down automatically based on
-        real-time CPU or memory usage metrics.
+        When someone creates a pod using
+        <code>kubectl apply -f deloy.yaml</code>,
+        <a href="/System_Design/Concepts/Kubernets/Architecture.html"
+          >kubectl</a
+        >
+        creates a <font color="red">JWT token</font> for this pod and places
+        token inside <code>(/var/run/secrets/...)</code><br />
+        After pod bringup if application running inside pod wants communicate
+        with
+        <a href="/System_Design/Concepts/Kubernets/Architecture.html"
+          >API Server</a
+        >
+        for example to run some command <code> kubectl get pods -A</code>, then
+        pod will present the created JWT token and API server will validate it
+        Credentials used by service running inside pod to communicate with API
+        server.<br />
+        This JWT token is associated with serviceAccount
       </p>
-      <pre><code class="language-css">
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: server-ingest                 &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; JWT Token would be associated with This
+  namespace: default
+  labels:
+    app: server-ingest
+    tier: ingestion</code></pre>
+          </td>
+          <td>
+            <div class="mermaid-wrap">
+              <pre class="mermaid">sequenceDiagram
+    actor user as User
+    box "Worker Node"
+        participant kctl as Kubectl
+        participant App as Pod<br>Executable
+    end
+    box "Control Plane"
+        participant API as Kubernetes API Server
+        participant RBAC as RBAC Engine
+    end
+
+    user ->> kctl: kubectl apply -f deploy.yaml
+    kctl ->> App: Create pod
+    kctl ->> App: Place JWT<br/>(/var/run/secrets/...)
+    note over App: JWT in <br/>(/var/run/secrets/...)
+    note over App: Pod started<br> kubectl list pod -A
+    App ->> API: HTTP GET<br>Authorization Token: JWT<br>kubectl list pod -A
+    API->>API: Verify JWT signature &<br>extract ServiceAccount (app)
+    API->>RBAC: Check RoleBindings for<br> identity permissions
+    RBAC-->>API: Allow / Deny action
+    API-->>App: Return API Response (e.g., list of pods)</pre>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="pdb">4. kind: PodDisruptionBudget (PDB)</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: webApp
+spec:
+  minAvailable: 4       &lt;&lt;&lt;&lt; Atleast 4 pods of web-store running
+  selector:
+    matchLabels:
+      app: web-store
+</code></pre>
+          </td>
+          <td>
+            Limits the number of pods of an application that can be down at the
+            same time during voluntary disruptions or during mainteinance.<br />
+            Think of it as an insurance policy that guarantees your application
+            always has enough running pods to handle traffic, even when cluster
+            administrators are messing with the infrastructure.<br />
+            PDB information is stored in
+            <a href="Architecture.html">Control Plane on etcd</a><br />
+            <div class="mermaid-wrap">
+              <pre class="mermaid">
+sequenceDiagram
+    autonumber
+
+    box Worker Node
+        actor Admin as Cluster Administrator
+    end
+    box Control Plane
+        participant API as API Server
+        participant DB as etcd (Database)
+        participant Ctrl as ControllerManager<br>has<br>Disruption Controller
+    end
+
+    Note over Admin: kubectl apply <br>-f test.yaml (minAvailable: 4)
+    Admin->>API: HTTP POST <br>/apis/policy/v1/.../poddisruptionbudgets
+    API->>DB: Store spec
+    DB-->>API: Acknowledge save
+    API-->>Admin: 201 Created / 200 OK
+
+    Note over Admin: kubectl apply <br>-f test.yaml (pods= 2)
+    Admin->>Ctrl: Change pods to 2
+    Ctrl->>API: Get minPods
+    API->>DB: Get PDB status for this Pod
+    DB-->>API: minRequired=4
+    API->>Ctrl: minRequired=4
+    Ctrl-->>Admin: Error: Cannot evict pod (violates PDB)
+  </pre>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="hpa">5. hpa.yaml (Horizontal Pod Autoscaler) (Optional)</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css"># hap.yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -167,7 +350,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: app-deployment
+    name: app
   minReplicas: 2
   maxReplicas: 10
   metrics:
@@ -177,7 +360,258 @@ spec:
       target:
         type: Utilization
         averageUtilization: 70    # Add pods if average CPU exceeds 70%
-      </code></pre>
+# kubectl apply -f hpa.yaml</code></pre>
+          </td>
+          <td>
+            Scales the number of Pod replicas up or down automatically based on
+            real-time CPU or memory usage metrics.<br /><br />
+            <b>How pods are bringup automatically at load?</b><br />
+            When <code>kubectl apply -f hpa.yaml</code> is executed it reaches
+            API server(control plane)<br />
+            - The <a href="Architecture.html">API Server</a> checks syntax,
+            permissions, and validates that the target app exists.<br />
+            - Creation: The HorizontalPodAutoscaler (HPA) resource is officially
+            registered in your cluster.<br />
+            - <a href="Architecture.html">Check Controller.</a> Loop inside the
+            <a href="Architecture.html">Controller Manager</a> wakes up and
+            starts monitoring app's CPU usage every 15 seconds.
+            <div class="mermaid-wrap">
+              <pre class="mermaid">
+sequenceDiagram
+autonumber
+
+    box rgba(0, 204, 102, 0.1) Worker Node
+        participant MS as Metrics Server Pod
+        participant Node as Kubelet Agent
+        actor Admin as Administrator
+    end
+
+    box rgba(0, 128, 255, 0.1) Control Plane
+        participant API as API Server
+        participant DB as etcd Database
+        participant HPA as HPA Controller
+        participant RS as ReplicaSet Controller
+    end
+
+    Note over Admin: kubectl apply -f hpa.yaml
+    Admin->>API: kubectl command travels to Api server<br>HTTP POST /apis/autoscaling/v2/...
+    API->>DB: Save HPA spec<br>(min:2, max:10, target:70%)
+    DB-->>API: Confirm save
+    API-->>Admin: 201 Created
+
+    Note over MS, Node: Ongoing Metric Collection<br>Track CPU usage via cgroups
+    MS->>Node: give metrics
+    Node-->>MS: Return CPU usage data
+
+    loop Every 15 seconds
+        HPA->>API: Query CPU metrics for app
+        API->>MS: HTTP Get /metrics
+        MS-->>API: Return Average CPU=90%
+        API-->>HPA: Average CPU=90%
+    end
+
+    Note over HPA: CPU 90% > 70%
+    HPA->>API: Update Deployment scale (replicas = 4)
+    API->DB: Get Replica count
+    
+    RS->>API: Create new Pod
+    API->>DB: Save new Pod object details
+    API->>Node: Kubelet schedule & run pod
+    Note over Node: Spin up new container replica
+              </pre>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="ingress">kind: Ingress</h2>
+      <p>
+        An Ingress is a Kubernetes API object that manages external HTTP/HTTPS
+        access to services inside a cluster.<br />
+        It acts as an application-layer (Layer 7) load balancer and reverse
+        proxy, allowing you to route traffic based on URL paths (e.g., /api,
+        /login) or domain names (e.g., ingest.local) to different internal
+        Kubernetes Services.<br />
+        An Ingress resource requires an Ingress Controller (such as NGINX,
+        Traefik, or HAProxy) running in the cluster to actually fulfill the
+        rules and handle the incoming traffic.
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: server-ingest
+  namespace: ns
+  labels:
+    app: test
+    tier: ingestion
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ingest.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: server-ingest
+                port:
+                  number: 8080
+# kubectl apply -f ingress.yaml</code></pre>
+          </td>
+          <td>
+            ingressClassName: Tells Kubernetes that this Ingress resource should
+            be processed and managed specifically by the NGINX Ingress
+            controller.<br />
+            annotations: Custom configurations specific to the NGINX controller.
+            Here, they extend the read and send timeouts to 3,600 seconds (1
+            hour), which is useful for long-running ingestion streams.<br />
+            paths: Directs any traffic matching the prefix / to the Kubernetes
+            Service named server-ingest on port 8080.
+            <br />
+            <pre><code>Client
+  Host: ingest.local  GET /
+        ↓
+nginx Ingress Controller (80/443)
+        ↓
+Service server-ingest:8080
+        ↓
+Pod (container port)</code></pre>
+            <div class="mermaid-wrap">
+              <pre class="mermaid">graph LR
+    classDef client fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef ing fill:#F5B041,stroke:#333,stroke-width:2px;
+    classDef svc fill:#85C1E9,stroke:#333,stroke-width:2px;
+    classDef pod fill:#2ECC71,stroke:#333,stroke-width:2px;
+
+    C[Web Client<br/>hit REST Endpoint/]:::client
+    IC[Ingress Controller<br/>class: nginx 8080]:::ing
+    S[Service<br/>server-ingest:8080]:::svc
+    P[Pod]:::pod
+
+    C -->|HTTP Host + path| IC
+    IC -->|proxy| S
+    S --> P</pre>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="ingress-vs-np">How Ingress relates to NetworkPolicy</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>Ingress</th>
+          <th>NetworkPolicy</th>
+        </tr>
+        <tr>
+          <td>Network Layer</td>
+          <td>Layer 7 (Application / HTTP/HTTPS)</td>
+          <td>Layer 3 & 4 (IP addresses, ports, protocols like TCP/UDP)</td>
+        </tr>
+        <tr>
+          <td>Traffic Direction</td>
+          <td>
+            (Outside to Inside Cluster)<br />Inbound traffic coming from outside
+            the cluster into internal Services.
+          </td>
+          <td>
+            (Inside Cluster. Pod to Pod)<br />Internal traffic between pods
+            (Ingress and Egress relative to a pod) within the cluster.
+          </td>
+        </tr>
+        <tr>
+          <td>Prerequisite</td>
+          <td>Requires an Ingress Controller (e.g., NGINX).</td>
+          <td>
+            Requires a CNI plugin that supports NetworkPolicies (e.g., Calico,
+            Cilium, Flannel with support).
+          </td>
+        </tr>
+      </table>
+
+      <h2 id="NetworkPolicy">Kind: NetworkPolicy</h2>
+      <p>
+        RBAC decides who may call the API server.<br />
+        NetworkPolicy decides which Pods may open a TCP/UDP connection to which
+        other Pods in cluster or which need to send data to outside world. This
+        is a firewall for pod<br />
+        <b>policyTypes</b> says which direction this YAML is a firewall for:
+      </p>
+      <table border="1" cellpadding="6">
+        <tr>
+          <th>policyTypes</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td><code>Ingress</code></td>
+          <td>
+            Rules for traffic <b>coming in</b> to the selected Pods (who may
+            call me)
+          </td>
+        </tr>
+        <tr>
+          <td><code>Egress</code></td>
+          <td>
+            Rules for traffic <b>going out</b> from the selected Pods (who I may
+            call)
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        Why use Egress: a stolen or buggy app inside a Pod cannot scan the
+        cluster, dump data to a random IP, or call the public internet — it can
+        only reach what you listed (for example the database).
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shop-can-only-talk-to-db
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: shop              # firewall applies to these Pods
+  policyTypes:
+  - Egress                   # this YAML is about OUTGOING packets
+  egress:
+  - to:                      # allow: shop → db only
+    - podSelector:
+        matchLabels:
+          app: db
+    ports:
+    - protocol: TCP
+      port: 5432
+# kubectl apply -f networkpolicy.yaml</code></pre>
+          </td>
+          <td>
+            <b>Very simple story</b><br />
+            Pods labeled <code>app: shop</code> run the store frontend.<br />
+            They should call Postgres (<code>app: db</code>, port 5432) and
+            nothing else.<br /><br />
+            <code>podSelector</code> = whose outgoing traffic we filter.<br />
+            <code>policyTypes: [Egress]</code> = we care about
+            <b>shop’s outbound</b> connections, not who calls shop.<br />
+            <code>egress.to</code> = the only destination still allowed.<br /><br />
+            After apply:
+            <pre><code>shop  --TCP 5432--&gt;  db     ALLOW
+shop  --any port--&gt;  internet  DROP
+shop  --any port--&gt;  other Pods DROP</code></pre>
+            CNI must support NetworkPolicy (Calico, Cilium, …). Without that
+            plugin the YAML is stored but not enforced.
+          </td>
+        </tr>
+      </table>
 
       <h3 id="namespace">4. namespace.yaml (Optional)</h3>
       <p>
@@ -403,34 +837,10 @@ roleRef:                                  # "roleRef" specifies the binding to a
           </td>
         </tr>
       </table>
-
-      <h3 id="ServiceAccount">ServiceAccount</h3>
-      <p>
-        Credentials used by service running inside pod to communicate with
-        kubernets server.<br />
-        When your application code inside a container needs to talk to the
-        Kubernetes API server (for example, to list pods, create resources, or
-        watch config maps), it authenticates using the credentials associated
-        with a ServiceAccount.<br />
-        <b>How it works?</b><br />
-        - When the Kubernetes control plane creates your Pod, it automatically
-        provisions and injects authentication credentials into that Pod.<br />
-        - Kubernetes automatically mounts a projected volume into the Pod
-        (usually at /var/run/secrets/kubernetes.io/serviceaccount). Inside this
-        folder, it places a short-lived, cryptographically signed JSON Web Token
-        (JWT) file named token.
-      </p>
-      <pre><code class="language-css">apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: server-ingest
-  namespace: identity-bridge
-  labels:
-    app: server-ingest
-    tier: ingestion</code></pre>
     </main>
 
     <script src="/scripts/prism.js"></script>
     <script src="/scripts/common.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>

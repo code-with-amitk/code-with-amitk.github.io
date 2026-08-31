@@ -5,6 +5,7 @@
     <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Databases/Terms/Transactions.html" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
+    <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
 
   <body>
@@ -48,28 +49,105 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">What is Transaction</h2>
+      <h1 id="what">Transaction?</h1>
       <dl>
         A transaction is a way for an application to group several reads and
-        writes together into a logical unit.<br />
-        Application sends data packet to DbMgr. DB Manager will not write every
-        packet to database but it groups several reads/writes together into a
-        logical unit called transaction.<br />
-        Conceptually, all the reads and writes in a transaction are executed as
-        one operation: either the entire transaction succeeds (commit) or it
-        fails (abort, rollback).<br />
-        If it fails, the application can safely retry.
-        <pre><code class="language-css">
-                                            |----|
-Application ---data pkt----> |DB Manager|   | DB |
-                                            |----|
-      </code></pre>
-        <b>Why Transaction is needed?</b><br />
-        1. <a href="/System_Design/Concepts/Databases/">Atomicity</a>: if
-        Application is writing 20KB json document to DB. After 10KB node
-        crashes, User will see partially updated values which is Wrong. if write
-        is done as part of transaction into Atomic DB, partial write is
-        discarded and db moves to prev state<br />
+        writes(INSERT INTO, SELECT x FROM) together into 1 logical unit.<br />
+        Its upto Application to decide whether it wants every read/write to be
+        written directly into DB or group several statements as 1 transaction
+      </dl>
+      <pre><code class="language-css">Application --INSERT INTO--&gt; |DB Manager| --&gt; | DB |</code></pre>
+
+      <h2>Modes of Transactions</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>AutoCommit (Default Mode)</th>
+          <th>Explicit Mode</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>
+            <b>Every INSERT is a seperate transaction</b><br /><br />
+            Application does not call any dbmgr API, its default mode. Every
+            read/write is a seperate transaction<br />
+            That means every insert is directly written into DB<br />
+            When you connect to the database and execute an INSERT command, the
+            driver immediately sends a hidden BEGIN before the command and a
+            hidden COMMIT immediately after it finishes. Every single command
+            you run is its own, isolated, permanent transaction<br />
+            <div class="mermaid-wrap">
+              <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant App as Application Code
+    participant DBMgr as Database Manager
+    participant DBStorage as Database Storage<br>(Tables)
+
+    App->>DBMgr: INSERT INTO Users (id=1)
+    Note over DBMgr: DBMgr adds [BEGIN],[COMMIT]<br> before and after INSERT statement
+    DBMgr->>DBStorage: {Begin}Write id=1{End}
+
+    App->>DBMgr: INSERT INTO Users (id=2)
+    DBMgr->>DBStorage: {Begin}Write id=2{End}
+    DBMgr-->>App: Success ACK
+              </pre>
+            </div>
+          </td>
+          <td>
+            <b>x number of operations are grouped as 1 transaction</b
+            ><br /><br />
+            Application want dbmgr, to group x reads/writes into 1
+            transaction<br />
+            To group multiple operations(INSERT, DELETE etc) into one logical
+            unit, the application must override the default behavior by sending
+            specific SQL commands(<code>db.begin_transaction()</code>) before
+            executing the data manipulation statements.<br />
+
+            <b>Commit:</b><br />
+            &ensp; The application sends multiple data packets (e.g., INSERT,
+            UPDATE, DELETE statements). The DBMgr writes these changes to a
+            <u>Temporary log (Write-Ahead Log)</u> rather than immediately
+            writing to DB, once application sends Commit, these are written to
+            DB.<br />
+            &ensp; The application sends a final COMMIT to save everything DB<br />
+            <b>Rollback(error occured):</b><br />
+            &ensp; Application sends Rollback to discard all changes. Once the
+            database Rollback, it deletes entry from Temporary(WAL log)<br />
+            <div class="mermaid-wrap">
+              <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant App as Application Code
+    participant DBMgr as Database Manager
+    participant DBStorage as Database Storage<br>(Tables)
+
+    App->>DBMgr: db.begin_transaction()
+    Note over DBMgr: START TRANSACTION
+
+    App->>DBMgr: INSERT INTO Users (id=2)
+    Note over DBMgr: Staged changes in Temporary Log
+
+    App->>DBMgr: INSERT INTO Users (id=3)
+    Note over DBMgr: Staged changes in Temporary Log
+
+    App->>DBMgr: db.commit()
+    DBMgr->>DBStorage: write id=2 and id=3
+    DBMgr-->>App: Success
+        </pre>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <h2>Why Transaction is needed?</h2>
+      <dl>
+        1. <a href="/System_Design/Concepts/Databases/">Atomicity</a>:<br />
+        - if Application is writing 20KB json document to DB. After 10KB node
+        crashes<br />
+        - User will see partially updated values which is Wrong. if write is
+        done as part of transaction into Atomic DB, partial write is discarded
+        and db moves to prev state<br />
         2. Safety Gurantees
       </dl>
 
@@ -86,8 +164,8 @@ Application ---data pkt----> |DB Manager|   | DB |
         </tr>
       </table>
 
-      <h2>Terms</h2>
-      <h3>Read Related</h3>
+      <h1>Terms</h1>
+      <h2>Read Related</h2>
       <table>
         <tr>
           <th>Term</th>
@@ -121,7 +199,7 @@ Application ---data pkt----> |DB Manager|   | DB |
         </tr>
       </table>
 
-      <h3>Write Related</h3>
+      <h2>Write Related</h2>
       <table>
         <tr>
           <th>Term</th>
@@ -152,7 +230,7 @@ Application ---data pkt----> |DB Manager|   | DB |
             atleast 1 of their collegue stays in hospital.<br />
             &ensp; Alice & Bob are 2 doctors(on particular shift) feeling unwell
             and decide to request leave.<br />
-            &ensp; Both click "Apply leave" button at same time.
+            &ensp; Both click "Apply leave" button at same time.<br />
             <pre><code class="language-css">
 Table doctors
 name    on_call
@@ -180,6 +258,7 @@ Alice   false
 Bob     false
 Carol   false
             </code></pre>
+            <br />
             Lock cannot solve the issue, Since both transactions are updating
             DIFFERENT ROWS in DB.<br />
             <b>Solution:</b>
@@ -330,5 +409,6 @@ Customer
       </dl>
     </article>
     <script src="/scripts/prism.js"></script>
+    <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>
 </html>
