@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <title>invoke_result</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/C%2B%2B_11%2C14%2C17%2C20%2C23/C%2B%2B17/invoke_result.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/C++/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">invoke_result</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h2 id="what">invoke_result</h2>
+      <p>
+        Deduces the return type of the expression passed. This deduction happens
+        at compile time.
+      </p>
+      <pre><code class="language-css">template &lt; class F, class... ArgTypes &gt;
+using invoke_result_t = typename invoke_result &lt;F, ArgTypes...&gt;::type;</code></pre>
+
+      <p>Code</p>
+      <pre><code class="language-css">#include &lt;type_traits&gt;
+
+std::string intToString(int x) {
+    return std::to_string(x);
+}
+
+int main() {
+    // 1. Get the return type at compile-time
+    using MyReturnType = std::invoke_result_t &lt;decltype(intToString), int&gt;
+
+    // 2. Ask the compiler: "Is MyReturnType the same as std::string?"
+    // This check happens instantly while compiling, not while running!
+    if constexpr (std::is_same_v &lt; MyReturnType, std::string&gt;) {
+        std::cout &lt;&lt; "Return type is string!" &lt;&lt; std::endl;
+    } else {
+        std::cout &lt;&lt; "Return type is something else." &lt;&lt; std::endl;
+    }
+
+    return 0;
+}</code></pre>
+    </article>
+
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

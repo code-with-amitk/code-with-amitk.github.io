@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Database Scaling</title>
+    <title>Replication, WAL</title>
     <link
       rel="canonical"
       href="https://code-with-amitk.github.io/System_Design/Concepts/Databases/DB_Scaling/Replication"
@@ -20,9 +20,6 @@
         <li><a href="/contact.html">Contact</a></li>
         <li><a href="/System_Design/Concepts/Databases/">Back</a></li>
         <li>
-          <a href="/System_Design/Concepts/Databases/DB_Scaling/">Back</a>
-        </li>
-        <li>
           <form id="searchForm">
             <input
               type="search"
@@ -39,6 +36,9 @@
     <aside class="sidebar">
       <a href="#what">What is Replication</a>
       <a href="#types">Types of Replication</a>
+      <ul>
+        <li><a href="#WAL">WAL</a></li>
+      </ul>
     </aside>
 
     <main>
@@ -49,24 +49,25 @@
           stores the copy is called Replica.<br />
 
           <b>Advantages of Replication</b><br />
-          &ensp; 1. Lower latency for users: Put a replica near the user(in
-          India). He donot need to wait for reading from Virginia.
+          &ensp; 1. Lower latency: Put a replica near the user(in India). He
+          donot need to wait for reading from Virginia.
           <br />
-          &ensp; 2. Availability: If one node crashes, another replica still
-          serves data.<br />
-          &ensp; 3. Read throughput: Writes go to the leader; many followers
-          share the read load. Ten replicas can serve roughly ten times the
-          reads of one node.<br />
+          &ensp; 2. Availability: If one node crashes, replica still serves
+          data.<br />
+          &ensp; 3. High throughput: Writes go to the leader; many
+          followers/replicas share the read load. 10 replicas can serve roughly
+          ten times the reads of one node.<br />
           &ensp; 4. Parallel processing: Leader handles writes. Followers serve
           read queries (reports, product listing, “my orders”).
         </dl>
 
         <h1 id="types">Types of Replication</h1>
         <p>
-          1. single leader, Multiple followers<br />
-          2. multi leader<br />
-          3. leaderless
+          1. Master Slave, Multiple Replica/Followers<br />
+          2. Multi Master/leader<br />
+          3. Leaderless
         </p>
+
         <h2>1. Master/Slave / Leader/Follower</h2>
         <p>
           Clients write only to the leader. The leader writes locally, then
@@ -75,11 +76,13 @@
           Clients usually read from any follower.<br />
           Examples: Built in Postgres, MySQL, MongoDB, Kafka partition replicas
         </p>
-        <img
-          src="/images/databases/master-slave-replication.PNG"
-          alt="Master Slave DB"
-          style="width: 300px; height: 400px"
-        />
+        <pre><code>
+                                                                        |------> |Replica|  ---- Read ----> Client
+                                        |-----------|                   |
+Application Server --- write ---------> | Master DB | --replication log-|------> |Replica|
+                                        |-----------|                   |
+                                                                        |------> |Replica|
+        </code></pre>
 
         <h2>2. Master/Master / Active/Active / Leader/Leader</h2>
         <p>
@@ -89,37 +92,8 @@
           <b>write conflicts</b> (two leaders update the same row).
         </p>
 
-        <h1>High Availability (Node Down)</h1>
-        <p>
-          Any node in the system can go down(leader or follower):<br />
-          - crash<br />
-          - Planned maintenance (rebooting a machine to install a ker nel
-          security patch).
-        </p>
-        <h3>a. Follower Restarted</h3>
-        <p>
-          Follower reads last transcation(LSN) from replication log<br />
-          Follower connects to master and reqeusts all data that happens after
-          LSN
-        </p>
-        <h3>b. Leader Down & Restarted (FAILOVER)</h3>
-        <p>
-          <b>Leader Down:</b><br />
-          &ensp; ELECTION: 1 of the followers needs to be promoted to be the new
-          leader, leader is chosen by a majority of the remaining replicas. best
-          candidate for leadership is usually the replica with the most
-          up-to-date data.<br />
-          &ensp; All clients need to be reconfigured to send their writes to the
-          new leader, and the other followers need to start consuming data
-          changes from the new leader.<br />
-          <b>SPLIT BRAIN:</b><br />
-          &ensp; It could happen that two nodes both believe that they are the
-          leader, and both accept writes, data is likely to be lost or
-          corrupted. Some systems shutdown 1 leader
-        </p>
-
         <h1 id="replog">Implementation of Replication Logs</h1>
-        <h3>1. Statement-based replication</h3>
+        <h2>1. Statement-based replication</h2>
         <p>
           Leader logs every DB request (INSERT, UPDATE, or DELETE) that it
           executes to its disk in a file<br />
@@ -136,11 +110,33 @@
           Other replication methods are now generally preferred now
         </p>
 
-        <h3>2. Write-ahead log (WAL)</h3>
+        <h2 id="WAL">2. Write-ahead log (WAL)</h2>
         <p>
           Write to disk 1st then DB. Then send log to replicas<br />
           Suppose node crashes while writing, so when it recovers it can check
-          Log file and actual Disk content so see what's completed and not.
+          Log file and actual Disk content so see what's completed and not.<br />
+          <a href="/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html"
+            >RAFT</a
+          >
+          also uses WAL
+        </p>
+
+        <h3>Format WAL (Binary file)?</h3>
+        <p>
+          WAL is stored as binary file<br />
+          <b>Benefits of Storing as Binary wrt txt:</b><br />
+          1. File Header: Every binary entry starts with a fixed-size header
+          detailing exactly how many bytes long the entry is. The operating
+          system can read this header and instantly know where the next log
+          entry begins without parsing lines of text.<br />
+          2. Appends Only: The file is strictly append-only. Random edits or
+          insertions in the middle of the file are forbidden, making it fast to
+          write<br />
+          3. Checksums (CRC): Every entry includes a checksum. If a power outage
+          or disk failure corrupts even a single bit of data, the system detects
+          the broken checksum on reboot and prevents corrupted data from
+          entering your database.<br />
+          2.
         </p>
       </article>
     </main>

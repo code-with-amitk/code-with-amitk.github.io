@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>Raft Consensus Algorithm</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Algorithms/Raft.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
@@ -35,25 +38,82 @@
     </aside>
 
     <main style="margin-left: 200px">
-      <h2 id="what">What is Raft?</h2>
+      <h1 id="what">
+        Raft(Strong
+        <a
+          href="/System_Design/Concepts/Databases/Terms/All_Terms.html#consistency"
+          >Consistent</a
+        >
+        System)
+      </h1>
       <p>
-        Raft is a consensus algorithm designed to be <b>easy to understand</b>.
-        It gives the same kind of fault tolerance as Paxos for crash failures:
-        as long as a <b>majority</b> of nodes are alive, the cluster keeps
-        working.<br />
-        Raft is <b>not a blockchain algorithm</b>. It is used in — Kubernetes
-        etcd, HashiCorp Consul, CockroachDB — to replicate configuration and
-        data inside <b>your</b> datacenter.
+        <b>What is Raft?</b><br />
+        - Raft is a
+        <a href="/System_Design/Concepts/Terms/Consensus/Introduction.html"
+          >consensus algorithm</a
+        >, where multiple nodes agree before commiting a value to system. Has
+        same fault tolerance as
+        <a href="/System_Design/Concepts/Terms/Consensus/Algorithms/Paxos.html"
+          >Paxos</a
+        ><br />
+        - Raft can be used writing content to DB. Leader & Followers agree to
+        commit and then data is committed to DB.
       </p>
+      <table>
+        <tr>
+          <th></th>
+          <th>Traditional Replication(Directly Written)</th>
+          <th>Raft Protocol (Agree then Commit)</th>
+        </tr>
+        <tr>
+          <td>Write to DB Sequence</td>
+          <td>DB executes on Leader ➔ streamed to Slaves.</td>
+          <td>Written to Log ➔ Quorum Agreed ➔ Executed into DB.</td>
+        </tr>
+        <tr>
+          <td>Split-Brain Risk</td>
+          <td>
+            <b>High.</b> If the network splits, two nodes might think they are
+            the leader and write conflicting data to disk.
+          </td>
+          <td>
+            <b>Zero.</b> A network minority partition can never get a majority
+            agreement, preventing conflicting writes.
+          </td>
+        </tr>
+        <tr>
+          <td>Data Loss</td>
+          <td>
+            <b>Risk of Loss.</b> If the leader writes to its DB and crashes
+            before sending it to replicas, that data is lost or trapped.
+          </td>
+          <td>
+            <b>No Loss.</b> A write is only confirmed to the client if a
+            majority safely saved the log.
+          </td>
+        </tr>
+        <tr>
+          <td>Failover Orchestration</td>
+          <td>
+            Requires external orchestrators or human intervention to promote a
+            new slave.
+          </td>
+          <td>
+            <b>Built-in & Instant.</b> Nodes notice a missing leader and elect a
+            new one in milliseconds automatically
+          </td>
+        </tr>
+      </table>
 
-      <h2 id="work">How Raft works</h2>
+      <h3 id="work">How Raft works</h3>
       <p>
-        <b>Leader election</b> — one node becomes Leader; others are
-        Followers.<br />
-        <b>Log replication</b> — client writes go to the Leader; Leader appends
-        to its log and copies to Followers.<br />
-        <b>Commit</b> — once a majority has stored an entry, it is committed and
-        applied to the state machine.<br />
+        <b>Leader election</b> — one node becomes Leader; others are Followers.
+        There are no Slaves in Raft, its followers<br />
+        <b>Log replication</b> — client writes Leader; Leader appends to its
+        Raft log and sends log copies to Followers. Yet none, Leader or Follower
+        writes to DB<br />
+        <b>Commit</b> — Once majority (N/2+1) followers Acknowledge, Leader
+        sends message to followers to commit into DB<br />
         <b>Safety</b> — if the Leader dies, a new election runs; committed
         entries are never lost.<br />
       </p>
@@ -62,27 +122,74 @@
         <pre class="mermaid">
 sequenceDiagram
   participant Client
-  participant L as Leader (C)
-  participant F1 as Follower A
-  participant F2 as Follower B
-  participant F3 as Follower D
-  participant F4 as Follower E
+  box Leader(Node L)
+    participant L as RaftLayer<br>DBMgr
+    participant LDB@{ "type" : "database" } as DB 
+  end
+  box Follower(Node A)
+    participant A as RaftLayer<br>DBMgr
+    participant ADB@{ "type" : "database" } as DB 
+  end
+  box Follower(Node B)
+    participant B as RaftLayer<br>DBMgr
+    participant BDB@{ "type" : "database" } as DB 
+  end
+  box Follower(Node C)
+    participant C as RaftLayer<br>DBMgr
+    participant CDB@{ "type" : "database" } as DB 
+  end
 
-  Note over L,F4: 1. C wins election (3 of 5 votes)
+  Note over L,CDB: L wins election (3 of 4 votes) and become leader
 
-  Client->>L: SET config/key = "prod-v2"
-  L->>L: Append entry #42 to local log
-  L->>F1: AppendEntries #42
-  L->>F2: AppendEntries #42
-  L->>F3: AppendEntries #42
-  L->>F4: AppendEntries #42
-  F1-->>L: OK
-  F2-->>L: OK
-  F3-->>L: OK
-  Note over L: Majority (3/5) acked → commit #42
+  Client->>L: INSERT INTO users... 
+  note over L: Append into WAL Log<br>(Log Entry #101: INSERT INTO users...)
+  note over L: NOTE: Value is not<br>written to DB
+
+  L->>A: AppendEntries WAL Log(INSERT INTO users...)
+  Note over A: Value not written to DB
+  A-->>L: OK
+  
+  L->>B: AppendEntries WAL Log(INSERT INTO users...)
+  Note over B: Value not written to DB
+  B-->>L: OK
+
+  L->>C: AppendEntries WAL Log(INSERT INTO users...)
+  Note over C: Value not written to DB<br>C does not send Ok
+
+  Note over L: Majority N/2+1<br>4/2+1=3 acked → commit
+
+  L ->> LDB: Apply WAL Log<br>(INSERT INTO users...)
+  L->>A: Commit
+  A ->> ADB: Apply WAL Log<br>(INSERT INTO users...)
+  L->>B: Commit
+  B ->> BDB: Apply WAL Log<br>(INSERT INTO users...)
+
   L-->>Client: Success
         </pre>
       </div>
+
+      <h1 id="#sd">Raft System Design</h1>
+      <h2 id="Requirements">Requirements</h2>
+      <p>
+        <b>Functional</b><br />
+        1. Write into Raft logs(ie WAL log): System should accept commands from
+        client, write in Raft logs before writing to DB<br />
+        2. Leader Election:<br />
+        3. Consensus: N/2 + 1 nodes to send ACK and then value is written to
+        DB<br />
+        4. Recovery: Master/Follower fails, system should recover<br />
+        5. Serving Reads to clients<br />
+        <b>Non Functional</b><br />
+        1. Fault Tolerance: Continue accepting writes until live nodes &gt;
+        N/2<br />
+        2. Consistent: Nodes agree on committed value and system returns the
+        same<br />
+        3. Available
+      </p>
+
+      <h2 id="HLD">HLD</h2>
+      <h3 id="LeaderElection">Leader Election</h3>
+      <p></p>
     </main>
     <script type="module" src="/scripts/mermaid-init.js"></script>
   </body>

@@ -67,37 +67,54 @@
       </p>
 
       <h2 id="flow">Authentication Flow</h2>
+      <p>
+        <b>Setting for Downloading the PAC file on Windows System:</b><br />
+        &ensp; Network & Internet > Proxy Settings > Use Setup Script (Provide
+        script URL)<br />
+        &ensp; This can be Always enabled(by security policy), so user cannot
+        disable.<br />
+        <a href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Authentication.html"
+          >HTTP CONNECT</a
+        >
+      </p>
       <div class="mermaid-wrap">
         <pre class="mermaid">
-%%{init: {'themeVariables': {'fontSize': '16px'}, 'sequence': {'actorMargin': 70, 'messageMargin': 55, 'boxMargin': 30, 'useMaxWidth': true}}}%%
 sequenceDiagram
     autonumber
 
+    box Tenant=acme
     actor User
-
     participant Browser
-    participant PAC
+    end
 
-    box Cloud
-    participant FP as Netskope Forward Proxy<br/>eproxy-acme-corp.goskope.com:8081
+    participant PAC as PACServer<br>pac.goskope.com
+    participant DNS
+
+    box Forward Proxy Cloud
+    participant FP as Forward Proxy<br/>acme.goskope.com:8081
     participant Auth
     participant Policy as Policy Engine
     end
     
     participant IdP
-
     participant Google
 
+    Note over User: System script to<br>Download PAC<br>https://pac.goskope.com/acme.pac
     User->>Browser: Open browser
-    Browser->>PAC: Download PAC file
-    PAC-->>Browser: FindProxyForURL() <br/>Send every HTTP to eproxy-acme-corp.goskope.com:8081
+    Browser->>PAC: Download PAC file<br>acme.pac
+    Note over PAC: Send acme.pac
+    PAC-->>Browser: FindProxyForURL() <br/>Send every HTTP to<br>acme.goskope.com:8081
+
+    Note over Browser: Now every HTTP request<br>will be send to<br>acme.goskope.com:8081
 
     User->>Browser: Open https://google.com
+    Browser->>DNS: Hostname(acme.goskope.com)
+    Note over DNS: Hostname  IP<br>*.goskope.com   1.2.3.4
+    DNS->>Browser: IP=1.2.3.4
+    
+    Browser->>FP: HTTP GET google.com<br>1.2.3.4:8081
 
-    Browser->>FP: CONNECT google.com<br>eproxy-acme-corp.goskope.com:8081
-
-    FP->>FP: Resolve tenant_id from proxy FQDN<br/>FQDN=eproxy-acme-corp is sent in HTTP Host Header<br>FQDN→tenant_id 1001 resolved<br>eproxy-acme-corp.goskope.com→1001<br>eproxy-contoso.goskope.com→2005<br>eproxy-xyz.goskope.com→3050
-    FP->>FP: Check session cookie. MISSING
+    Note over FP: Resolve tenant_id from proxy FQDN<br/>FQDN=acme is sent in HTTP Host Header<br>FQDN→tenant_id 1001 resolved<br>acme.goskope.com→1001<br>contoso.goskope.com→2005
     FP-->>Browser: 302 Redirect to Auth Service
 
     Browser->>Auth: GET /login
@@ -111,23 +128,25 @@ sequenceDiagram
 
     IdP->>IdP: Authenticate User
 
-    IdP-->>Browser: SAML Response
+    IdP-->>Browser: SAML Response samlAssertion{<br>User = bob@acme.com, Name = Bob Smith, Tenant = acme-corp, Groups = Engg,.. Authenticated = true, LoginTime = 10:30 AM, Expiry = 11:30 AM, Signature, Certs}
 
-    Browser->>Auth: POST SAML Assertion
+    note over Browser: Browser replays<br>SAML Response from IDP
+    Browser->>Auth: Send SAML Response {samlAssertion} to Assertion Consumer Service (ACS)=Auth Service
 
-    Auth->>Auth: Validate Assertion
-    Auth->>FP: Create Session
+    Auth->>Auth: Validate SAML Assertion<br>Check Basic structure,<br>Signature validation,<br>Time validity
+    Note over Auth: Create Session<br>Generate Session Cookie<br>Session cookie is called UTKN(universal token)<br>nspatoken is name given by Netskope
+    Auth->>Browser: Set Session-Cookie=XXX
+    Note over Browser: Store cookie in browser
 
-    FP->>FP: Cache Session
-    FP->>FP: Generate Session Cookie<br>Session cookie is called UTKN(universal token)<br>nspatoken is name given by Netskope
-
-    FP-->>Browser: Set Session-Cookie=XXX
-    FP-->>Browser: Redirect google.com
-
+    Note over Browser: Browser sends HTTP CONNECT<br>It does not send POST or GET<br>Read HTTP CONNECT above
     Browser->>FP: CONNECT google.com<br>Session Cookie=XXX 
-    FP->>FP: Resolve tenant_id from proxy FQDN<br/>FQDN=eproxy-acme-corp is sent in HTTP Host Header<br>FQDN→tenant_id 1001 resolved<br>eproxy-acme-corp.goskope.com→1001<br>eproxy-contoso.goskope.com→2005<br>eproxy-xyz.goskope.com→3050
-    
-    FP->>FP: User from cookie → bob@acme.com<br/>groups from SAML session
+    Note over FP: Proxy will check whether I have Session Cookie=XXX stored?<br>No
+    Note over FP: Proxy asks Cookie validation from Auth
+    FP->>Auth: Is session cookie valid=XXX
+    Note over Auth: Auth provides<br>Cookie, its TTL, TenantId
+    Auth-->>FP: Valid, Cookie=XXX, TTL, TenantId=123
+    Note over FP: Store Cookie,TTL,Tenant in Map
+    Note over FP: For 2nd Request<br> if (PresentEpoc>TTL)expired<br> Send 302 Redirect
     
     FP->>Policy: Evaluate Policy<br>tenant=1001,domain=google.com<br>method=CONNECT
 

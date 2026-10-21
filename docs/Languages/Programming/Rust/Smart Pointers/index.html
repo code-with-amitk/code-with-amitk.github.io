@@ -1,7 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <title>Rust Smart Pointers, Rc&lt;T&gt;</title>
+    <title>
+      Rust Smart Pointers, Box<T>, Rc<T>, RefCell<T>, Interior Mutability
+    </title>
     <link
       rel="canonical"
       href="https://code-with-amitk.github.io/Languages/Programming/Rust/Smart%20Pointers"
@@ -28,37 +30,60 @@
     </nav>
 
     <aside class="sidebar">
-      <!--See .sidebar in styles.css-->
       <a href="#what">Smart Pointers?</a>
-      <a href="">Examples</a>
+      <a href="#im">Interior mutability</a>
+      <a href="">Types</a>
       <ul>
-        <li><a href="#rc">Rc &lt;T&gt;</a></li>
+        <li><a href="#box">Box&lt;T&gt;</a></li>
+        <li><a href="#rc">Rc&lt;T&gt;</a></li>
         <ul>
           <li><a href="#features">Features</a></li>
         </ul>
+        <li><a href="#RefCell">RefCell&lt;T&gt;</a></li>
       </ul>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2>What is Smart Pointer?</h2>
-      <dl>
+      <h1>Smart Pointer?</h1>
+      <p>
         Same as C++ Smart,shared pointers, it allocates memory and deallocates
         when all references to it goes out of scope. They only point to 1 value.
         Examples: vec&lt;T&gt;, String.<br />
         Smart pointers are implemented using structs.
-      </dl>
+      </p>
 
-      <h2 id="ex">Examples</h2>
-      <h3 id="rc">Rc&lt;T&gt; (Reference Counted Pointer)</h3>
-      <dl>
-        Single-threaded Shared reference-counting pointers.<br />
-        Rc&lt;T&gt; provides shared ownership of a value of type T, allocated in
-        the heap.<br />
+      <h1 id="im">Interior mutability pattern</h1>
+      <p>
+        Interior mutability allows to mutate data even when there are immutable
+        references to that data;<br />
+        Normally, changing the data inside immutable reference is not allowed by
+        Rust's borrowing rules.<br />
+        But there are some cases eg(unsafe code) where we want to bend Rust’s
+        usual rules.
+      </p>
+
+      <h1 id="ex">Types of Smart Pointers</h1>
+      <h2 id="box">Box &lt;T&gt;</h2>
+      <p>
+        Boxes allow to store data on the heap rather than the stack. Pointer is
+        data is stored on stack and actual data on heap.
+      </p>
+      <pre><code class="language-css">
+fn main() {
+    let b = Box::new(5);
+    println!("b = {b}");
+}
+      </code></pre>
+
+      <h2 id="rc">Rc&lt;T&gt; (Reference Counted Pointer) / Shared pointer</h2>
+      <p>
+        Multiple owners of 1 pointer. It keeps track of the number of references
+        to a value to determine whether or not the value is still in use<br />
+        If there are 0 references to a value, the value will be cleaned up<br />
+        This is not thread safe by default<br />
         <b>clone(): </b> Invoking clone on Rc produces a new pointer to the same
-        allocation in the heap. When the last Rc pointer to a given allocation
-        is destroyed, the value stored in that allocation (often referred to as
-        “inner value”) is also dropped
-      </dl>
+        allocation in the heap.
+      </p>
       <pre><code class="language-css">
 use std::rc::Rc;
 struct Person {
@@ -108,6 +133,22 @@ fn main() {
         ><br />
         Rust compiler will check at compile time that you are not sending Rcs
         between threads.
+      </p>
+
+      <h2 id="RefCell">RefCell</h2>
+      <p>
+        It allows to implement <a href="#im">interior mutability pattern</a>,
+        allowing to mutate data even we have an immutable reference<br />
+        <u>The Rule:</u><br />
+        &ensp; Rust enforces its borrowing rules at compile time: we can have
+        either 1 mutable reference (&mut T) or any number of immutable
+        references (&T), but not both at the same time & this is checked at
+        compile time<br />
+        &ensp; With RefCell we move these borrowing checks from compile time to
+        runtime. runtime. It tracks borrows dynamically using an internal
+        counter. If you break the rules at runtime (e.g., trying to create two
+        mutable borrows at once), your program will panic and crash instead of
+        failing to compile
       </p>
     </article>
 

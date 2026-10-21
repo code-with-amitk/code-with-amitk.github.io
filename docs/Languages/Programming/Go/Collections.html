@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>collections</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Go/Collections.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Collections.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -46,48 +49,166 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2>Built in Collections in Go</h2>
-      <dl>
+      <h1>Built in Collections in Go</h1>
+      <p>
         Built in means those collections which are part of the go language
         syntax.
-      </dl>
+      </p>
+      <h2>Array, Slice</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Array (FIXED SIZE)</th>
+          <th>Slice (DYNAMIC)</th>
+        </tr>
+        <tr>
+          <td>Declaration<br />(Identify with number in [])</td>
+          <td>
+            <pre><code>var a [10]int</code></pre>
+            is a array (specific number inside the brackets)
+          </td>
+          <td>
+            <pre><code>[]int</code></pre>
+            is a slice (dynamically sized). No number in []
+          </td>
+        </tr>
+      </table>
+
       <h3 id="arrays">1. Array [n]T</h3>
-      <dl>
+      <table>
+        <tr>
+          <td>
+            Creating Array<br />
+            <pre><code class="language-css">func main() {
+  // Array of size=3, inititiazed
+  a := [3]int{1, 2, 3}
+  OR
+  
+  // Size=2, Go initializes to [0 0]
+  var b [2]int
+  OR
+
+  // Special array syntax telling 
+  // compiler to automatically count 
+  // elements and fix the array size to [3]int
+  c := [...]int{1, 2, 3}
+}</code></pre>
+          </td>
+          <td>
+            Array passed to function is "PASS BY VALUE"<br />
+            <pre><code class="language-css">package main
+
+import "fmt"
+
+func foo(a [2]int) {
+	a[0] = 10
+	a[1] = 20
+}
+func main() {
+	var a [2]int
+	a[0] = 1
+	a[1] = 2
+	foo(a)
+	fmt.Println(a)
+}
+$ go run
+[1 2]</code></pre>
+          </td>
+        </tr>
+      </table>
+      <p>
         fixed-size collection of elements of the same type. Array cannot be
-        resized<br />
-        When we assign an array to a new variable or pass it to a function, Go
-        creates a complete copy of the entire array.<br />
-        <pre><code class="language-css">
-var a [10]int
-b = a         // seperate copy is created for b
-                </code></pre>
-      </dl>
+        resized
+      </p>
 
       <h3 id="slices">
         2. Slices [] = C++20(std::span) = Rust(Slice (written as &[T]))
       </h3>
       <p>
-        Slice is a reference pointing to underlying array, slice can view/modify
-        elements of an underlying array.<br />
+        Slice is a JUST a POINTER pointing to array.
         <b>Slice has 3 components</b><br />
         1. Pointer(to underlying array)<br />
         2. Length(number of elements in slice). len(slice)<br />
         3. Capacity(maximum number of elements it can hold). cap(slice): length
-        of undelying array - 1<br />
+        of undelying array - 1
+      </p>
+      <pre><code>┌───────────────────────┐
+│ Pointer (ptr)  ───────┼───────┐
+│ Length (len): 3       │       │
+│ Capacity (cap): 3     │       │
+└───────────────────────┘       │
+                                v
+                          Backing Array
+                  ┌─────────┬─────────┬─────────┐
+                  │    1    │    2    │    3    │
+                  └─────────┴─────────┴─────────┘</code></pre>
+      <p>
         <b>nil slice:</b> slice which does not point to any array(at present),
         but can in future.<br />
-        <b>Can Slice increase the size of underlying array?</b> No<br />
-        &ensp; If underlying array has a length of 10, the maximum number of
-        elements slice can hold is 10<br />
-        &ensp; If we try to append an 11th element using append(), Go
-        automatically does the following behind the scenes:<br />
-        &emsp; Allocates a brand new, larger underlying array in memory (usually
-        double the size)<br />
-        &emsp; Copies all the old elements into the new array.<br />
-        &emsp; Appends the new element.<br />
-        &emsp; Returns a new slice pointing to this new array. The original
-        array of size 10 remains untouched.
+        <b>Can Slice increase the size of underlying array?</b> No
       </p>
+      <table>
+        <tr>
+          <td>
+            <b>Create Slice</b><br />
+            From Array<br />
+            <pre><code class="language-css">func main() {
+  a := [4]int{1, 2, 3} // Array
+  b := a[:2]              // Slice [1,2]     Index (0..2)
+  c := a[1:]              // Slice [2,3,4]   Index (1..end)
+  d := a[:]               // Slice [1,2,3,4]
+}</code></pre>
+            <br />
+
+            Slice from Slice<br />
+            <pre><code class="language-css">func main() {
+ // a is Slice. Nothing in [], hence slice.
+ // But Go creates a anonymous array
+ // and assign slice to it.
+	a := []int{1, 2, 3} // Slice
+}</code></pre>
+            <br />
+
+            Empty Slice<br />
+            <pre><code class="language-css">func main() {
+  a := []int{}
+}</code></pre>
+          </td>
+          <td>
+            UNDERSTAND, Will Clear all Slice Questions<br />
+
+            <pre><code class="language-css">func main() {
+  a := [4]int{1, 1, 1, 1}        // Array
+  fmt.Println(a, cap(a), len(a)) // a = [1,1,1,1], cap=4, len=4
+  //a = append(a, 5)             // Error cannot append to array
+
+  // Created Pointer=Slice pointing to Array
+  b := a[:]
+  b[0] = 9
+  fmt.Println(b, cap(b), len(b))  // b = [9,1,1,1], cap=4,len=4
+  fmt.Println(a)                  // a = [9,1,1,1]. Changing Slice changes array
+  
+  // len == cap, Reallocation
+  // When we append to Pointer(ie Slice)b and its length equals its array capacity, Go allocates a new,
+  // larger array(often double size), copies the old elements, and makes Pointer/Slice b point to that new array.
+  b = append(b, 5)
+  fmt.Println(b, cap(b), len(b)) // b = [9,1,1,1,5], cap=8, len=5
+  fmt.Println(a, cap(a), len(a)) // a = [9,1,1,1], cap=4, len=4.  a is not changed
+
+  // Point back to original array
+  // The temporary array is garbage collected
+  b = a[:]
+  fmt.Println(b, cap(b), len(b)) // b = [9,1,1,1], cap=4, len=4.
+}</code></pre>
+            <br />
+            <img
+              src="/images/Languages/Go/Go_Slice.png"
+              alt="GCS"
+              style="width: 700px; height: 550px"
+            />
+          </td>
+        </tr>
+      </table>
 
       <h4>Slice Functions</h4>
       <dl>
@@ -169,11 +290,13 @@ func main() {
         A map is a hash table.
         <a href="/Languages/Programming/C++/index.html">Maps in C++</a><br />
       </dl>
-      <pre><code class="language-css">
-Syntax: make(map[KeyType]ValueType, initialCapacity)
+      <pre><code class="language-css">Syntax: make(map[KeyType]ValueType, initialCapacity)
 
-m := make(map[string]int)   //map[key]value
+m := make(map[string]any)   //map[key]value
 m["gold"] = 100
+m["told"] = "b"
+
+m1 := map[string]bool{}     // Init map to empty
       </code></pre>
 
       <h1 id="standardlib">Standard Library Provided Collections</h1>

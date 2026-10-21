@@ -1,8 +1,11 @@
 <!doctype html>
 <html>
   <head>
-    <title>Types in golang</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Go/Types.html" />
+    <title>data Types in golang</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Types.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -33,6 +36,7 @@
         <li><a href="#reference">Reference</a></li>
         <li><a href="#interface">Interface</a></li>
         <ul>
+          <li><a href="#methodreceiver">Method Receiver</a></li>
           <li><a href="#restrictions">Restrictions</a></li>
           <li><a href="#usecases">Use case</a></li>
           <li><a href="#pollution">Interface Pollution</a></li>
@@ -41,13 +45,13 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">Types?</h2>
+      <h1 id="what">Type / Data Type</h1>
       <dl>
-        Go is statically typed language means every variable's type is fixed at
-        compile time, which helps catch errors early and makes code reliable.
+        Go is statically typed language that means every variable's data type is
+        fixed at compile time.
       </dl>
 
-      <h2 id="types">Types of types</h2>
+      <h1 id="types">Data types in Go</h1>
       <table>
         <tr>
           <th>Type</th>
@@ -57,12 +61,10 @@
           <td id="basic">1. Basic Type</td>
           <td>
             <b>int, float64, bool, string</b><br />
-            <pre><code class="language-css">
-var a int = 42
+            <pre><code class="language-css">var a int = 42
 str := "Go is awesome" // Type inference
 b := true
-var f float64 = float64(a)      //Type Conversion
-                </code></pre>
+var f float64 = float64(a)      //Type Conversion</code></pre>
           </td>
         </tr>
         <tr>
@@ -70,20 +72,16 @@ var f float64 = float64(a)      //Type Conversion
           <td>
             <b>1. Arrays:</b>An array is a fixed-size sequence of elements of
             the same type.<br />
-            <pre><code class="language-css">
-colors := [3]string{"red", "green", "blue"}
-            </code></pre>
+            <pre><code class="language-css">colors := [3]string{"red", "green", "blue"}</code></pre>
             <br />
             <b>2. struct</b><br />
-            <pre><code class="language-css">
-type Person struct {
+            <pre><code class="language-css">type Person struct {
     Name string
     Age  int
 }
 func (p Person) fun() string {  //Define function for struct
     return "Hello, my name is " + p.Name
-}
-                </code></pre>
+}</code></pre>
           </td>
         </tr>
         <tr>
@@ -101,10 +99,10 @@ func (p Person) fun() string {  //Define function for struct
         </tr>
       </table>
 
-      <h3 id="interface">4. Interface</h3>
+      <h2 id="interface">4. Interface</h2>
       <p>
-        Interface only declares the functions those should be implemented by
-        concrete types. Similar to
+        Interface declares the functions those should be implemented by concrete
+        types. Similar to
         <a
           href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/c%2B%2B/Characteristics_of_OOPS/Polymorphism/Dynamic_RunTime#pv"
           >Abstract Class C++98</a
@@ -115,39 +113,46 @@ func (p Person) fun() string {  //Define function for struct
         C++: A class must explicitly inherit from the abstract class (class Dog
         : public Animal)<br />
         Go follows <b>duck typing</b>(If it walks like a duck and quacks like a
-        duck, it's a duck), What it means is if type in Go implements all
-        methods of interface, it automatically implements the interface(no need
-        to provide implements or extends keyword)
+        duck, it's a duck), It means if type in Go implements all methods of
+        interface, it automatically implements the interface(no need to provide
+        implements or extends keyword)
       </p>
-      <pre><code class="language-css">
-package main
-import "fmt"
+      <pre><code class="language-css">package main
 
-type Speaker interface {      // 1. Define the interface (The Contract)
+import "fmt"
+// 1. Declare Abstract class (The Contract)
+type Speaker interface {
 	Speak() string
 }
 
-type Dog struct {           // 2. Define a concrete type
-	Name string
+// 2. Declare a concrete classes
+type Dog struct{ name string }
+type Cat struct{ breed string }
+
+// 3. Implement interface(Speaker not mentioned, it figured implicitly)
+// (d Dog) is METHOD RECIEVER, telling this function is associated with a concrete Type=DOG
+// if we remove method receiver, then this function cannot be associated with Type
+func (d Dog) Speak() string {
+	return "Bark " + d.name
 }
-
-func (d Dog) Speak() string {   // 3. Implement interface(Speaker not mentioned, it figured implicitly)
-	return "Woof!"
-}
-
-type Robot struct{}
-
 func main() {
-	var s Speaker                     // Interface var
-
-	s = Dog{Name: "Buddy"}            // Valid! Dog implements Speak()
+	var s Speaker          // Interface var
+	s = Dog{"Tommy"}       // Valid! Dog implements Speak()
 	fmt.Println(s.Speak())
+}</code></pre>
 
-	// s = Robot{} 
-	// ^ UNCOMMENTING THIS WILL CAUSE A COMPILER ERROR:
-	// "cannot use Robot{} as Speaker value: Robot does not implement Speaker (missing method Speak)"
-}
-            </code></pre>
+      <h3 id="methodreceiver">Method Receiver</h3>
+      <p>
+        <code>func (d Dog) Foo(v int) (int, error)</code><br />
+        This function takes <code>1 argument=v</code>, returns
+        <code>int, error</code><br />
+        <code>d</code> is called method reciever and it associates function with
+        type.<br />
+        if there is no method reciever, then function cannot be associated with
+        the type<br />
+        Method Receiver is added before function name while function parameters
+        are added after function name
+      </p>
 
       <h4 id="restrictions">Restrictions on Go Interfaces</h4>
       <p>

@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Memory Layout Compared — C++, Go, Rust, Java</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_compared.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_compared.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -35,6 +38,9 @@
       <ul>
         <li><a href="#cpp">C++</a></li>
         <li><a href="#go">Go</a></li>
+        <ul>
+          <li><a href="#gstruct">Goroutine Control Block</a></li>
+        </ul>
         <li><a href="#rust">Rust</a></li>
         <li><a href="#java">Java</a></li>
       </ul>
@@ -44,6 +50,11 @@
       <h1 id="layout">Memory Layout of a Process</h1>
 
       <h2 id="cpp">C++</h2>
+      <p>
+        <a href="/Motherboard/Memory/Memory_layout_of_process.html#processtable"
+          >Process Control Block, Process Table</a
+        >
+      </p>
       <pre><code>
 PROCESS MEMORY LAYOUT
                                                 Heap
@@ -90,6 +101,50 @@ High Memory Address                              |      |         Data Segment  
 |            |              |              |            |              |              | Process Executable code                    |
 └────────────┴──────────────┴──────────────┴────────────┴──────────────┴──────────────┴────────────────────────────────────────────┘
       </code></pre>
+      <h3 id="gstruct">g struct (Goroutine Control Block)</h3>
+      <p>
+        As every thread in C++ has its own
+        <a href="/Motherboard/Memory/Memory_layout_of_process.html#pcb"
+          >Thread Control Block</a
+        >, goroutine information is stored in g struct (defined in
+        src/runtime/runtime2.go).
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">
+struct g {
+  stack {         //bounds of the goroutine's stack
+    lo            
+    hi            
+  }
+  struct sched {        // CPU registers for context switching
+    program_counter,
+    stack_pointer,
+  }
+  state Runnable|Running|Waiting
+  goid int64            // unique goroutine ID
+}
+      </code></pre>
+          </td>
+          <td>
+            struct pseudo-goroutine(ie Wrapper struct)<br />
+            <pre><code class="language-css">
+type sudog struct {           
+    g           *g              // Pointer to the waiting goroutine
+    next        *sudog          // Doubly linked list forward pointer
+    prev        *sudog          // Doubly linked list backward pointer
+    elem        unsafe.Pointer  // Data element pointer (where to read/write)
+    acquiretime int64
+    releasetime int64
+    ticket      uint32
+    isSelect    bool
+    c           *hchan          // Pointer back to the channel it's waiting on
+}
+          </code></pre>
+          </td>
+        </tr>
+      </table>
 
       <h2 id="rust">Rust</h2>
       <p>

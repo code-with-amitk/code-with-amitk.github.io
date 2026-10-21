@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Test in Go</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Go/Testing.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+    <!-- Add any necessary CSS and JavaScript files -->
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/Go/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Testing in Go</a>
+      <a href="#example">Simple example</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">Testing in Go</h1>
+
+      <p>
+        In Go, testing is usually done by creating files that end with
+        <strong>_test.go</strong>. These files are compiled together with the
+        main code and can call functions from the package being tested.<br />
+        A test function must start with the word <strong>Test</strong>, and it
+        receives a pointer to <strong>testing.T</strong>. If the test fails, Go
+        reports the function name and the failing assertion.<br />
+        When you run <code>go test -v</code> in a package folder, Go
+        automatically finds all <em>_test.go</em> files, compiles them, and runs
+        the test functions.
+      </p>
+
+      <h3 id="example">Simple example</h3>
+
+      <pre><code class="language-go">package mymath
+
+func Add(a, b int) int {
+    return a + b
+}
+
+$ cat mathutils_test.go
+
+package mymath
+import "testing"
+
+func TestAdd(t *testing.T) {
+    got := Add(2, 3)
+    want := 5
+
+    if got != want {
+        t.Fatalf("Add(2, 3) = %d; want %d", got, want)
+    }
+}</code></pre>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

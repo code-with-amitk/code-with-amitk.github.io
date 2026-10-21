@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Switch</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-2/Switch.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Networking/OSI-Layers/">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#what">Switch</a>
+      <a href="#try-it">Try it</a>
+      <a href="#simple-example">Simple example</a>
+      <a href="#why-used">Why used</a>
+      <a href="#ip-layer">IP or Layer 2?</a>
+      <a href="#broadcast-domain">Broadcast domain</a>
+      <a href="#smart-switch">Smart switch</a>
+      <a href="#packet-flow">Packet flow</a>
+      <a href="#http-fields">HTTP fields</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">Switch</h1>
+
+      <p>
+        A <strong>switch</strong> is a Layer 2 device in the OSI model. It
+        connects devices in the same local network and forwards data based on
+        <strong>MAC addresses</strong>.
+      </p>
+
+      <h2 id="broadcast-domain">Broadcast domain in switch?</h2>
+      <p>
+        A <strong>broadcast domain</strong> is a section of the network where a
+        broadcast packet can reach all devices. A normal Ethernet switch
+        receives a broadcast frame and forwards it out all ports (except the
+        incoming one) within the same VLAN.<br />
+        Example: a switch with 4 ports and no VLANs creates a single broadcast
+        domain. If you create VLAN 10 and VLAN 20, then these are two separate
+        broadcast domains even though they are on the same physical switch.
+      </p>
+      <p>
+        A <strong>hub</strong> is the old device that behaves like a shared
+        medium and creates one big broadcast domain for all connected devices. A
+        switch is smarter because it forwards only to the right destination and
+        reduces broadcast scope.
+      </p>
+
+      <h2 id="smart-switch">Smart Switches</h2>
+      <p>
+        Home/office switches run vendor-provided firmware. We cannot install our
+        own software on them. They are designed for switching, not for arbitrary
+        app execution.<br />
+        There are <strong>smart switches/ programmable switches</strong> that
+        support: Web-based management,SNMP monitoring,VLAN configuration,QoS /
+        port mirroring / ACLs. Eg: <br />
+        &ensp; 1. Managed switches from Cisco, Aruba, HPE, Netgear, TP-Link<br />
+        &ensp; 2. Open networking switches running SONiC or other NOS<br />
+        &ensp; 3. White-box / bare-metal switches used in data centers
+      </p>
+
+      <h2 id="packet-flow">Packet Flow: India to US</h2>
+      <pre><code>
+        
+      </code></pre>
+      <p>
+        Let us imagine a laptop in India wants to open
+        <strong>https://www.google.com</strong>, whose server is hosted in the
+        United States.
+      </p>
+      <p>Step-by-step:</p>
+      <ol>
+        <li>
+          Your laptop asks a DNS server: "What is the IP address of google.com?"
+        </li>
+        <li>The DNS server replies with the IP address of Google server.</li>
+        <li>Your laptop creates an HTTP request to that IP address.</li>
+        <li>The request goes to the local home or office Wi-Fi router.</li>
+        <li>
+          The router may contain a <strong>switch</strong> internally for LAN
+          devices and a separate forwarding path to the ISP.
+        </li>
+        <li>
+          The data is then sent to the <strong>ISP router</strong> or edge
+          router.
+        </li>
+        <li>
+          The ISP forwards it through many core routers across the Internet.
+        </li>
+        <li>
+          Eventually, the packet reaches the destination network in the US.
+        </li>
+        <li>
+          The web server responds back with HTML, CSS, JavaScript, images, etc.
+        </li>
+      </ol>
+      <p>
+        In a local home network, a <strong>switch</strong> is used to connect
+        your laptop and other devices to the router. The router then sends the
+        traffic to the Internet. A <strong>hub</strong> is older and simply
+        broadcasts data to all ports; a switch is smarter and sends frames only
+        to the right port.
+      </p>
+
+      <pre
+        style="
+          background: #f5f5f5;
+          padding: 12px;
+          border-left: 4px solid #007acc;
+          overflow-x: auto;
+        "
+      >
+Laptop (India)
+   |
+   |-- Wi-Fi / LAN --> Home Router
+   |                     |
+   |                     |-- Switch inside router connects laptop, TV, etc.
+   |                     |
+   |                     |-- ISP Router / Edge Router
+   |                                             |
+   |                                             |-- Internet backbone routers
+   |                                             |
+   |                                             |-- US ISP / Google Edge Router
+   |                                                                     |
+   |                                                                     |-- Google Web Server (US)
+      </pre>
+
+      <h3>Mermaid sequence diagram</h3>
+      <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant User as Laptop (India)
+    participant Switch as Local Switch / Wi-Fi AP
+    participant Router as Home Router
+    participant DNS as DNS Server
+    participant ISP as ISP Router
+    participant Core as Internet Core Routers
+    participant USRouter as US Edge Router
+    participant Server as Google Web Server (US)
+
+    User->>DNS: 1. DNS query: "What is IP of google.com?"
+    DNS-->>User: 2. Reply with IP address
+    User->>Switch: 3. HTTP GET to google.com IP
+    Switch->>Router: 4. Forward Ethernet frame
+    Router->>ISP: 5. Forward packet to ISP router
+    ISP->>Core: 6. Route through Internet backbone
+    Core->>USRouter: 7. Forward packet to US network
+    USRouter->>Server: 8. Deliver packet to Google server
+    Server-->>USRouter: 9. HTTP response with HTML
+    USRouter-->>Core: 10. Route response back
+    Core-->>ISP: 11. Return through Internet
+    ISP-->>Router: 12. Send response back to home network
+    Router-->>Switch: 13. Forward back to local device
+    Switch-->>User: 14. Browser receives page
+      </pre>
+
+      <h2>What happens at each layer?</h2>
+      <p>
+        The packet does not travel as one single object with only one header. It
+        is layered. Each device looks at the needed headers:
+      </p>
+      <ul>
+        <li>
+          <strong>Application Layer</strong>: HTTP request like
+          <code>GET / HTTP/1.1</code>, <code>Host: www.google.com</code>
+        </li>
+        <li>
+          <strong>Transport Layer</strong>: TCP port numbers like source port
+          50000 and destination port 443
+        </li>
+        <li>
+          <strong>Network Layer</strong>: IP addresses such as source
+          192.168.1.10 and destination 142.250.x.x
+        </li>
+        <li>
+          <strong>Data Link Layer</strong>: Ethernet MAC addresses such as
+          laptop MAC to home router MAC
+        </li>
+      </ul>
+      <p>
+        A switch in the local network mainly uses the
+        <strong>Ethernet/MAC header</strong>. It does not need the full HTTP
+        content to forward a packet locally. The router uses the
+        <strong>IP header</strong> to decide the next hop across the Internet.
+      </p>
+
+      <h2 id="http-fields">
+        What HTTP fields traverse from one node to another?
+      </h2>
+      <p>
+        At the application layer, the following fields often travel with the
+        request:
+      </p>
+      <ul>
+        <li><strong>Method</strong>: GET, POST, PUT</li>
+        <li><strong>URL</strong>: /search?q=computer+network</li>
+        <li><strong>Host</strong>: www.google.com</li>
+        <li><strong>User-Agent</strong>: browser name and version</li>
+        <li>
+          <strong>Accept</strong>: types of content the browser can handle
+        </li>
+        <li><strong>Cookie</strong>: session or tracking data</li>
+      </ul>
+      <p>Example HTTP request:</p>
+      <pre
+        style="
+          background: #f5f5f5;
+          padding: 12px;
+          border-left: 4px solid #2e8b57;
+          overflow-x: auto;
+        "
+      >
+GET / HTTP/1.1
+Host: www.google.com
+User-Agent: Mozilla/5.0
+Accept: text/html,application/xhtml+xml
+Connection: keep-alive
+</pre
+      >
+      <p>
+        The router and switch do not usually inspect or modify the HTTP content.
+        They mainly forward based on lower-layer information such as MAC and IP
+        addresses. The HTTP payload remains mostly the same as it moves across
+        the path, though some devices such as proxies, firewalls, load
+        balancers, and NAT devices may inspect or change it.
+      </p>
+
+      <h2>Short summary</h2>
+      <p>
+        A switch is a Layer 2 device that forwards data using
+        <strong>MAC addresses</strong>. It is used to efficiently connect many
+        devices in the same local network. A normal switch is not an IP router.
+        Broadcast domains are groups of devices that can hear one another's
+        broadcast traffic, and a switch often defines a broadcast domain per
+        VLAN. Smart switches exist, but installing your own custom software is
+        only possible on managed, programmable, or open-network devices designed
+        for that purpose. When a user in India browses a website in the US, the
+        packet travels through the local switch, home router, ISP routers,
+        Internet core, distant routers, and finally reaches the destination
+        server, where the response comes back.
+      </p>
+    </article>
+
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "default" });
+    </script>
+  </body>
+</html>

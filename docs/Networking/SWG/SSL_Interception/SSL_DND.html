@@ -34,18 +34,11 @@
 
     <article style="margin-left: 200px">
         <h2 id="what">SSL DND(Donot Decrypt)</h2>
-        <dl>
-            In SSL-DND mode, the proxy operates as a transparent Layer 4 tunnel. It utilizes the standard 
-            HTTP CONNECT method to establish a bi-directional byte-stream between the client and the 
-            destination without terminating the TLS session.
-        </dl>
-
-        <h3 id="ch">Key Characteristics</h3>
-        <dl>
-            * Zero Visibility: The proxy does not possess the destination's private keys and cannot inspect the encrypted payload.<br>
-            * End-to-End Integrity: The TLS handshake occurs directly between the client and the remote server, ensuring that certificate validation and encryption remains unbroken.<br>
-            * SNI-Based Routing: While the payload is opaque, the proxy uses the Host header from the <a href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Connect.html">CONNECT request</a> (and optionally the SNI in the Client Hello) to perform DNS resolution and routing.
-        </dl>
+        <p>
+            Proxy does not terminate SSL Connection from Client & TLS handshake occurs directly between the client and the remote server<br>
+            * Proxy will not inspect the encrypted payload.<br>
+            * Proxy uses the Host header from <a href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Connect.html">CONNECT request</a> (OR <a href="/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/">SNI Header</a> in the Client Hello) to perform DNS resolution and routing.
+        </p>
 
         <h3 id="flow">Flow</h3>
         <dl>

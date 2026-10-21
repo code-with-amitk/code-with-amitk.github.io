@@ -27,6 +27,7 @@
         <a href="#copyclone">Copy & Clone trait</a>
         <a href="#default">default trait</a>
         <a href="#drop">drop trait</a>
+        <a href="#FnOnce">FnOnce trait</a>
         <a href="#future">future trait</a>
         <a href="#iterator">Iterator trait</a>
         <a href="#sendsync">Send, Sync trait</a>
@@ -81,7 +82,7 @@ fn main() {
                     <pre><code class="language-css">
 #[derive(Clone)]
 pub struct S {
-    x : Vec<i32>,
+    x : Vec &lt;i32&gt;,
 }
 fn main() {
     let a = S {
@@ -127,7 +128,7 @@ pub struct test {
     a : i32,
 }
 impl Default for test{
-    fn default() -> Self {
+    fn default() -&gt; Self {
         Self {
             a: 48,
         }
@@ -171,6 +172,37 @@ Dropping
 After scope
         </code></pre>
 
+        <h2 id="FnOnce">FnOnce trait (Function that can be called Once)</h2>
+        <pre><code>pub fn foo &lt;F&gt; (&self, arg1: F)
+where
+    F: FnOnce(), {
+    }
+//F is a generic type parameter (like template &lt;typename F&gt; in C++)
+
+</code></pre>
+        <p>
+            A trait in Rust for closures or functions that can be called at least once, 
+            but might consume the variables they capture from their environment.<br>
+            • Takes Ownership: It moves (consumes) captured variables by value.<br>
+            • Called Once: Because the captured data is moved out during the call, the closure 
+                destroys itself or loses its data, making a second call impossible.
+        </p>
+        <pre><code class="language-css">fn main() {
+    let text = String::from("Hello, Rust!");
+
+    // This closure takes ownership of `text` because of `move`
+    let consume_string = move || {
+        println!("{}", text);
+        // `text` is consumed/dropped here when the closure runs
+    };
+
+    // First call works fine
+    consume_string();
+
+    // Second call causes a compile-time error!
+    // consume_string(); 
+}</code></pre>
+
         <h2 id="future">future trait</h2>
         <dl>
             future is a "asynchronous value" that may not have finished computing yet. 
@@ -182,9 +214,9 @@ use std::task::Context;
 
 pub trait Future {
     type Output;
-    fn poll(self: Pin &lt;&mut Self>, cx: &mut Context &lt;'_>) -> Poll &lt;Self::Output>;
+    fn poll(self: Pin &lt;&mut Self&gt;, cx: &mut Context &lt;'_&gt;) -&gt; Poll &lt;Self::Output&gt;;
 }
-pub enum Poll &lt;T> {
+pub enum Poll &lt;T&gt; {
     Ready(T),
     Pending,
 }            
@@ -201,7 +233,7 @@ pub trait Iterator {
 
     // The Iterator trait requires one method to be implemented
     // This method advances the iterator and returns the next item in the sequence wrapped in Option
-    fn next(&mut self) -> Option<Self::Item>;
+    fn next(&mut self) -&gt; Option &lt;Self::Item&gt;;
 }
         </code></pre>
 

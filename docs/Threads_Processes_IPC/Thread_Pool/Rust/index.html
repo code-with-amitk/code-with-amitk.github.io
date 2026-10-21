@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>Rust Thread Pool</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/Thread_Pool/Rust" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Thread_Pool/Rust"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -70,7 +73,9 @@ fn main() {
 }
       </code></pre>
 
-      <h3 id="threadpool">2. <code>threadpool</code> crate — classic job pool</h3>
+      <h3 id="threadpool">
+        2. <code>threadpool</code> crate — classic job pool
+      </h3>
       <p>
         Submit closures to a fixed-size pool; closest to Java
         <code>ExecutorService</code>.
@@ -91,7 +96,9 @@ fn main() {
 }
       </code></pre>
 
-      <h3 id="manual">3. Manual pool — <code>std::thread</code> + <code>mpsc</code></h3>
+      <h3 id="manual">
+        3. Manual pool — <code>std::thread</code> + <code>mpsc</code>
+      </h3>
       <p>
         Build your own with worker threads and a channel — no external crate
         beyond std.
@@ -101,7 +108,7 @@ use std::sync::mpsc;
 use std::thread;
 
 fn main() {
-    let (tx, rx) = mpsc::channel::&lt;Box&lt;dyn FnOnce() + Send>>();
+    let (tx, rx) = mpsc::channel::&lt;Box&lt;dyn FnOnce() + Send&gt;&gt;();
     let rx = std::sync::Arc::new(std::sync::Mutex::new(rx));
 
     let num_workers = 4;

@@ -55,7 +55,7 @@
       <a href="#Context">Context</a>
       <a href="#cntk">CNTK</a>
       <a href="#Dataset">Dataset</a>
-      <a href="#Embedding">Embedding Models</a>
+      <a href="#Embedding">Embedding</a>
       <ul>
         <li><a href="#EmbeddingSpace">Embedding Space</a></li>
         <li><a href="#StaticEmbedding">Static Embedding</a></li>
@@ -72,6 +72,7 @@
         <li><a href="#overfitting">Overfitting</a></li>
         <li><a href="#underfitting">Underfitting</a></li>
       </ul>
+      <a href="#Hallucination">Hallucination</a>
       <a href="#Inference">Inference</a>
       <a href="#opt">Optimizer, stochastic gradient descent (SGD)</a>
       <a href="#orchestration">Orchestration</a>
@@ -95,6 +96,7 @@
       <a href="#Neuron">Neuron</a>
       <a href="#Neural_Network">Neural Network</a>
       <a href="#Prompt">Prompt</a>
+      <a href="#Temperature">Temperature</a>
       <a href="#tensor">Tensor</a>
       <ul>
         <li><a href="#vector">Vector</a></li>
@@ -766,7 +768,7 @@ optimizer = SGD(learning_rate=0.01, momentum=0.9)
         This is Microsoft Cognitive Toolkit (CNTK) backend, plugged with keras.
       </p>
 
-      <h1 id="Embedding">Embedding</h1>
+      <h1 id="Embedding">Embedding / Vector Embedding</h1>
       <p>
         Embedding = one point/vector.<br />
         Suppose we have 4 foods and we want to represent foods on basis of
@@ -1097,6 +1099,14 @@ Bin number	Range   	Feature vector
         >
       </p>
 
+      <h1 id="Hallucination">Hallucination</h1>
+      <p>
+        A response from an LLM that contains false, fabricated, or misleading
+        information presented as absolute fact<br />
+        <b>How to reduce Hallucinations?</b><br />
+        1. Use information available in RGA documents to validate the output.
+      </p>
+
       <h1 id="Inference">Inference / Prediction</h1>
       <p>
         Once we're satisfied with the results from evaluating the model (ie
@@ -1225,10 +1235,18 @@ But orange is isn't enough to know whether we're talking about fruit or color.</
         </tr>
       </table>
 
-      <h3>1. Transformer (Type of LLM)</h3>
+      <h2 id="Transformer">2.1 Transformer LLM</h2>
       <p>
-        Transformer contains
-        <font colore="red">Trillions of Parameters</font>(weights,bias)<br />
+        A LLM has n number
+        <a href="/Machine Learning/Libraries/keras/Layers_and_APIs.html#layers"
+          >Neural Networks</a
+        >. Each Neural Network is created using k number of
+        <a href="/Machine Learning/Terms.html#Neuron">Neurons</a><br />
+        Each Neuron has m
+        <a href="/Machine Learning/ML_and_Types_Algorithms.html#slmodels"
+          >weights and biases</a
+        >. A Transformer LLM have
+        <font color="red">trillions of weights and biases</font><br />
         It is used in wide variety of language model applications, such as
         translation eg: English to French<br />
         Transformer consists of:<br />
@@ -1243,17 +1261,135 @@ But orange is isn't enough to know whether we're talking about fruit or color.</
         style="width: 400px; height: 150px"
       />
 
-      <h4>Self Attention</h4>
+      <h3>How Transformer LLM Works</h3>
       <p>
-        This means How much does each other token of input affect the
-        interpretation of this token?<br />
-        Example In sentence
-        <code
-          >The animal didn't cross the street because it was too tired.</code
+        Work of every LLM is to predict next token based on previous/surrounding
+        token.<br />
+        Consider this example
+      </p>
+      <pre><code>The brown dog sat next to the red fox. </code></pre>
+      <p>
+        <b>Step-1:</b> Prompt is split into tokens, each token is converted to
+        <a href="#Embedding">vector/embedding</a> representation
+      </p>
+      <pre><code>"First Guess embedding/vector"
+the		[0.10,0.21,0.05,0.12,0.07]
+brown	..
+dog		..
+sat		..
+next	..
+to		..
+the		..
+red		..
+fox		..</code></pre>
+      <p>
+        <b>Step-2:</b> Each token also also provided a positional vector that
+        where its located in prompt?
+      </p>
+      <pre><code>"Position embedding/vector"
+the		[0.54,0.19,0.12,0.32,0.45]
+brown	..
+dog		..
+sat		..
+next	..
+to		..
+the		..
+red		..
+fox		..</code></pre>
+      <p>
+        <b>Step-3(Attention):</b><br />
+        &ensp; Each token can see position/meaning/<a href="#Embedding"
+          >vector embedding</a
         >
-        self attention determines <code>it</code> refers tp animal or street.<br />
-        A complete transformer model stacks multiple self-attention layers on
-        top of one another.
+        of every other token in the prompt.<br />
+        &ensp; Each token then decided which other Token it should pay most
+        attention to.<br />
+        &ensp; In above sentence, Word "Dog" will provide most attention to
+        "brown" and "sat". Since those words directly relate to thed Dog<br />
+        &ensp; 70% attention is assigned to brown. 20% to sat and 10% to all
+        other tokens
+      </p>
+      <pre><code>The brown dog sat next to the red fox.
+    |-----|----|
+    70%       20%</code></pre>
+      <p>
+        <u>Attention Heads:</u><br />
+        Most transformer models generate this attention via Layers
+        called(Attention Heads). Smaller models may have 8-16 attention heads,
+        while larger have 100 or more<br />
+        There can be several attention heads in Transformer LLM. Eg: &ensp; 1.
+        Head-1: Specializes in relationships between objects and their
+        descriptions<br />
+        &ensp; 2. Head-2: Specializes in Spatial relationships between objects.
+      </p>
+
+      <p>
+        <b>Step 4(Feed Forward Phase):</b> This is biggest phase of LLM, ie it
+        contains majority of parameters<br />
+        - Based on "Position embedding/vector", "First Guess embedding/vector"
+        and "Attention" each token is assigned a new embedding vector.<br />
+        - These new embeddings are formed by context of other tokens in the
+        prompt<br />
+
+        <b>Step 5(Repeat):</b><br />
+        Most LLMs repeat Step 1-4 N times(8-64 times). ie after N gusses
+        embeddings for words in prompt is generated.
+      </p>
+      <pre><code>
+                                     \/-----------------------------------------------------------------------------|
+           |-----------|     |----------------|     |----------------|                                              |
+           |           |     |  Token         |     | Postition      |     |-----------|     |--------------|       |
+Prompt --> | Tokenized | --> | Emmbedding LLM | --> | Embedding LLM  | --> | Attention | --> | Feed Forward | --> Updated 
+           |-----------|     |----------------|     |----------------|     |-----------|     |--------------|    Token Embeddings
+                              embedding of each      Positiional embedding
+                              token in calculated    for tokens calculated
+      </code></pre>
+
+      <p>
+        <b>Step 6(Decode):</b><br />
+        LLM asks based on updated embeddings of tokens, what token should come
+        next?<br />
+        This is calculated as probability distribution of all tokens in Model's
+        Dictionary
+      </p>
+      <pre><code>Token      Probability
+        and         32%
+        in          25%
+        on          18%
+        that        12%
+        with         9%
+        who          7%</code></pre>
+
+      <p>
+        <b>Step 7(Pick the Token)</b>
+        Finally LLM picks best probability token from the distribution and token
+        is appended to the end of the prompt. And after all this work 1 token is
+        gussed<br />
+        If we want to generate the 2nd token, Model will repeat all this process
+        from scratch, until next token is generated or token limit is
+        reached.<br />
+        Finally it generates <font color="red">EOS(End of Sentence)</font> token
+        signifying generation is ended.
+      </p>
+      <pre><code>
+The brown dog sat next to the red fox and
+                                      /\
+      </code></pre>
+
+      <p>
+        <b>Step 7.1 Ways to Pick Next Token:</b><br />
+        Token has to be picked in Step-7. There can be several ways to pick the
+        next token<br />
+        <u>1. Greedy Decoding:</u> Pick token with highest probability(as done
+        above).<br />
+        - Used in: Code completion, debugging<br />
+        - Disadvantages: Predictable/deterministic output. Same sounded text<br />
+        <u>2. Top-K Sampling:</u> pick a token from top k probablity tokens<br />
+        <u>3. Top-P Sampling:</u> Choosing a token after some x probality
+        threashold, ie discarding the high probability tokens<br />
+        <u>4. Repetition Penalty:</u> Penalizing the model for generating
+        repetative token/text<br />
+        <u>5. Logit Biases:</u>
       </p>
 
       <h4>Fine Tuning</h4>
@@ -1447,8 +1583,10 @@ But orange is isn't enough to know whether we're talking about fruit or color.</
 
       <h2 id="Neuron">One neuron = one linear equation</h2>
       <p>
-        <a href="#hyperplane">Linear equation in Hyperplane</a> is called a
-        neuron<br />
+        <a href="ML_and_Types_Algorithms.html#linearregression"
+          >Linear equation</a
+        >
+        in <a href="#hyperplane">Hyperplane</a> is called a neuron<br />
         y = m1x1 + m2x2 + m3x3 + b // 3 features, 1 label = Neuron<br />
         z = m1x1 + m2x2 + m3x3 + m4x4 + m5x5 + b // 5 features, 1 label=Neuron
       </p>
@@ -1577,7 +1715,21 @@ apple: ______</code></pre>
         </code>
       </p>
 
-      <h2 id="tensor">Tensor = n-D Matrix</h2>
+      <h1 id="Temperature">Temperature</h1>
+      <p>
+        Parameter that controls the randomness of prediction of
+        <a href="#LanguageModel">LLM</a>
+        Temp=1 leads to original distritution<br />
+        Temp=.5 leads to more spiky distribution<br />
+        Temp=0 makes Greedy Decoding<br /><br />
+
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Machine_Learning/LLM_Model/Temperature"
+          >Example Code</a
+        >
+      </p>
+
+      <h1 id="tensor">Tensor = n-D Matrix</h1>
       <p>
         This is matrix(as in maths). Multi-dimensional numpy arrays used to
         store numbers during computation.

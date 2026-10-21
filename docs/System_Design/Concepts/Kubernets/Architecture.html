@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Kubernets Architecture</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Architecture.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Architecture.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -252,14 +255,60 @@ flowchart TD
 
       <h1 id="worker">Worker Node = VM</h1>
       <dl>
-        Worker node is seperate installation(eg: VM). When load increases pods
-        inside worker nodes will be scaled.<br />
+        Worker node is seperate installation(eg: VM).<br />
+        When load increases pods inside worker nodes will be scaled.<br />
         We would need Cluster scalar(eg: <a href="Terms.html">Karpenter</a>)
         which will automatically spawn a new worker node on load<br />
         Worker node handles workload. Worker nodes hosts PODS. 1 Pod can contain
         1 or more containers, Eg: docker.<br />
         <b>Deamons in Worker Node</b>
       </dl>
+      <h3>Scaling</h3>
+      <p>
+        <b>POD: Horizontal Pod Autoscaler (HPA)</b><br />
+        - API server continously monitors the CPU/Memory metrics on pod and
+        compares against target levels<br />
+        - if target CPU &gt; 70%, API server asks kube controller to assign
+        Pending pod to worker node.
+      </p>
+      <table>
+        <tr>
+          <th>Stack</th>
+          <th>Estimated RPS / (I/O Bound)</th>
+          <th>Estimated RPS / (CPU Bound)</th>
+        </tr>
+        <tr>
+          <td>Go / Rust</td>
+          <td>5,000 – 15,000+ RPS</td>
+          <td>1,000 – 3,000 RPS</td>
+        </tr>
+      </table>
+
+      <p>
+        <b>Worker Node / Cluster Autoscaling</b><br />
+        - It scales up only when a Pod cannot be scheduled, not directly because
+        of high node CPU usage.<br />
+        - Scaling a worker node means adding another VM into the cluster
+      </p>
+      <pre><code>[Pending Pod Detected] 
+         │
+         ▼
+[Cluster Autoscaler / Karpenter API Call]
+         │
+         ▼
+[Cloud Provider Provisioning (AWS EC2 / GCP Compute)]
+         │
+         ▼
+[OS Boot & Cloud-Init execution]
+         │
+         ▼
+[Install Container Runtime & kubelet]
+         │
+         ▼
+[kubelet joins cluster via API Server TLS Bootstrapping]
+         │
+         ▼
+[Node status set to 'Ready' -&gt; Pod Scheduled]</code></pre>
 
       <h2 id="Kubelets">Kubelets</h2>
       <p>Recieves instructions from API Server to run/manage container.</p>

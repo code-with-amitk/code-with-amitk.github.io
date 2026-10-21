@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>HTTP Connect</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Connect.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Connect.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -41,11 +44,16 @@
     <article style="margin-left: 200px">
       <h2 id="connect">HTTP Connect</h2>
       <p>
-        HTTP Connect is message the is sent by Web Client to forward proxy. It
-        is never sent by web Client to Web server<br />
+        As per RFC 9110, HTTP CONNECT is intended to be used for request to
+        proxy.<br />
+        ie HTTP Connect is message the is sent by Web Client to forward proxy.
+        It is never sent by web Client to Web server<br />
         <font color="red"
           >That means when in (Browser Settings &gt; Proxy &gt; Proxy Server) is
           defined then only browser generates the HTTP Connect message.</font
+        ><br />
+        <a href="/Networking/OSI-Layers/Layer-7/HTTP/HTTP%20Headers.html"
+          >Host Header</a
         >
       </p>
       <pre><code class="language-css">

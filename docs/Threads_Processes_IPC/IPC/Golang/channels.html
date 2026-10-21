@@ -1,8 +1,11 @@
 <!doctype html>
 <html>
   <head>
-    <title>Golang IPC Channels</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/IPC/Golang/channels.html" />
+    <title>Go channels, waitGroup</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/IPC/Golang/channels.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -31,71 +34,102 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="#what">Channel?</a>
+      <a href="#Channel">Channel</a>
+      <a href="#WaitGroup">WaitGroup</a>
       <a href="#types">Types of Channels</a>
       <ul>
         <li><a href="#bufunbuf">Unbuffered, Buffered</a></li>
         <li><a href="#directional">Bidirectional / Directional</a></li>
       </ul>
       <a href="#select">select (wait on many channels)</a>
-      <a href="#internal">Internal Implementation</a>
       <a href="#fast">How Channels are Fast</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">Go Channel(for IPC)</h2>
+      <h1 id="Channel">Go Channel(queue)</h1>
       <p>
-        Go channels are used for synchronizing between 2 or goroutines OR
-        goroutine and main process.<br />
+        Go channel is a Thread-Safe Ring Buffer(similar to Pipe in C, Mpsc in
+        Rust) for passing messages between goroutines<br />
         <font color="red"
           >NOTE: Channels are not needed if 2 or more goroutines are not
           present. Channels are designed exclusively for inter-goroutine
           communication and synchronization</font
         ><br />
-        If you are doing everything sequentially inside the single main
-        goroutine, channel is not required<br />
-        we can send/recv data via channel with operator, &lt;- between
-        goroutines. The data flows in the direction of the arrow.<br />
-        channels are datastructures allocated on heap that reference both sender
-        and receiver goroutines<br />
-        <b>close():</b> Only sender can close a channel to indicate that no more
-        values will be sent.
+        Data flows in the direction of the arrow &lt; between go routines<br />
+        <b>close():</b> is mandatory to call once producer finishes sending data
+        on channel. if close is not called consumer will keep on waiting and get
+        deadlocked<br />
+        channel is just a pointer to hchan structure
       </p>
+
       <table>
-        <td>
-          <p>Write/Read on Channel</p>
-          <pre><code class="language-css">
-package main
-import "fmt"
+        <tr>
+          <td>
+            <pre><code class="language-css">type hchan struct {
+	qcount   uint           // total data in the queue
+	dataqsiz uint           // size of the circular queue
+	buf      unsafe.Pointer // points to an array of dataqsiz elements
+	elemsize uint16
+	closed   uint32
+	timer    *timer // timer feeding this chan
+	elemtype *_type // element type
+	sendx    uint   // send index
+	recvx    uint   // receive index
+	recvq    waitq  // list of recv waiters
+	sendq    waitq  // list of send waiters
+	bubble   *synctestBubble
 
-func main() {
-  ch := make(chan int)  //Create a Channel
-
-	go func() {   // Start goroutine
-		v := 1      // Local variable int
-		ch &lt;- v  //Write v on channel
-	}()
-
-	v, ok := &lt;-ch    // Read from channel
-	if !ok {
-		fmt.Println("Closed")
-	} else {
-		fmt.Println("Received first value:", v)
-	}
+	// lock protects all fields in hchan, as well as several
+	// fields in sudogs blocked on this channel.
+	//
+	// Do not change another G's status while holding this lock
+	// (in particular, do not ready a G), as this can deadlock
+	// with stack shrinking.
+	lock mutex
 }
-
-$ go run
-Received first value: 1
-        </code></pre>
-        </td>
-        <td>
-          <pre><code class="language-css">
-//        (channel, capacity)
-ch := make(chan int, 100)
-// Creates 1 channel that can hold up to 100 items
-// ie ints without blocking the sender
-        </code></pre>
-        </td>
+type waitq struct {   // Doubly Linked List of Blocked goroutines
+    first *sudog    // Pointer to struct sudog
+    last  *sudog
+}
+      </code></pre>
+            <br />
+            <a href="/Motherboard/Memory/Memory_layout_compared.html#gstruct"
+              >struct sudog</a
+            >
+          </td>
+          <td>
+            <pre><code>
+┌──────────────────────────────────── Heap ────────────────────────────────────────────┐
+  struct hchan(heap channel)
+  ┌────────────────────┬──────────────────────────────────────────────────────────┐
+  │thread-safety params│ buf=| | | | | | channel=Ring buffer queue of 5 ints      |
+  └────────────────────┴──────────────────────────────────────────────────────────┴
+└───────────────────────────────────────────────────────────────────────────────────────┘
+   /\
+   |
+|──────Stack───────|─Shared libs─|─Data Segment─|───────Text / Code Segment (Read Only)───|
+|  |               |                            | // Channel=Queue of 5 ints              |
+| pointer(ch)      |                            | ch := make(chan int, 5);                |
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+          </td>
+          <td>
+            <table>
+              <tr>
+                <td>
+                  <pre><code>
+<b>Write on Channel (ch &lt;- 2)</b>
+lock (hchan.lock)
+  buf[sendx] = 2
+  sendx++
+  qcount++
+unlock ()
+                  </code></pre>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
       </table>
 
       <h2 id="types">Types of Channels</h2>
@@ -103,80 +137,41 @@ ch := make(chan int, 100)
       <table>
         <tr>
           <th></th>
-          <th id="unbuffered">Unbuffered / Unbounded</th>
-          <th id="buffered">Buffered / Bounded</th>
+          <th id="unbuffered">Unbuffered <code>ch := make(chan int)</code></th>
+          <th id="buffered">Buffered <code>ch := make(chan int, 2)</code></th>
         </tr>
         <tr>
-          <td>What</td>
+          <td>Meaning</td>
           <td>
-            Like a hand-to-hand pass. The sender must wait until the receiver
-            does not read the value from channel. If no one is there to take it,
-            the sender BLOCKS/DEADLOCK.
+            Channel created with 0 size, that means<br />
+            <pre><code>struct hchan {
+  dataqsiz=0
+  buf=nil     // no Ring buffer is allocated
+}</code></pre>
           </td>
           <td>
-            Like a mailbox with a fixed slot capacity. The sender can drop off
-            letters and leave immediately, as long as the mailbox isn't full.
-            The receiver can pick them up later.
+            Channel created with size=2, that means<br />
+            <pre><code>struct hchan {
+  dataqsiz=2
+  buf=| | |     // Once 2 items are written sender will block
+}</code></pre>
           </td>
         </tr>
         <tr>
-          <td>Code</td>
+          <td>Writing to channel</td>
           <td>
-            <pre><code class="language-css">
-package main
-import "fmt"
-import "time"
-
-func main() {
-    ch := make(chan int) // Unbuffered
-
-    go func() {
-        fmt.Println("Sender: Attempting to send...")
-        ch *lt;- 42 // Blocks here until main goroutine reads it
-        fmt.Println("Sender: Sent successfully!")
-    }()
-
-    time.Sleep(2 * time.Second)
-    fmt.Println("In main before channel read")
-    v := &lt;-ch 
-    time.Sleep(2 * time.Second)
-    fmt.Println("Receiver: Got", v)
-}
-
-$ go run
-Sender: Attempting to send...
-In main before channel read
-Sender: Sent successfully!
-Receiver: Got 42
-            </code></pre>
+            Since no buf is present, channel cannot hold any messages<br />
+            When sender writes on channel <code>ch &lt;- 42</code> and no one is
+            recieving, it blocks until reciever reads the message.<br />
+            Sender goroutine sits in<br />
+            <code>sendq -&gt; struct sudog -&gt; g struct</code>
           </td>
           <td>
-            <pre><code class="language-css">
-package main
-import "fmt"
-
-func main() {
-    // Buffered channel that can hold up to 2 items
-    ch := make(chan int, 2) 
-
-    // We can send 2 items sequentially without any background goroutine!
-    ch &lt;- 10 
-    ch &lt;- 20 
-    fmt.Println("Sent 10 and 20 to buffer without blocking.")
-
-    // ch &lt;- 30 // UNCOMMENTING THIS WOULD BLOCK (Buffer is full!)
-
-    fmt.Println(&lt;-ch) // Reads 10
-    fmt.Println(&lt;-ch) // Reads 20
-}
-
-$ go run
-Sent 10 and 20 to buffer without blocking.
-10
-20
-            </code></pre>
+            When 2 ints are written and noone read then sender will block until
+            reciever does not read them
           </td>
         </tr>
+
         <tr>
           <td>Can Deadlock</td>
           <td>
@@ -308,6 +303,114 @@ func main() {
         </tr>
       </table>
 
+      <h1 id="WaitGroup">WaitGroup (Same as .join() in C++)</h1>
+      <p>
+        waitgroup is a struct which is used for waiting on goroutines, it make
+        sure main does not exit early while there are go routines which are
+        doing the work<br />
+        Similar to <b>Reference Counter</b> whose value is
+        incremented/decremented based on number of active goroutines
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code>
+┌──────────────────────────────────── Heap ────────────────────────────────┐
+| struct sync.WaitGroup (12 byte)
+| ┌────────────────────────┬───────────────────────┬────────────────────┐
+| │state: [counter 4 bytes]│ waiter count [4 byte] | semaphote [4 byte] |
+| └────────────────────────┴───────────────────────┴────────────────────┴
+└──────────────────────────────────────────────────────────────────────────┘
+   /\
+   |
+|──────Stack───────|─Shared libs─|────Data Segment───────|───Text / Code Segment (Read Only)───|
+|  |               |                                     | // Create wait group                |
+| pointer(wg)      |                                     | var wg sync.WaitGroup               |
+└──────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+          </td>
+          <td>
+            <pre><code class="language-css">// main need to wait for 5 go routines
+wg.Add(5)         |state = 5|
+
+// 1 go routine exited. decrement state by 1
+wg.Done()         |state = 4|
+
+// 1 go routine exited. decrement state by 1
+wg.Done()         |state = 3|
+
+// wait until any goroutine is pending processing
+wg.Wait()         if (state &gt; 0) Donot exit main</code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <h2>Code (channel & waitgroup)</h2>
+      <table>
+        <tr>
+          <td>
+            <pre><code class="language-css">package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main() {
+  ch := make(chan int, 1)   // Created a channel of size=1, ie buffer of size=1
+  ch &lt;- 1                // Write 1 on channel
+
+  var wg sync.WaitGroup
+  wg.Add(1)                 // Waitgroup will wait for 1 go routine before main can exit
+  go func() {
+    // defer will be called when go routine exit
+    // wg.Done() decrement waitgroup, stating this go routine has finished its work
+    defer wg.Done()
+    v, ok := &lt;-ch        // Inside go routine, read from channel
+    if !ok {
+      fmt.Println("Error")
+      return
+    } else {
+      fmt.Println(v)
+    }
+  }()
+
+  // Similar to join() wait in main until all goroutines have not called Done()
+  wg.Wait()
+}
+$ go run
+1</code></pre>
+          </td>
+          <td>
+            <b>Code:</b><br />
+            <a
+              href="https://github.com/code-with-amitk/Code-examples/blob/master/Threads_Processes_IPC/IPC/Questions/MultiProducer_MultiConsumer/Bounded_Queue.adoc"
+              >MultiProducer MultiConsumer using Bounded Queue</a
+            >
+          </td>
+        </tr>
+      </table>
+
+      <h1>() after lambda</h1>
+      <p>This is used for calling the lambda function</p>
+
+      <pre><code class="language-css">() After LAMBDA
+            
+func main() {
+	func() {
+		fmt.Println("Hi")
+	}()
+}
+$ go run
+Hi
+
+func main() {
+	func() {
+		fmt.Println("Hi")
+	}
+}
+$ go run
+func() {…} (value of type func()) is not used</code></pre>
+
       <h2 id="select">wait on multiple channels. select</h2>
       <pre><code class="language-css">
 package main
@@ -354,32 +457,6 @@ $ go run
 ch1: 1
 ch2: 2
 Done!
-      </code></pre>
-
-      <h2 id="internal">Internal Implementation of Channels</h2>
-      <dl>
-        When we call <b>make(chan int, 10)</b>, the runtime allocates a
-        <b>struct hchan</b> on heap
-      </dl>
-      <pre><code class="language-css">
-func main() {
-	ch1 := make(chan int)
-}
-
-// Channel struct 
-// (heap, hchan with buffer + sendq/recvq queues)
-type hchan struct {
-    qcount   uint           // bytes queued
-    dataqsiz uint           // buffer size
-    buf      unsafe.Pointer // ring buffer (heap)
-    elemsize uint16  // elem size
-    closed   uint32
-    elemtype *_type
-    sendx    uint          // send index
-    recvx    uint          // recv index
-    recvq    waitq         // blocked RECEIVERS  
-    sendq    waitq         // blocked SENDERS ← your goroutine lives here
-}
       </code></pre>
 
       <h2 id="fast">Why Channels are Fast</h2>
