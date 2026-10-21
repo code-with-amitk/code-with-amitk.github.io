@@ -1,7 +1,10 @@
 <!doctype html>
 <html>
   <head>
-    <title>Machine Learning Types</title>
+    <title>
+      ANN, KNN, Regression, Classifier, Clustering, HNSW, Biencoder,
+      Crossencoder, ColBERT, Reranking
+    </title>
     <link
       rel="canonical"
       href="https://code-with-amitk.github.io/Machine%20Learning/ML_and_Types_Algorithms.html"
@@ -68,6 +71,14 @@
           <li>2. Hierarchial Navigable Small World</li>
         </ul>
       </ul>
+      <a href="#Encoders">Encoders</a>
+      <ul>
+        <li>1. Bi-Encoder</li>
+        <li>2. Cross-Encoder</li>
+        <li>3. ColBERT</li>
+        <li>4. Reranking</li>
+      </ul>
+      <br />
     </aside>
 
     <article style="margin-left: 200px">
@@ -196,9 +207,9 @@
       </h2>
       <p>
         linear regression finds the relationship between
-        <a href="/Machine Learning/Terms.html">features</a>(Given value = x) and
-        a <a href="/Machine Learning/Terms.html">label</a>(To be predicted value
-        = y), ie finding the best-fit line<br />
+        <a href="/Machine Learning/Terms.html#Feature">features</a>(Given value
+        = x) and a <a href="/Machine Learning/Terms.html#Label">label</a>(To be
+        predicted value = y), ie finding the best-fit line<br />
         <font color="red"
           >Linear equation in n variables is called 1 Neuron</font
         >
@@ -657,6 +668,133 @@ else:
           </td>
         </tr>
       </table>
+
+      <h1 id="Encoders">Encoders</h1>
+      <h2 id="Bi-Encoder">1. Bi-Encoder</h2>
+      <p>
+        In Information Retrieval and Neural Search architectures, bi-encoders
+        and Approximate Nearest Neighbor (ANN) search are two complementary
+        things<br />
+        Bi-encoders generate the document vector embeddings and then seperately
+        prompt embeddings and compare for nearest items.
+      </p>
+      <pre><code>
+Prompt                    Documents
+  \/                        \/
+|-----------------|   |-----------------|
+| Embedding Model |   | Embedding Model |
+|-----------------|   |-----------------|
+  \/                        \/
+[0,5,0,2,1,3]         [1,4,1,5,7,9,9]
+  \/                        \/
+|-------------------------------------|
+|            Bi-Encoder               |
+| vector DB uses ANN to search/compare|
+| prompt and document vectors         |
+|-------------------------------------|
+      </code></pre>
+
+      <h2 id="Cross-Encoder">2. Cross-Encoder</h2>
+      <p>
+        Cross Encoder always provides better search results wrt Bi-Encoder, but
+        it takes a bit of more time<br />
+        How it work: Prompt is prepended to each Document before
+        (Prompt+Document) is fed to special embedding model. Embedding model
+        generates a relevancy score. Highest relevant score is taken as closest
+        document(s).<br />
+        <b>Advantage:</b><br />
+        &ensp; 1. Quality of results is great and they can be used to improve
+        results of other search techniques<br />
+        <b>Disadvantage:</b><br />
+        &ensp; 1. if there are billions of documents, there will be O(n)
+        complexity as every document need to be passed with prompt to embedding
+        model.<br />
+        &ensp; 2. Preprocessing(ie calculating the embeddings in advance before
+        recieving the prompt) cannot be done, which can be done in Bi-Encoder
+      </p>
+      <pre><code>Prompt    +     Document
+    \/              \/
+|---------------------------|
+|       Cross Encoder       |
+|---------------------------|
+            \/
+      Relevancy Score(70%)</code></pre>
+
+      <h2 id="ColBERT">3. ColBERT(Contexualized Late Interaction over BERT)</h2>
+      <p>
+        Instead of generating 1
+        <a href="Terms.html#embeddings">embedding vector</a> for whole
+        document(as in Cross-Encoder), ColBERT generate 1 embedding vector for 1
+        token<br />
+        This process is carried for every document and also for prompt.<br />
+        And then Each prompt vector is searched for most similar document
+        vector<br />
+        <b>Advatanges:</b><br />
+        &ensp; 1. Provides scalability of Bi-encoder and high matching results
+        of cross-encoder<br />
+        &ensp; 2. Faster than cross-encoder and can be used in real time
+        searches<br />
+        <b>Disadvatanges:</b><br />
+        &ensp; 1. Number of vectors to be stored is very high wrt any other
+        method
+      </p>
+      <pre><code>Document
+    \/
+|--------------------|
+| Embedding Model    |
+|--------------------|
+    \/
+    [1,2,4,6,9,2]   //Token1    // All Document vectors
+      [7,2,4,8,3,6] //Token2
+        [9,5,1,4,5,9] //Token3
+          [3,4,1,6,3,1] //Token4
+
+  Prompt
+    \/
+|--------------------|
+| Embedding Model    |
+|--------------------|
+    \/
+    [3,4,6,0,1,4]   //Token1    // All Prompt vectors
+      [5,6,9,3,1,3] //Token2
+
+Compare All Document vectors, All prompt vectors to find nearest similar vectors</code></pre>
+
+      <h2 id="reranking">4. Reranking</h2>
+      <p>
+        Technique where Bi-encoder and cross-encoder are used in pipeline.<br />
+        X Nearest documents are found to query vector using Bi-encoder<br />
+        Then these X documents are fed to cross-encoder which further returns
+        closest documents to the query.<br />
+        if 1 billion documents are fed to Bi-encoder, 50-100 documents are
+        outputted by Bi-encoder, which are fed to Cross-Encoder, which further
+        finds nearest documents to Query. Cross-Encoder will return 10-15
+        documents.
+      </p>
+      <pre><code>STEP 1: 
+Document Embeddings
+[1,2,4,6,9,2]
+[7,2,4,8,3,6]
+[9,5,1,4,5,9]
+[3,4,1,6,3,1]
+.. 1 Billion
+
+Prompt Embedding
+[3,4,6,0,1,4]
+
+      Documents > |------------|
+      Prompt    > | Bi Encoder | > 100 Nearst Documents
+                  |------------|
+
+STEP-2:
+Prompt + Document
+      \/
+|---------------|
+| Cross Encoder |
+|---------------|
+      \/
+      10 very near Documents
+          </code></pre>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>

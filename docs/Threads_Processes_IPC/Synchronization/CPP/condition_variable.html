@@ -1,8 +1,11 @@
 <!doctype html>
 <html>
   <head>
-    <title>condition_variable</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/Synchronization/CPP/condition_variable.html" />
+    <title>condition_variable, unique_lock</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Synchronization/CPP/condition_variable.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -14,7 +17,7 @@
         <li><a href="#">Our team</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="index.html">Back</a></li>
+        <li><a href="/Threads_Processes_IPC/">Back</a></li>
         <li>
           <form id="searchForm">
             <input
@@ -31,22 +34,20 @@
 
     <aside class="sidebar">
       <!--See .sidebar in styles.css-->
-      <a href="#what">condition_variable?</a>
+      <a href="#what">condition_variable</a>
       <ul>
-        <li><a href="#eg1">pthread_cond_wait</a></li>
-      </ul>
-      <a href="#">Ping pong Print</a>
-      <ul>
-        <li><a href="#pthread">pthread</a></li>
         <li>
-          <a href="#ppcv">condition_variable, unique_lock</a>
+          <a href="#ppcv">C++</a>
+          <a href="#condVarRust">condVar Rust</a>
+          <a href="#condVarGo">sync.Cond Go</a>
         </li>
       </ul>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">condition_variable / shared variable / Signalling</h2>
+      <h1 id="what">condition_variable / shared variable / Signalling</h1>
       <p>
+        <b>What is cond variable?</b><br />
         Thread1 notifies/signals Thread2 for condition. Then thread2 starts
         executes, until then thread2 is blocked<br />
 
@@ -54,54 +55,39 @@
         1. Avoids busy waiting, ie done by spinlock<br />
         2. Similar to [Semaphores]
       </p>
-
-      <h3 id="eg1">POSIX</h3>
-      <pre><code class="language-css">
-#include &lt;stdio.h>
-#include &lt;pthread.h>
-#include &lt;stdio.h>
-#include &lt;unistd.h>
-#include &lt;iostream>
-using namespace std;
-
-pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-void *fun1(void* arg) {
-    //pthread_mutex_lock(&mutex);
-    cout &lt;&lt; "Thread1 waiting on condition\n";
-
-    //pthread_cond_wait() might provide unexepected result without mutex
-    pthread_cond_wait(&cond, &mutex);
-    cout &lt;&lt; "Condition satisfied\n";
-    //pthread_mutex_unlock(&mutex);
-}
-void *fun2(void* arg) {
-    sleep(1);
-    cout &lt;&lt; "Thread2 signalled the condition\n";
-    pthread_cond_signal(&cond);
-}
-int main(){
-    pthread_t tid1,tid2;
-    pthread_create(&tid1, 0, fun1, 0);
-    pthread_create(&tid2, 0, fun2, 0);
-
-    pthread_join(tid1, 0);
-    pthread_join(tid2, 0);
-}
-$ ./a.out
-Thread1 waiting on condition
-Thread2 signalled the condition
-Condition satisfied
-            </code></pre>
-
-      <h3 id="pingpong">Ping Pong Game</h3>
+      <h3 id="how">How condition_variable is implemented internally</h3>
       <table>
         <tr>
           <th></th>
-          <th>POSIX pthread</th>
-          <th>C++11 (2 threads. 1 producer 1 consumer)</th>
-          <th>C++11 (4 threads. 2 producers 2 consumers)</th>
+          <th>Implemented using</th>
+        </tr>
+        <tr>
+          <td>pthread_cond_wait</td>
+          <td>pthread_cond_t</td>
+        </tr>
+        <tr>
+          <td>notify_one()</td>
+          <td>
+            sys_futex(&cond_sequence, FUTEX_WAKE_PRIVATE, 1)<br />
+            kernel moves one thread from the futex wait-queue to the OS runnable
+            queue.
+          </td>
+        </tr>
+        <tr>
+          <td>notify_all()</td>
+          <td>
+            sys_futex(&cond_sequence, FUTEX_WAKE_PRIVATE, INT_MAX)<br />
+            kernel wakes all threads waiting on that futex address
+          </td>
+        </tr>
+      </table>
+
+      <h3 id="pingpong">Code: Ping Pong</h3>
+      <table>
+        <tr>
+          <th></th>
+          <th>POSIX(pthread_cond_wait)</th>
+          <th>C++11 (2 producers 2 consumers)</th>
         </tr>
         <tr>
           <td>Code</td>
@@ -152,66 +138,28 @@ Pong,j:8
 Ping,j:9
 Pong,j:10</code></pre>
           </td>
+
           <td>
-            thread1 prints ping and then signal on condition variable.<br>
-            thread2 waits for signal and then only prints pong<br>
-            <b>notify_one()</b> notify 1 of threads waiting on <br>
-            condition variable (test).<br>
-            <pre><code class="language-css">bool test = false;
-mutex m;
+            thread1,2 prints ping and then signal on condition variable.<br />
+            thread3,4 waits for signal and then only prints pong<br />
+            <b>notify_all()</b> notify all of threads waiting on <br />
+            condition variable (test).<br />
+            <pre><code class="language-css">mutex m;
 condition_variable cv;
 
 void ping() {
-  // No mutex is needed since only 1 thread
-  // enters here
-  cout << "ping\n";
-  test = true;
-  cv.notify_one();
-}
-void pong() {
-    unique_lock<mutex> ul(m);
-
-    // Any thread entering is blocked on condition_variable cv
-    // For thread to enter Critical Section, lambda should return true
-    // test is condition predicate
-    cv.wait(ul, []
-            { return test; });
-    cout << "pong\n";
-}
-
-int main(){
-    int num_of_threads = 2;
-    thread t[num_of_threads];
-    t[0] = thread(pong);
-    t[1] = thread(ping);
-
-    for (auto i = 0; i < num_of_threads; i++)
-        t[i].join();
-    return 0;
-}
-$ ./a.out
-ping
-pong</code></pre></td>
-        <td>thread1,2 prints ping and then signal on condition variable.<br>
-            thread3,4 waits for signal and then only prints pong<br>
-            <b>notify_all()</b> notify all of threads waiting on <br>
-            condition variable (test).<br>
-          <pre><code class="language-css">mutex m;
-condition_variable cv;
-
-void ping() {
-    unique_lock<mutex> ul(m);
+    unique_lock &lt;mutex&gt; ul(m);
 
     // Any thread entering is blocked on condition_variable cv
     // !test means test should be false
-    cv.wait(ul, []
+    cv.wait(ul, []()
             { return !test; });
-    cout << "ping\n";
+    cout &lt;&lt; "ping\n";
     test = true;
     cv.notify_all();
 }
 void pong() {
-    unique_lock<mutex> ul(m);
+    unique_lock &lt;mutex&lt; ul(m);
 
     // Any thread entering is blocked on condition_variable cv
     // For thread to enter Critical Section, test should be true
@@ -219,7 +167,7 @@ void pong() {
     cv.wait(ul, []
             { return test; });
     test = false;
-    cout << "pong\n";
+    cout &lt;&lt; "pong\n";
 }
 
 int main() {
@@ -230,7 +178,7 @@ int main() {
   t[2] = thread(ping);
   t[3] = thread(ping);
 
-  for (auto i = 0; i < num_of_threads; i++)
+  for (auto i = 0; i &lt; num_of_threads; i++)
       t[i].join();
   return 0;
 }
@@ -239,10 +187,72 @@ ping
 pong
 ping
 pong</code></pre>
-        </td>
+          </td>
         </tr>
       </table>
 
+      <h2 id="condVarRust">Condition Variable in Rust</h2>
+      <pre><code class="language-css">
+bStop: bool = false;
+mtx: Mutex&lt;bool&gt; = Mutex::new(false);
+cv: Condvar = Condvar::new();
+fn foo()
+    {
+        // After acquiring lock, data inside mutex can be changed
+        let mut m = mtx.lock().unwrap();
+
+        // Wait until b_enter_f becomes true
+        while !bStop {
+            state = cv.wait(m).unwrap();
+        }
+        // Do Some work
+
+        cv.notify_all();
+    }
+      </code></pre>
+
+      <h2 id="condVarGo">Condition Variable in Golang</h2>
+      <p>
+        sync.Cond. It allows goroutines to wait for a specific condition or
+        signal other goroutines when that condition changes.<br />
+        <b>Simple Producer/Consumer Example</b>
+      </p>
+      <pre><code class="language-css">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var mu sync.Mutex           //mutex
+	cond := sync.NewCond(&mu)   //condition variable
+	ready := false
+
+	go func() {     //goroutine that waits for the condition
+		mu.Lock()
+		defer mu.Unlock()
+
+		for !ready {
+			fmt.Println("[Consumer] Not ready yet. Waiting...")
+			cond.Wait()       // Suspends execution and releases the lock
+		}
+
+		fmt.Println("[Consumer] Ready signal received! Processing data...")
+	}()
+
+	// Simulate some work before updating the condition
+	time.Sleep(2 * time.Second)
+
+	// Update the condition and signal the waiting goroutine
+	mu.Lock()
+	ready = true
+	fmt.Println("[Producer] Data is ready. Signaling consumer...")
+	cond.Signal() // Wakes up one waiting goroutine
+	mu.Unlock()
+
+}</code></pre>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>

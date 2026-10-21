@@ -1,8 +1,11 @@
 <!doctype html>
 <html>
   <head>
-    <title>Rust Ownership</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Rust/Ownership.html" />
+    <title>Rust Ownership, Borrow Checker</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/Ownership.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -27,16 +30,16 @@
     <aside class="sidebar">
       <!--See .sidebar in styles.css-->
       <a href="#what">Ownership</a>
+      <a href="#BorrowChecker">Borrow Checker</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">Ownership(avoid crash in Rust)</h2>
+      <h1 id="what">Ownership(avoid crash in Rust)</h1>
       <p>
-        - Defines how memory is managed safely(without need of garbage
-        collector) by Rust program.<br />
+        - Rust compiler(rustc) does ownership rules checks at compile time using
+        borrow checker.<br />
         - Every Variable/data have single owner at a time. When the owner goes
         out of scope, Rust automatically deallocates the memory.<br />
-        - Ownership rules are checked at compile time.<br />
         - Ownership applies to memory allocated on heap(dynamically), Eg:
         String(), vector ie those are moved. For variable allocated on Stack
         (Eg: int, float) variable is copied.
@@ -104,9 +107,6 @@ fn main() {
     // The ownership of the String was moved to s1, 
     //so s is no longer valid to use
     println!("{}", s);
-
-    // The String is still valid through s1
-    println!("{}", s1);
 } // Box goes out of scope, 
 // and the String is deallocated automatically
                             
@@ -114,6 +114,23 @@ fn main() {
           </td>
         </tr>
       </table>
+
+      <h1 id="#BorrowChecker">Borrow Checker</h1>
+      <p>
+        Borrow Checker is static analysis component present in Compilation stage
+        of rust program<br />
+        Compiler translates your code into step-by-step format called MIR
+        (Mid-level Intermediate Representation).<br />
+        The borrow checker looks at this MIR to track the exact liveness and
+        initialization state of your variables line by line.<br />
+        At compile time its able to find ownership BREAKAGE rules
+      </p>
+      <pre><code>
+Line of Code              State of s        State of s1           Borrow Checker Internal Action
+let s = Box::new(...);    Initialized	      Uninitialized	        Memory allocated. s becomes the valid owner.
+let s1 = s;               Moved (Invalid)   Initialized	          Bitwise copy to s1. State of s is changed to Moved.
+println!("{}", s);        Moved (Invalid)	  Initialized	Error!    Attempted to read a variable in the "Moved" state
+      </code></pre>
     </article>
     <script src="/scripts/prism.js"></script>
   </body>

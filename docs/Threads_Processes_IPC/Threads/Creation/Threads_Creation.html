@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Thread Code</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/Threads/Creation/Threads_Creation.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Threads/Creation/Threads_Creation.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -33,14 +36,25 @@
     <aside class="sidebar">
       <a href="#cpp">CPP</a>
       <ul>
+        <li>OS Threads</li>
+      </ul>
+      <ul>
         <li><a href="#threadclass">1. Thread class</a></li>
         <li><a href="#functor">2. Functor</a></li>
       </ul>
       <a href="#rust">Rust</a>
       <ul>
+        <li>OS Threads</li>
+      </ul>
+      <ul>
         <li><a href="#spawn">1. std::thread::spawn</a></li>
         <li><a href="#builder">2. std::thread::Builder</a></li>
-        <li><a href="#async">3. Asynchronous Frameworks (e.g., Tokio)</a></li>
+      </ul>
+      <ul>
+        <li>Green Threads</li>
+      </ul>
+      <ul>
+        <li><a href="#async">Async Frameworks (e.g., Tokio)</a></li>
       </ul>
       <a href="GoRoutines.html">Go routine</a>
       <a href="#python">Python</a>
@@ -61,12 +75,16 @@
 
     <article style="margin-left: 200px">
       <h1 id="cpp">CPP</h1>
-      <h4 id="threadclass">1. Thread class</h4>
+      <h2 id="threadclass">1. Thread class (OS Thread)</h2>
       <table>
         <tr>
           <td>
-            <pre><code class="language-css">
-#include &lt;thread&gt;
+            1. Create Thread Object, which is entity that <br />can start
+            execution immediately after creation<br />
+            2. Thread object created using thread class is<br />
+            2a. Not copy construtible. //error: use of deleted function<br />
+            2b. Not copy assignable. //error: use of deleted function<br />
+            <pre><code class="language-css">#include &lt;thread&gt;
 #include &lt;iostream&gt;
 void fun(int a){
     std::cout &lt;&lt; "Hello";
@@ -77,23 +95,12 @@ int main() {
     t1.join();
 
     //std::thread t2 = t1     //2a
-
     // std::thread t2(fun,3); //2b
-}
-              </code></pre>
+}</code></pre>
           </td>
           <td>
-            1. Create Thread Object, which is entity that can start execution
-            immediately after creation<br />
-            2. Thread object created using thread class is<br />
-            2a. Not copy construtible. //error: use of deleted function<br />
-            2b. Not copy assignable. //error: use of deleted function
-          </td>
-        </tr>
-      </table>
-
-      <dl>Thread calling method of class</dl>
-      <pre><code class="language-cpp">
+            <b>Thread calling method of class</b><br />
+            <pre><code class="language-css">
 #include &lt;thread&gt;
 class A {
     void test(int a) {
@@ -112,97 +119,70 @@ int main() {
     obj.fun(1);
 }
           </code></pre>
+          </td>
+        </tr>
+      </table>
 
-      <h4 id="functor">2. Using Functor</h4>
-      <pre><code class="language-css">
-#include &lt;thread&gt;
-#include &lt;iostream&gt;
-#include &lt;mutex&gt;
-#include &lt;vector&gt;
-std::mutex m;
-
-void fun(int tid) {
-    int a;
-    m.lock();
-    a += 5;
-    std::cout &lt;&lt; 
-    "Thread: " &lt;&lt; 
-    tid &lt;&lt; ", a:
-    " &lt;&lt; a &lt;&lt; std::endl;
-    m.unlock();
+      <h2 id="functor">2. Using Functor (OS Thread)</h2>
+      <table>
+        <tr>
+          <td>
+            <b>emplace_back():</b> In-Place Construction: emplace_back
+            constructs the object directly inside the vector's allocated memory
+            space.<br />
+            <pre><code class="language-css">void fun(int tid) {
+  ..
 }
 
 int main() {
     std::vector &lt;std::thread&gt; vecThreads;
     for (int i = 0; i&lt; 5; ++i) {
-    //Functor to create Threads
-    vecThreads.emplace_back(
-        [&]() {
+      vecThreads.emplace_back([&](){
         fun(i);
-        }
-    );
+      });
     }
-    for (auto& t : vecThreads)
-    t.join();
+    for (auto& t : vecThreads) {
+      t.join();
+    }
     return 0;
-}
-        </code></pre>
-
-      <h1 id="rust">Rust</h1>
-      <table>
-        <tr></tr>
+}</code></pre>
+          </td>
+          <td>
+            <b>push_back():</b> push_back requires a fully constructed object.
+            To use push_back with std::thread. This creates a temporary
+            std::thread on the stack and then moves it into the vector.
+          </td>
+        </tr>
       </table>
 
-      <h4 id="spawn">1. std::thread::spawn</h4>
-      <dl>
-        thread::spawn() takes a
-        <a
-          href="https://github.com/code-with-amitk/Code-examples/tree/master/Languages/Programming_Languages/Rust/Functions#closure"
-          >closure</a
-        >
-        as an argument, which contains the code to be executed in the new
-        thread<br />
-        3 ways to create threads using thread::spawn
-      </dl>
+      <h1 id="rust">Rust</h1>
+      <h2 id="spawn">1. std::thread::spawn (OS Thread)</h2>
       <table>
         <tr>
-          <th>Methods</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>1. Normal Closure</td>
           <td>
-            <pre><code class="language-css">
-$ cat main.rs
-use std::thread;
+            <b>Normal Closure</b><br />
+            <pre><code class="language-css">use std::thread;
 fn fun1() {
     println!("Thread-1");
 }
 fn main() {
-    let handle1 = thread::spawn(fun1);      //Thread-1
+    let handle1 = thread::spawn(fun1); //Thread-1
 
-    let handle2 = thread::spawn(||{         //Thread-2
+    let handle2 = thread::spawn(||{  //Normal Closure
             println! ("Thread-2");
         });
 
-    // Thread1, Thread2 are joinable.
-    // main will not exit without t1,t2
-    // spawn() returns Struct std::thread::JoinHandle 
-    // which has method join() 
     handle1.join().unwrap();
     handle2.join().unwrap();
 }
 $ cargo run
                 </code></pre>
           </td>
-        </tr>
-        <tr>
-          <td>2. Scoped Threads(Borrow from env)</td>
           <td>
-            Normal Threads cannot borrow from their environment, but scoped
-            threads can.<br />
-            Scoped threads are not required to joined: - Reason being, when
-            scoped thread completes, its required to return the borrowed data
+            <b>Scoped Lambda/Closure:</b><br />
+            Can borrow from env<br />
+            Scoped threads are not required to joined because when thread
+            completesits required to return the borrowed data<br />
             <pre><code class="language-css">
 fn main() {
     let a = 1;
@@ -215,14 +195,11 @@ fn main() {
 }
 </code></pre>
           </td>
-        </tr>
-        <tr>
-          <td>3. Move Closure</td>
           <td>
-            The move keyword indicates that the closure will take ownership of
-            any variables it captures from its environment.
-            <pre><code class="language-css">
-use std::thread;
+            <b>Move Closure:</b><br />
+            closure takes ownership of any variables it captures from its
+            environment.<br />
+            <pre><code class="language-css">use std::thread;
 
 fn main() {
     let a = 10;
@@ -230,20 +207,19 @@ fn main() {
         println!("Thread {}", a);
     });
 
-    handle.join().unwrap(); // Wait for the thread to finish
+    handle.join().unwrap();
 }
                     </code></pre>
           </td>
         </tr>
       </table>
 
-      <h4 id="builder">2. std::thread::Builder</h4>
-      <dl>
+      <h2 id="builder">2. std::thread::Builder (OS Thread)</h2>
+      <p>
         Allows for more control over thread creation, such as setting stack size
         or naming the thread
-      </dl>
-      <pre><code class="language-css">
-use std::thread;
+      </p>
+      <pre><code class="language-css">use std::thread;
 
 let builder = thread::Builder::new().name("my_thread".into()).stack_size(32 * 1024);
 let handle = builder.spawn(|| {
@@ -252,11 +228,7 @@ let handle = builder.spawn(|| {
 handle.join().unwrap();
         </code></pre>
 
-      <h4 id="async">3. Asynchronous Frameworks (e.g., Tokio)</h4>
-      <dl>
-        For asynchronous programming, you can use libraries like Tokio, which
-        allows you to spawn tasks on a runtime.
-      </dl>
+      <h2 id="async">Asynchronous Frameworks (e.g., Tokio) [GREEN Threads]</h2>
       <pre><code class="language-css">
 #[tokio::main]
 async fn main() {
@@ -267,7 +239,7 @@ async fn main() {
 }
         </code></pre>
 
-      <h3 id="python">Python</h3>
+      <h1 id="python">Python</h1>
       <pre><code class="language-css">
 import threading, zipfile
 
@@ -320,9 +292,9 @@ print('Main program waited until background was done.')
 
       <h2 id="os-thread">OS Thread (Platform Thread)</h2>
       <p>
-        A <strong>platform thread</strong> maps 1:1 to an OS thread. The JVM asks
-        the kernel to create a native thread. Use these for CPU-bound work or
-        when you need a small, fixed pool of threads.
+        A <strong>platform thread</strong> maps 1:1 to an OS thread. The JVM
+        asks the kernel to create a native thread. Use these for CPU-bound work
+        or when you need a small, fixed pool of threads.
       </p>
       <h4 id="java-runnable">1. Runnable Interface</h4>
       <pre><code class="language-java">
@@ -384,8 +356,8 @@ exiting main thread
       <p>
         In Java 21+, lightweight user-space threads are called
         <strong>virtual threads</strong> (Project Loom). The JVM schedules many
-        virtual threads on a small pool of platform (carrier) threads — the
-        same M:N idea as classic
+        virtual threads on a small pool of platform (carrier) threads — the same
+        M:N idea as classic
         <a href="../Green_vs_OS_threads.html#green">green threads</a>. They are
         cheap to create (millions are fine) and ideal for blocking I/O such as
         HTTP calls, DB queries, and file reads.
@@ -396,7 +368,9 @@ exiting main thread
       </p>
 
       <h4 id="java-vt-start">1. Thread.startVirtualThread()</h4>
-      <p>Simplest way — start one virtual thread with a <code>Runnable</code>.</p>
+      <p>
+        Simplest way — start one virtual thread with a <code>Runnable</code>.
+      </p>
       <pre><code class="language-java">
 // VirtualThreadStart.java — Java 21+
 public class VirtualThreadStart {
@@ -481,7 +455,9 @@ $ javac --release 21 VirtualThreadFactory.java
 $ java VirtualThreadFactory
       </code></pre>
 
-      <h4 id="java-vt-executor">4. Executors.newVirtualThreadPerTaskExecutor()</h4>
+      <h4 id="java-vt-executor">
+        4. Executors.newVirtualThreadPerTaskExecutor()
+      </h4>
       <p>
         Preferred for many short tasks — each submitted job runs on its own
         virtual thread. Use try-with-resources so the executor shuts down
@@ -516,8 +492,8 @@ $ java VirtualThreadExecutor
       <p>
         <strong>OS thread vs green thread in Java:</strong>
         <code>new Thread(r).start()</code> → platform thread (1 OS thread each).
-        <code>Thread.startVirtualThread(r)</code> or the virtual executor → green
-        thread (many share few carrier threads).
+        <code>Thread.startVirtualThread(r)</code> or the virtual executor →
+        green thread (many share few carrier threads).
       </p>
 
       <h1 id="windows">Windows</h1>

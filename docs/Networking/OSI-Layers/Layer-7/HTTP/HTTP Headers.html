@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>HTTP</title>
+  <title>HTTP Headers</title>
     <link rel="canonical" href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP%20Headers.html" />
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="stylesheet" href="/css/prism.css"/>
@@ -30,18 +30,60 @@
     <a href="#headers">Headers</a>
     <ul>
       <li><a href="#req">Request Header</a></li>
+      <ul>
+        <li><a href="#HostHeader">Host Header</a></li>
+      </ul>
       <li><a href="#res">Response Header</a></li>
     </ul>
   </aside>
 
   <article style="margin-left:200px;">
 
-    <h2 id="headers">HTTP Headers</h2>
-    <dl>
-      HTTP header is a field(key:value) in an HTTP request or response that contains extra information about the request or response. 
-    </dl>
-    <h3>Header Types</h3>
-    <h4 id="req">1. Reqeust header</h4>
+    <h1 id="headers">HTTP Headers</h1>
+    <p>
+      HTTP header is a field(key:value) in an HTTP request or response that contains some information
+    </p>
+    <table>
+      <tr>
+        <td>Request Headers: <br>
+	Provide context about the resource being fetched or the client making the request.
+<br>
+          <pre><code>
+Host(Mandatory):
+User-Agent
+Accept
+Authorization
+          </code></pre>
+        </td>
+        <td>Response Headers<br>
+          Hold extra metadata about the response<br>
+          <pre><code>
+Server
+Location
+Access-Control-Allow-Origin
+          </code></pre>
+        </td>
+        <td>Representation Headers<br>
+          Describe the specific format, encoding, or version<br>
+          <pre><code>
+Content-Type
+Content-Encoding
+Content-Language
+          </code></pre>
+        </td>
+        <td>Payload Headers<br>
+          Describe transport-level characteristics of the data payload<br>
+          <pre><code>
+Content-Length
+Transfer-Encoding
+          </code></pre>
+        </td>
+      </tr>
+    </table>
+
+
+    <h2>Header Types</h2>
+    <h3 id="req">1. Reqeust header</h3>
     <dl>
       HTTP client uses this to provide information about the request context, so that the server can tailor the response.
     </dl>
@@ -170,6 +212,15 @@ Sec-Fetch-Site: none
               </td>
             </tr>
           </table>
+        </td>
+      </tr>
+      <tr id="HostHeader">
+        <td>Host Header (MANDATORY)<br> Only present in HTTP/1.1</td>
+        <td><pre><code class="language-css">Host: www.example.com:443</code></pre><br>
+        Contains domain name of the server which HTTP Client want to connect. 
+        Without it, a server hosting multiple websites (virtual hosting) wouldn't 
+        know which site should receive the request.<br><br>
+        Host header is similar to <a href="/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/">SNI Header</a>
         </td>
       </tr>
       <tr>

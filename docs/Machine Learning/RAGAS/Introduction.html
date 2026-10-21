@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>RAGAS</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Machine%20Learning/RAGAS/Introduction.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/RAGAS/Introduction.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- Add any necessary CSS and JavaScript files -->
   </head>
@@ -28,7 +31,7 @@
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">RAGAS(Retrieval Augmented Generation Assessment)</h2>
+      <h1 id="what">RAGAS(Retrieval Augmented Generation Assessment)</h1>
       <p>
         Open-source framework designed to evaluate
         <a href="/Machine Learning/"
@@ -38,7 +41,39 @@
         failing
       </p>
 
-      <h2 id="metrics">Metrics of RAGAS</h2>
+      <h1 id="metrics">Metrics of RAGAS</h1>
+      <p>
+        - We have
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Machine_Learning/RAG_Pipeline/Code/RAG_Pipeline_VPN_Firewall_logs#retriever-phase-retrieve-embeddings-of-chunks-store-in-vector-db"
+          >RAG pipeline</a
+        >
+        in which documents are feed and embeddings are calculated and stored in
+        vector DB<br />
+        - Now embedding is calculated for actual User's Query and nearness is
+        calculated to document embeddings stored in vector DB<br />
+        - Now question is how close the LLM's response is to expected response,
+        ie the response which actually should be generated<br />
+        - Below metrics are measurement of same
+      </p>
+
+      <h2>1. ResponseRelevancy()</h2>
+      <p>
+        - Response from LLM is fed to another Evaluator LLM that generates
+        several new Sample Prompts, that could have lead this response<br />
+        - Embeddings is calculated for the Original User Prompt and these Sample
+        Prompts and Cosine Similarity is calculated.<br />
+        - Average of All these Similarity Scores is the Response Relevancy
+      </p>
+
+      <h2>2. Faithfulness()</h2>
+      <p>
+        - RAG system provides response to User's query. There are some factual
+        claims made within the response.<br />
+        - More LLM calls are made to find claims within the response are
+        factually correct or not. Percent of correct Cliams is the faithfulness
+      </p>
+
       <p>
         RAGAS breaks down evaluation into components that address the two main
         stages of a RAG pipeline: Retrieval (finding the right data) and
@@ -72,14 +107,6 @@
           <td>
             Measures if the generated answer is derived only from the retrieved
             context (prevents hallucinations).
-          </td>
-        </tr>
-        <tr>
-          <td>4. Answer Relevancy</td>
-          <td>Generation</td>
-          <td>
-            Measures how closely the generated answer addresses the user's
-            original query.
           </td>
         </tr>
       </table>

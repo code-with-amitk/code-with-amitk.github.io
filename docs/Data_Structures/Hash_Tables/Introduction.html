@@ -3,8 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="canonical" href="https://code-with-amitk.github.io/Data_Structures/Hash_Tables/Introduction.html" />
-    <title>Data Structures</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Data_Structures/Hash_Tables/Introduction.html"
+    />
+    <title>What is HashTable, Dictionary</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -56,9 +59,12 @@
         Hash Table is improvement over DAT
       </p>
 
-      <h1 id="what">What is Hash Table</h1>
+      <h1 id="what">Hash Table?</h1>
       <p>
-        Search Complexity: Average=O(1), Worst case=O(n)<br />
+        This is a data structure which can search/delete element in almost O(1)
+        time, Unlike arrays or linked lists that require searching through
+        elements one by one and takes O(n) time<br />
+        Complexity: Average=O(1), Worst case=O(n)<br />
         <b>Disadvantages:</b><br />
         &ensp; 1. Elements are not sorted<br />
         &ensp; 2. Rehashing: Once all HT entries are filled it needs
@@ -75,7 +81,7 @@
       <p>
         Let use consider simple example to insert following key,value pairs:
         {"a",1}, {"b",2}, {"b",3}<br />
-        Keys("a", "b", "b") are passed to hashfunction and indexes are returned
+        Keys("a", "b", "b") are passed to hash function and indexes are returned
         in bucket which acts as hash table<br />
         <b>Collision:</b> if same index is returned, chaining is done, ie
         element is inserted into next position in vector
@@ -140,7 +146,11 @@ public:
       </table>
 
       <h2 id="collision">Hash Collision</h2>
-      <p>This means hash function provides same index for 2 different keys.</p>
+      <p>
+        This means hash function provides same index for 2 different keys.<br /><br />
+        <b>Solutions to Hash Collision</b>
+      </p>
+
       <h3 id="opena">1. Open Addressing</h3>
       <table>
         <tr>
@@ -176,9 +186,8 @@ hash(b) = 1. Insert after open place in array
         <tr>
           <td>3. Double Hashing</td>
           <td>
-            Uses double hash function to re-calculate the hash if collision
-            occurs. In case of collision: hash1(x) = (hash1(x) +
-            i*hash2(x))%hash_table_size
+            Uses double hash function to re-calculate the index. hash1(x) =
+            (hash1(x) + i*hash2(x))%hash_table_size
           </td>
         </tr>
       </table>
@@ -212,20 +221,24 @@ Hash Table (Array of Buckets)
         <a href="#sepchaining">Seperate Chaining</a>
       </h1>
       <p>
-        A hash table container like std::unordered_map or std::unordered_set is
-        implemented using separate chaining for collision resolution.<br />
-        <b>Allocations:</b> <a href="">Similar to vector</a><br />
-        &ensp; A default-constructed hash table (:unordered_map &lt;int,
+        std::unordered_map or std::unordered_set is implemented using separate
+        chaining for collision resolution.<br />
+        <b>Allocations:</b>
+        <a
+          href="/Languages/Programming/C++/STL/Containers/Seqeunce_Containers/vector/"
+          >Similar to vector</a
+        ><br />
+        &ensp; A default-constructed hash table (unordered_map &lt;int,
         string&gt; map;) starts with a bucket count of 0.<br />
         &ensp; 1st map.insert(), it allocates its initial bucket array
         (size=1).<br />
-        &ensp; Check <a href="#rehashing">Rehashing</a>
+        &ensp; <a href="#rehashing">Rehashing</a>
       </p>
 
       <h2 id="rehashing">Rehashing</h2>
       <pre><code>load factor = number of elements / number of buckets
 default max_load_factor() = 1.0</code></pre>
-      <dl>
+      <p>
         When an insertion causes the load factor to exceed 1.0 (i.e., elements
         &gt;= buckets), a rehash is triggered automatically.<br />
         During a rehash, a new, larger bucket array is allocated (typically
@@ -233,39 +246,40 @@ default max_load_factor() = 1.0</code></pre>
         existing elements are re-hashed and redistributed into the new
         buckets.<br />
         Let us consider unordered_map&lt;int,string&gt; storing unique keys. At
-        start of program sizeof hash table=3<br />
-        <pre><code>Key | Value
+        start of program sizeof hash table=3
+      </p>
+      <pre><code>Key | Value
   ----------
   01  | amit
   02  | never
-  03  | give
-        </code></pre>
+  03  | give</code></pre>
+      <p>
         Now, (4, up) need to be stored, but hash table has no space so size of
         hash table is increased to 6. (old Hash function = %3) we can only goto
         index number=2. <br />
         But we want to reach 5. Hence Hash function is changed (new Hash
         function = %6). So hash is again calculated for existing values.
-      </dl>
+      </p>
 
       <h2 id="implementations">Implementations</h2>
       <h3 id="2left">2-left hashing</h3>
-      <dl>
+      <p>
         2 equal sized hash tables having 2 seperate hash functions are used.
-        Seperate chanining is used in both. Table1(hash1), Table2(hash2).<br />
-        <font color="red">Cuckoo Hashing</font> is a type of 2-left hashing<br />
+        Table1(hash1), Table2(hash2). Eg: <font color="red">Cuckoo Hashing</font
+        ><br />
         <b>Inserting key into table:</b>
         Always keep Table1 loaded, key is inserted into Table2 only when too
         many collisions happen on Table1.<br />
         <b>Advantages?</b> 1. On parallel systems. 2 cores can query 2 hash
         tables, ie Thread-1 can query Table1 and Thread2 Table2.
-      </dl>
+      </p>
 
       <h3 id="dleft">d-left Hashing</h3>
-      <dl>
+      <p>
         Split 1 hash table into d blocks. Similar to 2-left hashing, left most
         hashtable should be loaded.<br />
         d buckets, n entries. Each bucket has n/d entries<br />
-      </dl>
+      </p>
 
       <h2 id="code">Code</h2>
       <dl>

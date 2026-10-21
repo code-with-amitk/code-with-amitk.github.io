@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Database Transactions</title>
+    <title>Introduction to Transactions, 2PC</title>
     <link
       rel="canonical"
       href="https://code-with-amitk.github.io/System_Design/Concepts/Databases/Terms/Transactions.html"
@@ -53,7 +53,7 @@
     <article style="margin-left: 200px">
       <h1 id="what">Transaction?</h1>
       <dl>
-        A transaction is a way for an application to group several reads and
+        A transaction is a way for an application to group several reads or
         writes(INSERT INTO, SELECT x FROM) together into 1 logical unit.<br />
         Its upto Application to decide whether it wants every read/write to be
         written directly into DB or group several statements as 1 transaction
@@ -86,12 +86,12 @@ sequenceDiagram
     participant DBMgr as Database Manager
     participant DBStorage as Database Storage<br>(Tables)
 
-    App->>DBMgr: INSERT INTO Users (id=1)
-    Note over DBMgr: DBMgr adds [BEGIN],[COMMIT]<br> before and after INSERT statement
-    DBMgr->>DBStorage: {Begin}Write id=1{End}
+    App->>DBMgr: INSERT INTO Users id=1
+    Note over DBMgr:  Add [BEGIN],[COMMIT]<br> before and after INSERT statement
+    DBMgr->>DBStorage: {Begin}<br>INSERT INTO Users name='B' where id=1<br>{End}
 
-    App->>DBMgr: INSERT INTO Users (id=2)
-    DBMgr->>DBStorage: {Begin}Write id=2{End}
+    App->>DBMgr: UPDATE Users name='A" where id=2
+    DBMgr->>DBStorage: {Begin}<br>UPDATE Users name='A" where id=2<br>{End}
     DBMgr-->>App: Success ACK
               </pre>
             </div>
@@ -99,23 +99,18 @@ sequenceDiagram
           <td>
             <b>x number of operations are grouped as 1 transaction</b
             ><br /><br />
-            Application want dbmgr, to group x reads/writes into 1
-            transaction<br />
-            To group multiple operations(INSERT, DELETE etc) into one logical
-            unit, the application must override the default behavior by sending
-            specific SQL commands(<code>db.begin_transaction()</code>) before
-            executing the data manipulation statements.<br />
+            Application sends <code>db.begin_transaction()</code> marking start
+            of transaction<br />
 
-            <b>Commit:</b><br />
-            &ensp; The application sends multiple data packets (e.g., INSERT,
-            UPDATE, DELETE statements). The DBMgr writes these changes to a
-            <u>Temporary log (Write-Ahead Log)</u> rather than immediately
-            writing to DB, once application sends Commit, these are written to
-            DB.<br />
-            &ensp; The application sends a final COMMIT to save everything DB<br />
-            <b>Rollback(error occured):</b><br />
-            &ensp; Application sends Rollback to discard all changes. Once the
-            database Rollback, it deletes entry from Temporary(WAL log)<br />
+            Application sends multiple data packets (e.g., INSERT, UPDATE,
+            DELETE statements). The DBMgr writes these changes to a
+            <u>Temporary log (Write-Ahead Log)</u><br />
+            Application sends a <code>db.commit()</code> instructing DBMgr to
+            write into DB<br />
+            <b>Error:</b>
+            Application sends <code>db.roll_back()</code> to discard all
+            changes. Once the database Rollback, it deletes entry from
+            Temporary(WAL log)<br />
             <div class="mermaid-wrap">
               <pre class="mermaid">
 sequenceDiagram
@@ -127,10 +122,10 @@ sequenceDiagram
     App->>DBMgr: db.begin_transaction()
     Note over DBMgr: START TRANSACTION
 
-    App->>DBMgr: INSERT INTO Users (id=2)
+    App->>DBMgr: INSERT INTO Users name='A' where id=2
     Note over DBMgr: Staged changes in Temporary Log
 
-    App->>DBMgr: INSERT INTO Users (id=3)
+    App->>DBMgr: UPDATE Users name='B' where id=3
     Note over DBMgr: Staged changes in Temporary Log
 
     App->>DBMgr: db.commit()

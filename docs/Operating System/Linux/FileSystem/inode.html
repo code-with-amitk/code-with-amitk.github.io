@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>inode</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Operating%20System/Linux/FileSystem/inode.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Operating System/Linux">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="sidebar">
+      <a href="#inode">inode</a>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="inode">inode / index node</h1>
+      <p>
+        Data structure in Unix/Linux filesystems that stores all metadata about
+        a filesystem object—except its name and its actual data contents.<br />
+        Every file or directory on a Linux filesystem gets assigned a unique
+        integer called an inode number.
+      </p>
+      <table>
+        <tr>
+          <td>
+            <pre><code>struct file_inode {
+    int size;
+    int change time; 
+    int group;
+    int permissions;
+    int number of blocks;
+
+    //Addresses of blocks of file_A on Disk
+    uint64_t Block_Addresses[] = {4, 7, 2, 10};
+};
+      </code>
+    </pre>
+          </td>
+          <td>
+            <img
+              src="/images/operating_system/linux/filesystem/file_inode.jpg"
+              alt="file inode"
+              class="zoomable-image"
+              id="zoomableImage2"
+              style="width: 600px; height: 300px"
+            />
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        Every time user writes to file, new block is stored at new disk location
+        and addresses is added.<br />
+        File name(stored on heap), file content(stored on disk blocks).
+      </p>
+    </article>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>

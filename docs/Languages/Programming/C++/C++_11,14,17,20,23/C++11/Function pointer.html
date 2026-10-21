@@ -1,44 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <title>Function Pointer</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/C%2B%2B_11%2C14%2C17%2C20%2C23/C%2B%2B11/Function%20pointer.html" />
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="/contact.html">Contact</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  <head>
+    <title>Function Pointer C++</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/C%2B%2B_11%2C14%2C17%2C20%2C23/C%2B%2B11/Function%20pointer.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Languages/Programming/C++">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#fp">Function pointer</a>
-        <ul>
-            <li><a href="#fpcpp">C++ (std::function)</a></li>
-            <li><a href="">C</a></li>
-        </ul>
-        <a href="#callback">Callback Function</a>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#fp">Function pointer</a>
+      <ul>
+        <li><a href="#fpcpp">C++ (std::function)</a></li>
+        <li><a href="">C</a></li>
+      </ul>
+      <a href="#callback">Callback Function</a>
     </aside>
 
-    <article style="margin-left:200px;">
-        <h2 id="fp">Function Pointer</h2>
-        <h3 id="fpcpp">C++ (std::function)</h3>
-        <dl>
-            Instances of std::function can store, copy, and invoke any CopyConstructible Callable functions(ie targets)<br>
-        </dl>
+    <article style="margin-left: 200px">
+      <h1 id="fp">Function Pointer</h1>
+      <h3 id="fpcpp">C++ (std::function)</h3>
+      <dl>
+        Instances of std::function can store, copy, and invoke any
+        CopyConstructible Callable functions(ie targets)<br />
+      </dl>
 
-        <pre><code class="language-css">
+      <pre><code class="language-css">
 #include &lt;functional>
 class C {
     int n;
@@ -79,8 +86,8 @@ int main() {
 }
         </code></pre>
 
-        <h3 id="fpc">C Function Pointer</h3>
-        <pre><code class="language-css">
+      <h3 id="fpc">C Function Pointer</h3>
+      <pre><code class="language-css">
 // Pointer to function returning void, accepting void
 void fun(){
     cout &lt;&lt; "fun";
@@ -103,13 +110,15 @@ int main() {
 }
         </code></pre>
 
-        <h2 id="callback">Callback Function</h2>
-        <dl>
-            A callback is a function that is passed as an argument to another function and is intended to be "called back" at 
-            a later time within that other function.<br>
-            In C++, callbacks are often implemented using function pointers, functors, or std::function objects.
-        </dl>
-        <pre><code class="language-css">
+      <h2 id="callback">Callback Function</h2>
+      <dl>
+        A callback is a function that is passed as an argument to another
+        function and is intended to be "called back" at a later time within that
+        other function.<br />
+        In C++, callbacks are often implemented using function pointers,
+        functors, or std::function objects.
+      </dl>
+      <pre><code class="language-css">
 #include &lt;iostream>
 #include &lt;functional>
 using namespace std;
@@ -135,26 +144,34 @@ fun 10
 */
         </code></pre>
 
-        <h2 id="vs">Callback vs Function pointer</h2>
-        <table>
-            <tr>
-                <th></th>
-                <th>Function pointer</th>
-                <th>Callback</th>
-            </tr>
-            <tr>
-                <td>What</td>
-                <td>This is low-level mechanism that points to a function</td>
-                <td>High-level concept where a function is passed as an argument to be executed later.</td>
-            </tr>
-            <tr>
-                <td>Usage, Ease</td>
-                <td>Function pointers are more common in C and simpler C++ applications</td>
-                <td>Callbacks using std::function are preferred in modern C++ because they provide more flexibility and ease of use</td>
-            </tr>
-        </table>
+      <h2 id="vs">Callback vs Function pointer</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>Function pointer</th>
+          <th>Callback</th>
+        </tr>
+        <tr>
+          <td>What</td>
+          <td>This is low-level mechanism that points to a function</td>
+          <td>
+            High-level concept where a function is passed as an argument to be
+            executed later.
+          </td>
+        </tr>
+        <tr>
+          <td>Usage, Ease</td>
+          <td>
+            Function pointers are more common in C and simpler C++ applications
+          </td>
+          <td>
+            Callbacks using std::function are preferred in modern C++ because
+            they provide more flexibility and ease of use
+          </td>
+        </tr>
+      </table>
     </article>
 
     <script src="/scripts/prism.js"></script>
-</body>
+  </body>
 </html>

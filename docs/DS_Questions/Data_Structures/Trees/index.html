@@ -1,55 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Binary Trees</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/DS_Questions/Data_Structures/Trees" />
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/prism.css"/>
-</head>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/DS_Questions/Data_Structures/Trees"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
 
-<body>
-    <nav class="navbar">    <!--See .navbar in styles.css-->
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">Our team</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="/DS_Questions/">Back</a></li>
-          <li>
-            <form>
-                <input type="search" name="q" placeholder="Search site" />
-                <input type="submit" value="Go!" />
-            </form>
-           </li>
-        </ul>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="/DS_Questions/">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="/Data_Structures/">Types of Trees</a>
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="/Data_Structures/">Types of Trees</a>
     </aside>
 
     <main>
-        <article style="margin-left:200px;">
-            <h1>Binary Trees</h1>
-            <ul>
-              <li>
-                  <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
-              </li>
-            </ul>
-        
-            <h3 id="comp">C++, Rust, Python, Go</h3>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>C++</th>
-                    <th>Rust</th>
-                    <th>Python(List [])</th>
-                    <th>Go</th>
-                </tr>
-        
-                <tr>
-                    <td>Definition</td>
-                    <td><pre>    <!--c++-->
+      <article style="margin-left: 200px">
+        <h1>Binary Trees</h1>
+        <ul>
+          <li>
+            <h3><a href="#comp">C++, Rust, Python, Go</a></h3>
+          </li>
+        </ul>
+
+        <h3 id="comp">C++, Rust, Python, Go</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>C++</th>
+            <th>Rust</th>
+            <th>Python(List [])</th>
+            <th>Go</th>
+          </tr>
+
+          <tr>
+            <td>Definition</td>
+            <td>
+              <pre>    <!--c++-->
 //Definition for a binary tree node.
 struct TreeNode {
     int val;
@@ -71,19 +77,21 @@ struct TreeNode {
     val(x), left(left), right(right) {}
 };
 
-                    </pre></td>
-                    <td><pre>    <!--Rust-->
+                    </pre>
+            </td>
+            <td>
+              <pre>    <!--Rust-->
 // Definition for a binary tree node.
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
 pub val: i32,
-pub left: Option<Rc<RefCell<TreeNode>>>,
-pub right: Option<Rc<RefCell<TreeNode>>>,
+pub left: Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt;,
+pub right: Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt;,
 }
 
 impl TreeNode {
 #[inline]
-pub fn new(val: i32) -> Self {
+pub fn new(val: i32) -&lt; Self {
     TreeNode {
     val,
     left: None,
@@ -91,50 +99,62 @@ pub fn new(val: i32) -> Self {
     }
 }
 }
-                    </pre></td>
-                    <td><pre>    <!--Python-->
+                    </pre>
+            </td>
+            <td>
+              <pre>    <!--Python-->
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
 #         self.val = val
 #         self.left = left
 #         self.right = right
-                    </pre></td>
-                    
-                    <td><pre>    <!--Go-->
-                    </pre></td>
-                </tr>
-        
-                <tr>
-                    <td>Passing to Function</td>
-                    <td><pre>   <!--c++-->
+                    </pre>
+            </td>
+
+            <td>
+              <pre>    <!--Go-->
+                    </pre>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Passing to Function</td>
+            <td>
+              <pre>   <!--c++-->
 void inorder(TreeNode* root)
-                    </pre></td>
-                    <td><pre>   <!--Rust-->
+                    </pre>
+            </td>
+            <td>
+              <pre>   <!--Rust-->
 fn inorder(
-    root: &Option<Rc<RefCell<TreeNode>>>
+    root: &Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt;
         )
-                    </pre></td>
-                    <td><pre>   <!--Python-->
+                    </pre>
+            </td>
+            <td>
+              <pre>   <!--Python-->
 def leafSimilar(
     self, root1: Optional[TreeNode]
     )
-                    </pre></td>
-                    <td>    <!--Go-->
-        
-                    </td>
-                </tr>
-        
-                <tr>
-                    <td>Check Value is empty?</td>
-                    <td><pre>    <!--c++-->
+                    </pre>
+            </td>
+            <td><!--Go--></td>
+          </tr>
+
+          <tr>
+            <td>Check Value is empty?</td>
+            <td>
+              <pre>    <!--c++-->
 if (!root)
     return;
-                    </pre></td>
-                    <td><pre>    <!--rust-->
+                    </pre>
+            </td>
+            <td>
+              <pre>    <!--rust-->
 fn inorder(
-    root: &Option<Rc<RefCell<TreeNode>>>, 
-    tree: &mut Vec<i32>) {
+    root: &Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt; 
+    tree: &mut Vec&lt;i32&gt;) {
     if let Some(node) = root {
         Solution::inorder(
             &node.borrow().left, 
@@ -149,20 +169,24 @@ fn inorder(
             tree);
     }
 }
-                    </pre></td>
-                    <td><pre>   <!--python-->
+                    </pre>
+            </td>
+            <td>
+              <pre>   <!--python-->
 def inorder(root: Optional[TreeNode], tree: []):
     if root == None:
         return
     inorder (root.left, tree)
-                    </pre></td>
-                    <td><pre>   <!--go-->
+                    </pre>
+            </td>
+            <td>
+              <pre>   <!--go-->
         
-                    </pre></td>
-                </tr>
-            </table>
-        </article>
+                    </pre>
+            </td>
+          </tr>
+        </table>
+      </article>
     </main>
-</body>
-
+  </body>
 </html>

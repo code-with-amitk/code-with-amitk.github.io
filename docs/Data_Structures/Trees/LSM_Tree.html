@@ -40,16 +40,14 @@
         LSM Tree is not a traditional
         <a href="/Data_Structures/">BTree</a> node-and-pointer parent-child tree
         structure<br />
-        LSM-Tree = (Memtables(in memory) + SSTables(on disk))
+        LSM-Tree = RAM(Memtables) + Hard Disk(SSTables (Sorted String Table))
       </p>
       <h3>Write Data in LSM Tree?</h3>
       <p>
-        <b>1. MemTables(In memory/RAM)</b><br />
-        &ensp; 1st data is written to RAM(ie memtables). When (size &gt; 64KB).
-        data is moved to Disk<br />
-        <b>2. SSTables(Sorted String Table) on Disk</b><br />
-        &ensp; SSTables are immutable sorted files stored on Disk which store
-        data in sequential manner.
+        1st data is written to RAM(ie memtables). When (size &gt; 64KB). data is
+        moved to Dis(SSTables)k<br />
+        SSTables are immutable sorted files stored on Disk which store data in
+        sequential manner.
       </p>
       <h3>Read Data</h3>
       <p>
@@ -73,11 +71,11 @@
 
       <h2>Example</h2>
       <p>
-        Consider a example where {key,value} need to be stored.<br />
+        {key,value} need to be stored.<br />
         <b>Writing to DB:</b> 1st data goes to RAM(Memtables), once size of
-        Memtables(exceeds 64KB) data is moved to disk(SSTables).<br />
-        <b>Reading from DB:</b> To Read ID: 2: The system checks the MemTable
-        first. If not found, it checks the SSTables from newest to oldest.
+        Memtables &gt; 64KB data is moved to disk(SSTables).<br />
+        <b>Reading from DB:</b> System checks the MemTable first. If not found,
+        it checks the SSTables from newest to oldest.
       </p>
       <pre><code>Incoming data       Stored in RAM(Memtables)
         {1, A}        
@@ -90,22 +88,16 @@
         {2,B} ----> |{2,B}|------write---------> [ {1,A}, {2,B}, {3,C} ]
       </code></pre>
 
-      <h2 id="why">Why LSM Trees Scale Horizontally Better Than B-Trees</h2>
+      <h2 id="why">Why noSQL Scale Horizontally wrt SQL</h2>
+      <h3>1. SQL(ACID), noSQL(BASE)</h3>
       <p>
-        Core difference between LSM-based storage engines(e.g., Cassandra,
-        RocksDB, ScyllaDB) and traditional B-Tree storage engines (e.g.,
-        PostgreSQL, InnoDB) comes down to
-        <b>append-only storage vs. in-place updates.</b><br /><br />
-
-        <b>How postgres stores data?</b><br />
-        &ensp; In-Place Updates: Overwrites fixed-size disk pages directly.<br /><br />
-
-        <b>How LSM Trees store data?</b><br />
-        &ensp; Append-Only / Immutable: Writes sequentially to RAM, then flushes
-        new SSTables to disk.<br />
-        &ensp; Whenever new data need to be added a new Shard is added and data
-        present on old shard is not touched.<br />
-        &ensp; Shards can paritioned using user_id
+        <b>SQL: ACID(Atomicity, Consistency, Isolation, Durability)</b><br />
+        &ensp; <u>Consistency</u> SQL DB wants transaction to be consistent. if
+        tables are stored on 3 seperate machines. SQL want data should be
+        committed and ACKed.
+        <a href="/System_Design/Concepts/Databases/Terms/Transactions.html#2pc"
+          >2 Phase Commit</a
+        >
       </p>
     </article>
 

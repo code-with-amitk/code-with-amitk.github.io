@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>C++(vector) internal Implementation</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/STL/Containers/Seqeunce_Containers/vector/Internal_Implementation.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/STL/Containers/Seqeunce_Containers/vector/Internal_Implementation.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -30,8 +33,8 @@
         vector allocates memory on heap<br />
         vector start with 0 capacity, 0 size<br />
         Allocate a single element on the first push_back()<br />
-        vector starts with 0 size and reallocates double or 1.5 times based on
-        standard library implementations
+        Reallocates double or 1.5 times based on standard library
+        implementations
       </p>
       <pre><code>std::vector&lt;int&gt; a;   // Capacity: 0, Size: 0
 a.push_back(10);            // Allocates capacity 1. Size: 1, Capacity: 1

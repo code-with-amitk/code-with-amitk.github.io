@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Lifetime in Rust</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Languages/Programming/Rust/lifetime.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Languages/Programming/Rust/lifetime.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -39,16 +42,18 @@
     <article style="margin-left: 200px">
       <h2 id="what">Lifetime ('a)</h2>
       <p>
-        'a is a Lifetime. It is <b>not a type, but a label</b> that describes
+        A lifetime ensures that a "borrowed" reference doesn't outlive the
+        actual data it is pointing to<br />
+        If the original data gets destroyed, but your reference tries to stick
+        around, it becomes a dangerous "dangling reference". Rust stops this
+        from happening at compile time<br />
+        Lifetimes are checked using <a href="/Languages/Programming/Rust/Ownership.html#BorrowChecker"
+          >Borrow checker</a
+        >.<br>
+        'a is a Lifetime. it describes
         how long a reference is valid. <br />
         A lifetime in Rust is the duration during which a
         <a href="References Borrowing/index.html">reference</a> is valid<br />
-        Lifetime is only associated with references, it ensures memory safety
-        without a garbage collector.<br />
-        Rust
-        <a href="References Borrowing/index.html">Borrow checker</a> ensures
-        <b>references never outlive the data they point to</b>, preventing
-        dangling pointers<br />
         Lifetime annotations look like &lt;'a&gt;, 'a, etc. — they're just
         labels for the compiler
       </p>
@@ -59,37 +64,41 @@
         </tr>
         <tr>
           <td>
-            <pre><code class="language-css">
-fn longest (x:& str, y:& str) -&gt; & str{
-    if x.len() &gt; y.len() { x } else { y }
-}
-fn main() {
-    let string1 = String::from("Hi");
-    {
-        let string2 = String::from("Hello");
-        let result = longest (string1.as_str(), string2.as_str());
-        println! ("{result}");
-    }
+            <pre><code class="language-css">fn main() {
+    let a;
+    {                    
+        let b = 5;
+        a = &b;           // a takes reference of b
+    }                     // b life ended
+    println!("a: {}", a); // Error: Trying to use dead variable
 }
 
-$ cargo build
-3 | fn longest(x:& str, y:& str) -&gt; & str 
-    |              -----    -----    ^ expected named lifetime parameter
-                        </code></pre>
-            <br />
-            <b>Why compliation error?</b><br />
-            The return type (&str) from function longest() is a borrowed value,
-            but Rust doesn't know whether it's borrowed from x or y.<br />
-            Compiler does not know that the returned reference will remain valid
-            as long as the any inputs are valid.
+
+///// Another Example (does not compile)/////////
+fn longest(first: &str, second: & str) -&gt; & str {
+    if first.len() &gt; second.len() {
+        first
+    } else {
+        second
+    }
+}
+fn main() {
+    let first = String::from("Rust");
+    let second = String::from("Programming");
+    let result = longest(&first, &second);
+    println!("Longest: {result}");
+}
+$ cargo run
+error: missing lifetime specifier
+</code></pre>
           </td>
           <td>
             <b>Lifetime?</b><br />
             &ensp; Prefix every parameter with 'a. Apostrophe ('a), denotes
-            reference has generic lifetime.
+            reference has generic lifetime.<br />
             <pre><code class="language-css">
 fn longest &lt;'a&gt; (x: &'a str, y: &'a str) -&gt; &'a str {
-    if x.len() &gt; y.len() { x } else { y }
+  
 }
                         </code></pre>
             <br />

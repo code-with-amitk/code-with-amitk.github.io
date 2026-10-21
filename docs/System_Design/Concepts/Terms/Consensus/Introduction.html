@@ -2,8 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Consensus</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Introduction.html" />
+    <title>Consensus, Raft, Paxos</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Terms/Consensus/Introduction.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
   </head>
@@ -37,13 +40,12 @@
     <main style="margin-left: 200px">
       <h2 id="what">What is Consensus?</h2>
       <p>
-        <b>Consensus</b> is how a group of servers agree on <b>one value</b> or
-        <b>one ordered log of operations</b>, even when some nodes crash or
-        messages are delayed. Every non-faulty node must eventually pick the
-        same result.<br />
-        Typical problem: five database replicas receive write requests. Which
-        write is official? Consensus picks an order everyone follows so all
-        replicas stay consistent.<br />
+        Aggrement of group of servers on a value or
+        <b>order of operations</b>, even when some nodes crash or messages are
+        delayed.<br />
+        Eg: 5 database replicas receive write requests. Which write is official?
+        Consensus picks an order everyone follows so all replicas stay
+        consistent.<br />
         Raft and Paxos are <b>general distributed-systems</b> algorithms not
         blockchain specific.<br />
         <b>Products using Consensus:</b> etcd, Consul, CockroachDB, TiKV (Raft);
