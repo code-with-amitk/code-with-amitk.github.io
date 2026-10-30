@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Mutex</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Threads_Processes_IPC/Synchronization/mutex.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Threads_Processes_IPC/Synchronization/mutex.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <!-- Add any necessary CSS and JavaScript files -->
@@ -43,30 +46,32 @@
       </ul>
       <a href="#wrappers">Wrappers around Mutex</a>
       <ul>
-        <li>lock_guard</li>
-        <li>unique_lock</li>
-        <li>unique_lock&lt;defer_lock&gt;</li>
-        <li>shared_lock&lt;shared_mutex&gt;</li>
+        <li><a href="#lgul">lock_guard</a></li>
+        <li><a href="#lgul">unique_lock</a></li>
+        <li>
+          <a href="#lgul">unique_lock<br />&lt;defer_lock&gt;</a>
+        </li>
+        <br />
+        <li>shared_lock<br />&lt;shared_mutex&gt;</li>
       </ul>
     </aside>
 
     <article style="margin-left: 200px">
       <h1 id="what">
         Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep
-      </h1  >
+      </h1>
       <dl>
         if 1 thread is in CS other cannot enter, Return value: None, Parameters:
         None
       </dl>
 
-        <h1>How Mutex is internally implemented?</h1>
+      <h1>How Mutex is internally implemented?</h1>
       <dl>
-        Mutex is kernel maintained lock(a data structure) that we set
-        before using a shared resource and release after using it.<br />
-        Mutex keeps track of who currently has exclusive access to the
-        data.<br />
-        When the lock is set, no other thread can access the locked
-        region of code. <br />
+        Mutex is kernel maintained lock(a data structure) that we set before
+        using a shared resource and release after using it.<br />
+        Mutex keeps track of who currently has exclusive access to the data.<br />
+        When the lock is set, no other thread can access the locked region of
+        code. <br />
         Mutex lock will only be released by the thread who locked it.
         <br />
 
@@ -243,41 +248,39 @@ fn main() {
       </table>
 
       <h1 id="wrappers">Wrappers around mutex</h1>
-      <p>
-        These are classes which owns mutex and provide RAII
-      </p>
+      <h2 id="lgul">lock_guard, unique_lock</h2>
+      <p>These are classes which owns mutex and provide RAII</p>
 
       <table>
         <tr>
-          <th></th> 
+          <th></th>
           <th>lock_guard (smaller=faster)</th>
           <th>unique_lock (heavy wrt lock_guard)</th>
         </tr>
         <tr>
-        <td>What</td>
-        <td>
-          We donot need to unlock this mutex,<br>
-          When lock_guard object goes out of scope, mutex is automatically unlocked
-        </td>
-        <td>
-          Feature rich version of lock_guard
-        </td>
+          <td>What</td>
+          <td>
+            We donot need to unlock this mutex,<br />
+            When lock_guard object goes out of scope, mutex is automatically
+            unlocked
+          </td>
+          <td>Feature rich version of lock_guard</td>
         </tr>
         <tr>
           <td>Features</td>
-          <td>Not copy construtible. Move Assignable.<br>
-          Because operator = is deleted.</td>
           <td>
-            Move Assignable(yes), copy construtible(no)<br>
-          <b>Properties</b><br>
-          lock_guard locks only when it is created.<br>
-          unique_lock has more features:<br>
-          1. Lock/unlock again after 1st lock.<br>
-          2. unique_lock be moved to other object<br>
-          3. unique_lock uses a little more memory to track if it is locked.<br>
-          4. deferred locking: Acquire the mutex but donot lock immediately<br>
-          5. time-constrained attempts at locking: try_lock_for(), try_lock_until()<br>
-          6. recursive locking
+            Not copy construtible. Move Assignable.<br />
+            Because operator = is deleted.
+          </td>
+          <td>
+            Move Assignable(yes), copy construtible(no)<br />
+            <b>Properties</b><br />
+            1. Lock/unlock again after 1st lock.<br />
+            2. Can be moved to other object<br />
+            3. deferred locking: Acquire the mutex but donot lock immediately<br />
+            4. time-constrained attempts at locking: try_lock_for(),
+            try_lock_until()<br />
+            5. recursive locking
           </td>
         </tr>
         <tr>
@@ -290,53 +293,30 @@ void fun(int tid) {
   // unlike mutex, lg.unlock() is not needed
   lock_guard &lt;mutex&gt; lg(m);
   cout &lt;&lt; "tid: " &lt;&lt; tid &lt;&lt; ", var: " &lt;&lt;  var++ &lt;&lt; "\n";
-}
-int main() {
-    int a = 1;
-    int num_of_thrs = 5;
-    thread t[10];
-    for (auto i = 0; i &lt; num_of_thrs; i++) {
-        t[i] = thread(fun, i);
-    }
-
-    for (auto i = 0; i &lt; num_of_thrs; i++)
-        t[i].join();
-    return 0;
-}
-/*
-Without lock_guard:
-tid: thr_id: 0, var: 0
-tid: 1, var: 1
-tid: 34, var: 2
-, var: tid: 2, var: 3
-4
-
-With lock_guard:
-tid: 0, var: 0
-tid: 1, var: 1
-tid: 2, var: 2
-tid: 4, var: 3
-tid: 3, var: 4
-*/</code></pre>
-      </td>
+}</code></pre>
+          </td>
           <td>
-            <b>Immediate lock</b><br>
+            <b>Immediate lock</b><br />
             <pre><code class="language-css">mutex m;
 void fun(int tid) {
-    unique_lock<mutex> ul(m);
+    unique_lock &lt;mutex&gt; ul(m);
     // Do some work here
     ul.unlock();    // unlock early
     // Do other work without the lock
     ul.lock();      // lock again
-}</code></pre><br><br>
+}</code></pre>
+            <br /><br />
 
-          <b>unique_lock &lt;defer_lock&gt;</b><br>
-          - Donot lock immediately. Most of deadlock problem occur because of immediate mutex locking.<br>
-          - defer_lock delays locking on mutex for some time. <a href="/Threads_Processes_IPC/index.html">defer_lock example</a>(Deadlock)<br>
-        <pre><code class="language-css">std::mutex mtx;
+            <b>unique_lock &lt;defer_lock&gt;</b><br />
+            - Donot lock immediately. Most of deadlock problem occur because of
+            immediate mutex locking.<br />
+            - defer_lock delays locking on mutex for some time.
+            <a href="/Threads_Processes_IPC/index.html">defer_lock example</a
+            >(Deadlock)<br />
+            <pre><code class="language-css">std::mutex mtx;
 void task() {
-    // Construct the unique_lock, donot lock mutex immediately
-    std::unique_lock &lt;std::mutex&gt; lock(mtx, std::defer_lock);
+    // Construct unique_lock, donot lock mutex immediately
+    unique_lock &lt;mutex&gt; lock(mtx, defer_lock);
 
     // Do some work while the mutex is NOT locked...
 
@@ -346,13 +326,14 @@ void task() {
 } // The destructor of 'lock' will automatically unlock mtx when it goes out of scope
 
 int main() {
-    std::thread t(task);
+    thread t(task);
     t.join();
     return 0;
-}</code></pre><br>
+}</code></pre>
+            <br />
 
-          <b>1 Writer, Multiple Readers</b><br>
-          <pre><code class="language-css">
+            <b>1 Writer, Multiple Readers</b><br />
+            <pre><code class="language-css">
 #include &lt;shared_mutex&gt;
 std::shared_mutex mtx;
 
@@ -362,13 +343,9 @@ shared_lock &lt;std::shared_mutex&gt; rlock(mtx); // multiple readers allowed
 // For write operations (e.g., allowRequest when it modifies state)
 unique_lock &lt;shared_mutex&gt; wlock(mtx); // single writer
           </code></pre>
-
           </td>
         </tr>
       </table>
-
-
-
     </article>
     <script src="/scripts/common.js"></script>
     <script src="/scripts/prism.js"></script>
