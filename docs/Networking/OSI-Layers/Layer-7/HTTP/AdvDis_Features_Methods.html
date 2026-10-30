@@ -2,8 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>HTTP</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html" />
+    <title>HTTP, HTTP Methods</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
   </head>
@@ -34,19 +37,102 @@
     <aside class="sidebar">
       <!--See .sidebar in styles.css-->
       <a href="#what">What is HTTP</a>
+      <a href="#flow">HTTP Packet Flow</a>
+      <a href="#HowHTTPDected"> How HTTP parses Headers, Body</a>
       <a href="#features">Features of HTTP</a>
       <a href="#adv">Advatanges, Disadvatanges</a>
       <a href="#methods">HTTP Methods</a>
     </aside>
 
     <article style="margin-left: 200px">
-      <h2 id="what">What is HTTP</h2>
-      <dl>
+      <h1 id="what">HTTP?</h1>
+      <p>
         Client-server/Request-Response protocol. Default port 80, other can be
         used. Uses TCP, does not use UDP. Google’s QUIC uses HTTP over UDP<br />
         HTTP Clients: Web-browser, Any process can create socket and get
         information from server.
-      </dl>
+      </p>
+
+      <h2>HTTP Payload + Headers</h2>
+      <img
+        src="/images/networking/HTTP/HTTP_and_HTTPS.png"
+        alt="HTTP Request"
+        style="width: 600px; height: 300px"
+      />
+
+      <h2 id="flow">HTTP Packet Flow</h2>
+      <p>
+        <b>Sender</b><br />
+        - Browser create HTTP request which goes to TLS Layer which sets TLS
+        header encrypts the HTTP request it passes through the TCP layer<br />
+        - TCP header, IP header are added<br />
+        - NIC(Network interface Card) runs the Data Link layer which add the DL
+        header and trailer and converts whole packet into 0101010111<br />
+        - Modulation Chip converts these 010101 to electrical signals<br />
+        - Routing table points to which next Hop Packet should be forwarded<br />
+        - via
+        <a
+          href="https://github.com/code-with-amitk/Code-examples/tree/master/Networking/OSI-Layers/Between_L2_L3/Protocols/ARP"
+          >ARP</a
+        >
+        dst MAC is recieved and filled the DL header<br />
+        <b>Reciever</b><br />
+        - Packet arrives on the destination network NIC, NIC removes the DL
+        header<br />
+        - Copies the IP-TCP-Encrypted-Payload via DMA(direct memory access)
+        RAM<br />
+        - A interrupt is generated which notify the kernel. Kernel removes IP,
+        TCP Header<br />
+        - TLS header is removed, packet is decrypted inside User space and
+        recv() returns the Bytes
+      </p>
+      <img
+        src="/images/networking/HTTP/Layers_adding_headers.png"
+        alt="Layers adding headers"
+        style="width: 800px; height: 400px"
+      />
+
+      <h2 id="HowHTTPDected">
+        How HTTP parses Header, HTTP Body, End of HTTP Request
+      </h2>
+      <p>
+        Every HTTP Header line is seperated by \r\n<br />
+        HTTP headers and body is separated by exactly \r\n\r\n (two carriage
+        return and line feed sequences)<br />
+        Example of 2 back to back HTTP Requests, POST & GET<br />
+      </p>
+      <pre><code>POST /upload HTTP/1.1\r\n
+Host: example.com\r\n
+Content-Length: 12\r\n
+\r\n
+[FILE DATA!]GET /status HTTP/1.1\r\n
+Host: example.com\r\n
+\r\n</code></pre>
+      <h4>Parse POST</h4>
+      <p>
+        HTTP parser reads the incoming stream line-by-line (looking for
+        \r\n).<br />
+        It stops when it hits \r\n\r\n. Now, It looks inside the headers & finds
+        Content-Length: 12.<br />
+        Since it knows content-length=12, it blindly reads exactly 12 bytes from
+        the stream immediately following the \r\n\r\n. It captures [FILE DATA!]
+        as the file payload.
+      </p>
+      <h4>Parse GET</h4>
+      <p>
+        Because the parser read exactly 12 bytes, the stream pointer is now
+        positioned precisely at the start of the next request: GET /status…​.<br />
+        The parser loops back to step 1, reading line-by-line until it hits the
+        next \r\n\r\n.<br />
+        recv() returns whatever bytes are currently available. It might return
+        100 bytes or 4 KB, There is no guarantee that a read data is complete
+        HTTP or not.<br />
+        For example, read 1 might contain GET /api HTTP/1.1\r\nHo, and read 2
+        might contain st: example.com\r\n\r\n.<br />
+        Parser maintains state across reads, recognizes that the first read
+        contains an incomplete header, and continues parsing when the next bytes
+        arrive.
+      </p>
 
       <h2 id="features">Features of HTTP</h2>
       <dl>

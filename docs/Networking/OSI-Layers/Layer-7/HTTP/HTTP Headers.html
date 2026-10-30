@@ -1,102 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>HTTP Headers</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP%20Headers.html" />
-  <link rel="stylesheet" href="/css/styles.css"/>
-  <link rel="stylesheet" href="/css/prism.css"/>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTTP Headers</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP%20Headers.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
 
-
-<body>
-  <nav class="navbar">    <!--See .navbar in styles.css-->
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Our team</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li><a href="../../index.html">Back</a></li>
-      <li>
-        <form id="searchForm">
-            <input type="search" id="searchInput" name="q" placeholder="Search site" />
-            <input type="submit" value="Go!" />
-        </form>
-        </li>
-    </ul>
-  </nav>
-
-  <aside class="sidebar">    <!--See .sidebar in styles.css-->
-    <a href="#headers">Headers</a>
-    <ul>
-      <li><a href="#req">Request Header</a></li>
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
       <ul>
-        <li><a href="#HostHeader">Host Header</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="../../index.html">Back</a></li>
+        <li>
+          <form id="searchForm">
+            <input
+              type="search"
+              id="searchInput"
+              name="q"
+              placeholder="Search site"
+            />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
       </ul>
-      <li><a href="#res">Response Header</a></li>
-    </ul>
-  </aside>
+    </nav>
 
-  <article style="margin-left:200px;">
+    <aside class="sidebar">
+      <!--See .sidebar in styles.css-->
+      <a href="#headers">Headers</a>
+      <ul>
+        <li><a href="#req">Request Header</a></li>
+        <ul>
+          <li><a href="#Authorization">Authorization Request</a></li>
+          <li><a href="#Content-Length">Content-Length</a></li>
+          <li><a href="#HostHeader">Host Header</a></li>
+          <li><a href="#Referer">Referer</a></li>
+          <li><a href="#TransferEncoding">Transfer-Encoding</a></li>
+        </ul>
+        <li><a href="#res">Response Header</a></li>
+      </ul>
+    </aside>
 
-    <h1 id="headers">HTTP Headers</h1>
-    <p>
-      HTTP header is a field(key:value) in an HTTP request or response that contains some information
-    </p>
-    <table>
-      <tr>
-        <td>Request Headers: <br>
-	Provide context about the resource being fetched or the client making the request.
-<br>
-          <pre><code>
+    <article style="margin-left: 200px">
+      <h1 id="headers">HTTP Headers</h1>
+      <p>
+        HTTP header is a field(key:value) in an HTTP request or response that
+        contains some information
+      </p>
+      <table>
+        <tr>
+          <td>
+            Request Headers: <br />
+            Provide context about the resource being fetched or the client
+            making the request.
+            <br />
+            <pre><code>
 Host(Mandatory):
 User-Agent
 Accept
 Authorization
           </code></pre>
-        </td>
-        <td>Response Headers<br>
-          Hold extra metadata about the response<br>
-          <pre><code>
+          </td>
+          <td>
+            Response Headers<br />
+            Hold extra metadata about the response<br />
+            <pre><code>
 Server
 Location
 Access-Control-Allow-Origin
           </code></pre>
-        </td>
-        <td>Representation Headers<br>
-          Describe the specific format, encoding, or version<br>
-          <pre><code>
+          </td>
+          <td>
+            Representation Headers<br />
+            Describe the specific format, encoding, or version<br />
+            <pre><code>
 Content-Type
 Content-Encoding
 Content-Language
           </code></pre>
-        </td>
-        <td>Payload Headers<br>
-          Describe transport-level characteristics of the data payload<br>
-          <pre><code>
+          </td>
+          <td>
+            Payload Headers<br />
+            Describe transport-level characteristics of the data payload<br />
+            <pre><code>
 Content-Length
 Transfer-Encoding
           </code></pre>
-        </td>
-      </tr>
-    </table>
+          </td>
+        </tr>
+      </table>
 
-
-    <h2>Header Types</h2>
-    <h3 id="req">1. Reqeust header</h3>
-    <dl>
-      HTTP client uses this to provide information about the request context, so that the server can tailor the response.
-    </dl>
-    <table>
-      <tr>
-        <th>Header Name</th>
-        <th>Content</th>
-      </tr>
-      <tr>
-        <td>Accept request header</td>
-        <td>
-          MIME types HTTP client is able to understand.<br>
-          <pre><code class="language-css">
+      <h2>Header Types</h2>
+      <h3 id="req">1. Reqeust header</h3>
+      <dl>
+        HTTP client uses this to provide information about the request context,
+        so that the server can tailor the response.
+      </dl>
+      <table>
+        <tr>
+          <th>Header Name</th>
+          <th>Content</th>
+        </tr>
+        <tr>
+          <td id="Accept">Accept request header</td>
+          <td>
+            MIME types HTTP client is able to understand.<br />
+            <pre><code class="language-css">
 Accept: text/html
 
 Accept: image/*
@@ -107,97 +125,168 @@ Accept: */*
 // Default for navigation requests
 Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8     
           </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Authorization request header</td>
-        <td>
-          Provide credentials that authenticate a user agent with a server, allowing access to a protected resource<br>
-          <pre><code class="language-css">
-Authorization: Basic <credentials>
+          </td>
+        </tr>
+        <tr>
+          <td id="Authorization">Authorization request header</td>
+          <td>
+            Provide credentials that authenticate a user agent with a server,
+            allowing access to a protected resource<br />
+            <pre><code class="language-css">
+Authorization: Basic credentials
 
 OR
 
-Authorization: Digest username=<username>,    //Digest(String of the hex digits that proves that the user knows a password.)
-realm="<realm>",
-uri="<url>",
-algorithm=<algorithm>,
-nonce="<nonce>",
-nc=<nc>,
-cnonce="<cnonce>",
-qop=<qop>,
-response="<response>",
-opaque="<opaque>"
+Authorization: Digest username=username,    //Digest(String of the hex digits that proves that the user knows a password.)
+realm="realm",
+uri="url",
+algorithm=algorithm,
+nonce="nonce",
+nc=nc,
+cnonce="cnonce",
+qop=qop,
+response="response",
+opaque="opaque"
           </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Accept-Language</td>
-        <td>
-          natural language and locale that the client prefers<br>
-          <pre><code class="language-css">
+          </td>
+        </tr>
+        <tr>
+          <td id="Accept-Language">Accept-Language</td>
+          <td>
+            natural language and locale that the client prefers<br />
+            <pre><code class="language-css">
 Accept-Language: en-US,en;q=0.5
           </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Referer</td>
-        <td>
-          Absolute or partial address from which a resource has been requested<br>
-          <pre><code class="language-css">
+          </td>
+        </tr>
+        <tr>
+          <td id="Referer">Referer</td>
+          <td>
+            Absolute or partial address from which a resource has been
+            requested<br />
+            <pre><code class="language-css">
 Referer: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 Referer: https://example.com/page?q=123
 Referer: https://example.com/            
           </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Connection</td>
-        <td>
-          whether the network connection stays open after the current transaction finishes<br>
-          If the value sent is keep-alive, the connection is persistent and not closed, allowing for subsequent 
-          requests to the same server to be done.<br>
-          <pre><code class="language-css">
+          </td>
+        </tr>
+        <tr>
+          <td id="Content-Length">Content-Length</td>
+          <td>
+            This indicates the exact size of the message body (the data
+            following the headers) measured in bytes<br />
+            It tells the receiver exactly how much data to expect so it knows
+            precisely where the current message ends and when to stop reading
+            from the network connection<br />
+            Check How HTTP detects end of HTTP Reqest, Start of Body etc<br />
+            <pre><code class="language-css">HTTP/1.1 200 OK\r\n
+Date: Wed, 28 Oct 2026 11:00:00 GMT\r\n
+Content-Type: text/plain\r\n
+Content-Length: 13\r\n              &lt;&lt;&lt;&lt;&lt;&lt; Message body is of length=13
+\r\n
+Hello, World!</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Connection</td>
+          <td>
+            whether the network connection stays open after the current
+            transaction finishes<br />
+            If the value sent is keep-alive, the connection is persistent and
+            not closed, allowing for subsequent requests to the same server to
+            be done.<br />
+            <pre><code class="language-css">
 Connection: keep-alive
 Connection: close
           </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td>Upgrade-Insecure-Requests</td>
-        <td>
-          sends a signal to the server expressing the client's preference for an encrypted and authenticated response<br>
-          <pre><code class="language-css">
+          </td>
+        </tr>
+        <tr>
+          <td id="TransferEncoding">Transfer-Encoding: chunked</td>
+          <td>
+            <h3>Chunked Transfer Encoding</h3>
+            Sending Chunks of data or Sending Streaming data<br />
+            Used when the server or client wants to send a body of unknown or
+            dynamic size (e.g., streaming a file generated on the fly, or
+            real-time log streaming), without waiting to calculate a
+            <a href="#ContentLength">Content-Length</a><br />
+            See
+            <a
+              href="/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html#HowHTTPDected"
+              >HTTP detects end of HTTP Reqest, Start of Body using \r\n</a
+            ><br />
+            Body is series of discrete chunks. Each chunk is preceded by its
+            size in hexadecimal, followed by \r\n, the chunk data itself, and
+            another \r\n. The stream ends with a chunk of size 0\r\n\r\n.<br />
+            <pre><code class="language-css">POST /upload HTTP/1.1\r\n
+Host: example.com\r\n
+Transfer-Encoding: chunked\r\n
+\r\n
+5\r\n                   &lt;&lt;&lt;&lt;&lt;&lt; 1st chunk is 5 bytes long in hex (5=decimal)
+Hello\r\n               &lt;&lt;&lt;&lt;&lt;&lt; 5 bytes of data
+6\r\n
+World!\r\n
+0\r\n                   &lt;&lt;&lt;&lt;&lt;&lt; The terminator chunk (size 0)
+\r\n</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>Upgrade-Insecure-Requests</td>
+          <td>
+            sends a signal to the server expressing the client's preference for
+            an encrypted and authenticated response<br />
+            <pre><code class="language-css">
 GET / HTTP/1.1
 Host: example.com
 Upgrade-Insecure-Requests: 1
           </code></pre>
-        </td>
-      </tr>
-      <tr>
-        <td><a href="https://developer.mozilla.org/en-US/docs/Glossary/Fetch_metadata_request_header">
-          Fetch metadata request header</a></td>
-        <td>
-          - Provides additional information about the context from which the request originated.<br>
-          - This allows the server to make decisions about whether a request should be allowed based on where the request came<br>
-          - With this information a server can implement a resource isolation policy<br>
-          - This approach can help mitigate common cross-site web vulnerabilities such as 
-          <a href="https://developer.mozilla.org/en-US/docs/Glossary/CSRF">CSRF</a>, 
-          Cross-site Script Inclusion('XSSI'), timing attacks, and cross-origin information leaks<br>
-          - <b><a href="https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_header_name">Forbidden header name:</a></b> 
-          These headers are prefixed with Sec-, and hence have forbidden header names.<br>
-          A forbidden header name is the name of any HTTP header that cannot be modified programmatically(ie using javascript)<br><br>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Glossary/Fetch_metadata_request_header"
+            >
+              Fetch metadata request header</a
+            >
+          </td>
+          <td>
+            - Provides additional information about the context from which the
+            request originated.<br />
+            - This allows the server to make decisions about whether a request
+            should be allowed based on where the request came<br />
+            - With this information a server can implement a resource isolation
+            policy<br />
+            - This approach can help mitigate common cross-site web
+            vulnerabilities such as
+            <a href="https://developer.mozilla.org/en-US/docs/Glossary/CSRF"
+              >CSRF</a
+            >, Cross-site Script Inclusion('XSSI'), timing attacks, and
+            cross-origin information leaks<br />
+            -
+            <b
+              ><a
+                href="https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_header_name"
+                >Forbidden header name:</a
+              ></b
+            >
+            These headers are prefixed with Sec-, and hence have forbidden
+            header names.<br />
+            A forbidden header name is the name of any HTTP header that cannot
+            be modified programmatically(ie using javascript)<br /><br />
 
-          <table>
-            <tr>
-              <th>Header</th>
-              <th>Description</th>
-            </tr>
-            <tr>
-              <td>Sec-Fetch-Site</td>
-              <td>
-                - Tells relationship between a Request initiator's origin and the Requested resource's Origin.
-                <pre><code class="language-css">
+            <table>
+              <tr>
+                <th>Header</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>Sec-Fetch-Site</td>
+                <td>
+                  - Tells relationship between a Request initiator's origin and
+                  the Requested resource's Origin.
+                  <pre><code class="language-css">
 Sec-Fetch-Site: same-origin                  
 /*
 Meaning: Initiator is directly requesting the resource
@@ -209,66 +298,79 @@ Sec-Fetch-Site: same-site
 Sec-Fetch-Site: none
                   
                 </code></pre>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr id="HostHeader">
-        <td>Host Header (MANDATORY)<br> Only present in HTTP/1.1</td>
-        <td><pre><code class="language-css">Host: www.example.com:443</code></pre><br>
-        Contains domain name of the server which HTTP Client want to connect. 
-        Without it, a server hosting multiple websites (virtual hosting) wouldn't 
-        know which site should receive the request.<br><br>
-        Host header is similar to <a href="/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/">SNI Header</a>
-        </td>
-      </tr>
-      <tr>
-        <td id="xff">XFF (X-Forwarded-For) <br>Non Mandatory</td>
-        <td>
-          This is used for sending original IP header of client when 
-          the connection goes through a proxy or load balancer.<br>
-          <u>Why seeing original IP is important?</u> logging, rate limiting<br>
-          <u>Example:</u> Request from client IP 1.1.1.1 goes through a CDN (2.2.2.2) 
-          and then a load balancer. The application server receives the request with the following header:
-          X-Forwarded-For: 1.1.1.1, 2.2.2.2<br>
-          The leftmost IP (1.1.1.1) is the original client IP
-        </td>
-      </tr>
-      <tr>
-        <td id="xau">XAU (X-Authenticated-User) <br>Non Mandatory</td>
-        <td>
-          Similar to XFF, this header contains authenticated username of the end user who made the request.<br>
-          This is used to pass the user identity after initial authentication, preventing the need for 
-          re-authentication at every hop. <br>
-          X-Authenticated-User: john.doe, 
-          The receiving service reads this header to know which user the request belongs to and applies 
-          appropriate access policies. 
-        </td>
-      </tr>
-    </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr id="HostHeader">
+          <td>
+            Host Header (MANDATORY)<br />
+            Only present in HTTP/1.1
+          </td>
+          <td>
+            <pre><code class="language-css">Host: www.example.com:443</code></pre>
+            <br />
+            Contains domain name of the server which HTTP Client want to
+            connect. Without it, a server hosting multiple websites (virtual
+            hosting) wouldn't know which site should receive the request.<br /><br />
+            Host header is similar to
+            <a href="/Networking/OSI-Layers/Layer-6/SSL_TLS/Terms/"
+              >SNI Header</a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td id="xff">XFF (X-Forwarded-For) <br />Non Mandatory</td>
+          <td>
+            This is used for sending original IP header of client when the
+            connection goes through a proxy or load balancer.<br />
+            <u>Why seeing original IP is important?</u> logging, rate
+            limiting<br />
+            <u>Example:</u> Request from client IP 1.1.1.1 goes through a CDN
+            (2.2.2.2) and then a load balancer. The application server receives
+            the request with the following header: X-Forwarded-For: 1.1.1.1,
+            2.2.2.2<br />
+            The leftmost IP (1.1.1.1) is the original client IP
+          </td>
+        </tr>
+        <tr>
+          <td id="xau">XAU (X-Authenticated-User) <br />Non Mandatory</td>
+          <td>
+            Similar to XFF, this header contains authenticated username of the
+            end user who made the request.<br />
+            This is used to pass the user identity after initial authentication,
+            preventing the need for re-authentication at every hop. <br />
+            X-Authenticated-User: john.doe, The receiving service reads this
+            header to know which user the request belongs to and applies
+            appropriate access policies.
+          </td>
+        </tr>
+      </table>
 
-    <h4 id="res">2. Response header</h4>
+      <h4 id="res">2. Response header</h4>
 
-    <h4>3. Representation header</h4>
-    <dl>
-      describes one particular representation of a resource. Data might be present as XML, JSON, HTML
-    </dl>
-    <table>
-      <tr>
-        <th>Header Name</th>
-        <th>Meaning</th>
-        <th>Content</th>
-      </tr>
-      <tr>
-        <td>Content-Type header</td>
-        <td>
-          Indicate the original media type(sound file might be labeled audio/ogg, or an image file image/png) 
-          of the resource<br>
-          In requests, (such as POST or PUT), the client tells the server what type of data is actually sent.
-        </td>
-        <td>
-          <pre><code class="language-css">
+      <h4>3. Representation header</h4>
+      <dl>
+        describes one particular representation of a resource. Data might be
+        present as XML, JSON, HTML
+      </dl>
+      <table>
+        <tr>
+          <th>Header Name</th>
+          <th>Meaning</th>
+          <th>Content</th>
+        </tr>
+        <tr>
+          <td>Content-Type header</td>
+          <td>
+            Indicate the original media type(sound file might be labeled
+            audio/ogg, or an image file image/png) of the resource<br />
+            In requests, (such as POST or PUT), the client tells the server what
+            type of data is actually sent.
+          </td>
+          <td>
+            <pre><code class="language-css">
 Syntax:
 Content-Type: text/html; charset=utf-8
 Content-Type: multipart/form-data; boundary=something
@@ -288,16 +390,18 @@ Content-Type: text/plain
 (content of the uploaded file foo.txt)
 -----------------------------974767299852498929531610575--
           </code></pre>
-        </td>
-      </tr>      
-      <tr>
-        <td>Content-Encoding header</td>
-        <td>
-          Tells any encodings that have been applied to the message payload.<br>
-          This lets the recipient know how to decode the representation in order to obtain the original payload format.
-        </td>
-        <td>
-          <pre><code class="language-css">
+          </td>
+        </tr>
+        <tr>
+          <td>Content-Encoding header</td>
+          <td>
+            Tells any encodings that have been applied to the message
+            payload.<br />
+            This lets the recipient know how to decode the representation in
+            order to obtain the original payload format.
+          </td>
+          <td>
+            <pre><code class="language-css">
 Syntax:
 Content-Encoding: gzip
 Content-Encoding: compress
@@ -307,11 +411,10 @@ Content-Encoding: zstd
 // Multiple, in the order in which they were applied
 Content-Encoding: deflate, gzip            
           </code></pre>
-        </td>
-      </tr>
-    </table>
-
-  </article>
-  <script src="/scripts/prism.js"></script>
-</body>
+          </td>
+        </tr>
+      </table>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
 </html>

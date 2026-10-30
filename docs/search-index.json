@@ -224,7 +224,7 @@
     "headings": []
   },
   {
-    "title": "ANN, KNN, Regression, Classifier, Clustering, HNSW, Biencoder,\n      Crossencoder, ColBERT, Reranking",
+    "title": "ANN, KNN, Regression, Classifier, Clustering, HNSW, Biencoder,\r\n      Crossencoder, ColBERT, Reranking",
     "url": "/Machine Learning/ML_and_Types_Algorithms.html",
     "excerpt": "Machine Learning and ML Model? ML is the process of training a ML Model , to make useful predictions or generate content (like text, images, audio, or video) from data. Types of Ma...",
     "headings": [
@@ -354,18 +354,18 @@
   },
   {
     "title": "Async Programming",
+    "url": "/Async_Programming/",
+    "excerpt": "Introduction: What is async, async vs Threading Rust &ensp; How async is implemented in Rust &ensp; async, await, block_on(), future &ensp; notify-rs: Watch changes in file, Recomm...",
+    "headings": []
+  },
+  {
+    "title": "Async Programming",
     "url": "/Async_Programming/Introduction.html",
     "excerpt": "--> Asynchronous Async means Concurrent BUT NOT SINGLE THREADED. Aysnc is not parallel. Each task execute until it would block, then switching to another task that is ready to make...",
     "headings": [
       "Asynchronous",
       "Async vs Threading"
     ]
-  },
-  {
-    "title": "Async Programming",
-    "url": "/Async_Programming/",
-    "excerpt": "Introduction: What is async, async vs Threading Rust &ensp; How async is implemented in Rust &ensp; async, await, block_on(), future &ensp; notify-rs: Watch changes in file, Recomm...",
-    "headings": []
   },
   {
     "title": "atomics",
@@ -558,6 +558,12 @@
   },
   {
     "title": "Blockchain",
+    "url": "/BlockChain/",
+    "excerpt": "Introduction Blockchain? How bitcoin can be issued? Terms BlockchainAddress, Block, Consensus Mechanism , Custodian, Genesis Block, Mining, Proof of Work, Proof of Stake, Transacti...",
+    "headings": []
+  },
+  {
+    "title": "Blockchain",
     "url": "/BlockChain/Introduction.html",
     "excerpt": "Blockchain Blockchain? How bitcoin can be issued? Blockchain What This is an SHARED immutable(no changable) append-only distributed ledger that is updateable only via consensus/agr...",
     "headings": [
@@ -566,12 +572,6 @@
       "Limitations of Blockchain",
       "How bitcoin can be issued?"
     ]
-  },
-  {
-    "title": "Blockchain",
-    "url": "/BlockChain/",
-    "excerpt": "Introduction Blockchain? How bitcoin can be issued? Terms BlockchainAddress, Block, Consensus Mechanism , Custodian, Genesis Block, Mining, Proof of Work, Proof of Stake, Transacti...",
-    "headings": []
   },
   {
     "title": "Blockchain Terms",
@@ -1470,6 +1470,14 @@
   },
   {
     "title": "CPP Async Programming",
+    "url": "/Async_Programming/CPP/",
+    "excerpt": "--> Async Programming Future object is returned by the async function. Promise is returned by async. #include &lt;iostream&gt; #include &lt;thread&gt; #include &lt;iostream&gt; #in...",
+    "headings": [
+      "Async Programming"
+    ]
+  },
+  {
+    "title": "CPP Async Programming",
     "url": "/Async_Programming/CPP/Introduction.html",
     "excerpt": "--> Async Programming in C++ Meaning of async? std::async run a function asynchronously. std::future&lt;T&gt; is the result of async function, that will be available later std::pro...",
     "headings": [
@@ -1477,14 +1485,6 @@
       "Meaning of async?",
       "Simple example",
       "Async Rust"
-    ]
-  },
-  {
-    "title": "CPP Async Programming",
-    "url": "/Async_Programming/CPP/",
-    "excerpt": "--> Async Programming Future object is returned by the async function. Promise is returned by async. #include &lt;iostream&gt; #include &lt;thread&gt; #include &lt;iostream&gt; #in...",
-    "headings": [
-      "Async Programming"
     ]
   },
   {
@@ -1640,14 +1640,14 @@
   },
   {
     "title": "Data Structures",
-    "url": "/DS_Questions/Data_Structures/",
-    "excerpt": "",
+    "url": "/Data_Structures/",
+    "excerpt": "Trees: &ensp; Types: &emsp; Binary, full, complete, perfect, BST, sum tree, M-ary(BTree, B+Tree) &emsp; LSM(Log structured Merge): Used in noSQL DB Comparison &ensp; Hash Table vs...",
     "headings": []
   },
   {
     "title": "Data Structures",
-    "url": "/Data_Structures/",
-    "excerpt": "Trees: &ensp; Types: &emsp; Binary, full, complete, perfect, BST, sum tree, M-ary(BTree, B+Tree) &emsp; LSM(Log structured Merge): Used in noSQL DB Comparison &ensp; Hash Table vs...",
+    "url": "/DS_Questions/Data_Structures/",
+    "excerpt": "",
     "headings": []
   },
   {
@@ -1853,11 +1853,11 @@
     ]
   },
   {
-    "title": "Distributed Cache System Design",
+    "title": "Distributed Cache, Redis, Lua Script",
     "url": "/System_Design/Scalable/Distributed_Cache/",
-    "excerpt": "Distributed Cache (eg for twitter) A cache is storage space for access to data kept in database. Application server instead of going to DB will check cache and in case of Cache Hit...",
+    "excerpt": "Distributed Cache (Redis) A cache is storage space for access to data kept in database. Application server instead of going to DB will check cache and in case of Cache Hit will ret...",
     "headings": [
-      "Distributed Cache (eg for twitter)",
+      "Distributed Cache (Redis)",
       "Requirements",
       "Functional",
       "Non Functional",
@@ -1869,7 +1869,10 @@
       "Redis Cluster",
       "Redis Cluster Client Library",
       "Hash calculation on Redis",
-      "Hash Table on Redis Master(Not Redis Client library)"
+      "Hash Table on Redis Master(Not Redis Client library)",
+      "Lua Script",
+      "Why Lua Chosen by Redis? Not C++/Rust?",
+      "GET(key)/SET(key) on Redis"
     ]
   },
   {
@@ -1911,16 +1914,9 @@
   {
     "title": "Distributed Rate Limiter",
     "url": "/System_Design/Scalable/Rate Limiter/",
-    "excerpt": "What is DRL(distributed rate limiter) DRL decides whether a client (user, IP, or API key) will proceed to origin/application server, using rate limiting counters. Eg: 100 HTTP req/...",
+    "excerpt": "DRL(distributed rate limiter) Requirements High Level Design Block Diagram Request Flow Flow Diagram Rate Limiter System Design(github) Algorithms Fixed Window Counter Multithreade...",
     "headings": [
-      "What is DRL(distributed rate limiter)",
-      "Requirements",
-      "High Level Design",
-      "Where the limiter sits. Global LB → Regional LB → AZ LB → Rate Limiter",
-      "Block Diagram",
-      "Request flow",
-      "Regional Redis vs Global Redis",
-      "Sequence Diagram",
+      "DRL(distributed rate limiter)",
       "Algorithms",
       "Fixed Window Counter",
       "Sliding Window",
@@ -2655,6 +2651,12 @@
   },
   {
     "title": "Glew Library",
+    "url": "/Libraries/Glew/",
+    "excerpt": "Glew? &ensp; What is Glew &ensp; Program to print Glew version",
+    "headings": []
+  },
+  {
+    "title": "Glew Library",
     "url": "/Libraries/Glew/Introduction.html",
     "excerpt": "What is Glew? Glew is OpenGL's Extension Wrangler Library that helps developers initialize OpenGL extensions and write more portable applications In simple sense, Glew combines lot...",
     "headings": [
@@ -2663,9 +2665,9 @@
     ]
   },
   {
-    "title": "Glew Library",
-    "url": "/Libraries/Glew/",
-    "excerpt": "Glew? &ensp; What is Glew &ensp; Program to print Glew version",
+    "title": "Go",
+    "url": "/Languages/Programming/Go/",
+    "excerpt": "Go Versions: 1.0(2012), 1.26.5(2026) Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command line Arguments: os.args , flag package Collections &ensp; Arrays, Slices...",
     "headings": []
   },
   {
@@ -2675,12 +2677,6 @@
     "headings": [
       "Install Go"
     ]
-  },
-  {
-    "title": "Go",
-    "url": "/Languages/Programming/Go/",
-    "excerpt": "Go Versions: 1.0(2012), 1.26.5(2026) Code Examples: Hello World , CPU Usage % , GPU Usage %(github) Command line Arguments: os.args , flag package Collections &ensp; Arrays, Slices...",
-    "headings": []
   },
   {
     "title": "Go Async Programming",
@@ -3080,19 +3076,6 @@
     ]
   },
   {
-    "title": "HTTP",
-    "url": "/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html",
-    "excerpt": "What is HTTP Client-server/Request-Response protocol. Default port 80, other can be used. Uses TCP, does not use UDP. Google’s QUIC uses HTTP over UDP HTTP Clients: Web-browser, An...",
-    "headings": [
-      "What is HTTP",
-      "Features of HTTP",
-      "Advatanges, Disadvatanges/pitfalls of HTTP",
-      "Advatanges",
-      "DisAdvatanges",
-      "HTTP Methods"
-    ]
-  },
-  {
     "title": "HTTP Authentication, Session Cookie",
     "url": "/Networking/OSI-Layers/Layer-7/HTTP/HTTP_Authentication.html",
     "excerpt": "HTTP Authentication In enterprise networks, a Forward proxy often sits between users and the internet. Before allowing outbound traffic, the proxy checks whether the user is authen...",
@@ -3136,8 +3119,27 @@
       "HTTP Headers",
       "Header Types",
       "1. Reqeust header",
+      "Chunked Transfer Encoding",
       "2. Response header",
       "3. Representation header"
+    ]
+  },
+  {
+    "title": "HTTP, HTTP Methods",
+    "url": "/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html",
+    "excerpt": "HTTP? Client-server/Request-Response protocol. Default port 80, other can be used. Uses TCP, does not use UDP. Google’s QUIC uses HTTP over UDP HTTP Clients: Web-browser, Any proce...",
+    "headings": [
+      "HTTP?",
+      "HTTP Payload + Headers",
+      "HTTP Packet Flow",
+      "How HTTP parses Header, HTTP Body, End of HTTP Request",
+      "Parse POST",
+      "Parse GET",
+      "Features of HTTP",
+      "Advatanges, Disadvatanges/pitfalls of HTTP",
+      "Advatanges",
+      "DisAdvatanges",
+      "HTTP Methods"
     ]
   },
   {
@@ -3342,18 +3344,18 @@
   },
   {
     "title": "IPC",
-    "url": "/Threads_Processes_IPC/IPC/Methods.html",
-    "excerpt": "Methods of IPC Method Communication Synchronization 1. Pipe, Rust Channels Parent to child viceversa Yes 2.Named pipes, fifo Multiple process can communicate. Process-1 to process-...",
-    "headings": [
-      "Methods of IPC"
-    ]
-  },
-  {
-    "title": "IPC",
     "url": "/Threads_Processes_IPC/IPC/",
     "excerpt": "IPC? For communication between 2 processes, Parent and child as well.",
     "headings": [
       "IPC?"
+    ]
+  },
+  {
+    "title": "IPC",
+    "url": "/Threads_Processes_IPC/IPC/Methods.html",
+    "excerpt": "Methods of IPC Method Communication Synchronization 1. Pipe, Rust Channels Parent to child viceversa Yes 2.Named pipes, fifo Multiple process can communicate. Process-1 to process-...",
+    "headings": [
+      "Methods of IPC"
     ]
   },
   {
@@ -4450,6 +4452,12 @@
   },
   {
     "title": "Libraries",
+    "url": "/Libraries/",
+    "excerpt": "C: &ensp; libuv JSON Parsing: Jansson JSX React Libraries for 2D, 3D graphics rendering: OpenGL & DirectX, Glew for OpenGL, Vulkan, WebGL, Graphics pipeline from Windows VM(guest)...",
+    "headings": []
+  },
+  {
+    "title": "Libraries",
     "url": "/Libraries/Jansson/",
     "excerpt": "What is Jansson Jansson is C library for encoding/decoding/manipulating JSON data. Installation (Ubuntu) // Get Jansson.tar.gz $ ./configure $ make $ sudo make install $ make check...",
     "headings": [
@@ -4459,12 +4467,6 @@
       "Build Default Example",
       "json_object_set_new(), json_object_foreach()"
     ]
-  },
-  {
-    "title": "Libraries",
-    "url": "/Libraries/",
-    "excerpt": "C: &ensp; libuv JSON Parsing: Jansson JSX React Libraries for 2D, 3D graphics rendering: OpenGL & DirectX, Glew for OpenGL, Vulkan, WebGL, Graphics pipeline from Windows VM(guest)...",
-    "headings": []
   },
   {
     "title": "libuv",
@@ -4687,17 +4689,17 @@
   },
   {
     "title": "Machine Learning",
+    "url": "/Machine Learning/",
+    "excerpt": "Agent: &ensp; Langchain: Create Agent &ensp; Langsmith: Monitor Agent Logs (Langsmith=Sumologs) Create Virtual Env in Python Run ML on AMD GPU Machine Learning & Types: Supervised...",
+    "headings": []
+  },
+  {
+    "title": "Machine Learning",
     "url": "/Machine Learning/Run_ML_on_AMD_GPU.html",
     "excerpt": "Machine Learning Run ML on AMD GPU Run ML on AMD GPU 1. Windows version (>10, 1709) 2. Install minconda in C:\\Users\\amit\\ What is conda? conda is package manager which will install...",
     "headings": [
       "Run ML on AMD GPU"
     ]
-  },
-  {
-    "title": "Machine Learning",
-    "url": "/Machine Learning/",
-    "excerpt": "Agent: &ensp; Langchain: Create Agent &ensp; Langsmith: Monitor Agent Logs (Langsmith=Sumologs) Create Virtual Env in Python Run ML on AMD GPU Machine Learning & Types: Supervised...",
-    "headings": []
   },
   {
     "title": "Machine Learning Models",
@@ -4894,13 +4896,12 @@
   {
     "title": "Memory",
     "url": "/Motherboard/Memory/virtual_and_physical.html",
-    "excerpt": "Why VM Now-a-days processes are RAM hungry. Every Program(eg: adobe photoshop, microsoft teams) need more RAM. if 10 such processes want to run simultaneously then 10GB RAM is need...",
+    "excerpt": "Virtual Memory Its illusion to a process that all memory space belongs to it. Suppose in a program, pointer points to memory address 0, then increments to point to 1. Pointer point...",
     "headings": [
-      "Why VM",
-      "Virtual Memory & Physical Memory",
+      "Virtual Memory",
+      "Address Translation",
+      "16 bit Architecture (16 bit=2byte Bus size)",
       "Terms",
-      "Page",
-      "Frame",
       "Paging",
       "Pure Demand Paging",
       "Page Fault",
@@ -4909,7 +4910,7 @@
       "MMU(Memory Management Unit) Translate Virtual to Physical Address",
       "TLB(Translation lookaside buffer)",
       "Problem with TLB",
-      "Translation from Virtual Address(Hard Disk) to Physical Address(RAM)",
+      "Translation from Virtual Address to Physical Address(RAM)",
       "Conversion Example(16 bit system)",
       "Conversion Example(32,64 bit system)",
       "Problem with Page Table",
@@ -4920,7 +4921,7 @@
   {
     "title": "Memory Layout Compared — C++, Go, Rust, Java",
     "url": "/Motherboard/Memory/Memory_layout_compared.html",
-    "excerpt": "Memory Layout of a Process C++ Process Control Block, Process Table PROCESS MEMORY LAYOUT Heap /\\ High Memory Address | | Data Segment | ┌────────────┬──────────────┬──────────────...",
+    "excerpt": "Memory Layout of a Process C++ Process Control Block, Process Table mutex mtx; condition_variable cv; // futex void fun(int a){} // pthread_cond_t main() { thread t(fun, 1); } Heap...",
     "headings": [
       "Memory Layout of a Process",
       "C++",
@@ -5114,17 +5115,17 @@
   },
   {
     "title": "Motherboard",
+    "url": "/Motherboard/",
+    "excerpt": "Memory &ensp; Virtual & Physical Memory &ensp; Memory Types(Registers, Caches) &ensp; Process &emsp; C++ Process: Memory Layout &emsp;&emsp; C++ Process Space(CS, DS, SS ,HS), Proc...",
+    "headings": []
+  },
+  {
+    "title": "Motherboard",
     "url": "/Motherboard/Terms/",
     "excerpt": "UART (Universal Asynchronous Receiver-Transmitter) Hardware communication protocol (a set of rules) used to send data serially. UART can send data on wire and in air as well Usage:...",
     "headings": [
       "UART (Universal Asynchronous Receiver-Transmitter)"
     ]
-  },
-  {
-    "title": "Motherboard",
-    "url": "/Motherboard/",
-    "excerpt": "Memory &ensp; Virtual & Physical Memory &ensp; Memory Types(Registers, Caches) &ensp; Process &emsp; C++ Process: Memory Layout &emsp;&emsp; C++ Process Space(CS, DS, SS ,HS), Proc...",
-    "headings": []
   },
   {
     "title": "Movie Review Classification(+ve or -ve)",
@@ -5209,11 +5210,19 @@
     "url": "/Threads_Processes_IPC/Synchronization/mutex.html",
     "excerpt": "Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep if 1 thread is in CS other cannot enter, Return value: None, Parameters: None How Mutex is internally implemented? Mute...",
     "headings": [
-      "Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep if 1 thread is in CS other cannot enter, Return value: None, Parameters: None How Mutex is internally implemented?",
+      "Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep",
+      "How Mutex is internally implemented?",
       "Problems with Mutex",
       "Creating Mutex",
-      "Wrappers around mutex"
+      "Wrappers around mutex",
+      "lock_guard, unique_lock"
     ]
+  },
+  {
+    "title": "N1QL",
+    "url": "/System_Design/Concepts/Databases/NoSQL/Couchbase/",
+    "excerpt": "Introduction N1QL?",
+    "headings": []
   },
   {
     "title": "N1QL",
@@ -5224,12 +5233,6 @@
       "Additional Operators",
       "Query examples"
     ]
-  },
-  {
-    "title": "N1QL",
-    "url": "/System_Design/Concepts/Databases/NoSQL/Couchbase/",
-    "excerpt": "Introduction N1QL?",
-    "headings": []
   },
   {
     "title": "Near by Recommendation System",
@@ -5308,6 +5311,12 @@
   },
   {
     "title": "Networking",
+    "url": "/Networking/",
+    "excerpt": "Why Cloud Data, Control Plane OSI Layers Integrations: Meta Networking Devices &ensp; Firewalls: Fortinet , SRX &ensp; Gateways: Netskope , Netskope Appliance / DPOP Terms: &ensp;...",
+    "headings": []
+  },
+  {
+    "title": "Networking",
     "url": "/Networking/OSI-Layers/Layer-3/Protocols/IP_Internet_Protocol/IP_Addressing_Scheme/",
     "excerpt": "IP Addressing Scheme Types of IP Addressing 1. Classful Addressing. Ancient Valid IPv4 Addresses 2. Classless Addressing Subnet Mask / Prefix / Netmask CIDR(Classless Interdomain R...",
     "headings": [
@@ -5325,12 +5334,6 @@
       "Classes &amp; their Subnet masks",
       "Valid Subnet masks"
     ]
-  },
-  {
-    "title": "Networking",
-    "url": "/Networking/",
-    "excerpt": "Why Cloud Data, Control Plane OSI Layers Integrations: Meta Networking Devices &ensp; Firewalls: Fortinet , SRX &ensp; Gateways: Netskope , Netskope Appliance / DPOP Terms: &ensp;...",
-    "headings": []
   },
   {
     "title": "Networking Devices",
@@ -5626,7 +5629,7 @@
     ]
   },
   {
-    "title": "Process Table, Memory Layout of Process",
+    "title": "Process Table, Memory Layout, task_struct",
     "url": "/Motherboard/Memory/Memory_layout_of_process.html",
     "excerpt": "What is process? Running instance of program. All processes are decedents of swapper process(PID=0) . Both(threads, processes) are independent sequence of operations fork() = Creat...",
     "headings": [
@@ -5643,9 +5646,9 @@
       "Segmentation Fault",
       "Heap Overflow / Memory leak",
       "Process States",
+      "Process Table & Process Control Block",
       "Process Table",
-      "Process or Thread Control Block",
-      "Information stored in PCB",
+      "Process or Thread Control Block (struct task_struct)",
       "Ways of Process Creation, Terminaton",
       "Process Creation Ways",
       "Process Termination ways"
@@ -5814,6 +5817,12 @@
   },
   {
     "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/",
+    "excerpt": "Type Description Example Seqeunce Containers Sequence containers are ordered collections that support indexing and slicing: Lists(same as vector): Mutable, dynamic sequences. Repre...",
+    "headings": []
+  },
+  {
+    "title": "Python",
     "url": "/Languages/Scripting/Python/Containers/MappingType/Dictionary.html",
     "excerpt": "What Keys are immutable(non changable). If we try entering value of existant key, the old value associated with that key is overwritten. Example of keys: strings, numbers, Tuples i...",
     "headings": [
@@ -5824,6 +5833,12 @@
       "Removal",
       "zip(iteratable)"
     ]
+  },
+  {
+    "title": "Python",
+    "url": "/Languages/Scripting/Python/Containers/MappingType/",
+    "excerpt": "Type Represented by Description Comprehension Dictionary/HashMap (Mutable key-value) {} y Ordered Dictionary {} Subclass of dictionary, remembers the order in which keys are insert...",
+    "headings": []
   },
   {
     "title": "Python",
@@ -5843,8 +5858,8 @@
   },
   {
     "title": "Python",
-    "url": "/Languages/Scripting/Python/Containers/MappingType/",
-    "excerpt": "Type Represented by Description Comprehension Dictionary/HashMap (Mutable key-value) {} y Ordered Dictionary {} Subclass of dictionary, remembers the order in which keys are insert...",
+    "url": "/Languages/Scripting/Python/Containers/Sequence/",
+    "excerpt": "Type Represented by Description Comprehension List (Mutable) [] ordered collections, Can store different data types, Allows dynamic modification of elements y Tuples (Immutable) ()...",
     "headings": []
   },
   {
@@ -5876,18 +5891,6 @@
   },
   {
     "title": "Python",
-    "url": "/Languages/Scripting/Python/Containers/Sequence/",
-    "excerpt": "Type Represented by Description Comprehension List (Mutable) [] ordered collections, Can store different data types, Allows dynamic modification of elements y Tuples (Immutable) ()...",
-    "headings": []
-  },
-  {
-    "title": "Python",
-    "url": "/Languages/Scripting/Python/Containers/",
-    "excerpt": "Type Description Example Seqeunce Containers Sequence containers are ordered collections that support indexing and slicing: Lists(same as vector): Mutable, dynamic sequences. Repre...",
-    "headings": []
-  },
-  {
-    "title": "Python",
     "url": "/Languages/Scripting/Python/Control_Flow.html",
     "excerpt": "if if x &lt; 0: x = 0 print('Negative changed to zero') elif x == 0: print('Zero') else: //Optional print('More') for statement words = ['cat', 'window', 'defenestrate'] //Iterate...",
     "headings": [
@@ -5911,6 +5914,12 @@
   },
   {
     "title": "Python",
+    "url": "/Languages/Scripting/Python/",
+    "excerpt": "Introduction: What is Python? Terms / Concepts: Global Interpreter Lock, Memory Management, PEP 8 Control Flow: if, for, match=switch, range() Functions: &ensp; Call by Value, Call...",
+    "headings": []
+  },
+  {
+    "title": "Python",
     "url": "/Languages/Scripting/Python/Introduction.html",
     "excerpt": "What Python is interpreted(executes statement line by line), general Purpose language. Other Interpreted languages: Ruby, R, PHP, JS. Features Python is dynamic typed language Dyna...",
     "headings": [
@@ -5919,12 +5928,6 @@
       "Python is dynamic typed language",
       "virtualenv / virtual enviornment"
     ]
-  },
-  {
-    "title": "Python",
-    "url": "/Languages/Scripting/Python/",
-    "excerpt": "Introduction: What is Python? Terms / Concepts: Global Interpreter Lock, Memory Management, PEP 8 Control Flow: if, for, match=switch, range() Functions: &ensp; Call by Value, Call...",
-    "headings": []
   },
   {
     "title": "Python Terms",
@@ -6014,6 +6017,12 @@
   },
   {
     "title": "React",
+    "url": "/Libraries/React/",
+    "excerpt": "What is React React Terms Components Rendering lists Event Handler Remembering State Sharing data between components React Projects",
+    "headings": []
+  },
+  {
+    "title": "React",
     "url": "/Libraries/React/What_Terms.html",
     "excerpt": "What is React React is a JavaScript library(using component-based approach) for building user interfaces (UIs) How React works React uses a virtual DOM which is a lightweight copy...",
     "headings": [
@@ -6027,9 +6036,9 @@
     ]
   },
   {
-    "title": "React",
-    "url": "/Libraries/React/",
-    "excerpt": "What is React React Terms Components Rendering lists Event Handler Remembering State Sharing data between components React Projects",
+    "title": "React Native",
+    "url": "/Frameworks/React_Native/components/",
+    "excerpt": "Components FlatList ScrollView, ParallaxScrollView SafeAreaView and SafeAreaProvider Text TextInput ThemedView TouchableOpacity View Props State",
     "headings": []
   },
   {
@@ -6041,12 +6050,6 @@
       "SafeAreaView Component",
       "SafeAreaProvider"
     ]
-  },
-  {
-    "title": "React Native",
-    "url": "/Frameworks/React_Native/components/",
-    "excerpt": "Components FlatList ScrollView, ParallaxScrollView SafeAreaView and SafeAreaProvider Text TextInput ThemedView TouchableOpacity View Props State",
-    "headings": []
   },
   {
     "title": "React Native",
@@ -6123,6 +6126,12 @@
   },
   {
     "title": "React Native Networking",
+    "url": "/Frameworks/React_Native/Networking/",
+    "excerpt": "Navigation between Screens Fetch data from REST endpoint Passing data between Screens",
+    "headings": []
+  },
+  {
+    "title": "React Native Networking",
     "url": "/Frameworks/React_Native/Networking/Passing data between screens.html",
     "excerpt": "Passing data between screens _layout.tsx Defines the navigation stack (Required) in expo-router. We can provide different screen options here import { Stack } from \"expo-router\"; e...",
     "headings": [
@@ -6131,12 +6140,6 @@
       "index.tsx",
       "ProfileScreen.tsx"
     ]
-  },
-  {
-    "title": "React Native Networking",
-    "url": "/Frameworks/React_Native/Networking/",
-    "excerpt": "Navigation between Screens Fetch data from REST endpoint Passing data between Screens",
-    "headings": []
   },
   {
     "title": "React Native ScrollView",
@@ -6301,6 +6304,14 @@
   },
   {
     "title": "Runtimes",
+    "url": "/Async_Programming/Rust/Runtime/",
+    "excerpt": "What is Runtime? Runtime provides: &ensp; Reactor: Support for performing async tasks &ensp; Executor: Support for future Rust does not have a \"built-in\" runtime, but several optio...",
+    "headings": [
+      "What is Runtime?"
+    ]
+  },
+  {
+    "title": "Runtimes",
     "url": "/Async_Programming/Rust/Runtime/Tokio/",
     "excerpt": "(Tasks = Green Thread ) != OS Thread Tasks are not threads, these are light weight threads created by runtime. These are non-blocking & task may or may not execute on seperate thre...",
     "headings": [
@@ -6313,12 +6324,10 @@
     ]
   },
   {
-    "title": "Runtimes",
-    "url": "/Async_Programming/Rust/Runtime/",
-    "excerpt": "What is Runtime? Runtime provides: &ensp; Reactor: Support for performing async tasks &ensp; Executor: Support for future Rust does not have a \"built-in\" runtime, but several optio...",
-    "headings": [
-      "What is Runtime?"
-    ]
+    "title": "Rust",
+    "url": "/Languages/Programming/Rust/",
+    "excerpt": "Why Rust Over C++(Ownership, Borrowing) Arc(Atomically Reference Counted) Automated Tests Cargo What is cargo , Files( Cargo.toml ), Commands ( cargo build , cargo clippy , cargo d...",
+    "headings": []
   },
   {
     "title": "Rust",
@@ -6329,12 +6338,6 @@
       "Faster wrt C++",
       "Smaller binary wrt C++"
     ]
-  },
-  {
-    "title": "Rust",
-    "url": "/Languages/Programming/Rust/",
-    "excerpt": "Why Rust Over C++(Ownership, Borrowing) Arc(Atomically Reference Counted) Automated Tests Cargo What is cargo , Files( Cargo.toml ), Commands ( cargo build , cargo clippy , cargo d...",
-    "headings": []
   },
   {
     "title": "Rust Async Programming",
@@ -6898,14 +6901,14 @@
   },
   {
     "title": "SubSequences",
-    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/SubSequence/",
-    "excerpt": "SubSequences Longest Subsequence forming Arithmetic Progression Number of Longest Increasing Subsequence",
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/",
+    "excerpt": "SubSequences SubSequences",
     "headings": []
   },
   {
     "title": "SubSequences",
-    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/",
-    "excerpt": "SubSequences SubSequences",
+    "url": "/DS_Questions/Questions/vectors_arrays/SubSequence_SubArray/SubSequence/",
+    "excerpt": "SubSequences Longest Subsequence forming Arithmetic Progression Number of Longest Increasing Subsequence",
     "headings": []
   },
   {
@@ -6964,12 +6967,6 @@
   },
   {
     "title": "System Design",
-    "url": "/System_Design/Scalable/",
-    "excerpt": "Authentication Flow Methods to reach Microservice System Designs: &ensp; Box Design &ensp;Amo Apps: Bump , Tilt &ensp; Data Lineage and Policy Enforcement &ensp; Distributed &emsp;...",
-    "headings": []
-  },
-  {
-    "title": "System Design",
     "url": "/System_Design/",
     "excerpt": "8 Building Blocks of System Design In any system these are majorly 8 building blocks, which can be reused to create a system: 1. Application Server 2. Load Balancers 3. Databases 4...",
     "headings": [
@@ -6977,6 +6974,12 @@
       "System Design Interview Questions",
       "Keep practising these(over & over again):"
     ]
+  },
+  {
+    "title": "System Design",
+    "url": "/System_Design/Scalable/",
+    "excerpt": "Authentication Flow Methods to reach Microservice System Designs: &ensp; Box Design &ensp;Amo Apps: Bump , Tilt &ensp; Data Lineage and Policy Enforcement &ensp; Distributed &emsp;...",
+    "headings": []
   },
   {
     "title": "Tallest Billboard",
@@ -7145,18 +7148,18 @@
   },
   {
     "title": "Threads Processes IPC",
+    "url": "/Threads_Processes_IPC/",
+    "excerpt": "Compared: Thread vs Process , Threads (User Space, Kernel Space, Green Threads), Memory Layout( Process(C++,Rust,Go,Java) , Thread ) OS Thread Creation: CPP(Threadclass, CPP Functo...",
+    "headings": []
+  },
+  {
+    "title": "Threads Processes IPC",
     "url": "/Threads_Processes_IPC/Threads_vs_Processes.html",
     "excerpt": "Threads vs Processes (Mechanisms used for executing code concurrently) Threads(User Space) Processes What Lightweight process within a process.(Since no duplication of process spac...",
     "headings": [
       "Threads vs Processes (Mechanisms used for executing code concurrently)",
       "Why Processes(if they are Heavy wrt Threds?)"
     ]
-  },
-  {
-    "title": "Threads Processes IPC",
-    "url": "/Threads_Processes_IPC/",
-    "excerpt": "Compared: Thread vs Process , Threads (User Space, Kernel Space, Green Threads), Memory Layout( Process(C++,Rust,Go,Java) , Thread ) OS Thread Creation: CPP(Threadclass, CPP Functo...",
-    "headings": []
   },
   {
     "title": "Threat Modelling, OWASP, STRIDE",

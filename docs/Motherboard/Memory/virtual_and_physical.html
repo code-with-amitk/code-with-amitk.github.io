@@ -23,9 +23,7 @@
         </ul>
     </nav>
 
-    <aside class="sidebar">    <!--See .sidebar in styles.css-->
-        <a href="#why">Why Virtual Memory</a>
-        <a href="#comparison">Comparison</a>
+    <aside class="sidebar">
         <a href="#terms">Terms</a>
         <ul>
             <li><a href="#page">Page</a></li>
@@ -45,69 +43,57 @@
 
     <main>  <!--Here is our page's main content-->
     <article style="margin-left:200px;">   <!-- It contains an article -->
-        <h2 id="why">Why VM</h2>
-        <dl>
-        Now-a-days processes are RAM hungry. Every Program(eg: adobe photoshop, microsoft teams) need more RAM.<br>
-        if 10 such processes want to run simultaneously then 10GB RAM is needed which is not available. 
-        VM is illusion to program that it has complete access to RAM.
-        </dl>
+        <h1>Virtual Memory</h1>
+        <p>
+            Its illusion to a process that all memory space belongs to it.<br>
+            Suppose in a program, pointer points to memory address 0, then increments to point to 1.
+            Pointer point to 1, so process is thinking of writing to Address 0, but when program is run
+            on RAM, this address maps to some other Physical address<br>
+            This local address of 0 and 1 are virtual addresses
+        </p>
+        <pre><code>int main() {
+    char *ptr = (char *)0;
+    ptr++;
+    return 0;
+}</code></pre>
+        <p>
+            <font color="red">Virtual address DOES NOT mean Hard Disk.</font> Only swap space is Hard Disk.
+        </p>
 
-        <h2 id="comparison">Virtual Memory & Physical Memory</h2>
-        <table>
-            <tr>
-                <th></th>
-                <th>Virtual Memory = Hard Disk</th>
-                <th>Physical Memory = RAM</th>
-            </tr>
-            <tr>
-                <td>Size</td>
-                <td>Bigger</td>
-                <td>Smaller wrt HD. 
-                    Stores data and machine code currently being used by the system.
-                </td>
-            </tr>
-            <tr>
-                <td>Contains</td>
-                <td><a href="#page" target="_blank">Pages</a></td>
-                <td><a href="#frame" target="_blank">Frames</a></td>
-            </tr>
-            <tr>
-                <td>Memory Allocation</td>
-                <td>Contigous</td>
-                <td>Contigous</td>
-            </tr>
-            <tr>
-                <td>Max Memory Sizes</td>
-                <td>
-                    hard Disk=4GB. Virtual Memory=3GB<br>
-                    hard Disk=1TB. Virtual Memory=966GB
-                </td>
-                <td>
-                    hard Disk=4GB. Physical Memory=1GB<br>
-                    hard Disk=1TB. Virtual Memory=4GB
-                </td>
-            </tr>
-        </table>
+        <h1>Address Translation</h1>
+        <h2>16 bit Architecture (16 bit=2byte Bus size)</h2>
+        <p>
+            - 2<sup>16</sup>=65535. With 16 we can create 65535=64KB unique numbers. ie it can access 64KB memory<br>
+            - Page size taken=4KB. Every data will not be 4KB big, there will be data that will be smaller than 4KB=4096
+              to be stored. Hence we need offset to find that data inside 4KB=4096 bytes.<br>
+            - To address 4096 bytes inside a page, we need exactly 12 bits (2<sup>12</sup>=4096).<br>
+            - Page Number=4 bits. (2<sup>4</sup>=16 pages)<br>
+            - offset = 12 bits. 2<sup>12</sup>=4096<br>
+            - 16x4096 = 65,536 bytes
+        </p>
+        <pre><code class="language-css">int main() {
+    int a = 1;
+}</code></pre>
 
-        <h2 id="terms">Terms</h2>
-        <h3 id="page">Page</h3>
-        <dl>
-            Pages are fixed sized blocks of Virtual Memory. <br>
-            <b>Size:</b> Page size is typically 4KB, but varies as per OS(upto 64KB).<br>
-            Pages are mapped to frames in physical memory
-        </dl>
+        <h1 id="terms">Terms</h1>
+        <p>
+            <b>Page:</b> A chunk of Virtual Memory. (e.g., 16 bit system has 2<sup>16</sup>=65535(64 KB virtual space) ie split into 16, 4 KB Pages).<br>
+            <b>Paging:</b> The process of chopping virtual and physical memory into equal-sized, fixed chunks so the OS can map them easily.<br>
 
-        <h3 id="frame">Frame</h3>
-        <dl>
-            Frames are fixed-size blocks of physical memory.<br>Page and frame are of same size<br>
-            Physical memory is divided into frames<br>
-            Pages from virtual memory are loaded into available frames in physical memory
-        </dl>
+<b>Page Frame:</b> A chunk of Physical RAM. It is the exact same size as a page, but it represents the actual hardware slot in RAM.<br>
+<b>Page Table:</b> A "dictionary" or lookup table stored in RAM. Every process has its own page table. It keeps track of which virtual page maps to which physical page frame.<br>
+<b>MMU (Memory Management Unit):</b> A physical hardware chip inside the CPU. It intercepts every single virtual address your program tries to read/write and instantly converts it to a physical RAM address using the Page Table.<br>
+<b>TLB (Translation Lookaside Buffer):</b> A tiny, blazing-fast hardware cache inside the MMU. Because looking up addresses in the Page Table (which sits in slow RAM) takes time, the TLB caches the most recent translations. It is the "speed dial" of memory mapping.<br>
 
+<b>Pure Demand Paging:</b> An optimization strategy where the OS does not load your program into RAM when it starts. Instead, it starts execution with a completely empty Page Table. The OS only brings a page from the hard disk into RAM on demand—the exact moment the CPU tries to execute or read it.<br>
+<b>Page Fault:</b> What happens when the CPU asks for a virtual page, but the MMU checks the Page Table and finds that the page is not currently loaded in RAM (valid bit is 0). It is a temporary pause signal, not a crash.<br>
+<b>Trap (Trap Instruction):</b> A hardware-driven exception or software interrupt generated by the CPU. When a Page Fault happens, the MMU executes a trap instruction to freeze the program, switch the CPU into "Kernel Mode" (administrator mode), and hand control over to the Operating System's internal Page Fault Handler to go fetch the missing data from the hard disk.
+        </p>
+        
         <h3 id="paging">Paging</h3>
         <dl>
             Memory management scheme that eliminates the need for contiguous allocation of physical memory/RAM<br>
-            It divides both virtual and physical memory into fixed-sized blocks, called <a href=#page">pages</a>
+            It divides both virtual and physical memory into fixed-sized blocks, called <a href="#page">pages</a>
             and <a href="#frame">frames</a> respectively.<br>
             When a program accesses data, the operating system maps the <a href="#comparison">virtual address to a physical address</a>
              using page tables.<br>
@@ -120,7 +106,7 @@
             are needed (i.e., on demand).<br>
             Initially, none of the program’s pages are loaded into RAM/physical memory.<br>
             When a <a href="#page">page</a> is accessed for the first time, a page fault occurs, and the operating system 
-            loads the required page from Virtual Memory/Hard disk into a free <a href="#frame">frame</a> in RAM/physical memory.<br>
+            loads the required page from Virtual Memory into a free <a href="#frame">frame</a> in RAM/physical memory.<br>
             <b>Advantage of Paging:</b> Minimizes RAM usage and allows for efficient use of available RAM/memory.
         </dl>
 
@@ -228,13 +214,13 @@
 
         <h3 id="pagetable">Page Table</h3>
         <dl>
-            Stores mapping of Pages(Hard Disk/Virtual Memory) to Frames(RAM/Physical memory).
+            Stores mapping of Pages(Virtual Memory) to Frames(RAM/Physical memory).
         </dl>
         <img src="/images/Memory/PageTable.png" alt="trie" style="width:200px;height:300px;">
 
         <h4 id="mmu">MMU(Memory Management Unit) Translate Virtual to Physical Address</h4>
         <dl>
-            Takes Virtual address(of Virtual Memory/Hard Disk) as Input provides Physical Address(of RAM) as output ie translate virtual to physical address.<br>
+            Takes Virtual address as Input provides Physical Address(of RAM) as output ie translate virtual to physical address.<br>
             CPU and MMU are present on single Die, ie on same chip.
             Mapping of Virtual Address to Physical Address is stored in PAGE TABLE.
         </dl>
@@ -256,7 +242,7 @@
             Solution: Software to maintain a cache internally.
         </dl>
 
-        <h3 id="translate">Translation from Virtual Address(Hard Disk) to Physical Address(RAM)</h3>
+        <h3 id="translate">Translation from Virtual Address to Physical Address(RAM)</h3>
         <dl>
             Translation typically involves two components: <br>
             - Page number(or fragment): identifies a page in the virtual address space<br>
@@ -303,7 +289,7 @@
             We have above <a href="#pagetable" target="_blank">page table</a>
         </dl>
         <pre><code class="language-css">
-            Virtual Memory/Hard Disk	Physical Memory/RAM
+            Virtual Memory          	Physical Memory/RAM
     Size	64KB	                    32KB
     Count	64k/4k = 16 Pages	        32k/4k = 8 Frames
         </code></pre>

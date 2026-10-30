@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>Distributed Rate Limiter</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Scalable/Rate%20Limiter" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Rate%20Limiter"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -33,16 +36,6 @@
     </nav>
 
     <aside class="sidebar">
-      <a href="#req">Requirements</a>
-      <a href="#hld">High Level Design</a>
-      <ul>
-        <li><a href="#where">Where Rate limiter sits</a></li>
-        <li><a href="#block">Block Diagram</a></li>
-        <li><a href="#flow">Request flow</a></li>
-        <ul>
-          <li><a href="#sequence">Sequence Diagram</a></li>
-        </ul>
-      </ul>
       <a href="#lld">Algorithms</a>
       <ul>
         <li><a href="#fixed">Fixed Window Counter</a></li>
@@ -56,248 +49,18 @@
 
     <main>
       <article style="margin-left: 200px">
-        <h1>What is DRL(distributed rate limiter)</h1>
+        <h1>DRL(distributed rate limiter)</h1>
         <p>
-          DRL decides whether a client (user, IP, or API key) will proceed to
-          origin/application server, using rate limiting counters. Eg: 100 HTTP
-          req/sec. if 101 arrives with in second, 429(too many requests) should
-          be returned to client
+          Requirements<br />
+          High Level Design<br />
+          Block Diagram<br />
+          Request Flow<br />
+          Flow Diagram<br />
+          <a
+            href="https://github.com/code-with-amitk/Code-examples/tree/master/System-Design/Scalable/Rate_Limiter"
+            >Rate Limiter System Design(github)
+          </a>
         </p>
-
-        <h1 id="req">Requirements</h1>
-        <p>
-          <b>1. DRL run in multiple regions</b>
-          Since DRL runs in several regions(US, India etc) atomic counters to be
-          shared across regions so the limit is enforced for the fleet — not per
-          machine.<br />
-
-          <b>2. System must be scalable:</b> Adding rate-limiter nodes should
-          not crash the system.<br />
-
-          <b>3. Thread-safe</b>: Concurrent checks from many threads/pods must
-          update counters atomically so two simultaneous requests cannot both
-          pass when only one token remains.<br />
-
-          <b>4. Low-latency</b>: Rate limiting counters are checked hot path so
-          least latency.
-        </p>
-
-        <h1 id="hld">High Level Design</h1>
-
-        <h2 id="where">
-          Where the limiter sits. Global LB → Regional LB → AZ LB → Rate Limiter
-        </h2>
-        <p>
-          It sits behind AZ LB<br />
-          <b>Why RL does not sit behind Global LB?</b><br />
-          - The global LB’s job is <b>geo routing and health</b>: steer traffic
-          to a region, fail over when a region is down.<br />
-          - Token-bucket check(at RL) needs a <b>nearby Redis round-trip</b> on
-          every request, if Redis fails it will be worldwide single point of
-          failure<br />
-
-          - Identity check cannot be done at Global level. Customers present
-          <code>X-API-Key</code>, JWT bearer tokens, or mTLS client certs. TLS
-          Termination happen on the <b>API Gateway</b> which cannot be placed
-          before global LB.
-        </p>
-
-        <h2 id="block">Block Diagram</h2>
-        <p>
-          Two regions (US and India). Each region has regional Redis for live
-          token buckets and talks to a shared global Redis (or config store) for
-          rules and tenant metadata.
-        </p>
-        <pre><code class="language-css">
-                                        +--------------------------------+
-                                        |   Global Load Balancer         |
-Client -------------------------------->|   Geo Routing                  |
-                                        +---------------+----------------+
-                                                        |
-                            +---------------------------+---------------------------+
-                            |                                                       |
-                            v                                                       v
-                 +-------------------------+                           +-------------------------+
-                 | Regional LB (US)        |                           | Regional LB (India)     |
-                 +------------+------------+                           +------------+------------+
-                              |                                                     |
-                              v                                                     v
-               +--------POD 1 -----+  +-POD2 --+                 +-------------- POD ------------+
-               | API Gateway       |  | API GW |                 | API Gateway                   |
-               | - SSL Termination |  |        |                 | - SSL Termination             |
-               | - Authentication  |  |------- |                 | - Authentication              |
-               | - Routing         |                             | - Routing                     |
-               | - Rate Limiter    |                             | - Rate Limiter                |
-               +-------------------+                             +---------------+---------------+
-                               |                                                 |
-                 Read/Update Token Bucket                         Read/Update Token Bucket
-                               |                                                 |
-                    +- Redis Cluster LB -------+                                 |
-                    |--------------------------|                                 |
-                               |                                                 |
-   ---------------------------------------------                                 v
-        |                         |
-+---------US  POD:6379 ---+  +-- Redis Pod 2 --+                +--------- IN POD:6379 --------+
-| Regional Redis(US) runs |  |                  |               |                              |
-| - Lua script atomically |  |                  |<------------->|                              |
-+---------------+---------+  +------------------+    |           +------------------+-----------+
-                              |                      |                              |
-                              v                      |                              v
-                      Backend Services               |                      Backend Services
-                                                     |
-                                                     |
-                                      +-----------------+
-                                      | config sync svc |
-                                      +-----------------+
-                                          /\
-                  Global Config Store (Redis/DB/Etcd)
-                  +---------------------------------+
-                  | - Rate limit policies           |
-                  | - API Keys                      |
-                  | - Tenant quotas                 |
-                  | - Configuration                 |
-                  +---------------------------------+
-        </code></pre>
-
-        <h2 id="flow">Request flow</h2>
-        <p>
-          A Customer authenticate and send request.<br />
-          The global load balancer resolves the hostname, routes to least loaded
-          AZ LB<br />
-          The AZ LB inside that zone selects a healthy API Gateway pod, which
-          does SSL Termination.<br />
-          API GW pod(<font color="red">Does Rate Limiting</font>)<br />
-          - Terminates TLS if needed<br />
-          - Validate the API key<br />
-          - Fetch the tenant rules from regional redis and runs the token-bucket
-          Lua script<br />
-          &ensp; <b><font color="red">Why Lua with Redis?</font></b
-          ><br />
-          &emsp; Redis embeds a Lua interpreter. Redis guarantees Execute the
-          entire Lua script as 1 atomic operation.<br />
-          &emsp; Redis does not natively support Python, Java, C++, Go inside
-          the Redis server.<br />
-          - If tokens remain, the gateway forwards to the correct microservice
-          and returns the response; if not, it responds with
-          <code>429 Too Many Requests</code>
-        </p>
-
-        <h3>Regional Redis vs Global Redis</h3>
-        <p>
-          <b>Usage:</b> <br />
-          1. Sharding inside the cluster is by hash(rule_id + tenant). This
-          ensures high write QPS, sub‑ms latency, and thread-safe increments.
-          When an admin changes a tenant’s limit in its Tenant UI, the update
-          lands in global Redis/config and fans out to all regional API
-          gateways;
-          <br />
-          2. To Enforce Global limits, 100 requests/sec Globally
-          <br />
-          Tenants logs into US or IN only 100req/sec are allowed. Regional Redis
-          cannot Enforce this<br />
-          Suppose tenant wants Entire world 100 requests/sec<br />
-          <b>Solution-1(Bad):</b> All Regional API GW nodes talk to global
-          redis. Lead to High latency, Global bottleneck, Lower availability,
-          Expensive network traffic
-        </p>
-        <pre><code>
-US API GW ------\
-                  \
-India API GW-----> Global Redis
-                  /
-Europe API GW ---/
-        </code></pre>
-        <p>
-          <b>Solution-2(Good):</b> Distribute regional limits or regional tokens
-          by global allocator
-        </p>
-        <table>
-          <tr>
-            <td>
-              <pre><code>
-Global Limit = 300/sec
-US      100/sec
-India  100/sec
-Europe 100/sec
-        </code></pre>
-            </td>
-            <td>
-              <pre><code>
-Global Bucket
-       |
-  Allocate Tokens
-       \/
-  Global Distributor(Push based)
-       |
-------------------------
-|          |          |
-US        India     Europe
-40         30         30
-              </code></pre>
-            </td>
-          </tr>
-        </table>
-
-        <h3 id="sequence">Sequence Diagram</h3>
-        <p>End-to-end path for one API call through the India region.</p>
-        <div class="mermaid-wrap">
-          <pre class="mermaid">
-%%{init: {'themeVariables': {'fontSize': '13px'}, 'sequence': {'actorMargin': 36, 'messageMargin': 24, 'boxMargin': 8, 'useMaxWidth': true}}}%%
-sequenceDiagram
-autonumber
-
-actor Customer
-
-box LightBlue Global Edge
-participant GLB as Global LB<br>Geo Routing
-participant RLB as Regional LB India
-participant AZLB as AZ LB
-end
-
-box LightGreen Datacenter
-participant GW as API Gateway Pod<br>SSL · Auth <br><br>Rate Limiter
-participant RedisLB as Redis Cluster LB
-participant RRedis as Regional Redis<br>Token Bucket
-participant API as Backend Services
-end
-
-box LightYellow Global Config
-participant Sync as Config Sync Svc
-participant GStore as Global Config Store<br>rules · API keys · quotas
-end
-
-Customer->>GLB: HTTPS API request<br>X-API-Key=tenant_acme
-Note over GLB: Geo + health only<br>no rate-limit check
-GLB->>RLB: Route to India region
-
-RLB->>AZLB: Route to AZ pod
-AZLB->>GW: Forward to gateway pod
-
-GW->>GW: TLS terminate + validate API key<br>tenant_acme identified
-
-GW->>Sync: refresh rules or cached policy
-Sync->>GStore: GET rule:tenant_acme
-GStore-->>Sync: rate=100/min, burst=20
-Sync-->>GW: rule returned
-
-GW->>RedisLB: EVAL token_bucket.lua<br>bucket:api:tenant_acme
-RedisLB->>RRedis: route to Redis pod
-RRedis-->>RedisLB: allowed=true, remaining=17
-RedisLB-->>GW: allowed=true, remaining=17
-
-alt tokens remaining
-    GW->>API: Forward allowed request
-    API-->>GW: 200 OK + body
-    GW-->>Customer: 200 OK<br>X-RateLimit-Remaining: 17
-else bucket empty
-    RRedis-->>RedisLB: allowed=false, retry_after=12s
-    RedisLB-->>GW: allowed=false, retry_after=12s
-    GW-->>Customer: 429 Too Many Requests<br>Retry-After: 12
-end
-
-Note over Sync,GStore: Config sync pushes<br>policy updates to all regions
-          </pre>
-        </div>
 
         <h2 id="lld">Algorithms</h2>
 

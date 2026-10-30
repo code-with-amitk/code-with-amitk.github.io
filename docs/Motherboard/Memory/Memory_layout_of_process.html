@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Process Table, Memory Layout of Process</title>
+    <title>Process Table, Memory Layout, task_struct</title>
     <link
       rel="canonical"
       href="https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_of_process.html"
@@ -324,32 +324,41 @@ while(1){
           memory.
         </dl>
 
-        <h1 id="processtable">Process Table</h1>
+        <h1>Process Table & Process Control Block</h1>
+
+        <h3 id="processtable">Process Table</h3>
         <p>
           Process Table is Array of structures (called Process Control Blocks),
           one entry per process.<br />
-          Entry contains all information about the process's state:<br />
-          &ensp; Its
-          <a href="/Motherboard/Memory/Memory_Types.html#ip">Program counter</a
-          >: Store address from where to start again<br />
-          &ensp; stack pointer<br />
-          &ensp; memory allocation<br />
-          &ensp; the status of its open files<br />
-          &ensp; Process's accounting and scheduling information<br />
-          &ensp; And everything else about the process that must be saved when
-          the process is switched from running to ready or blocked state so that
-          it can be restarted later
+        </p>
+
+        <h3 id="PCB">Process or Thread Control Block (struct task_struct)</h3>
+        <p>
+          <b>What is PCB/TCB?</b> <code>struct task_struct</code> containing all
+          information about the process's state example:<br />
+          - Execution Context: Registers,
+          <a href="/Motherboard/Memory/Memory_Types.html#ip"
+            >Program Counter (Store address from where to start again)</a
+          >, Stack Pointer (SP).<br />
+          - State: Running, Sleeping, Zombie, etc.<br />
+          - Wait Queues: When a thread blocks on a mutex, socket, or condition
+          variable, the kernel places a node (wait_queue_entry_t)<br />
+          - Process's accounting and scheduling information
           <br />
-          <b>Process Table Objective?</b> <br />
-          To restart process from state where it left off, as it had never
-          stopped. Process state which is interrupted using Interrupt is also
-          saved on process table for later resumption. (due to
+          <b>PCB Objective?</b> To restart process from state where it left off,
+          as it had never stopped. Process state which is interrupted using
+          Interrupt is also saved on process table for later resumption. (due to
           <a
             href="https://github.com/code-with-amitk/Code-examples/tree/master/Threads_Processes_IPC/Terms#context-switch"
             >context switch</a
           >
           or
-          <a href="/Operating%20System/Linux/Kernel/Interrupts/">interrupt</a>)
+          <a href="/Operating%20System/Linux/Kernel/Interrupts/">interrupt</a
+          >)<br />
+          <b>struct task_struct</b> When we create a process using
+          <code>fork()</code> or a thread using <code>pthread_create()</code>,
+          the kernel allocates a task_struct. Linux uses task_struct for both
+          processes and threads
         </p>
         <table>
           <tr>
@@ -361,82 +370,31 @@ while(1){
               />
             </td>
             <td>
-              <h3>Process or Thread Control Block</h3>
-              When we create a process using <code>fork()</code> or a thread
-              using <code>pthread_create()</code>, the kernel allocates a
-              task_struct<br />
-              The Linux kernel does not actually have a separate concept of a
-              "process" structure versus a "thread" structure.<br /><br />
-
-              <b>Create new process using <code>fork()</code>:</b> The kernel
-              creates a brand new <code>task_struct</code> and gives it
-              completely separate copies of memory (mm_struct), file descriptors
-              (files_struct), and environment variables. They are isolated.<br /><br />
-
-              <b
-                >Create new Thread <code>pthread_create()</code> or
-                <code>clone()</code></b
-              >: The kernel creates a new task_struct, but shares the parent's
-              memory (mm_struct), file descriptors, and open files.<br /><br />
-
-              task_struct Contains: <br />
-              - Execution Context: Registers, Program Counter (PC), Stack
-              Pointer (SP).<br />
-              - State: Running, Sleeping, Zombie, etc.<br />
-              - Memory Pointers: References to page tables (mm_struct).<br />
-              - Wait Queues: When a thread blocks on a mutex, socket, or
-              condition variable, the kernel places a node
-              (wait_queue_entry_t)<br />
+              <b>PCB/TCB (Process/Thread Control Block)</b><br />
               <pre><code class="language-css">
 struct task_struct {
-    long                 priority;
-    
-    struct task_struct   *next_task, *prev_task;  //DOUBLY LL
-    
-    int                  pid;                     //Process PID
-    
-    int                  pgrp;                    //Process Group
-    
-    struct task_struct   *p_opptr, *p_pptr, *p_cptr,  //Pointers to parent, youngest child, silbilings etc
-    
+    long                 priority, pid, pgrp;   // Process PID, group
     unsigned short       uid,suid,gid,sgid..;     //UID,GID
-    
-    struct fs_struct     *fs;                     //File system information
-    
+    struct task_struct   *next_task, *prev_task;  //DOUBLY LL
+    struct task_struct   *p_opptr, *p_pptr, *p_cptr,  //Pointers to parent, youngest child, silbilings etc
+
+    //File system information
+    struct fs_struct     *fs  {int users;seqlock_t seq;int umask;struct path root, pwd;}
+
     struct sem_queue     *semsleeping;            //IPC Information
-    
     struct mm_struct     *mm;                     //memory management info
-    
     struct signal_struct *sig;                    //signal handlers
 
-    //Register information.
+    // Process State {RUNNING, INTERRUPTABLE, STOPPED, ZOMBIE, DEAD}
+    unsigned int state; 
+
+    // Registers: Stack pointer, Program Counter
+    struct thread_struct {unsigned long sp, pc, flags..}
 };
                         </code></pre>
             </td>
           </tr>
         </table>
-
-        <h4>Information stored in PCB</h4>
-        <dt>
-          <a href="/Motherboard/Memory/Memory_Types.html"
-            >Register values of present process, stack pointer (rbp) etc</a
-          ><br />
-          Process-state: Any of 5<br />
-          pid: process-id<br />
-          <a href="/Motherboard/Memory/Memory_Types.html"
-            >Program Counter/Instruction Pointer:</a
-          >
-          Address of next instruction to be executed on Code segment of this
-          process.<br />
-          priority: This is a number. Process having higher priority execute
-          1st.<br />
-          <a href="/Motherboard/Memory/Memory_Types.html"
-            >General purpose registers:</a
-          >
-          Stores results of calculations done by process in Memory segment.<br />
-          List of open files, list of open devices. This all information is
-          called PROCESS CONTEXT.
-        </dt>
 
         <h2 id="ways">Ways of Process Creation, Terminaton</h2>
         <h3>Process Creation Ways</h3>

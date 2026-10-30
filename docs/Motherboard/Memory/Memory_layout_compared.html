@@ -55,25 +55,26 @@
           >Process Control Block, Process Table</a
         >
       </p>
-      <pre><code>
-PROCESS MEMORY LAYOUT
-                                                Heap
-                                                /\
-High Memory Address                              |      |         Data Segment        |
-┌────────────┬──────────────┬──────────────┬─────|──────┬──────────────┬──────────────┬──────────────┐
-│   Kernel   │    Stack     │ Shared Libs  │    Pointer | BSS          │ .data        │ Text / Code  │
-│   space    │ grows -->    │              │ to Heap    │ Uninitialized│ Initialized  │  Read Only   │
-|            |              |              |            |              | &lt;-RW-&gt;&lt;-RO-&gt; |              |
-└────────────┴──────────────┴──────────────┴────────────┴──────────────┴──────────────┴──────────────┘
-                                                                                                  0x00000000
-                                                                                                Low Memory Address
-
-THREAD MEMORY LAYOUT
------------------------------Process Memory layout---------------------------
--------Process Stack-----------------
-[ Thread1_Stack Thread2_Stack        ][ ptr-to-heap ][Data Segment][Code Segment]
-                
-            </code></pre>
+      <pre><code>mutex mtx;
+condition_variable cv;    // futex
+void fun(int a){}         // pthread_cond_t
+main() {
+  thread t(fun, 1);
+}
+                                                  Heap
+                                                   /\
+LOW MEMORY (0x0000...)                              |   <-- Process --->                                    HIGH MEMORY (0xFFFF...)
+┬───────────────┬─────────────────────────────┬─────|──────┬──────────────────────────┐        ┬─────────────────────────────┐
+| Text/Code(RO) |<------- Data Segment------->|     |      |     Stack                |        |  KERNEL SPACE               |
+│ main()        │ BSS          │ .data        |   Pointer  │ [thred1 Stack][t2 stack] │        | struct task_struct          |
+│               │ Uninitialized│ Initialized  |   to Heap  │       t1                 |        |    /\                 futex |
+|               |  cv    mtx   |<-RW-><-RO->  |            |        |                 |        |  clone(),mmap          /\   |
+└───────────────┴────────|─────┴──────────────┴────────────┴────────|─────────────────┘        └─────|──────────────────|────┘
+                         |                                          |--------------------------------|                  |
+                         |----------------------------------------------------------------------------------------------|
+                                                       Each thread has its own execution context & stack
+                                                       But Share CS(code), HS(heap), DS(global variables)
+</code></pre>
 
       <h2 id="go">Go</h2>
       <h3>Go vs C++</h3>

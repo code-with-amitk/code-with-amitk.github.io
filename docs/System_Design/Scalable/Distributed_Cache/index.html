@@ -2,8 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Distributed Cache System Design</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Scalable/Distributed_Cache" />
+    <title>Distributed Cache, Redis, Lua Script</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Scalable/Distributed_Cache"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -46,18 +49,19 @@
         <li><a href="#redis-storage">Storage of Hashes</a></li>
         <li><a href="#hash-calc">Hash calculation</a></li>
       </ul>
+      <a href="#LuaScript">Lua Script</a>
     </aside>
 
     <main style="margin-left: 200px">
       <article>
-        <h2 id="overview">Distributed Cache (eg for twitter)</h2>
+        <h1 id="overview">Distributed Cache (Redis)</h1>
         <p>
           A cache is storage space for access to data kept in database.
           Application server instead of going to DB will check cache and in case
           of Cache Hit will return result
         </p>
 
-        <h2 id="requirements">Requirements</h2>
+        <h1 id="requirements">Requirements</h1>
         <h4>Functional</h4>
         <p>
           1. Low latency: Cache instead of database (less than 5ms)<br />
@@ -341,6 +345,80 @@ followers:100           [45,88,90]
 | Replica              |   | Replica              |   | Replica              |
 +----------------------+   +----------------------+   +----------------------+
 </code></pre>
+
+        <h1 id="LuaScript">Lua Script</h1>
+        <p>
+          Redis uses Lua script to update keys in Redis cache<br />
+          Lua is a server-side lock same as Mutex.<br />
+          <b>Redis's Single-Threaded process:</b> Redis processes commands using
+          a single-threaded event loop (for command execution).<br />
+          <b>Atomicity Guarantee:</b> When Redis runs a Lua script via EVAL or
+          EVALSHA, it guarantees that no other client/thread/script can run
+          until that Lua script completes.
+        </p>
+
+        <h3>Why Lua Chosen by Redis? Not C++/Rust?</h3>
+        <p>
+          <b>Speed of C:</b> Lua written in C, making it fast enough for
+          high-frequency in-memory databases.<br />
+          <b>Small Lua Interpretor:</b> Lua interpreter is small(100 KB) and has
+          minimal memory footprint.<br />
+          <b>Secure:</b> Sandbox for running Lua inside Redis prevents it to
+          interfere host OS file system or network, ensuring security.
+        </p>
+
+        <h3>GET(key)/SET(key) on Redis</h3>
+        <p>
+          <b>Problem: Race Condition</b><br />
+
+          - In Prod, Multiple pods talk to the 1 Redis pod at same time. Each
+          Pod pod calls `GET` API of Redis<br />
+          - Redis pod reads Key from
+          <a href="/System_Design/Concepts/Kubernets/Terms.html#pvc">PVC</a>,
+          return value and decrement Key on PVC.<br />
+          - This code to read/modify/write become Critical Section<br /><br />
+
+          <b>Solution: Lua Script</b><br />
+
+          - Instead of sending seperate GET/SET packets by Application to Redis,
+          the entire token-checking and decrementing logic is pushed to Redis as
+          a single script execution (EVAL or EVALSHA).<br />
+          - EVAL=Read-Modify-Write. GET/SET operations are done in EVAL at once
+        </p>
+        <code>
+          <pre class="language-css">
+-- KEYS[1]: The Redis key for the rate limit counter
+-- ARGV[1]: Max capacity, ARGV[2]: Refill amount / current request cost, ARGV[3]: Current timestamp
+local key = KEYS[1]
+local capacity = tonumber(ARGV[1])
+local requested = tonumber(ARGV[2])
+local now = tonumber(ARGV[3])
+
+-- Fetch current bucket state from Redis hash
+local bucket = redis.call('HMGET', key, 'tokens', 'last_updated')
+local tokens = tonumber(bucket[1])
+local last_updated = tonumber(bucket[2])
+
+if not tokens then
+    -- Initialize bucket if it doesn't exist
+    tokens = capacity
+    last_updated = now
+else
+    -- Simple refill logic (example approximation)
+    -- In production, refill math is calculated based on elapsed time
+    tokens = math.min(capacity, tokens + 1) 
+end
+
+if tokens >= requested then
+    tokens = tokens - requested
+    redis.call('HMSET', key, 'tokens', tokens, 'last_updated', now)
+    return 1 -- Allowed
+else
+    return 0 -- Rate limited (Exceeded)
+end
+        </pre
+          >
+        </code>
       </article>
     </main>
 
