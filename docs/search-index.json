@@ -235,7 +235,7 @@
     ]
   },
   {
-    "title": "ANN, KNN, Regression, Classifier, Clustering, HNSW, Biencoder,\r\n      Crossencoder, ColBERT, Reranking",
+    "title": "ANN, KNN, Regression, Classifier, Clustering, HNSW, Biencoder,\n      Crossencoder, ColBERT, Reranking",
     "url": "/Machine Learning/ML_and_Types_Algorithms.html",
     "excerpt": "Machine Learning and ML Model? ML is the process of training a ML Model , to make useful predictions or generate content (like text, images, audio, or video) from data. Types of Ma...",
     "headings": [
