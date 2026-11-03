@@ -370,7 +370,7 @@ void reverseString(vector<char>& s) {
 }
             </code></pre></td>
 
-            <td><pre>   <!--Rust-->
+            <td><pre><code class="language-css">   <!--Rust-->
 fun(nums: Vec&lt;i32>) {
     for i in nums.iter().skip(1) {//skip 1st 2 element
         println!("{}", *i);
@@ -386,8 +386,8 @@ s.chars().for_each(|ele| {
 
     }
 });
-            </pre></td>
-            <td><pre>   <!--Python-->
+            </code></pre></td>
+            <td><pre><code class="language-css">  <!--Python-->
 for c in s[1:-1]:
   print(c)
 
@@ -400,7 +400,7 @@ for i in range(0,n):
 for i in range(len(list) - 1,
  -1, -1):
   print(list[i])
-            </pre></td>
+            </code></pre></td>
 
             <td><pre>        <!--Go-->
 for i := 0; i &lt; len(nums)-1; i++ {
@@ -419,6 +419,18 @@ for index, n := range nums {
             <td>vec.back()</td>
             <td>if Some(l) = vec.last()</td>
             <td></td>
+        </tr>
+
+        <tr>
+            <td>Max element</td>
+            <td><pre><code class="language-css">*max_element(vec.begin(), vec.end())</code></pre></td>
+            <td><pre><code class="language-css">let numbers = vec![10, 5, 20, 15];
+let max_val = *numbers.iter().max().unwrap();</code></pre></td>       <!--Rust-->
+            <td><pre><code class="language-css">numbers = [4, -4, 8, -9, 1]
+
+largest = max(numbers)</code></pre></td>       <!--Python-->
+            <td><pre><code class="language-css">numbers := []int{3, 5, 1, 8, 2}
+maxNum := slices.Max(numbers)</code></pre></td>       <!--Go-->
         </tr>
 
         <tr>

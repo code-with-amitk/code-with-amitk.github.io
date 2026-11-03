@@ -42,11 +42,15 @@
         </ul>
         <a href="#rehashing">Rehashing</a>
       </ul>
+      <a href="#ExtraOverhead">Extra Overhead</a>
+      <a href="#LoadFactor">Load Factor</a>
       <a href="">Implementations</a>
       <ul>
         <a href="#2left">2-left Hashing(Cuckoo)</a>
         <a href="#dleft">d-left Hashing</a>
       </ul>
+      <a href="/Data_Structures/Terms.html#amortized">Amortized</a>
+      <a href="/Data_Structures/Terms.html#CacheLocality">Cache Locality</a>
     </aside>
 
     <article style="margin-left: 200px">
@@ -89,43 +93,46 @@
 
       <table>
         <tr>
+          <td><b>Hash table</b></td>
           <td>
-            Hash table<br />
-            <pre><code class="language-css">key value
-a   1
-b   2
-c   3</code></pre>
-          </td>
-          <td>
-            <b>How hashFunction() works</b>
-            <pre><code>i   value           hash               index
-0   a=97        randomval + 97 = 97   97 % 4 = 1
-1   b=98        randomval + 98 = 98   98 % 4 = 2
-2   c=99        randomval + 99 = 99   99 % 4 = 3
+            Let these need to be inserted into hash table:<br />
+            &ensp; {a,1}, {b,2}, {c,3}, {d,4}<br />
+            <pre><code>
+key    hash (key%3)=index in array
+a        97 % 3 = 1
+b        98 % 3 = 2
+c        99 % 3 = 0
+d       100 % 3 = 1
 
-Hash Table
-|   | a |   b   | c |
-  0   1     2     3  </code></pre>
+Hash Table (using Chaining/Separate Chaining)
++----+
+|  0 | ---&gt; (c,3) ---&gt; NULL
++----+
+|  1 | ---&gt; (a,1) ---&gt; (d,4) ---&gt; NULL
++----+
+|  2 | ---&gt; (b,2) ---&gt; NULL
++----+</code></pre>
+
+            Bucket index array is contiguous in memory<br />
+            Actual key-value pairs are scattered across the heap.
           </td>
           <td>
             <pre><code class="language-css">
 struct Entry {
-    std::string key;
+    char key;
     int value;
 };
 class HashTable {
     static const int CAP = 4;
     std::vector&lt;Entry&gt; buckets[CAP];
-    int hashFunction (const std::string &s) {
+    int hashFunction (char &c) {
         // Very simple hash
-        unsigned long h = 0;
-        for (char c : s) {
-            h = h * 31 + (unsigned char)c;
-        }
+        unsigned long random = 5;
+        int h = random + (unsigned char)c;
         return (int)(h % CAP);      //index into bucket
     }
 public:
-    void insertIntoHashTable(const std::string &key, int value) {
+    void insertIntoHashTable(char key, int value) {
         int idx = hashFunction (key);
         auto &bucket = buckets[idx];
 
@@ -147,7 +154,7 @@ public:
 
       <h2 id="collision">Hash Collision</h2>
       <p>
-        This means hash function provides same index for 2 different keys.<br /><br />
+        This means hash function provides same index for 2 different keys.<br />
         <b>Solutions to Hash Collision</b>
       </p>
 
@@ -192,29 +199,36 @@ hash(b) = 1. Insert after open place in array
         </tr>
       </table>
 
-      <h3 id="sepchaining">2. Seperate Chaining</h3>
-      <p>
-        Each index of the hash table points to a secondary data structure,
-        typically a linked list. When a collision occurs, the new key is simply
-        appended to the list at that index<br />
-        Insert(x): O(1). Insert at head of LL, Search(x): O(n). Need to search
-        complete list
-      </p>
-      <pre><code>hash(a) = 1, hash(b) = 1, hash(c) = 1
-hash(d) = 1, hash(e) = 1
+      <h3 id="sepchaining">2. Seperate Chaining (Discussed above)</h3>
 
-Hash Table (Array of Buckets)
-+---------+
-| Index 0 | ---&gt; NULL
-+---------+
-| Index 1 | ---&gt; [ "a" ] ---&gt; [ "b" ] ---&gt; [ "c" ] ---&gt; NULL
-+---------+
-| Index 2 | ---&gt; NULL
-+---------+
-| Index 3 | ---&gt; [ "d" ] ---&gt; [ "e" ] ---&gt; NULL
-+---------+
-| Index 4 | ---&gt; NULL
-+---------+</code></pre>
+      <h1 id="ExtraOverhead">Extra Overhead with hash table</h1>
+      <p>
+        <b>Memory Overhead:</b><br />
+        &ensp; 1. Every bucket requires memory for a pointer. Since key-value is
+        stored in Linked List, requires extra bytes to store a pointer to the
+        "next" node in the chain.<br />
+        &ensp; 2. <a href="#rehashing">Rehashing</a> Overhead. When
+        <a href="#LoadFactor">Load Factor</a> becomes greater than .75, then
+        larger bucket is allocated, all keys are rehashed<br />
+        <b>Computation Overhead</b><br />
+        &ensp; 1. Every read, write, and delete requires running the hash
+        function algorithm to calculate the index.
+      </p>
+
+      <h1 id="LoadFactor">Load Factor</h1>
+      <p>Load factor measures of how "full" the hash table is</p>
+      <pre><code>Load factor = Total number of elements / number of slots in buckets
+
+Above example:
+ elements: (a,1), (b,2), (c,3), and (d,4)
+ slots: 3
+ LF = 4/3 = 1.33</code></pre>
+      <p>
+        if (Load Factor &gt; 0.75), then rehashing is triggered.<br />
+        <b>(Load Factor &gt; 1) means</b><br />
+        - Elements &gt; slots, that means there is atleast 1 collision<br />
+        - Collision means Search is not O(1) now, its moving towards O(n)
+      </p>
 
       <h1>
         C++ hashmap(unordered_map / unordered_set) =
@@ -235,13 +249,11 @@ Hash Table (Array of Buckets)
         &ensp; <a href="#rehashing">Rehashing</a>
       </p>
 
-      <h2 id="rehashing">Rehashing</h2>
-      <pre><code>load factor = number of elements / number of buckets
-default max_load_factor() = 1.0</code></pre>
+      <h2 id="rehashing">Rehashing / Resizing</h2>
       <p>
-        When an insertion causes the load factor to exceed 1.0 (i.e., elements
-        &gt;= buckets), a rehash is triggered automatically.<br />
-        During a rehash, a new, larger bucket array is allocated (typically
+        When <a href="#LoadFactor">Load Factor</a> &gt; 0.75, a rehash is
+        triggered automatically.<br />
+        During a rehash, a new, l arger bucket array is allocated (typically
         scaling to the <font color="red">next prime number</font>), and all
         existing elements are re-hashed and redistributed into the new
         buckets.<br />

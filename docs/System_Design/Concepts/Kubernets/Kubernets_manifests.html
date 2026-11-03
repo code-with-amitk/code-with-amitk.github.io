@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>Kubernets Manifests</title>
-    <link rel="canonical" href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Kubernets_manifests.html" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Kubernets_manifests.html"
+    />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/prism.css" />
     <link rel="stylesheet" href="/css/mermaid.css" />
@@ -65,15 +68,13 @@
         entirely new kinds tailored to your applications (such as kind:
         Database, kind: RedisCluster, or kind: AppDeployment).<br /><br />
 
-        <b>Kubernets Object</b><br />
-        The Object is the actual active entity running inside the cluster after
-        you submit the manifest using a command like "kubectl apply -f
-        file.yaml"
+        <b>Kubernets Object:</b>
+        Actual active entity running inside the cluster after you submit the
+        manifest using a command like "kubectl apply -f file.yaml"
         <br /><br />
 
-        <b>Required Manifests</b><br />
-        - Only deployment.yaml and service.yaml are mandatory to deploy and
-        access your container.<br />
+        <b>Required Manifests:</b> Only deployment.yaml and service.yaml are
+        mandatory to deploy and access your container.<br />
         - Rest are optional tools used to handle scaling, security,
         configuration, and monitoring.
       </p>
@@ -140,57 +141,32 @@ spec:
           </td>
           <td>
             <b>Service</b><br />
-            &ensp; In Kubernetes, Pods are temporary. They are created,
-            destroyed, and replaced constantly during updates or node
-            failures.<br />
-            &ensp; if pod gets deleted and new pod is created, how new pod would
-            be reachable?<br />
-            &ensp; A Service provides a static/permanent IP address and a
-            permanent DNS name (kafka.test.svc.cluster.local) to pod<br />
-            &ensp; Now other apps will talk to service<br />
-            &ensp; Every time a new Pod is created, it gets a dynamic,
-            unpredictable IP address.
-            <pre><code>10.244.a.b:9092
-       ↓
-       ↓ Pod gets deleted
-       ↓
-10.244.c.d :9092
+            &ensp; In Kubernetes, Pods are emphemeral/temporary. When a pod
+            crashes/scales up/upgrade, Kubernetes destroys it and creates a new
+            pod with brand new IP address.<br />
+            &ensp; A Service provides a static/permanent cluster IP address for
+            external applications to talk<br />
+            &ensp; Application will reach clusterIP which will route the request
+            to 1 of healthy Pod
+            <pre><code>Client will connect ClusterIP:Port
+                            |----------|
+                            |service   |         |> App-Pod1 (1.1.1.1)
+connect(10.96.0.50:8080)    |clusterIP | -round--|
+                            |10.96.0.50|  robin  |> App-Pod2 (2.2.2.2)
+                            | 8080     |
+                            |----------|
 
-DNS: kafka.test.svc.cluster.local:9092 remains same, where other apps will reach</code></pre>
-            <div class="mermaid-wrap">
-              <pre class="mermaid">graph LR
-    %% Define styles
-    classDef client fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef svc fill:#85C1E9,stroke:#333,stroke-width:2px;
-    classDef deployment fill:#D2B4DE,stroke:#333,stroke-width:2px;
-    classDef pod fill:#2ECC71,stroke:#333,stroke-width:2px;
-    classDef dns fill:#F5B041,stroke:#333,stroke-width:2px;
+App-Pod2 crashes:
+- Kubectl(worker node), noticies and informs Scheduler(Master)
+- Scheduler provisions a new pod App-Pod3(3.3.3.3)
+- New IP(3.3.3.3) gets stores in API Server
 
-    %% Components
-    Client[Client App-X Pod<br/>Anywhere in Cluster]:::client
-    
-    subgraph DNS [CoreDNS System]
-        DNS_Record["kafka.test.svc.cluster.local"]:::dns
-    end
-
-    subgraph K8s_Namespace [test Namespace]
-        
-        Service[Service: kafka<br/>Type: ClusterIP<br/>IP: 10.96.x.x <font color=blue>STATIC IP</font>]:::svc
-        
-        subgraph Deployment_Layer [Deployment: kafka]
-            Pod[Pod: kafka-7f8d...<br/>Labels: app=kafka<br/>IP: 10.244.x.x <font color=red>DYNAMIC IP</font>]:::pod
-            Container[Redpanda Container<br/>Port: 9092]:::pod
-        end
-        
-    end
-
-    %% Connections
-    Client -->|1. Resolves Name| DNS_Record
-    DNS_Record -->|2. Returns Static Service IP| Client
-    Client ==> |3. Sends traffic to 10.96.x.x:9092| Service
-    Service ==> |4. Routes traffic via Selector app=kafka| Pod
-    Pod --> Container</pre>
-            </div>
+                            |----------|
+                            |service   |         |> App-Pod1 (1.1.1.1)
+connect(10.96.0.50:8080)    |clusterIP | -round--|
+                            |10.96.0.50|  robin  |> App-Pod3 (3.3.3.3)
+                            | 8080     |
+                            |----------|</code></pre>
           </td>
         </tr>
       </table>

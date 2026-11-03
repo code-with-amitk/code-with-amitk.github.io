@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Multi Query, RAG Fusion</title>
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Machine%20Learning/RAG/Retrieval_Types.html"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/prism.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <!--See .navbar in styles.css-->
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Our team</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/Machine Learning">Back</a></li>
+        <li>
+          <form>
+            <input type="search" name="q" placeholder="Search site" />
+            <input type="submit" value="Go!" />
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <aside class="sidebar">
+      <a href="#what">Retrieval Types</a>
+      <ul>
+        <li><a href="#multiquery">1. Multi query</a></li>
+        <li><a href="#ragfusion">2. RAG Fusion</a></li>
+      </ul>
+    </aside>
+
+    <article style="margin-left: 200px">
+      <h1 id="what">Retrieval Types</h1>
+      <p>
+        Methods by which a document can be retrieved from vector database for
+        closeness matching
+      </p>
+
+      <h2 id="multiquery">1. Multi Query</h2>
+      <p>
+        When a user submits a natural language Query to a RAG system, query may
+        contain 2 or 3 different varied questions. <br />
+        Now if retriever tries to match vector embedding of whole user query, it
+        might not provide correct matching document, since matching documents
+        might be far placed in embedding vector space, since query might have
+        2-3 unrelated questions
+      </p>
+
+      <h3>How Multi-Query solves this?</h3>
+      <p>
+        1. System takes the user's prompt and asks a fast LLM: "Generate 3(for
+        example) sub-questions of this query from different angles."<br />
+        2. The system executes a vector search (retrieve_top_k=10) for each of
+        those generated variations independently against the vector database, we
+        get 3*10=30 nearest documents<br />
+        3. Duplicate documents are removed and remaining documents are fed as
+        context with User's query to LLM for final response generation.
+      </p>
+    </article>
+    <script src="/scripts/prism.js"></script>
+  </body>
+</html>
