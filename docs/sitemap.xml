@@ -200,7 +200,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Data_Structures</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -212,7 +212,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Data_Structures/Hash_Tables/Introduction.html</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -225,6 +225,12 @@
   <url>
     <loc>https://code-with-amitk.github.io/Data_Structures/Probabalistic_Data_Structures/Why.html</loc>
     <lastmod>2026-07-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://code-with-amitk.github.io/Data_Structures/Terms.html</loc>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -944,7 +950,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/STL</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -998,7 +1004,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Languages/Programming/C%2B%2B/STL/Containers/Seqeunce_Containers/vector/Functions.html</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -1838,7 +1844,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Machine%20Learning</loc>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2054,7 +2060,13 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Machine%20Learning/RAG/Observability.html</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://code-with-amitk.github.io/Machine%20Learning/RAG/Retrieval_Types.html</loc>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -2180,13 +2192,13 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_compared.html</loc>
-    <lastmod>2026-10-25</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Motherboard/Memory/Memory_layout_of_process.html</loc>
-    <lastmod>2026-10-25</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -2258,7 +2270,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Networking/OSI-Layers</loc>
-    <lastmod>2026-10-28</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -2456,7 +2468,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/AdvDis_Features_Methods.html</loc>
-    <lastmod>2026-10-28</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -2474,7 +2486,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Networking/OSI-Layers/Layer-7/HTTP/HTTP%20Headers.html</loc>
-    <lastmod>2026-10-28</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -2726,7 +2738,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/System_Design/Concepts</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3128,7 +3140,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/System_Design/Concepts/Kubernets/Kubernets_manifests.html</loc>
-    <lastmod>2026-09-12</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -3266,7 +3278,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/System_Design/Scalable/Distributed_Cache</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3356,7 +3368,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/System_Design/Scalable/Rate%20Limiter</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -3506,7 +3518,7 @@
   </url>
   <url>
     <loc>https://code-with-amitk.github.io/Threads_Processes_IPC/Threads_vs_Processes.html</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

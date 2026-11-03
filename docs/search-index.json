@@ -224,6 +224,17 @@
     "headings": []
   },
   {
+    "title": "Amortized",
+    "url": "/Data_Structures/Terms.html",
+    "excerpt": "Amortized Dictionary meaning is spreading out a financial cost, debt, or asset value into smaller, regular amounts over a set period of time For data structures it means \"average c...",
+    "headings": [
+      "Amortized",
+      "Cache Locality",
+      "1. Vector (Contiguous Memory = Great Locality)",
+      "2. Hash Table (Scattered Memory = Poor Locality)"
+    ]
+  },
+  {
     "title": "ANN, KNN, Regression, Classifier, Clustering, HNSW, Biencoder,\r\n      Crossencoder, ColBERT, Reranking",
     "url": "/Machine Learning/ML_and_Types_Algorithms.html",
     "excerpt": "Machine Learning and ML Model? ML is the process of training a ML Model , to make useful predictions or generate content (like text, images, audio, or video) from data. Types of Ma...",
@@ -5146,6 +5157,16 @@
     ]
   },
   {
+    "title": "Multi Query, RAG Fusion",
+    "url": "/Machine Learning/RAG/Retrieval_Types.html",
+    "excerpt": "Retrieval Types Methods by which a document can be retrieved from vector database for closeness matching 1. Multi Query When a user submits a natural language Query to a RAG system...",
+    "headings": [
+      "Retrieval Types",
+      "1. Multi Query",
+      "How Multi-Query solves this?"
+    ]
+  },
+  {
     "title": "Muslim Law",
     "url": "/Law/Muslim Law/",
     "excerpt": "Source of Mohammedan/Islamic law Quran(6237) 114 (Ayat/Rhythms) revealed to Prophet Muhammad by Allah Sunnah way of life and practices of the Prophet Muhammad Hadith saying, action...",
@@ -5208,10 +5229,10 @@
   {
     "title": "Mutex",
     "url": "/Threads_Processes_IPC/Synchronization/mutex.html",
-    "excerpt": "Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep if 1 thread is in CS other cannot enter, Return value: None, Parameters: None How Mutex is internally implemented? Mute...",
+    "excerpt": "Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep if 1 thread is in CS other cannot enter, Return value: None, Parameters: None Mutex internal implementation A mutex is...",
     "headings": [
       "Mutex / Mutual Exclusion / Locking mechanism / Block / Sleep",
-      "How Mutex is internally implemented?",
+      "Mutex internal implementation",
       "Problems with Mutex",
       "Creating Mutex",
       "Wrappers around mutex",
@@ -5437,10 +5458,11 @@
   {
     "title": "Observability to RAG Pipeline",
     "url": "/Machine Learning/RAG/Observability.html",
-    "excerpt": "RAG / Retrieval-Augmented Generation What is RAG? Why RAG is used? What is RAG Pipeline? here RAG Observability Observability means looking inside RAG pipeline what's happening(Wha...",
+    "excerpt": "RAG / Retrieval-Augmented Generation What is RAG? Why RAG is used? What is RAG Pipeline? here RAG Observability Finding internal health, behavior, and performance of the entire Ret...",
     "headings": [
       "RAG / Retrieval-Augmented Generation",
-      "RAG Observability"
+      "RAG Observability",
+      "Methods to achieve Observability"
     ]
   },
   {
@@ -7644,9 +7666,11 @@
       "Internal Implementation of Hash Table",
       "Hash Collision",
       "1. Open Addressing",
-      "2. Seperate Chaining",
+      "2. Seperate Chaining (Discussed above)",
+      "Extra Overhead with hash table",
+      "Load Factor",
       "C++ hashmap(unordered_map / unordered_set) = Seperate Chaining",
-      "Rehashing",
+      "Rehashing / Resizing",
       "Implementations",
       "2-left hashing",
       "d-left Hashing",

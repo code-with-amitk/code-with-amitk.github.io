@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="canonical"
+      href="https://code-with-amitk.github.io/Data_Structures/Terms.html"
+    />
+    <title>Amortized</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <nav class="navbar">
+    <!--See .navbar in styles.css-->
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Our team</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li><a href="/">Back</a></li>
+      <li>
+        <form>
+          <input type="search" name="q" placeholder="Search site" />
+          <input type="submit" value="Go!" />
+        </form>
+      </li>
+    </ul>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="#amortized">Amortized</a>
+    <a href="#CacheLocality">Cache Locality</a>
+  </aside>
+
+  <article style="margin-left: 200px">
+    <h1 id="amortized">Amortized</h1>
+
+    <p>
+      Dictionary meaning is spreading out a financial cost, debt, or asset value
+      into smaller, regular amounts over a set period of time<br />
+      For data structures it means "average cost per operation over a long
+      sequence of operations not 1 single operation"<br />
+
+      <b>Examples:</b><br />
+      1. Inserting into a std::vector or a hash table is Amortized O(1)<br />
+      &ensp; Because 99% of the time: The operation is lightning-fast and takes
+      O(1) constant time because there is open space available<br />
+      &ensp; 1% of the time: The structure runs out of space. It must allocate a
+      brand-new, larger chunk of memory and copy all existing elements into it.
+      This single operation takes O(n) linear time.
+    </p>
+
+    <h1 id="CacheLocality">Cache Locality</h1>
+    <p>
+      Cache locality refers to the tendency of a CPU to access memory locations
+      that are physically close to each other and copy those to CPU caches<br />
+      Cache line is 64 bytes and stores it in the cache.<br />
+
+      <b>A Simple Analogy</b><br />
+      Imagine you are baking a cake at a kitchen counter (the CPU) and your
+      ingredients are stored in a pantry in the hallway (the RAM).<br />
+      • Good Cache Locality: You need sugar. Instead of bringing back just one
+      teaspoon, you grab the whole bag of sugar and the bag of flour sitting
+      right next to it, placing them on your counter. When you need flour next,
+      it’s already right there in front of you.<br />
+      • Bad Cache Locality: You need sugar, so you walk to the pantry, grab a
+      teaspoon, and walk back. Next, you need vanilla, which is stored on the
+      top shelf on the opposite side of the pantry. You have to walk all the way
+      back to the pantry just for that one item.
+    </p>
+
+    <h3>1. Vector (Contiguous Memory = Great Locality)</h3>
+    <p>
+      • How it works: Because all elements are side-by-side, when the CPU reads
+      Element 0, the hardware automatically loads Element 1, Element 2, and
+      Element 3 into the CPU cache at the exact same time.<br />
+      • The Result: Iterating through a vector is incredibly fast. The CPU
+      almost never has to wait for RAM because the next item is already waiting
+      in the cache.
+    </p>
+    <h3>2. Hash Table (Scattered Memory = Poor Locality)</h3>
+    <p>
+      • In hash table (like one using chained linked lists), the "buckets" might
+      be an array, but the actual data nodes are scattered all over your RAM at
+      random addresses.<br />
+      • The Result: When the CPU looks up an item, it jumps to a bucket, reads a
+      pointer, and then has to jump to a completely different, random area of
+      RAM to find the actual data. Every random jump usually results in a cache
+      miss, forcing the CPU to stop and wait for the slow main RAM to deliver
+      the data.
+    </p>
+    <p></p>
+  </article>
+
+  <script src="/scripts/search.js"></script>
+  <script src="/scripts/mobile.js"></script>
+  <!-- </body> -->
+</html>

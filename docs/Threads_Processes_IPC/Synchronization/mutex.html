@@ -65,23 +65,21 @@
         None
       </dl>
 
-      <h1>How Mutex is internally implemented?</h1>
-      <dl>
-        Mutex is kernel maintained lock(a data structure) that we set before
-        using a shared resource and release after using it.<br />
-        Mutex keeps track of who currently has exclusive access to the data.<br />
-        When the lock is set, no other thread can access the locked region of
-        code. <br />
-        Mutex lock will only be released by the thread who locked it.
-        <br />
+      <h1>Mutex internal implementation</h1>
+      <p>
+        A mutex is shared state + rules for deciding which thread may enter a
+        critical section.<br />
 
-        <b>Wake up?</b><br />
-        &ensp; When call to mutex.unlock() comes, signal is sent to scheduler.
-        Scheduler checks all threads waiting on mutex.<br />
-        if 1000 threads are waiting, wakeup call to activate 1000 comes(also
-        called thundering herd), but scheduler wakes up 1 thread(at its
-        discretion) & 999 falls to sleep.
-      </dl>
+        mutex's state is stored in ordinary memory owned by the program (often
+        in the mutex object). other cores.<br />
+        Once thread asks for mutex, kernel checks that value and puts the
+        calling thread on a wait queue and schedules it out. Checking the value
+        as part of waiting prevents a wake-up from being lost if the mutex was
+        unlocked just before the thread went to sleep.<br />
+        In short, the CPU performs the fast atomic lock operation, while the
+        kernel is typically involved only when a thread must sleep or be woken.
+        library.
+      </p>
 
       <h1 id="prob">Problems with Mutex</h1>
       <table>
